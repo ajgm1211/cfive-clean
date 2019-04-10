@@ -25,9 +25,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Abu Dhabi, AEAUH',
                 'coordinates' => '24.4821 54.502135',
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "abu dhabi-aeauh-united arab emirates", "abu dhabi ,ae", "united arab emirates: abu dhabi", "abu dhabi pt", "abu dhabi port", "abu dhabi city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+            'varation' => '{"type": ["abu dhabi-aeauh-united arab emirates", "abu dhabi ,ae", "united arab emirates: abu dhabi", "abu dhabi pt", "abu dhabi port", "abu dhabi city", "abu dhabi, abu zabi, united arab emirates", "abu dhabi abu zabi united arab emirates", "abu dhabi (khalifa port)", "abu dhabi khalifa port", "abu dhabi, united arab emirates", "abu dhabi united arab emirates", "khalifa, abu dhabi", "khalifa port, abu dhabi", "abu dhabiabu dhabi"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2019-03-12 15:23:20',
             ),
             1 => 
             array (
@@ -37,9 +37,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ajman, AEAJM',
                 'coordinates' => '25.41093 55.4573',
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "ajman-aeajm-united arab emirates", "ajman ,ae", "united arab emirates: ajman", "ajman pt", "ajman port", "ajman city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+                'varation' => '{"type": ["ajman-aeajm-united arab emirates", "ajman ,ae", "united arab emirates: ajman", "ajman pt", "ajman port", "ajman city", "ajman, united arab emirates"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2018-12-17 06:24:53',
             ),
             2 => 
             array (
@@ -49,9 +49,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fujairah, AEFJR',
                 'coordinates' => '25.12769 56.356',
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "fujairah-aefjr-united arab emirates", "fujairah ,ae", "united arab emirates: fujairah", "fujairah pt", "fujairah port", "fujairah city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+                'varation' => '{"type": ["fujairah-aefjr-united arab emirates", "fujairah ,ae", "united arab emirates: fujairah", "fujairah pt", "fujairah port", "fujairah city", "fujairah, united arab emirates"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2018-12-17 06:23:07',
             ),
             3 => 
             array (
@@ -61,9 +61,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jebel Ali, AEJEA',
                 'coordinates' => '25.00063 55.0493',
                 'country_id' => 2,
-                'varation' => '{"type": ["aejal", "", "jebel ali-aejea-united arab emirates", "jebel ali ,ae", "united arab emirates: jebel ali", "jebel ali pt", "jebel ali port", "jebel ali city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+            'varation' => '{"type": ["aejal", "jebel ali-aejea-united arab emirates", "jebel ali ,ae", "united arab emirates: jebel ali", "jebel ali pt", "jebel ali port", "jebel ali city", "ua emirates: jebel ali", "ua emirates jebel ali", "jebel ali, dubai, united arab emirates", "jebel ali dubai united arab emirates", "jebel ali dubai united arab emirates", "jebel ali, united arab emirates", "mina jebel ali", "dubai icd", "dubai icd", "dubai jebel ali", "dubaijebel a.", "dubai(jebel a.)", "dubai / jebel ali", "dubai / jebel ali"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2019-04-03 08:16:19',
             ),
             4 => 
             array (
@@ -73,9 +73,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sharjah, AESHJ',
                 'coordinates' => '25.36711 55.38845',
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "sharjah-aeshj-united arab emirates", "sharjah ,ae", "united arab emirates: sharjah", "sharjah pt", "sharjah port", "sharjah city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+                'varation' => '{"type": ["sharjah-aeshj-united arab emirates", "sharjah ,ae", "united arab emirates: sharjah", "sharjah pt", "sharjah port", "sharjah city", "sharjah, united arab emirates", "sharjah united arab emirates", "sharjah icd"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2019-01-22 15:20:41',
             ),
             5 => 
             array (
@@ -85,9 +85,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'KHOR AL FAKKAN, AEKLF',
                 'coordinates' => '25.34523 56.37061',
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "khor al fakkan-aeklf-united arab emirates", "khor al fakkan ,ae", "united arab emirates: khor al fakkan", "khor al fakkan pt", "khor al fakkan port", "khor al fakkan city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+                'varation' => '{"type": ["khor al fakkan-aeklf-united arab emirates", "khor al fakkan ,ae", "united arab emirates: khor al fakkan", "khor al fakkan pt", "khor al fakkan port", "khor al fakkan city", "khor fakkan", "khor al fakkan, al fujayrah, united arab emirates", "khor al fakkan al fujayrah united arab emirates", "khorfakkan"]}',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2019-01-22 15:20:26',
             ),
             6 => 
             array (
@@ -98,8 +98,8 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '25.79233 55.9461',
                 'country_id' => 2,
                 'varation' => '{"type": ["", "", "ras al khaimah-aerkt-united arab emirates", "ras al khaimah ,ae", "united arab emirates: ras al khaimah", "ras al khaimah pt", "ras al khaimah port", "ras al khaimah city"]}',
-                'created_at' => '2018-09-05 19:34:09',
-                'updated_at' => '2018-09-05 19:34:09',
+                'created_at' => '2018-09-05 15:34:09',
+                'updated_at' => '2018-09-05 15:34:09',
             ),
             7 => 
             array (
@@ -109,9 +109,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'UMM AL QAIWAIN, AEQIW',
                 'coordinates' => NULL,
                 'country_id' => 2,
-                'varation' => '{"type": ["", "", "umm al qaiwain-aeqiw-united arab emirates", "umm al qaiwain ,ae", "united arab emirates: umm al qaiwain", "umm al qaiwain pt", "umm al qaiwain port", "umm al qaiwain city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["umm al qaiwain-aeqiw-united arab emirates", "umm al qaiwain ,ae", "united arab emirates: umm al qaiwain", "umm al qaiwain pt", "umm al qaiwain port", "umm al qaiwain city", "umm al quwain, united arab emirates", "umm al quwain united arab emirates"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-10-22 11:40:16',
             ),
             8 => 
             array (
@@ -121,9 +121,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ANTIGUA, AGANU',
                 'coordinates' => '17.01175 -61.773625',
                 'country_id' => 4,
-                'varation' => '{"type": ["", "", "antigua-aganu-antigua and barbuda", "antigua ,ag", "antigua and barbuda: antigua", "antigua pt", "antigua port", "antigua city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["antigua-aganu-antigua and barbuda", "antigua ,ag", "antigua and barbuda: antigua", "antigua pt", "antigua port", "antigua city", "antigua-st johns ,ag", "antiguast johns ,ag", "antiguast johns ag", "antigua-st johns, antigua and barbuda", "antiguast johns antigua and barbuda"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-12-14 10:37:15',
             ),
             9 => 
             array (
@@ -133,9 +133,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DURRES, ALDRZ',
                 'coordinates' => '41.30761 19.45881',
                 'country_id' => 6,
-                'varation' => '{"type": ["", "", "durres-aldrz-albania", "durres ,al", "albania: durres", "durres pt", "durres port", "durres city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["durres-aldrz-albania", "durres ,al", "albania: durres", "durres pt", "durres port", "durres city", "durres, albania", "durres albania"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-12-14 12:18:01',
             ),
             10 => 
             array (
@@ -145,9 +145,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LOBITO, AOLOB',
                 'coordinates' => '-12.35887 13.5425',
                 'country_id' => 8,
-                'varation' => '{"type": ["", "", "lobito-aolob-angola", "lobito ,ao", "angola: lobito", "lobito pt", "lobito port", "lobito city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["lobito-aolob-angola", "lobito ,ao", "angola: lobito", "lobito pt", "lobito port", "lobito city", "lobito, angola", "lobito angola"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-01-25 10:04:13',
             ),
             11 => 
             array (
@@ -157,9 +157,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LUANDA, AOLAD',
                 'coordinates' => '-8.80407 13.2333',
                 'country_id' => 8,
-                'varation' => '{"type": ["aolua", "", "luanda-aolad-angola", "luanda ,ao", "angola: luanda", "luanda pt", "luanda port", "luanda city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["aolua", "luanda-aolad-angola", "luanda ,ao", "angola: luanda", "luanda pt", "luanda port", "luanda city", "luanda, angola"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-01-09 14:41:43',
             ),
             12 => 
             array (
@@ -169,9 +169,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NAMIBE, AOMSZ',
                 'coordinates' => '-15.19487 12.1411',
                 'country_id' => 8,
-                'varation' => '{"type": ["", "", "namibe-aomsz-angola", "namibe ,ao", "angola: namibe", "namibe pt", "namibe port", "namibe city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["namibe-aomsz-angola", "namibe ,ao", "angola: namibe", "namibe pt", "namibe port", "namibe city", "namibe, angola", "namibe angola"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-01-25 08:39:43',
             ),
             13 => 
             array (
@@ -182,8 +182,8 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-38.75997 -62.3498',
                 'country_id' => 10,
                 'varation' => '{"type": ["arbbl", "", "bahia blanca-arbhi-argentina", "bahia blanca ,ar", "argentina: bahia blanca", "bahia blanca pt", "bahia blanca port", "bahia blanca city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-09-05 15:34:10',
             ),
             14 => 
             array (
@@ -193,9 +193,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BUENOS AIRES, ARBUE',
                 'coordinates' => '-34.60257 -58.3747',
                 'country_id' => 10,
-                'varation' => '{"type": ["arbna", "", "buenos aires-arbue-argentina", "buenos aires ,ar", "argentina: buenos aires", "buenos aires pt", "buenos aires port", "buenos aires city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["arbna", "buenos aires-arbue-argentina", "buenos aires ,ar", "argentina: buenos aires", "buenos aires pt", "buenos aires port", "buenos aires city", "buenos aires buenos aires argentina", "buenos aires ar", "buenos aires, ar", "buenos aires, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 10:52:16',
             ),
             15 => 
             array (
@@ -206,8 +206,8 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-27.49377 -58.8516',
                 'country_id' => 10,
                 'varation' => '{"type": ["arcrr", "", "corrientes-arcnq-argentina", "corrientes ,ar", "argentina: corrientes", "corrientes pt", "corrientes port", "corrientes city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-09-05 15:34:10',
             ),
             16 => 
             array (
@@ -217,9 +217,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LAS PALMAS, ARLPS',
                 'coordinates' => '-34.019905 -59.12787',
                 'country_id' => 10,
-                'varation' => '{"type": ["arlsp", "", "las palmas-arlps-argentina", "las palmas ,ar", "argentina: las palmas", "las palmas pt", "las palmas port", "las palmas city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["arlsp", "las palmas-arlps-argentina", "las palmas ,ar", "argentina: las palmas"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-04-04 17:40:59',
             ),
             17 => 
             array (
@@ -230,8 +230,8 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-38.00017 -57.5475',
                 'country_id' => 10,
                 'varation' => '{"type": ["armdp", "mar del plata-armdq-argentina", "mar del plata ,ar", "argentina: mar del plata", "mar del plata pt", "mar del plata port", "mar del plata city", "mar del plata, argentina"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 12:08:21',
             ),
             18 => 
             array (
@@ -241,9 +241,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PUERTO DESEADO, ARPUD',
                 'coordinates' => '-47.74737 -65.8929',
                 'country_id' => 10,
-                'varation' => '{"type": ["arpde", "", "puerto deseado-arpud-argentina", "puerto deseado ,ar", "argentina: puerto deseado", "puerto deseado pt", "puerto deseado port", "puerto deseado city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["arpde", "puerto deseado-arpud-argentina", "puerto deseado ,ar", "argentina: puerto deseado", "puerto deseado pt", "puerto deseado port", "puerto deseado city", "puerto deseado, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-25 05:20:21',
             ),
             19 => 
             array (
@@ -253,9 +253,9 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PUERTO MADRYN, ARPMY',
                 'coordinates' => '-42.77377 -65.0281',
                 'country_id' => 10,
-                'varation' => '{"type": ["arpma", "", "puerto madryn-arpmy-argentina", "puerto madryn ,ar", "argentina: puerto madryn", "puerto madryn pt", "puerto madryn port", "puerto madryn city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["arpma", "puerto madryn-arpmy-argentina", "puerto madryn ,ar", "argentina: puerto madryn", "puerto madryn pt", "puerto madryn port", "puerto madryn city", "puerto madryn, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 12:13:28',
             ),
             20 => 
             array (
@@ -265,23 +265,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ROSARIO, ARROS',
                 'coordinates' => '-32.93957 -60.6396',
                 'country_id' => 10,
-                'varation' => '{"type": ["", "", "rosario-arros-argentina", "rosario ,ar", "argentina: rosario", "rosario pt", "rosario port", "rosario city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["rosario-arros-argentina", "rosario ,ar", "argentina: rosario", "rosario pt", "rosario port", "rosario city", "rosario", "rosario, ar", "rosario ar", "rosario, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 12:08:04',
             ),
             21 => 
-            array (
-                'id' => 763,
-                'name' => 'SAN ANTONIO ESTE',
-                'code' => 'ARSAE',
-                'display_name' => 'SAN ANTONIO ESTE, ARSAE',
-                'coordinates' => '-40.81237 -64.7387',
-                'country_id' => 10,
-                'varation' => '{"type": ["", "", "san antonio este-arsae-argentina", "san antonio este ,ar", "argentina: san antonio este", "san antonio este pt", "san antonio este port", "san antonio este city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
-            ),
-            22 => 
             array (
                 'id' => 764,
                 'name' => 'USHUAIA',
@@ -289,11 +277,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'USHUAIA, ARUSH',
                 'coordinates' => '-54.80327 -68.2984',
                 'country_id' => 10,
-                'varation' => '{"type": ["", "", "ushuaia-arush-argentina", "ushuaia ,ar", "argentina: ushuaia", "ushuaia pt", "ushuaia port", "ushuaia city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["ushuaia-arush-argentina", "ushuaia ,ar", "argentina: ushuaia", "ushuaia pt", "ushuaia port", "ushuaia city", "ushuaia, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 12:12:07',
             ),
-            23 => 
+            22 => 
             array (
                 'id' => 765,
                 'name' => 'VILLA CONSTITUCION',
@@ -302,10 +290,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-33.23447 -60.3155',
                 'country_id' => 10,
                 'varation' => '{"type": ["", "", "villa constitucion-arvcn-argentina", "villa constitucion ,ar", "argentina: villa constitucion", "villa constitucion pt", "villa constitucion port", "villa constitucion city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2018-09-05 15:34:10',
             ),
-            24 => 
+            23 => 
             array (
                 'id' => 766,
                 'name' => 'ZARATE',
@@ -313,11 +301,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ZARATE, ARZAE',
                 'coordinates' => '-34.08147 -59.0348',
                 'country_id' => 10,
-                'varation' => '{"type": ["arzar", "", "zarate-arzae-argentina", "zarate ,ar", "argentina: zarate", "zarate pt", "zarate port", "zarate city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["arzar", "zarate-arzae-argentina", "zarate ,ar", "argentina: zarate", "zarate pt", "zarate port", "zarate city", "zarate, ar", "zarate ar", "zarate, argentina"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-03-13 12:12:26',
             ),
-            25 => 
+            24 => 
             array (
                 'id' => 767,
                 'name' => 'PAGO PAGO',
@@ -325,11 +313,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PAGO PAGO, ASPPG',
                 'coordinates' => '-14.28117 -170.6909',
                 'country_id' => 11,
-                'varation' => '{"type": ["aspgo", "", "pago pago-asppg-american samoa", "pago pago ,as", "american samoa: pago pago", "pago pago pt", "pago pago port", "pago pago city"]}',
-                'created_at' => '2018-09-05 19:34:10',
-                'updated_at' => '2018-09-05 19:34:10',
+                'varation' => '{"type": ["aspgo", "pago pago-asppg-american samoa", "pago pago ,as", "american samoa: pago pago", "pago pago pt", "pago pago port", "pago pago city", "pago pago, american samoa", "pago pago american samoa"]}',
+                'created_at' => '2018-09-05 15:34:10',
+                'updated_at' => '2019-01-22 10:28:18',
             ),
-            26 => 
+            25 => 
             array (
                 'id' => 768,
                 'name' => 'Adelaide',
@@ -337,11 +325,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Adelaide, AUADL',
                 'coordinates' => '-34.80684 138.5082',
                 'country_id' => 13,
-                'varation' => '{"type": ["", "", "adelaide-auadl-australia", "adelaide ,au", "australia: adelaide", "adelaide pt", "adelaide port", "adelaide city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["adelaide-auadl-australia", "adelaide ,au", "australia: adelaide", "adelaide pt", "adelaide port", "adelaide city", "adelaide, australia", "adelaide australia", "au008 auadl adelaide", "adelaine", "au  auadl  adelaide"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-04-08 06:11:38',
             ),
-            27 => 
+            26 => 
             array (
                 'id' => 769,
                 'name' => 'Bell Bay',
@@ -350,10 +338,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-41.18997 146.8423',
                 'country_id' => 13,
                 'varation' => '{"type": ["aublb", "", "bell bay-aubel-australia", "bell bay ,au", "australia: bell bay", "bell bay pt", "bell bay port", "bell bay city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-09-05 15:34:11',
             ),
-            28 => 
+            27 => 
             array (
                 'id' => 770,
                 'name' => 'Brisbane',
@@ -361,11 +349,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Brisbane, AUBNE',
                 'coordinates' => '-27.47127 153.0149',
                 'country_id' => 13,
-                'varation' => '{"type": ["aubri", "", "brisbane-aubne-australia", "brisbane ,au", "australia: brisbane", "brisbane pt", "brisbane port", "brisbane city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["aubri", "brisbane-aubne-australia", "brisbane ,au", "australia: brisbane", "brisbane pt", "brisbane port", "brisbane city", "brisbane, australia", "brisbane"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-12 18:14:47',
             ),
-            29 => 
+            28 => 
             array (
                 'id' => 771,
                 'name' => 'Fremantle',
@@ -373,11 +361,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fremantle, AUFRE',
                 'coordinates' => '-32.09837 115.7599',
                 'country_id' => 13,
-                'varation' => '{"type": ["", "", "fremantle-aufre-australia", "fremantle ,au", "australia: fremantle", "fremantle pt", "fremantle port", "fremantle city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["fremantle-aufre-australia", "fremantle ,au", "australia: fremantle", "fremantle pt", "fremantle port", "fremantle city", "fremantle, australia", "fremantle australia", "fremantle perth"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-14 11:38:19',
             ),
-            30 => 
+            29 => 
             array (
                 'id' => 772,
                 'name' => 'Melbourne',
@@ -385,11 +373,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Melbourne, AUMEL',
                 'coordinates' => '-37.82427 144.9465',
                 'country_id' => 13,
-                'varation' => '{"type": ["", "", "melbourne-aumel-australia", "melbourne ,au", "australia: melbourne", "melbourne pt", "melbourne port", "melbourne city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["melbourne-aumel-australia", "melbourne ,au", "australia: melbourne", "melbourne pt", "melbourne port", "melbourne city", "melbourne, australia", "melbourne australia"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-01-22 10:26:19',
             ),
-            31 => 
+            30 => 
             array (
                 'id' => 773,
                 'name' => 'Sydney',
@@ -397,11 +385,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sydney, AUSYD',
                 'coordinates' => '-33.851505 151.19885',
                 'country_id' => 13,
-                'varation' => '{"type": ["", "", "sydney-ausyd-australia", "sydney ,au", "australia: sydney", "sydney pt", "sydney port", "sydney city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["sydney-ausyd-australia", "sydney ,au", "australia: sydney", "sydney pt", "sydney port", "sydney city", "sydney, australia", "sydney australia"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-01-22 10:30:29',
             ),
-            32 => 
+            31 => 
             array (
                 'id' => 774,
                 'name' => 'Townsville',
@@ -409,11 +397,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Townsville, AUTSV',
                 'coordinates' => '-19.26207 146.8231',
                 'country_id' => 13,
-                'varation' => '{"type": ["autow", "", "townsville-autsv-australia", "townsville ,au", "australia: townsville", "townsville pt", "townsville port", "townsville city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["autow", "townsville-autsv-australia", "townsville ,au", "australia: townsville", "townsville pt", "townsville port", "townsville city", "townsville, australia", "townsville australia"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-01-22 10:31:30',
             ),
-            33 => 
+            32 => 
             array (
                 'id' => 775,
                 'name' => 'ESPERANCE',
@@ -422,10 +410,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-33.86507 121.8957',
                 'country_id' => 13,
                 'varation' => '{"type": ["", "", "esperance-auepr-australia", "esperance ,au", "australia: esperance", "esperance pt", "esperance port", "esperance city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-09-05 15:34:11',
             ),
-            34 => 
+            33 => 
             array (
                 'id' => 776,
                 'name' => 'BRIDGETOWN',
@@ -433,11 +421,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BRIDGETOWN, BBBGI',
                 'coordinates' => '13.09953 -59.625',
                 'country_id' => 17,
-                'varation' => '{"type": ["", "", "bridgetown-bbbgi-barbados", "bridgetown ,bb", "barbados: bridgetown", "bridgetown pt", "bridgetown port", "bridgetown city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["bridgetown-bbbgi-barbados", "bridgetown ,bb", "barbados: bridgetown", "bridgetown pt", "bridgetown port", "bridgetown city", "bridgetown, barbados", "bridgetown barbados", "bridgetonwn"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-02-14 09:11:10',
             ),
-            35 => 
+            34 => 
             array (
                 'id' => 777,
                 'name' => 'Chittagong',
@@ -445,11 +433,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Chittagong, BDCGP',
                 'coordinates' => '22.31373 91.8195',
                 'country_id' => 18,
-                'varation' => '{"type": ["", "", "chittagong-bdcgp-bangladesh", "chittagong ,bd", "bangladesh: chittagong", "chittagong pt", "chittagong port", "chittagong city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+            'varation' => '{"type": ["chittagong-bdcgp-bangladesh", "chittagong ,bd", "bangladesh: chittagong", "chittagong pt", "chittagong port", "chittagong city", "bangladesh: chittagong", "bangladesh chittagong", "chittagong, bangladesh", "chittagong bangladesh", "chittagong (chattogram), bangladesh", "chittagong chattogram bangladesh", "chittagong (chattogram), bangladesh", "chittagong, bangladesh", "chittagong bangladesh", "chittagong chattogram, bangladesh", "chattogram chittagong", "chittagong r2", "chittagong *r2", "chittagong (inc lthc/ens)", "chittagong inc lthc/ens", "chittagong inc lthcens"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-11 11:22:51',
             ),
-            36 => 
+            35 => 
             array (
                 'id' => 778,
                 'name' => 'MONGLA',
@@ -458,10 +446,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '22.47873 89.5967',
                 'country_id' => 18,
                 'varation' => '{"type": ["bdmon", "", "mongla-bdmgl-bangladesh", "mongla ,bd", "bangladesh: mongla", "mongla pt", "mongla port", "mongla city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-09-05 15:34:11',
             ),
-            37 => 
+            36 => 
             array (
                 'id' => 779,
                 'name' => 'Antwerp',
@@ -469,11 +457,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Antwerp, BEANR',
                 'coordinates' => '51.21353 4.3865',
                 'country_id' => 19,
-                'varation' => '{"type": ["beant", "", "antwerp-beanr-belgium", "antwerp ,be", "belgium: antwerp", "antwerp pt", "antwerp port", "antwerp city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["beant", "antwerp-beanr-belgium", "antwerp ,be", "belgium: antwerp", "antwerp pt", "antwerp port", "antwerp city", "antwerpen, antwerpen, vlaanderen, belgium", "antwerpen antwerpen vlaanderen belgium", "antwerp, belgium", "antwerp belgium", "amberes", "beanr", "antwertp", "neur126 beanr antwerp"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-04-01 07:19:17',
             ),
-            38 => 
+            37 => 
             array (
                 'id' => 780,
                 'name' => 'ZEEBRUGGE',
@@ -482,10 +470,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '51.33723 3.1979',
                 'country_id' => 19,
                 'varation' => '{"type": ["", "", "zeebrugge-bezee-belgium", "zeebrugge ,be", "belgium: zeebrugge", "zeebrugge pt", "zeebrugge port", "zeebrugge city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-09-05 15:34:11',
             ),
-            39 => 
+            38 => 
             array (
                 'id' => 781,
                 'name' => 'Burgas',
@@ -493,11 +481,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Burgas, BGBOJ',
                 'coordinates' => '42.49453 27.4773',
                 'country_id' => 21,
-                'varation' => '{"type": ["bgbur", "", "burgas-bgboj-bulgaria", "burgas ,bg", "bulgaria: burgas", "burgas pt", "burgas port", "burgas city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["bgbur", "burgas-bgboj-bulgaria", "burgas ,bg", "bulgaria: burgas", "burgas pt", "burgas port", "burgas city", "burgas, bulgaria", "burgas bulgaria"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-12-14 12:02:16',
             ),
-            40 => 
+            39 => 
             array (
                 'id' => 782,
                 'name' => 'Varna',
@@ -505,11 +493,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Varna, BGVAR',
                 'coordinates' => '43.193825 27.91081',
                 'country_id' => 21,
-                'varation' => '{"type": ["", "", "varna-bgvar-bulgaria", "varna ,bg", "bulgaria: varna", "varna pt", "varna port", "varna city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["varna-bgvar-bulgaria", "varna ,bg", "bulgaria: varna", "varna pt", "varna port", "varna city", "varna, bulgaria", "varna bulgaria"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-10-22 11:56:11',
             ),
-            41 => 
+            40 => 
             array (
                 'id' => 783,
                 'name' => 'Bahrain',
@@ -517,11 +505,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bahrain, BHKBS',
                 'coordinates' => '26.19784 50.71145',
                 'country_id' => 22,
-                'varation' => '{"type": ["", "", "bahrain-bhkbs-bahrain", "bahrain ,bh", "bahrain: bahrain", "bahrain pt", "bahrain port", "bahrain city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["bahrain-bhkbs-bahrain", "bahrain ,bh", "bahrain: bahrain", "bahrain pt", "bahrain port", "bahrain city", "bahrain: bahrain", "bahrain bahrain", "bahrain", "bahrain, bahrain", "bahrein **", "bahrain khalifa bin salman port"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-02-07 08:53:28',
             ),
-            42 => 
+            41 => 
             array (
                 'id' => 784,
                 'name' => 'COTONOU',
@@ -529,11 +517,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'COTONOU, BJCOO',
                 'coordinates' => '6.35532 2.4566',
                 'country_id' => 24,
-                'varation' => '{"type": ["", "", "cotonou-bjcoo-benin", "cotonou ,bj", "benin: cotonou", "cotonou pt", "cotonou port", "cotonou city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["cotonou-bjcoo-benin", "cotonou ,bj", "benin: cotonou", "cotonou pt", "cotonou port", "cotonou city", "cotonou, bj", "cotonou, benin", "cotonou benin"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-01-25 08:35:02',
             ),
-            43 => 
+            42 => 
             array (
                 'id' => 785,
                 'name' => 'BELEM',
@@ -542,10 +530,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-1.44347 -48.5079',
                 'country_id' => 30,
                 'varation' => '{"type": ["", "", "belem-brbel-brazil", "belem ,br", "brazil: belem", "belem pt", "belem port", "belem city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2018-09-05 15:34:11',
             ),
-            44 => 
+            43 => 
             array (
                 'id' => 786,
                 'name' => 'ITAJAI',
@@ -553,11 +541,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ITAJAI, BRITJ',
                 'coordinates' => '-26.90537 -48.655',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "itajai-britj-brazil", "itajai ,br", "brazil: itajai", "itajai pt", "itajai port", "itajai city"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'varation' => '{"type": ["itajai-britj-brazil", "itajai ,br", "brazil: itajai", "itajai pt", "itajai port", "itajai city", "itajai, br", "itajai br", "itajaÍ", "itajaibritj", "itapoa itajai", "itajai, brazil"]}',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-13 12:07:10',
             ),
-            45 => 
+            44 => 
             array (
                 'id' => 787,
                 'name' => 'ITAPOA',
@@ -566,10 +554,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-26.184 -48.6026',
                 'country_id' => 30,
                 'varation' => '{"type": ["itapoa-brioa-brazil", "itapoa ,br", "brazil: itapoa", "itapoa pt", "itapoa port", "itapoa city", "itapoa br", "itapoa, br", "itapoa br", "itapoa, sc", "itapoa sc", "brioa itapoa", "itapoa, brazil", "itapoa"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-14 08:16:51',
             ),
-            46 => 
+            45 => 
             array (
                 'id' => 788,
                 'name' => 'MANAUS',
@@ -578,10 +566,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-3.13247 -60.0193',
                 'country_id' => 30,
                 'varation' => '{"type": ["manaus-brmao-brazil", "manaus ,br", "brazil: manaus", "manaus pt", "manaus port", "manaus city", "manaus, br", "manaus br", "manaus, brazil"]}',
-                'created_at' => '2018-09-05 19:34:11',
-                'updated_at' => '2018-09-05 19:34:11',
+                'created_at' => '2018-09-05 15:34:11',
+                'updated_at' => '2019-03-13 12:06:48',
             ),
-            47 => 
+            46 => 
             array (
                 'id' => 789,
                 'name' => 'NAVEGANTES',
@@ -590,10 +578,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-26.897025 -48.66268',
                 'country_id' => 30,
                 'varation' => '{"type": ["", "", "navegantes-brnvt-brazil", "navegantes ,br", "brazil: navegantes", "navegantes pt", "navegantes port", "navegantes city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            48 => 
+            47 => 
             array (
                 'id' => 790,
                 'name' => 'PARANAGUA',
@@ -601,11 +589,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PARANAGUA, BRPNG',
                 'coordinates' => '-25.50747 -48.508',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "paranagua-brpng-brazil", "paranagua ,br", "brazil: paranagua", "paranagua pt", "paranagua port", "paranagua city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["paranagua-brpng-brazil", "paranagua ,br", "brazil: paranagua", "paranagua pt", "paranagua port", "paranagua city", "paranagua br", "paranagua, br", "paranagua br", "paranaguabrpng", "paranagua, brazil"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-13 12:13:19',
             ),
-            49 => 
+            48 => 
             array (
                 'id' => 791,
                 'name' => 'PECEM',
@@ -614,10 +602,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-3.532126 -38.80311',
                 'country_id' => 30,
                 'varation' => '{"type": ["pecem-brpec-brazil", "pecem ,br", "brazil: pecem", "pecem pt", "pecem port", "pecem city", "pecem, br", "pecem br", "pecem pt/sao goncalo do amarante", "pecem ptsao goncalo do amarante", "pecem fortaleza", "pecem, brazil"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-13 12:07:21',
             ),
-            50 => 
+            49 => 
             array (
                 'id' => 792,
                 'name' => 'PORTO VELHO',
@@ -626,10 +614,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-8.76497 -63.9184',
                 'country_id' => 30,
                 'varation' => '{"type": ["", "", "porto velho-brpvh-brazil", "porto velho ,br", "brazil: porto velho", "porto velho pt", "porto velho port", "porto velho city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            51 => 
+            50 => 
             array (
                 'id' => 793,
                 'name' => 'RIO DE JANEIRO',
@@ -638,10 +626,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-22.89687 -43.2041',
                 'country_id' => 30,
                 'varation' => '{"type": ["", "", "rio de janeiro-brrio-brazil", "rio de janeiro ,br", "brazil: rio de janeiro", "rio de janeiro pt", "rio de janeiro port", "rio de janeiro city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            52 => 
+            51 => 
             array (
                 'id' => 794,
                 'name' => 'RIO GRANDE',
@@ -649,11 +637,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'RIO GRANDE, BRRIG',
                 'coordinates' => '-32.05147 -52.0815',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "rio grande-brrig-brazil", "rio grande ,br", "brazil: rio grande", "rio grande pt", "rio grande port", "rio grande city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["rio grande-brrig-brazil", "rio grande ,br", "brazil: rio grande", "rio grande pt", "rio grande port", "rio grande city", "rio grande, br", "rio grande br", "rio grandebrrig", "rio grande, brazil", "rio grande"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-25 08:35:42',
             ),
-            53 => 
+            52 => 
             array (
                 'id' => 795,
                 'name' => 'SALVADOR',
@@ -661,11 +649,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SALVADOR, BRSSA',
                 'coordinates' => '-12.93997 -38.4939',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "salvador-brssa-brazil", "salvador ,br", "brazil: salvador", "salvador pt", "salvador port", "salvador city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["salvador-brssa-brazil", "salvador ,br", "brazil: salvador", "salvador pt", "salvador port", "salvador city", "salvador, br", "salvador br", "salvador", "salvador de bahia", "salvador di bahia", "salvador, brazil", "salvador do bahia"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-25 08:30:26',
             ),
-            54 => 
+            53 => 
             array (
                 'id' => 796,
                 'name' => 'SANTAREM',
@@ -674,10 +662,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-2.4158 -54.729',
                 'country_id' => 30,
                 'varation' => '{"type": ["", "", "santarem-brstm-brazil", "santarem ,br", "brazil: santarem", "santarem pt", "santarem port", "santarem city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            55 => 
+            54 => 
             array (
                 'id' => 797,
                 'name' => 'SANTOS',
@@ -685,11 +673,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SANTOS, BRSSZ',
                 'coordinates' => '-23.92767 -46.3069',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "santos-brssz-brazil", "santos ,br", "brazil: santos", "santos pt", "santos port", "santos city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["santos-brssz-brazil", "santos ,br", "brazil: santos", "santos pt", "santos port", "santos city", "santos", "santos", "santos br", "santos, br", "santos br", "santosbrssz", "santos, brazil"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-13 12:10:58',
             ),
-            56 => 
+            55 => 
             array (
                 'id' => 798,
                 'name' => 'SUAPE',
@@ -697,11 +685,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SUAPE, BRSUA',
                 'coordinates' => '-8.39767 -34.9578',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "suape-brsua-brazil", "suape ,br", "brazil: suape", "suape pt", "suape port", "suape city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["suape-brsua-brazil", "suape ,br", "brazil: suape", "suape pt", "suape port", "suape city", "suape br", "suape, br", "suape br", "suape recife", "suapebrsua", "suape, brazil"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-13 12:11:56',
             ),
-            57 => 
+            56 => 
             array (
                 'id' => 799,
                 'name' => 'VILA DO CONDE',
@@ -709,11 +697,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VILA DO CONDE, BRVLC',
                 'coordinates' => '-1.534438 -48.743',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "vila do conde-brvlc-brazil", "vila do conde ,br", "brazil: vila do conde", "vila do conde pt", "vila do conde port", "vila do conde city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["vila do conde-brvlc-brazil", "vila do conde ,br", "brazil: vila do conde", "vila do conde pt", "vila do conde port", "vila do conde city", "vila do conde, br", "vila do conde br", "vila do conde belem"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-02-21 16:27:19',
             ),
-            58 => 
+            57 => 
             array (
                 'id' => 800,
                 'name' => 'VITORIA',
@@ -721,11 +709,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VITORIA, BRVIX',
                 'coordinates' => '-20.32817 -40.3459',
                 'country_id' => 30,
-                'varation' => '{"type": ["", "", "vitoria-brvix-brazil", "vitoria ,br", "brazil: vitoria", "vitoria pt", "vitoria port", "vitoria city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["vitoria-brvix-brazil", "vitoria ,br", "brazil: vitoria", "vitoria pt", "vitoria port", "vitoria city", "vitoria, br", "vitoria br", "vitoriabrvix"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-11 13:24:37',
             ),
-            59 => 
+            58 => 
             array (
                 'id' => 801,
                 'name' => 'Freeport',
@@ -733,11 +721,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Freeport, BSFPO',
                 'coordinates' => '26.51503 -78.6324',
                 'country_id' => 31,
-                'varation' => '{"type": ["", "", "freeport-bsfpo-bahamas", "freeport ,bs", "bahamas: freeport", "freeport pt", "freeport port", "freeport city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+            'varation' => '{"type": ["freeport-bsfpo-bahamas", "freeport ,bs", "bahamas: freeport", "freeport pt", "freeport port", "freeport city", "freeport, bahamas", "freeport bahamas", "freeport", "freeport (*r3)", "freeport *r3", "freeport r3"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-02-27 17:05:35',
             ),
-            60 => 
+            59 => 
             array (
                 'id' => 802,
                 'name' => 'NASSAU',
@@ -745,11 +733,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NASSAU, BSNAS',
                 'coordinates' => '25.07713 -77.3337',
                 'country_id' => 31,
-                'varation' => '{"type": ["", "", "nassau-bsnas-bahamas", "nassau ,bs", "bahamas: nassau", "nassau pt", "nassau port", "nassau city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["nassau-bsnas-bahamas", "nassau ,bs", "bahamas: nassau", "nassau pt", "nassau port", "nassau city", "nassau r3", "nassau *r3"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-07 08:02:09',
             ),
-            61 => 
+            60 => 
             array (
                 'id' => 803,
                 'name' => 'BELIZE CITY',
@@ -758,10 +746,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '17.48543 -88.1849',
                 'country_id' => 35,
                 'varation' => '{"type": ["", "", "belize city-bzbze-belize", "belize city ,bz", "belize: belize city", "belize city pt", "belize city port", "belize city city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            62 => 
+            61 => 
             array (
                 'id' => 804,
                 'name' => 'MONTREAL',
@@ -769,11 +757,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MONTREAL, CAMTR',
                 'coordinates' => '45.50173 -73.5481',
                 'country_id' => 36,
-                'varation' => '{"type": ["", "", "montreal-camtr-canada", "montreal ,ca", "canada: montreal", "montreal pt", "montreal port", "montreal city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["montreal-camtr-canada", "montreal ,ca", "canada: montreal", "montreal pt", "montreal port", "montreal city", "montreal, qc", "montreal, qu,"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-04-03 08:43:07',
             ),
-            63 => 
+            62 => 
             array (
                 'id' => 805,
                 'name' => 'PRINCE RUPERT',
@@ -782,10 +770,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '54.32193 -130.2978',
                 'country_id' => 36,
                 'varation' => '{"type": ["", "", "prince rupert-caprr-canada", "prince rupert ,ca", "canada: prince rupert", "prince rupert pt", "prince rupert port", "prince rupert city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            64 => 
+            63 => 
             array (
                 'id' => 806,
                 'name' => 'SAINT JOHN',
@@ -793,11 +781,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SAINT JOHN, CASJB',
                 'coordinates' => '45.26353 -66.0606',
                 'country_id' => 36,
-                'varation' => '{"type": ["", "", "saint john-casjb-canada", "saint john ,ca", "canada: saint john", "saint john pt", "saint john port", "saint john city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["saint john-casjb-canada", "saint john ,ca", "canada: saint john"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-02-27 16:29:38',
             ),
-            65 => 
+            64 => 
             array (
                 'id' => 807,
                 'name' => 'VANCOUVER',
@@ -805,11 +793,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VANCOUVER, CAVAN',
                 'coordinates' => '49.28383 -123.1084',
                 'country_id' => 36,
-                'varation' => '{"type": ["", "", "vancouver-cavan-canada", "vancouver ,ca", "canada: vancouver", "vancouver pt", "vancouver port", "vancouver city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["vancouver-cavan-canada", "vancouver ,ca", "canada: vancouver", "vancouver pt", "vancouver port", "vancouver city", "vancouver british columbia canada", "vancouver, bc"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-03-07 15:16:50',
             ),
-            66 => 
+            65 => 
             array (
                 'id' => 808,
                 'name' => 'ABIDJAN',
@@ -817,11 +805,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ABIDJAN, CIABJ',
                 'coordinates' => '5.2983915 -4.01993',
                 'country_id' => 42,
-                'varation' => '{"type": ["", "", "abidjan-ciabj-cote d\'ivoire", "abidjan ,ci", "cote d\'ivoire: abidjan", "abidjan pt", "abidjan port", "abidjan city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["abidjan-ciabj-cote d\'ivoire", "abidjan ,ci", "cote d\'ivoire: abidjan", "abidjan pt", "abidjan port", "abidjan city", "ivory coast abidjan", "abidjan, ci", "abidjan, ivory coast", "abidjan, ivory coast", "abidjan ivory coast"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-01-25 08:22:43',
             ),
-            67 => 
+            66 => 
             array (
                 'id' => 809,
                 'name' => 'SAN-PEDRO',
@@ -829,11 +817,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SAN-PEDRO, CISPY',
                 'coordinates' => '4.743 -6.615',
                 'country_id' => 42,
-                'varation' => '{"type": ["", "", "san-pedro-cispy-cote d\'ivoire", "san-pedro ,ci", "cote d\'ivoire: san-pedro", "san-pedro pt", "san-pedro port", "san-pedro city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["san-pedro-cispy-cote d\'ivoire", "san-pedro ,ci", "cote d\'ivoire: san-pedro", "san-pedro pt", "san-pedro port", "san-pedro city", "san-pedro, ivory coast"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-01-25 08:31:59',
             ),
-            68 => 
+            67 => 
             array (
                 'id' => 810,
                 'name' => 'RAROTONGA',
@@ -842,10 +830,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-21.20418 -159.7844',
                 'country_id' => 43,
                 'varation' => '{"type": ["", "", "rarotonga-ckrar-cook islands", "rarotonga ,ck", "cook islands: rarotonga", "rarotonga pt", "rarotonga port", "rarotonga city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2018-09-05 15:34:12',
             ),
-            69 => 
+            68 => 
             array (
                 'id' => 811,
                 'name' => 'Arica',
@@ -853,11 +841,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Arica, CLARI',
                 'coordinates' => '-18.48247 -70.3283',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "arica-clari-chile", "arica ,cl", "chile: arica", "arica pt", "arica port", "arica city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["arica-clari-chile", "arica ,cl", "chile: arica", "arica pt", "arica port", "arica city", "arica, chile", "arica chile", "arica, cl"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-02-15 09:37:25',
             ),
-            70 => 
+            69 => 
             array (
                 'id' => 812,
                 'name' => 'Iquique',
@@ -865,11 +853,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Iquique, CLIQQ',
                 'coordinates' => '-20.20607 -70.1474',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "iquique-cliqq-chile", "iquique ,cl", "chile: iquique", "iquique pt", "iquique port", "iquique city"]}',
-                'created_at' => '2018-09-05 19:34:12',
-                'updated_at' => '2018-09-05 19:34:12',
+                'varation' => '{"type": ["iquique-cliqq-chile", "iquique ,cl", "chile: iquique", "iquique pt", "iquique port", "iquique city", "iquique tarapaca chile", "iquique, chile", "iquique chile", "iquique, cl"]}',
+                'created_at' => '2018-09-05 15:34:12',
+                'updated_at' => '2019-02-15 09:37:50',
             ),
-            71 => 
+            70 => 
             array (
                 'id' => 813,
                 'name' => 'San Antonio',
@@ -877,11 +865,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'San Antonio, CLSAI',
                 'coordinates' => '-33.58947 -71.6118',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "san antonio-clsai-chile", "san antonio ,cl", "chile: san antonio", "san antonio pt", "san antonio port", "san antonio city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["san antonio-clsai-chile", "san antonio ,cl", "chile: san antonio", "san antonio pt", "san antonio port", "san antonio city", "san antonio, chile", "san antonio chile", "san antonio, cl", "san antonio"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-02-27 23:04:06',
             ),
-            72 => 
+            71 => 
             array (
                 'id' => 814,
                 'name' => 'San Vicente',
@@ -889,11 +877,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'San Vicente, CLSVE',
                 'coordinates' => '-36.72857 -73.1296',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "san vicente-clsve-chile", "san vicente ,cl", "chile: san vicente", "san vicente pt", "san vicente port", "san vicente city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["san vicente-clsve-chile", "san vicente ,cl", "chile: san vicente", "san vicente pt", "san vicente port", "san vicente city", "san vicente bio-bio chile", "san vicente (bio-bio) chile", "san vicente biobio chile", "san vicente bio-bio chile", "san vicente, chile", "san vicente chile", "san vicente, cl", "san vicente"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-30 08:06:33',
             ),
-            73 => 
+            72 => 
             array (
                 'id' => 815,
                 'name' => 'CORONEL',
@@ -901,11 +889,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CORONEL, CLCNL',
                 'coordinates' => '-37.02957 -73.1603',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "coronel-clcnl-chile", "coronel ,cl", "chile: coronel", "coronel pt", "coronel port", "coronel city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["coronel-clcnl-chile", "coronel ,cl", "chile: coronel", "coronel pt", "coronel port", "coronel city", "cornel, cl"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-02-21 10:28:15',
             ),
-            74 => 
+            73 => 
             array (
                 'id' => 816,
                 'name' => 'LIRQUEN',
@@ -913,11 +901,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LIRQUEN, CLLQN',
                 'coordinates' => '-36.69987 -72.9802',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "lirquen-cllqn-chile", "lirquen ,cl", "chile: lirquen", "lirquen pt", "lirquen port", "lirquen city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["lirquen-cllqn-chile", "lirquen ,cl", "chile: lirquen", "lirquen pt", "lirquen port", "lirquen city", "lirquen bio-bio chile", "lirquen, cl", "lirquen (san vicente)"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-29 12:11:10',
             ),
-            75 => 
+            74 => 
             array (
                 'id' => 817,
                 'name' => 'PUERTO ANGAMOS',
@@ -925,11 +913,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PUERTO ANGAMOS, CLPAG',
                 'coordinates' => NULL,
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "puerto angamos-clpag-chile", "puerto angamos ,cl", "chile: puerto angamos", "puerto angamos pt", "puerto angamos port", "puerto angamos city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["puerto angamos-clpag-chile", "puerto angamos ,cl", "chile: puerto angamos", "puerto angamos pt", "puerto angamos port", "puerto angamos city", "puerto angamos antofagasta chile", "puerto angamos, cl"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-02-21 10:27:52',
             ),
-            76 => 
+            75 => 
             array (
                 'id' => 818,
                 'name' => 'VALPARAISO',
@@ -937,11 +925,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VALPARAISO, CLVAP',
                 'coordinates' => '-33.03667 -71.6331',
                 'country_id' => 44,
-                'varation' => '{"type": ["", "", "valparaiso-clvap-chile", "valparaiso ,cl", "chile: valparaiso", "valparaiso pt", "valparaiso port", "valparaiso city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["valparaiso-clvap-chile", "valparaiso ,cl", "chile: valparaiso", "valparaiso pt", "valparaiso port", "valparaiso city", "valparaiso valparaiso chile", "valparaiso", "valparaiso, chile", "valparaiso chile", "valparaiso, cl", "valparaÍso", "valparaíso"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-27 15:04:31',
             ),
-            77 => 
+            76 => 
             array (
                 'id' => 819,
                 'name' => 'DOUALA',
@@ -949,11 +937,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DOUALA, CMDLA',
                 'coordinates' => '4.05673 9.6933',
                 'country_id' => 45,
-                'varation' => '{"type": ["", "", "douala-cmdla-cameroon", "douala ,cm", "cameroon: douala", "douala pt", "douala port", "douala city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["douala-cmdla-cameroon", "douala ,cm", "cameroon: douala", "douala pt", "douala port", "douala city", "douala, cameroon", "douala cameroon"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-01-25 09:57:14',
             ),
-            78 => 
+            77 => 
             array (
                 'id' => 820,
                 'name' => 'Anqing',
@@ -961,11 +949,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Anqing, CNAQG',
                 'coordinates' => '30.49393 117.0393',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "anqing-cnaqg-china", "anqing ,cn", "china: anqing", "anqing pt", "anqing port", "anqing city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["anqing-cnaqg-china", "anqing ,cn", "china: anqing", "anqing pt", "anqing port", "anqing city", "anqing, china", "anqing china", "anqing ah", "anqing, anhui"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-29 00:15:14',
             ),
-            79 => 
+            78 => 
             array (
                 'id' => 821,
                 'name' => 'Beihai',
@@ -973,11 +961,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Beihai, CNBHY',
                 'coordinates' => '21.48393 109.0811',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "beihai-cnbhy-china", "beihai ,cn", "china: beihai", "beihai pt", "beihai port", "beihai city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["beihai-cnbhy-china", "beihai ,cn", "china: beihai", "beihai pt", "beihai port", "beihai city", "beihai, beihai, guangxi, china", "beihai beihai guangxi china", "beihai, china"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2018-12-10 13:35:43',
             ),
-            80 => 
+            79 => 
             array (
                 'id' => 822,
                 'name' => 'Beijiao',
@@ -985,11 +973,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Beijiao, CNBIJ',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "beijiao-cnbij-china", "beijiao ,cn", "china: beijiao", "beijiao pt", "beijiao port", "beijiao city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["beijiao-cnbij-china", "beijiao ,cn", "china: beijiao", "beijiao pt", "beijiao port", "beijiao city", "beijiao", "beijiao, shunde, guangdong, china", "beijiao shunde guangdong china", "beijiao, china", "beijiao gd", "shunde beijiao, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-07 15:15:57',
             ),
-            81 => 
+            80 => 
             array (
                 'id' => 823,
                 'name' => 'Changsha',
@@ -997,35 +985,35 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Changsha, CNCSH',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "changsha-cncsh-china", "changsha ,cn", "china: changsha", "changsha pt", "changsha port", "changsha city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["changsha-cncsh-china", "changsha ,cn", "china: changsha", "changsha pt", "changsha port", "changsha city", "changsha, changsha, hunan, china", "changsha changsha hunan china", "changsha, hn", "cncsx", "changsha, china", "changsha hn"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2018-12-20 09:21:26',
             ),
-            82 => 
+            81 => 
             array (
                 'id' => 824,
                 'name' => 'Changshu',
-                'code' => 'CNCGS ',
-                'display_name' => 'Changshu, CNCGS ',
+                'code' => 'CNCGS',
+                'display_name' => 'Changshu, CNCGS',
                 'coordinates' => '#N/A',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "changshu-cncgs -china", "changshu ,cn", "china: changshu", "changshu pt", "changshu port", "changshu city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["changshu-cncgs -china", "changshu ,cn", "china: changshu", "changshu pt", "changshu port", "changshu city", "changshu, js", "changshu(liwen)", "changshuliwen", "changshu(xinghua)", "changshuxinghua", "changshu (liwen)", "changshu (liwen)", "changshu liwen", "changshu (xinghua)", "changshu xinghua", "changshu, china", "changshu cn", "changsu, jiangsu"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-07 15:11:35',
             ),
-            83 => 
+            82 => 
             array (
                 'id' => 825,
                 'name' => 'Changzhou',
-                'code' => 'CNCZX ',
-                'display_name' => 'Changzhou, CNCZX ',
+                'code' => 'CNCZX',
+                'display_name' => 'Changzhou, CNCZX',
                 'coordinates' => '#N/A',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "changzhou-cnczx -china", "changzhou ,cn", "china: changzhou", "changzhou pt", "changzhou port", "changzhou city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["changzhou-cnczx -china", "changzhou ,cn", "china: changzhou", "changzhou pt", "changzhou port", "changzhou city", "changzhou, changzhou, jiangsu, china", "changzhou changzhou jiangsu china", "changzhou, china", "changzhou js", "changzhou jiangsu cn", "changzhou ,jiangsu"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-22 14:17:49',
             ),
-            84 => 
+            83 => 
             array (
                 'id' => 826,
                 'name' => 'Chongqing',
@@ -1033,11 +1021,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Chongqing, CNCQI',
                 'coordinates' => '29.56956 106.60535',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "chongqing-cncqi-china", "chongqing ,cn", "china: chongqing", "chongqing pt", "chongqing port", "chongqing city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["chongqing-cncqi-china", "chongqing ,cn", "china: chongqing", "chongqing pt", "chongqing port", "chongqing city", "chongqing, china", "chongqing china", "chongqing (jiulong)", "chongqing jiulong", "chongqing (liwen)", "chongqing liwen", "chongqing liwen", "chongqing", "chong qing", "cnckg", "chongqing sc", "chongqing, chongqing", "chongqing, sichuan"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-04-01 08:34:46',
             ),
-            85 => 
+            84 => 
             array (
                 'id' => 827,
                 'name' => 'Dafeng',
@@ -1045,11 +1033,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dafeng, CNDFG',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "dafeng-cndfg-china", "dafeng ,cn", "china: dafeng", "dafeng pt", "dafeng port", "dafeng city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["dafeng-cndfg-china", "dafeng ,cn", "china: dafeng", "dafeng pt", "dafeng port", "dafeng city", "dafeng, china", "dafeng, jiangsu"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-04-02 06:59:04',
             ),
-            86 => 
+            85 => 
             array (
                 'id' => 828,
                 'name' => 'Dalian',
@@ -1057,11 +1045,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dalian, CNDLC',
                 'coordinates' => '38.92683 121.6133',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "dalian-cndlc-china", "dalian ,cn", "china: dalian", "dalian pt", "dalian port", "dalian city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["dalian-cndlc-china", "dalian ,cn", "china: dalian", "dalian pt", "dalian port", "dalian city", "dalian, dalian, liaoning, china", "dalian dalian liaoning china", "dalian, china", "dalian ln"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2018-12-20 09:22:34',
             ),
-            87 => 
+            86 => 
             array (
                 'id' => 829,
                 'name' => 'Fangcheng',
@@ -1069,11 +1057,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fangcheng, CNFAN',
                 'coordinates' => '21.54273 108.2795',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "fangcheng-cnfan-china", "fangcheng ,cn", "china: fangcheng", "fangcheng pt", "fangcheng port", "fangcheng city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["fangcheng-cnfan-china", "fangcheng ,cn", "china: fangcheng", "fangcheng pt", "fangcheng port", "fangcheng city", "fangcheng, gx", "fangcheng, fangchenggang, guangxi, china", "fangcheng fangchenggang guangxi china", "fang cheng gang", "fangcheng, china", "fangcheng gx", "fangcheng via qingzhou"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-02-22 08:11:33',
             ),
-            88 => 
+            87 => 
             array (
                 'id' => 830,
                 'name' => 'Foshan',
@@ -1081,11 +1069,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Foshan, CNFOS',
                 'coordinates' => '22.99696 113.0719',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "foshan-cnfos-china", "foshan ,cn", "china: foshan", "foshan pt", "foshan port", "foshan city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["foshan-cnfos-china", "foshan ,cn", "china: foshan", "foshan pt", "foshan port", "foshan city", "foshan foshan guangdong china", "foshan, foshan, guangdong, china", "foshan foshan guangdong china", "foshan", "foshan", "foshan (xingang / lanshi)", "foshan xingang / lanshi", "foshan xingang  lanshi", "foshan, china", "foshan old port", "foshan, guangdong", "foshan, foshan, guandong, china", "foshan gd", "**foshan", "foshan", "foshanguangdong", "foshan,guangdong", "foshan,", "foshan guangdong"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-03-25 08:33:42',
             ),
-            89 => 
+            88 => 
             array (
                 'id' => 831,
                 'name' => 'Fuzhou',
@@ -1093,11 +1081,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fuzhou, CNFOC',
                 'coordinates' => '26.04653 119.2983',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "fuzhou-cnfoc-china", "fuzhou ,cn", "china: fuzhou", "fuzhou pt", "fuzhou port", "fuzhou city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+            'varation' => '{"type": ["fuzhou-cnfoc-china", "fuzhou ,cn", "china: fuzhou", "fuzhou pt", "fuzhou port", "fuzhou city", "fuzhou new port", "fuzhou, fuzhou, fujian, china", "fuzhou fuzhou fujian china", "fuzhou", "fuzhou, china", "fuzhou fj", "fuzhou mawei", "fuzhou jiangyin fuqing", "fuzhou provincia fujian", "fuzhou (fujian)", "fuzhou mawei fujian", "fuzhou mawei, fujian"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-04-03 12:32:06',
             ),
-            90 => 
+            89 => 
             array (
                 'id' => 832,
                 'name' => 'Gaolan',
@@ -1105,11 +1093,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gaolan, CNGLA',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "gaolan-cngla-china", "gaolan ,cn", "china: gaolan", "gaolan pt", "gaolan port", "gaolan city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["gaolan-cngla-china", "gaolan ,cn", "china: gaolan", "gaolan pt", "gaolan port", "gaolan city", "gaolan,zhuhai", "zhuhaigaolan", "zhuhai gaolan", "zhuhai（gaolan）", "gaolan, china", "gaolan gd", "gaolan"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2019-01-07 12:06:36',
             ),
-            91 => 
+            90 => 
             array (
                 'id' => 833,
                 'name' => 'Gaoming',
@@ -1117,11 +1105,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gaoming, CNGOM',
                 'coordinates' => '22.88657 112.89805',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "gaoming-cngom-china", "gaoming ,cn", "china: gaoming", "gaoming pt", "gaoming port", "gaoming city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["gaoming-cngom-china", "gaoming ,cn", "china: gaoming", "gaoming pt", "gaoming port", "gaoming city", "gaoming, foshan, guangdong, china", "gaoming foshan guangdong china", "gaoming, china", "gao ming gd"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2018-12-20 10:15:00',
             ),
-            92 => 
+            91 => 
             array (
                 'id' => 834,
                 'name' => 'Gaoyao',
@@ -1129,11 +1117,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gaoyao, CNGAY',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "gaoyao-cngay-china", "gaoyao ,cn", "china: gaoyao", "gaoyao pt", "gaoyao port", "gaoyao city"]}',
-                'created_at' => '2018-09-05 19:34:13',
-                'updated_at' => '2018-09-05 19:34:13',
+                'varation' => '{"type": ["gaoyao-cngay-china", "gaoyao ,cn", "china: gaoyao", "gaoyao pt", "gaoyao port", "gaoyao city", "gaoyao,zhaoqing", "gaoyao,zhaoqing", "zhaoqing（gaoyao）", "zhaoqing gaoyao", "gaoyao, china"]}',
+                'created_at' => '2018-09-05 15:34:13',
+                'updated_at' => '2018-12-10 13:43:32',
             ),
-            93 => 
+            92 => 
             array (
                 'id' => 835,
                 'name' => 'Haikou',
@@ -1141,11 +1129,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Haikou, CNHAK',
                 'coordinates' => '20.03873 110.3205',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "haikou-cnhak-china", "haikou ,cn", "china: haikou", "haikou pt", "haikou port", "haikou city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["haikou-cnhak-china", "haikou ,cn", "china: haikou", "haikou pt", "haikou port", "haikou city", "haikou, china", "haikou hi"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-20 10:01:32',
             ),
-            94 => 
+            93 => 
             array (
                 'id' => 836,
                 'name' => 'Haimen',
@@ -1153,11 +1141,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Haimen, CNHME',
                 'coordinates' => '28.69153 121.4437',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "haimen-cnhme-china", "haimen ,cn", "china: haimen", "haimen pt", "haimen port", "haimen city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["haimen-cnhme-china", "haimen ,cn", "china: haimen", "haimen pt", "haimen port", "haimen city", "haimen, china", "haimen china", "haimen, zhejiang, china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-04-01 08:51:26',
             ),
-            95 => 
+            94 => 
             array (
                 'id' => 837,
                 'name' => 'Huadu',
@@ -1165,11 +1153,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Huadu, CNHDU',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "huadu-cnhdu-china", "huadu ,cn", "china: huadu", "huadu pt", "huadu port", "huadu city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+            'varation' => '{"type": ["huadu-cnhdu-china", "huadu ,cn", "china: huadu", "huadu pt", "huadu port", "huadu city", "huadu, gd", "huadu, guangzhou, guangdong, china", "huadu guangzhou guangdong china", "jiaoxin (huadu)", "jiaoxin huadu", "huadu, china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-10 13:52:02',
             ),
-            96 => 
+            95 => 
             array (
                 'id' => 838,
                 'name' => 'Huangpu',
@@ -1177,11 +1165,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Huangpu, CNHUA',
                 'coordinates' => '23.09443 113.4319',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "huangpu-cnhua-china", "huangpu ,cn", "china: huangpu", "huangpu pt", "huangpu port", "huangpu city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+            'varation' => '{"type": ["huangpu-cnhua-china", "huangpu ,cn", "china: huangpu", "huangpu pt", "huangpu port", "huangpu city", "huangpu guangzhou guangdong china", "huangpu, guangzhou, guangdong, china", "huangpu,guangzhou", "huangpuguangzhou", "huangpu new port", "huangpu(yuzhu)", "huangpuyuzhu", "huangpu（miaoshawei）", "huangpumiaoshawei", "huangpu miaoshawei", "huangpu（quantong）", "huangpuquantong", "huangpu quantong", "huangpu(guangbaotung)", "huangpuguangbaotung", "huangpuguangbaotung", "huangpu old port", "huangpu", "huangpu old port", "huangpu new port (jisi)", "huangpu new port jisi", "huangpu wuchongkou", "huangpu (wuchongkou)", "huangp（wuchongkou）", "huangpu old port", "guangzhou(huangpu)", "guangzhouhuangpu", "huangpu, china", "huangpu, guangdong", "huangpu gd", "huangpu old port", "huangpu (hgp)", "huangpu hgp", "huangpu old port", "huangpu old port", "huangpu hgp", "huangpu old port", "huangpu  guangzhou"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-03-07 15:13:38',
             ),
-            97 => 
+            96 => 
             array (
                 'id' => 839,
                 'name' => 'Huzhou',
@@ -1189,11 +1177,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Huzhou, CNHZH',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "huzhou-cnhzh-china", "huzhou ,cn", "china: huzhou", "huzhou pt", "huzhou port", "huzhou city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["huzhou-cnhzh-china", "huzhou ,cn", "china: huzhou", "huzhou pt", "huzhou port", "huzhou city", "huzhou, china", "huzhou china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-01-03 16:30:28',
             ),
-            98 => 
+            97 => 
             array (
                 'id' => 840,
                 'name' => 'Jiangmen',
@@ -1201,11 +1189,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jiangmen, CNJMN',
                 'coordinates' => '22.60153 113.1121',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "jiangmen-cnjmn-china", "jiangmen ,cn", "china: jiangmen", "jiangmen pt", "jiangmen port", "jiangmen city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["jiangmen-cnjmn-china", "jiangmen ,cn", "china: jiangmen", "jiangmen pt", "jiangmen port", "jiangmen city", "jiangmen, gd", "jiangmen, jiangmen, guangdong, china", "jiangmen jiangmen guangdong china", "jiangmen, jiangmen, guangdong, china", "jiangmen", "jiangmen waihai  gaosha", "jiangmen, china", "jiangmen, jiangmen, guandong, china", "jiangmen gd", "**jiangmen", "jiangmen", "jiangmen waihai", "jiangmen,guangdong"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-03-22 11:01:28',
             ),
-            99 => 
+            98 => 
             array (
                 'id' => 841,
                 'name' => 'Jiangyin - Jiangsu',
@@ -1213,11 +1201,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jiangyin - Jiangsu, CNJIA',
                 'coordinates' => '31.91133 120.2031',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "jiangyin - jiangsu-cnjia-china", "jiangyin - jiangsu ,cn", "china: jiangyin - jiangsu", "jiangyin - jiangsu pt", "jiangyin - jiangsu port", "jiangyin - jiangsu city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["jiangyin - jiangsu-cnjia-china", "jiangyin - jiangsu ,cn", "china: jiangyin - jiangsu", "jiangyin - jiangsu pt", "jiangyin - jiangsu port", "jiangyin - jiangsu city", "jiangyin, wuxi, jiangsu, china", "jiangyin wuxi jiangsu china", "jiangyin - jiangsu, china", "fuzhou, jiangyin", "jiangyin jiangsu cn", "jiangyin", "jiangyin, jiangsu", "jiangying, jiangsu"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-04-02 07:00:55',
             ),
-            100 => 
+            99 => 
             array (
                 'id' => 842,
                 'name' => 'Jiaxing',
@@ -1225,11 +1213,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jiaxing, CNJAX',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "jiaxing-cnjax-china", "jiaxing ,cn", "china: jiaxing", "jiaxing pt", "jiaxing port", "jiaxing city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["jiaxing-cnjax-china", "jiaxing ,cn", "china: jiaxing", "jiaxing pt", "jiaxing port", "jiaxing city", "jiaxing", "jiaxing, china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-10 15:17:46',
             ),
-            101 => 
+            100 => 
             array (
                 'id' => 843,
                 'name' => 'JIUJIANG',
@@ -1237,11 +1225,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'JIUJIANG, CNJIU',
                 'coordinates' => '29.69113 115.9523',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "jiujiang-cnjiu-china", "jiujiang ,cn", "china: jiujiang", "jiujiang pt", "jiujiang port", "jiujiang city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+            'varation' => '{"type": ["jiujiang-cnjiu-china", "jiujiang ,cn", "china: jiujiang", "jiujiang pt", "jiujiang port", "jiujiang city", "jiujiang guangdong ,cn", "jiujiang guangdong cn", "jiujiang, jiangxi", "jiujiang jiangxi", "jiujiangguangdong", "jiujiang,guangdong", "jiujiang,jiangxi", "jiujiangjiangxi", "jiujiang(liwen)", "jiujiangliwen", "jiujiangliwen", "nanhaijiujiang", "jiujiang foshan guangdong china", "jiujiang, foshan, guangdong, china", "jiujiang, jiujiang, jiangxi, china", "jiujiang (liwen)", "jiujiang liwen", "jiujiang, china", "jiujiang guangdong, china", "jiujiang jx", "jiujiang, gd", "jiujiang gd", "jiujiang", "jiujiang, guangdong", "jiu jiang, jiangx"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-04-02 06:49:36',
             ),
-            102 => 
+            101 => 
             array (
                 'id' => 844,
                 'name' => 'Lanshi',
@@ -1249,11 +1237,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lanshi, CNLNS',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "lanshi-cnlns-china", "lanshi ,cn", "china: lanshi", "lanshi pt", "lanshi port", "lanshi city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["lanshi-cnlns-china", "lanshi ,cn", "china: lanshi", "lanshi pt", "lanshi port", "lanshi city", "lanshi, gd", "lanshi, foshan, guangdong, china", "lanshi foshan guangdong china", "lanshi", "lanshi, china", "lan shi gd", "ffoshan lan shi, guangdong", "lanshi, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-03-31 13:27:58',
             ),
-            103 => 
+            102 => 
             array (
                 'id' => 845,
                 'name' => 'Leliu',
@@ -1261,23 +1249,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Leliu, CNLUU',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "leliu-cnluu-china", "leliu ,cn", "china: leliu", "leliu pt", "leliu port", "leliu city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["leliu-cnluu-china", "leliu ,cn", "china: leliu", "leliu pt", "leliu port", "leliu city", "leliu, shunde, guangdong, china", "leliu shunde guangdong china", "leliu", "leliu, china", "leliu gd", "shunde & leliu,shunde", "shunde  leliu,shunde", "shunde leliu, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-04-02 07:00:11',
             ),
-            104 => 
+            103 => 
             array (
                 'id' => 846,
                 'name' => 'Lian Hua Shan',
-                'code' => 'CNLIH ',
-                'display_name' => 'Lian Hua Shan, CNLIH ',
-                'coordinates' => '#N/A',
+                'code' => 'CNLIH',
+                'display_name' => 'Lian Hua Shan, CNLIH',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "lian hua shan-cnlih -china", "lian hua shan ,cn", "china: lian hua shan", "lian hua shan pt", "lian hua shan port", "lian hua shan city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["lian hua shan-cnlih -china", "lian hua shan ,cn", "china: lian hua shan", "lian hua shan pt", "lian hua shan port", "lian hua shan city", "lian hua shan, china", "lian hua shan china", "lianhuashan", "lianhuashuan", "lianhuanshan", "lianhuashan panyu", "lianhuashan, guangzhou, guangdong, china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-02-22 07:18:28',
             ),
-            105 => 
+            104 => 
             array (
                 'id' => 847,
                 'name' => 'Lianyungang',
@@ -1285,11 +1273,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lianyungang, CNLYG',
                 'coordinates' => '34.73173 119.4581',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "lianyungang-cnlyg-china", "lianyungang ,cn", "china: lianyungang", "lianyungang pt", "lianyungang port", "lianyungang city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["lianyungang-cnlyg-china", "lianyungang ,cn", "china: lianyungang", "lianyungang pt", "lianyungang port", "lianyungang city", "lianyungang, lianyungang, jiangsu, china", "lianyungang lianyungang jiangsu china", "lianyungang, lianyungang, jiangsu, china [city]", "lianyungang lianyungang jiangsu china city", "lianyungang, lianyungang, jiangsu, china [city]", "lianyungang lianyungang jiangsu china city", "lianyungang, china", "lianyungang js", "lianyungang, lianyungang, jiangsu, china city", "liangyungang", "lyanyungang"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-02-27 12:20:22',
             ),
-            106 => 
+            105 => 
             array (
                 'id' => 848,
                 'name' => 'Maanshan',
@@ -1297,11 +1285,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Maanshan, CNMAA',
                 'coordinates' => '31.718 118.4595',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "maanshan-cnmaa-china", "maanshan ,cn", "china: maanshan", "maanshan pt", "maanshan port", "maanshan city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["maanshan-cnmaa-china", "maanshan ,cn", "china: maanshan", "maanshan pt", "maanshan port", "maanshan city", "ma\'anshan", "maanshan", "maanshan, china"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-10 15:19:02',
             ),
-            107 => 
+            106 => 
             array (
                 'id' => 849,
                 'name' => 'Mawei',
@@ -1309,11 +1297,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mawei, CNMAW',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "mawei-cnmaw-china", "mawei ,cn", "china: mawei", "mawei pt", "mawei port", "mawei city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["mawei-cnmaw-china", "mawei ,cn", "china: mawei", "mawei pt", "mawei port", "mawei city", "mawei, fuzhou", "mawei fuzhou", "mawei, china", "fuzhou, mawei", "fuzhou , mawei", "mawei", "fuzhou-mawei"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-03-07 13:10:28',
             ),
-            108 => 
+            107 => 
             array (
                 'id' => 850,
                 'name' => 'Nanchang',
@@ -1321,11 +1309,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nanchang, CNNCH',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "nanchang-cnnch-china", "nanchang ,cn", "china: nanchang", "nanchang pt", "nanchang port", "nanchang city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["nanchang-cnnch-china", "nanchang ,cn", "china: nanchang", "nanchang pt", "nanchang port", "nanchang city", "nanchang, jx", "nanchang, china", "nanchang jx"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-20 09:23:53',
             ),
-            109 => 
+            108 => 
             array (
                 'id' => 851,
                 'name' => 'Nangang',
@@ -1333,11 +1321,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nangang, CNNGG',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "nangang-cnngg-china", "nangang ,cn", "china: nangang", "nangang pt", "nangang port", "nangang city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["nangang-cnngg-china", "nangang ,cn", "china: nangang", "nangang pt", "nangang port", "nangang city", "nangang, pc", "nangang, foshan, guangdong, china", "nangang foshan guangdong china", "nangang, china", "nangang china", "nangang, china", "nangang china", "nangang nanhai"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-02-19 10:26:17',
             ),
-            110 => 
+            109 => 
             array (
                 'id' => 852,
                 'name' => 'Nanjing',
@@ -1345,11 +1333,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nanjing, CNNKG',
                 'coordinates' => '32.08723 118.7227',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "nanjing-cnnkg-china", "nanjing ,cn", "china: nanjing", "nanjing pt", "nanjing port", "nanjing city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["nanjing-cnnkg-china", "nanjing ,cn", "china: nanjing", "nanjing pt", "nanjing port", "nanjing city", "nanjing, nanjing, jiangsu, china", "nanjing nanjing jiangsu china", "nanjing, china", "nanjing, nanjing, jiangsy, china", "nanjing js", "nanjing", "nanjing"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-02-07 08:55:58',
             ),
-            111 => 
+            110 => 
             array (
                 'id' => 853,
                 'name' => 'Nansha New Port',
@@ -1357,11 +1345,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nansha New Port, CNNSA',
                 'coordinates' => '22.669175 113.66055',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "nansha new port-cnnsa-china", "nansha new port ,cn", "china: nansha new port", "nansha new port pt", "nansha new port port", "nansha new port city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+            'varation' => '{"type": ["nansha new port-cnnsa-china", "nansha new port ,cn", "china: nansha new port", "nansha new port pt", "nansha new port port", "nansha new port city", "nansha", "nansha, guangzhou", "nansha guangzhou", "nansha, guangzhou, guangdong, china", "nansha guangzhou guangdong china", "nansha (dongfa)", "nansha dongfa", "nansha new port, china", "nansha-cnnsa-china", "nansha, guangdong", "nansha gd", "nansha old port, gd"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2019-01-29 12:58:51',
             ),
-            112 => 
+            111 => 
             array (
                 'id' => 854,
                 'name' => 'Nantong',
@@ -1369,11 +1357,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nantong, CNNTG',
                 'coordinates' => '32.00013 120.8187',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "nantong-cnntg-china", "nantong ,cn", "china: nantong", "nantong pt", "nantong port", "nantong city"]}',
-                'created_at' => '2018-09-05 19:34:14',
-                'updated_at' => '2018-09-05 19:34:14',
+                'varation' => '{"type": ["nantong-cnntg-china", "nantong ,cn", "china: nantong", "nantong pt", "nantong port", "nantong city", "nantong nantong jiangsu china", "nantong, nantong, jiangsu, china", "nantong nantong jiangsu china", "nantong, js", "nantong, china", "nantong js"]}',
+                'created_at' => '2018-09-05 15:34:14',
+                'updated_at' => '2018-12-20 09:51:48',
             ),
-            113 => 
+            112 => 
             array (
                 'id' => 855,
                 'name' => 'Ningbo',
@@ -1381,11 +1369,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ningbo, CNNGB',
                 'coordinates' => '29.87043 121.5537',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "ningbo-cnngb-china", "ningbo ,cn", "china: ningbo", "ningbo pt", "ningbo port", "ningbo city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["ningbo-cnngb-china", "ningbo ,cn", "china: ningbo", "ningbo pt", "ningbo port", "ningbo city", "ningbo, ningbo, zhejiang, china", "ningbo ningbo zhejiang china", "ningbo, china", "cnnbo"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-02-22 17:44:23',
             ),
-            114 => 
+            113 => 
             array (
                 'id' => 856,
                 'name' => 'Putian',
@@ -1393,11 +1381,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Putian, CNPUT',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "putian-cnput-china", "putian ,cn", "china: putian", "putian pt", "putian port", "putian city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["putian-cnput-china", "putian ,cn", "china: putian", "putian pt", "putian port", "putian city", "putian, china"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2018-12-10 15:30:24',
             ),
-            115 => 
+            114 => 
             array (
                 'id' => 857,
                 'name' => 'Qingdao',
@@ -1405,11 +1393,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qingdao, CNTAO',
                 'coordinates' => '36.06263 120.3105',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "qingdao-cntao-china", "qingdao ,cn", "china: qingdao", "qingdao pt", "qingdao port", "qingdao city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["qingdao-cntao-china", "qingdao ,cn", "china: qingdao", "qingdao pt", "qingdao port", "qingdao city", "qingdao, qingdao, shandong, china", "qingdao, china", "quingdao", "qingdao shandong"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-03-25 08:27:45',
             ),
-            116 => 
+            115 => 
             array (
                 'id' => 858,
                 'name' => 'Qinhuangdao',
@@ -1417,11 +1405,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qinhuangdao, CNSHP',
                 'coordinates' => '39.91373 119.5953',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "qinhuangdao-cnshp-china", "qinhuangdao ,cn", "china: qinhuangdao", "qinhuangdao pt", "qinhuangdao port", "qinhuangdao city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["qinhuangdao-cnshp-china", "qinhuangdao ,cn", "china: qinhuangdao", "qinhuangdao pt", "qinhuangdao port", "qinhuangdao city", "qinhuangdao, china"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2018-12-10 15:30:11',
             ),
-            117 => 
+            116 => 
             array (
                 'id' => 859,
                 'name' => 'Qinzhou',
@@ -1429,11 +1417,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qinzhou, CNQZH',
                 'coordinates' => '21.68317 108.647',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "qinzhou-cnqzh-china", "qinzhou ,cn", "china: qinzhou", "qinzhou pt", "qinzhou port", "qinzhou city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["qinzhou-cnqzh-china", "qinzhou ,cn", "china: qinzhou", "qinzhou pt", "qinzhou port", "qinzhou city", "qinzhou, qinzhou, guangxi, china", "qinzhou qinzhou guangxi china", "qinzhou, china", "qinzhou, china", "quinzhou, quinzhou, guangxi, china"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-02-27 12:59:40',
             ),
-            118 => 
+            117 => 
             array (
                 'id' => 860,
                 'name' => 'Rongqi',
@@ -1441,11 +1429,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Rongqi, CNROQ',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "rongqi-cnroq-china", "rongqi ,cn", "china: rongqi", "rongqi pt", "rongqi port", "rongqi city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["rongqi-cnroq-china", "rongqi ,cn", "china: rongqi", "rongqi pt", "rongqi port", "rongqi city", "rongqi guangdong china", "rongqi, guangdong, china", "rongqi, gd", "rongqi, shunde, guangdong, china", "rongqi shunde guangdong china", "rongqi", "rongqi, china", "rongqi gd", "rongqui shunde"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-02-13 09:04:39',
             ),
-            119 => 
+            118 => 
             array (
                 'id' => 861,
                 'name' => 'San Shan',
@@ -1453,11 +1441,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'San Shan, CNNHS',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "san shan-cnnhs-china", "san shan ,cn", "china: san shan", "san shan pt", "san shan port", "san shan city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["san shan-cnnhs-china", "san shan ,cn", "china: san shan", "san shan pt", "san shan port", "san shan city", "san shan, china"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2018-12-10 15:40:08',
             ),
-            120 => 
+            119 => 
             array (
                 'id' => 862,
                 'name' => 'Sanshui',
@@ -1465,11 +1453,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sanshui, CNSJQ',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "sanshui-cnsjq-china", "sanshui ,cn", "china: sanshui", "sanshui pt", "sanshui port", "sanshui city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["sanshui-cnsjq-china", "sanshui ,cn", "china: sanshui", "sanshui pt", "sanshui port", "sanshui city", "sanshui, gd", "sanshui, foshan, guangdong, china", "sanshui foshan guangdong china", "sanshui, china", "san shui, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-03-31 13:27:47',
             ),
-            121 => 
+            120 => 
             array (
                 'id' => 863,
                 'name' => 'Shanghai',
@@ -1477,23 +1465,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shanghai, CNSHA',
                 'coordinates' => '31.23793 121.4883',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shanghai-cnsha-china", "shanghai ,cn", "china: shanghai", "shanghai pt", "shanghai port", "shanghai city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["shanghai-cnsha-china", "shanghai ,cn", "china: shanghai", "shanghai pt", "shanghai port", "shanghai city", "shanghai", "china: shanghai", "china shanghai", "shanghai china", "shanghai, china", "shanghái", "shanghai*", "shanghai, shanghai", "shanghai - yangshan", "shanghai  yangshan"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-03-25 11:55:53',
             ),
-            122 => 
+            121 => 
             array (
                 'id' => 864,
                 'name' => 'Shantou',
-                'code' => 'CNSWA',
-                'display_name' => 'Shantou, CNSWA',
+                'code' => 'CNSTG',
+                'display_name' => 'Shantou, CNSTG',
                 'coordinates' => '23.34873 116.6653',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shantou-cnswa-china", "shantou ,cn", "china: shantou", "shantou pt", "shantou port", "shantou city"]}',
-                'created_at' => '2018-09-05 19:34:15',
-                'updated_at' => '2018-09-05 19:34:15',
+                'varation' => '{"type": ["shantou shantou guangdong china", "shantou, china", "shantou gd", "cnstg", "shantou pt", "shantou-cnswa-china", "shantou cnswa china"]}',
+                'created_at' => '2018-09-05 15:34:15',
+                'updated_at' => '2019-04-05 09:36:15',
             ),
-            123 => 
+            122 => 
             array (
                 'id' => 865,
                 'name' => 'Shatian',
@@ -1501,11 +1489,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shatian, CNSTI',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shatian-cnsti-china", "shatian ,cn", "china: shatian", "shatian pt", "shatian port", "shatian city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["shatian-cnsti-china", "shatian ,cn", "china: shatian", "shatian pt", "shatian port", "shatian city", "shatian, guangdong, china", "shatian, guangdong, china", "shatian guangdong china", "shatian, gd", "hatian dongguan guangdong china", "shatian, dongguan, guangdong, china", "shatian dongguan guangdong china", "shatian, china", "shatian"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-21 08:04:30',
             ),
-            124 => 
+            123 => 
             array (
                 'id' => 866,
                 'name' => 'Shekou',
@@ -1513,11 +1501,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shekou, CNSHK',
                 'coordinates' => '22.477 113.912',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shekou-cnshk-china", "shekou ,cn", "china: shekou", "shekou pt", "shekou port", "shekou city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+            'varation' => '{"type": ["shekou-cnshk-china", "shekou ,cn", "china: shekou", "shekou pt", "shekou port", "shekou city", "shekou, shenzhen, guangdong, china", "shekou shenzhen guangdong china", "shekou, china", "shekou cnshk", "shekou (ex)", "shekou ex", "shekou - chiwan", "shekou  chiwan", "shekow chiwan", "shekou", "shekou (chiwan)"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-03-29 12:13:26',
             ),
-            125 => 
+            124 => 
             array (
                 'id' => 867,
                 'name' => 'Shidao',
@@ -1525,11 +1513,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shidao, CNSHD',
                 'coordinates' => '36.890725 122.4488',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shidao-cnshd-china", "shidao ,cn", "china: shidao", "shidao pt", "shidao port", "shidao city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["shidao-cnshd-china", "shidao ,cn", "china: shidao", "shidao pt", "shidao port", "shidao city", "shidao, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:40:53',
             ),
-            126 => 
+            125 => 
             array (
                 'id' => 868,
                 'name' => 'Shuidong',
@@ -1537,11 +1525,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shuidong, CNSDG',
                 'coordinates' => '21.50333 111.0025',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "shuidong-cnsdg-china", "shuidong ,cn", "china: shuidong", "shuidong pt", "shuidong port", "shuidong city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["shuidong-cnsdg-china", "shuidong ,cn", "china: shuidong", "shuidong pt", "shuidong port", "shuidong city", "maoming（shuidong）", "maoming shuidong", "maoming shuidong", "maomingshuidong", "shuidong, china", "shuidong"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-17 09:06:03',
             ),
-            127 => 
+            126 => 
             array (
                 'id' => 869,
                 'name' => 'Taicang',
@@ -1549,11 +1537,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Taicang, CNTAC',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "taicang-cntac-china", "taicang ,cn", "china: taicang", "taicang pt", "taicang port", "taicang city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["taicang-cntac-china", "taicang ,cn", "china: taicang", "taicang pt", "taicang port", "taicang city", "taicang, js", "taicang, suzhou, jiangsu, china", "taicang suzhou jiangsu china", "taicang, china", "taicang cn", "tai cang"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-02-12 09:40:05',
             ),
-            128 => 
+            127 => 
             array (
                 'id' => 870,
                 'name' => 'Taizhou',
@@ -1561,11 +1549,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Taizhou, CNTZO',
                 'coordinates' => '28.639955 121.53965',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "taizhou-cntzo-china", "taizhou ,cn", "china: taizhou", "taizhou pt", "taizhou port", "taizhou city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["taizhou-cntzo-china", "taizhou ,cn", "china: taizhou", "taizhou pt", "taizhou port", "taizhou city", "taizhou, china", "taizhou cn", "taizhou, jiangsu", "taizhou jiangsu"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-04-03 12:34:41',
             ),
-            129 => 
+            128 => 
             array (
                 'id' => 871,
                 'name' => 'Tongling',
@@ -1573,11 +1561,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tongling, CNTOL',
                 'coordinates' => '30.94813 117.7769',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "tongling-cntol-china", "tongling ,cn", "china: tongling", "tongling pt", "tongling port", "tongling city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["tongling-cntol-china", "tongling ,cn", "china: tongling", "tongling pt", "tongling port", "tongling city", "tongling, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:38:35',
             ),
-            130 => 
+            129 => 
             array (
                 'id' => 872,
                 'name' => 'Weihai',
@@ -1585,11 +1573,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Weihai, CNWEI',
                 'coordinates' => '37.50413 122.1321',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "weihai-cnwei-china", "weihai ,cn", "china: weihai", "weihai pt", "weihai port", "weihai city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["weihai-cnwei-china", "weihai ,cn", "china: weihai", "weihai pt", "weihai port", "weihai city", "weihai, weihai, shandong, china", "weihai, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:39:31',
             ),
-            131 => 
+            130 => 
             array (
                 'id' => 873,
                 'name' => 'Wenzhou',
@@ -1597,11 +1585,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Wenzhou, CNWNZ',
                 'coordinates' => '28.02533 120.6517',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "wenzhou-cnwnz-china", "wenzhou ,cn", "china: wenzhou", "wenzhou pt", "wenzhou port", "wenzhou city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["wenzhou-cnwnz-china", "wenzhou ,cn", "china: wenzhou", "wenzhou pt", "wenzhou port", "wenzhou city", "wenzhou, wenzhou, zhejiang, china", "wenzhou, china", "wenzhouwnz"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-01-07 07:41:21',
             ),
-            132 => 
+            131 => 
             array (
                 'id' => 874,
                 'name' => 'Wuhan',
@@ -1609,11 +1597,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Wuhan, CNWUH',
                 'coordinates' => '30.56483 114.2735',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "wuhan-cnwuh-china", "wuhan ,cn", "china: wuhan", "wuhan pt", "wuhan port", "wuhan city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["wuhan-cnwuh-china", "wuhan ,cn", "china: wuhan", "wuhan pt", "wuhan port", "wuhan city", "wuhan, wuhan, hubei, china", "wuhan, hb", "wuhan, china", "wuhan hb", "wuhan, wuhan, hubei, china, via shanghai"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-02-27 12:57:59',
             ),
-            133 => 
+            132 => 
             array (
                 'id' => 875,
                 'name' => 'Wuhu',
@@ -1621,11 +1609,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Wuhu, CNWHI',
                 'coordinates' => '31.34773 118.3379',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "wuhu-cnwhi-china", "wuhu ,cn", "china: wuhu", "wuhu pt", "wuhu port", "wuhu city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["wuhu-cnwhi-china", "wuhu ,cn", "china: wuhu", "wuhu pt", "wuhu port", "wuhu city", "wuhu, ah", "wuhu, wuhu, anhui, china", "wuhu wuhu anhui china", "wuhu, china", "wuhu ah", "wuhu anhui cn"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-02-05 08:15:52',
             ),
-            134 => 
+            133 => 
             array (
                 'id' => 876,
                 'name' => 'Wuzhou',
@@ -1633,11 +1621,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Wuzhou, CNWUZ',
                 'coordinates' => '23.47333 111.3225',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "wuzhou-cnwuz-china", "wuzhou ,cn", "china: wuzhou", "wuzhou pt", "wuzhou port", "wuzhou city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["wuzhou-cnwuz-china", "wuzhou ,cn", "china: wuzhou", "wuzhou pt", "wuzhou port", "wuzhou city", "wuzhou, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:44:47',
             ),
-            135 => 
+            134 => 
             array (
                 'id' => 877,
                 'name' => 'Xiamen',
@@ -1645,11 +1633,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Xiamen, CNXMN',
                 'coordinates' => '24.44993 118.0769',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "xiamen-cnxmn-china", "xiamen ,cn", "china: xiamen", "xiamen pt", "xiamen port", "xiamen city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["xiamen-cnxmn-china", "xiamen ,cn", "china: xiamen", "xiamen pt", "xiamen port", "xiamen city", "xiamen, xiamen, fujian, china", "xiamen xiamen fujian china", "xiamen, china", "xiamen fj", "xiamen cnxmn", "xiamen haitian ver también mex1", "xiamen haicang", "xiamen hai cang", "xiamen, xiamen, fujian, china haicang", "xiamen,fujian"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-03-22 10:58:09',
             ),
-            136 => 
+            135 => 
             array (
                 'id' => 878,
                 'name' => 'Xiaolan',
@@ -1657,11 +1645,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Xiaolan, CNXAO',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "xiaolan-cnxao-china", "xiaolan ,cn", "china: xiaolan", "xiaolan pt", "xiaolan port", "xiaolan city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["xiaolan-cnxao-china", "xiaolan ,cn", "china: xiaolan", "xiaolan pt", "xiaolan port", "xiaolan city", "xiolan", "xiaolan, zhongshan, guangdong, china", "xiaolan zhongshan guangdong china", "xiaolan", "xiaolan, china", "xiolan", "xiaolan, guangdong", "xiaolan,guangdong"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-03-22 10:59:50',
             ),
-            137 => 
+            136 => 
             array (
                 'id' => 879,
                 'name' => 'Xingang',
@@ -1669,11 +1657,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Xingang, CNXGA',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "xingang-cnxga-china", "xingang ,cn", "china: xingang", "xingang pt", "xingang port", "xingang city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+            'varation' => '{"type": ["xingang-cnxga-china", "xingang ,cn", "china: xingang", "xingang pt", "xingang port", "xingang city", "xingang", "xingang", "xingang china", "xingang", "xingang (xin)", "xingang, tianjin", "xingang tianjin", "xingang ,cn", "xingang cn", "xingang / tianjin", "xingang  tianjin", "xingang, china", "xingang-cnxgg-china", "xingang, tianjin, china", "xingang tj", "xingang", "xingang xin", "tianjinxingang", "tianjin-xingang", "xingangtianjin", "xingang,", "xingang,hebei"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-03-22 14:57:15',
             ),
-            138 => 
+            137 => 
             array (
                 'id' => 880,
                 'name' => 'Xinhui',
@@ -1681,11 +1669,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Xinhui, CNXIN',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "xinhui-cnxin-china", "xinhui ,cn", "china: xinhui", "xinhui pt", "xinhui port", "xinhui city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["xinhui-cnxin-china", "xinhui ,cn", "china: xinhui", "xinhui pt", "xinhui port", "xinhui city", "xinhui,jiangmen", "xinhuijiangmen", "xinhui, gd", "xinhui, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:41:37',
             ),
-            139 => 
+            138 => 
             array (
                 'id' => 881,
                 'name' => 'Yangpu',
@@ -1693,23 +1681,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yangpu, CNYGP',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yangpu-cnygp-china", "yangpu ,cn", "china: yangpu", "yangpu pt", "yangpu port", "yangpu city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+            'varation' => '{"type": ["yangpu-cnygp-china", "yangpu ,cn", "china: yangpu", "yangpu pt", "yangpu port", "yangpu city", "yangpu, china", "yangpu (xiao chantan)", "yangpu xiao chantan"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-02-18 11:34:21',
             ),
-            140 => 
+            139 => 
             array (
                 'id' => 882,
                 'name' => 'Yangzhou',
-                'code' => 'CN YZH',
-                'display_name' => 'Yangzhou, CN YZH',
+                'code' => 'CNYZH',
+                'display_name' => 'Yangzhou, CNYZH',
                 'coordinates' => '32.312645 119.47255',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yangzhou-cn yzh-china", "yangzhou ,cn", "china: yangzhou", "yangzhou pt", "yangzhou port", "yangzhou city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["yangzhou-cn yzh-china", "yangzhou ,cn", "china: yangzhou", "yangzhou pt", "yangzhou port", "yangzhou city", "yangzhou, yangzhou, jiangsu, china", "yangzhou yangzhou jiangsu china", "cnyzh", "yangzhou, china", "yang zhou", "yangzhou cn"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-02-05 08:16:21',
             ),
-            141 => 
+            140 => 
             array (
                 'id' => 883,
                 'name' => 'Yantai',
@@ -1717,11 +1705,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yantai, CNYNT',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yantai-cnynt-china", "yantai ,cn", "china: yantai", "yantai pt", "yantai port", "yantai city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["yantai-cnynt-china", "yantai ,cn", "china: yantai", "yantai pt", "yantai port", "yantai city", "yantai, yantai, shandong, china", "yantai, sd", "yantai, china", "yantai cnynt"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-01-29 07:50:03',
             ),
-            142 => 
+            141 => 
             array (
                 'id' => 884,
                 'name' => 'Yantian',
@@ -1729,11 +1717,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yantian, CNYTN',
                 'coordinates' => '22.57643 114.2607',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yantian-cnytn-china", "yantian ,cn", "china: yantian", "yantian pt", "yantian port", "yantian city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["yantian-cnytn-china", "yantian ,cn", "china: yantian", "yantian pt", "yantian port", "yantian city", "yantian, shenzhen, guangdong, china", "yantian shenzhen guangdong china", "yantian, china", "shenzhen yantian, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2019-03-07 15:29:39',
             ),
-            143 => 
+            142 => 
             array (
                 'id' => 885,
                 'name' => 'Yibin',
@@ -1741,11 +1729,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yibin, CNYIB',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yibin-cnyib-china", "yibin ,cn", "china: yibin", "yibin pt", "yibin port", "yibin city"]}',
-                'created_at' => '2018-09-05 19:34:16',
-                'updated_at' => '2018-09-05 19:34:16',
+                'varation' => '{"type": ["yibin-cnyib-china", "yibin ,cn", "china: yibin", "yibin pt", "yibin port", "yibin city", "yibin, china"]}',
+                'created_at' => '2018-09-05 15:34:16',
+                'updated_at' => '2018-12-10 15:43:54',
             ),
-            144 => 
+            143 => 
             array (
                 'id' => 886,
                 'name' => 'Yichang',
@@ -1753,11 +1741,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yichang, CNYIC',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yichang-cnyic-china", "yichang ,cn", "china: yichang", "yichang pt", "yichang port", "yichang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["yichang-cnyic-china", "yichang ,cn", "china: yichang", "yichang pt", "yichang port", "yichang city", "yichang, china", "yichang hubei"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-12-20 10:13:02',
             ),
-            145 => 
+            144 => 
             array (
                 'id' => 887,
                 'name' => 'Yue Yang',
@@ -1765,11 +1753,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yue Yang, CN YYA',
                 'coordinates' => '29.43242 113.1345',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yue yang-cn yya-china", "yue yang ,cn", "china: yue yang", "yue yang pt", "yue yang port", "yue yang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["yue yang-cn yya-china", "yue yang ,cn", "china: yue yang", "yue yang pt", "yue yang port", "yue yang city", "yue yang, china", "yue yang china"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-01-03 15:58:16',
             ),
-            146 => 
+            145 => 
             array (
                 'id' => 888,
                 'name' => 'Yun Fu',
@@ -1777,11 +1765,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yun Fu, CNYUF',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "yun fu-cnyuf-china", "yun fu ,cn", "china: yun fu", "yun fu pt", "yun fu port", "yun fu city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["yun fu-cnyuf-china", "yun fu ,cn", "china: yun fu", "yun fu pt", "yun fu port", "yun fu city", "yun fu, china"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-12-10 15:44:22',
             ),
-            147 => 
+            146 => 
             array (
                 'id' => 889,
                 'name' => 'Zhangjiagang',
@@ -1789,11 +1777,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhangjiagang, CNZJG',
                 'coordinates' => '31.96303 120.3987',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhangjiagang-cnzjg-china", "zhangjiagang ,cn", "china: zhangjiagang", "zhangjiagang pt", "zhangjiagang port", "zhangjiagang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+            'varation' => '{"type": ["zhangjiagang-cnzjg-china", "zhangjiagang ,cn", "china: zhangjiagang", "zhangjiagang pt", "zhangjiagang port", "zhangjiagang city", "zhangjiagang, js", "zhangjiagangsurun", "zhangjiagangsurun", "zhangjiagang, suzhou, jiangsu, china", "zhangjiagang suzhou jiangsu china", "zhangjiagang", "zhangjiagang (surun)", "zhangjiagang surun", "zhangjiagang, china", "zhangjiagang (jiangxi province)", "zhangjiagang jiangxi province", "zhangjiagang, jiangsu", "zhangjiagang js", "zhangjiagang cn", "zhangjiangang"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-19 10:27:12',
             ),
-            148 => 
+            147 => 
             array (
                 'id' => 890,
                 'name' => 'Zhanjiang',
@@ -1801,11 +1789,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhanjiang, CNZHA',
                 'coordinates' => '21.18923 110.4017',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhanjiang-cnzha-china", "zhanjiang ,cn", "china: zhanjiang", "zhanjiang pt", "zhanjiang port", "zhanjiang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["zhanjiang-cnzha-china", "zhanjiang ,cn", "china: zhanjiang", "zhanjiang pt", "zhanjiang port", "zhanjiang city", "zhanjiang, gd", "zhanjiang zhanjiang guangdong china", "zhanjiang, zhanjiang, guangdong, china", "zhanjiang zhanjiang guangdong china", "cnzng", "zhanjiang, china", "zhanjiang, zhanjiang, guandong, china", "zhanjiang gd"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-12-20 10:13:38',
             ),
-            149 => 
+            148 => 
             array (
                 'id' => 891,
                 'name' => 'Zhaoqing',
@@ -1813,11 +1801,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhaoqing, CNZQG',
                 'coordinates' => '23.052565 112.46125',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhaoqing-cnzqg-china", "zhaoqing ,cn", "china: zhaoqing", "zhaoqing pt", "zhaoqing port", "zhaoqing city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+            'varation' => '{"type": ["zhaoqing-cnzqg-china", "zhaoqing ,cn", "china: zhaoqing", "zhaoqing pt", "zhaoqing port", "zhaoqing city", "zhaoqing (new port)", "zhaoqing new port", "zhaoqing, gd", "zhaoqing zhaoqing guangdong china", "zhaoqing, zhaoqing, guangdong, china", "zhaoqing, china", "zhaoqing", "zhaoqing gd"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-12-20 09:59:32',
             ),
-            150 => 
+            149 => 
             array (
                 'id' => 892,
                 'name' => 'Zhengzhou',
@@ -1825,11 +1813,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhengzhou, CNZGZ',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhengzhou-cnzgz-china", "zhengzhou ,cn", "china: zhengzhou", "zhengzhou pt", "zhengzhou port", "zhengzhou city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["zhengzhou-cnzgz-china", "zhengzhou ,cn", "china: zhengzhou", "zhengzhou pt", "zhengzhou port", "zhengzhou city", "zhengzhou, china", "zhengzhou china"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-01-03 16:23:23',
             ),
-            151 => 
+            150 => 
             array (
                 'id' => 893,
                 'name' => 'Zhenjiang',
@@ -1837,11 +1825,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhenjiang, CNZHE',
                 'coordinates' => '32.21443 119.4349',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhenjiang-cnzhe-china", "zhenjiang ,cn", "china: zhenjiang", "zhenjiang pt", "zhenjiang port", "zhenjiang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["zhenjiang-cnzhe-china", "zhenjiang ,cn", "china: zhenjiang", "zhenjiang pt", "zhenjiang port", "zhenjiang city", "zhenjiang, js", "zhenjiang, zhenjiang, jiangsu, china", "zhenjiang zhenjiang jiangsu china", "zhenjiang, china", "zhenjiang js", "zhenjiang cn"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-05 08:17:04',
             ),
-            152 => 
+            151 => 
             array (
                 'id' => 894,
                 'name' => 'Zhongshan',
@@ -1849,11 +1837,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhongshan, CNZGA',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhongshan-cnzga-china", "zhongshan ,cn", "china: zhongshan", "zhongshan pt", "zhongshan port", "zhongshan city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["zhongshan-cnzga-china", "zhongshan ,cn", "china: zhongshan", "zhongshan pt", "zhongshan port", "zhongshan city", "zhongshan, zhongshan, guangdong, china", "hangyun,zhongshan", "zhongshan, gd", "zhongshan int\'l", "zhongshan intl", "zhongshan sinotrans", "zhongshan sinotrans", "zhongshan", "zhongshan xiaolan", "cnzsn", "zhongshan, china", "zhongshan, guangdong", "zhongshan, guangdong, china", "zhongshan gd", "**zhongshan", "zhongshan", "zhongshang"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-13 09:05:05',
             ),
-            153 => 
+            152 => 
             array (
                 'id' => 895,
                 'name' => 'Zhuhai',
@@ -1861,11 +1849,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zhuhai, CNZUH',
                 'coordinates' => '21.91982 113.2',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "zhuhai-cnzuh-china", "zhuhai ,cn", "china: zhuhai", "zhuhai pt", "zhuhai port", "zhuhai city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+            'varation' => '{"type": ["zhuhai-cnzuh-china", "zhuhai ,cn", "china: zhuhai", "zhuhai pt", "zhuhai port", "zhuhai city", "civet,zhuhai", "zhuhai", "zhuhai, gd", "zhuhai (xiyu)", "zhuhai（xiyu)", "zhuhai xiyu", "zhuhaixiyu", "zhuhai xiyu", "zhuhai xiyu", "zhuhaixiyu", "zhuhai xiyu", "zhuhaixiyu", "zhuhai, zhuhai, guangdong, china", "zhuhai zhuhai guangdong china", "zhuhai（xiyu）", "zhuhaigaolancivet", "zhuhai, china", "zhuhai gd", "**zhuhai", "zhuhai", "zhuhai hongwan, civet, doumen, wanzai", "zhuhai, zhuhai, guangdong, china, via nansha", "zhuhai jiuzhou guangdong", "zhuhai,guangdong", "zhuhai (hongwan)"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-03-27 15:05:39',
             ),
-            154 => 
+            153 => 
             array (
                 'id' => 896,
                 'name' => 'Dongguan',
@@ -1873,11 +1861,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dongguan, CNDGG',
                 'coordinates' => '22.92799 113.6116',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "dongguan-cndgg-china", "dongguan ,cn", "china: dongguan", "dongguan pt", "dongguan port", "dongguan city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["dongguan-cndgg-china", "dongguan ,cn", "china: dongguan", "dongguan pt", "dongguan port", "dongguan city", "dongguan, dongguan, guangdong, china", "dongguan dongguan guangdong china", "dongguan", "dongguan shatian", "dongguan, guangdong"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-03-14 11:26:47',
             ),
-            155 => 
+            154 => 
             array (
                 'id' => 897,
                 'name' => 'Guangzhou',
@@ -1885,11 +1873,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Guangzhou, CNGZG',
                 'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "guangzhou-cngzg-china", "guangzhou ,cn", "china: guangzhou", "guangzhou pt", "guangzhou port", "guangzhou city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["guangzhou-cngzg-china", "guangzhou ,cn", "china: guangzhou", "guangzhou pt", "guangzhou port", "guangzhou city", "guangzhou, guangzhou, guangdong, china", "guangzhou guangzhou guangdong china", "guangzhou", "guangzhou, guangdong", "guangzhou, xinfeng", "guangzhou, xinfeng", "guangzhou xinfeng"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-04-03 08:22:33',
             ),
-            156 => 
+            155 => 
             array (
                 'id' => 898,
                 'name' => 'TIANJINXINGANG',
@@ -1897,11 +1885,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TIANJINXINGANG, CNTXG',
                 'coordinates' => '39.07203 117.2197',
                 'country_id' => 46,
-                'varation' => '{"type": ["", "", "tianjinxingang-cntxg-china", "tianjinxingang ,cn", "china: tianjinxingang", "tianjinxingang pt", "tianjinxingang port", "tianjinxingang city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["tianjinxingang-cntxg-china", "tianjinxingang ,cn", "china: tianjinxingang", "tianjinxingang pt", "tianjinxingang port", "tianjinxingang city", "tianjin, china", "tianjin china", "tianjin", "tianjing", "tianjin xingang", "tianjin/xingang, hebei", "tianjinxingang, hebei"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-03-22 09:22:16',
             ),
-            157 => 
+            156 => 
             array (
                 'id' => 899,
                 'name' => 'Barranquilla',
@@ -1909,11 +1897,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Barranquilla, COBAQ',
                 'coordinates' => '10.96288 -74.75962',
                 'country_id' => 47,
-                'varation' => '{"type": ["", "", "barranquilla-cobaq-colombia", "barranquilla ,co", "colombia: barranquilla", "barranquilla pt", "barranquilla port", "barranquilla city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["barranquilla-cobaq-colombia", "barranquilla ,co", "colombia: barranquilla", "barranquilla pt", "barranquilla port", "barranquilla city", "barranquilla, colombia", "barranquilla colombia"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-12-14 10:40:27',
             ),
-            158 => 
+            157 => 
             array (
                 'id' => 900,
                 'name' => 'Buenaventura',
@@ -1921,11 +1909,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Buenaventura, COBUN',
                 'coordinates' => '3.887549 -77.063125',
                 'country_id' => 47,
-                'varation' => '{"type": ["cobue", "", "buenaventura-cobun-colombia", "buenaventura ,co", "colombia: buenaventura", "buenaventura pt", "buenaventura port", "buenaventura city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["cobue", "buenaventura-cobun-colombia", "buenaventura ,co", "colombia: buenaventura", "buenaventura pt", "buenaventura port", "buenaventura city", "buenaventura, colombia", "buenaventura colombia"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-10-19 07:30:46',
             ),
-            159 => 
+            158 => 
             array (
                 'id' => 901,
                 'name' => 'Cartagena',
@@ -1933,11 +1921,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Cartagena, COCTG',
                 'coordinates' => '10.401215 -75.52856',
                 'country_id' => 47,
-                'varation' => '{"type": ["cocta", "", "cartagena-coctg-colombia", "cartagena ,co", "colombia: cartagena", "cartagena pt", "cartagena port", "cartagena city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["cocta", "cartagena-coctg-colombia", "cartagena ,co", "colombia: cartagena", "cartagena, colombia", "cartagena colombia"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-26 21:31:36',
             ),
-            160 => 
+            159 => 
             array (
                 'id' => 902,
                 'name' => 'Santa Marta-Magdalena',
@@ -1945,11 +1933,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Santa Marta-Magdalena, COSMR',
                 'coordinates' => '11.243665 -74.221865',
                 'country_id' => 47,
-                'varation' => '{"type": ["", "", "santa marta-magdalena-cosmr-colombia", "santa marta-magdalena ,co", "colombia: santa marta-magdalena", "santa marta-magdalena pt", "santa marta-magdalena port", "santa marta-magdalena city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["santa marta-magdalena-cosmr-colombia", "santa marta-magdalena ,co", "colombia: santa marta-magdalena", "santa marta-magdalena pt", "santa marta-magdalena port", "santa marta-magdalena city", "santa marta-magdalena, colombia", "santa martamagdalena colombia", "santa marta, co", "santa marta co"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-05 08:15:23',
             ),
-            161 => 
+            160 => 
             array (
                 'id' => 903,
                 'name' => 'TURBO',
@@ -1957,11 +1945,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TURBO, COTRB',
                 'coordinates' => '8.08929 -76.73191',
                 'country_id' => 47,
-                'varation' => '{"type": ["", "", "turbo-cotrb-colombia", "turbo ,co", "colombia: turbo", "turbo pt", "turbo port", "turbo city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["turbo-cotrb-colombia", "turbo ,co", "colombia: turbo", "turbo pt", "turbo port", "turbo city", "turbo, colombia", "turbo colombia"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-01-17 07:52:12',
             ),
-            162 => 
+            161 => 
             array (
                 'id' => 904,
                 'name' => 'Puerto Caldera',
@@ -1969,11 +1957,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Puerto Caldera, CRPTC',
                 'coordinates' => NULL,
                 'country_id' => 48,
-                'varation' => '{"type": ["", "", "puerto caldera-crptc-costa rica", "puerto caldera ,cr", "costa rica: puerto caldera", "puerto caldera pt", "puerto caldera port", "puerto caldera city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["puerto caldera-crptc-costa rica", "puerto caldera ,cr", "costa rica: puerto caldera", "puerto caldera pt", "puerto caldera port", "puerto caldera city", "puerto caldera, costa rica", "puerto caldera costa rica", "caldera"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-01-09 14:36:58',
             ),
-            163 => 
+            162 => 
             array (
                 'id' => 905,
                 'name' => 'Puerto Moin',
@@ -1981,11 +1969,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Puerto Moin, CRPMN',
                 'coordinates' => '10.005451 -83.078485',
                 'country_id' => 48,
-                'varation' => '{"type": ["", "", "puerto moin-crpmn-costa rica", "puerto moin ,cr", "costa rica: puerto moin", "puerto moin pt", "puerto moin port", "puerto moin city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["puerto moin-crpmn-costa rica", "puerto moin ,cr", "costa rica: puerto moin", "puerto moin pt", "puerto moin port", "puerto moin city", "puerto moin, costa rica", "puerto moin costa rica", "moin", "moin, cr", "moin cr", "moin, l"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-02-14 08:01:18',
             ),
-            164 => 
+            163 => 
             array (
                 'id' => 906,
                 'name' => 'CALDERA',
@@ -1994,10 +1982,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '9.90433 -84.7169',
                 'country_id' => 48,
                 'varation' => '{"type": ["", "", "caldera-crcal-costa rica", "caldera ,cr", "costa rica: caldera", "caldera pt", "caldera port", "caldera city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-09-05 15:34:17',
             ),
-            165 => 
+            164 => 
             array (
                 'id' => 907,
                 'name' => 'MOIN',
@@ -2005,11 +1993,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MOIN, CRMOB',
                 'coordinates' => '9.95283 -83.0248',
                 'country_id' => 48,
-                'varation' => '{"type": ["", "", "moin-crmob-costa rica", "moin ,cr", "costa rica: moin", "moin pt", "moin port", "moin city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'varation' => '{"type": ["moin-crmob-costa rica", "moin ,cr", "costa rica: moin", "moin pt", "moin port", "moin city", "moín cr"]}',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2019-03-04 07:11:04',
             ),
-            166 => 
+            165 => 
             array (
                 'id' => 908,
                 'name' => 'PUERTO LIMON',
@@ -2018,10 +2006,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '9.99033 -83.033',
                 'country_id' => 48,
                 'varation' => '{"type": ["", "", "puerto limon-crlio-costa rica", "puerto limon ,cr", "costa rica: puerto limon", "puerto limon pt", "puerto limon port", "puerto limon city"]}',
-                'created_at' => '2018-09-05 19:34:17',
-                'updated_at' => '2018-09-05 19:34:17',
+                'created_at' => '2018-09-05 15:34:17',
+                'updated_at' => '2018-09-05 15:34:17',
             ),
-            167 => 
+            166 => 
             array (
                 'id' => 909,
                 'name' => 'Mariel',
@@ -2029,11 +2017,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mariel, CUMAR',
                 'coordinates' => '23.00816 -82.76352',
                 'country_id' => 49,
-                'varation' => '{"type": ["", "", "mariel-cumar-cuba", "mariel ,cu", "cuba: mariel", "mariel pt", "mariel port", "mariel city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["mariel-cumar-cuba", "mariel ,cu", "cuba: mariel", "mariel pt", "mariel port", "mariel city", "mariel, cuba", "mariel cuba", "pto.mariella habana", "puerto mariel"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-03-28 09:53:58',
             ),
-            168 => 
+            167 => 
             array (
                 'id' => 910,
                 'name' => 'Santiago',
@@ -2041,11 +2029,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Santiago, CUSCU',
                 'coordinates' => '20.00073 -75.86171',
                 'country_id' => 49,
-                'varation' => '{"type": ["", "", "santiago-cuscu-cuba", "santiago ,cu", "cuba: santiago", "santiago pt", "santiago port", "santiago city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["santiago-cuscu-cuba", "santiago ,cu", "cuba: santiago", "santiago pt", "santiago port", "santiago city", "santiago, cuba", "santiago cuba", "santiago de cuba"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-02-14 08:00:35',
             ),
-            169 => 
+            168 => 
             array (
                 'id' => 911,
                 'name' => 'LA HABANA',
@@ -2054,10 +2042,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '23.13009 -82.341115',
                 'country_id' => 49,
                 'varation' => '{"type": ["", "", "la habana-cuhav-cuba", "la habana ,cu", "cuba: la habana", "la habana pt", "la habana port", "la habana city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2018-09-05 15:34:18',
             ),
-            170 => 
+            169 => 
             array (
                 'id' => 912,
                 'name' => 'MINDELO',
@@ -2065,11 +2053,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MINDELO, CVMIN',
                 'coordinates' => '16.88843 -24.9964',
                 'country_id' => 50,
-                'varation' => '{"type": ["", "", "mindelo-cvmin-cape verde", "mindelo ,cv", "cape verde: mindelo", "mindelo pt", "mindelo port", "mindelo city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["mindelo-cvmin-cape verde", "mindelo ,cv", "cape verde: mindelo", "mindelo pt", "mindelo port", "mindelo city", "mindelo, cape verde island", "mindelo cape verde island", "mindelo cape verde island", "mindelo cape, verde island"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-01-25 10:05:55',
             ),
-            171 => 
+            170 => 
             array (
                 'id' => 913,
                 'name' => 'PRAIA',
@@ -2077,11 +2065,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PRAIA, CVRAI',
                 'coordinates' => '14.91053 -23.5139',
                 'country_id' => 50,
-                'varation' => '{"type": ["", "", "praia-cvrai-cape verde", "praia ,cv", "cape verde: praia", "praia pt", "praia port", "praia city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["praia-cvrai-cape verde", "praia ,cv", "cape verde: praia", "praia pt", "praia port", "praia city", "praia, cv", "praia, cape verde island", "praia cape verde island"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-01-25 08:37:06',
             ),
-            172 => 
+            171 => 
             array (
                 'id' => 914,
                 'name' => 'Limassol',
@@ -2089,11 +2077,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Limassol, CYLMS',
                 'coordinates' => '34.68093 33.0645',
                 'country_id' => 53,
-                'varation' => '{"type": ["", "", "limassol-cylms-cyprus", "limassol ,cy", "cyprus: limassol", "limassol pt", "limassol port", "limassol city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["limassol-cylms-cyprus", "limassol ,cy", "cyprus: limassol", "limassol pt", "limassol port", "limassol city", "limassol, cyprus", "limassol cyprus", "limasol"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-02-27 09:49:24',
             ),
-            173 => 
+            172 => 
             array (
                 'id' => 915,
                 'name' => 'Bremerhaven',
@@ -2101,11 +2089,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bremerhaven, DEBRV',
                 'coordinates' => '53.55088 8.5488755',
                 'country_id' => 55,
-                'varation' => '{"type": ["", "", "bremerhaven-debrv-germany", "bremerhaven ,de", "germany: bremerhaven", "bremerhaven pt", "bremerhaven port", "bremerhaven city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["bremerhaven-debrv-germany", "bremerhaven ,de", "germany: bremerhaven", "bremerhaven pt", "bremerhaven port", "bremerhaven city", "bremerhaven, germany", "bremerhaven germany", "debre"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-02-25 10:03:12',
             ),
-            174 => 
+            173 => 
             array (
                 'id' => 916,
                 'name' => 'Hamburg',
@@ -2113,11 +2101,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hamburg, DEHAM',
                 'coordinates' => '53.54633 9.9809',
                 'country_id' => 55,
-                'varation' => '{"type": ["", "", "hamburg-deham-germany", "hamburg ,de", "germany: hamburg", "hamburg pt", "hamburg port", "hamburg city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["hamburg-deham-germany", "hamburg ,de", "germany: hamburg", "hamburg pt", "hamburg port", "hamburg city", "hamburg, hamburg, germany", "hamburg hamburg germany", "deham", "neur126 deham hamburg", "neur054 deham hamburg", "neur deham hamburg"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-04-08 06:11:52',
             ),
-            175 => 
+            174 => 
             array (
                 'id' => 917,
                 'name' => 'WILHELMSHAVEN',
@@ -2125,11 +2113,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'WILHELMSHAVEN, DEWVN',
                 'coordinates' => '53.52533 8.1229',
                 'country_id' => 55,
-                'varation' => '{"type": ["", "", "wilhelmshaven-dewvn-germany", "wilhelmshaven ,de", "germany: wilhelmshaven", "wilhelmshaven pt", "wilhelmshaven port", "wilhelmshaven city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["wilhelmshaven-dewvn-germany", "wilhelmshaven ,de", "germany: wilhelmshaven", "wilhelmshaven pt", "wilhelmshaven port", "wilhelmshaven city", "wilhelmshaven, germany", "wilhelmshaven germany"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-01-25 10:16:24',
             ),
-            176 => 
+            175 => 
             array (
                 'id' => 918,
                 'name' => 'Djibouti',
@@ -2137,11 +2125,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Djibouti, DJJIB',
                 'coordinates' => '11.60146 43.11104',
                 'country_id' => 56,
-                'varation' => '{"type": ["", "", "djibouti-djjib-djibouti", "djibouti ,dj", "djibouti: djibouti", "djibouti pt", "djibouti port", "djibouti city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["djibouti-djjib-djibouti", "djibouti ,dj", "djibouti: djibouti", "djibouti pt", "djibouti port", "djibouti city", "djibouti: djibouti", "djibouti djibouti", "djibouti", "djibouti", "djibouti", "djibouti ", "djibouti, djibouti"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-01-28 12:42:40',
             ),
-            177 => 
+            176 => 
             array (
                 'id' => 919,
                 'name' => 'Aarhus',
@@ -2150,10 +2138,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '56.154 10.2295',
                 'country_id' => 57,
                 'varation' => '{"type": ["aarhus-dkaar-denmark", "aarhus ,dk", "denmark: aarhus", "aarhus pt", "aarhus port", "aarhus city", "aarhus, denmark", "aarhus denmark", "aarus"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-02-14 07:49:40',
             ),
-            178 => 
+            177 => 
             array (
                 'id' => 920,
                 'name' => 'Copenhagen',
@@ -2161,11 +2149,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Copenhagen, DKCPH',
                 'coordinates' => '55.701 12.609',
                 'country_id' => 57,
-                'varation' => '{"type": ["", "", "copenhagen-dkcph-denmark", "copenhagen ,dk", "denmark: copenhagen", "copenhagen pt", "copenhagen port", "copenhagen city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["copenhagen-dkcph-denmark", "copenhagen ,dk", "denmark: copenhagen", "copenhagen pt", "copenhagen port", "copenhagen city", "copenhagen, denmark", "copenhagen denmark"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2018-12-14 12:09:52',
             ),
-            179 => 
+            178 => 
             array (
                 'id' => 921,
                 'name' => 'Torshavn',
@@ -2173,11 +2161,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Torshavn, FOTOR',
                 'coordinates' => '62.00223 -6.7686305',
                 'country_id' => 57,
-                'varation' => '{"type": ["", "", "torshavn-fotor-denmark", "torshavn ,dk", "denmark: torshavn", "torshavn pt", "torshavn port", "torshavn city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["torshavn-fotor-denmark", "torshavn ,dk", "denmark: torshavn", "torshavn pt", "torshavn port", "torshavn city", "torshavn, denmark", "torshavn denmark"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-01-25 10:15:45',
             ),
-            180 => 
+            179 => 
             array (
                 'id' => 922,
                 'name' => 'FREDERICIA',
@@ -2186,10 +2174,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '55.5565 9.748',
                 'country_id' => 57,
                 'varation' => '{"type": ["", "", "fredericia-dkfrc-denmark", "fredericia ,dk", "denmark: fredericia", "fredericia pt", "fredericia port", "fredericia city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2018-09-05 15:34:18',
             ),
-            181 => 
+            180 => 
             array (
                 'id' => 923,
                 'name' => 'KALUNDBORG',
@@ -2198,10 +2186,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '55.67683 11.0951',
                 'country_id' => 57,
                 'varation' => '{"type": ["", "", "kalundborg-dkkal-denmark", "kalundborg ,dk", "denmark: kalundborg", "kalundborg pt", "kalundborg port", "kalundborg city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2018-09-05 15:34:18',
             ),
-            182 => 
+            181 => 
             array (
                 'id' => 924,
                 'name' => 'ROSEAU',
@@ -2209,11 +2197,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ROSEAU, DMRSU',
                 'coordinates' => '15.29816 -61.38997',
                 'country_id' => 58,
-                'varation' => '{"type": ["", "", "roseau-dmrsu-dominica", "roseau ,dm", "dominica: roseau", "roseau pt", "roseau port", "roseau city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["roseau-dmrsu-dominica", "roseau ,dm", "dominica: roseau", "roseau pt", "roseau port", "roseau city", "roseau, dominica"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2018-12-14 11:05:05',
             ),
-            183 => 
+            182 => 
             array (
                 'id' => 925,
                 'name' => 'Caucedo',
@@ -2221,11 +2209,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Caucedo, DOCAU',
                 'coordinates' => '18.42541 -69.6285',
                 'country_id' => 59,
-                'varation' => '{"type": ["", "", "caucedo-docau-dominican republic", "caucedo ,do", "dominican republic: caucedo", "caucedo pt", "caucedo port", "caucedo city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["caucedo-docau-dominican republic", "caucedo ,do", "dominican republic: caucedo", "caucedo pt", "caucedo port", "caucedo city", "caucedo, dominican republic", "caucedo dominican republic", "caucedo r4", "caucedo", "caucedo rep.dominicana"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-03-28 09:49:06',
             ),
-            184 => 
+            183 => 
             array (
                 'id' => 926,
                 'name' => 'MANZANILLO',
@@ -2233,11 +2221,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MANZANILLO, DOMAN',
                 'coordinates' => NULL,
                 'country_id' => 59,
-                'varation' => '{"type": ["", "", "manzanillo-doman-dominican republic", "manzanillo ,do", "dominican republic: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["manzanillo-doman-dominican republic", "manzanillo ,do", "dominican republic: manzanillo"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-03-05 09:07:53',
             ),
-            185 => 
+            184 => 
             array (
                 'id' => 927,
                 'name' => 'RIO HAINA',
@@ -2245,23 +2233,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'RIO HAINA, DOHAI',
                 'coordinates' => '18.417 -70.019',
                 'country_id' => 59,
-                'varation' => '{"type": ["dorha", "", "rio haina-dohai-dominican republic", "rio haina ,do", "dominican republic: rio haina", "rio haina pt", "rio haina port", "rio haina city"]}',
-                'created_at' => '2018-09-05 19:34:18',
-                'updated_at' => '2018-09-05 19:34:18',
+                'varation' => '{"type": ["dorha", "rio haina-dohai-dominican republic", "rio haina ,do", "dominican republic: rio haina", "rio haina pt", "rio haina port", "rio haina city", "rio haina, dominican republic", "rio haina dominican republic", "río haina", "rio haina r4", "rio haina caucedo"]}',
+                'created_at' => '2018-09-05 15:34:18',
+                'updated_at' => '2019-03-12 16:04:48',
             ),
-            186 => 
-            array (
-                'id' => 928,
-                'name' => 'ALGER',
-                'code' => 'DZALG',
-                'display_name' => 'ALGER, DZALG',
-                'coordinates' => '36.81833 3.0041',
-                'country_id' => 60,
-                'varation' => '{"type": ["", "", "alger-dzalg-algeria", "alger ,dz", "algeria: alger", "alger pt", "alger port", "alger city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
-            ),
-            187 => 
+            185 => 
             array (
                 'id' => 929,
                 'name' => 'ANNABA',
@@ -2269,11 +2245,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ANNABA, DZAAE',
                 'coordinates' => '36.90793 7.7809',
                 'country_id' => 60,
-                'varation' => '{"type": ["", "", "annaba-dzaae-algeria", "annaba ,dz", "algeria: annaba", "annaba pt", "annaba port", "annaba city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["annaba-dzaae-algeria", "annaba ,dz", "algeria: annaba", "annaba pt", "annaba port", "annaba city", "annaba, algeria", "annaba algeria"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-12-14 11:57:28',
             ),
-            188 => 
+            186 => 
             array (
                 'id' => 930,
                 'name' => 'BEJAIA',
@@ -2281,11 +2257,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BEJAIA, DZBJA',
                 'coordinates' => '36.75123 5.0797',
                 'country_id' => 60,
-                'varation' => '{"type": ["", "", "bejaia-dzbja-algeria", "bejaia ,dz", "algeria: bejaia", "bejaia pt", "bejaia port", "bejaia city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["bejaia-dzbja-algeria", "bejaia ,dz", "algeria: bejaia", "bejaia pt", "bejaia port", "bejaia city", "bejaia, algeria", "bejaia algeria"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-12-14 11:59:51',
             ),
-            189 => 
+            187 => 
             array (
                 'id' => 931,
                 'name' => 'DJEN-DJEN',
@@ -2293,11 +2269,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DJEN-DJEN, DZDJE',
                 'coordinates' => '36.825 5.891',
                 'country_id' => 60,
-                'varation' => '{"type": ["", "", "djen-djen-dzdje-algeria", "djen-djen ,dz", "algeria: djen-djen", "djen-djen pt", "djen-djen port", "djen-djen city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["djen-djen-dzdje-algeria", "djen-djen ,dz", "algeria: djen-djen", "djen-djen pt", "djen-djen port", "djen-djen city", "djen djen"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-02-04 10:11:24',
             ),
-            190 => 
+            188 => 
             array (
                 'id' => 932,
                 'name' => 'ORAN',
@@ -2305,11 +2281,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ORAN, DZORN',
                 'coordinates' => '35.71803 -0.6488',
                 'country_id' => 60,
-                'varation' => '{"type": ["", "", "oran-dzorn-algeria", "oran ,dz", "algeria: oran", "oran pt", "oran port", "oran city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["oran-dzorn-algeria", "oran ,dz", "algeria: oran", "oran pt", "oran port", "oran city", "oran terminal ,dz", "oran terminal dz", "oran, algeria", "oran algeria", "oran terminal, algeria", "oran", "oran sea port", "oranoran"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-03-12 16:03:48',
             ),
-            191 => 
+            189 => 
             array (
                 'id' => 933,
                 'name' => 'SKIKDA',
@@ -2317,11 +2293,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SKIKDA, DZSKI',
                 'coordinates' => '36.89053 6.9071',
                 'country_id' => 60,
-                'varation' => '{"type": ["", "", "skikda-dzski-algeria", "skikda ,dz", "algeria: skikda", "skikda pt", "skikda port", "skikda city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["skikda-dzski-algeria", "skikda ,dz", "algeria: skikda", "skikda pt", "skikda port", "skikda city", "skikda, algeria", "skikda algeria"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-03 10:51:13',
             ),
-            192 => 
+            190 => 
             array (
                 'id' => 934,
                 'name' => 'Esmeraldas - Esmeraldas',
@@ -2329,11 +2305,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Esmeraldas - Esmeraldas, ECESM',
                 'coordinates' => '1.01079485 -79.667',
                 'country_id' => 61,
-                'varation' => '{"type": ["", "", "esmeraldas - esmeraldas-ecesm-ecuador", "esmeraldas - esmeraldas ,ec", "ecuador: esmeraldas - esmeraldas", "esmeraldas - esmeraldas pt", "esmeraldas - esmeraldas port", "esmeraldas - esmeraldas city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["esmeraldas - esmeraldas-ecesm-ecuador", "esmeraldas - esmeraldas ,ec", "ecuador: esmeraldas - esmeraldas", "esmeraldas - esmeraldas pt", "esmeraldas - esmeraldas port", "esmeraldas - esmeraldas city", "esmeraldas - esmeraldas, ecuador", "esmeraldas  esmeraldas ecuador"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-12-14 10:43:23',
             ),
-            193 => 
+            191 => 
             array (
                 'id' => 935,
                 'name' => 'Guayaquil',
@@ -2341,11 +2317,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Guayaquil, ECGYE',
                 'coordinates' => '-2.23237 -79.88674',
                 'country_id' => 61,
-                'varation' => '{"type": ["ecgyl", "", "guayaquil-ecgye-ecuador", "guayaquil ,ec", "ecuador: guayaquil", "guayaquil pt", "guayaquil port", "guayaquil city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["ecgyl", "guayaquil-ecgye-ecuador", "guayaquil ,ec", "ecuador: guayaquil", "guayaquil pt", "guayaquil port", "guayaquil city", "guayaquil, ecuador", "guayaquil ecuador", "guyaquil", "guayaquil, equador"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-09 14:43:37',
             ),
-            194 => 
+            192 => 
             array (
                 'id' => 936,
                 'name' => 'PUERTO BOLIVAR',
@@ -2354,10 +2330,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-3.25689 -80.00117',
                 'country_id' => 61,
                 'varation' => '{"type": ["", "", "puerto bolivar-ecpbo-ecuador", "puerto bolivar ,ec", "ecuador: puerto bolivar", "puerto bolivar pt", "puerto bolivar port", "puerto bolivar city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-09-05 15:34:19',
             ),
-            195 => 
+            193 => 
             array (
                 'id' => 937,
                 'name' => 'Sillamae',
@@ -2365,11 +2341,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sillamae, EESLM',
                 'coordinates' => '59.416 27.7295',
                 'country_id' => 62,
-                'varation' => '{"type": ["", "", "sillamae-eeslm-estonia", "sillamae ,ee", "estonia: sillamae", "sillamae pt", "sillamae port", "sillamae city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["sillamae-eeslm-estonia", "sillamae ,ee", "estonia: sillamae", "sillamae pt", "sillamae port", "sillamae city", "sillamae, estonia", "sillamae estonia"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-17 08:15:53',
             ),
-            196 => 
+            194 => 
             array (
                 'id' => 938,
                 'name' => 'Tallinn',
@@ -2377,11 +2353,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tallinn, EETLL',
                 'coordinates' => '59.45413 24.7479',
                 'country_id' => 62,
-                'varation' => '{"type": ["", "", "tallinn-eetll-estonia", "tallinn ,ee", "estonia: tallinn", "tallinn pt", "tallinn port", "tallinn city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["tallinn-eetll-estonia", "tallinn ,ee", "estonia: tallinn", "tallinn pt", "tallinn port", "tallinn city", "tallinn, estonia", "tallinn estonia"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-17 08:08:50',
             ),
-            197 => 
+            195 => 
             array (
                 'id' => 939,
                 'name' => 'Alexandria',
@@ -2389,11 +2365,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Alexandria, EGALY',
                 'coordinates' => '31.14933 29.8799',
                 'country_id' => 63,
-                'varation' => '{"type": ["egale", "", "alexandria-egaly-egypt", "alexandria ,eg", "egypt: alexandria", "alexandria pt", "alexandria port", "alexandria city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+            'varation' => '{"type": ["egale", "alexandria-egaly-egypt", "alexandria ,eg", "egypt: alexandria", "alexandria pt", "alexandria port", "alexandria city", "alexandria", "alexandria eg", "alexandria ,eg", "alexandria eg", "alexandria (old port)", "alexandria old port", "alexandria eg", "alexandria ,eg", "alexandria, egypt", "alexandria egypt", "alejandria", "alexandría old port", "alejandrÍa old port", "alexandria egait"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-04-08 12:00:08',
             ),
-            198 => 
+            196 => 
             array (
                 'id' => 940,
                 'name' => 'Damietta',
@@ -2401,11 +2377,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Damietta, EGDAM',
                 'coordinates' => '31.43843 31.8261',
                 'country_id' => 63,
-                'varation' => '{"type": ["", "", "damietta-egdam-egypt", "damietta ,eg", "egypt: damietta", "damietta pt", "damietta port", "damietta city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["damietta-egdam-egypt", "damietta ,eg", "egypt: damietta", "damietta pt", "damietta port", "damietta city", "damietta, dumyat, egypt", "damietta dumyat egypt", "damietta, egypt", "damietta egypt", "damieta", "damietta"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-03-27 15:04:16',
             ),
-            199 => 
+            197 => 
             array (
                 'id' => 941,
                 'name' => 'Port Said East',
@@ -2413,11 +2389,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Said East, EGPSE',
                 'coordinates' => NULL,
                 'country_id' => 63,
-                'varation' => '{"type": ["", "", "port said east-egpse-egypt", "port said east ,eg", "egypt: port said east", "port said east pt", "port said east port", "port said east city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["port said east-egpse-egypt", "port said east ,eg", "egypt: port said east", "port said east pt", "port said east port", "port said east city", "port said east, egypt", "port said east egypt"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-12-17 06:48:27',
             ),
-            200 => 
+            198 => 
             array (
                 'id' => 942,
                 'name' => 'Port Said West',
@@ -2425,11 +2401,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Said West, EGPSW',
                 'coordinates' => NULL,
                 'country_id' => 63,
-                'varation' => '{"type": ["", "", "port said west-egpsw-egypt", "port said west ,eg", "egypt: port said west", "port said west pt", "port said west port", "port said west city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+            'varation' => '{"type": ["port said west-egpsw-egypt", "port said west ,eg", "egypt: port said west", "port said west pt", "port said west port", "port said west city", "port said west (psct)", "port said west psct", "port said west, egypt", "port said west egypt", "port said"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-09 14:42:18',
             ),
-            201 => 
+            199 => 
             array (
                 'id' => 943,
                 'name' => 'ALEXANDRIA EL DEKHEILA',
@@ -2437,11 +2413,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ALEXANDRIA EL DEKHEILA, EGEDK',
                 'coordinates' => '31.1326 29.79895',
                 'country_id' => 63,
-                'varation' => '{"type": ["", "", "alexandria el dekheila-egedk-egypt", "alexandria el dekheila ,eg", "egypt: alexandria el dekheila", "alexandria el dekheila pt", "alexandria el dekheila port", "alexandria el dekheila city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+            'varation' => '{"type": ["alexandria el dekheila-egedk-egypt", "alexandria el dekheila ,eg", "egypt: alexandria el dekheila", "alexandria el dekheila pt", "alexandria el dekheila port", "alexandria el dekheila city", "dekheila - alexandria ,eg", "alexandria (el-dikheila)", "alexandria el-dikheila", "alexandria (el-dikheila)", "alexandria el-dikheila", "alexandria eldikheila", "dekheila - alexandria, egypt", "dekheila  alexandria, egypt", "alexandria edk", "alexandría edk", "alejandrÍa dekheila", "alejandria dekheila"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-04-03 11:47:23',
             ),
-            202 => 
+            200 => 
             array (
                 'id' => 944,
                 'name' => 'SOKHNA PORT',
@@ -2449,11 +2425,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SOKHNA PORT, EGSOK',
                 'coordinates' => '29.647615 32.360645',
                 'country_id' => 63,
-                'varation' => '{"type": ["", "", "sokhna port-egsok-egypt", "sokhna port ,eg", "egypt: sokhna port", "sokhna port pt", "sokhna port port", "sokhna port city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["sokhna port-egsok-egypt", "sokhna port ,eg", "egypt: sokhna port", "sokhna port pt", "sokhna port port", "sokhna port city", "sokhna ,eg", "sokhna eg", "sokhna, egypt", "sokhna egypt"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-01-03 10:51:34',
             ),
-            203 => 
+            201 => 
             array (
                 'id' => 945,
                 'name' => 'MASSAWA',
@@ -2462,10 +2438,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '15.608405 39.46306',
                 'country_id' => 65,
                 'varation' => '{"type": ["", "", "massawa-ermsw-eritrea", "massawa ,er", "eritrea: massawa", "massawa pt", "massawa port", "massawa city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-09-05 15:34:19',
             ),
-            204 => 
+            202 => 
             array (
                 'id' => 946,
                 'name' => 'ALGECIRAS',
@@ -2473,11 +2449,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ALGECIRAS, ESALG',
                 'coordinates' => '36.13672 -5.434271',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "algeciras-esalg-spain", "algeciras ,es", "spain: algeciras", "algeciras pt", "algeciras port", "algeciras city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["algeciras-esalg-spain", "algeciras ,es", "spain: algeciras", "algeciras pt", "algeciras port", "algeciras city", "algeciras andalucia spain", "algeciras, andalucia, spain", "algeciras andalucia spain", "algeciras, spain", "algeciras spain", "algeciras, spain", "algeciras, es", "algeciras es", "algeciras, malaga", "algeciras", "algeciras, cadiz, andalucia, spain", "es001 esalg algeciras"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-03-26 21:39:52',
             ),
-            205 => 
+            203 => 
             array (
                 'id' => 947,
                 'name' => 'ALICANTE',
@@ -2486,10 +2462,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '38.33723 -0.4869',
                 'country_id' => 66,
                 'varation' => '{"type": ["", "", "alicante-esalc-spain", "alicante ,es", "spain: alicante", "alicante pt", "alicante port", "alicante city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-09-05 15:34:19',
             ),
-            206 => 
+            204 => 
             array (
                 'id' => 948,
                 'name' => 'ARRECIFE DE LANZAROTE',
@@ -2498,22 +2474,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '28.962 -13.5395',
                 'country_id' => 66,
                 'varation' => '{"type": ["", "", "arrecife de lanzarote-esace-spain", "arrecife de lanzarote ,es", "spain: arrecife de lanzarote", "arrecife de lanzarote pt", "arrecife de lanzarote port", "arrecife de lanzarote city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2018-09-05 15:34:19',
             ),
-            207 => 
+            205 => 
             array (
                 'id' => 949,
-                'name' => 'BARCELONA',
+                'name' => 'Barcelona',
                 'code' => 'ESBCN',
-                'display_name' => 'BARCELONA, ESBCN',
+                'display_name' => 'Barcelona, ESBCN',
                 'coordinates' => '41.37373 2.1805',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "barcelona-esbcn-spain", "barcelona ,es", "spain: barcelona", "barcelona pt", "barcelona port", "barcelona city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["barcelona-esbcn-spain", "barcelona ,es", "spain: barcelona", "barcelona pt", "barcelona port", "barcelona city", "barcelona, spain", "barcelona, es", "barcelona es", "barcelona, bcn", "es esbcn barcelona", "es002 esbcn barcelona"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-04-01 13:41:15',
             ),
-            208 => 
+            206 => 
             array (
                 'id' => 950,
                 'name' => 'BILBAO',
@@ -2521,11 +2497,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BILBAO, ESBIO',
                 'coordinates' => '43.355805 -3.0664985',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "bilbao-esbio-spain", "bilbao ,es", "spain: bilbao", "bilbao pt", "bilbao port", "bilbao city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["bilbao-esbio-spain", "bilbao ,es", "spain: bilbao", "bilbao pt", "bilbao port", "bilbao city", "bilbao, spain", "bilbao"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-02-26 11:29:55',
             ),
-            209 => 
+            207 => 
             array (
                 'id' => 951,
                 'name' => 'CADIZ',
@@ -2533,11 +2509,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CADIZ, ESCAD',
                 'coordinates' => '36.53243 -6.2969',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "cadiz-escad-spain", "cadiz ,es", "spain: cadiz", "cadiz pt", "cadiz port", "cadiz city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["cadiz-escad-spain", "cadiz ,es", "spain: cadiz", "cadiz pt", "cadiz port", "cadiz city", "cádiz", "cadiz"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-02-21 16:23:25',
             ),
-            210 => 
+            208 => 
             array (
                 'id' => 952,
                 'name' => 'CARTAGENA',
@@ -2545,11 +2521,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CARTAGENA, ESCAR',
                 'coordinates' => '37.580165 -0.96792915',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "cartagena-escar-spain", "cartagena ,es", "spain: cartagena", "cartagena pt", "cartagena port", "cartagena city"]}',
-                'created_at' => '2018-09-05 19:34:19',
-                'updated_at' => '2018-09-05 19:34:19',
+                'varation' => '{"type": ["cartagena-escar-spain", "cartagena ,es", "spain: cartagena", "cartagena, spain", "cartagena spain"]}',
+                'created_at' => '2018-09-05 15:34:19',
+                'updated_at' => '2019-04-03 13:38:41',
             ),
-            211 => 
+            209 => 
             array (
                 'id' => 953,
                 'name' => 'CASTELLON DE LA PLANA',
@@ -2558,10 +2534,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '39.967005 0.020405295',
                 'country_id' => 66,
                 'varation' => '{"type": ["", "", "castellon de la plana-escas-spain", "castellon de la plana ,es", "spain: castellon de la plana", "castellon de la plana pt", "castellon de la plana port", "castellon de la plana city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            212 => 
+            210 => 
             array (
                 'id' => 954,
                 'name' => 'GIJON',
@@ -2570,10 +2546,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '43.54853 -5.6758',
                 'country_id' => 66,
                 'varation' => '{"type": ["", "", "gijon-esgij-spain", "gijon ,es", "spain: gijon", "gijon pt", "gijon port", "gijon city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            213 => 
+            211 => 
             array (
                 'id' => 955,
                 'name' => 'LAS PALMAS',
@@ -2581,11 +2557,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LAS PALMAS, ESLPA',
                 'coordinates' => '28.141 -15.41635',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "las palmas-eslpa-spain", "las palmas ,es", "spain: las palmas", "las palmas pt", "las palmas port", "las palmas city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["las palmas-eslpa-spain", "las palmas ,es", "spain: las palmas", "las palmas, spain", "las palmas spain", "las palmas, gran canaria"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-04-04 17:41:28',
             ),
-            214 => 
+            212 => 
             array (
                 'id' => 956,
                 'name' => 'MALAGA',
@@ -2593,11 +2569,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MALAGA, ESAGP',
                 'coordinates' => '36.70981 -4.417605',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "malaga-esagp-spain", "malaga ,es", "spain: malaga", "malaga pt", "malaga port", "malaga city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["malaga-esagp-spain", "malaga ,es", "spain: malaga", "malaga pt", "malaga port", "malaga city", "malaga", "malaga, spain", "malaga spain", "málaga"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-02-14 09:12:04',
             ),
-            215 => 
+            213 => 
             array (
                 'id' => 957,
                 'name' => 'MARIN',
@@ -2605,11 +2581,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MARIN, ESMPG',
                 'coordinates' => '42.40034 -8.6953115',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "marin-esmpg-spain", "marin ,es", "spain: marin", "marin pt", "marin port", "marin city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["marin-esmpg-spain", "marin ,es", "spain: marin", "marin pt", "marin port", "marin city", "marin, spain", "marin spain", "marin"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-02-20 14:03:48',
             ),
-            216 => 
+            214 => 
             array (
                 'id' => 958,
                 'name' => 'MELILLA',
@@ -2617,23 +2593,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MELILLA, ESMLN',
                 'coordinates' => '35.29753 -2.9397',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "melilla-esmln-spain", "melilla ,es", "spain: melilla", "melilla pt", "melilla port", "melilla city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["melilla-esmln-spain", "melilla ,es", "spain: melilla", "melilla pt", "melilla port", "melilla city", "melilla, spain"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-12-10 13:36:35',
             ),
-            217 => 
-            array (
-                'id' => 959,
-                'name' => 'PUERTO DEL ROSARIO-FUERTEVENTURA',
-                'code' => 'ESFUE',
-                'display_name' => 'PUERTO DEL ROSARIO-FUERTEVENTURA, ESFUE',
-                'coordinates' => '28.4865 -13.8545',
-                'country_id' => 66,
-                'varation' => '{"type": ["", "", "puerto del rosario-fuerteventura-esfue-spain", "puerto del rosario-fuerteventura ,es", "spain: puerto del rosario-fuerteventura", "puerto del rosario-fuerteventura pt", "puerto del rosario-fuerteventura port", "puerto del rosario-fuerteventura city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
-            ),
-            218 => 
+            215 => 
             array (
                 'id' => 960,
                 'name' => 'SANTA CRUZ DE TENERIFE',
@@ -2641,11 +2605,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SANTA CRUZ DE TENERIFE, ESSCT',
                 'coordinates' => '28.480055 -16.23424',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "santa cruz de tenerife-essct-spain", "santa cruz de tenerife ,es", "spain: santa cruz de tenerife", "santa cruz de tenerife pt", "santa cruz de tenerife port", "santa cruz de tenerife city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["santa cruz de tenerife-essct-spain", "santa cruz de tenerife ,es", "spain: santa cruz de tenerife", "santa cruz de tenerife pt", "santa cruz de tenerife port", "santa cruz de tenerife city", "tenerife, spain", "tenerife spain", "tenerife, spain"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-12-14 11:12:46',
             ),
-            219 => 
+            216 => 
             array (
                 'id' => 961,
                 'name' => 'TARRAGONA',
@@ -2653,23 +2617,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TARRAGONA, ESTAR',
                 'coordinates' => '41.11093 1.2407',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "tarragona-estar-spain", "tarragona ,es", "spain: tarragona", "tarragona pt", "tarragona port", "tarragona city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["tarragona-estar-spain", "tarragona ,es", "spain: tarragona", "tarragona pt", "tarragona port", "tarragona city", "terragona"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-03-08 13:53:16',
             ),
-            220 => 
+            217 => 
             array (
                 'id' => 962,
-                'name' => 'VALENCIA',
+                'name' => 'Valencia',
                 'code' => 'ESVLC',
-                'display_name' => 'VALENCIA, ESVLC',
+                'display_name' => 'Valencia, ESVLC',
                 'coordinates' => '39.45913 -0.323',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "valencia-esvlc-spain", "valencia ,es", "spain: valencia", "valencia pt", "valencia port", "valencia city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["valencia-esvlc-spain", "valencia ,es", "spain: valencia", "valencia pt", "valencia port", "valencia city", "valencia, valencia, comunidad valenciana, spain", "valencia valencia comunidad valenciana spain", "valencia, spain", "valencia, es", "valencia es", "valencia, vlc", "velencia", "es002 esvlc valencia", "es esvlc valencia", "vlc", "es001 esvlc valencia"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-03-26 21:40:25',
             ),
-            221 => 
+            218 => 
             array (
                 'id' => 963,
                 'name' => 'VIGO',
@@ -2677,11 +2641,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VIGO, ESVGO',
                 'coordinates' => '42.241505 -8.7212355',
                 'country_id' => 66,
-                'varation' => '{"type": ["", "", "vigo-esvgo-spain", "vigo ,es", "spain: vigo", "vigo pt", "vigo port", "vigo city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["vigo-esvgo-spain", "vigo ,es", "spain: vigo", "vigo pt", "vigo port", "vigo city", "vigo, spain", "vigo spain", "vigo", "\\" vigo\\"", "vigo"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-02-26 11:28:06',
             ),
-            222 => 
+            219 => 
             array (
                 'id' => 964,
                 'name' => 'Helsinki',
@@ -2689,11 +2653,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Helsinki, FIHEL',
                 'coordinates' => '60.15793 24.9375',
                 'country_id' => 68,
-                'varation' => '{"type": ["", "", "helsinki-fihel-finland", "helsinki ,fi", "finland: helsinki", "helsinki pt", "helsinki port", "helsinki city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["helsinki-fihel-finland", "helsinki ,fi", "finland: helsinki", "helsinki pt", "helsinki port", "helsinki city", "helsinki, finland", "helsinki finland"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-17 08:05:20',
             ),
-            223 => 
+            220 => 
             array (
                 'id' => 965,
                 'name' => 'Kotka',
@@ -2701,11 +2665,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kotka, FIKTK',
                 'coordinates' => '60.46993 26.9391',
                 'country_id' => 68,
-                'varation' => '{"type": ["", "", "kotka-fiktk-finland", "kotka ,fi", "finland: kotka", "kotka pt", "kotka port", "kotka city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["kotka-fiktk-finland", "kotka ,fi", "finland: kotka", "kotka pt", "kotka port", "kotka city", "kotka, finland", "kotka finland", "kotka, finland", "kotka finland"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-17 08:06:26',
             ),
-            224 => 
+            221 => 
             array (
                 'id' => 966,
                 'name' => 'Oulu',
@@ -2713,11 +2677,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Oulu, FIOUL',
                 'coordinates' => '65.02003 25.4849',
                 'country_id' => 68,
-                'varation' => '{"type": ["", "", "oulu-fioul-finland", "oulu ,fi", "finland: oulu", "oulu pt", "oulu port", "oulu city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["oulu-fioul-finland", "oulu ,fi", "finland: oulu", "oulu pt", "oulu port", "oulu city", "oulu, finland", "oulu finland", "oulu"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-25 10:25:43',
             ),
-            225 => 
+            222 => 
             array (
                 'id' => 967,
                 'name' => 'Rauma',
@@ -2725,11 +2689,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Rauma, FIRAU',
                 'coordinates' => '61.13613 21.4723',
                 'country_id' => 68,
-                'varation' => '{"type": ["", "", "rauma-firau-finland", "rauma ,fi", "finland: rauma", "rauma pt", "rauma port", "rauma city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["rauma-firau-finland", "rauma ,fi", "finland: rauma", "rauma pt", "rauma port", "rauma city", "rauma, finland", "rauma finland"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-25 09:51:42',
             ),
-            226 => 
+            223 => 
             array (
                 'id' => 968,
                 'name' => 'Tornio',
@@ -2737,11 +2701,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tornio, FITOR',
                 'coordinates' => '65.86373 24.1587',
                 'country_id' => 68,
-                'varation' => '{"type": ["", "", "tornio-fitor-finland", "tornio ,fi", "finland: tornio", "tornio pt", "tornio port", "tornio city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["tornio-fitor-finland", "tornio ,fi", "finland: tornio", "tornio pt", "tornio port", "tornio city", "tornio, finland", "tornio finland"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-17 08:07:59',
             ),
-            227 => 
+            224 => 
             array (
                 'id' => 969,
                 'name' => 'HAMINA',
@@ -2750,10 +2714,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '60.56693 27.1815',
                 'country_id' => 68,
                 'varation' => '{"type": ["", "", "hamina-fihmn-finland", "hamina ,fi", "finland: hamina", "hamina pt", "hamina port", "hamina city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            228 => 
+            225 => 
             array (
                 'id' => 970,
                 'name' => 'KEMI',
@@ -2762,10 +2726,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '65.67933 24.5275',
                 'country_id' => 68,
                 'varation' => '{"type": ["", "", "kemi-fikem-finland", "kemi ,fi", "finland: kemi", "kemi pt", "kemi port", "kemi city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            229 => 
+            226 => 
             array (
                 'id' => 971,
             'name' => 'KOKKOLA (KARLEBY)',
@@ -2774,10 +2738,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '63.85633 23.1145',
                 'country_id' => 68,
             'varation' => '{"type": ["", "", "kokkola (karleby)-fikok-finland", "kokkola (karleby) ,fi", "finland: kokkola (karleby)", "kokkola (karleby) pt", "kokkola (karleby) port", "kokkola (karleby) city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            230 => 
+            227 => 
             array (
                 'id' => 972,
             'name' => 'RAAHE (BRAHESTAD)',
@@ -2786,10 +2750,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '64.68213 24.4609',
                 'country_id' => 68,
             'varation' => '{"type": ["", "", "raahe (brahestad)-firaa-finland", "raahe (brahestad) ,fi", "finland: raahe (brahestad)", "raahe (brahestad) pt", "raahe (brahestad) port", "raahe (brahestad) city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-09-05 15:34:20',
             ),
-            231 => 
+            228 => 
             array (
                 'id' => 973,
                 'name' => 'Lautoka',
@@ -2797,11 +2761,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lautoka, FJLTK',
                 'coordinates' => '-17.614 177.4456',
                 'country_id' => 69,
-                'varation' => '{"type": ["", "", "lautoka-fjltk-fiji", "lautoka ,fj", "fiji: lautoka", "lautoka pt", "lautoka port", "lautoka city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["lautoka-fjltk-fiji", "lautoka ,fj", "fiji: lautoka", "lautoka pt", "lautoka port", "lautoka city", "lautoka, fiji islands", "lautoka fiji islands"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-22 10:24:24',
             ),
-            232 => 
+            229 => 
             array (
                 'id' => 974,
                 'name' => 'Suva',
@@ -2809,11 +2773,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Suva, FJSUV',
                 'coordinates' => '-18.12138 178.41645',
                 'country_id' => 69,
-                'varation' => '{"type": ["", "", "suva-fjsuv-fiji", "suva ,fj", "fiji: suva", "suva pt", "suva port", "suva city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["suva-fjsuv-fiji", "suva ,fj", "fiji: suva", "suva pt", "suva port", "suva city", "suva, fiji islands", "suva fiji islands"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-01-22 10:30:05',
             ),
-            233 => 
+            230 => 
             array (
                 'id' => 975,
                 'name' => 'Dunkerque',
@@ -2821,11 +2785,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dunkerque, FRDKK',
                 'coordinates' => '51.04933 2.3841',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "dunkerque-frdkk-france", "dunkerque ,fr", "france: dunkerque", "dunkerque pt", "dunkerque port", "dunkerque city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["dunkerque-frdkk-france", "dunkerque ,fr", "france: dunkerque", "dunkerque pt", "dunkerque port", "dunkerque city", "dunkerque, nord, nord pas de calais, france", "dunkerque nord nord pas de calais france", "dunkerque, france", "dunkerque france"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2018-12-14 12:17:41',
             ),
-            234 => 
+            231 => 
             array (
                 'id' => 976,
                 'name' => 'Le Havre',
@@ -2833,11 +2797,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Le Havre, FRLEH',
                 'coordinates' => '49.48533 0.1081',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "le havre-frleh-france", "le havre ,fr", "france: le havre", "le havre pt", "le havre port", "le havre city"]}',
-                'created_at' => '2018-09-05 19:34:20',
-                'updated_at' => '2018-09-05 19:34:20',
+                'varation' => '{"type": ["le havre-frleh-france", "le havre ,fr", "france: le havre", "le havre pt", "le havre port", "le havre city", "le havre, france", "le havre france", "frleh"]}',
+                'created_at' => '2018-09-05 15:34:20',
+                'updated_at' => '2019-02-25 08:17:06',
             ),
-            235 => 
+            232 => 
             array (
                 'id' => 977,
                 'name' => 'Montoir de Bretagne',
@@ -2845,11 +2809,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Montoir de Bretagne, FRMTX',
                 'coordinates' => '47.29696 -2.14036',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "montoir de bretagne-frmtx-france", "montoir de bretagne ,fr", "france: montoir de bretagne", "montoir de bretagne pt", "montoir de bretagne port", "montoir de bretagne city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["montoir de bretagne-frmtx-france", "montoir de bretagne ,fr", "france: montoir de bretagne", "montoir de bretagne pt", "montoir de bretagne port", "montoir de bretagne city", "montoir de bretagne, france"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-22 10:50:49',
             ),
-            236 => 
+            233 => 
             array (
                 'id' => 978,
                 'name' => 'BASSENS',
@@ -2858,10 +2822,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '44.90373 -0.5346',
                 'country_id' => 73,
                 'varation' => '{"type": ["", "", "bassens-frbas-france", "bassens ,fr", "france: bassens", "bassens pt", "bassens port", "bassens city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            237 => 
+            234 => 
             array (
                 'id' => 979,
                 'name' => 'BREST',
@@ -2869,23 +2833,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BREST, FRBES',
                 'coordinates' => '48.376655 -4.4856975',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "brest-frbes-france", "brest ,fr", "france: brest", "brest pt", "brest port", "brest city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["brest-frbes-france", "brest ,fr", "france: brest", "brest pt", "brest port", "brest city", "brest, france", "brest france"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-12-14 12:01:47',
             ),
-            238 => 
-            array (
-                'id' => 980,
-                'name' => 'FOS-SUR-MER',
-                'code' => 'FRFOS',
-                'display_name' => 'FOS-SUR-MER, FRFOS',
-                'coordinates' => '43.422905 4.8651305',
-                'country_id' => 73,
-                'varation' => '{"type": ["", "", "fos-sur-mer-frfos-france", "fos-sur-mer ,fr", "france: fos-sur-mer", "fos-sur-mer pt", "fos-sur-mer port", "fos-sur-mer city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
-            ),
-            239 => 
+            235 => 
             array (
                 'id' => 981,
                 'name' => 'LE VERDON',
@@ -2894,10 +2846,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '45.556105 -1.0608305',
                 'country_id' => 73,
                 'varation' => '{"type": ["", "", "le verdon-frlve-france", "le verdon ,fr", "france: le verdon", "le verdon pt", "le verdon port", "le verdon city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            240 => 
+            236 => 
             array (
                 'id' => 982,
                 'name' => 'MARSEILLE',
@@ -2905,11 +2857,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MARSEILLE, FRMRS',
                 'coordinates' => '43.30323 5.3699',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "marseille-frmrs-france", "marseille ,fr", "france: marseille", "marseille pt", "marseille port", "marseille city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["marseille-frmrs-france", "marseille ,fr", "france: marseille", "marseille pt", "marseille port", "marseille city", "marsella"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-02-14 07:46:56',
             ),
-            241 => 
+            237 => 
             array (
                 'id' => 983,
                 'name' => 'ROUEN',
@@ -2917,11 +2869,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ROUEN, FRURO',
                 'coordinates' => '49.45093 1.0533',
                 'country_id' => 73,
-                'varation' => '{"type": ["", "", "rouen-fruro-france", "rouen ,fr", "france: rouen", "rouen pt", "rouen port", "rouen city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["rouen-fruro-france", "rouen ,fr", "france: rouen", "rouen pt", "rouen port", "rouen city", "rouen, france", "rouen france"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-17 08:16:10',
             ),
-            242 => 
+            238 => 
             array (
                 'id' => 984,
                 'name' => 'LIBREVILLE',
@@ -2929,11 +2881,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LIBREVILLE, GALBV',
                 'coordinates' => '0.37983 9.4527',
                 'country_id' => 74,
-                'varation' => '{"type": ["", "", "libreville-galbv-gabon", "libreville ,ga", "gabon: libreville", "libreville pt", "libreville port", "libreville city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["libreville-galbv-gabon", "libreville ,ga", "gabon: libreville", "libreville pt", "libreville port", "libreville city", "libreville, ga", "libreville, gabon"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-25 08:28:31',
             ),
-            243 => 
+            239 => 
             array (
                 'id' => 985,
                 'name' => 'Belfast Northern Ireland',
@@ -2941,11 +2893,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Belfast Northern Ireland, GBBEL',
                 'coordinates' => '54.618745 -5.8977055',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "belfast northern ireland-gbbel-united kingdom", "belfast northern ireland ,gb", "united kingdom: belfast northern ireland", "belfast northern ireland pt", "belfast northern ireland port", "belfast northern ireland city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["belfast northern ireland-gbbel-united kingdom", "belfast northern ireland ,gb", "united kingdom: belfast northern ireland", "belfast northern ireland pt", "belfast northern ireland port", "belfast northern ireland city", "belfast northern ireland, united kingdom", "belfast northern ireland united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-12-14 12:00:11',
             ),
-            244 => 
+            240 => 
             array (
                 'id' => 986,
                 'name' => 'Felixstowe',
@@ -2953,11 +2905,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Felixstowe, GBFXT',
                 'coordinates' => '51.95993 1.3421',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "felixstowe-gbfxt-united kingdom", "felixstowe ,gb", "united kingdom: felixstowe", "felixstowe pt", "felixstowe port", "felixstowe city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["felixstowe-gbfxt-united kingdom", "felixstowe ,gb", "united kingdom: felixstowe", "felixstowe pt", "felixstowe port", "felixstowe city", "felixstowe, suffolk, england, united kingdom", "felixstowe suffolk england united kingdom", "felixstowe, united kingdom", "felixstowe united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-12-14 12:18:20',
             ),
-            245 => 
+            241 => 
             array (
                 'id' => 987,
                 'name' => 'Grangemouth',
@@ -2965,11 +2917,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Grangemouth, GBGRG',
                 'coordinates' => '56.0285 -3.705',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "grangemouth-gbgrg-united kingdom", "grangemouth ,gb", "united kingdom: grangemouth", "grangemouth pt", "grangemouth port", "grangemouth city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["grangemouth-gbgrg-united kingdom", "grangemouth ,gb", "united kingdom: grangemouth", "grangemouth pt", "grangemouth port", "grangemouth city", "grangemouth, united kingdom", "grangemouth united kingdom", "grangemounth", "grangesmouth"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-02-21 15:18:53',
             ),
-            246 => 
+            242 => 
             array (
                 'id' => 988,
                 'name' => 'Immingham',
@@ -2977,11 +2929,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Immingham, GBIMM',
                 'coordinates' => '53.62813 -0.1842',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "immingham-gbimm-united kingdom", "immingham ,gb", "united kingdom: immingham", "immingham pt", "immingham port", "immingham city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["immingham-gbimm-united kingdom", "immingham ,gb", "united kingdom: immingham", "immingham pt", "immingham port", "immingham city", "immingham, united kingdom", "immingham united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-03-11 07:07:12',
             ),
-            247 => 
+            243 => 
             array (
                 'id' => 989,
                 'name' => 'Liverpool',
@@ -2989,11 +2941,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Liverpool, GBLIV',
                 'coordinates' => '53.46293 -3.0263',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "liverpool-gbliv-united kingdom", "liverpool ,gb", "united kingdom: liverpool", "liverpool pt", "liverpool port", "liverpool city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["liverpool-gbliv-united kingdom", "liverpool ,gb", "united kingdom: liverpool", "liverpool pt", "liverpool port", "liverpool city", "liverpool, united kingdom", "liverpool united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-12-14 11:55:12',
             ),
-            248 => 
+            244 => 
             array (
                 'id' => 990,
                 'name' => 'London Gateway',
@@ -3001,11 +2953,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'London Gateway, GBLGP',
                 'coordinates' => '51.50671 0.5083515',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "london gateway-gblgp-united kingdom", "london gateway ,gb", "united kingdom: london gateway", "london gateway pt", "london gateway port", "london gateway city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["london gateway-gblgp-united kingdom", "london gateway ,gb", "united kingdom: london gateway", "london gateway pt", "london gateway port", "london gateway city", "london gateway, united kingdom", "gblgp", "london gateway port, ess"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-04-01 11:29:04',
             ),
-            249 => 
+            245 => 
             array (
                 'id' => 991,
                 'name' => 'South Shields',
@@ -3013,11 +2965,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'South Shields, GBSSH',
                 'coordinates' => NULL,
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "south shields-gbssh-united kingdom", "south shields ,gb", "united kingdom: south shields", "south shields pt", "south shields port", "south shields city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["south shields-gbssh-united kingdom", "south shields ,gb", "united kingdom: south shields", "south shields pt", "south shields port", "south shields city", "south shields, united kingdom", "south shields united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-17 08:10:27',
             ),
-            250 => 
+            246 => 
             array (
                 'id' => 992,
                 'name' => 'Teesport',
@@ -3025,11 +2977,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Teesport, GBTEE',
                 'coordinates' => '54.609645 -1.1715735',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "teesport-gbtee-united kingdom", "teesport ,gb", "united kingdom: teesport", "teesport pt", "teesport port", "teesport city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["teesport-gbtee-united kingdom", "teesport ,gb", "united kingdom: teesport", "teesport pt", "teesport port", "teesport city", "teesport, united kingdom", "teesport united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-17 08:08:34',
             ),
-            251 => 
+            247 => 
             array (
                 'id' => 993,
                 'name' => 'GREENOCK',
@@ -3038,10 +2990,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '55.956575 -4.7618265',
                 'country_id' => 75,
                 'varation' => '{"type": ["", "", "greenock-gbgrk-united kingdom", "greenock ,gb", "united kingdom: greenock", "greenock pt", "greenock port", "greenock city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            252 => 
+            248 => 
             array (
                 'id' => 994,
                 'name' => 'HARTLEPOOL',
@@ -3050,10 +3002,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '54.70033 -1.1974',
                 'country_id' => 75,
                 'varation' => '{"type": ["", "", "hartlepool-gbhtp-united kingdom", "hartlepool ,gb", "united kingdom: hartlepool", "hartlepool pt", "hartlepool port", "hartlepool city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            253 => 
+            249 => 
             array (
                 'id' => 995,
                 'name' => 'PORTBURY',
@@ -3061,11 +3013,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PORTBURY, GBPRU',
                 'coordinates' => '51.50123 -2.7309',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "portbury-gbpru-united kingdom", "portbury ,gb", "united kingdom: portbury", "portbury pt", "portbury port", "portbury city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["portbury-gbpru-united kingdom", "portbury ,gb", "united kingdom: portbury", "portbury pt", "portbury port", "portbury city", "portbury, united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-22 10:51:16',
             ),
-            254 => 
+            250 => 
             array (
                 'id' => 996,
                 'name' => 'PORTLAND',
@@ -3074,10 +3026,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '50.56173 -2.4574',
                 'country_id' => 75,
                 'varation' => '{"type": ["", "", "portland-gbptl-united kingdom", "portland ,gb", "united kingdom: portland", "portland pt", "portland port", "portland city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            255 => 
+            251 => 
             array (
                 'id' => 997,
                 'name' => 'SOUTHAMPTON',
@@ -3085,11 +3037,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SOUTHAMPTON, GBSOU',
                 'coordinates' => '50.91733 -1.378',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "southampton-gbsou-united kingdom", "southampton ,gb", "united kingdom: southampton", "southampton pt", "southampton port", "southampton city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["southampton-gbsou-united kingdom", "southampton ,gb", "united kingdom: southampton", "southampton pt", "southampton port", "southampton city", "southampton, southampton, england, united kingdom", "southampton southampton england united kingdom", "southampton, united kingdom", "southampton united kingdom"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-03-11 07:07:32',
             ),
-            256 => 
+            252 => 
             array (
                 'id' => 998,
                 'name' => 'TILBURY',
@@ -3097,11 +3049,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TILBURY, GBTIL',
                 'coordinates' => '51.45453 0.3589',
                 'country_id' => 75,
-                'varation' => '{"type": ["", "", "tilbury-gbtil-united kingdom", "tilbury ,gb", "united kingdom: tilbury", "tilbury pt", "tilbury port", "tilbury city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["tilbury-gbtil-united kingdom", "tilbury ,gb", "united kingdom: tilbury", "tilbury pt", "tilbury port", "tilbury city", "tilbury, united kingdom", "tilbury united kingdom", "tillbury"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-03-07 07:56:16',
             ),
-            257 => 
+            253 => 
             array (
                 'id' => 999,
                 'name' => 'SAINT GEORGE\'S',
@@ -3110,10 +3062,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '12.048 -61.7515',
                 'country_id' => 76,
                 'varation' => '{"type": ["", "", "saint george\'s-gdstg-grenada", "saint george\'s ,gd", "grenada: saint george\'s", "saint george\'s pt", "saint george\'s port", "saint george\'s city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2018-09-05 15:34:21',
             ),
-            258 => 
+            254 => 
             array (
                 'id' => 1000,
                 'name' => 'Poti',
@@ -3121,11 +3073,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Poti, GEPTI',
                 'coordinates' => '42.15033 41.6521',
                 'country_id' => 77,
-                'varation' => '{"type": ["", "", "poti-gepti-georgia", "poti ,ge", "georgia: poti", "poti pt", "poti port", "poti city"]}',
-                'created_at' => '2018-09-05 19:34:21',
-                'updated_at' => '2018-09-05 19:34:21',
+                'varation' => '{"type": ["poti-gepti-georgia", "poti ,ge", "georgia: poti", "poti pt", "poti port", "poti city", "poti, georgia", "poti georgia"]}',
+                'created_at' => '2018-09-05 15:34:21',
+                'updated_at' => '2019-01-03 10:48:56',
             ),
-            259 => 
+            255 => 
             array (
                 'id' => 1001,
                 'name' => 'BATUMI',
@@ -3134,10 +3086,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '41.65333 41.6509',
                 'country_id' => 77,
                 'varation' => '{"type": ["", "", "batumi-gebus-georgia", "batumi ,ge", "georgia: batumi", "batumi pt", "batumi port", "batumi city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-09-05 15:34:22',
             ),
-            260 => 
+            256 => 
             array (
                 'id' => 1002,
                 'name' => 'TAKORADI',
@@ -3145,11 +3097,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TAKORADI, GHTKD',
                 'coordinates' => '4.88503 -1.749',
                 'country_id' => 80,
-                'varation' => '{"type": ["", "", "takoradi-ghtkd-ghana", "takoradi ,gh", "ghana: takoradi", "takoradi pt", "takoradi port", "takoradi city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["takoradi-ghtkd-ghana", "takoradi ,gh", "ghana: takoradi", "takoradi pt", "takoradi port", "takoradi city", "takoradi, ghana", "takoradi ghana", "takordi"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-26 21:50:21',
             ),
-            261 => 
+            257 => 
             array (
                 'id' => 1003,
                 'name' => 'TEMA',
@@ -3157,11 +3109,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TEMA, GHTEM',
                 'coordinates' => '5.62973 0.0103',
                 'country_id' => 80,
-                'varation' => '{"type": ["", "", "tema-ghtem-ghana", "tema ,gh", "ghana: tema", "tema pt", "tema port", "tema city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["tema-ghtem-ghana", "tema ,gh", "ghana: tema", "tema pt", "tema port", "tema city", "ghana: tema", "ghana tema", "tema, gh", "tema", "tema, ghana", "tema ghana", "tema, ghana", "tema******"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-29 12:11:51',
             ),
-            262 => 
+            258 => 
             array (
                 'id' => 1004,
                 'name' => 'BANJUL',
@@ -3169,11 +3121,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BANJUL, GMBJL',
                 'coordinates' => '13.45473 -16.5798',
                 'country_id' => 83,
-                'varation' => '{"type": ["", "", "banjul-gmbjl-gambia", "banjul ,gm", "gambia: banjul", "banjul pt", "banjul port", "banjul city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["banjul-gmbjl-gambia", "banjul ,gm", "gambia: banjul", "banjul pt", "banjul port", "banjul city", "banjul, gambia", "banjul gambia"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-01-25 10:17:39',
             ),
-            263 => 
+            259 => 
             array (
                 'id' => 1005,
                 'name' => 'CONAKRY',
@@ -3181,11 +3133,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CONAKRY, GNCKY',
                 'coordinates' => '9.51905 -13.71517',
                 'country_id' => 84,
-                'varation' => '{"type": ["", "", "conakry-gncky-guinea", "conakry ,gn", "guinea: conakry", "conakry pt", "conakry port", "conakry city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["conakry-gncky-guinea", "conakry ,gn", "guinea: conakry", "conakry pt", "conakry port", "conakry city", "conakry, guinea", "conakry guinea", "conakry 1", "conakry 1", "conarky"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-26 21:49:13',
             ),
-            264 => 
+            260 => 
             array (
                 'id' => 1006,
                 'name' => 'POINTE-A-PITRE',
@@ -3193,11 +3145,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'POINTE-A-PITRE, GPPTP',
                 'coordinates' => '16.24843 -61.5368',
                 'country_id' => 85,
-                'varation' => '{"type": ["", "", "pointe-a-pitre-gpptp-guadeloupe", "pointe-a-pitre ,gp", "guadeloupe: pointe-a-pitre", "pointe-a-pitre pt", "pointe-a-pitre port", "pointe-a-pitre city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["pointe-a-pitre-gpptp-guadeloupe", "pointe-a-pitre ,gp", "guadeloupe: pointe-a-pitre", "pointe-a-pitre pt", "pointe-a-pitre port", "pointe-a-pitre city", "pointe à pitre", "pointe à pitre gp"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-04 07:10:36',
             ),
-            265 => 
+            261 => 
             array (
                 'id' => 1007,
                 'name' => 'MALABO',
@@ -3205,11 +3157,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MALABO, GQSSG',
                 'coordinates' => '3.7604845 8.7815925',
                 'country_id' => 86,
-                'varation' => '{"type": ["", "", "malabo-gqssg-equatorial guinea", "malabo ,gq", "equatorial guinea: malabo", "malabo pt", "malabo port", "malabo city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["malabo-gqssg-equatorial guinea", "malabo ,gq", "equatorial guinea: malabo", "malabo pt", "malabo port", "malabo city", "malabo, equatorial guinea", "malabo, equatorial guinea", "malabo equatorial guinea"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-01-25 08:40:01',
             ),
-            266 => 
+            262 => 
             array (
                 'id' => 1008,
                 'name' => 'Piraeus',
@@ -3217,11 +3169,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Piraeus, GRPIR',
                 'coordinates' => '37.94606 23.610555',
                 'country_id' => 87,
-                'varation' => '{"type": ["", "", "piraeus-grpir-greece", "piraeus ,gr", "greece: piraeus", "piraeus pt", "piraeus port", "piraeus city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["piraeus-grpir-greece", "piraeus ,gr", "greece: piraeus", "piraeus pt", "piraeus port", "piraeus city", "piraeus, attiki, attica, greece", "piraeus attiki attica greece", "pireo", "piraeus, greece", "piraeus greece", "pireaus", "pireus", "pireopiraeus"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-12 16:03:08',
             ),
-            267 => 
+            263 => 
             array (
                 'id' => 1009,
                 'name' => 'Thessaloniki',
@@ -3229,11 +3181,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Thessaloniki, GRSKG',
                 'coordinates' => '40.63692 22.91859',
                 'country_id' => 87,
-                'varation' => '{"type": ["", "", "thessaloniki-grskg-greece", "thessaloniki ,gr", "greece: thessaloniki", "thessaloniki pt", "thessaloniki port", "thessaloniki city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["thessaloniki-grskg-greece", "thessaloniki ,gr", "greece: thessaloniki", "thessaloniki pt", "thessaloniki port", "thessaloniki city", "thessaloniki, greece", "thessaloniki greece"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-10-22 11:56:31',
             ),
-            268 => 
+            264 => 
             array (
                 'id' => 1010,
                 'name' => 'HERAKLION',
@@ -3242,10 +3194,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.3475 25.1478',
                 'country_id' => 87,
                 'varation' => '{"type": ["", "", "heraklion-grher-greece", "heraklion ,gr", "greece: heraklion", "heraklion pt", "heraklion port", "heraklion city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-09-05 15:34:22',
             ),
-            269 => 
+            265 => 
             array (
                 'id' => 1011,
                 'name' => 'VOLOS',
@@ -3254,10 +3206,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '39.353 22.963655',
                 'country_id' => 87,
                 'varation' => '{"type": ["", "", "volos-grvol-greece", "volos ,gr", "greece: volos", "volos pt", "volos port", "volos city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-09-05 15:34:22',
             ),
-            270 => 
+            266 => 
             array (
                 'id' => 1012,
                 'name' => 'Puerto Quetzal',
@@ -3265,11 +3217,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Puerto Quetzal, GTPRQ',
                 'coordinates' => '13.92239 -90.78141',
                 'country_id' => 89,
-                'varation' => '{"type": ["", "", "puerto quetzal-gtprq-guatemala", "puerto quetzal ,gt", "guatemala: puerto quetzal", "puerto quetzal pt", "puerto quetzal port", "puerto quetzal city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["puerto quetzal-gtprq-guatemala", "puerto quetzal ,gt", "guatemala: puerto quetzal", "puerto quetzal pt", "puerto quetzal port", "puerto quetzal city", "puerto quetzal, guatemala", "puerto quetzal guatemala"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-12-14 10:53:50',
             ),
-            271 => 
+            267 => 
             array (
                 'id' => 1013,
                 'name' => 'Santo Tomas de Castilla',
@@ -3277,11 +3229,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Santo Tomas de Castilla, GTSTC',
                 'coordinates' => '15.69533 -88.6108',
                 'country_id' => 89,
-                'varation' => '{"type": ["", "", "santo tomas de castilla-gtstc-guatemala", "santo tomas de castilla ,gt", "guatemala: santo tomas de castilla", "santo tomas de castilla pt", "santo tomas de castilla port", "santo tomas de castilla city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["santo tomas de castilla-gtstc-guatemala", "santo tomas de castilla ,gt", "guatemala: santo tomas de castilla", "santo tomas de castilla pt", "santo tomas de castilla port", "santo tomas de castilla city", "santo tomas de castilla, guatemala", "santo tomas de castilla guatemala", "sto. tomÁs de castilla", "santo tomas de castilla, gt", "santo tomas de castilla gt", "s.tomas de c.", "santo tomás de castilla", "stomas de c"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-04-02 04:28:51',
             ),
-            272 => 
+            268 => 
             array (
                 'id' => 1014,
                 'name' => 'PUERTO BARRIOS',
@@ -3289,11 +3241,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PUERTO BARRIOS, GTPBR',
                 'coordinates' => '15.73519 -88.60459',
                 'country_id' => 89,
-                'varation' => '{"type": ["", "", "puerto barrios-gtpbr-guatemala", "puerto barrios ,gt", "guatemala: puerto barrios", "puerto barrios pt", "puerto barrios port", "puerto barrios city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["puerto barrios-gtpbr-guatemala", "puerto barrios ,gt", "guatemala: puerto barrios", "puerto barrios pt", "puerto barrios port", "puerto barrios city", "puerto barrios, guatemala"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-01-09 14:42:57',
             ),
-            273 => 
+            269 => 
             array (
                 'id' => 1015,
                 'name' => 'BISSAU',
@@ -3301,11 +3253,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BISSAU, GWOXB',
                 'coordinates' => '11.86113 -15.5859',
                 'country_id' => 91,
-                'varation' => '{"type": ["", "", "bissau-gwoxb-guinea-bissau", "bissau ,gw", "guinea-bissau: bissau", "bissau pt", "bissau port", "bissau city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["bissau-gwoxb-guinea-bissau", "bissau ,gw", "guinea-bissau: bissau", "bissau pt", "bissau port", "bissau city", "bissau, gw", "bissau, guinea-bissau", "bissau, guineabissau", "bissau guineabissau"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-01-25 10:14:04',
             ),
-            274 => 
+            270 => 
             array (
                 'id' => 1016,
                 'name' => 'Georgetown',
@@ -3313,11 +3265,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Georgetown, GYGEO',
                 'coordinates' => '6.80983 -58.1614',
                 'country_id' => 92,
-                'varation' => '{"type": ["", "", "georgetown-gygeo-guyana", "georgetown ,gy", "guyana: georgetown", "georgetown pt", "georgetown port", "georgetown city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["georgetown-gygeo-guyana", "guyana: georgetown", "georgetown pt", "georgetown port", "georgetown city", "georgetown, guyana", "georgetown guyana", "georgetown", "george town", "georgetown, gy"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-04-02 05:08:28',
             ),
-            275 => 
+            271 => 
             array (
                 'id' => 1017,
                 'name' => 'Hong Kong',
@@ -3325,11 +3277,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hong Kong, HKHKG',
                 'coordinates' => '22.29183 114.1777',
                 'country_id' => 93,
-                'varation' => '{"type": ["", "", "hong kong-hkhkg-hong kong", "hong kong ,hk", "hong kong: hong kong", "hong kong pt", "hong kong port", "hong kong city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["hong kong-hkhkg-hong kong", "hong kong ,hk", "hong kong: hong kong", "hong kong pt", "hong kong port", "hong kong city", "hong kong: hongkong", "hong kong hongkong", "hong kong hong kong", "hong kong, hong kong", "hkhong kong"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-07 11:43:34',
             ),
-            276 => 
+            272 => 
             array (
                 'id' => 1018,
                 'name' => 'Puerto Cortes',
@@ -3337,11 +3289,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Puerto Cortes, HNPCR',
                 'coordinates' => '15.82193 -87.9344',
                 'country_id' => 94,
-                'varation' => '{"type": ["hnpco", "", "puerto cortes-hnpcr-honduras", "puerto cortes ,hn", "honduras: puerto cortes", "puerto cortes pt", "puerto cortes port", "puerto cortes city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["hnpco", "puerto cortes-hnpcr-honduras", "puerto cortes ,hn", "honduras: puerto cortes", "puerto cortes pt", "puerto cortes port", "puerto cortes city", "puerto cortes, honduras", "puerto cortes honduras", "puerto cortes hn", "puerto cortes, hn"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-02-18 07:53:00',
             ),
-            277 => 
+            273 => 
             array (
                 'id' => 1019,
                 'name' => 'PUERTO CASTILLA',
@@ -3350,10 +3302,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '16.00563 -86.0231',
                 'country_id' => 94,
                 'varation' => '{"type": ["", "", "puerto castilla-hnpca-honduras", "puerto castilla ,hn", "honduras: puerto castilla", "puerto castilla pt", "puerto castilla port", "puerto castilla city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-09-05 15:34:22',
             ),
-            278 => 
+            274 => 
             array (
                 'id' => 1020,
                 'name' => 'ROATAN',
@@ -3362,10 +3314,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '16.31734 -86.526645',
                 'country_id' => 94,
                 'varation' => '{"type": ["", "", "roatan-hnrtb-honduras", "roatan ,hn", "honduras: roatan", "roatan pt", "roatan port", "roatan city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2018-09-05 15:34:22',
             ),
-            279 => 
+            275 => 
             array (
                 'id' => 1021,
                 'name' => 'PLOCE',
@@ -3373,11 +3325,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PLOCE, HRPLE',
                 'coordinates' => '43.04454 17.43813',
                 'country_id' => 95,
-                'varation' => '{"type": ["", "", "ploce-hrple-croatia", "ploce ,hr", "croatia: ploce", "ploce pt", "ploce port", "ploce city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["ploce-hrple-croatia", "ploce ,hr", "croatia: ploce", "ploce pt", "ploce port", "ploce city", "ploce, croatia"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-01-23 07:54:57',
             ),
-            280 => 
+            276 => 
             array (
                 'id' => 1022,
                 'name' => 'RIJEKA',
@@ -3385,11 +3337,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'RIJEKA, HRRJK',
                 'coordinates' => '45.32643 14.4403',
                 'country_id' => 95,
-                'varation' => '{"type": ["", "", "rijeka-hrrjk-croatia", "rijeka ,hr", "croatia: rijeka", "rijeka pt", "rijeka port", "rijeka city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["rijeka-hrrjk-croatia", "rijeka ,hr", "croatia: rijeka", "rijeka pt", "rijeka port", "rijeka city", "rijeka, croatia", "rijeka croatia", "rejeka"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-03-27 08:39:52',
             ),
-            281 => 
+            277 => 
             array (
                 'id' => 1023,
                 'name' => 'Port-au-Prince',
@@ -3397,11 +3349,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port-au-Prince, HTPAP',
                 'coordinates' => '18.55615 -72.34769',
                 'country_id' => 96,
-                'varation' => '{"type": ["", "", "port-au-prince-htpap-haiti", "port-au-prince ,ht", "haiti: port-au-prince", "port-au-prince pt", "port-au-prince port", "port-au-prince city"]}',
-                'created_at' => '2018-09-05 19:34:22',
-                'updated_at' => '2018-09-05 19:34:22',
+                'varation' => '{"type": ["port-au-prince-htpap-haiti", "port-au-prince ,ht", "haiti: port-au-prince", "port-au-prince pt", "port-au-prince port", "port-au-prince city", "port-au-prince, haiti", "port au prince", "port of prince", "port of prince r1"]}',
+                'created_at' => '2018-09-05 15:34:22',
+                'updated_at' => '2019-02-27 16:57:45',
             ),
-            282 => 
+            278 => 
             array (
                 'id' => 1024,
                 'name' => 'Belawan',
@@ -3409,11 +3361,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Belawan, IDBLW',
                 'coordinates' => '3.7841385 98.688805',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "belawan-idblw-indonesia", "belawan ,id", "indonesia: belawan", "belawan pt", "belawan port", "belawan city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["belawan-idblw-indonesia", "belawan ,id", "indonesia: belawan", "belawan pt", "belawan port", "belawan city", "belawan, sumatera utara, indonesia", "belawan sumatera utara indonesia", "belawan indonesia", "belawan, indonesia", "belawan, indonesia", "belawan, sumatra-idblw-indonesia", "medan  belawan", "belawan sumatra"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-03-25 08:24:57',
             ),
-            283 => 
+            279 => 
             array (
                 'id' => 1025,
                 'name' => 'Benoa',
@@ -3421,11 +3373,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Benoa, IDBOA',
                 'coordinates' => '-8.74329 115.20943',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "benoa-idboa-indonesia", "benoa ,id", "indonesia: benoa", "benoa pt", "benoa port", "benoa city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["benoa-idboa-indonesia", "benoa ,id", "indonesia: benoa", "benoa pt", "benoa port", "benoa city", "benoa, indonesia", "benoa bali"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-02-12 09:36:59',
             ),
-            284 => 
+            280 => 
             array (
                 'id' => 1026,
                 'name' => 'Bitung',
@@ -3433,11 +3385,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bitung, IDBIT',
                 'coordinates' => '1.4364835 125.1904',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "bitung-idbit-indonesia", "bitung ,id", "indonesia: bitung", "bitung pt", "bitung port", "bitung city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["bitung-idbit-indonesia", "bitung ,id", "indonesia: bitung", "bitung pt", "bitung port", "bitung city", "bitung, indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 13:54:10',
             ),
-            285 => 
+            281 => 
             array (
                 'id' => 1027,
                 'name' => 'Jakarta',
@@ -3445,11 +3397,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jakarta, IDJKT',
                 'coordinates' => '-6.125718 106.85125',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "jakarta-idjkt-indonesia", "jakarta ,id", "indonesia: jakarta", "jakarta pt", "jakarta port", "jakarta city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+            'varation' => '{"type": ["jakarta-idjkt-indonesia", "jakarta ,id", "indonesia: jakarta", "jakarta pt", "jakarta port", "jakarta city", "jakarta, indonesia", "jakarta indonesia", "indonesia jakarta", "jakarta, java-idjkt-indonesia", "jakarta (tanjun priok)", "jakarta tanjun priok"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-03-22 07:30:55',
             ),
-            286 => 
+            282 => 
             array (
                 'id' => 1028,
                 'name' => 'Jambi',
@@ -3457,23 +3409,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jambi, IDDJB',
                 'coordinates' => '-1.58677 103.6197',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "jambi-iddjb-indonesia", "jambi ,id", "indonesia: jambi", "jambi pt", "jambi port", "jambi city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["jambi-iddjb-indonesia", "jambi ,id", "indonesia: jambi", "jambi pt", "jambi port", "jambi city", "jambi ,id", "jambi id", "jambi, indonesia", "kuala tungkal"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-17 09:02:57',
             ),
-            287 => 
-            array (
-                'id' => 1029,
-                'name' => 'Makassar',
-                'code' => 'IDUPG',
-                'display_name' => 'Makassar, IDUPG',
-                'coordinates' => '-5.13222 119.40315',
-                'country_id' => 98,
-                'varation' => '{"type": ["", "", "makassar-idupg-indonesia", "makassar ,id", "indonesia: makassar", "makassar pt", "makassar port", "makassar city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
-            ),
-            288 => 
+            283 => 
             array (
                 'id' => 1030,
                 'name' => 'Merak',
@@ -3482,10 +3422,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-5.92286 105.99422',
                 'country_id' => 98,
                 'varation' => '{"type": ["", "", "merak-idmrk-indonesia", "merak ,id", "indonesia: merak", "merak pt", "merak port", "merak city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-09-05 15:34:23',
             ),
-            289 => 
+            284 => 
             array (
                 'id' => 1031,
                 'name' => 'Padang',
@@ -3493,11 +3433,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Padang, IDPDG',
                 'coordinates' => '-1.00017 100.37084',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "padang-idpdg-indonesia", "padang ,id", "indonesia: padang", "padang pt", "padang port", "padang city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["padang-idpdg-indonesia", "padang ,id", "indonesia: padang", "padang pt", "padang port", "padang city", "padang, indonesia", "padang, sumatra"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-20 09:59:07',
             ),
-            290 => 
+            285 => 
             array (
                 'id' => 1032,
                 'name' => 'Palembang',
@@ -3505,11 +3445,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Palembang, IDPLM',
                 'coordinates' => '-2.98704 104.76697',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "palembang-idplm-indonesia", "palembang ,id", "indonesia: palembang", "palembang pt", "palembang port", "palembang city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["palembang-idplm-indonesia", "palembang ,id", "indonesia: palembang", "palembang pt", "palembang port", "palembang city", "palembang, indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 13:48:36',
             ),
-            291 => 
+            286 => 
             array (
                 'id' => 1033,
                 'name' => 'Panjang Port',
@@ -3517,11 +3457,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Panjang Port, IDPNJ',
                 'coordinates' => '-5.4803245 105.29475',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "panjang port-idpnj-indonesia", "panjang port ,id", "indonesia: panjang port", "panjang port pt", "panjang port port", "panjang port city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["panjang port-idpnj-indonesia", "panjang port ,id", "indonesia: panjang port", "panjang port pt", "panjang port port", "panjang port city", "panjang port, indonesia", "panjang-idpnj-indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 14:26:47',
             ),
-            292 => 
+            287 => 
             array (
                 'id' => 1034,
                 'name' => 'Perawang',
@@ -3529,11 +3469,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Perawang, IDPER',
                 'coordinates' => NULL,
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "perawang-idper-indonesia", "perawang ,id", "indonesia: perawang", "perawang pt", "perawang port", "perawang city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["perawang-idper-indonesia", "perawang ,id", "indonesia: perawang", "perawang pt", "perawang port", "perawang city", "perawang, indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 15:39:42',
             ),
-            293 => 
+            288 => 
             array (
                 'id' => 1035,
                 'name' => 'Semarang',
@@ -3541,11 +3481,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Semarang, IDSRG',
                 'coordinates' => '-6.9467 110.42515',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "semarang-idsrg-indonesia", "semarang ,id", "indonesia: semarang", "semarang pt", "semarang port", "semarang city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["semarang-idsrg-indonesia", "semarang ,id", "indonesia: semarang", "semarang pt", "semarang port", "semarang city", "semarang", "semarang, jawa tengah, indonesia", "semarang jawa tengah indonesia", "semarang, indonesia", "semarang, java-idsrg-indonesia", "semarang, jawa tengah, indonesia, via singapore"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-02-27 12:58:59',
             ),
-            294 => 
+            289 => 
             array (
                 'id' => 1036,
                 'name' => 'Surabaya',
@@ -3553,11 +3493,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Surabaya, IDSUB',
                 'coordinates' => '-7.2076375 112.7219',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "surabaya-idsub-indonesia", "surabaya ,id", "indonesia: surabaya", "surabaya pt", "surabaya port", "surabaya city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["surabaya-idsub-indonesia", "surabaya ,id", "indonesia: surabaya", "surabaya pt", "surabaya port", "surabaya city", "surabaya, jawa timur, indonesia", "surabaya,indonesia", "surabayaindonesia", "surabaya, java-idsub-indonesia", "surabaya, indonesia", "surabaya, jawa timur, indonesia, via singapore"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-02-27 12:59:19',
             ),
-            295 => 
+            290 => 
             array (
                 'id' => 1037,
                 'name' => 'Tebing Tinggi Jambi',
@@ -3565,11 +3505,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tebing Tinggi Jambi, IDTTI',
                 'coordinates' => NULL,
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "tebing tinggi jambi-idtti-indonesia", "tebing tinggi jambi ,id", "indonesia: tebing tinggi jambi", "tebing tinggi jambi pt", "tebing tinggi jambi port", "tebing tinggi jambi city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["tebing tinggi jambi-idtti-indonesia", "tebing tinggi jambi ,id", "indonesia: tebing tinggi jambi", "tebing tinggi jambi pt", "tebing tinggi jambi port", "tebing tinggi jambi city", "tebing tinggi jambi, indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 15:36:56',
             ),
-            296 => 
+            291 => 
             array (
                 'id' => 1038,
                 'name' => 'BATAM ISLAND',
@@ -3577,11 +3517,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BATAM ISLAND, IDBTM',
                 'coordinates' => NULL,
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "batam island-idbtm-indonesia", "batam island ,id", "indonesia: batam island", "batam island pt", "batam island port", "batam island city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["batam island-idbtm-indonesia", "batam island ,id", "indonesia: batam island", "batam island pt", "batam island port", "batam island city", "batam island"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-01-25 10:25:12',
             ),
-            297 => 
+            292 => 
             array (
                 'id' => 1039,
                 'name' => 'MAKASSAR',
@@ -3589,11 +3529,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MAKASSAR, IDMAK',
                 'coordinates' => '-5.123504 119.4177',
                 'country_id' => 98,
-                'varation' => '{"type": ["", "", "makassar-idmak-indonesia", "makassar ,id", "indonesia: makassar", "makassar pt", "makassar port", "makassar city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["makassar-idmak-indonesia", "makassar ,id", "indonesia: makassar", "makassar pt", "makassar port", "makassar city", "makassar id", "makassar ,id", "makassar, indonesia"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-10 13:50:36',
             ),
-            298 => 
+            293 => 
             array (
                 'id' => 1040,
                 'name' => 'PONTIANAK, KALIMANTAN',
@@ -3602,10 +3542,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-0.01847 109.33552',
                 'country_id' => 98,
                 'varation' => '{"type": ["", "", "pontianak, kalimantan-idpnk-indonesia", "pontianak, kalimantan ,id", "indonesia: pontianak, kalimantan", "pontianak, kalimantan pt", "pontianak, kalimantan port", "pontianak, kalimantan city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-09-05 15:34:23',
             ),
-            299 => 
+            294 => 
             array (
                 'id' => 1041,
                 'name' => 'Cork Co Cork',
@@ -3613,11 +3553,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Cork Co Cork, IEORK',
                 'coordinates' => '51.900405 -8.435681',
                 'country_id' => 99,
-                'varation' => '{"type": ["", "", "cork co cork-ieork-ireland", "cork co cork ,ie", "ireland: cork co cork", "cork co cork pt", "cork co cork port", "cork co cork city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["cork co cork-ieork-ireland", "cork co cork ,ie", "ireland: cork co cork", "cork co cork pt", "cork co cork port", "cork co cork city", "cork co cork, ireland", "cork co cork ireland"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-14 12:10:07',
             ),
-            300 => 
+            295 => 
             array (
                 'id' => 1042,
                 'name' => 'Dublin',
@@ -3625,11 +3565,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dublin, IEDUB',
                 'coordinates' => '53.36233 -6.2365',
                 'country_id' => 99,
-                'varation' => '{"type": ["", "", "dublin-iedub-ireland", "dublin ,ie", "ireland: dublin", "dublin pt", "dublin port", "dublin city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["dublin-iedub-ireland", "dublin ,ie", "ireland: dublin", "dublin pt", "dublin port", "dublin city", "dublin, ireland", "dublin ireland"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-14 12:13:28',
             ),
-            301 => 
+            296 => 
             array (
                 'id' => 1043,
                 'name' => 'Ashdod',
@@ -3637,11 +3577,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ashdod, ILASH',
                 'coordinates' => '31.82475 34.6482',
                 'country_id' => 100,
-                'varation' => '{"type": ["", "", "ashdod-ilash-israel", "ashdod ,il", "israel: ashdod", "ashdod pt", "ashdod port", "ashdod city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+            'varation' => '{"type": ["ashdod-ilash-israel", "ashdod ,il", "israel: ashdod", "ashdod pt", "ashdod port", "ashdod city", "ashdod railyard", "ashdod (rail yard)", "ashdod, israel", "ashdod israel", "ashdod rail yard"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-04-09 15:59:34',
             ),
-            302 => 
+            297 => 
             array (
                 'id' => 1044,
                 'name' => 'Haifa',
@@ -3649,11 +3589,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Haifa, ILHFA',
                 'coordinates' => '32.81873 35.0141',
                 'country_id' => 100,
-                'varation' => '{"type": ["", "", "haifa-ilhfa-israel", "haifa ,il", "israel: haifa", "haifa pt", "haifa port", "haifa city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["haifa-ilhfa-israel", "haifa ,il", "israel: haifa", "haifa pt", "haifa port", "haifa city", "haifa, israel", "haifa israel"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-12-14 13:46:39',
             ),
-            303 => 
+            298 => 
             array (
                 'id' => 1045,
                 'name' => 'Agra',
@@ -3662,10 +3602,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "agra-inagr-india", "agra ,in", "india: agra", "agra pt", "agra port", "agra city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2018-09-05 15:34:23',
             ),
-            304 => 
+            299 => 
             array (
                 'id' => 1046,
                 'name' => 'Ahmedabad',
@@ -3673,11 +3613,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ahmedabad, INAMD',
                 'coordinates' => NULL,
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "ahmedabad-inamd-india", "ahmedabad ,in", "india: ahmedabad", "ahmedabad pt", "ahmedabad port", "ahmedabad city"]}',
-                'created_at' => '2018-09-05 19:34:23',
-                'updated_at' => '2018-09-05 19:34:23',
+                'varation' => '{"type": ["ahmedabad-inamd-india", "ahmedabad ,in", "india: ahmedabad", "ahmedabad pt", "ahmedabad port", "ahmedabad city", "ahmedabad", "ahmedabad icd"]}',
+                'created_at' => '2018-09-05 15:34:23',
+                'updated_at' => '2019-04-03 11:07:27',
             ),
-            305 => 
+            300 => 
             array (
                 'id' => 1047,
                 'name' => 'Amingaon',
@@ -3686,10 +3626,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "amingaon-inamg-india", "amingaon ,in", "india: amingaon", "amingaon pt", "amingaon port", "amingaon city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            306 => 
+            301 => 
             array (
                 'id' => 1048,
                 'name' => 'Ankleshwar',
@@ -3698,10 +3638,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ankleshwar-inakv-india", "ankleshwar ,in", "india: ankleshwar", "ankleshwar pt", "ankleshwar port", "ankleshwar city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            307 => 
+            302 => 
             array (
                 'id' => 1049,
                 'name' => 'Aurangabad',
@@ -3710,10 +3650,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "aurangabad-inawm-india", "aurangabad ,in", "india: aurangabad", "aurangabad pt", "aurangabad port", "aurangabad city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            308 => 
+            303 => 
             array (
                 'id' => 1050,
                 'name' => 'Baroda',
@@ -3722,10 +3662,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "baroda-inbrc-india", "baroda ,in", "india: baroda", "baroda pt", "baroda port", "baroda city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            309 => 
+            304 => 
             array (
                 'id' => 1051,
                 'name' => 'Boisar',
@@ -3734,10 +3674,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "boisar-inpgr-india", "boisar ,in", "india: boisar", "boisar pt", "boisar port", "boisar city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            310 => 
+            305 => 
             array (
                 'id' => 1052,
                 'name' => 'Chawapail',
@@ -3746,10 +3686,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "chawapail-incpr-india", "chawapail ,in", "india: chawapail", "chawapail pt", "chawapail port", "chawapail city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            311 => 
+            306 => 
             array (
                 'id' => 1053,
                 'name' => 'Chennai',
@@ -3757,11 +3697,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Chennai, INMAA',
                 'coordinates' => '13.09853 80.2971',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "chennai-inmaa-india", "chennai ,in", "india: chennai", "chennai pt", "chennai port", "chennai city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["chennai-inmaa-india", "chennai ,in", "india: chennai", "chennai pt", "chennai port", "chennai city", "india chennai", "chennai, tamil nadu, india", "chennai tamil nadu india", "chennai", "chennai madras", "chennai/madras", "chennaimadras", "chennai ex madras", "chennai / madras", "madras chennai"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2019-03-25 08:29:43',
             ),
-            312 => 
+            307 => 
             array (
                 'id' => 1054,
                 'name' => 'Cochin',
@@ -3769,11 +3709,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Cochin, INCOK',
                 'coordinates' => '9.95453 76.2447',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "cochin-incok-india", "cochin ,in", "india: cochin", "cochin pt", "cochin port", "cochin city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["cochin-incok-india", "cochin ,in", "india: cochin", "cochin pt", "cochin port", "cochin city", "in023 incok cochin", "cochin, india", "cochin india", "isc007 incok cochin"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2019-04-01 13:40:56',
             ),
-            313 => 
+            308 => 
             array (
                 'id' => 1055,
                 'name' => 'Dadri',
@@ -3782,10 +3722,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "dadri-indri-india", "dadri ,in", "india: dadri", "dadri pt", "dadri port", "dadri city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            314 => 
+            309 => 
             array (
                 'id' => 1056,
                 'name' => 'Dhannad',
@@ -3794,10 +3734,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "dhannad-indha-india", "dhannad ,in", "india: dhannad", "dhannad pt", "dhannad port", "dhannad city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            315 => 
+            310 => 
             array (
                 'id' => 1057,
                 'name' => 'Durgapur',
@@ -3806,10 +3746,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "durgapur-indur-india", "durgapur ,in", "india: durgapur", "durgapur pt", "durgapur port", "durgapur city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            316 => 
+            311 => 
             array (
                 'id' => 1058,
                 'name' => 'Faridabad',
@@ -3818,10 +3758,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "faridabad-infbd-india", "faridabad ,in", "india: faridabad", "faridabad pt", "faridabad port", "faridabad city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            317 => 
+            312 => 
             array (
                 'id' => 1059,
                 'name' => 'Gautam Budhh Nagar',
@@ -3830,10 +3770,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "gautam budhh nagar-ingnu-india", "gautam budhh nagar ,in", "india: gautam budhh nagar", "gautam budhh nagar pt", "gautam budhh nagar port", "gautam budhh nagar city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            318 => 
+            313 => 
             array (
                 'id' => 1060,
                 'name' => 'Greater Noida',
@@ -3842,10 +3782,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "greater noida-ingno-india", "greater noida ,in", "india: greater noida", "greater noida pt", "greater noida port", "greater noida city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            319 => 
+            314 => 
             array (
                 'id' => 1061,
                 'name' => 'Gurgaon',
@@ -3854,10 +3794,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "gurgaon-inggn-india", "gurgaon ,in", "india: gurgaon", "gurgaon pt", "gurgaon port", "gurgaon city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            320 => 
+            315 => 
             array (
                 'id' => 1062,
                 'name' => 'Haldia',
@@ -3865,11 +3805,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Haldia, INHAL',
                 'coordinates' => '22.01363 88.0755',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "haldia-inhal-india", "haldia ,in", "india: haldia", "haldia pt", "haldia port", "haldia city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["haldia-inhal-india", "haldia ,in", "india: haldia", "haldia pt", "haldia port", "haldia city", "haldia port ,in", "haldia port in", "haldia port ,in", "haldia port in", "haldia port in", "haldia, west bengal, india", "haldia west bengal india", "haldia port, india", "haldia port india"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-12-14 13:49:12',
             ),
-            321 => 
+            316 => 
             array (
                 'id' => 1063,
                 'name' => 'Hazira',
@@ -3877,11 +3817,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hazira, INHZR',
                 'coordinates' => '21.1076 72.651155',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "hazira-inhzr-india", "hazira ,in", "india: hazira", "hazira pt", "hazira port", "hazira city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["hazira-inhzr-india", "hazira ,in", "india: hazira", "hazira pt", "hazira port", "hazira city", "hazira, gujarat, india", "hazira gujarat india", "surat hazira", "surat hazira", "hazira, gj", "hazira gj", "hazira, india", "inhza", "hazira * r3", "hazira  r3"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2019-02-27 17:09:31',
             ),
-            322 => 
+            317 => 
             array (
                 'id' => 1064,
                 'name' => 'Hyderabad',
@@ -3889,11 +3829,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hyderabad, INHYD',
                 'coordinates' => NULL,
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "hyderabad-inhyd-india", "hyderabad ,in", "india: hyderabad", "hyderabad pt", "hyderabad port", "hyderabad city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["hyderabad-inhyd-india", "hyderabad ,in", "india: hyderabad", "hyderabad pt", "hyderabad port", "hyderabad city", "hyderabad icd"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2019-03-14 11:37:50',
             ),
-            323 => 
+            318 => 
             array (
                 'id' => 1065,
                 'name' => 'Jaipur',
@@ -3902,10 +3842,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "jaipur-injai-india", "jaipur ,in", "india: jaipur", "jaipur pt", "jaipur port", "jaipur city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-09-05 15:34:24',
             ),
-            324 => 
+            319 => 
             array (
                 'id' => 1066,
                 'name' => 'Jawaharlal Nehru',
@@ -3913,11 +3853,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jawaharlal Nehru, INNSA',
                 'coordinates' => '18.95113 72.9611',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "jawaharlal nehru-innsa-india", "jawaharlal nehru ,in", "india: jawaharlal nehru", "jawaharlal nehru pt", "jawaharlal nehru port", "jawaharlal nehru city"]}',
-                'created_at' => '2018-09-05 19:34:24',
-                'updated_at' => '2018-09-05 19:34:24',
+                'varation' => '{"type": ["jawaharlal nehru-innsa-india", "jawaharlal nehru ,in", "india: jawaharlal nehru", "jawaharlal nehru pt", "jawaharlal nehru port", "jawaharlal nehru city", "jawaharlal nehru, india"]}',
+                'created_at' => '2018-09-05 15:34:24',
+                'updated_at' => '2018-12-17 06:23:27',
             ),
-            325 => 
+            320 => 
             array (
                 'id' => 1067,
                 'name' => 'Jodhpur',
@@ -3926,10 +3866,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "jodhpur-injdh-india", "jodhpur ,in", "india: jodhpur", "jodhpur pt", "jodhpur port", "jodhpur city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            326 => 
+            321 => 
             array (
                 'id' => 1068,
                 'name' => 'Kakinada',
@@ -3938,10 +3878,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '16.93263 82.2613',
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kakinada-inkak-india", "kakinada ,in", "india: kakinada", "kakinada pt", "kakinada port", "kakinada city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            327 => 
+            322 => 
             array (
                 'id' => 1069,
                 'name' => 'Kanpur',
@@ -3949,11 +3889,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kanpur, INKNU',
                 'coordinates' => NULL,
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "kanpur-inknu-india", "kanpur ,in", "india: kanpur", "kanpur pt", "kanpur port", "kanpur city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["kanpur-inknu-india", "kanpur ,in", "india: kanpur", "kanpur pt", "kanpur port", "kanpur city", "kampur"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2019-03-22 14:56:10',
             ),
-            328 => 
+            323 => 
             array (
                 'id' => 1070,
                 'name' => 'Kathuwas',
@@ -3962,10 +3902,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kathuwas-incml-india", "kathuwas ,in", "india: kathuwas", "kathuwas pt", "kathuwas port", "kathuwas city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            329 => 
+            324 => 
             array (
                 'id' => 1071,
                 'name' => 'Kattupalli',
@@ -3973,23 +3913,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kattupalli, INKAT',
                 'coordinates' => '13.30473 80.35606',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "kattupalli-inkat-india", "kattupalli ,in", "india: kattupalli", "kattupalli pt", "kattupalli port", "kattupalli city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["kattupalli-inkat-india", "kattupalli ,in", "india: kattupalli", "kattupalli pt", "kattupalli port", "kattupalli city", "kattupalli, india", "katttupalli"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2019-03-27 08:39:29',
             ),
-            330 => 
+            325 => 
             array (
                 'id' => 1072,
-                'name' => 'Kolkata',
+                'name' => 'Calcutta',
                 'code' => 'INCCU',
-                'display_name' => 'Kolkata, INCCU',
+                'display_name' => 'Calcutta, INCCU',
                 'coordinates' => '22.55313 88.3383',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "kolkata-inccu-india", "kolkata ,in", "india: kolkata", "kolkata pt", "kolkata port", "kolkata city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["kolkata-inccu-india", "kolkata ,in", "india: kolkata", "kolkata pt", "kolkata port", "kolkata city", "kolkata, west bengal, india", "kolkatacalcutta", "kolkatacalcutta", "kolkata, india", "calcuta kolkata", "kolkatta", "calcutta", "india calcutta"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2019-03-22 09:20:52',
             ),
-            331 => 
+            326 => 
             array (
                 'id' => 1073,
                 'name' => 'Kota',
@@ -3998,10 +3938,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kota-inktu-india", "kota ,in", "india: kota", "kota pt", "kota port", "kota city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            332 => 
+            327 => 
             array (
                 'id' => 1074,
                 'name' => 'Krishnapatnam',
@@ -4009,11 +3949,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Krishnapatnam, INKRI',
                 'coordinates' => '14.249 80.13',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "krishnapatnam-inkri-india", "krishnapatnam ,in", "india: krishnapatnam", "krishnapatnam pt", "krishnapatnam port", "krishnapatnam city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["krishnapatnam-inkri-india", "krishnapatnam ,in", "india: krishnapatnam", "krishnapatnam pt", "krishnapatnam port", "krishnapatnam city", "krishnapatnam, ap", "krishnapatnam ap", "krishnapatnam, india"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-12-17 06:27:53',
             ),
-            333 => 
+            328 => 
             array (
                 'id' => 1075,
                 'name' => 'Loni',
@@ -4022,10 +3962,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "loni-inlni-india", "loni ,in", "india: loni", "loni pt", "loni port", "loni city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            334 => 
+            329 => 
             array (
                 'id' => 1076,
                 'name' => 'Ludhiana',
@@ -4034,10 +3974,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ludhiana-inluh-india", "ludhiana ,in", "india: ludhiana", "ludhiana pt", "ludhiana port", "ludhiana city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            335 => 
+            330 => 
             array (
                 'id' => 1077,
                 'name' => 'Malanpur',
@@ -4046,10 +3986,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "malanpur-inmpr-india", "malanpur ,in", "india: malanpur", "malanpur pt", "malanpur port", "malanpur city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            336 => 
+            331 => 
             array (
                 'id' => 1078,
                 'name' => 'Mandideep',
@@ -4058,10 +3998,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "mandideep-inmnp-india", "mandideep ,in", "india: mandideep", "mandideep pt", "mandideep port", "mandideep city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            337 => 
+            332 => 
             array (
                 'id' => 1079,
                 'name' => 'Mangalore',
@@ -4069,11 +4009,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mangalore, INIXE',
                 'coordinates' => '12.84253 74.8427',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "mangalore-inixe-india", "mangalore ,in", "india: mangalore", "mangalore pt", "mangalore port", "mangalore city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["mangalore-inixe-india", "mangalore ,in", "india: mangalore", "mangalore pt", "mangalore port", "mangalore city", "mangalore ,in", "mangalore in", "mangalore ,in", "mangalore in", "mangalore in", "mangalore, india", "mangalore india"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-12-14 11:54:05',
             ),
-            338 => 
+            333 => 
             array (
                 'id' => 1080,
                 'name' => 'Marmagao',
@@ -4081,11 +4021,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Marmagao, INMRM',
                 'coordinates' => '15.40303 73.7999',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "marmagao-inmrm-india", "marmagao ,in", "india: marmagao", "marmagao pt", "marmagao port", "marmagao city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["marmagao-inmrm-india", "marmagao ,in", "india: marmagao", "marmagao pt", "marmagao port", "marmagao city", "marmagao, india"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-12-17 06:26:39',
             ),
-            339 => 
+            334 => 
             array (
                 'id' => 1081,
                 'name' => 'Moradabad',
@@ -4094,10 +4034,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "moradabad-inmor-india", "moradabad ,in", "india: moradabad", "moradabad pt", "moradabad port", "moradabad city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            340 => 
+            335 => 
             array (
                 'id' => 1082,
                 'name' => 'Mundra',
@@ -4105,11 +4045,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mundra, INMUN',
                 'coordinates' => '22.83353 69.7027',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "mundra-inmun-india", "mundra ,in", "india: mundra", "mundra pt", "mundra port", "mundra city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["mundra-inmun-india", "mundra ,in", "india: mundra", "mundra pt", "mundra port", "mundra city", "mundra, gujarat, india", "mundra gujarat india", "inmmu", "mundra, india", "mundra", "mundra * r3", "mundra r3", "mundra via damietta*", "mundra via damietta"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2019-03-25 09:16:27',
             ),
-            341 => 
+            336 => 
             array (
                 'id' => 1083,
                 'name' => 'Nagpur',
@@ -4118,10 +4058,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "nagpur-innag-india", "nagpur ,in", "india: nagpur", "nagpur pt", "nagpur port", "nagpur city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            342 => 
+            337 => 
             array (
                 'id' => 1084,
                 'name' => 'New Delhi',
@@ -4129,11 +4069,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'New Delhi, INICD',
                 'coordinates' => NULL,
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "new delhi-inicd-india", "new delhi ,in", "india: new delhi", "new delhi pt", "new delhi port", "new delhi city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+            'varation' => '{"type": ["new delhi-inicd-india", "new delhi ,in", "india: new delhi", "new delhi pt", "new delhi port", "new delhi city", "new delhi (icd patpar.)", "new delhi icd patpar.", "new delhi icd patpar"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2019-03-14 11:39:43',
             ),
-            343 => 
+            338 => 
             array (
                 'id' => 1085,
                 'name' => 'Panipat',
@@ -4142,10 +4082,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "panipat-inpap-india", "panipat ,in", "india: panipat", "panipat pt", "panipat port", "panipat city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            344 => 
+            339 => 
             array (
                 'id' => 1086,
                 'name' => 'Patli',
@@ -4154,10 +4094,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "patli-inptl-india", "patli ,in", "india: patli", "patli pt", "patli port", "patli city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            345 => 
+            340 => 
             array (
                 'id' => 1087,
                 'name' => 'Patparganj',
@@ -4166,10 +4106,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "patparganj-inppg-india", "patparganj ,in", "india: patparganj", "patparganj pt", "patparganj port", "patparganj city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            346 => 
+            341 => 
             array (
                 'id' => 1088,
                 'name' => 'Pipavav',
@@ -4177,11 +4117,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Pipavav, INPPV',
                 'coordinates' => NULL,
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "pipavav-inppv-india", "pipavav ,in", "india: pipavav", "pipavav pt", "pipavav port", "pipavav city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'varation' => '{"type": ["pipavav-inppv-india", "pipavav ,in", "india: pipavav", "pipavav pt", "pipavav port", "pipavav city", "pipavav", "pipavav, india"]}',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-12-17 06:27:06',
             ),
-            347 => 
+            342 => 
             array (
                 'id' => 1089,
                 'name' => 'Pithampur',
@@ -4190,10 +4130,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "pithampur-inpir-india", "pithampur ,in", "india: pithampur", "pithampur pt", "pithampur port", "pithampur city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            348 => 
+            343 => 
             array (
                 'id' => 1090,
                 'name' => 'Piyala',
@@ -4202,10 +4142,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "piyala-inpiy-india", "piyala ,in", "india: piyala", "piyala pt", "piyala port", "piyala city"]}',
-                'created_at' => '2018-09-05 19:34:25',
-                'updated_at' => '2018-09-05 19:34:25',
+                'created_at' => '2018-09-05 15:34:25',
+                'updated_at' => '2018-09-05 15:34:25',
             ),
-            349 => 
+            344 => 
             array (
                 'id' => 1091,
                 'name' => 'Raipur',
@@ -4214,10 +4154,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "raipur-inrpr-india", "raipur ,in", "india: raipur", "raipur pt", "raipur port", "raipur city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            350 => 
+            345 => 
             array (
                 'id' => 1092,
                 'name' => 'Ratlam',
@@ -4226,10 +4166,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "ratlam-inrtm-india", "ratlam ,in", "india: ratlam", "ratlam pt", "ratlam port", "ratlam city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            351 => 
+            346 => 
             array (
                 'id' => 1093,
                 'name' => 'Rewari',
@@ -4238,10 +4178,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "rewari-inrea-india", "rewari ,in", "india: rewari", "rewari pt", "rewari port", "rewari city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            352 => 
+            347 => 
             array (
                 'id' => 1094,
                 'name' => 'SAHNEWAL',
@@ -4250,10 +4190,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "sahnewal-inswa-india", "sahnewal ,in", "india: sahnewal", "sahnewal pt", "sahnewal port", "sahnewal city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            353 => 
+            348 => 
             array (
                 'id' => 1095,
                 'name' => 'Sanand',
@@ -4262,10 +4202,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "sanand-insaa-india", "sanand ,in", "india: sanand", "sanand pt", "sanand port", "sanand city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            354 => 
+            349 => 
             array (
                 'id' => 1096,
                 'name' => 'Shorajpur',
@@ -4274,10 +4214,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "shorajpur-inshj-india", "shorajpur ,in", "india: shorajpur", "shorajpur pt", "shorajpur port", "shorajpur city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            355 => 
+            350 => 
             array (
                 'id' => 1097,
                 'name' => 'Sonepat',
@@ -4286,10 +4226,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '#N/A',
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "sonepat-inson -india", "sonepat ,in", "india: sonepat", "sonepat pt", "sonepat port", "sonepat city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            356 => 
+            351 => 
             array (
                 'id' => 1098,
                 'name' => 'THAR',
@@ -4298,10 +4238,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "thar-intha-india", "thar ,in", "india: thar", "thar pt", "thar port", "thar city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            357 => 
+            352 => 
             array (
                 'id' => 1099,
                 'name' => 'Tuticorin',
@@ -4309,11 +4249,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tuticorin, INTUT',
                 'coordinates' => '8.74983 78.1953',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "tuticorin-intut-india", "tuticorin ,in", "india: tuticorin", "tuticorin pt", "tuticorin port", "tuticorin city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["tuticorin-intut-india", "tuticorin ,in", "india: tuticorin", "tuticorin pt", "tuticorin port", "tuticorin city", "tuticorin, tamil nadu, india", "tuticorin tamil nadu india", "tuticorin, india", "tuticorin india", "tutticorin"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2019-03-25 08:37:39',
             ),
-            358 => 
+            353 => 
             array (
                 'id' => 1100,
                 'name' => 'Visakhapatnam',
@@ -4321,23 +4261,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Visakhapatnam, INVTZ',
                 'coordinates' => '17.70333 83.3105',
                 'country_id' => 102,
-                'varation' => '{"type": ["", "", "visakhapatnam-invtz-india", "visakhapatnam ,in", "india: visakhapatnam", "visakhapatnam pt", "visakhapatnam port", "visakhapatnam city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+            'varation' => '{"type": ["visakhapatnam-invtz-india", "visakhapatnam ,in", "india: visakhapatnam", "visakhapatnam pt", "visakhapatnam port", "visakhapatnam city", "visakhapatnam, andhra pradesh, india", "visakhapatnam andhra pradesh india", "visakhapatnam, india", "visakhapatnam india", "vizag", "vishakhapatnam", "vishakhapatanam", "vizag (visakhapatnam)", "vizag (visakhapatnam)"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2019-03-29 12:12:22',
             ),
-            359 => 
-            array (
-                'id' => 1101,
-                'name' => 'HAZIRA PORT/SURAT',
-                'code' => 'INHZA',
-                'display_name' => 'HAZIRA PORT/SURAT, INHZA',
-                'coordinates' => NULL,
-                'country_id' => 102,
-                'varation' => '{"type": ["", "", "hazira port/surat-inhza-india", "hazira port/surat ,in", "india: hazira port/surat", "hazira port/surat pt", "hazira port/surat port", "hazira port/surat city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
-            ),
-            360 => 
+            354 => 
             array (
                 'id' => 1102,
                 'name' => 'KANDLA',
@@ -4346,22 +4274,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '22.99593 70.1941',
                 'country_id' => 102,
                 'varation' => '{"type": ["", "", "kandla-inixy-india", "kandla ,in", "india: kandla", "kandla pt", "kandla port", "kandla city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            361 => 
-            array (
-                'id' => 1103,
-                'name' => 'NEW MANGALORE',
-                'code' => 'INNML',
-                'display_name' => 'NEW MANGALORE, INNML',
-                'coordinates' => '12.93533 74.8245',
-                'country_id' => 102,
-                'varation' => '{"type": ["", "", "new mangalore-innml-india", "new mangalore ,in", "india: new mangalore", "new mangalore pt", "new mangalore port", "new mangalore city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
-            ),
-            362 => 
+            355 => 
             array (
                 'id' => 1104,
             'name' => 'PIPAVAV (VICTOR) PORT',
@@ -4370,22 +4286,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '20.9175 71.50515',
                 'country_id' => 102,
             'varation' => '{"type": ["", "", "pipavav (victor) port-inpav-india", "pipavav (victor) port ,in", "india: pipavav (victor) port", "pipavav (victor) port pt", "pipavav (victor) port port", "pipavav (victor) port city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            363 => 
+            356 => 
             array (
                 'id' => 1105,
-                'name' => 'Umm Qasr',
+                'name' => 'Umm Qasr North Port',
                 'code' => 'IQUQR',
-                'display_name' => 'Umm Qasr, IQUQR',
+                'display_name' => 'Umm Qasr North Port, IQUQR',
                 'coordinates' => '30.05371 47.93358',
                 'country_id' => 104,
-                'varation' => '{"type": ["", "", "umm qasr-iquqr-iraq", "umm qasr ,iq", "iraq: umm qasr", "umm qasr pt", "umm qasr port", "umm qasr city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["umm qasr-iquqr-iraq", "umm qasr ,iq", "iraq: umm qasr", "umm qasr pt", "umm qasr port", "umm qasr city", "iraq umm qasr north port", "umm qasr", "umm qasr, iraq", "um qasr", "umm qasr*", "umm e qasar", "umm qsar", "umm qasar"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2019-02-27 09:50:50',
             ),
-            364 => 
+            357 => 
             array (
                 'id' => 1106,
                 'name' => 'BASRA',
@@ -4393,11 +4309,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BASRA, IQBSR',
                 'coordinates' => '30.51143 47.8497',
                 'country_id' => 104,
-                'varation' => '{"type": ["", "", "basra-iqbsr-iraq", "basra ,iq", "iraq: basra", "basra pt", "basra port", "basra city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["basra-iqbsr-iraq", "basra ,iq", "iraq: basra", "basra pt", "basra port", "basra city", "basra al maqal port"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2019-02-27 16:37:45',
             ),
-            365 => 
+            358 => 
             array (
                 'id' => 1107,
                 'name' => 'BANDAR ABBAS SHAHID RAJAEE CONTAINER TERMINAL',
@@ -4406,10 +4322,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '27.14493 56.1911',
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "bandar abbas shahid rajaee container terminal-irbnd-iran, islamic republic of", "bandar abbas shahid rajaee container terminal ,ir", "iran, islamic republic of: bandar abbas shahid rajaee container terminal", "bandar abbas shahid rajaee container terminal pt", "bandar abbas shahid rajaee container terminal port", "bandar abbas shahid rajaee container terminal city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            366 => 
+            359 => 
             array (
                 'id' => 1108,
                 'name' => 'BUSHEHR',
@@ -4418,10 +4334,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '28.97233 50.8283',
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "bushehr-irbuz-iran, islamic republic of", "bushehr ,ir", "iran, islamic republic of: bushehr", "bushehr pt", "bushehr port", "bushehr city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            367 => 
+            360 => 
             array (
                 'id' => 1109,
                 'name' => 'ANCONA',
@@ -4429,11 +4345,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ANCONA, ITAOI',
                 'coordinates' => '43.619535 13.502415',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "ancona-itaoi-italy", "ancona ,it", "italy: ancona", "ancona pt", "ancona port", "ancona city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["ancona-itaoi-italy", "ancona ,it", "italy: ancona", "ancona pt", "ancona port", "ancona city", "ancona, italy", "ancona italy"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-12-17 06:42:42',
             ),
-            368 => 
+            361 => 
             array (
                 'id' => 1110,
                 'name' => 'BARI',
@@ -4441,11 +4357,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BARI, ITBRI',
                 'coordinates' => '41.13093 16.8501',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "bari-itbri-italy", "bari ,it", "italy: bari", "bari pt", "bari port", "bari city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["bari-itbri-italy", "bari ,it", "italy: bari", "bari pt", "bari port", "bari city", "bari"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2019-02-22 14:50:01',
             ),
-            369 => 
+            362 => 
             array (
                 'id' => 1111,
                 'name' => 'CAGLIARI',
@@ -4454,10 +4370,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '39.206115 9.1140775',
                 'country_id' => 107,
                 'varation' => '{"type": ["", "", "cagliari-itcag-italy", "cagliari ,it", "italy: cagliari", "cagliari pt", "cagliari port", "cagliari city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-09-05 15:34:26',
             ),
-            370 => 
+            363 => 
             array (
                 'id' => 1112,
                 'name' => 'CATANIA',
@@ -4465,11 +4381,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CATANIA, ITCTA',
                 'coordinates' => '37.48393 15.0911',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "catania-itcta-italy", "catania ,it", "italy: catania", "catania pt", "catania port", "catania city"]}',
-                'created_at' => '2018-09-05 19:34:26',
-                'updated_at' => '2018-09-05 19:34:26',
+                'varation' => '{"type": ["catania-itcta-italy", "catania ,it", "italy: catania", "catania pt", "catania port", "catania city", "catania, italy", "catania italy"]}',
+                'created_at' => '2018-09-05 15:34:26',
+                'updated_at' => '2018-12-14 12:03:24',
             ),
-            371 => 
+            364 => 
             array (
                 'id' => 1113,
                 'name' => 'CIVITAVECCHIA',
@@ -4477,23 +4393,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CIVITAVECCHIA, ITCVV',
                 'coordinates' => '42.09113 11.7871',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "civitavecchia-itcvv-italy", "civitavecchia ,it", "italy: civitavecchia", "civitavecchia pt", "civitavecchia port", "civitavecchia city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["civitavecchia-itcvv-italy", "civitavecchia ,it", "italy: civitavecchia", "civitavecchia pt", "civitavecchia port", "civitavecchia city", "civitavecchia, italy", "civitavecchia italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-12-14 12:06:22',
             ),
-            372 => 
+            365 => 
             array (
                 'id' => 1114,
-                'name' => 'GENOA',
+                'name' => 'GENOVA',
                 'code' => 'ITGOA',
-                'display_name' => 'GENOA, ITGOA',
+                'display_name' => 'GENOVA, ITGOA',
                 'coordinates' => '44.403545 8.909109',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "genoa-itgoa-italy", "genoa ,it", "italy: genoa", "genoa pt", "genoa port", "genoa city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["genoa-itgoa-italy", "genoa ,it", "italy: genoa", "genoa pt", "genoa port", "genoa city", "genova, liguria, italia", "genova liguria italia", "genova liguria italia", "genoa, italy", "genoa italy", "génova"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-02-14 09:10:33',
             ),
-            373 => 
+            366 => 
             array (
                 'id' => 1115,
                 'name' => 'GIOIA TAURO',
@@ -4501,11 +4417,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'GIOIA TAURO, ITGIT',
                 'coordinates' => '38.45494 15.901825',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "gioia tauro-itgit-italy", "gioia tauro ,it", "italy: gioia tauro", "gioia tauro pt", "gioia tauro port", "gioia tauro city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["gioia tauro-itgit-italy", "gioia tauro ,it", "italy: gioia tauro", "gioia tauro pt", "gioia tauro port", "gioia tauro city", "gioia tauro, italy", "gioia tauro italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-12-14 13:45:58',
             ),
-            374 => 
+            367 => 
             array (
                 'id' => 1116,
                 'name' => 'LA SPEZIA',
@@ -4513,11 +4429,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LA SPEZIA, ITSPE',
                 'coordinates' => '44.104715 9.837505',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "la spezia-itspe-italy", "la spezia ,it", "italy: la spezia", "la spezia pt", "la spezia port", "la spezia city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["la spezia-itspe-italy", "la spezia ,it", "italy: la spezia", "la spezia pt", "la spezia port", "la spezia city", "la spezia, italy", "la spezia italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-12-17 06:45:39',
             ),
-            375 => 
+            368 => 
             array (
                 'id' => 1117,
                 'name' => 'LEGHORN',
@@ -4525,11 +4441,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LEGHORN, ITLIV',
                 'coordinates' => '43.57633 10.3147',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "leghorn-itliv-italy", "leghorn ,it", "italy: leghorn", "leghorn pt", "leghorn port", "leghorn city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["leghorn-itliv-italy", "leghorn ,it", "italy: leghorn", "leghorn pt", "leghorn port", "leghorn city", "leghorn, italy", "leghorn italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-12-17 06:47:08',
             ),
-            376 => 
+            369 => 
             array (
                 'id' => 1118,
                 'name' => 'NAPLES',
@@ -4537,11 +4453,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NAPLES, ITNAP',
                 'coordinates' => '40.83799 14.27623',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "naples-itnap-italy", "naples ,it", "italy: naples", "naples pt", "naples port", "naples city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["naples-itnap-italy", "naples ,it", "italy: naples", "naples pt", "naples port", "naples city", "naples, italy", "naples italy", "napoli", "napoles"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-02-21 17:58:10',
             ),
-            377 => 
+            370 => 
             array (
                 'id' => 1119,
                 'name' => 'PALERMO',
@@ -4550,10 +4466,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '38.13114 13.37366',
                 'country_id' => 107,
                 'varation' => '{"type": ["", "", "palermo-itpmo-italy", "palermo ,it", "italy: palermo", "palermo pt", "palermo port", "palermo city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-09-05 15:34:27',
             ),
-            378 => 
+            371 => 
             array (
                 'id' => 1120,
                 'name' => 'POZZALLO',
@@ -4562,10 +4478,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.72093 14.8457',
                 'country_id' => 107,
                 'varation' => '{"type": ["", "", "pozzallo-itpzl-italy", "pozzallo ,it", "italy: pozzallo", "pozzallo pt", "pozzallo port", "pozzallo city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-09-05 15:34:27',
             ),
-            379 => 
+            372 => 
             array (
                 'id' => 1121,
                 'name' => 'RAVENNA',
@@ -4573,11 +4489,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'RAVENNA, ITRAN',
                 'coordinates' => '44.41243 12.2023',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "ravenna-itran-italy", "ravenna ,it", "italy: ravenna", "ravenna pt", "ravenna port", "ravenna city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["ravenna-itran-italy", "ravenna ,it", "italy: ravenna", "ravenna pt", "ravenna port", "ravenna city", "ravenna, italy", "ravenna italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 10:50:07',
             ),
-            380 => 
+            373 => 
             array (
                 'id' => 1122,
                 'name' => 'SALERNO',
@@ -4585,11 +4501,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SALERNO, ITSAL',
                 'coordinates' => '40.67853 14.7531',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "salerno-itsal-italy", "salerno ,it", "italy: salerno", "salerno pt", "salerno port", "salerno city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["salerno-itsal-italy", "salerno ,it", "italy: salerno", "salerno pt", "salerno port", "salerno city", "salerno campania italia", "salerno, campania, italia", "salerno, italy", "salerno italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 10:50:25',
             ),
-            381 => 
+            374 => 
             array (
                 'id' => 1123,
                 'name' => 'TRIESTE',
@@ -4597,11 +4513,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TRIESTE, ITTRS',
                 'coordinates' => '45.65083 13.7541',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "trieste-ittrs-italy", "trieste ,it", "italy: trieste", "trieste pt", "trieste port", "trieste city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["trieste-ittrs-italy", "trieste ,it", "italy: trieste", "trieste pt", "trieste port", "trieste city", "trieste, italy", "trieste italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-10-22 11:42:08',
             ),
-            382 => 
+            375 => 
             array (
                 'id' => 1124,
                 'name' => 'VADO LIGURE',
@@ -4609,11 +4525,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VADO LIGURE, ITVDL',
                 'coordinates' => '44.26389 8.4487725',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "vado ligure-itvdl-italy", "vado ligure ,it", "italy: vado ligure", "vado ligure pt", "vado ligure port", "vado ligure city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["vado ligure-itvdl-italy", "vado ligure ,it", "italy: vado ligure", "vado ligure pt", "vado ligure port", "vado ligure city", "vado ligure, italy", "vado ligure italy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 10:51:50',
             ),
-            383 => 
+            376 => 
             array (
                 'id' => 1125,
                 'name' => 'VENIZIA',
@@ -4621,11 +4537,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'VENIZIA, ITVCE',
                 'coordinates' => '45.43193 12.3177',
                 'country_id' => 107,
-                'varation' => '{"type": ["", "", "venizia-itvce-italy", "venizia ,it", "italy: venizia", "venizia pt", "venizia port", "venizia city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["venizia-itvce-italy", "venizia ,it", "italy: venizia", "venizia pt", "venizia port", "venizia city", "venezia ,it", "venezia it", "venice", "venezia it", "venezia, italy", "venezia italy", "venecia"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-02-14 09:12:45',
             ),
-            384 => 
+            377 => 
             array (
                 'id' => 1126,
                 'name' => 'Kingston',
@@ -4633,11 +4549,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kingston, JMKIN',
                 'coordinates' => '17.98213 -76.8242',
                 'country_id' => 109,
-                'varation' => '{"type": ["", "", "kingston-jmkin-jamaica", "kingston ,jm", "jamaica: kingston", "kingston pt", "kingston port", "kingston city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["kingston-jmkin-jamaica", "kingston ,jm", "jamaica: kingston", "kingston pt", "kingston port", "kingston city", "kingston, jamaica", "kingston jamaica", "kingston jm", "kingstons", "kingston, jm", "kingston *r1", "kingston r1"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-02-27 17:23:11',
             ),
-            385 => 
+            378 => 
             array (
                 'id' => 1127,
                 'name' => 'Aqaba',
@@ -4645,11 +4561,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Aqaba, JOAQJ',
                 'coordinates' => '29.51374 34.99818',
                 'country_id' => 110,
-                'varation' => '{"type": ["", "", "aqaba-joaqj-jordan", "aqaba ,jo", "jordan: aqaba", "aqaba pt", "aqaba port", "aqaba city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+            'varation' => '{"type": ["aqaba-joaqj-jordan", "aqaba ,jo", "jordan: aqaba", "aqaba pt", "aqaba port", "aqaba city", "jordan: aqaba", "jordan aqaba", "al aqabah jordan", "al \'aqabah jordan", "al aqabah jordan", "al aqabah jordan", "al \'aqabah, jordan", "al \'aqabah jordan", "jordan: aqaba  (via jed)", "aqaba, jordan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-12-17 06:25:06',
             ),
-            386 => 
+            379 => 
             array (
                 'id' => 1128,
                 'name' => 'Akita',
@@ -4657,11 +4573,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Akita, JPAXT',
                 'coordinates' => '39.72823 140.0817',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "akita-jpaxt-japan", "akita ,jp", "japan: akita", "akita pt", "akita port", "akita city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["akita-jpaxt-japan", "akita ,jp", "japan: akita", "akita pt", "akita port", "akita city", "akita, japan", "akita japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:22:53',
             ),
-            387 => 
+            380 => 
             array (
                 'id' => 1129,
                 'name' => 'Hakata',
@@ -4669,11 +4585,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hakata, JPHTD',
                 'coordinates' => NULL,
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "hakata-jphtd-japan", "hakata ,jp", "japan: hakata", "hakata pt", "hakata port", "hakata city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["hakata-jphtd-japan", "hakata ,jp", "japan: hakata", "hakata pt", "hakata port", "hakata city", "hakata", "hakata, japan", "hakata japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:27:38',
             ),
-            388 => 
+            381 => 
             array (
                 'id' => 1130,
                 'name' => 'Hiroshima',
@@ -4681,11 +4597,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hiroshima, JPHIJ',
                 'coordinates' => '34.35091 132.4482',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "hiroshima-jphij-japan", "hiroshima ,jp", "japan: hiroshima", "hiroshima pt", "hiroshima port", "hiroshima city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["hiroshima-jphij-japan", "hiroshima ,jp", "japan: hiroshima", "hiroshima pt", "hiroshima port", "hiroshima city", "hiroshima ,jp", "hiroshima jp", "hiroshima ,jp", "hiroshima, japan", "hiroshima japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:29:36',
             ),
-            389 => 
+            382 => 
             array (
                 'id' => 1131,
                 'name' => 'Kobe',
@@ -4693,11 +4609,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kobe, JPUKB',
                 'coordinates' => '34.67549 135.22546',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "kobe-jpukb-japan", "kobe ,jp", "japan: kobe", "kobe pt", "kobe port", "kobe city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["kobe-jpukb-japan", "kobe ,jp", "japan: kobe", "kobe pt", "kobe port", "kobe city", "kobe, hyogo-ken, japan", "kobe hyogoken japan", "kobe hyogo-ken japan", "kobe", "kobe, japan", "kobe japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:34:32',
             ),
-            390 => 
+            383 => 
             array (
                 'id' => 1132,
                 'name' => 'Moji',
@@ -4705,11 +4621,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Moji, JPMOJ',
                 'coordinates' => '33.95201 130.96579',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "moji-jpmoj-japan", "moji ,jp", "japan: moji", "moji pt", "moji port", "moji city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+            'varation' => '{"type": ["moji-jpmoj-japan", "moji ,jp", "japan: moji", "moji pt", "moji port", "moji city", "moji, fukuoka, japan", "moji fukuoka japan", "moji", "moji (cy)", "moji japan", "moji, japan", "mojikitakyushu", "moji cy"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-03-14 12:28:54',
             ),
-            391 => 
+            384 => 
             array (
                 'id' => 1133,
                 'name' => 'Nagoya',
@@ -4717,11 +4633,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nagoya, JPNGO',
                 'coordinates' => '35.02735 136.84663',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "nagoya-jpngo-japan", "nagoya ,jp", "japan: nagoya", "nagoya pt", "nagoya port", "nagoya city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["nagoya-jpngo-japan", "nagoya ,jp", "japan: nagoya", "nagoya pt", "nagoya port", "nagoya city", "nagoya, aichi, japan", "nagoya, tokyo, hakata, moji", "nagoya tokyo hakata moji", "nagoya-aichi", "nagoya japan", "nagoya, japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:30:04',
             ),
-            392 => 
+            385 => 
             array (
                 'id' => 1134,
                 'name' => 'Osaka',
@@ -4729,11 +4645,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Osaka, JPOSA',
                 'coordinates' => '34.61406 135.4404',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "osaka-jposa-japan", "osaka ,jp", "japan: osaka", "osaka pt", "osaka port", "osaka city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["osaka-jposa-japan", "osaka ,jp", "japan: osaka", "osaka pt", "osaka port", "osaka city", "osaka, japan", "osaka japan", "osaka"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2018-11-15 14:43:56',
             ),
-            393 => 
+            386 => 
             array (
                 'id' => 1135,
                 'name' => 'Sendai',
@@ -4741,11 +4657,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sendai, JPSGM',
                 'coordinates' => '38.32143 141.0319',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "sendai-jpsgm-japan", "sendai ,jp", "japan: sendai", "sendai pt", "sendai port", "sendai city"]}',
-                'created_at' => '2018-09-05 19:34:27',
-                'updated_at' => '2018-09-05 19:34:27',
+                'varation' => '{"type": ["sendai-jpsgm-japan", "sendai ,jp", "japan: sendai", "sendai pt", "sendai port", "sendai city", "sendai ,jp", "sendai jp", "sendai", "sendai, japan", "sendai japan"]}',
+                'created_at' => '2018-09-05 15:34:27',
+                'updated_at' => '2019-01-03 16:31:44',
             ),
-            394 => 
+            387 => 
             array (
                 'id' => 1136,
                 'name' => 'Shimizu',
@@ -4753,11 +4669,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shimizu, JPSMZ',
                 'coordinates' => '34.99983 138.5021',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "shimizu-jpsmz-japan", "shimizu ,jp", "japan: shimizu", "shimizu pt", "shimizu port", "shimizu city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["shimizu-jpsmz-japan", "shimizu ,jp", "japan: shimizu", "shimizu pt", "shimizu port", "shimizu city", "shimizu, shizuoka, japan", "shimizu shizuoka japan", "shimizhu", "shimizu, japan", "shimizu japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-01-03 16:31:22',
             ),
-            395 => 
+            388 => 
             array (
                 'id' => 1137,
                 'name' => 'Tokuyama',
@@ -4765,11 +4681,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tokuyama, JPTKY',
                 'coordinates' => '34.04574 131.7966',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "tokuyama-jptky-japan", "tokuyama ,jp", "japan: tokuyama", "tokuyama pt", "tokuyama port", "tokuyama city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["tokuyama-jptky-japan", "tokuyama ,jp", "japan: tokuyama", "tokuyama pt", "tokuyama port", "tokuyama city", "tokuyama, yamaguchi, japan", "tokuyama yamaguchi japan", "tokuyama, japan", "tokuyama japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-01-03 16:30:49',
             ),
-            396 => 
+            389 => 
             array (
                 'id' => 1138,
                 'name' => 'Tokyo',
@@ -4777,11 +4693,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tokyo, JPTYO',
                 'coordinates' => '35.60678 139.80236',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "tokyo-jptyo-japan", "tokyo ,jp", "japan: tokyo", "tokyo pt", "tokyo port", "tokyo city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["tokyo-jptyo-japan", "tokyo ,jp", "japan: tokyo", "tokyo pt", "tokyo port", "tokyo city", "tokyo, japan", "tokyo japan", "tokyo", "tokio"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-02-21 17:59:18',
             ),
-            397 => 
+            390 => 
             array (
                 'id' => 1139,
                 'name' => 'Tomakomai',
@@ -4789,11 +4705,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tomakomai, JPTMK',
                 'coordinates' => '42.63893 141.6259',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "tomakomai-jptmk-japan", "tomakomai ,jp", "japan: tomakomai", "tomakomai pt", "tomakomai port", "tomakomai city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["tomakomai-jptmk-japan", "tomakomai ,jp", "japan: tomakomai", "tomakomai pt", "tomakomai port", "tomakomai city", "tomakomai, hokkaido, japan", "tomakomai hokkaido japan", "tomakomai, japan", "tomakomai japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-01-03 16:24:46',
             ),
-            398 => 
+            391 => 
             array (
                 'id' => 1140,
                 'name' => 'Toyama',
@@ -4801,11 +4717,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Toyama, JPTOY',
                 'coordinates' => '36.75781 137.22828',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "toyama-jptoy-japan", "toyama ,jp", "japan: toyama", "toyama pt", "toyama port", "toyama city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["toyama-jptoy-japan", "toyama ,jp", "japan: toyama", "toyama pt", "toyama port", "toyama city", "toyama shinko", "toyama, japan", "toyama japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-01-03 16:24:26',
             ),
-            399 => 
+            392 => 
             array (
                 'id' => 1141,
                 'name' => 'Yokkaichi',
@@ -4813,11 +4729,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yokkaichi, JPYKK',
                 'coordinates' => '34.96253 136.6337',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "yokkaichi-jpykk-japan", "yokkaichi ,jp", "japan: yokkaichi", "yokkaichi pt", "yokkaichi port", "yokkaichi city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["yokkaichi-jpykk-japan", "yokkaichi ,jp", "japan: yokkaichi", "yokkaichi pt", "yokkaichi port", "yokkaichi city", "yokkaichi, japan", "yokkaichi japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-01-03 16:23:54',
             ),
-            400 => 
+            393 => 
             array (
                 'id' => 1142,
                 'name' => 'Yokohama',
@@ -4825,11 +4741,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yokohama, JPYOK',
                 'coordinates' => '35.42804 139.67341',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "yokohama-jpyok-japan", "yokohama ,jp", "japan: yokohama", "yokohama pt", "yokohama port", "yokohama city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["yokohama-jpyok-japan", "yokohama ,jp", "japan: yokohama", "yokohama pt", "yokohama port", "yokohama city", "yokohama,", "yokohama, kanagawa-ken, japan", "yokohama kanagawaken japan", "yokohama", "yokohama, japan", "yokohama japan", "yokohama, osaka, kobe"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-04-09 15:52:57',
             ),
-            401 => 
+            394 => 
             array (
                 'id' => 1143,
                 'name' => 'ABURATSU',
@@ -4838,10 +4754,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '31.57143 131.4065',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "aburatsu-jpabu-japan", "aburatsu ,jp", "japan: aburatsu", "aburatsu pt", "aburatsu port", "aburatsu city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            402 => 
+            395 => 
             array (
                 'id' => 1144,
                 'name' => 'CHIBA',
@@ -4850,22 +4766,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.57636 140.09222',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "chiba-jpchb-japan", "chiba ,jp", "japan: chiba", "chiba pt", "chiba port", "chiba city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            403 => 
+            396 => 
             array (
                 'id' => 1145,
-                'name' => 'FUKUYAMA, HIROSHIMA',
+                'name' => 'FUKUYAMA',
                 'code' => 'JPFKY',
-                'display_name' => 'FUKUYAMA, HIROSHIMA, JPFKY',
+                'display_name' => 'FUKUYAMA, JPFKY',
                 'coordinates' => '34.44993 133.4195',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "fukuyama, hiroshima-jpfky-japan", "fukuyama, hiroshima ,jp", "japan: fukuyama, hiroshima", "fukuyama, hiroshima pt", "fukuyama, hiroshima port", "fukuyama, hiroshima city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["fukuyama-jpfky-japan", "fukuyama ,jp", "japan: fukuyama", "fukuyama pt", "fukuyama port", "fukuyama city", "fukuyama, japan", "fukuyama japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-03-12 08:34:34',
             ),
-            404 => 
+            397 => 
             array (
                 'id' => 1146,
                 'name' => 'HACHINOHE, AOMORI',
@@ -4873,11 +4789,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'HACHINOHE, AOMORI, JPHHE',
                 'coordinates' => '40.54401 141.52266',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "hachinohe, aomori-jphhe-japan", "hachinohe, aomori ,jp", "japan: hachinohe, aomori", "hachinohe, aomori pt", "hachinohe, aomori port", "hachinohe, aomori city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["hachinohe, aomori-jphhe-japan", "hachinohe, aomori ,jp", "japan: hachinohe, aomori", "hachinohe, aomori pt", "hachinohe, aomori port", "hachinohe, aomori city", "hachinohe, aomori, japan", "hachinohe aomori japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-10-22 11:47:01',
             ),
-            405 => 
+            398 => 
             array (
                 'id' => 1147,
                 'name' => 'HAKATA, FUKUOKA',
@@ -4885,11 +4801,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'HAKATA, FUKUOKA, JPHKT',
                 'coordinates' => '33.62869 130.37655',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "hakata, fukuoka-jphkt-japan", "hakata, fukuoka ,jp", "japan: hakata, fukuoka", "hakata, fukuoka pt", "hakata, fukuoka port", "hakata, fukuoka city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["hakata, fukuoka-jphkt-japan", "hakata, fukuoka ,jp", "japan: hakata, fukuoka", "hakata, fukuoka pt", "hakata, fukuoka port", "hakata, fukuoka city", "hakata, fukuoka, japan", "hakata fukuoka japan", "hakatafukuoka"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-02-07 08:51:59',
             ),
-            406 => 
+            399 => 
             array (
                 'id' => 1148,
                 'name' => 'HAKODATE',
@@ -4898,10 +4814,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '41.77393 140.7295',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "hakodate-jphkd-japan", "hakodate ,jp", "japan: hakodate", "hakodate pt", "hakodate port", "hakodate city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            407 => 
+            400 => 
             array (
                 'id' => 1149,
                 'name' => 'HAMADA',
@@ -4910,10 +4826,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.87263 132.0499',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "hamada-jphmd-japan", "hamada ,jp", "japan: hamada", "hamada pt", "hamada port", "hamada city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            408 => 
+            401 => 
             array (
                 'id' => 1150,
                 'name' => 'HIBIKISHINKO',
@@ -4921,11 +4837,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'HIBIKISHINKO, JPHBK',
                 'coordinates' => '33.93548 130.77317',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "hibikishinko-jphbk-japan", "hibikishinko ,jp", "japan: hibikishinko", "hibikishinko pt", "hibikishinko port", "hibikishinko city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["hibikishinko-jphbk-japan", "hibikishinko ,jp", "japan: hibikishinko", "hibikishinko pt", "hibikishinko port", "hibikishinko city", "hibikishinko, japan"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2019-03-12 06:35:50',
             ),
-            409 => 
+            402 => 
             array (
                 'id' => 1151,
                 'name' => 'HITACHINAKA',
@@ -4934,10 +4850,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.422 140.6255',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "hitachinaka-jphic-japan", "hitachinaka ,jp", "japan: hitachinaka", "hitachinaka pt", "hitachinaka port", "hitachinaka city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            410 => 
+            403 => 
             array (
                 'id' => 1152,
                 'name' => 'HOSOSHIMA',
@@ -4946,10 +4862,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '32.43613 131.6675',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "hososhima-jphsm-japan", "hososhima ,jp", "japan: hososhima", "hososhima pt", "hososhima port", "hososhima city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            411 => 
+            404 => 
             array (
                 'id' => 1153,
                 'name' => 'IMABARI',
@@ -4958,10 +4874,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.06973 133.0117',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "imabari-jpimb-japan", "imabari ,jp", "japan: imabari", "imabari pt", "imabari port", "imabari city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            412 => 
+            405 => 
             array (
                 'id' => 1154,
                 'name' => 'IMARI',
@@ -4970,10 +4886,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.30433 129.8193',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "imari-jpimi-japan", "imari ,jp", "japan: imari", "imari pt", "imari port", "imari city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            413 => 
+            406 => 
             array (
                 'id' => 1155,
                 'name' => 'ISHIKARI',
@@ -4982,10 +4898,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '43.20639 141.2916',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "ishikari-jpisi-japan", "ishikari ,jp", "japan: ishikari", "ishikari pt", "ishikari port", "ishikari city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            414 => 
+            407 => 
             array (
                 'id' => 1156,
                 'name' => 'IWAKUNI',
@@ -4994,10 +4910,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.17367 132.24187',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "iwakuni-jpiwk-japan", "iwakuni ,jp", "japan: iwakuni", "iwakuni pt", "iwakuni port", "iwakuni city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            415 => 
+            408 => 
             array (
                 'id' => 1157,
                 'name' => 'IYOMISHIMA',
@@ -5005,11 +4921,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'IYOMISHIMA, JPIYM',
                 'coordinates' => NULL,
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "iyomishima-jpiym-japan", "iyomishima ,jp", "japan: iyomishima", "iyomishima pt", "iyomishima port", "iyomishima city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'varation' => '{"type": ["iyomishima-jpiym-japan", "iyomishima ,jp", "japan: iyomishima", "iyomishima pt", "iyomishima port", "iyomishima city", "iyo-mishima", "iyomishima"]}',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-12-12 08:18:51',
             ),
-            416 => 
+            409 => 
             array (
                 'id' => 1158,
                 'name' => 'KAMAISHI',
@@ -5018,10 +4934,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '39.27053 141.8913',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kamaishi-jpkis-japan", "kamaishi ,jp", "japan: kamaishi", "kamaishi pt", "kamaishi port", "kamaishi city"]}',
-                'created_at' => '2018-09-05 19:34:28',
-                'updated_at' => '2018-09-05 19:34:28',
+                'created_at' => '2018-09-05 15:34:28',
+                'updated_at' => '2018-09-05 15:34:28',
             ),
-            417 => 
+            410 => 
             array (
                 'id' => 1159,
                 'name' => 'KANAZAWA',
@@ -5030,10 +4946,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.60173 136.5919',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kanazawa-jpknz-japan", "kanazawa ,jp", "japan: kanazawa", "kanazawa pt", "kanazawa port", "kanazawa city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            418 => 
+            411 => 
             array (
                 'id' => 1160,
                 'name' => 'KASHIMA, IBARAKI',
@@ -5042,10 +4958,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.92775 140.69993',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kashima, ibaraki-jpksm-japan", "kashima, ibaraki ,jp", "japan: kashima, ibaraki", "kashima, ibaraki pt", "kashima, ibaraki port", "kashima, ibaraki city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            419 => 
+            412 => 
             array (
                 'id' => 1161,
                 'name' => 'KAWASAKI',
@@ -5054,10 +4970,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.53053 139.7601',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kawasaki-jpkws-japan", "kawasaki ,jp", "japan: kawasaki", "kawasaki pt", "kawasaki port", "kawasaki city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            420 => 
+            413 => 
             array (
                 'id' => 1162,
                 'name' => 'KOCHI',
@@ -5066,10 +4982,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.54323 133.5637',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kochi-jpkcz-japan", "kochi ,jp", "japan: kochi", "kochi pt", "kochi port", "kochi city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            421 => 
+            414 => 
             array (
                 'id' => 1163,
                 'name' => 'KUMAMOTO',
@@ -5078,10 +4994,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '32.76418 130.60175',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kumamoto-jpkmj-japan", "kumamoto ,jp", "japan: kumamoto", "kumamoto pt", "kumamoto port", "kumamoto city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            422 => 
+            415 => 
             array (
                 'id' => 1164,
                 'name' => 'KUSHIRO',
@@ -5090,10 +5006,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '42.96753 144.3637',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "kushiro-jpkuh-japan", "kushiro ,jp", "japan: kushiro", "kushiro pt", "kushiro port", "kushiro city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            423 => 
+            416 => 
             array (
                 'id' => 1165,
                 'name' => 'MAIZURU',
@@ -5102,10 +5018,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.45383 135.31004',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "maizuru-jpmai-japan", "maizuru ,jp", "japan: maizuru", "maizuru pt", "maizuru port", "maizuru city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            424 => 
+            417 => 
             array (
                 'id' => 1166,
                 'name' => 'MATSUYAMA',
@@ -5114,10 +5030,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.86093 132.7141',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "matsuyama-jpmyj-japan", "matsuyama ,jp", "japan: matsuyama", "matsuyama pt", "matsuyama port", "matsuyama city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            425 => 
+            418 => 
             array (
                 'id' => 1167,
                 'name' => 'MIIKE, FUKUOKA',
@@ -5126,10 +5042,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.00633 130.4307',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "miike, fukuoka-jpmii-japan", "miike, fukuoka ,jp", "japan: miike, fukuoka", "miike, fukuoka pt", "miike, fukuoka port", "miike, fukuoka city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            426 => 
+            419 => 
             array (
                 'id' => 1168,
                 'name' => 'MIZUSHIMA',
@@ -5137,11 +5053,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MIZUSHIMA, JPMIZ',
                 'coordinates' => '34.51253 133.7505',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "mizushima-jpmiz-japan", "mizushima ,jp", "japan: mizushima", "mizushima pt", "mizushima port", "mizushima city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'varation' => '{"type": ["mizushima-jpmiz-japan", "mizushima ,jp", "japan: mizushima", "mizushima pt", "mizushima port", "mizushima city", "mizushima, japan", "mizushima japan"]}',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2019-03-12 08:34:47',
             ),
-            427 => 
+            420 => 
             array (
                 'id' => 1169,
                 'name' => 'MURORAN',
@@ -5150,10 +5066,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '42.33503 140.9647',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "muroran-jpmur-japan", "muroran ,jp", "japan: muroran", "muroran pt", "muroran port", "muroran city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            428 => 
+            421 => 
             array (
                 'id' => 1170,
                 'name' => 'NAGASAKI',
@@ -5162,10 +5078,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '32.75343 129.8629',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "nagasaki-jpngs-japan", "nagasaki ,jp", "japan: nagasaki", "nagasaki pt", "nagasaki port", "nagasaki city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            429 => 
+            422 => 
             array (
                 'id' => 1171,
                 'name' => 'NAHA, OKINAWA',
@@ -5173,11 +5089,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NAHA, OKINAWA, JPNAH',
                 'coordinates' => '26.25035 127.6901',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "naha, okinawa-jpnah-japan", "naha, okinawa ,jp", "japan: naha, okinawa", "naha, okinawa pt", "naha, okinawa port", "naha, okinawa city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'varation' => '{"type": ["naha, okinawa-jpnah-japan", "naha, okinawa ,jp", "japan: naha, okinawa", "naha, okinawa pt", "naha, okinawa port", "naha, okinawa city", "naha"]}',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-10-25 09:10:04',
             ),
-            430 => 
+            423 => 
             array (
                 'id' => 1172,
                 'name' => 'NAKANOSEKI',
@@ -5186,10 +5102,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.03675 131.59573',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "nakanoseki-jpnan-japan", "nakanoseki ,jp", "japan: nakanoseki", "nakanoseki pt", "nakanoseki port", "nakanoseki city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            431 => 
+            424 => 
             array (
                 'id' => 1173,
                 'name' => 'NAOETSU',
@@ -5198,10 +5114,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '37.17513 138.2331',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "naoetsu-jpnao-japan", "naoetsu ,jp", "japan: naoetsu", "naoetsu pt", "naoetsu port", "naoetsu city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            432 => 
+            425 => 
             array (
                 'id' => 1174,
                 'name' => 'NIIGATA',
@@ -5209,11 +5125,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NIIGATA, JPKIJ',
                 'coordinates' => '37.92613 139.0647',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "niigata-jpkij-japan", "niigata ,jp", "japan: niigata", "niigata pt", "niigata port", "niigata city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'varation' => '{"type": ["niigata-jpkij-japan", "niigata ,jp", "japan: niigata", "niigata pt", "niigata port", "niigata city", "nigata", "niigata, japan", "niigata japan"]}',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2019-01-03 16:38:42',
             ),
-            433 => 
+            426 => 
             array (
                 'id' => 1175,
                 'name' => 'OITA',
@@ -5222,10 +5138,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.27397 131.68755',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "oita-jpoit-japan", "oita ,jp", "japan: oita", "oita pt", "oita port", "oita city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            434 => 
+            427 => 
             array (
                 'id' => 1176,
                 'name' => 'OMAEZAKI',
@@ -5234,10 +5150,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.62215 138.21307',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "omaezaki-jpomz-japan", "omaezaki ,jp", "japan: omaezaki", "omaezaki pt", "omaezaki port", "omaezaki city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            435 => 
+            428 => 
             array (
                 'id' => 1177,
                 'name' => 'ONAHAMA',
@@ -5246,10 +5162,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.94093 140.9073',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "onahama-jpona-japan", "onahama ,jp", "japan: onahama", "onahama pt", "onahama port", "onahama city"]}',
-                'created_at' => '2018-09-05 19:34:29',
-                'updated_at' => '2018-09-05 19:34:29',
+                'created_at' => '2018-09-05 15:34:29',
+                'updated_at' => '2018-09-05 15:34:29',
             ),
-            436 => 
+            429 => 
             array (
                 'id' => 1178,
                 'name' => 'OTAKE',
@@ -5258,10 +5174,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.23302 132.2508',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "otake-jpotk-japan", "otake ,jp", "japan: otake", "otake pt", "otake port", "otake city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            437 => 
+            430 => 
             array (
                 'id' => 1179,
                 'name' => 'SAKAIMINATO',
@@ -5270,10 +5186,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.53163 133.2477',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "sakaiminato-jpsmn-japan", "sakaiminato ,jp", "japan: sakaiminato", "sakaiminato pt", "sakaiminato port", "sakaiminato city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            438 => 
+            431 => 
             array (
                 'id' => 1180,
                 'name' => 'SAKATA',
@@ -5282,10 +5198,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '38.91293 139.8349',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "sakata-jpskt-japan", "sakata ,jp", "japan: sakata", "sakata pt", "sakata port", "sakata city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            439 => 
+            432 => 
             array (
                 'id' => 1181,
                 'name' => 'SATSUMASENDAI',
@@ -5294,10 +5210,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "satsumasendai-jpsts-japan", "satsumasendai ,jp", "japan: satsumasendai", "satsumasendai pt", "satsumasendai port", "satsumasendai city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            440 => 
+            433 => 
             array (
                 'id' => 1182,
                 'name' => 'SENDAI, MIYAGI',
@@ -5305,11 +5221,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SENDAI, MIYAGI, JPSDJ',
                 'coordinates' => '38.3185 141.04365',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "sendai, miyagi-jpsdj-japan", "sendai, miyagi ,jp", "japan: sendai, miyagi", "sendai, miyagi pt", "sendai, miyagi port", "sendai, miyagi city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["sendai, miyagi-jpsdj-japan", "sendai, miyagi ,jp", "japan: sendai, miyagi", "sendai, miyagi pt", "sendai, miyagi port", "sendai, miyagi city", "sendai miyagi japan", "sendai, miyagi, japan"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-10-22 11:59:09',
             ),
-            441 => 
+            434 => 
             array (
                 'id' => 1183,
                 'name' => 'SHIBUSHI',
@@ -5317,11 +5233,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SHIBUSHI, JPSBS',
                 'coordinates' => '31.46293 131.1099',
                 'country_id' => 111,
-                'varation' => '{"type": ["", "", "shibushi-jpsbs-japan", "shibushi ,jp", "japan: shibushi", "shibushi pt", "shibushi port", "shibushi city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["shibushi-jpsbs-japan", "shibushi ,jp", "japan: shibushi", "shibushi pt", "shibushi port", "shibushi city", "shibushi, kagoshima, japan", "shibushi kagoshima japan"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-10-22 12:08:15',
             ),
-            442 => 
+            435 => 
             array (
                 'id' => 1184,
                 'name' => 'TAKAMATSU',
@@ -5330,10 +5246,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.35789 134.06855',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "takamatsu-jptak-japan", "takamatsu ,jp", "japan: takamatsu", "takamatsu pt", "takamatsu port", "takamatsu city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            443 => 
+            436 => 
             array (
                 'id' => 1185,
                 'name' => 'TOKUSHIMA',
@@ -5342,22 +5258,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.05209 134.59368',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "tokushima-jptks-japan", "tokushima ,jp", "japan: tokushima", "tokushima pt", "tokushima port", "tokushima city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            444 => 
-            array (
-                'id' => 1186,
-                'name' => 'TOYAMASHINKO',
-                'code' => 'JPTOS',
-                'display_name' => 'TOYAMASHINKO, JPTOS',
-                'coordinates' => '36.76794 137.11685',
-                'country_id' => 111,
-                'varation' => '{"type": ["", "", "toyamashinko-jptos-japan", "toyamashinko ,jp", "japan: toyamashinko", "toyamashinko pt", "toyamashinko port", "toyamashinko city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
-            ),
-            445 => 
+            437 => 
             array (
                 'id' => 1187,
                 'name' => 'TOYOHASHI',
@@ -5366,10 +5270,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.69643 137.3135',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "toyohashi-jpths-japan", "toyohashi ,jp", "japan: toyohashi", "toyohashi pt", "toyohashi port", "toyohashi city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            446 => 
+            438 => 
             array (
                 'id' => 1188,
                 'name' => 'TSURUGA',
@@ -5378,10 +5282,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.65833 136.0649',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "tsuruga-jptrg-japan", "tsuruga ,jp", "japan: tsuruga", "tsuruga pt", "tsuruga port", "tsuruga city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            447 => 
+            439 => 
             array (
                 'id' => 1189,
                 'name' => 'UBE',
@@ -5390,10 +5294,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '33.93913 131.2289',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "ube-jpubj-japan", "ube ,jp", "japan: ube", "ube pt", "ube port", "ube city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            448 => 
+            440 => 
             array (
                 'id' => 1190,
                 'name' => 'WAKAYAMA',
@@ -5402,10 +5306,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.220875 135.1288',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "wakayama-jpwak-japan", "wakayama ,jp", "japan: wakayama", "wakayama pt", "wakayama port", "wakayama city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            449 => 
+            441 => 
             array (
                 'id' => 1191,
                 'name' => 'YATSUSHIRO',
@@ -5414,10 +5318,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '32.51486 130.55105',
                 'country_id' => 111,
                 'varation' => '{"type": ["", "", "yatsushiro-jpyat-japan", "yatsushiro ,jp", "japan: yatsushiro", "yatsushiro pt", "yatsushiro port", "yatsushiro city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-09-05 15:34:30',
             ),
-            450 => 
+            442 => 
             array (
                 'id' => 1192,
                 'name' => 'Mombasa',
@@ -5425,11 +5329,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mombasa, KEMBA',
                 'coordinates' => '-4.07597 39.6707',
                 'country_id' => 112,
-                'varation' => '{"type": ["", "", "mombasa-kemba-kenya", "mombasa ,ke", "kenya: mombasa", "mombasa pt", "mombasa port", "mombasa city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["mombasa-kemba-kenya", "mombasa ,ke", "kenya: mombasa", "mombasa pt", "mombasa port", "mombasa city", "kenya mombasa", "mombasa, kenya", "mombassa"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2019-03-28 09:51:33',
             ),
-            451 => 
+            443 => 
             array (
                 'id' => 1193,
                 'name' => 'Phnom Penh',
@@ -5437,11 +5341,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Phnom Penh, KHPNH',
                 'coordinates' => '11.55903 104.9367',
                 'country_id' => 114,
-                'varation' => '{"type": ["phnom pehn", "", "phnom pen-khpnh-cambodia", "phnom penh ,kh", "cambodia: phnom penh", "phnom penh pt", "phnom penh port", "phnom penh city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["phnom pehn", "phnom pen-khpnh-cambodia", "phnom penh ,kh", "cambodia: phnom penh", "phnom penh pt", "phnom penh port", "phnom penh city", "phnom penh, cambodia", "phnom penh cambodia", "phnom penh", "phnom penh", "phnom penh", "phnom penh - khpnh- cambodia", "phnom pen - khpnh-cambodia", "phnom penh"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2019-02-27 13:44:06',
             ),
-            452 => 
+            444 => 
             array (
                 'id' => 1194,
                 'name' => 'Sihanoukville',
@@ -5449,11 +5353,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sihanoukville, KHSIH',
                 'coordinates' => '10.62293 103.4923',
                 'country_id' => 114,
-                'varation' => '{"type": ["", "", "sihanoukville-khkos-cambodia", "sihanoukville ,kh", "cambodia: sihanoukville", "sihanoukville pt", "sihanoukville port", "sihanoukville city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["sihanoukville-khkos-cambodia", "sihanoukville ,kh", "cambodia: sihanoukville", "sihanoukville pt", "sihanoukville port", "sihanoukville city", "sihanoukville, sihanoukville, cambodia", "cambodja: sihanoukville", "cambodja sihanoukville", "cambodia sihanoukville", "sihanoukville, sihanoukville, cambodia, via singapore", "khsihanoukvill"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2019-03-07 11:45:09',
             ),
-            453 => 
+            445 => 
             array (
                 'id' => 1195,
                 'name' => 'Kampong Saom',
@@ -5461,11 +5365,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kampong Saom, KHKOS',
                 'coordinates' => '10.60433 103.5217',
                 'country_id' => 114,
-                'varation' => '{"type": ["", "", "kampong saom-khkos-cambodia", "kampong saom ,kh", "cambodia: kampong saom", "kampong saom pt", "kampong saom port", "kampong saom city"]}',
-                'created_at' => '2018-09-05 19:34:30',
-                'updated_at' => '2018-09-05 19:34:30',
+                'varation' => '{"type": ["kampong saom-khkos-cambodia", "kampong saom ,kh", "cambodia: kampong saom", "kampong saom pt", "kampong saom port", "kampong saom city", "khkos"]}',
+                'created_at' => '2018-09-05 15:34:30',
+                'updated_at' => '2018-12-10 11:49:31',
             ),
-            454 => 
+            446 => 
             array (
                 'id' => 1196,
                 'name' => 'MORONI',
@@ -5473,11 +5377,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MORONI, KMYVA',
                 'coordinates' => '-11.68697 43.2401',
                 'country_id' => 116,
-                'varation' => '{"type": ["", "", "moroni-kmyva-comoros", "moroni ,km", "comoros: moroni", "moroni pt", "moroni port", "moroni city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["moroni-kmyva-comoros", "moroni ,km", "comoros: moroni", "moroni pt", "moroni port", "moroni city", "moroni, comoro islands"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-01-28 08:18:55',
             ),
-            455 => 
+            447 => 
             array (
                 'id' => 1197,
                 'name' => 'MUTSAMUDU',
@@ -5485,23 +5389,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MUTSAMUDU, KMMUT',
                 'coordinates' => '-12.16744 44.39271',
                 'country_id' => 116,
-                'varation' => '{"type": ["", "", "mutsamudu-kmmut-comoros", "mutsamudu ,km", "comoros: mutsamudu", "mutsamudu pt", "mutsamudu port", "mutsamudu city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["mutsamudu-kmmut-comoros", "mutsamudu ,km", "comoros: mutsamudu", "mutsamudu pt", "mutsamudu port", "mutsamudu city", "mutsamudu, comoro islands"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-01-28 08:24:26',
             ),
-            456 => 
+            448 => 
             array (
                 'id' => 1198,
                 'name' => 'Busan',
                 'code' => 'KRPUS',
                 'display_name' => 'Busan, KRPUS',
                 'coordinates' => '35.12373 129.0617',
-                'country_id' => 248,
-                'varation' => '{"type": ["", "", "busan-krpus-korea, republic of", "busan ,kr", "korea, republic of: busan", "busan pt", "busan port", "busan city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'country_id' => 119,
+                'varation' => '{"type": ["busan-krpus-korea, republic of", "busan ,kr", "korea, republic of: busan", "busan pt", "busan port", "busan city", "pusan", "busan korea", "busan, korea", "pusan, south korea", "pusan south korea", "pusan", "krbusan  pusan", "krbusan  pusan", "busanpusan"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-03-07 15:33:32',
             ),
-            457 => 
+            449 => 
             array (
                 'id' => 1199,
                 'name' => 'Gwangyang',
@@ -5509,23 +5413,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gwangyang, KRKAN',
                 'coordinates' => '34.884905 127.71855',
                 'country_id' => 248,
-                'varation' => '{"type": ["", "", "gwangyang-krkan-korea, republic of", "gwangyang ,kr", "korea, republic of: gwangyang", "gwangyang pt", "gwangyang port", "gwangyang city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["gwangyang-krkan-korea, republic of", "gwangyang ,kr", "korea, republic of: gwangyang", "gwangyang pt", "gwangyang port", "gwangyang city", "s.korea: gwangyang", "s.korea gwangyang", "skorea gwangyang", "gwangyang, korea", "gwang yang", "gwangyang-krkan, republic of korea", "gwang yang kwanyang", "krgwangyang"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-03-07 11:43:53',
             ),
-            458 => 
+            450 => 
             array (
                 'id' => 1200,
                 'name' => 'Inchon',
                 'code' => 'KRINC',
                 'display_name' => 'Inchon, KRINC',
                 'coordinates' => '37.45913 126.6093',
-                'country_id' => 248,
-                'varation' => '{"type": ["", "", "inchon-krinc-korea, republic of", "inchon ,kr", "korea, republic of: inchon", "inchon pt", "inchon port", "inchon city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'country_id' => 119,
+                'varation' => '{"type": ["incheon", "inchon, korea", "inchon korea", "incheon-inchon", "incheoninchon", "incheon, korea"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-04-04 05:35:29',
             ),
-            459 => 
+            451 => 
             array (
                 'id' => 1201,
                 'name' => 'Pohang',
@@ -5533,11 +5437,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Pohang, KRKPO',
                 'coordinates' => '36.01113 129.4015',
                 'country_id' => 248,
-                'varation' => '{"type": ["", "", "pohang-krkpo-korea, republic of", "pohang ,kr", "korea, republic of: pohang", "pohang pt", "pohang port", "pohang city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["pohang-krkpo-korea, republic of", "pohang ,kr", "korea, republic of: pohang", "pohang pt", "pohang port", "pohang city", "pohang, korea"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2018-12-10 13:48:25',
             ),
-            460 => 
+            452 => 
             array (
                 'id' => 1202,
                 'name' => 'OKPO/GEOJE',
@@ -5546,22 +5450,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.89133 128.7483',
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "okpo/geoje-krokp-korea, republic of", "okpo/geoje ,kr", "korea, republic of: okpo/geoje", "okpo/geoje pt", "okpo/geoje port", "okpo/geoje city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2018-09-05 15:34:31',
             ),
-            461 => 
-            array (
-                'id' => 1203,
-                'name' => 'Shuaiba',
-                'code' => 'KWMIB',
-                'display_name' => 'Shuaiba, KWMIB',
-                'coordinates' => '29.04194 48.14968',
-                'country_id' => 120,
-                'varation' => '{"type": ["", "", "shuaiba-kwmib-kuwait", "shuaiba ,kw", "kuwait: shuaiba", "shuaiba pt", "shuaiba port", "shuaiba city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
-            ),
-            462 => 
+            453 => 
             array (
                 'id' => 1204,
                 'name' => 'Shuwaikh',
@@ -5569,11 +5461,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shuwaikh, KWSWK',
                 'coordinates' => '29.35102 47.94272',
                 'country_id' => 120,
-                'varation' => '{"type": ["", "", "shuwaikh-kwswk-kuwait", "shuwaikh ,kw", "kuwait: shuwaikh", "shuwaikh pt", "shuwaikh port", "shuwaikh city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+            'varation' => '{"type": ["shuwaikh-kwswk-kuwait", "shuwaikh ,kw", "kuwait: shuwaikh", "shuwaikh pt", "shuwaikh port", "shuwaikh city", "al shuwaikh, al asamah, kuwait", "al shuwaikh al asamah kuwait", "kuwait (shuwaikh)", "kuwait (shuwaikh)", "shuwaikh, kuwait", "shuwaikh kuwait", "shuweikh **", "kuwait (shuwaikh)", "kuwait shuwaikh"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-27 16:55:10',
             ),
-            463 => 
+            454 => 
             array (
                 'id' => 1205,
                 'name' => 'SHUAIBA',
@@ -5581,11 +5473,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SHUAIBA, KWSAA',
                 'coordinates' => '29.039365 48.167875',
                 'country_id' => 120,
-                'varation' => '{"type": ["", "", "shuaiba-kwsaa-kuwait", "shuaiba ,kw", "kuwait: shuaiba", "shuaiba pt", "shuaiba port", "shuaiba city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["shuaiba-kwsaa-kuwait", "shuaiba ,kw", "kuwait: shuaiba", "shuaiba pt", "shuaiba port", "shuaiba city", "shuaiba, al ahmadi, kuwait", "shuaiba al ahmadi kuwait", "shuaiba, kuwait", "kuwait shuaiba **", "kuwait shuaiba", "kuwait shuaiba"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-27 16:54:23',
             ),
-            464 => 
+            455 => 
             array (
                 'id' => 1206,
                 'name' => 'GRAND CAYMAN',
@@ -5594,10 +5486,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 121,
                 'varation' => '{"type": ["", "", "grand cayman-kygcm-cayman islands", "grand cayman ,ky", "cayman islands: grand cayman", "grand cayman pt", "grand cayman port", "grand cayman city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2018-09-05 15:34:31',
             ),
-            465 => 
+            456 => 
             array (
                 'id' => 1207,
                 'name' => 'Beirut',
@@ -5605,11 +5497,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Beirut, LBBEY',
                 'coordinates' => '33.90721 35.525425',
                 'country_id' => 124,
-                'varation' => '{"type": ["", "", "beirut-lbbey-lebanon", "beirut ,lb", "lebanon: beirut", "beirut pt", "beirut port", "beirut city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["beirut-lbbey-lebanon", "beirut ,lb", "lebanon: beirut", "beirut pt", "beirut port", "beirut city", "beirut, lebanon", "beirut lebanon", "beirut", "beirut lbbct"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-04-08 12:02:32',
             ),
-            466 => 
+            457 => 
             array (
                 'id' => 1208,
                 'name' => 'CASTRIES',
@@ -5617,11 +5509,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CASTRIES, LCCAS',
                 'coordinates' => '14.014215 -61.00251',
                 'country_id' => 125,
-                'varation' => '{"type": ["", "", "castries-lccas-saint lucia", "castries ,lc", "saint lucia: castries", "castries pt", "castries port", "castries city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["castries-lccas-saint lucia", "castries ,lc", "saint lucia: castries", "castries pt", "castries port", "castries city", "castries, st lucia", "castries st lucia"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2018-12-14 10:41:45',
             ),
-            467 => 
+            458 => 
             array (
                 'id' => 1209,
                 'name' => 'Colombo',
@@ -5629,11 +5521,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Colombo, LKCMB',
                 'coordinates' => '6.94119 79.8428',
                 'country_id' => 127,
-                'varation' => '{"type": ["", "", "colombo-lkcmb-sri lanka", "colombo ,lk", "sri lanka: colombo", "colombo pt", "colombo port", "colombo city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["colombo-lkcmb-sri lanka", "colombo ,lk", "sri lanka: colombo", "colombo pt", "colombo port", "colombo city", "sri lanka colombo", "colombo, western, sri lanka", "colombo western sri lanka", "colombo, sri lanka", "colombo sri lanka", "colombo, wester, sri lanka", "colombo r1", "colombo *r1"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-27 17:08:39',
             ),
-            468 => 
+            459 => 
             array (
                 'id' => 1210,
                 'name' => 'MONROVIA',
@@ -5641,11 +5533,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MONROVIA, LRMLW',
                 'coordinates' => '6.33305 -10.79561',
                 'country_id' => 128,
-                'varation' => '{"type": ["", "", "monrovia-lrmlw-liberia", "monrovia ,lr", "liberia: monrovia", "monrovia pt", "monrovia port", "monrovia city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["monrovia-lrmlw-liberia", "monrovia ,lr", "liberia: monrovia", "monrovia pt", "monrovia port", "monrovia city", "monrovia, lr", "monrovia, liberia", "monrovia liberia"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-01-25 08:48:52',
             ),
-            469 => 
+            460 => 
             array (
                 'id' => 1211,
                 'name' => 'Klaipeda',
@@ -5653,11 +5545,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Klaipeda, LTKLJ',
                 'coordinates' => '55.71253 21.1147',
                 'country_id' => 130,
-                'varation' => '{"type": ["", "", "klaipeda-ltklj-lithuania", "klaipeda ,lt", "lithuania: klaipeda", "klaipeda pt", "klaipeda port", "klaipeda city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["klaipeda-ltklj-lithuania", "klaipeda ,lt", "lithuania: klaipeda", "klaipeda pt", "klaipeda port", "klaipeda city", "klaipeda, lithuania", "klaipeda lithuania", "klaipeida"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-21 15:18:09',
             ),
-            470 => 
+            461 => 
             array (
                 'id' => 1212,
                 'name' => 'Riga',
@@ -5665,11 +5557,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Riga, LVRIX',
                 'coordinates' => '56.93973 24.1121',
                 'country_id' => 132,
-                'varation' => '{"type": ["", "", "riga-lvrix-latvia", "riga ,lv", "latvia: riga", "riga pt", "riga port", "riga city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["riga-lvrix-latvia", "riga ,lv", "latvia: riga", "riga pt", "riga port", "riga city", "riga, latvia", "riga latvia", "riga, latvia", "riga latviaee"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-01-25 10:26:30',
             ),
-            471 => 
+            462 => 
             array (
                 'id' => 1213,
                 'name' => 'Al Khoms',
@@ -5677,11 +5569,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Al Khoms, LYKHO',
                 'coordinates' => '32.65917 14.29024',
                 'country_id' => 133,
-                'varation' => '{"type": ["", "", "al khoms-lykho-libya", "al khoms ,ly", "libya: al khoms", "al khoms pt", "al khoms port", "al khoms city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["al khoms-lykho-libya", "al khoms ,ly", "libya: al khoms", "al khoms pt", "al khoms port", "al khoms city", "al khoms, libya", "al khoms libya", "el khoms", "al kohms"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-19 08:46:45',
             ),
-            472 => 
+            463 => 
             array (
                 'id' => 1214,
                 'name' => 'Benghazi',
@@ -5689,11 +5581,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Benghazi, LYBEN',
                 'coordinates' => '32.10399 20.03957',
                 'country_id' => 133,
-                'varation' => '{"type": ["", "", "benghazi-lyben-libya", "benghazi ,ly", "libya: benghazi", "benghazi pt", "benghazi port", "benghazi city"]}',
-                'created_at' => '2018-09-05 19:34:31',
-                'updated_at' => '2018-09-05 19:34:31',
+                'varation' => '{"type": ["benghazi-lyben-libya", "benghazi ,ly", "libya: benghazi", "benghazi pt", "benghazi port", "benghazi city", "benghazi, libya", "bingazi"]}',
+                'created_at' => '2018-09-05 15:34:31',
+                'updated_at' => '2019-02-04 10:16:29',
             ),
-            473 => 
+            464 => 
             array (
                 'id' => 1215,
                 'name' => 'Misuratah',
@@ -5701,11 +5593,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Misuratah, LYMRA',
                 'coordinates' => '32.36626 15.2194',
                 'country_id' => 133,
-                'varation' => '{"type": ["", "", "misuratah-lymra-libya", "misuratah ,ly", "libya: misuratah", "misuratah pt", "misuratah port", "misuratah city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["misuratah-lymra-libya", "misuratah ,ly", "libya: misuratah", "misuratah pt", "misuratah port", "misuratah city", "misuratah, libya", "misuratah libya"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-17 06:47:59',
             ),
-            474 => 
+            465 => 
             array (
                 'id' => 1216,
                 'name' => 'TRIPOLI',
@@ -5714,22 +5606,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '32.90412 13.18102',
                 'country_id' => 133,
                 'varation' => '{"type": ["", "", "tripoli-lytip-libya", "tripoli ,ly", "libya: tripoli", "tripoli pt", "tripoli port", "tripoli city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            475 => 
+            466 => 
             array (
                 'id' => 1217,
-                'name' => 'AGADIR',
+                'name' => 'Agadir',
                 'code' => 'MAAGA',
-                'display_name' => 'AGADIR, MAAGA',
+                'display_name' => 'Agadir, MAAGA',
                 'coordinates' => '30.42093 -9.6292',
                 'country_id' => 134,
-                'varation' => '{"type": ["agadir-maaga-morocco", "agadir ,ma", "morocco: agadir", "agadir pt", "agadir port", "agadir city", "agadir ,maas", "agadir ,maasasd"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2019-02-25 15:18:30',
+                'varation' => '{"type": ["agadir-maaga-morocco", "agadir ,ma", "morocco: agadir", "agadir pt", "agadir port", "agadir city", "agadir, morocco", "agadir morocco"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-14 11:41:24',
             ),
-            476 => 
+            467 => 
             array (
                 'id' => 1218,
                 'name' => 'CASABLANCA',
@@ -5737,11 +5629,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CASABLANCA, MACAS',
                 'coordinates' => '33.61393 -7.6112',
                 'country_id' => 134,
-                'varation' => '{"type": ["", "", "casablanca-macas-morocco", "casablanca ,ma", "morocco: casablanca", "casablanca pt", "casablanca port", "casablanca city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["casablanca-macas-morocco", "casablanca ,ma", "morocco: casablanca", "casablanca pt", "casablanca port", "casablanca city", "casablanca, morocco", "casablanca, morocco", "casablanca morocco"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-14 12:02:45',
             ),
-            477 => 
+            468 => 
             array (
                 'id' => 1219,
                 'name' => 'NADOR',
@@ -5750,10 +5642,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.27713 -2.9303',
                 'country_id' => 134,
                 'varation' => '{"type": ["", "", "nador-mandr-morocco", "nador ,ma", "morocco: nador", "nador pt", "nador port", "nador city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            478 => 
+            469 => 
             array (
                 'id' => 1220,
                 'name' => 'TANGER MEDITERRANEO',
@@ -5762,10 +5654,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.895 -5.4945',
                 'country_id' => 134,
                 'varation' => '{"type": ["", "", "tanger mediterraneo-maptm-morocco", "tanger mediterraneo ,ma", "morocco: tanger mediterraneo", "tanger mediterraneo pt", "tanger mediterraneo port", "tanger mediterraneo city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            479 => 
+            470 => 
             array (
                 'id' => 1221,
                 'name' => 'TANGIER',
@@ -5773,11 +5665,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TANGIER, MATNG',
                 'coordinates' => '35.79323 -5.788',
                 'country_id' => 134,
-                'varation' => '{"type": ["port tangier mediterranee ,ma", "", "tangier-matng-morocco", "tangier ,ma", "morocco: tangier", "tangier pt", "tangier port", "tangier city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["port tangier mediterranee ,ma", "tangier-matng-morocco", "tangier ,ma", "morocco: tangier", "tangier pt", "tangier port", "tangier city", "port tangier mediterranee, morocco", "port tangier mediterranee morocco"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-03 10:48:39',
             ),
-            480 => 
+            471 => 
             array (
                 'id' => 1222,
                 'name' => 'GIURGIULESTI',
@@ -5786,10 +5678,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '45.47013 28.20697',
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "giurgiulesti-mdgiu-moldova, republic of", "giurgiulesti ,md", "moldova, republic of: giurgiulesti", "giurgiulesti pt", "giurgiulesti port", "giurgiulesti city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            481 => 
+            472 => 
             array (
                 'id' => 1223,
                 'name' => 'BAR',
@@ -5797,11 +5689,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BAR, MEBAR',
                 'coordinates' => '42.099745 19.074665',
                 'country_id' => 137,
-                'varation' => '{"type": ["", "", "bar-mebar-montenegro", "bar ,me", "montenegro: bar", "bar pt", "bar port", "bar city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["bar-mebar-montenegro", "bar ,me", "montenegro: bar", "bar pt", "bar port", "bar city", "bar, montenegro", "bar montenegro", "bar"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-25 10:21:43',
             ),
-            482 => 
+            473 => 
             array (
                 'id' => 1224,
                 'name' => 'DIEGO SUAREZ',
@@ -5809,11 +5701,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DIEGO SUAREZ, MGDIE',
                 'coordinates' => '-12.27509 49.28513',
                 'country_id' => 139,
-                'varation' => '{"type": ["", "", "diego suarez-mgdie-madagascar", "diego suarez ,mg", "madagascar: diego suarez", "diego suarez pt", "diego suarez port", "diego suarez city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["diego suarez-mgdie-madagascar", "diego suarez ,mg", "madagascar: diego suarez", "diego suarez pt", "diego suarez port", "diego suarez city", "antsiranana"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-02-27 10:35:40',
             ),
-            483 => 
+            474 => 
             array (
                 'id' => 1225,
                 'name' => 'MAJUNGA',
@@ -5822,10 +5714,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-15.72721 46.32287',
                 'country_id' => 139,
                 'varation' => '{"type": ["", "", "majunga-mgmjn-madagascar", "majunga ,mg", "madagascar: majunga", "majunga pt", "majunga port", "majunga city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            484 => 
+            475 => 
             array (
                 'id' => 1226,
                 'name' => 'TAMATAVE',
@@ -5834,10 +5726,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-18.15439 49.42657',
                 'country_id' => 139,
                 'varation' => '{"type": ["", "", "tamatave-mgtmm-madagascar", "tamatave ,mg", "madagascar: tamatave", "tamatave pt", "tamatave port", "tamatave city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            485 => 
+            476 => 
             array (
                 'id' => 1227,
                 'name' => 'THILAWA',
@@ -5845,11 +5737,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'THILAWA, MMTLA',
                 'coordinates' => '16.648855 96.25448',
                 'country_id' => 249,
-                'varation' => '{"type": ["", "", "thilawa-mmtla-myanmar", "thilawa ,mm", "myanmar: thilawa", "thilawa pt", "thilawa port", "thilawa city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+            'varation' => '{"type": ["thilawa-mmtla-myanmar", "thilawa ,mm", "myanmar: thilawa", "thilawa pt", "thilawa port", "thilawa city", "thilawa, myanmar (burma)", "thilawa myanmar burma", "thilawa myanmar (burma)", "thilawa, myanmar burma"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-03 16:40:34',
             ),
-            486 => 
+            477 => 
             array (
                 'id' => 1228,
                 'name' => 'Yangon',
@@ -5857,11 +5749,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yangon, MMRGN',
                 'coordinates' => '16.76658 96.16827',
                 'country_id' => 249,
-                'varation' => '{"type": ["yangon-myanmar", "", "yangon-mmrgn-myanmar", "yangon ,mm", "myanmar: yangon", "yangon pt", "yangon port", "yangon city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+            'varation' => '{"type": ["yangon-myanmar", "yangon-mmrgn-myanmar", "yangon ,mm", "myanmar: yangon", "yangon pt", "yangon port", "yangon city", "yangon, yangon, myanmar", "myanmar yangon", "yangoon", "yangon, myanmar (burma)", "yangon, myanmar (burma)", "yangon, myanmar burma", "mmyangon", "yangon/rangun", "yangon rangoon", "yangon rangun"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-04-03 12:35:10',
             ),
-            487 => 
+            478 => 
             array (
                 'id' => 1229,
                 'name' => 'NOUADHIBOU',
@@ -5869,11 +5761,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NOUADHIBOU, MRNDB',
                 'coordinates' => '20.89894 -17.05258',
                 'country_id' => 148,
-                'varation' => '{"type": ["", "", "nouadhibou-mrndb-mauritania", "nouadhibou ,mr", "mauritania: nouadhibou", "nouadhibou pt", "nouadhibou port", "nouadhibou city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["nouadhibou-mrndb-mauritania", "nouadhibou ,mr", "mauritania: nouadhibou", "nouadhibou pt", "nouadhibou port", "nouadhibou city", "nouadhibou, mauritania", "nouadhibou mauritania"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-25 08:37:20',
             ),
-            488 => 
+            479 => 
             array (
                 'id' => 1230,
                 'name' => 'NOUAKCHOTT',
@@ -5881,11 +5773,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NOUAKCHOTT, MRNKC',
                 'coordinates' => '17.989 -16.0305',
                 'country_id' => 148,
-                'varation' => '{"type": ["", "", "nouakchott-mrnkc-mauritania", "nouakchott ,mr", "mauritania: nouakchott", "nouakchott pt", "nouakchott port", "nouakchott city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["nouakchott-mrnkc-mauritania", "nouakchott ,mr", "mauritania: nouakchott", "nouakchott pt", "nouakchott port", "nouakchott city", "nouakchott, mr", "nouakchott, mauritania", "nouakchott mauritania", "nouakchott, mauritania"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-25 10:03:32',
             ),
-            489 => 
+            480 => 
             array (
                 'id' => 1231,
                 'name' => 'MARSAXLOKK',
@@ -5893,11 +5785,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MARSAXLOKK, MTMAR',
                 'coordinates' => '35.81263 14.5439',
                 'country_id' => 150,
-                'varation' => '{"type": ["", "", "marsaxlokk-mtmar-malta", "marsaxlokk ,mt", "malta: marsaxlokk", "marsaxlokk pt", "marsaxlokk port", "marsaxlokk city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+            'varation' => '{"type": ["marsaxlokk-mtmar-malta", "marsaxlokk ,mt", "malta: marsaxlokk", "marsaxlokk pt", "marsaxlokk port", "marsaxlokk city", "marsaxlokk, malta", "marsaxlokk malta", "malta (marsaxlokk)", "malta(freeport)", "maltafreeport", "mtmla malta(freeport)", "mtmla maltafreeport", "mtmla maltafreeport", "malta marsaxlokk", "la valleta marsaxlokk", "malta freeport"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-04-04 16:00:55',
             ),
-            490 => 
+            481 => 
             array (
                 'id' => 1232,
                 'name' => 'PORT LOUIS',
@@ -5905,11 +5797,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PORT LOUIS, MUPLU',
                 'coordinates' => '-20.14987 57.4961',
                 'country_id' => 151,
-                'varation' => '{"type": ["", "", "port louis-muplu-mauritius", "port louis ,mu", "mauritius: port louis", "port louis pt", "port louis port", "port louis city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["port louis-muplu-mauritius", "port louis ,mu", "mauritius: port louis", "port louis pt", "port louis port", "port louis city", "port louis, mauritius"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-01-28 08:20:31',
             ),
-            491 => 
+            482 => 
             array (
                 'id' => 1233,
                 'name' => 'MALE',
@@ -5917,11 +5809,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MALE, MVMLE',
                 'coordinates' => '4.16603 73.5015',
                 'country_id' => 152,
-                'varation' => '{"type": ["", "", "male-mvmle-maldives", "male ,mv", "maldives: male", "male pt", "male port", "male city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["male-mvmle-maldives", "male ,mv", "maldives: male", "male pt", "male port", "male city", "maldivas male maldivas", "maldivas male maldivas", "male maldivas", "male maldives"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-04-09 15:57:22',
             ),
-            492 => 
+            483 => 
             array (
                 'id' => 1234,
                 'name' => 'Altamira',
@@ -5929,11 +5821,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Altamira, MXATM',
                 'coordinates' => '22.48441 -97.86003',
                 'country_id' => 154,
-                'varation' => '{"type": ["", "", "altamira-mxatm-mexico", "altamira ,mx", "mexico: altamira", "altamira pt", "altamira port", "altamira city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["altamira-mxatm-mexico", "altamira ,mx", "mexico: altamira", "altamira pt", "altamira port", "altamira city", "altamira, mexico", "altamira mexico", "altamira, mexico", "altamira, mx", "altamira mx", "mexico / altamira", "mexico  altamira"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-03-07 10:08:30',
             ),
-            493 => 
+            484 => 
             array (
                 'id' => 1235,
                 'name' => 'Ensenada',
@@ -5942,10 +5834,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '31.86133 -116.6219',
                 'country_id' => 154,
                 'varation' => '{"type": ["", "", "ensenada-mxese-mexico", "ensenada ,mx", "mexico: ensenada", "ensenada pt", "ensenada port", "ensenada city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            494 => 
+            485 => 
             array (
                 'id' => 1236,
                 'name' => 'Lazaro Cardenas',
@@ -5953,11 +5845,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lazaro Cardenas, MXLZC',
                 'coordinates' => '17.91523 -102.1623',
                 'country_id' => 154,
-                'varation' => '{"type": ["", "", "lazaro cardenas-mxlzc-mexico", "lazaro cardenas ,mx", "mexico: lazaro cardenas", "lazaro cardenas pt", "lazaro cardenas port", "lazaro cardenas city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["lazaro cardenas-mxlzc-mexico", "lazaro cardenas ,mx", "mexico: lazaro cardenas", "lazaro cardenas pt", "lazaro cardenas port", "lazaro cardenas city", "lazaro cardenas, mexico", "lazaro cardenas mexico", "lazaro cadenas"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-04-01 03:58:20',
             ),
-            495 => 
+            486 => 
             array (
                 'id' => 1237,
                 'name' => 'Manzanillo',
@@ -5965,11 +5857,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Manzanillo, MXZLO',
                 'coordinates' => '19.05013 -104.33',
                 'country_id' => 154,
-                'varation' => '{"type": ["", "", "manzanillo-mxzlo-mexico", "manzanillo ,mx", "mexico: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["manzanillo-mxzlo-mexico", "manzanillo ,mx", "mexico: manzanillo", "manzanillo mexico", "manzanillo, mexico", "manzanillo, mx"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-03-05 09:08:30',
             ),
-            496 => 
+            487 => 
             array (
                 'id' => 1238,
                 'name' => 'Veracruz',
@@ -5977,11 +5869,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Veracruz, MXVER',
                 'coordinates' => '19.20223 -96.1242',
                 'country_id' => 154,
-                'varation' => '{"type": ["", "", "veracruz-mxver-mexico", "veracruz ,mx", "mexico: veracruz", "veracruz pt", "veracruz port", "veracruz city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["veracruz-mxver-mexico", "veracruz ,mx", "mexico: veracruz", "veracruz pt", "veracruz port", "veracruz city", "veracruz, mexico", "veracruz mexico", "veracruz, mx", "veracruz mx", "mexico / veracruz", "mexico  veracruz"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2019-03-07 10:09:18',
             ),
-            497 => 
+            488 => 
             array (
                 'id' => 1239,
                 'name' => 'GUAYMAS',
@@ -5990,10 +5882,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '27.91603 -110.8762',
                 'country_id' => 154,
                 'varation' => '{"type": ["", "", "guaymas-mxgym-mexico", "guaymas ,mx", "mexico: guaymas", "guaymas pt", "guaymas port", "guaymas city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            498 => 
+            489 => 
             array (
                 'id' => 1240,
                 'name' => 'MAZATLAN',
@@ -6002,10 +5894,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '23.17393 -106.4244',
                 'country_id' => 154,
                 'varation' => '{"type": ["", "", "mazatlan-mxmzt-mexico", "mazatlan ,mx", "mexico: mazatlan", "mazatlan pt", "mazatlan port", "mazatlan city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-            499 => 
+            490 => 
             array (
                 'id' => 1241,
                 'name' => 'PUERTO MORELOS',
@@ -6014,12 +5906,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '20.834695 -86.88545',
                 'country_id' => 154,
                 'varation' => '{"type": ["", "", "puerto morelos-mxpms-mexico", "puerto morelos ,mx", "mexico: puerto morelos", "puerto morelos pt", "puerto morelos port", "puerto morelos city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-09-05 15:34:32',
             ),
-        ));
-        \DB::table('harbors')->insert(array (
-            0 => 
+            491 => 
             array (
                 'id' => 1242,
                 'name' => 'Bintulu',
@@ -6027,11 +5917,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bintulu, MYBTU',
                 'coordinates' => '3.18693 113.0295',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "bintulu-mybtu-malaysia", "bintulu ,my", "malaysia: bintulu", "bintulu pt", "bintulu port", "bintulu city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["bintulu-mybtu-malaysia", "bintulu ,my", "malaysia: bintulu", "bintulu pt", "bintulu port", "bintulu city", "bintulu, malaysia"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-10 13:37:00',
             ),
-            1 => 
+            492 => 
             array (
                 'id' => 1243,
                 'name' => 'Kota Kinabalu',
@@ -6039,11 +5929,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kota Kinabalu, MYBKI',
                 'coordinates' => '5.97153 116.0667',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "kota kinabalu-mybki-malaysia", "kota kinabalu ,my", "malaysia: kota kinabalu", "kota kinabalu pt", "kota kinabalu port", "kota kinabalu city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["kota kinabalu-mybki-malaysia", "kota kinabalu ,my", "malaysia: kota kinabalu", "kota kinabalu pt", "kota kinabalu port", "kota kinabalu city", "kota kinabalu, sabah, malaysia", "kota kinabalu sabah malaysia", "kota kinabalu, malaysia"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-10 15:18:27',
             ),
-            2 => 
+            493 => 
             array (
                 'id' => 1244,
                 'name' => 'Kuantan',
@@ -6051,11 +5941,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kuantan, MYKUA',
                 'coordinates' => '3.96303 103.4335',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "kuantan-mykua-malaysia", "kuantan ,my", "malaysia: kuantan", "kuantan pt", "kuantan port", "kuantan city"]}',
-                'created_at' => '2018-09-05 19:34:32',
-                'updated_at' => '2018-09-05 19:34:32',
+                'varation' => '{"type": ["kuantan-mykua-malaysia", "kuantan ,my", "malaysia: kuantan", "kuantan pt", "kuantan port", "kuantan city", "kuantan, malaysia", "kuantan, pahang"]}',
+                'created_at' => '2018-09-05 15:34:32',
+                'updated_at' => '2018-12-20 09:53:43',
             ),
-            3 => 
+            494 => 
             array (
                 'id' => 1245,
                 'name' => 'Kuching',
@@ -6063,11 +5953,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kuching, MYKCH',
                 'coordinates' => '1.55763 110.3715',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "kuching-mykch-malaysia", "kuching ,my", "malaysia: kuching", "kuching pt", "kuching port", "kuching city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["kuching-mykch-malaysia", "kuching ,my", "malaysia: kuching", "kuching pt", "kuching port", "kuching city", "kuching, sarawak, malaysia", "kuching sarawak malaysia", "kuching, malaysia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-12-10 15:18:51',
             ),
-            4 => 
+            495 => 
             array (
                 'id' => 1246,
                 'name' => 'Pasir Gudang',
@@ -6075,11 +5965,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Pasir Gudang, MYPGU',
                 'coordinates' => '1.43593 103.9017',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "pasir gudang-mypgu-malaysia", "pasir gudang ,my", "malaysia: pasir gudang", "pasir gudang pt", "pasir gudang port", "pasir gudang city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["pasir gudang-mypgu-malaysia", "pasir gudang ,my", "malaysia: pasir gudang", "pasir gudang pt", "pasir gudang port", "pasir gudang city", "pasir gudang, johor, malaysia", "pasir gudang johor malaysia", "pasir gudang, malaysia", "pasir gudang malaysia", "johore, pasir gudang", "pasir gudang, johor-mypgu-malaysia", "johore pasir gudang", "pasir gudang"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-03-22 09:21:46',
             ),
-            5 => 
+            496 => 
             array (
                 'id' => 1247,
                 'name' => 'Penang',
@@ -6087,11 +5977,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Penang, MYPEN',
                 'coordinates' => '5.36623 100.3183',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "penang-mypen-malaysia", "penang ,my", "malaysia: penang", "penang pt", "penang port", "penang city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["penang-mypen-malaysia", "penang ,my", "malaysia: penang", "penang pt", "penang port", "penang city", "penang, pulau pinang, malaysia", "penang pulau pinang malaysia", "penang, malaysia", "penang malaysia", "penang", "penang, malasia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-03-31 06:29:20',
             ),
-            6 => 
+            497 => 
             array (
                 'id' => 1248,
                 'name' => 'Port Klang',
@@ -6099,11 +5989,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Klang, MYPKG',
                 'coordinates' => '3.00093 101.3823',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "port klang-mypkg-malaysia", "port klang ,my", "malaysia: port klang", "port klang pt", "port klang port", "port klang city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+            'varation' => '{"type": ["port klang-mypkg-malaysia", "port klang ,my", "malaysia: port klang", "port klang pt", "port klang port", "port klang city", "port kelang, malaysia", "port kelang malaysia", "malaysia: port klang", "malaysia port klang", "port klang, selangor, malaysia", "port klang selangor malaysia", "port kelang", "port klang, malaysia", "port kelang-mypkg-malaysia", "port kelang north port", "port kelang***", "pork kelang malaysia", "port klang", "port klang (west terminal)", "port klang*", "port klang, malasia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-03-31 06:29:47',
             ),
-            7 => 
+            498 => 
             array (
                 'id' => 1249,
                 'name' => 'Sandakan',
@@ -6111,11 +6001,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sandakan, MYSDK',
                 'coordinates' => '5.83803 118.1167',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "sandakan-mysdk-malaysia", "sandakan ,my", "malaysia: sandakan", "sandakan pt", "sandakan port", "sandakan city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["sandakan-mysdk-malaysia", "sandakan ,my", "malaysia: sandakan", "sandakan pt", "sandakan port", "sandakan city", "sandakan, malaysia", "sandakan malaysia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-01-03 14:29:20',
             ),
-            8 => 
+            499 => 
             array (
                 'id' => 1250,
                 'name' => 'Tanjung Pelepas',
@@ -6123,11 +6013,13 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tanjung Pelepas, MYTPP',
                 'coordinates' => '1.3855 103.541',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "tanjung pelepas-mytpp-malaysia", "tanjung pelepas ,my", "malaysia: tanjung pelepas", "tanjung pelepas pt", "tanjung pelepas port", "tanjung pelepas city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["tanjung pelepas-mytpp-malaysia", "tanjung pelepas ,my", "malaysia: tanjung pelepas", "tanjung pelepas pt", "tanjung pelepas port", "tanjung pelepas city", "tanjung pelepas, johor, malaysia", "tanjung pelepas johor malaysia", "tanjung pelepas, malaysia", "tanjung pelepas malaysia", "tajun pelepas", "tanjun pelepas", "tanjung", "tanjung-pelepas", "tanjungpelepas"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-03-30 08:05:26',
             ),
-            9 => 
+        ));
+        \DB::table('harbors')->insert(array (
+            0 => 
             array (
                 'id' => 1251,
                 'name' => 'Tawau',
@@ -6135,11 +6027,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tawau, MYTWU',
                 'coordinates' => '4.25013 117.8713',
                 'country_id' => 155,
-                'varation' => '{"type": ["", "", "tawau-mytwu-malaysia", "tawau ,my", "malaysia: tawau", "tawau pt", "tawau port", "tawau city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["tawau-mytwu-malaysia", "tawau ,my", "malaysia: tawau", "tawau pt", "tawau port", "tawau city", "tawau, malaysia", "tawau malaysia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-01-03 14:30:00',
             ),
-            10 => 
+            1 => 
             array (
                 'id' => 1252,
                 'name' => 'SIBU, SARAWAK',
@@ -6148,10 +6040,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '2.28333 111.8275',
                 'country_id' => 155,
                 'varation' => '{"type": ["", "", "sibu, sarawak-mysbw-malaysia", "sibu, sarawak ,my", "malaysia: sibu, sarawak", "sibu, sarawak pt", "sibu, sarawak port", "sibu, sarawak city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-09-05 15:34:33',
             ),
-            11 => 
+            2 => 
             array (
                 'id' => 1253,
                 'name' => 'BEIRA',
@@ -6159,11 +6051,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BEIRA, MZBEW',
                 'coordinates' => '-19.82676 34.83322',
                 'country_id' => 156,
-                'varation' => '{"type": ["", "", "beira-mzbew-mozambique", "beira ,mz", "mozambique: beira", "beira pt", "beira port", "beira city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["beira-mzbew-mozambique", "beira ,mz", "mozambique: beira", "beira pt", "beira port", "beira city", "beira, mozambique", "beira mozambique", "beira r1"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-02-27 17:02:03',
             ),
-            12 => 
+            3 => 
             array (
                 'id' => 1254,
                 'name' => 'MAPUTO',
@@ -6171,11 +6063,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MAPUTO, MZMPM',
                 'coordinates' => '-25.97 32.564',
                 'country_id' => 156,
-                'varation' => '{"type": ["", "", "maputo-mzmpm-mozambique", "maputo ,mz", "mozambique: maputo", "maputo pt", "maputo port", "maputo city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["maputo-mzmpm-mozambique", "maputo ,mz", "mozambique: maputo", "maputo pt", "maputo port", "maputo city", "maputo, mozambique", "maputo mozambique", "maputo *r1", "maputo r1"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-02-27 16:29:05',
             ),
-            13 => 
+            4 => 
             array (
                 'id' => 1255,
                 'name' => 'NACALA',
@@ -6183,11 +6075,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NACALA, MZMNC',
                 'coordinates' => '-14.5415 40.6675',
                 'country_id' => 156,
-                'varation' => '{"type": ["", "", "nacala-mzmnc-mozambique", "nacala ,mz", "mozambique: nacala", "nacala pt", "nacala port", "nacala city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["nacala-mzmnc-mozambique", "nacala ,mz", "mozambique: nacala", "nacala pt", "nacala port", "nacala city", "nacala, mozambique", "nacala *r1", "nacala r1"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-02-27 16:53:30',
             ),
-            14 => 
+            5 => 
             array (
                 'id' => 1256,
                 'name' => 'WALVIS BAY',
@@ -6195,11 +6087,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'WALVIS BAY, NAWVB',
                 'coordinates' => '-22.94857 14.4989',
                 'country_id' => 157,
-                'varation' => '{"type": ["", "", "walvis bay-nawvb-namibia", "walvis bay ,na", "namibia: walvis bay", "walvis bay pt", "walvis bay port", "walvis bay city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["walvis bay-nawvb-namibia", "walvis bay ,na", "namibia: walvis bay", "walvis bay pt", "walvis bay port", "walvis bay city", "walvis bay, namibia", "walvis bay namibia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-01-16 08:58:09',
             ),
-            15 => 
+            6 => 
             array (
                 'id' => 1257,
                 'name' => 'Noumea',
@@ -6207,11 +6099,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Noumea, NCNOU',
                 'coordinates' => '-22.27534 166.4347',
                 'country_id' => 158,
-                'varation' => '{"type": ["", "", "noumea-ncnou-new caledonia", "noumea ,nc", "new caledonia: noumea", "noumea pt", "noumea port", "noumea city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["noumea-ncnou-new caledonia", "noumea ,nc", "new caledonia: noumea", "noumea pt", "noumea port", "noumea city", "noumea, new caledonia", "noumea new caledonia"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-01-22 10:27:39',
             ),
-            16 => 
+            7 => 
             array (
                 'id' => 1258,
                 'name' => 'PRONY',
@@ -6220,10 +6112,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 158,
                 'varation' => '{"type": ["", "", "prony-ncpny-new caledonia", "prony ,nc", "new caledonia: prony", "prony pt", "prony port", "prony city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-09-05 15:34:33',
             ),
-            17 => 
+            8 => 
             array (
                 'id' => 1259,
                 'name' => 'APAPA',
@@ -6231,11 +6123,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'APAPA, NGAPP',
                 'coordinates' => NULL,
                 'country_id' => 161,
-                'varation' => '{"type": ["", "", "apapa-ngapp-nigeria", "apapa ,ng", "nigeria: apapa", "apapa pt", "apapa port", "apapa city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["apapa-ngapp-nigeria", "apapa ,ng", "nigeria: apapa", "apapa pt", "apapa port", "apapa city", "apapa, ng", "apapa, nigeria", "apapa nigeria", "apapa"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-02-27 12:47:37',
             ),
-            18 => 
+            9 => 
             array (
                 'id' => 1260,
                 'name' => 'PORT HARCOURT',
@@ -6244,10 +6136,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '4.77753 7.0039',
                 'country_id' => 161,
                 'varation' => '{"type": ["", "", "port harcourt-ngphc-nigeria", "port harcourt ,ng", "nigeria: port harcourt", "port harcourt pt", "port harcourt port", "port harcourt city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-09-05 15:34:33',
             ),
-            19 => 
+            10 => 
             array (
                 'id' => 1261,
                 'name' => 'TINCAN/LAGOS',
@@ -6255,11 +6147,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TINCAN/LAGOS, NGTIN',
                 'coordinates' => NULL,
                 'country_id' => 161,
-                'varation' => '{"type": ["", "", "tincan/lagos-ngtin-nigeria", "tincan/lagos ,ng", "nigeria: tincan/lagos", "tincan/lagos pt", "tincan/lagos port", "tincan/lagos city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+            'varation' => '{"type": ["tincan/lagos-ngtin-nigeria", "tincan/lagos ,ng", "nigeria: tincan/lagos", "tincan/lagos pt", "tincan/lagos port", "tincan/lagos city", "tincan (lagos)", "tincan lagos", "tin can island port ng", "tin can island port ,ng", "lagostincan", "tincan/lagos", "tincanlagos", "tin can island port, nigeria", "tin can island port nigeria", "lagos tincan", "lagos apapa / tincan", "lagos apapa  tincan", "lagos apapa  tincan", "lagos apapa tincan", "lagos  tincan", "lagos apapa / tincan", "lagos apapa  tincan", "lagos (apapa + tincan) ****"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-03-29 12:13:04',
             ),
-            20 => 
+            11 => 
             array (
                 'id' => 1262,
                 'name' => 'Corinto',
@@ -6267,11 +6159,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Corinto, NICIO',
                 'coordinates' => '12.48084 -87.16871',
                 'country_id' => 162,
-                'varation' => '{"type": ["", "", "corinto-nicio-nicaragua", "corinto ,ni", "nicaragua: corinto", "corinto pt", "corinto port", "corinto city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["corinto-nicio-nicaragua", "corinto ,ni", "nicaragua: corinto", "corinto pt", "corinto port", "corinto city", "corinto, nicaragua", "corinto nicaragua"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-12-14 10:43:08',
             ),
-            21 => 
+            12 => 
             array (
                 'id' => 1263,
                 'name' => 'Rotterdam',
@@ -6279,11 +6171,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Rotterdam, NLRTM',
                 'coordinates' => '51.90793 4.4059',
                 'country_id' => 163,
-                'varation' => '{"type": ["", "", "rotterdam-nlrtm-netherlands", "rotterdam ,nl", "netherlands: rotterdam", "rotterdam pt", "rotterdam port", "rotterdam city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'varation' => '{"type": ["rotterdam-nlrtm-netherlands", "rotterdam ,nl", "netherlands: rotterdam", "rotterdam pt", "rotterdam port", "rotterdam city", "rotterdam, zuid-holland, netherlands", "rotterdam zuidholland netherlands", "rotterdam, netherlands", "rotterdam netherlands", "rótterdam", "nlrtm", "rotterdam gigo"]}',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2019-04-09 16:00:04',
             ),
-            22 => 
+            13 => 
             array (
                 'id' => 1264,
                 'name' => 'AMSTERDAM',
@@ -6292,10 +6184,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '52.37075 4.878955',
                 'country_id' => 163,
                 'varation' => '{"type": ["", "", "amsterdam-nlams-netherlands", "amsterdam ,nl", "netherlands: amsterdam", "amsterdam pt", "amsterdam port", "amsterdam city"]}',
-                'created_at' => '2018-09-05 19:34:33',
-                'updated_at' => '2018-09-05 19:34:33',
+                'created_at' => '2018-09-05 15:34:33',
+                'updated_at' => '2018-09-05 15:34:33',
             ),
-            23 => 
+            14 => 
             array (
                 'id' => 1265,
                 'name' => 'MOERDIJK',
@@ -6304,10 +6196,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '51.69063 4.6053',
                 'country_id' => 163,
                 'varation' => '{"type": ["", "", "moerdijk-nlmoe-netherlands", "moerdijk ,nl", "netherlands: moerdijk", "moerdijk pt", "moerdijk port", "moerdijk city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            24 => 
+            15 => 
             array (
                 'id' => 1266,
                 'name' => 'Aalesund',
@@ -6315,11 +6207,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Aalesund, NOAES',
                 'coordinates' => '62.47273 6.2195',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "aalesund-noaes-norway", "aalesund ,no", "norway: aalesund", "aalesund pt", "aalesund port", "aalesund city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["aalesund-noaes-norway", "aalesund ,no", "norway: aalesund", "aalesund pt", "aalesund port", "aalesund city", "aalesund, norway", "aalesund norway", "aalesund"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-28 08:23:48',
             ),
-            25 => 
+            16 => 
             array (
                 'id' => 1267,
                 'name' => 'Bergen',
@@ -6327,11 +6219,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bergen, NOBGO',
                 'coordinates' => '60.39085 5.32245',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "bergen-nobgo-norway", "bergen ,no", "norway: bergen", "bergen pt", "bergen port", "bergen city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["bergen-nobgo-norway", "bergen ,no", "norway: bergen", "bergen pt", "bergen port", "bergen city", "bergen, norway", "bergen norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-12-14 12:00:40',
             ),
-            26 => 
+            17 => 
             array (
                 'id' => 1268,
                 'name' => 'Drammen',
@@ -6339,11 +6231,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Drammen, NODRM',
                 'coordinates' => '59.74153 10.2165',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "drammen-nodrm-norway", "drammen ,no", "norway: drammen", "drammen pt", "drammen port", "drammen city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["drammen-nodrm-norway", "drammen ,no", "norway: drammen", "drammen pt", "drammen port", "drammen city", "drammen, norway", "drammen norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-12-14 12:13:04',
             ),
-            27 => 
+            18 => 
             array (
                 'id' => 1269,
                 'name' => 'Fredrikstad',
@@ -6351,11 +6243,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fredrikstad, NOFRK',
                 'coordinates' => '59.20673 10.9585',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "fredrikstad-nofrk-norway", "fredrikstad ,no", "norway: fredrikstad", "fredrikstad pt", "fredrikstad port", "fredrikstad city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["fredrikstad-nofrk-norway", "fredrikstad ,no", "norway: fredrikstad", "fredrikstad pt", "fredrikstad port", "fredrikstad city", "fredrikstad, norway", "fredrikstad norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-12-14 12:19:31',
             ),
-            28 => 
+            19 => 
             array (
                 'id' => 1270,
                 'name' => 'Kristiansand',
@@ -6363,11 +6255,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kristiansand, NOKRS',
                 'coordinates' => '58.13993 8.0173',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "kristiansand-nokrs-norway", "kristiansand ,no", "norway: kristiansand", "kristiansand pt", "kristiansand port", "kristiansand city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["kristiansand-nokrs-norway", "kristiansand ,no", "norway: kristiansand", "kristiansand pt", "kristiansand port", "kristiansand city", "kristiansand, norway", "kristiansand norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:50:52',
             ),
-            29 => 
+            20 => 
             array (
                 'id' => 1271,
                 'name' => 'Larvik',
@@ -6375,11 +6267,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Larvik, NOLAR',
                 'coordinates' => '59.04133 10.0463',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "larvik-nolar-norway", "larvik ,no", "norway: larvik", "larvik pt", "larvik port", "larvik city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["larvik-nolar-norway", "larvik ,no", "norway: larvik", "larvik pt", "larvik port", "larvik city", "larvik, norway", "larvik norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:50:17',
             ),
-            30 => 
+            21 => 
             array (
                 'id' => 1272,
                 'name' => 'Maloy',
@@ -6387,11 +6279,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Maloy, NOMAY',
                 'coordinates' => '61.93483 5.0395',
                 'country_id' => 164,
-                'varation' => '{"type": ["maaloey ,no", "", "maloy-nomay-norway", "maloy ,no", "norway: maloy", "maloy pt", "maloy port", "maloy city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["maaloey ,no", "maloy-nomay-norway", "maloy ,no", "norway: maloy", "maloy pt", "maloy port", "maloy city", "maaloey, norway", "maaloey norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:51:08',
             ),
-            31 => 
+            22 => 
             array (
                 'id' => 1273,
                 'name' => 'Moss',
@@ -6399,11 +6291,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Moss, NOMSS',
                 'coordinates' => '59.436 10.6535',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "moss-nomss-norway", "moss ,no", "norway: moss", "moss pt", "moss port", "moss city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["moss-nomss-norway", "moss ,no", "norway: moss", "moss pt", "moss port", "moss city", "moss, norway", "moss norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:55:27',
             ),
-            32 => 
+            23 => 
             array (
                 'id' => 1274,
                 'name' => 'Oslo',
@@ -6411,11 +6303,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Oslo, NOOSL',
                 'coordinates' => '59.89892 10.725',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "oslo-noosl-norway", "oslo ,no", "norway: oslo", "oslo pt", "oslo port", "oslo city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["oslo-noosl-norway", "oslo ,no", "norway: oslo", "oslo pt", "oslo port", "oslo city", "oslo, norway", "oslo norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:51:58',
             ),
-            33 => 
+            24 => 
             array (
                 'id' => 1275,
                 'name' => 'Stavanger',
@@ -6423,11 +6315,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Stavanger, NOSVG',
                 'coordinates' => '58.95973 5.7443',
                 'country_id' => 164,
-                'varation' => '{"type": ["", "", "stavanger-nosvg-norway", "stavanger ,no", "norway: stavanger", "stavanger pt", "stavanger port", "stavanger city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["stavanger-nosvg-norway", "stavanger ,no", "norway: stavanger", "stavanger pt", "stavanger port", "stavanger city", "stavanger, norway", "stavanger norway"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-17 08:09:19',
             ),
-            34 => 
+            25 => 
             array (
                 'id' => 1276,
                 'name' => 'AUSTEVOLL',
@@ -6436,10 +6328,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '60.106 5.177',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "austevoll-noasv-norway", "austevoll ,no", "norway: austevoll", "austevoll pt", "austevoll port", "austevoll city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            35 => 
+            26 => 
             array (
                 'id' => 1277,
                 'name' => 'BREVIK',
@@ -6448,10 +6340,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '59.05323 9.6997',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "brevik-nobvk-norway", "brevik ,no", "norway: brevik", "brevik pt", "brevik port", "brevik city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            36 => 
+            27 => 
             array (
                 'id' => 1278,
                 'name' => 'FLORO',
@@ -6460,10 +6352,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '61.49843 5.0553',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "floro-nofro-norway", "floro ,no", "norway: floro", "floro pt", "floro port", "floro city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            37 => 
+            28 => 
             array (
                 'id' => 1279,
                 'name' => 'GJEMNES',
@@ -6472,10 +6364,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "gjemnes-nogjm-norway", "gjemnes ,no", "norway: gjemnes", "gjemnes pt", "gjemnes port", "gjemnes city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            38 => 
+            29 => 
             array (
                 'id' => 1280,
                 'name' => 'HALDEN',
@@ -6484,10 +6376,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '59.11953 11.3563',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "halden-nohal-norway", "halden ,no", "norway: halden", "halden pt", "halden port", "halden city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            39 => 
+            30 => 
             array (
                 'id' => 1281,
                 'name' => 'HAUGESUND',
@@ -6496,10 +6388,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '59.418305 5.258',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "haugesund-nohau-norway", "haugesund ,no", "norway: haugesund", "haugesund pt", "haugesund port", "haugesund city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            40 => 
+            31 => 
             array (
                 'id' => 1282,
                 'name' => 'IKORNNES',
@@ -6508,10 +6400,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "ikornnes-noikr-norway", "ikornnes ,no", "norway: ikornnes", "ikornnes pt", "ikornnes port", "ikornnes city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            41 => 
+            32 => 
             array (
                 'id' => 1283,
                 'name' => 'KVINESDAL',
@@ -6520,10 +6412,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "kvinesdal-nokvd-norway", "kvinesdal ,no", "norway: kvinesdal", "kvinesdal pt", "kvinesdal port", "kvinesdal city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            42 => 
+            33 => 
             array (
                 'id' => 1284,
                 'name' => 'ORKANGER',
@@ -6532,10 +6424,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '63.31733 9.8511',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "orkanger-noork-norway", "orkanger ,no", "norway: orkanger", "orkanger pt", "orkanger port", "orkanger city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            43 => 
+            34 => 
             array (
                 'id' => 1285,
                 'name' => 'SALTEN',
@@ -6544,10 +6436,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '67.366295 15.585395',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "salten-nosat-norway", "salten ,no", "norway: salten", "salten pt", "salten port", "salten city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            44 => 
+            35 => 
             array (
                 'id' => 1286,
                 'name' => 'SAUDA',
@@ -6556,10 +6448,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '59.6445 6.3575',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "sauda-nosau-norway", "sauda ,no", "norway: sauda", "sauda pt", "sauda port", "sauda city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            45 => 
+            36 => 
             array (
                 'id' => 1287,
                 'name' => 'SUNNDALSORA',
@@ -6568,10 +6460,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '62.676905 8.539295',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "sunndalsora-nosun-norway", "sunndalsora ,no", "norway: sunndalsora", "sunndalsora pt", "sunndalsora port", "sunndalsora city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            46 => 
+            37 => 
             array (
                 'id' => 1288,
                 'name' => 'SVELGEN',
@@ -6580,10 +6472,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '61.76783 5.2939',
                 'country_id' => 164,
                 'varation' => '{"type": ["", "", "svelgen-nosve-norway", "svelgen ,no", "norway: svelgen", "svelgen pt", "svelgen port", "svelgen city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2018-09-05 15:34:34',
             ),
-            47 => 
+            38 => 
             array (
                 'id' => 1289,
                 'name' => 'Auckland',
@@ -6591,11 +6483,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Auckland, NZAKL',
                 'coordinates' => '-36.86527 174.7897',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "auckland-nzakl-new zealand", "auckland ,nz", "new zealand: auckland", "auckland pt", "auckland port", "auckland city"]}',
-                'created_at' => '2018-09-05 19:34:34',
-                'updated_at' => '2018-09-05 19:34:34',
+                'varation' => '{"type": ["auckland-nzakl-new zealand", "auckland ,nz", "new zealand: auckland", "auckland pt", "auckland port", "auckland city", "auckland, new zealand", "auckland new zealand"]}',
+                'created_at' => '2018-09-05 15:34:34',
+                'updated_at' => '2019-01-22 10:22:04',
             ),
-            48 => 
+            39 => 
             array (
                 'id' => 1290,
                 'name' => 'Christchurch Metroport',
@@ -6603,11 +6495,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Christchurch Metroport, NZCHC',
                 'coordinates' => '-43.55477 172.7057',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "christchurch metroport-nzchc-new zealand", "christchurch metroport ,nz", "new zealand: christchurch metroport", "christchurch metroport pt", "christchurch metroport port", "christchurch metroport city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["christchurch metroport-nzchc-new zealand", "christchurch metroport ,nz", "new zealand: christchurch metroport", "christchurch metroport pt", "christchurch metroport port", "christchurch metroport city", "christchurch metroport, new zealand", "christchurch metroport new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:22:38',
             ),
-            49 => 
+            40 => 
             array (
                 'id' => 1291,
                 'name' => 'Lyttelton',
@@ -6615,11 +6507,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lyttelton, NZLYT',
                 'coordinates' => '-43.60387 172.7173',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "lyttelton-nzlyt-new zealand", "lyttelton ,nz", "new zealand: lyttelton", "lyttelton pt", "lyttelton port", "lyttelton city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["lyttelton-nzlyt-new zealand", "lyttelton ,nz", "new zealand: lyttelton", "lyttelton pt", "lyttelton port", "lyttelton city", "lyttelton, new zealand", "lyttelton new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:25:33',
             ),
-            50 => 
+            41 => 
             array (
                 'id' => 1292,
                 'name' => 'Napier',
@@ -6627,11 +6519,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Napier, NZNPE',
                 'coordinates' => '-39.48117 176.8919',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "napier-nznpe-new zealand", "napier ,nz", "new zealand: napier", "napier pt", "napier port", "napier city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["napier-nznpe-new zealand", "napier ,nz", "new zealand: napier", "napier pt", "napier port", "napier city", "napier, new zealand", "napier new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:26:35',
             ),
-            51 => 
+            42 => 
             array (
                 'id' => 1293,
                 'name' => 'Nelson',
@@ -6639,11 +6531,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nelson, NZNSN',
                 'coordinates' => '-41.28447 173.2371',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "nelson-nznsn-new zealand", "nelson ,nz", "new zealand: nelson", "nelson pt", "nelson port", "nelson city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["nelson-nznsn-new zealand", "nelson ,nz", "new zealand: nelson", "nelson pt", "nelson port", "nelson city", "nelson, new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-02-15 10:07:20',
             ),
-            52 => 
+            43 => 
             array (
                 'id' => 1294,
                 'name' => 'Port Chalmers',
@@ -6651,11 +6543,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Chalmers, NZPOE',
                 'coordinates' => '-45.76287 170.6671',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "port chalmers-nzpoe-new zealand", "port chalmers ,nz", "new zealand: port chalmers", "port chalmers pt", "port chalmers port", "port chalmers city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["port chalmers-nzpoe-new zealand", "port chalmers ,nz", "new zealand: port chalmers", "port chalmers pt", "port chalmers port", "port chalmers city", "port chalmers, new zealand", "port chalmers new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:28:33',
             ),
-            53 => 
+            44 => 
             array (
                 'id' => 1295,
                 'name' => 'Tauranga',
@@ -6663,11 +6555,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tauranga, NZTRG',
                 'coordinates' => '-37.69417 176.1619',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "tauranga-nztrg-new zealand", "tauranga ,nz", "new zealand: tauranga", "tauranga pt", "tauranga port", "tauranga city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["tauranga-nztrg-new zealand", "tauranga ,nz", "new zealand: tauranga", "tauranga pt", "tauranga port", "tauranga city", "tauranga, new zealand", "tauranga new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:30:49',
             ),
-            54 => 
+            45 => 
             array (
                 'id' => 1296,
                 'name' => 'Timaru',
@@ -6675,11 +6567,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Timaru, NZTIU',
                 'coordinates' => '-44.40067 171.2581',
                 'country_id' => 168,
-                'varation' => '{"type": ["", "", "timaru-nztiu-new zealand", "timaru ,nz", "new zealand: timaru", "timaru pt", "timaru port", "timaru city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["timaru-nztiu-new zealand", "timaru ,nz", "new zealand: timaru", "timaru pt", "timaru port", "timaru city", "timaru, new zealand", "timaru new zealand"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-22 10:31:11',
             ),
-            55 => 
+            46 => 
             array (
                 'id' => 1297,
                 'name' => 'Wellington',
@@ -6688,10 +6580,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-41.32017 174.8073',
                 'country_id' => 168,
                 'varation' => '{"type": ["", "", "wellington-nzwlg-new zealand", "wellington ,nz", "new zealand: wellington", "wellington pt", "wellington port", "wellington city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            56 => 
+            47 => 
             array (
                 'id' => 1298,
                 'name' => 'BLUFF',
@@ -6700,10 +6592,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-46.61107 168.3549',
                 'country_id' => 168,
                 'varation' => '{"type": ["", "", "bluff-nzblu-new zealand", "bluff ,nz", "new zealand: bluff", "bluff pt", "bluff port", "bluff city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            57 => 
+            48 => 
             array (
                 'id' => 1299,
                 'name' => 'MARSDEN POINT',
@@ -6712,10 +6604,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-35.75097 174.3489',
                 'country_id' => 168,
                 'varation' => '{"type": ["", "", "marsden point-nzmap-new zealand", "marsden point ,nz", "new zealand: marsden point", "marsden point pt", "marsden point port", "marsden point city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            58 => 
+            49 => 
             array (
                 'id' => 1300,
                 'name' => 'Salalah',
@@ -6723,11 +6615,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Salalah, OMRAY',
                 'coordinates' => '16.93874 53.99858',
                 'country_id' => 169,
-                'varation' => '{"type": ["", "", "salalah-omray-oman", "salalah ,om", "oman: salalah", "salalah pt", "salalah port", "salalah city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["salalah-omray-oman", "salalah ,om", "oman: salalah", "salalah pt", "salalah port", "salalah city", "salalah ,om", "salalah om", "salalah ,om", "salalah om", "salalahom", "salalah, oman", "omsll"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-04-04 11:12:56',
             ),
-            59 => 
+            50 => 
             array (
                 'id' => 1301,
                 'name' => 'Sohar',
@@ -6735,11 +6627,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sohar, OMSOH',
                 'coordinates' => '24.37699 56.73828',
                 'country_id' => 169,
-                'varation' => '{"type": ["", "", "sohar-omsoh-oman", "sohar ,om", "oman: sohar", "sohar pt", "sohar port", "sohar city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["sohar-omsoh-oman", "sohar ,om", "oman: sohar", "sohar pt", "sohar port", "sohar city", "oman: sohar", "oman sohar", "sohar, oman"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-12-17 06:28:27',
             ),
-            60 => 
+            51 => 
             array (
                 'id' => 1302,
                 'name' => 'DUQM',
@@ -6748,22 +6640,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 169,
                 'varation' => '{"type": ["", "", "duqm-omdqm-oman", "duqm ,om", "oman: duqm", "duqm pt", "duqm port", "duqm city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            61 => 
-            array (
-                'id' => 1303,
-                'name' => 'SALALAH',
-                'code' => 'OMSLL',
-                'display_name' => 'SALALAH, OMSLL',
-                'coordinates' => '16.953125 54.00435',
-                'country_id' => 169,
-                'varation' => '{"type": ["", "", "salalah-omsll-oman", "salalah ,om", "oman: salalah", "salalah pt", "salalah port", "salalah city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
-            ),
-            62 => 
+            52 => 
             array (
                 'id' => 1304,
                 'name' => 'Balboa',
@@ -6771,11 +6651,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Balboa, PABLB',
                 'coordinates' => '8.96003 -79.5613',
                 'country_id' => 170,
-                'varation' => '{"type": ["", "", "balboa-pablb-panama", "balboa ,pa", "panama: balboa", "balboa pt", "balboa port", "balboa city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["balboa-pablb-panama", "balboa ,pa", "panama: balboa", "balboa pt", "balboa port", "balboa city", "balboa, panama", "balboa panama"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-12-14 10:40:12',
             ),
-            63 => 
+            53 => 
             array (
                 'id' => 1305,
                 'name' => 'Manzanillo',
@@ -6783,11 +6663,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Manzanillo, PAMIT',
                 'coordinates' => '9.360054 -79.884335',
                 'country_id' => 170,
-                'varation' => '{"type": ["", "", "manzanillo-pamit-panama", "manzanillo ,pa", "panama: manzanillo", "manzanillo pt", "manzanillo port", "manzanillo city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["manzanillo-pamit-panama", "manzanillo ,pa", "panama: manzanillo", "manzanillo, panama", "manzanillo panama"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-03-05 09:08:46',
             ),
-            64 => 
+            54 => 
             array (
                 'id' => 1306,
                 'name' => 'ALMIRANTE',
@@ -6796,10 +6676,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '9.28603 -82.3949',
                 'country_id' => 170,
                 'varation' => '{"type": ["", "", "almirante-papam-panama", "almirante ,pa", "panama: almirante", "almirante pt", "almirante port", "almirante city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            65 => 
+            55 => 
             array (
                 'id' => 1307,
                 'name' => 'CRISTOBAL',
@@ -6807,11 +6687,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CRISTOBAL, PACTB',
                 'coordinates' => '9.34713 -79.9052',
                 'country_id' => 170,
-                'varation' => '{"type": ["", "", "cristobal-pactb-panama", "cristobal ,pa", "panama: cristobal", "cristobal pt", "cristobal port", "cristobal city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["cristobal-pactb-panama", "cristobal ,pa", "panama: cristobal", "cristobal pt", "cristobal port", "cristobal city", "cristobal, panama"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-09 14:43:24',
             ),
-            66 => 
+            56 => 
             array (
                 'id' => 1308,
                 'name' => 'RODMAN',
@@ -6820,10 +6700,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '8.952652 -79.57444',
                 'country_id' => 170,
                 'varation' => '{"type": ["", "", "rodman-parod-panama", "rodman ,pa", "panama: rodman", "rodman pt", "rodman port", "rodman city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            67 => 
+            57 => 
             array (
                 'id' => 1309,
                 'name' => 'Callao',
@@ -6831,11 +6711,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Callao, PECLL',
                 'coordinates' => '-12.04873 -77.14381',
                 'country_id' => 171,
-                'varation' => '{"type": ["", "", "callao-pecll-peru", "callao ,pe", "peru: callao", "callao pt", "callao port", "callao city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["callao-pecll-peru", "callao ,pe", "peru: callao", "callao pt", "callao port", "callao city", "callao peru", "callao, peru", "callao"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2019-01-28 13:29:38',
             ),
-            68 => 
+            58 => 
             array (
                 'id' => 1310,
                 'name' => 'Paita',
@@ -6843,11 +6723,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Paita, PEPAI',
                 'coordinates' => '-5.0774365 -81.11155',
                 'country_id' => 171,
-                'varation' => '{"type": ["", "", "paita-pepai-peru", "paita ,pe", "peru: paita", "paita pt", "paita port", "paita city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'varation' => '{"type": ["paita-pepai-peru", "paita ,pe", "peru: paita", "paita pt", "paita port", "paita city", "paita, peru", "paita peru"]}',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-12-14 10:50:31',
             ),
-            69 => 
+            59 => 
             array (
                 'id' => 1311,
                 'name' => 'CHIMBOTE',
@@ -6856,10 +6736,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-9.0774 -78.61072',
                 'country_id' => 171,
                 'varation' => '{"type": ["", "", "chimbote-pechm-peru", "chimbote ,pe", "peru: chimbote", "chimbote pt", "chimbote port", "chimbote city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            70 => 
+            60 => 
             array (
                 'id' => 1312,
                 'name' => 'MATARANI',
@@ -6868,10 +6748,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-16.99703 -72.10718',
                 'country_id' => 171,
                 'varation' => '{"type": ["", "", "matarani-pemri-peru", "matarani ,pe", "peru: matarani", "matarani pt", "matarani port", "matarani city"]}',
-                'created_at' => '2018-09-05 19:34:35',
-                'updated_at' => '2018-09-05 19:34:35',
+                'created_at' => '2018-09-05 15:34:35',
+                'updated_at' => '2018-09-05 15:34:35',
             ),
-            71 => 
+            61 => 
             array (
                 'id' => 1313,
                 'name' => 'SALAVERRY',
@@ -6880,10 +6760,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-8.22857 -78.98235',
                 'country_id' => 171,
                 'varation' => '{"type": ["", "", "salaverry-pesvy-peru", "salaverry ,pe", "peru: salaverry", "salaverry pt", "salaverry port", "salaverry city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-09-05 15:34:36',
             ),
-            72 => 
+            62 => 
             array (
                 'id' => 1314,
                 'name' => 'PAPEETE',
@@ -6892,10 +6772,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-17.52817 -149.5727',
                 'country_id' => 172,
                 'varation' => '{"type": ["", "", "papeete-pfppt-french polynesia", "papeete ,pf", "french polynesia: papeete", "papeete pt", "papeete port", "papeete city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-09-05 15:34:36',
             ),
-            73 => 
+            63 => 
             array (
                 'id' => 1315,
                 'name' => 'Kimbe',
@@ -6903,11 +6783,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kimbe, PGKIM',
                 'coordinates' => '-5.54977 150.1501',
                 'country_id' => 173,
-                'varation' => '{"type": ["", "", "kimbe-pgkim-papua new guinea", "kimbe ,pg", "papua new guinea: kimbe", "kimbe pt", "kimbe port", "kimbe city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["kimbe-pgkim-papua new guinea", "kimbe ,pg", "papua new guinea: kimbe", "kimbe pt", "kimbe port", "kimbe city", "kimbe, papua new guinea", "kimbe papua new guinea"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-22 13:23:09',
             ),
-            74 => 
+            64 => 
             array (
                 'id' => 1316,
                 'name' => 'Lae',
@@ -6915,11 +6795,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lae, PGLAE',
                 'coordinates' => '-6.73497 146.9797',
                 'country_id' => 173,
-                'varation' => '{"type": ["", "", "lae-pglae-papua new guinea", "lae ,pg", "papua new guinea: lae", "lae pt", "lae port", "lae city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["lae-pglae-papua new guinea", "lae ,pg", "papua new guinea: lae", "lae pt", "lae port", "lae city", "lae, papua new guinea", "lae papua new guinea", "lae, papua new guinea", "lae papua new guinea"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-22 10:32:18',
             ),
-            75 => 
+            65 => 
             array (
                 'id' => 1317,
                 'name' => 'Port Moresby',
@@ -6927,11 +6807,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Moresby, PGPOM',
                 'coordinates' => '-9.48067 147.1503',
                 'country_id' => 173,
-                'varation' => '{"type": ["", "", "port moresby-pgpom-papua new guinea", "port moresby ,pg", "papua new guinea: port moresby", "port moresby pt", "port moresby port", "port moresby city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["port moresby-pgpom-papua new guinea", "port moresby ,pg", "papua new guinea: port moresby", "port moresby pt", "port moresby port", "port moresby city", "port moresby, papua new guinea", "port moresby papua new guinea"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-22 10:29:01',
             ),
-            76 => 
+            66 => 
             array (
                 'id' => 1318,
                 'name' => 'Rabaul',
@@ -6939,11 +6819,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Rabaul, PGRAB',
                 'coordinates' => '-4.20507 152.1611',
                 'country_id' => 173,
-                'varation' => '{"type": ["", "", "rabaul-pgrab-papua new guinea", "rabaul ,pg", "papua new guinea: rabaul", "rabaul pt", "rabaul port", "rabaul city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["rabaul-pgrab-papua new guinea", "rabaul ,pg", "papua new guinea: rabaul", "rabaul pt", "rabaul port", "rabaul city", "rabaul, papua new guinea", "rabaul papua new guinea"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-22 10:29:44',
             ),
-            77 => 
+            67 => 
             array (
                 'id' => 1319,
                 'name' => 'Batangas',
@@ -6951,11 +6831,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Batangas, PHBTG',
                 'coordinates' => '13.746045 121.0453',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "batangas-phbtg-philippines", "batangas ,ph", "philippines: batangas", "batangas pt", "batangas port", "batangas city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["batangas-phbtg-philippines", "batangas ,ph", "philippines: batangas", "batangas pt", "batangas port", "batangas city", "batangas, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-10 13:54:28',
             ),
-            78 => 
+            68 => 
             array (
                 'id' => 1320,
                 'name' => 'Cagayan de Oro',
@@ -6963,11 +6843,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Cagayan de Oro, PHCGY',
                 'coordinates' => '8.49515 124.66258',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "cagayan de oro-phcgy-philippines", "cagayan de oro ,ph", "philippines: cagayan de oro", "cagayan de oro pt", "cagayan de oro port", "cagayan de oro city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["cagayan de oro-phcgy-philippines", "cagayan de oro ,ph", "philippines: cagayan de oro", "cagayan de oro pt", "cagayan de oro port", "cagayan de oro city", "cagayan de oro, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-10 13:53:59',
             ),
-            79 => 
+            69 => 
             array (
                 'id' => 1321,
                 'name' => 'Cebu City',
@@ -6975,11 +6855,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Cebu City, PHCEB',
                 'coordinates' => '10.30435 123.91541',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "cebu city-phceb-philippines", "cebu city ,ph", "philippines: cebu city", "cebu city pt", "cebu city port", "cebu city city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["cebu city-phceb-philippines", "cebu city ,ph", "philippines: cebu city", "cebu city pt", "cebu city port", "cebu city city", "cebu city, cebu, philippines", "cebu city cebu philippines", "cebu city, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-10 13:37:25',
             ),
-            80 => 
+            70 => 
             array (
                 'id' => 1322,
                 'name' => 'General Santos City Dadiangas',
@@ -6987,11 +6867,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'General Santos City Dadiangas, PHGES',
                 'coordinates' => '6.0535 125.146',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "general santos city dadiangas-phges-philippines", "general santos city dadiangas ,ph", "philippines: general santos city dadiangas", "general santos city dadiangas pt", "general santos city dadiangas port", "general santos city dadiangas city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["general santos city dadiangas-phges-philippines", "general santos city dadiangas ,ph", "philippines: general santos city dadiangas", "general santos city dadiangas pt", "general santos city dadiangas port", "general santos city dadiangas city", "general santos city, south cotabato, philippines", "general santos city south cotabato philippines", "gen santos", "general santos city dadiangas, philippines", "general santos city dadianga, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-02-14 08:48:40',
             ),
-            81 => 
+            71 => 
             array (
                 'id' => 1323,
                 'name' => 'Manila',
@@ -6999,11 +6879,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Manila, PHMNL',
                 'coordinates' => '14.58943 120.9609',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "manila-phmnl-philippines", "manila ,ph", "philippines: manila", "manila pt", "manila port", "manila city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["manila-phmnl-philippines", "manila ,ph", "philippines: manila", "manila pt", "manila port", "manila city", "manila, metro manila, philippines", "manila metro manila philippines", "philippines manila", "manila", "manilla-phmnl-philippines", "manila, metro manila, phillippines", "manille", "manila, filipinas"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-03-31 06:29:34',
             ),
-            82 => 
+            72 => 
             array (
                 'id' => 1324,
                 'name' => 'MANILA SOUTH',
@@ -7011,11 +6891,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MANILA SOUTH, PHMNS',
                 'coordinates' => '14.577 120.962',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "manila south-phmns-philippines", "manila south ,ph", "philippines: manila south", "manila south pt", "manila south port", "manila south city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["manila south-phmns-philippines", "manila south ,ph", "philippines: manila south", "manila south pt", "manila south port", "manila south city", "manila south harbour", "manila south, philippines", "manila south philippines", "manilasouth"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-07 07:39:22',
             ),
-            83 => 
+            73 => 
             array (
                 'id' => 1325,
                 'name' => 'Panabo City',
@@ -7023,11 +6903,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Panabo City, PHPAN',
                 'coordinates' => NULL,
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "panabo city-phpan-philippines", "panabo city ,ph", "philippines: panabo city", "panabo city pt", "panabo city port", "panabo city city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["panabo city-phpan-philippines", "panabo city ,ph", "philippines: panabo city", "panabo city pt", "panabo city port", "panabo city city", "panabo city, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-10 15:31:30',
             ),
-            84 => 
+            74 => 
             array (
                 'id' => 1326,
                 'name' => 'Subic',
@@ -7035,11 +6915,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Subic, PHSFS',
                 'coordinates' => '14.8231 120.29334',
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "subic-phsfs-philippines", "subic ,ph", "philippines: subic", "subic pt", "subic port", "subic city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["subic-phsfs-philippines", "subic ,ph", "philippines: subic", "subic pt", "subic port", "subic city", "subic, philippines"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-10 15:34:37',
             ),
-            85 => 
+            75 => 
             array (
                 'id' => 1327,
                 'name' => 'Manila North',
@@ -7047,11 +6927,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Manila North, PHMNN',
                 'coordinates' => NULL,
                 'country_id' => 174,
-                'varation' => '{"type": ["", "", "manila north-phmnn-philippines", "manila north ,ph", "philippines: manila north", "manila north pt", "manila north port", "manila north city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["manila north-phmnn-philippines", "manila north ,ph", "philippines: manila north", "manila north pt", "manila north port", "manila north city", "manila north", "manila north", "manila north", "manila north", "manila north harbour", "manilanorth", "manila north"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-02-27 13:44:41',
             ),
-            86 => 
+            76 => 
             array (
                 'id' => 1328,
                 'name' => 'Karachi',
@@ -7059,11 +6939,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Karachi, PKKHI',
                 'coordinates' => '24.83424 66.97856',
                 'country_id' => 175,
-                'varation' => '{"type": ["", "", "karachi-pkkhi-pakistan", "karachi ,pk", "pakistan: karachi", "karachi pt", "karachi port", "karachi city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+            'varation' => '{"type": ["karachi-pkkhi-pakistan", "karachi ,pk", "pakistan: karachi", "karachi pt", "karachi port", "karachi city", "keamari, karachi, sindh, pakistan", "keamari karachi sindh pakistan", "karachi (terminal kict)", "karachi terminal kict", "karachi (old port)", "karachi, pakistan", "karachi", "karachi sapt", "karachi old port pict", "karachi old port kict", "pkkhi", "karachi bin qasim", "karachi/ bin qasim"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-04-09 15:02:03',
             ),
-            87 => 
+            77 => 
             array (
                 'id' => 1329,
                 'name' => 'Port Qasim',
@@ -7071,11 +6951,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Qasim, PKBQM',
                 'coordinates' => '24.76282 67.33042',
                 'country_id' => 175,
-                'varation' => '{"type": ["", "", "port qasim-pkbqm-pakistan", "port qasim ,pk", "pakistan: port qasim", "port qasim pt", "port qasim port", "port qasim city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+            'varation' => '{"type": ["port qasim-pkbqm-pakistan", "port qasim ,pk", "pakistan: port qasim", "port qasim pt", "port qasim port", "port qasim city", "pakistan port qasim", "port qasim, sindh, pakistan", "port qasim sindh pakistan", "port qsim", "port quasim", "port qasim, pakistan", "port qasim, karachi, sindh, pakistan", "bin qasim (karachi)", "bin qasim karachi", "pkbqm"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-02-25 08:18:08',
             ),
-            88 => 
+            78 => 
             array (
                 'id' => 1330,
                 'name' => 'Gdansk',
@@ -7083,11 +6963,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gdansk, PLGDN',
                 'coordinates' => '54.41053 18.6709',
                 'country_id' => 176,
-                'varation' => '{"type": ["", "", "gdansk-plgdn-poland", "gdansk ,pl", "poland: gdansk", "gdansk pt", "gdansk port", "gdansk city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["gdansk-plgdn-poland", "gdansk ,pl", "poland: gdansk", "gdansk pt", "gdansk port", "gdansk city", "gdansk, poland", "gdansk poland"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-12-14 12:21:53',
             ),
-            89 => 
+            79 => 
             array (
                 'id' => 1331,
                 'name' => 'Szczecin',
@@ -7095,11 +6975,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Szczecin, PLSZZ',
                 'coordinates' => '53.42793 14.5631',
                 'country_id' => 176,
-                'varation' => '{"type": ["", "", "szczecin-plszz-poland", "szczecin ,pl", "poland: szczecin", "szczecin pt", "szczecin port", "szczecin city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["szczecin-plszz-poland", "szczecin ,pl", "poland: szczecin", "szczecin pt", "szczecin port", "szczecin city", "szczecin, poland", "szczecin poland"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-01-17 08:09:04',
             ),
-            90 => 
+            80 => 
             array (
                 'id' => 1332,
                 'name' => 'GDYNIA',
@@ -7108,10 +6988,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '54.53593 18.5293',
                 'country_id' => 176,
                 'varation' => '{"type": ["", "", "gdynia-plgdy-poland", "gdynia ,pl", "poland: gdynia", "gdynia pt", "gdynia port", "gdynia city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2018-09-05 15:34:36',
             ),
-            91 => 
+            81 => 
             array (
                 'id' => 1333,
                 'name' => 'SAN JUAN',
@@ -7119,11 +6999,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SAN JUAN, PRSJU',
                 'coordinates' => '18.43033 -66.105',
                 'country_id' => 179,
-                'varation' => '{"type": ["", "", "san juan-prsju-puerto rico", "san juan ,pr", "puerto rico: san juan", "san juan pt", "san juan port", "san juan city"]}',
-                'created_at' => '2018-09-05 19:34:36',
-                'updated_at' => '2018-09-05 19:34:36',
+                'varation' => '{"type": ["san juan-prsju-puerto rico", "san juan ,pr", "puerto rico: san juan", "san juan pt", "san juan port", "san juan city", "san juan, puerto rico", "san juan de puerto rico", "san juan de puerto rico", "san juan de p.r.", "san juan de pr", "san juan, pr", "san juan"]}',
+                'created_at' => '2018-09-05 15:34:36',
+                'updated_at' => '2019-04-01 12:16:00',
             ),
-            92 => 
+            82 => 
             array (
                 'id' => 1334,
                 'name' => 'Leixoes',
@@ -7131,11 +7011,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Leixoes, PTLEI',
                 'coordinates' => '41.18653 -8.7022',
                 'country_id' => 181,
-                'varation' => '{"type": ["ptlxs", "", "leixoes-ptlei-portugal", "leixoes ,pt", "portugal: leixoes", "leixoes pt", "leixoes port", "leixoes city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+            'varation' => '{"type": ["ptlxs", "leixoes-ptlei-portugal", "leixoes ,pt", "portugal: leixoes", "leixoes pt", "leixoes port", "leixoes city", "leixoes, portugal", "leixoes portugal", "leixoes, portugal", "leixoes rail", "leixoes (rail)"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-27 12:43:47',
             ),
-            93 => 
+            83 => 
             array (
                 'id' => 1335,
                 'name' => 'Lisbon',
@@ -7143,11 +7023,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Lisbon, PTLIS',
                 'coordinates' => '38.69513 -9.1778',
                 'country_id' => 181,
-                'varation' => '{"type": ["", "", "lisbon-ptlis-portugal", "lisbon ,pt", "portugal: lisbon", "lisbon pt", "lisbon port", "lisbon city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["lisbon-ptlis-portugal", "lisbon ,pt", "portugal: lisbon", "lisbon pt", "lisbon port", "lisbon city", "lisbon, portugal", "lisbon portugal", "lisbon, portugal", "lisbon, portugal", "lisbon portugal", "lisboa"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-14 09:12:17',
             ),
-            94 => 
+            84 => 
             array (
                 'id' => 1336,
                 'name' => 'Sines',
@@ -7155,11 +7035,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sines, PTSIE',
                 'coordinates' => '37.94953 -8.8628',
                 'country_id' => 181,
-                'varation' => '{"type": ["", "", "sines-ptsie-portugal", "sines ,pt", "portugal: sines", "sines pt", "sines port", "sines city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["sines-ptsie-portugal", "sines ,pt", "portugal: sines", "sines pt", "sines port", "sines city", "sines, portugal", "sines"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-01-07 07:57:23',
             ),
-            95 => 
+            85 => 
             array (
                 'id' => 1337,
                 'name' => 'FIGUEIRA DA FOZ',
@@ -7168,10 +7048,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '40.14933 -8.8603',
                 'country_id' => 181,
                 'varation' => '{"type": ["", "", "figueira da foz-ptfdf-portugal", "figueira da foz ,pt", "portugal: figueira da foz", "figueira da foz pt", "figueira da foz port", "figueira da foz city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            96 => 
+            86 => 
             array (
                 'id' => 1338,
                 'name' => 'SETUBAL',
@@ -7180,22 +7060,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '38.494575 -8.8419685',
                 'country_id' => 181,
                 'varation' => '{"type": ["", "", "setubal-ptset-portugal", "setubal ,pt", "portugal: setubal", "setubal pt", "setubal port", "setubal city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            97 => 
+            87 => 
             array (
                 'id' => 1339,
-                'name' => 'CAACUPEMI ASUNCION',
-                'code' => 'PYBCM',
-                'display_name' => 'CAACUPEMI ASUNCION, PYBCM',
+                'name' => 'Asunción',
+                'code' => 'PYASU',
+                'display_name' => 'ASUNCION, PYASU',
                 'coordinates' => NULL,
                 'country_id' => 183,
-                'varation' => '{"type": ["", "", "caacupemi asuncion-pybcm-paraguay", "caacupemi asuncion ,py", "paraguay: caacupemi asuncion", "caacupemi asuncion pt", "caacupemi asuncion port", "caacupemi asuncion city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["asuncion, pyasu", "asuncion ,py", "asuncion ,py", "asunsión", "asuncion", "asunsion", "asunción", "asunciÓn", "pyasu asuncion", "pyasuasuncion", "pyasu asuncion", "asuncion, paraguay"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-03-13 11:06:13',
             ),
-            98 => 
+            88 => 
             array (
                 'id' => 1340,
                 'name' => 'CAACUPEMI PILAR',
@@ -7203,11 +7083,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CAACUPEMI PILAR, PYPIL',
                 'coordinates' => NULL,
                 'country_id' => 183,
-                'varation' => '{"type": ["", "", "caacupemi pilar-pypil-paraguay", "caacupemi pilar ,py", "paraguay: caacupemi pilar", "caacupemi pilar pt", "caacupemi pilar port", "caacupemi pilar city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["caacupemi pilar-pypil-paraguay", "caacupemi pilar ,py", "paraguay: caacupemi pilar", "caacupemi pilar pt", "caacupemi pilar port", "caacupemi pilar city", "caacupemi asuncion", "caacupemi asuncion *"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-27 16:32:25',
             ),
-            99 => 
+            89 => 
             array (
                 'id' => 1341,
                 'name' => 'COLONIA MARIANO ROQUE ALONSO PUERTO SAN JOSE',
@@ -7215,11 +7095,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'COLONIA MARIANO ROQUE ALONSO PUERTO SAN JOSE, PYMRA',
                 'coordinates' => NULL,
                 'country_id' => 183,
-                'varation' => '{"type": ["", "", "colonia mariano roque alonso puerto san jose-pymra-paraguay", "colonia mariano roque alonso puerto san jose ,py", "paraguay: colonia mariano roque alonso puerto san jose", "colonia mariano roque alonso puerto san jose pt", "colonia mariano roque alonso puerto san jose port", "colonia mariano roque alonso puerto san jose city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["colonia mariano roque alonso puerto"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-27 16:40:22',
             ),
-            100 => 
+            90 => 
             array (
                 'id' => 1342,
                 'name' => 'ENCARNACION PUERTO SAN JUAN',
@@ -7228,10 +7108,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-27.33727 -55.878',
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "encarnacion puerto san juan-pyeno-paraguay", "encarnacion puerto san juan ,py", "paraguay: encarnacion puerto san juan", "encarnacion puerto san juan pt", "encarnacion puerto san juan port", "encarnacion puerto san juan city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            101 => 
+            91 => 
             array (
                 'id' => 1343,
                 'name' => 'FENIX',
@@ -7240,22 +7120,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 183,
                 'varation' => '{"type": ["", "", "fenix-pyfnx-paraguay", "fenix ,py", "paraguay: fenix", "fenix pt", "fenix port", "fenix city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            102 => 
+            92 => 
             array (
                 'id' => 1344,
-            'name' => 'PUERTO SEGURO FLUVIAL (VILLETA)',
+                'name' => 'Villeta',
                 'code' => 'PYVLL',
-            'display_name' => 'PUERTO SEGURO FLUVIAL (VILLETA), PYVLL',
+                'display_name' => 'Villeta, PYVLL',
                 'coordinates' => '-25.535695 -57.59335',
                 'country_id' => 183,
-            'varation' => '{"type": ["", "", "puerto seguro fluvial (villeta)-pyvll-paraguay", "puerto seguro fluvial (villeta) ,py", "paraguay: puerto seguro fluvial (villeta)", "puerto seguro fluvial (villeta) pt", "puerto seguro fluvial (villeta) port", "puerto seguro fluvial (villeta) city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+            'varation' => '{"type": ["puerto seguro fluvial (villeta)-pyvll-paraguay", "puerto seguro fluvial (villeta) ,py", "paraguay: puerto seguro fluvial (villeta)", "puerto seguro fluvial (villeta) pt", "puerto seguro fluvial (villeta) port", "puerto seguro fluvial (villeta) city", "villeta ,py", "villeta, paraguay"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-03-13 12:14:25',
             ),
-            103 => 
+            93 => 
             array (
                 'id' => 1345,
                 'name' => 'TERPORT',
@@ -7263,11 +7143,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TERPORT, PYTER',
                 'coordinates' => '-25.433555 -57.574625',
                 'country_id' => 183,
-                'varation' => '{"type": ["", "", "terport-pyter-paraguay", "terport ,py", "paraguay: terport", "terport pt", "terport port", "terport city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["terport-pyter-paraguay", "terport ,py", "paraguay: terport", "terport pt", "terport port", "terport city", "telport", "terport villeta & san antonio *", "terport, paraguay"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-03-25 05:20:40',
             ),
-            104 => 
+            94 => 
             array (
                 'id' => 1346,
                 'name' => 'Doha',
@@ -7275,11 +7155,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Doha, QADOH',
                 'coordinates' => '25.29168 51.52706',
                 'country_id' => 184,
-                'varation' => '{"type": ["", "", "doha-qadoh-qatar", "doha ,qa", "qatar: doha", "doha pt", "doha port", "doha city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["doha-qadoh-qatar", "doha ,qa", "qatar: doha", "doha pt", "doha port", "doha city", "doha, qatar", "doha qatar", "hamad doha"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-27 16:36:48',
             ),
-            105 => 
+            95 => 
             array (
                 'id' => 1347,
                 'name' => 'Qapco',
@@ -7287,11 +7167,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qapco, QAQAP',
                 'coordinates' => NULL,
                 'country_id' => 184,
-                'varation' => '{"type": ["", "", "qapco-qaqap-qatar", "qapco ,qa", "qatar: qapco", "qapco pt", "qapco port", "qapco city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["qapco-qaqap-qatar", "qapco ,qa", "qatar: qapco", "qapco pt", "qapco port", "qapco city", "qapco, qatar", "qapco qatar"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-01-22 10:34:37',
             ),
-            106 => 
+            96 => 
             array (
                 'id' => 1348,
                 'name' => 'Qchem',
@@ -7299,11 +7179,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qchem, QAQCH',
                 'coordinates' => NULL,
                 'country_id' => 184,
-                'varation' => '{"type": ["", "", "qchem-qaqch-qatar", "qchem ,qa", "qatar: qchem", "qchem pt", "qchem port", "qchem city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["qchem-qaqch-qatar", "qchem ,qa", "qatar: qchem", "qchem pt", "qchem port", "qchem city", "qchem, qatar", "qchem qatar"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-01-22 10:39:40',
             ),
-            107 => 
+            97 => 
             array (
                 'id' => 1349,
                 'name' => 'HAMAD',
@@ -7311,11 +7191,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'HAMAD, QAHMD',
                 'coordinates' => '25.029455 51.624495',
                 'country_id' => 184,
-                'varation' => '{"type": ["", "", "hamad-qahmd-qatar", "hamad ,qa", "qatar: hamad", "hamad pt", "hamad port", "hamad city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["hamad-qahmd-qatar", "hamad ,qa", "qatar: hamad", "hamad pt", "hamad port", "hamad city", "qatar hamad", "hamad", "hamad **"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-03-27 09:00:28',
             ),
-            108 => 
+            98 => 
             array (
                 'id' => 1350,
                 'name' => 'MESAIEED',
@@ -7324,10 +7204,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '24.935975 51.59607',
                 'country_id' => 184,
                 'varation' => '{"type": ["", "", "mesaieed-qames-qatar", "mesaieed ,qa", "qatar: mesaieed", "mesaieed pt", "mesaieed port", "mesaieed city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            109 => 
+            99 => 
             array (
                 'id' => 1351,
                 'name' => 'POINTE DES GALETS',
@@ -7336,10 +7216,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-20.91107 55.2925',
                 'country_id' => 185,
                 'varation' => '{"type": ["", "", "pointe des galets-repdg-reunion", "pointe des galets ,re", "reunion: pointe des galets", "pointe des galets pt", "pointe des galets port", "pointe des galets city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-09-05 15:34:37',
             ),
-            110 => 
+            100 => 
             array (
                 'id' => 1352,
                 'name' => 'Constanta',
@@ -7347,11 +7227,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Constanta, ROCND',
                 'coordinates' => '44.16453 28.6419',
                 'country_id' => 186,
-                'varation' => '{"type": ["", "", "constanta-rocnd-romania", "constanta ,ro", "romania: constanta", "constanta pt", "constanta port", "constanta city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["constanta-rocnd-romania", "constanta ,ro", "romania: constanta", "constanta pt", "constanta port", "constanta city", "constanza", "constanta romania", "constanta, romania", "constanta, romania", "constanta romania", "constansa"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-02-14 09:10:06',
             ),
-            111 => 
+            101 => 
             array (
                 'id' => 1353,
                 'name' => 'Azov',
@@ -7359,11 +7239,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Azov, RUAZO',
                 'coordinates' => '47.12366 39.410595',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "azov-ruazo-russia", "azov ,ru", "russia: azov", "azov pt", "azov port", "azov city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["azov-ruazo-russia", "azov ,ru", "russia: azov", "azov pt", "azov port", "azov city", "azov, russia", "azov russia"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-12-14 11:58:30',
             ),
-            112 => 
+            102 => 
             array (
                 'id' => 1354,
                 'name' => 'DALZAVOD',
@@ -7371,11 +7251,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DALZAVOD, RUDAZ',
                 'coordinates' => NULL,
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "dalzavod-rudaz-russia", "dalzavod ,ru", "russia: dalzavod", "dalzavod pt", "dalzavod port", "dalzavod city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["dalzavod-rudaz-russia", "dalzavod ,ru", "russia: dalzavod", "dalzavod pt", "dalzavod port", "dalzavod city", "dalzavod, russia", "dalzavod russia"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-01-03 14:28:35',
             ),
-            113 => 
+            103 => 
             array (
                 'id' => 1355,
                 'name' => 'Fish Port Terminal',
@@ -7383,11 +7263,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Fish Port Terminal, RUFPT',
                 'coordinates' => NULL,
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "fish port terminal-rufpt-russia", "fish port terminal ,ru", "russia: fish port terminal", "fish port terminal pt", "fish port terminal port", "fish port terminal city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["fish port terminal-rufpt-russia", "fish port terminal ,ru", "russia: fish port terminal", "fish port terminal pt", "fish port terminal port", "fish port terminal city", "fish port terminal, russia"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2018-12-10 13:53:40',
             ),
-            114 => 
+            104 => 
             array (
                 'id' => 1356,
                 'name' => 'Kaliningrad',
@@ -7395,11 +7275,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kaliningrad, RUKGD',
                 'coordinates' => '54.69839 20.471965',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "kaliningrad-rukgd-russia", "kaliningrad ,ru", "russia: kaliningrad", "kaliningrad pt", "kaliningrad port", "kaliningrad city"]}',
-                'created_at' => '2018-09-05 19:34:37',
-                'updated_at' => '2018-09-05 19:34:37',
+                'varation' => '{"type": ["kaliningrad-rukgd-russia", "kaliningrad ,ru", "russia: kaliningrad", "kaliningrad pt", "kaliningrad port", "kaliningrad city", "kaliningrad, russia", "kaliningrad russia"]}',
+                'created_at' => '2018-09-05 15:34:37',
+                'updated_at' => '2019-01-17 08:05:37',
             ),
-            115 => 
+            105 => 
             array (
                 'id' => 1357,
                 'name' => 'Korsakov',
@@ -7407,11 +7287,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Korsakov, RUKOR',
                 'coordinates' => '46.61763 142.7703',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "korsakov-rukor-russia", "korsakov ,ru", "russia: korsakov", "korsakov pt", "korsakov port", "korsakov city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["korsakov-rukor-russia", "korsakov ,ru", "russia: korsakov", "korsakov pt", "korsakov port", "korsakov city", "korsakov, russia"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-12-10 15:18:15',
             ),
-            116 => 
+            106 => 
             array (
                 'id' => 1358,
                 'name' => 'Magadan',
@@ -7419,11 +7299,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Magadan, RUGDX',
                 'coordinates' => '59.550985 150.7733',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "magadan-rugdx-russia", "magadan ,ru", "russia: magadan", "magadan pt", "magadan port", "magadan city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["magadan-rugdx-russia", "magadan ,ru", "russia: magadan", "magadan pt", "magadan port", "magadan city", "magadan, russia"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-12-10 15:19:15',
             ),
-            117 => 
+            107 => 
             array (
                 'id' => 1359,
                 'name' => 'Novorossiysk',
@@ -7431,11 +7311,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Novorossiysk, RUNVS',
                 'coordinates' => '44.71353 37.7883',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "novorossiysk-runvs-russia", "novorossiysk ,ru", "russia: novorossiysk", "novorossiysk pt", "novorossiysk port", "novorossiysk city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["novorossiysk-runvs-russia", "novorossiysk ,ru", "russia: novorossiysk", "novorossiysk pt", "novorossiysk port", "novorossiysk city", "novorossiysk, rusia", "novorossiysk rusia", "novorossiysk russia", "novorossiysk, russia", "novorosisk", "novorosijsk"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-02-27 09:49:34',
             ),
-            118 => 
+            108 => 
             array (
                 'id' => 1360,
                 'name' => 'St Petersburg',
@@ -7443,11 +7323,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'St Petersburg, RULED',
                 'coordinates' => '59.91673 30.2575',
                 'country_id' => 188,
-                'varation' => '{"type": ["st petersburg fct ,ru", "", "st petersburg-ruled-russia", "st petersburg ,ru", "russia: st petersburg", "st petersburg pt", "st petersburg port", "st petersburg city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+            'varation' => '{"type": ["st petersburg fct ,ru", "st petersburg-ruled-russia", "st petersburg ,ru", "russia: st petersburg", "st petersburg pt", "st petersburg port", "st petersburg city", "st petersburg, russia", "st petersburg russia", "st petersburg fct, russia", "st petersburg fct russia", "san petersburgo", "st. petersburg (plp & fct)", "st petersburg plp & fct", "st petersburg plp  fct", "st petersburg", "st. petersburg"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-03-27 15:04:45',
             ),
-            119 => 
+            109 => 
             array (
                 'id' => 1361,
                 'name' => 'Ust Luga',
@@ -7455,11 +7335,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ust Luga, RUULU',
                 'coordinates' => '59.68294 28.329515',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "ust luga-ruulu-russia", "ust luga ,ru", "russia: ust luga", "ust luga pt", "ust luga port", "ust luga city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+            'varation' => '{"type": ["ust luga-ruulu-russia", "ust luga ,ru", "russia: ust luga", "ust luga pt", "ust luga port", "ust luga city", "ust luga, russia", "ust luga russia", "(ust luga)", "ust luga", "st. petersburg (ust luga)", "st. petersburg ust luga", "st petersburg ust luga"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-03-20 14:34:31',
             ),
-            120 => 
+            110 => 
             array (
                 'id' => 1362,
                 'name' => 'Vladivostok',
@@ -7467,11 +7347,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Vladivostok, RUVVO',
                 'coordinates' => '43.13783 131.8959',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "vladivostok-ruvvo-russia", "vladivostok ,ru", "russia: vladivostok", "vladivostok pt", "vladivostok port", "vladivostok city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["vladivostok-ruvvo-russia", "vladivostok ,ru", "russia: vladivostok", "vladivostok pt", "vladivostok port", "vladivostok city", "vladivostok, russia", "vladivostok - sollers, russia", "vladivostok sollers russia"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-02-20 14:31:09',
             ),
-            121 => 
+            111 => 
             array (
                 'id' => 1363,
                 'name' => 'Vostochniy Port',
@@ -7479,11 +7359,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Vostochniy Port, RUVYP',
                 'coordinates' => '42.71853 133.0461',
                 'country_id' => 188,
-                'varation' => '{"type": ["", "", "vostochniy port-ruvyp-russia", "vostochniy port ,ru", "russia: vostochniy port", "vostochniy port pt", "vostochniy port port", "vostochniy port city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["vostochniy port-ruvyp-russia", "vostochniy port ,ru", "russia: vostochniy port", "vostochniy port pt", "vostochniy port port", "vostochniy port city", "vostochniy port, russia"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-12-10 15:39:10',
             ),
-            122 => 
+            112 => 
             array (
                 'id' => 1364,
                 'name' => 'Al Jubayl',
@@ -7491,11 +7371,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Al Jubayl, SAJUB',
                 'coordinates' => '27.01673 49.6603',
                 'country_id' => 190,
-                'varation' => '{"type": ["", "", "al jubayl-sajub-saudi arabia", "al jubayl ,sa", "saudi arabia: al jubayl", "al jubayl pt", "al jubayl port", "al jubayl city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["al jubayl-sajub-saudi arabia", "al jubayl ,sa", "saudi arabia: al jubayl", "al jubayl pt", "al jubayl port", "al jubayl city", "jubail", "al jubayl, saudi arabia", "al jubayl saudi arabia", "al jubail"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-02 08:43:32',
             ),
-            123 => 
+            113 => 
             array (
                 'id' => 1365,
                 'name' => 'Dammam',
@@ -7503,11 +7383,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Dammam, SADMM',
                 'coordinates' => '26.441 50.1485',
                 'country_id' => 190,
-                'varation' => '{"type": ["", "", "dammam-sadmm-saudi arabia", "dammam ,sa", "saudi arabia: dammam", "dammam pt", "dammam port", "dammam city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["dammam-sadmm-saudi arabia", "dammam ,sa", "saudi arabia: dammam", "dammam pt", "dammam port", "dammam city", "dammam, ash sharqiyah, saudi arabia", "dammam ash sharqiyah saudi arabia", "dammam saudi arabia", "dammam, saudi arabia", "damman"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-02 08:39:17',
             ),
-            124 => 
+            114 => 
             array (
                 'id' => 1366,
                 'name' => 'Jeddah',
@@ -7515,11 +7395,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Jeddah, SAJED',
                 'coordinates' => '21.48133 39.1805',
                 'country_id' => 190,
-                'varation' => '{"type": ["", "", "jeddah-sajed-saudi arabia", "jeddah ,sa", "saudi arabia: jeddah", "jeddah pt", "jeddah port", "jeddah city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["jeddah-sajed-saudi arabia", "jeddah ,sa", "saudi arabia: jeddah", "jeddah pt", "jeddah port", "jeddah city", "saudi arabia jeddah", "jeddah, makkah, saudi arabia", "jeddah makkah saudi arabia", "jeddah, saudi arabia", "jeddeh", "sajed jeddah"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-04-01 07:19:49',
             ),
-            125 => 
+            115 => 
             array (
                 'id' => 1367,
                 'name' => 'King Abdullah Port',
@@ -7527,11 +7407,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'King Abdullah Port, SAKAC',
                 'coordinates' => '22.52477 39.09416',
                 'country_id' => 190,
-                'varation' => '{"type": ["", "", "king abdullah port-sakac-saudi arabia", "king abdullah port ,sa", "saudi arabia: king abdullah port", "king abdullah port pt", "king abdullah port port", "king abdullah port city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["king abdullah port-sakac-saudi arabia", "king abdullah port ,sa", "saudi arabia: king abdullah port", "king abdullah port pt", "king abdullah port port", "king abdullah port city", "king abdullah port, saudi arabia", "king abdulah", "king abdullah city"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-04-01 07:30:07',
             ),
-            126 => 
+            116 => 
             array (
                 'id' => 1368,
                 'name' => 'Port Noro',
@@ -7539,11 +7419,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Noro, SBNOR',
                 'coordinates' => '-8.21267 157.2001',
                 'country_id' => 191,
-                'varation' => '{"type": ["", "", "port noro-sbnor-solomon islands", "port noro ,sb", "solomon islands: port noro", "port noro pt", "port noro port", "port noro city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["port noro-sbnor-solomon islands", "port noro ,sb", "solomon islands: port noro", "port noro pt", "port noro port", "port noro city", "port noro, solomon islands", "port noro solomon islands"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-22 10:29:25',
             ),
-            127 => 
+            117 => 
             array (
                 'id' => 1369,
                 'name' => 'HONIARA, GUADALCANAL IS',
@@ -7552,10 +7432,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-9.43028 159.95812',
                 'country_id' => 191,
                 'varation' => '{"type": ["", "", "honiara, guadalcanal is-sbhir-solomon islands", "honiara, guadalcanal is ,sb", "solomon islands: honiara, guadalcanal is", "honiara, guadalcanal is pt", "honiara, guadalcanal is port", "honiara, guadalcanal is city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-09-05 15:34:38',
             ),
-            128 => 
+            118 => 
             array (
                 'id' => 1370,
                 'name' => 'Port Sudan',
@@ -7563,11 +7443,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port Sudan, SDPZU',
                 'coordinates' => '19.61909 37.21619',
                 'country_id' => 193,
-                'varation' => '{"type": ["", "", "port sudan-sdpzu-sudan", "port sudan ,sd", "sudan: port sudan", "port sudan pt", "port sudan port", "port sudan city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["port sudan-sdpzu-sudan", "port sudan ,sd", "sudan: port sudan", "port sudan pt", "port sudan port", "port sudan city", "sudan: sudan port", "sudan sudan port", "port sudan, sudan", "port sudan *r4", "port sudan r4"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-02-27 16:52:40',
             ),
-            129 => 
+            119 => 
             array (
                 'id' => 1371,
                 'name' => 'Gaevle',
@@ -7575,11 +7455,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gaevle, SEGVX',
                 'coordinates' => '60.68333 17.1811',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "gaevle-segvx-sweden", "gaevle ,se", "sweden: gaevle", "gaevle pt", "gaevle port", "gaevle city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["gaevle-segvx-sweden", "gaevle ,se", "sweden: gaevle", "gaevle pt", "gaevle port", "gaevle city", "gefle", "gaevle, sweden", "gaevle sweden"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-12-14 12:20:54',
             ),
-            130 => 
+            120 => 
             array (
                 'id' => 1372,
                 'name' => 'Gothenburg',
@@ -7587,11 +7467,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gothenburg, SEGOT',
                 'coordinates' => '57.70433 11.9627',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "gothenburg-segot-sweden", "gothenburg ,se", "sweden: gothenburg", "gothenburg pt", "gothenburg port", "gothenburg city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["gothenburg-segot-sweden", "gothenburg ,se", "sweden: gothenburg", "gothenburg pt", "gothenburg port", "gothenburg city", "gothenburg, sweden", "gothenburg sweden", "gotemburg", "gothenborg", "gotteborg"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-03-28 17:07:27',
             ),
-            131 => 
+            121 => 
             array (
                 'id' => 1373,
                 'name' => 'Halmstad',
@@ -7599,11 +7479,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Halmstad, SEHAD',
                 'coordinates' => '56.66213 12.8479',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "halmstad-sehad-sweden", "halmstad ,se", "sweden: halmstad", "halmstad pt", "halmstad port", "halmstad city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["halmstad-sehad-sweden", "halmstad ,se", "sweden: halmstad", "halmstad pt", "halmstad port", "halmstad city", "halmstad, sweden", "halmstad sweden"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-12-20 13:14:47',
             ),
-            132 => 
+            122 => 
             array (
                 'id' => 1374,
                 'name' => 'Helsingborg',
@@ -7611,11 +7491,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Helsingborg, SEHEL',
                 'coordinates' => '56.0265 12.6975',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "helsingborg-sehel-sweden", "helsingborg ,se", "sweden: helsingborg", "helsingborg pt", "helsingborg port", "helsingborg city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["helsingborg-sehel-sweden", "helsingborg ,se", "sweden: helsingborg", "helsingborg pt", "helsingborg port", "helsingborg city", "helsingborg, sweden", "helsingborg sweden", "helsinborg"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-03-07 08:05:25',
             ),
-            133 => 
+            123 => 
             array (
                 'id' => 1375,
                 'name' => 'Norrkoeping',
@@ -7623,11 +7503,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Norrkoeping, SENRK',
                 'coordinates' => '58.6175 16.2235',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "norrkoeping-senrk-sweden", "norrkoeping ,se", "sweden: norrkoeping", "norrkoeping pt", "norrkoeping port", "norrkoeping city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["norrkoeping-senrk-sweden", "norrkoeping ,se", "sweden: norrkoeping", "norrkoeping pt", "norrkoeping port", "norrkoeping city", "norrkoeping, sweden", "norrkoeping sweden", "norrkoeping, sweden"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-22 10:52:37',
             ),
-            134 => 
+            124 => 
             array (
                 'id' => 1376,
                 'name' => 'Soedertaelje',
@@ -7635,11 +7515,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Soedertaelje, SESOE',
                 'coordinates' => '59.20773 17.6345',
                 'country_id' => 194,
-                'varation' => '{"type": ["", "", "soedertaelje-sesoe-sweden", "soedertaelje ,se", "sweden: soedertaelje", "soedertaelje pt", "soedertaelje port", "soedertaelje city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["soedertaelje-sesoe-sweden", "soedertaelje ,se", "sweden: soedertaelje", "soedertaelje pt", "soedertaelje port", "soedertaelje city", "soedertaelje, sweden", "soedertaelje sweden", "soedertaelje, sweden"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-22 10:52:03',
             ),
-            135 => 
+            125 => 
             array (
                 'id' => 1377,
                 'name' => 'AHUS',
@@ -7648,10 +7528,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '55.93233 14.3221',
                 'country_id' => 194,
                 'varation' => '{"type": ["", "", "ahus-seahu-sweden", "ahus ,se", "sweden: ahus", "ahus pt", "ahus port", "ahus city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-09-05 15:34:38',
             ),
-            136 => 
+            126 => 
             array (
                 'id' => 1378,
                 'name' => 'PITEA',
@@ -7660,10 +7540,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '65.31813 21.5093',
                 'country_id' => 194,
                 'varation' => '{"type": ["", "", "pitea-sepit-sweden", "pitea ,se", "sweden: pitea", "pitea pt", "pitea port", "pitea city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-09-05 15:34:38',
             ),
-            137 => 
+            127 => 
             array (
                 'id' => 1379,
                 'name' => 'STOCKHOLM',
@@ -7672,10 +7552,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '59.31563 18.0357',
                 'country_id' => 194,
                 'varation' => '{"type": ["", "", "stockholm-sesto-sweden", "stockholm ,se", "sweden: stockholm", "stockholm pt", "stockholm port", "stockholm city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-09-05 15:34:38',
             ),
-            138 => 
+            128 => 
             array (
                 'id' => 1380,
                 'name' => 'Singapore',
@@ -7683,11 +7563,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Singapore, SGSIN',
                 'coordinates' => '1.2593655 103.75445',
                 'country_id' => 195,
-                'varation' => '{"type": ["", "", "singapore-sgsin-singapore", "singapore ,sg", "singapore: singapore", "singapore pt", "singapore port", "singapore city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["singapore-sgsin-singapore", "singapore ,sg", "singapore: singapore", "singapore pt", "singapore port", "singapore city", "singapore", "singapore singapore", "singapur", "singapore, singapore", "singapore***", "singapore*", "singapura"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-03-07 13:13:03',
             ),
-            139 => 
+            129 => 
             array (
                 'id' => 1381,
                 'name' => 'KOPER',
@@ -7695,11 +7575,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'KOPER, SIKOP',
                 'coordinates' => '45.54353 13.7445',
                 'country_id' => 197,
-                'varation' => '{"type": ["", "", "koper-sikop-slovenia", "koper ,si", "slovenia: koper", "koper pt", "koper port", "koper city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["koper-sikop-slovenia", "koper ,si", "slovenia: koper", "koper pt", "koper port", "koper city", "koper, slovenia", "koper slovenia"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2018-10-22 11:30:25',
             ),
-            140 => 
+            130 => 
             array (
                 'id' => 1382,
                 'name' => 'FREETOWN',
@@ -7707,11 +7587,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'FREETOWN, SLFNA',
                 'coordinates' => '8.49123 -13.2325',
                 'country_id' => 199,
-                'varation' => '{"type": ["", "", "freetown-slfna-sierra leone", "freetown ,sl", "sierra leone: freetown", "freetown pt", "freetown port", "freetown city"]}',
-                'created_at' => '2018-09-05 19:34:38',
-                'updated_at' => '2018-09-05 19:34:38',
+                'varation' => '{"type": ["freetown-slfna-sierra leone", "freetown ,sl", "sierra leone: freetown", "freetown pt", "freetown port", "freetown city", "freetown, sl", "freetown, sierra leone", "freetown sierra leone"]}',
+                'created_at' => '2018-09-05 15:34:38',
+                'updated_at' => '2019-01-25 10:02:31',
             ),
-            141 => 
+            131 => 
             array (
                 'id' => 1383,
                 'name' => 'DAKAR',
@@ -7719,11 +7599,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DAKAR, SNDKR',
                 'coordinates' => '14.681 -17.4275',
                 'country_id' => 201,
-                'varation' => '{"type": ["", "", "dakar-sndkr-senegal", "dakar ,sn", "senegal: dakar", "dakar pt", "dakar port", "dakar city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["dakar-sndkr-senegal", "dakar ,sn", "senegal: dakar", "dakar pt", "dakar port", "dakar city", "senegal dakar", "dakar, sn", "dakar, senegal"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-25 08:20:28',
             ),
-            142 => 
+            132 => 
             array (
                 'id' => 1384,
                 'name' => 'Berbera',
@@ -7731,11 +7611,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Berbera, SOBBO',
                 'coordinates' => '10.439615 44.994505',
                 'country_id' => 202,
-                'varation' => '{"type": ["", "", "berbera-sobbo-somalia", "berbera ,so", "somalia: berbera", "berbera pt", "berbera port", "berbera city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["berbera-sobbo-somalia", "berbera ,so", "somalia: berbera", "berbera pt", "berbera port", "berbera city", "berbera, somalia"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-28 12:41:30',
             ),
-            143 => 
+            133 => 
             array (
                 'id' => 1385,
                 'name' => 'KISMAYU',
@@ -7744,10 +7624,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-0.377309 42.54044',
                 'country_id' => 202,
                 'varation' => '{"type": ["", "", "kismayu-sokmu-somalia", "kismayu ,so", "somalia: kismayu", "kismayu pt", "kismayu port", "kismayu city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-09-05 15:34:39',
             ),
-            144 => 
+            134 => 
             array (
                 'id' => 1386,
                 'name' => 'MOGADISHU',
@@ -7755,11 +7635,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MOGADISHU, SOMGQ',
                 'coordinates' => '2.02514 45.33757',
                 'country_id' => 202,
-                'varation' => '{"type": ["", "", "mogadishu-somgq-somalia", "mogadishu ,so", "somalia: mogadishu", "mogadishu pt", "mogadishu port", "mogadishu city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["mogadishu-somgq-somalia", "mogadishu ,so", "somalia: mogadishu", "mogadishu pt", "mogadishu port", "mogadishu city", "mogadishu, somalia", "mogadiscio"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-02-21 16:31:37',
             ),
-            145 => 
+            135 => 
             array (
                 'id' => 1387,
                 'name' => 'Paramaribo',
@@ -7767,11 +7647,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Paramaribo, SRPBM',
                 'coordinates' => '5.82203 -55.146',
                 'country_id' => 203,
-                'varation' => '{"type": ["", "", "paramaribo-srpbm-suriname", "paramaribo ,sr", "suriname: paramaribo", "paramaribo pt", "paramaribo port", "paramaribo city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["paramaribo-srpbm-suriname", "paramaribo ,sr", "suriname: paramaribo", "paramaribo pt", "paramaribo port", "paramaribo city", "paramaribo, suriname", "paramaribo suriname", "paramaribo r2", "paramaribo *r2"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-03-06 09:18:32',
             ),
-            146 => 
+            136 => 
             array (
                 'id' => 1388,
                 'name' => 'Acajutla',
@@ -7779,35 +7659,35 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Acajutla, SVAQJ',
                 'coordinates' => '13.57773 -89.8374',
                 'country_id' => 206,
-                'varation' => '{"type": ["", "", "acajutla-svaqj-el salvador", "acajutla ,sv", "el salvador: acajutla", "acajutla pt", "acajutla port", "acajutla city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["acajutla-svaqj-el salvador", "acajutla ,sv", "el salvador: acajutla", "acajutla pt", "acajutla port", "acajutla city", "acajutla, el salvador", "acajutla el salvador", "acajutla, el salvador"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-12-14 11:18:19',
             ),
-            147 => 
+            137 => 
             array (
                 'id' => 1389,
                 'name' => 'PHILIPSBURG',
                 'code' => 'SXPHI',
                 'display_name' => 'PHILIPSBURG, SXPHI',
                 'coordinates' => '18.013 -63.046815',
-                'country_id' => 248,
-            'varation' => '{"type": ["", "", "philipsburg-sxphi-sint maarten (dutch part)", "philipsburg ,sx", "sint maarten (dutch part): philipsburg", "philipsburg pt", "philipsburg port", "philipsburg city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'country_id' => 207,
+            'varation' => '{"type": ["philipsburg-sxphi-sint maarten (dutch part)", "philipsburg ,sx", "sint maarten (dutch part): philipsburg", "philipsburg pt", "philipsburg port", "philipsburg city", "philipsburg, sint maarten"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-02-18 07:48:15',
             ),
-            148 => 
+            138 => 
             array (
                 'id' => 1390,
                 'name' => 'Latakia',
                 'code' => 'SYLTK',
                 'display_name' => 'Latakia, SYLTK',
                 'coordinates' => '35.51173 35.7703',
-                'country_id' => 248,
-                'varation' => '{"type": ["", "", "latakia-syltk-syrian arab republic", "latakia ,sy", "syrian arab republic: latakia", "latakia pt", "latakia port", "latakia city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'country_id' => 208,
+                'varation' => '{"type": ["latakia-syltk-syrian arab republic", "latakia ,sy", "syrian arab republic: latakia", "latakia pt", "latakia port", "latakia city", "latakia, syria"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-23 07:55:27',
             ),
-            149 => 
+            139 => 
             array (
                 'id' => 1391,
                 'name' => 'TARTUS',
@@ -7816,10 +7696,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.89653 35.8873',
                 'country_id' => 248,
                 'varation' => '{"type": ["", "", "tartus-sytts-syrian arab republic", "tartus ,sy", "syrian arab republic: tartus", "tartus pt", "tartus port", "tartus city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-09-05 15:34:39',
             ),
-            150 => 
+            140 => 
             array (
                 'id' => 1392,
                 'name' => 'LOME',
@@ -7827,11 +7707,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LOME, TGLFW',
                 'coordinates' => '6.14242 1.28425',
                 'country_id' => 213,
-                'varation' => '{"type": ["", "", "lome-tglfw-togo", "lome ,tg", "togo: lome", "lome pt", "lome port", "lome city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["lome-tglfw-togo", "lome ,tg", "togo: lome", "lome pt", "lome port", "lome city", "lome, togo"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-25 08:28:43',
             ),
-            151 => 
+            141 => 
             array (
                 'id' => 1393,
                 'name' => 'Bangkok',
@@ -7839,11 +7719,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Bangkok, THBKK',
                 'coordinates' => '13.68263 100.5187',
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "bangkok-thbkk-thailand", "bangkok ,th", "thailand: bangkok", "bangkok pt", "bangkok port", "bangkok city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["bangkok-thbkk-thailand", "bangkok ,th", "thailand: bangkok", "bangkok pt", "bangkok port", "bangkok city", "bangkok, thailand", "bangkok thailand", "bangkok, thailand", "bangkok thailand", "bangkok ,th", "bangkok th", "bangkok,thailand", "bangkokthailand", "bangkok", "bangkok th", "bangkok ,th", "bangkok th", "bangkok tst", "bangkok tst", "bangkok olf - asin tariff", "bangkok siam cntr tml", "bangkok***", "bangkok,", "bangkok **", "bangkok, tst"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-04-01 03:33:39',
             ),
-            152 => 
+            142 => 
             array (
                 'id' => 1394,
                 'name' => 'Laem Chabang',
@@ -7851,11 +7731,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Laem Chabang, THLCH',
                 'coordinates' => '13.06917 100.90117',
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "laem chabang-thlch-thailand", "laem chabang ,th", "thailand: laem chabang", "laem chabang pt", "laem chabang port", "laem chabang city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["laem chabang-thlch-thailand", "laem chabang ,th", "thailand: laem chabang", "laem chabang pt", "laem chabang port", "laem chabang city", "thailand: laem chabang", "thailand laem chabang", "laem chabang thailand", "laem chabang, thailand", "laemchabang", "laem chabang, chon buri, thailand", "laem chabang chon buri thailand"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-10-22 11:52:16',
             ),
-            153 => 
+            143 => 
             array (
                 'id' => 1395,
                 'name' => 'Sahathai',
@@ -7863,11 +7743,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sahathai, THSPS',
                 'coordinates' => NULL,
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "sahathai-thsps-thailand", "sahathai ,th", "thailand: sahathai", "sahathai pt", "sahathai port", "sahathai city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["sahathai-thsps-thailand", "sahathai ,th", "thailand: sahathai", "sahathai pt", "sahathai port", "sahathai city", "sahathai, thailand", "sahathai thailand", "bangkok sahathai"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-07 12:04:25',
             ),
-            154 => 
+            144 => 
             array (
                 'id' => 1396,
                 'name' => 'Songkhla',
@@ -7875,23 +7755,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Songkhla, THSGZ',
                 'coordinates' => '7.22451 100.57485',
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "songkhla-thsgz-thailand", "songkhla ,th", "thailand: songkhla", "songkhla pt", "songkhla port", "songkhla city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["songkhla-thsgz-thailand", "songkhla ,th", "thailand: songkhla", "songkhla pt", "songkhla port", "songkhla city", "songkhla, songkhla, thailand", "songkhla songkhla thailand", "songhkla", "songkla", "songklha"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-02-27 12:20:38',
             ),
-            155 => 
+            145 => 
             array (
                 'id' => 1397,
                 'name' => 'BANGKOK MODERN TERMINALS/BANGKOK',
                 'code' => 'THBMT',
-                'display_name' => 'BANGKOK MODERN TERMINALS/BANGKOK, THBMT',
+                'display_name' => 'Bangkok Modern Terminal, THBMT',
                 'coordinates' => NULL,
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "bangkok modern terminals/bangkok-thbmt-thailand", "bangkok modern terminals/bangkok ,th", "thailand: bangkok modern terminals/bangkok", "bangkok modern terminals/bangkok pt", "bangkok modern terminals/bangkok port", "bangkok modern terminals/bangkok city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["bangkok modern terminals/bangkok-thbmt-thailand", "bangkok modern terminals/bangkok ,th", "thailand: bangkok modern terminals/bangkok", "bangkok modern terminals/bangkok pt", "bangkok modern terminals/bangkok port", "bangkok modern terminals/bangkok city", "bangkok bmt", "bangkok modern tml bmt", "bangkok modern terminal, bmt", "bangkok modern terminals/bangkok", "bangkok modern terminalsbangkok", "bangkok bbt", "bangkok, bmt"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-04-01 03:33:28',
             ),
-            156 => 
+            146 => 
             array (
                 'id' => 1398,
                 'name' => 'PAT BANGKOK',
@@ -7899,11 +7779,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PAT BANGKOK, THPAT',
                 'coordinates' => NULL,
                 'country_id' => 214,
-                'varation' => '{"type": ["", "", "pat bangkok-thpat-thailand", "pat bangkok ,th", "thailand: pat bangkok", "pat bangkok pt", "pat bangkok port", "pat bangkok city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["pat bangkok-thpat-thailand", "pat bangkok ,th", "thailand: pat bangkok", "pat bangkok pt", "pat bangkok port", "pat bangkok city", "bangkok pat", "bangkok, pat", "bangkok pat terminal", "bangkok pat terminal"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-04-03 08:11:44',
             ),
-            157 => 
+            147 => 
             array (
                 'id' => 1399,
                 'name' => 'T S TRANSPORT AND LOGISTICS',
@@ -7912,10 +7792,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "t s transport and logistics-thi6c-thailand", "t s transport and logistics ,th", "thailand: t s transport and logistics", "t s transport and logistics pt", "t s transport and logistics port", "t s transport and logistics city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-09-05 15:34:39',
             ),
-            158 => 
+            148 => 
             array (
                 'id' => 1400,
                 'name' => 'THAI PROSPERITY TERMINAL',
@@ -7924,10 +7804,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => NULL,
                 'country_id' => 214,
                 'varation' => '{"type": ["", "", "thai prosperity terminal-thtpt-thailand", "thai prosperity terminal ,th", "thailand: thai prosperity terminal", "thai prosperity terminal pt", "thai prosperity terminal port", "thai prosperity terminal city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-09-05 15:34:39',
             ),
-            159 => 
+            149 => 
             array (
                 'id' => 1401,
                 'name' => 'DILI',
@@ -7936,10 +7816,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-8.544016 125.5763',
                 'country_id' => 217,
                 'varation' => '{"type": ["", "", "dili-tldil-timor-leste", "dili ,tl", "timor-leste: dili", "dili pt", "dili port", "dili city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2018-09-05 15:34:39',
             ),
-            160 => 
+            150 => 
             array (
                 'id' => 1402,
                 'name' => 'TUNIS',
@@ -7947,11 +7827,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TUNIS, TNTUN',
                 'coordinates' => NULL,
                 'country_id' => 219,
-                'varation' => '{"type": ["", "", "tunis-tntun-tunisia", "tunis ,tn", "tunisia: tunis", "tunis pt", "tunis port", "tunis city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["tunis-tntun-tunisia", "tunis ,tn", "tunisia: tunis", "tunis pt", "tunis port", "tunis city", "tunis, tunisia", "tunis tunisia", "tunis", "tunis**"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-02-27 16:58:33',
             ),
-            161 => 
+            151 => 
             array (
                 'id' => 1403,
                 'name' => 'Nukualofa',
@@ -7959,11 +7839,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nukualofa, TOTBU',
                 'coordinates' => '-21.13267 -175.2037',
                 'country_id' => 220,
-                'varation' => '{"type": ["", "", "nukualofa-totbu-tonga", "nukualofa ,to", "tonga: nukualofa", "nukualofa pt", "nukualofa port", "nukualofa city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["nukualofa-totbu-tonga", "nukualofa ,to", "tonga: nukualofa", "nukualofa pt", "nukualofa port", "nukualofa city", "nukualofa, tonga", "nukualofa tonga"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-01-22 10:27:56',
             ),
-            162 => 
+            152 => 
             array (
                 'id' => 1404,
                 'name' => 'Ambarli Port Istanbul',
@@ -7971,11 +7851,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ambarli Port Istanbul, TRIST',
                 'coordinates' => '41.03413 28.9945',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "ambarli port istanbul-trist-turkey", "ambarli port istanbul ,tr", "turkey: ambarli port istanbul", "ambarli port istanbul pt", "ambarli port istanbul port", "ambarli port istanbul city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["ambarli port istanbul-trist-turkey", "ambarli port istanbul ,tr", "turkey: ambarli port istanbul", "ambarli port istanbul pt", "ambarli port istanbul port", "ambarli port istanbul city", "istanbul, istanbul, turkey", "istanbul istanbul turkey", "estambul", "ambarli port istanbul, turkey", "ambarli port istanbul turkey", "estambul", "istanbul, ambarli port e. side", "istanbul, ambarli port e side", "istanbul", "istanbul ambarli", "istanbulestambul-am", "istanbulestambulam", "tr012 travc istanbul, ambarli port e. side", "tr travc istanbul ambarli port e side", "istanbul/estambul-ambarli", "istanbulestambul-ambarli"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-03-22 07:31:25',
             ),
-            163 => 
+            153 => 
             array (
                 'id' => 1405,
                 'name' => 'Gemlik',
@@ -7983,11 +7863,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Gemlik, TRGEM',
                 'coordinates' => '40.43403 29.1581',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "gemlik-trgem-turkey", "gemlik ,tr", "turkey: gemlik", "gemlik pt", "gemlik port", "gemlik city"]}',
-                'created_at' => '2018-09-05 19:34:39',
-                'updated_at' => '2018-09-05 19:34:39',
+                'varation' => '{"type": ["gemlik-trgem-turkey", "gemlik ,tr", "turkey: gemlik", "gemlik pt", "gemlik port", "gemlik city", "gemlik, turkey", "gemlik turkey", "gemlik borusan", "gemlik gemport", "gemlik rodaport", "trgem gemlik", "tr trgem gemlik"]}',
+                'created_at' => '2018-09-05 15:34:39',
+                'updated_at' => '2019-03-21 10:15:17',
             ),
-            164 => 
+            154 => 
             array (
                 'id' => 1406,
                 'name' => 'Iskenderun',
@@ -7995,11 +7875,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Iskenderun, TRISK',
                 'coordinates' => '36.5935 36.18749',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "iskenderun-trisk-turkey", "iskenderun ,tr", "turkey: iskenderun", "iskenderun pt", "iskenderun port", "iskenderun city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["iskenderun-trisk-turkey", "iskenderun ,tr", "turkey: iskenderun", "iskenderun pt", "iskenderun port", "iskenderun city", "iskenderun (limak)", "iskenderun limak", "iskenderun, turkey", "iskenderun turkey", "tr038 trisk iskenderun", "iskenderun trlmk"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-04-08 12:04:48',
             ),
-            165 => 
+            155 => 
             array (
                 'id' => 1407,
                 'name' => 'Izmir',
@@ -8007,11 +7887,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Izmir, TRIZM',
                 'coordinates' => '38.45433 27.1685',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "izmir-trizm-turkey", "izmir ,tr", "turkey: izmir", "izmir pt", "izmir port", "izmir city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["izmir-trizm-turkey", "izmir ,tr", "turkey: izmir", "izmir pt", "izmir port", "izmir city", "izmir (alsancak)", "izmir, turkey", "izmir turkey", "izmir alsancak", "izmir (alsancak)", "izmir"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-04 12:16:50',
             ),
-            166 => 
+            156 => 
             array (
                 'id' => 1408,
                 'name' => 'Izmit Korfezi',
@@ -8019,11 +7899,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Izmit Korfezi, TRIZT',
                 'coordinates' => '40.76943 29.9367',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "izmit korfezi-trizt-turkey", "izmit korfezi ,tr", "turkey: izmit korfezi", "izmit korfezi pt", "izmit korfezi port", "izmit korfezi city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["izmit korfezi-trizt-turkey", "izmit korfezi ,tr", "turkey: izmit korfezi", "izmit korfezi pt", "izmit korfezi port", "izmit korfezi city", "izmit, turkey", "izmit turkey", "izmit korfezi, turkey", "izmit korfezi turkey", "izmit", "izmit evyap"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-04-09 16:00:42',
             ),
-            167 => 
+            157 => 
             array (
                 'id' => 1409,
                 'name' => 'Mersin',
@@ -8031,11 +7911,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Mersin, TRMER',
                 'coordinates' => '36.79153 34.6257',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "mersin-trmer-turkey", "mersin ,tr", "turkey: mersin", "mersin pt", "mersin port", "mersin city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["mersin-trmer-turkey", "mersin ,tr", "turkey: mersin", "mersin pt", "mersin port", "mersin city", "mersin, turkey", "mersin turkey", "mersín", "mersin mip", "mersin trmer"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-04-08 12:07:46',
             ),
-            168 => 
+            158 => 
             array (
                 'id' => 1410,
                 'name' => 'ALIAGA',
@@ -8043,11 +7923,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ALIAGA, TRALI',
                 'coordinates' => '38.83223 26.9493',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "aliaga-trali-turkey", "aliaga ,tr", "turkey: aliaga", "aliaga pt", "aliaga port", "aliaga city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["aliaga-trali-turkey", "aliaga ,tr", "turkey: aliaga", "aliaga pt", "aliaga port", "aliaga city", "aliaga nemport", "aliaga nemport", "aliaga nemport", "aliaga tcg01", "aliaga nemport (izm02)", "aliaga nemport izm02", "aliaga, izmir", "aliaga izmir", "trali", "izmir aliaga", "trali aliaga, izmir", "trali aliaga izmir", "aliaga", "izmir aliaga, trapm"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-04-08 12:10:33',
             ),
-            169 => 
+            159 => 
             array (
                 'id' => 1411,
                 'name' => 'ANTALYA',
@@ -8056,10 +7936,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.88853 30.7027',
                 'country_id' => 221,
                 'varation' => '{"type": ["", "", "antalya-trayt-turkey", "antalya ,tr", "turkey: antalya", "antalya pt", "antalya port", "antalya city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-09-05 15:34:40',
             ),
-            170 => 
+            160 => 
             array (
                 'id' => 1412,
                 'name' => 'BANDIRMA',
@@ -8068,10 +7948,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '40.36533 27.9779',
                 'country_id' => 221,
                 'varation' => '{"type": ["", "", "bandirma-trbdm-turkey", "bandirma ,tr", "turkey: bandirma", "bandirma pt", "bandirma port", "bandirma city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-09-05 15:34:40',
             ),
-            171 => 
+            161 => 
             array (
                 'id' => 1413,
                 'name' => 'EVYAP PORT',
@@ -8079,11 +7959,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'EVYAP PORT, TREYP',
                 'coordinates' => '40.77216 29.71175',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "evyap port-treyp-turkey", "evyap port ,tr", "turkey: evyap port", "evyap port pt", "evyap port port", "evyap port city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["evyap port-treyp-turkey", "evyap port ,tr", "turkey: evyap port", "evyap port pt", "evyap port port", "evyap port city", "evyap", "gebze evyap"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-25 10:27:42',
             ),
-            172 => 
+            162 => 
             array (
                 'id' => 1414,
                 'name' => 'GEBZE',
@@ -8091,11 +7971,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'GEBZE, TRGEB',
                 'coordinates' => '40.755475 29.37558',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "gebze-trgeb-turkey", "gebze ,tr", "turkey: gebze", "gebze pt", "gebze port", "gebze city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["gebze-trgeb-turkey", "gebze ,tr", "turkey: gebze", "gebze pt", "gebze port", "gebze city", "gebze (yilport)", "gebze, kocaeli, turkey", "gebze kocaeli turkey", "gebze", "gebze, turkey"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-04-08 03:33:15',
             ),
-            173 => 
+            163 => 
             array (
                 'id' => 1415,
                 'name' => 'LIMAS',
@@ -8104,10 +7984,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '40.722845 29.844',
                 'country_id' => 221,
                 'varation' => '{"type": ["", "", "limas-trlma-turkey", "limas ,tr", "turkey: limas", "limas pt", "limas port", "limas city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-09-05 15:34:40',
             ),
-            174 => 
+            164 => 
             array (
                 'id' => 1416,
                 'name' => 'SAMSUN',
@@ -8115,11 +7995,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SAMSUN, TRSSX',
                 'coordinates' => '41.29463 36.3425',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "samsun-trssx-turkey", "samsun ,tr", "turkey: samsun", "samsun pt", "samsun port", "samsun city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["samsun-trssx-turkey", "samsun ,tr", "turkey: samsun", "samsun pt", "samsun port", "samsun city", "samsum"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-14 09:13:00',
             ),
-            175 => 
+            165 => 
             array (
                 'id' => 1417,
             'name' => 'TEKIRDAG (ASYAPORT)',
@@ -8127,11 +8007,11 @@ class HarborsTableSeeder extends Seeder
             'display_name' => 'TEKIRDAG (ASYAPORT), TRTEK',
                 'coordinates' => '40.98673 27.5235',
                 'country_id' => 221,
-            'varation' => '{"type": ["", "", "tekirdag (asyaport)-trtek-turkey", "tekirdag (asyaport) ,tr", "turkey: tekirdag (asyaport)", "tekirdag (asyaport) pt", "tekirdag (asyaport) port", "tekirdag (asyaport) city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["tekirdag (asyaport)-trtek-turkey", "tekirdag (asyaport) ,tr", "turkey: tekirdag (asyaport)", "tekirdag (asyaport) pt", "tekirdag (asyaport) port", "tekirdag (asyaport) city", "tekirdag ,tr", "tekirdag tr", "tekirdag ,tr", "tekirdag, turkey", "tekirdag (asyaport)", "tekirdag asyaport"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-20 14:04:39',
             ),
-            176 => 
+            166 => 
             array (
                 'id' => 1418,
                 'name' => 'TRABZON',
@@ -8140,10 +8020,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '41.00483 39.7593',
                 'country_id' => 221,
                 'varation' => '{"type": ["", "", "trabzon-trtzx-turkey", "trabzon ,tr", "turkey: trabzon", "trabzon pt", "trabzon port", "trabzon city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-09-05 15:34:40',
             ),
-            177 => 
+            167 => 
             array (
                 'id' => 1419,
                 'name' => 'YARIMCA',
@@ -8151,11 +8031,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'YARIMCA, TRYAR',
                 'coordinates' => '40.75693 29.7639',
                 'country_id' => 221,
-                'varation' => '{"type": ["", "", "yarimca-tryar-turkey", "yarimca ,tr", "turkey: yarimca", "yarimca pt", "yarimca port", "yarimca city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["yarimca-tryar-turkey", "yarimca ,tr", "turkey: yarimca", "yarimca pt", "yarimca port", "yarimca city", "gebze yarimca"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-25 10:30:39',
             ),
-            178 => 
+            168 => 
             array (
                 'id' => 1420,
                 'name' => 'Point Lisas',
@@ -8163,11 +8043,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Point Lisas, TTPTS',
                 'coordinates' => '10.36263 -61.4765',
                 'country_id' => 222,
-                'varation' => '{"type": ["", "", "point lisas-ttpts-trinidad and tobago", "point lisas ,tt", "trinidad and tobago: point lisas", "point lisas pt", "point lisas port", "point lisas city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["point lisas-ttpts-trinidad and tobago", "point lisas ,tt", "trinidad and tobago: point lisas", "point lisas pt", "point lisas port", "point lisas city", "point lisas, trinidad and tobago", "point lisas trinidad and tobago", "point lisas, trinidad and tobago", "point lisas, trinidad tobago"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-01-09 14:42:46',
             ),
-            179 => 
+            169 => 
             array (
                 'id' => 1421,
                 'name' => 'Port of Spain',
@@ -8175,11 +8055,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Port of Spain, TTPOS',
                 'coordinates' => '10.65443 -61.5273',
                 'country_id' => 222,
-                'varation' => '{"type": ["", "", "port of spain-ttpos-trinidad and tobago", "port of spain ,tt", "trinidad and tobago: port of spain", "port of spain pt", "port of spain port", "port of spain city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["port of spain-ttpos-trinidad and tobago", "port of spain ,tt", "trinidad and tobago: port of spain", "port of spain pt", "port of spain port", "port of spain city", "port of spain"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-27 23:04:45',
             ),
-            180 => 
+            170 => 
             array (
                 'id' => 1422,
                 'name' => 'Kaohsiung',
@@ -8187,11 +8067,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Kaohsiung, TWKHH',
                 'coordinates' => '22.60793 120.2609',
                 'country_id' => 224,
-                'varation' => '{"type": ["", "", "kaohsiung-twkhh-taiwan", "kaohsiung ,tw", "taiwan: kaohsiung", "kaohsiung pt", "kaohsiung port", "kaohsiung city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["kaohsiung-twkhh-taiwan", "kaohsiung ,tw", "taiwan: kaohsiung", "kaohsiung pt", "kaohsiung port", "kaohsiung city", "kaohsiung, taiwan", "kaohsiung taiwan", "kaoshiung", "twkhh", "kaohsiung", "kaohsiung*"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-28 11:32:13',
             ),
-            181 => 
+            171 => 
             array (
                 'id' => 1423,
                 'name' => 'Keelung',
@@ -8199,11 +8079,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Keelung, TWKEL',
                 'coordinates' => '25.13423 121.7361',
                 'country_id' => 224,
-                'varation' => '{"type": ["", "", "keelung-twkel-taiwan", "keelung ,tw", "taiwan: keelung", "keelung pt", "keelung port", "keelung city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["keelung-twkel-taiwan", "keelung ,tw", "taiwan: keelung", "keelung pt", "keelung port", "keelung city", "keelung, taiwan", "keelung taiwan", "keelung taichung taoyuan", "keelung-twkhh-taiwan", "keelung, taiwan", "keelung", "keelung wutu, taiwan"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-03-21 05:20:34',
             ),
-            182 => 
+            172 => 
             array (
                 'id' => 1424,
                 'name' => 'Taichung',
@@ -8211,35 +8091,35 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Taichung, TWTXG',
                 'coordinates' => '24.23053 120.5077',
                 'country_id' => 224,
-                'varation' => '{"type": ["taichung -twtxg-taiwan", "", "taichung-twtxg-taiwan", "taichung ,tw", "taiwan: taichung", "taichung pt", "taichung port", "taichung city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+            'varation' => '{"type": ["taichung -twtxg-taiwan", "taichung-twtxg-taiwan", "taichung ,tw", "taiwan: taichung", "taichung pt", "taichung port", "taichung city", "taichung, taiwan", "taichung", "taichung", "taichung, tainwan", "taichung(taiwan)", "taichungtaiwan", "taichung, taiwan, via kaohsiung", "taichung taiwan"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-03-05 15:06:15',
             ),
-            183 => 
+            173 => 
             array (
                 'id' => 1425,
-                'name' => 'Tao Yuan',
+                'name' => 'TaoYuan',
                 'code' => 'TWTYN',
-                'display_name' => 'Tao Yuan, TWTYN',
+                'display_name' => 'TaoYuan, TWTYN',
                 'coordinates' => NULL,
                 'country_id' => 224,
-                'varation' => '{"type": ["", "", "tao yuan-twtyn-taiwan", "tao yuan ,tw", "taiwan: tao yuan", "tao yuan pt", "tao yuan port", "tao yuan city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["tao yuan-twtyn-taiwan", "tao yuan ,tw", "taiwan: tao yuan", "tao yuan pt", "tao yuan port", "tao yuan city", "taoyuan, taoyuan, taiwan", "taoyuan taoyuan taiwan", "taoyuan", "tao yuan, taiwan"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-12-10 15:38:47',
             ),
-            184 => 
+            174 => 
             array (
                 'id' => 1426,
                 'name' => 'Dar es Salaam',
                 'code' => 'TZDAR',
                 'display_name' => 'Dar es Salaam, TZDAR',
                 'coordinates' => '-6.82457 39.2895',
-                'country_id' => 248,
-                'varation' => '{"type": ["", "", "dar es salaam-tzdar-tanzania, united republic of", "dar es salaam ,tz", "tanzania, united republic of: dar es salaam", "dar es salaam pt", "dar es salaam port", "dar es salaam city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'country_id' => 225,
+                'varation' => '{"type": ["dar es salaam-tzdar-tanzania, united republic of", "dar es salaam ,tz", "tanzania, united republic of: dar es salaam", "dar es salaam pt", "dar es salaam port", "dar es salaam city", "tanzania: dar es salaam", "tanzania dar es salaam", "dar es salaam ** tcfb", "dar es salaam  tcfb", "dar es salaam, tanzania", "dar es salam"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-03-07 13:09:39',
             ),
-            185 => 
+            175 => 
             array (
                 'id' => 1427,
                 'name' => 'Tanga',
@@ -8247,11 +8127,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Tanga, TZTGT',
                 'coordinates' => '-5.06557 39.1087',
                 'country_id' => 248,
-                'varation' => '{"type": ["", "", "tanga-tztgt-tanzania, united republic of", "tanga ,tz", "tanzania, united republic of: tanga", "tanga pt", "tanga port", "tanga city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["tanga-tztgt-tanzania, united republic of", "tanga ,tz", "tanzania, united republic of: tanga", "tanga pt", "tanga port", "tanga city", "tanga, tanzania", "tanga"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-02-21 16:26:58',
             ),
-            186 => 
+            176 => 
             array (
                 'id' => 1428,
                 'name' => 'Zanzibar',
@@ -8259,11 +8139,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Zanzibar, TZZNZ',
                 'coordinates' => '-6.15757 39.1985',
                 'country_id' => 248,
-                'varation' => '{"type": ["", "", "zanzibar-tzznz-tanzania, united republic of", "zanzibar ,tz", "tanzania, united republic of: zanzibar", "zanzibar pt", "zanzibar port", "zanzibar city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["zanzibar-tzznz-tanzania, united republic of", "zanzibar ,tz", "tanzania, united republic of: zanzibar", "zanzibar pt", "zanzibar port", "zanzibar city", "zanzibar, tanzania"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2019-01-28 12:43:24',
             ),
-            187 => 
+            177 => 
             array (
                 'id' => 1429,
                 'name' => 'Chornomorsk',
@@ -8271,11 +8151,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Chornomorsk, UAILK',
                 'coordinates' => '46.34014 30.64053',
                 'country_id' => 226,
-                'varation' => '{"type": ["", "", "chornomorsk-uailk-ukraine", "chornomorsk ,ua", "ukraine: chornomorsk", "chornomorsk pt", "chornomorsk port", "chornomorsk city"]}',
-                'created_at' => '2018-09-05 19:34:40',
-                'updated_at' => '2018-09-05 19:34:40',
+                'varation' => '{"type": ["chornomorsk-uailk-ukraine", "chornomorsk ,ua", "ukraine: chornomorsk", "chornomorsk pt", "chornomorsk port", "chornomorsk city", "chornomorsk, ukraine", "chornomorsk ukraine"]}',
+                'created_at' => '2018-09-05 15:34:40',
+                'updated_at' => '2018-12-14 12:06:02',
             ),
-            188 => 
+            178 => 
             array (
                 'id' => 1430,
                 'name' => 'Yuzhny',
@@ -8283,11 +8163,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Yuzhny, UAYUZ',
                 'coordinates' => '46.61876 31.01423',
                 'country_id' => 226,
-                'varation' => '{"type": ["", "", "yuzhny-uayuz-ukraine", "yuzhny ,ua", "ukraine: yuzhny", "yuzhny pt", "yuzhny port", "yuzhny city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["yuzhny-uayuz-ukraine", "yuzhny ,ua", "ukraine: yuzhny", "yuzhny pt", "yuzhny port", "yuzhny city", "yuzhny, ukraine", "yuzhny ukraine"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-12-14 11:53:11',
             ),
-            189 => 
+            179 => 
             array (
                 'id' => 1431,
                 'name' => 'MARIUPOL',
@@ -8296,10 +8176,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '47.069665 37.5367',
                 'country_id' => 226,
                 'varation' => '{"type": ["", "", "mariupol-uampw-ukraine", "mariupol ,ua", "ukraine: mariupol", "mariupol pt", "mariupol port", "mariupol city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-09-05 15:34:41',
             ),
-            190 => 
+            180 => 
             array (
                 'id' => 1432,
                 'name' => 'ODESSA',
@@ -8307,23 +8187,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'ODESSA, UAODS',
                 'coordinates' => '46.49373 30.7547',
                 'country_id' => 226,
-                'varation' => '{"type": ["", "", "odessa-uaods-ukraine", "odessa ,ua", "ukraine: odessa", "odessa pt", "odessa port", "odessa city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["odessa-uaods-ukraine", "odessa ,ua", "ukraine: odessa", "odessa pt", "odessa port", "odessa city", "odesa, ukraine", "odesa ukraine"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-10-22 11:24:32',
             ),
-            191 => 
+            181 => 
             array (
                 'id' => 1433,
-                'name' => 'BALTIMORE',
+            'name' => 'Baltimore (Maryland)',
                 'code' => 'USBAL',
-                'display_name' => 'BALTIMORE, USBAL',
+            'display_name' => 'Baltimore (Maryland), USBAL',
                 'coordinates' => '39.27273 -76.5808',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "baltimore-usbal-united states", "baltimore ,us", "united states: baltimore", "baltimore pt", "baltimore port", "baltimore city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["baltimore-usbal-united states", "baltimore ,us", "united states: baltimore", "baltimore pt", "baltimore port", "baltimore city", "baltimore (maryland), united states", "baltimore maryland united states", "baltimore (maryland) united states", "baltimore"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-10-19 07:27:40',
             ),
-            192 => 
+            182 => 
             array (
                 'id' => 1434,
                 'name' => 'BOSTON',
@@ -8331,23 +8211,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'BOSTON, USBOS',
                 'coordinates' => '42.35603 -71.0349',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "boston-usbos-united states", "boston ,us", "united states: boston", "boston pt", "boston port", "boston city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["boston-usbos-united states", "boston ,us", "united states: boston", "boston pt", "boston port", "boston city", "boston, ma", "boston mass."]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-25 08:25:11',
             ),
-            193 => 
+            183 => 
             array (
                 'id' => 1435,
-                'name' => 'CHARLESTON',
+            'name' => 'CHARLESTON (South Carolina)',
                 'code' => 'USCHS',
-                'display_name' => 'CHARLESTON, USCHS',
+            'display_name' => 'Charleston (South Carolina), USCHS',
                 'coordinates' => '32.78153 -79.9322',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "charleston-uschs-united states", "charleston ,us", "united states: charleston", "charleston pt", "charleston port", "charleston city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["charleston-uschs-united states", "charleston ,us", "united states: charleston", "charleston pt", "charleston port", "charleston city", "charleston (south carolina), united states", "charleston south carolina united states", "charleston, sc"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-14 11:34:05',
             ),
-            194 => 
+            184 => 
             array (
                 'id' => 1436,
                 'name' => 'GULFPORT',
@@ -8356,22 +8236,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '30.35453 -89.0873',
                 'country_id' => 229,
                 'varation' => '{"type": ["", "", "gulfport-usgpt-united states", "gulfport ,us", "united states: gulfport", "gulfport pt", "gulfport port", "gulfport city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-09-05 15:34:41',
             ),
-            195 => 
+            185 => 
             array (
                 'id' => 1437,
-                'name' => 'HOUSTON',
+            'name' => 'HOUSTON (Texas)',
                 'code' => 'USHOU',
-                'display_name' => 'HOUSTON, USHOU',
+            'display_name' => 'Houston (Texas), USHOU',
                 'coordinates' => '29.727785 -95.270045',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "houston-ushou-united states", "houston ,us", "united states: houston", "houston pt", "houston port", "houston city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["houston-ushou-united states", "houston ,us", "united states: houston", "houston pt", "houston port", "houston city", "houston (texas), united states", "houston texas united states", "houston, tx", "houston, tx"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-12 18:18:25',
             ),
-            196 => 
+            186 => 
             array (
                 'id' => 1438,
                 'name' => 'JACKSONVILLE',
@@ -8379,11 +8259,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'JACKSONVILLE, USJAX',
                 'coordinates' => '30.3755 -81.52',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "jacksonville-usjax-united states", "jacksonville ,us", "united states: jacksonville", "jacksonville pt", "jacksonville port", "jacksonville city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["jacksonville-usjax-united states", "jacksonville ,us", "united states: jacksonville", "jacksonville pt", "jacksonville port", "jacksonville city", "jacksonville, fl", "jacksonville florida"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-28 09:50:04',
             ),
-            197 => 
+            187 => 
             array (
                 'id' => 1439,
                 'name' => 'LONG BEACH',
@@ -8391,11 +8271,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LONG BEACH, USLGB',
                 'coordinates' => '33.75493 -118.21435',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "long beach-uslgb-united states", "long beach ,us", "united states: long beach", "long beach pt", "long beach port", "long beach city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["long beach-uslgb-united states", "long beach ,us", "united states: long beach", "long beach pt", "long beach port", "long beach city", "long beach, ca", "los angeles long beach, ca.", "long beach california"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-28 09:44:16',
             ),
-            198 => 
+            188 => 
             array (
                 'id' => 1440,
                 'name' => 'LOS ANGELES',
@@ -8403,11 +8283,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'LOS ANGELES, USLAX',
                 'coordinates' => '33.74021 -118.265',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "los angeles-uslax-united states", "los angeles ,us", "united states: los angeles", "los angeles pt", "los angeles port", "los angeles city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["los angeles-uslax-united states", "los angeles ,us", "united states: los angeles", "los angeles pt", "los angeles port", "los angeles city", "los angeles, ca", "los angeles", "los angeles ca", "los angeles california"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-25 08:27:20',
             ),
-            199 => 
+            189 => 
             array (
                 'id' => 1441,
                 'name' => 'MIAMI',
@@ -8415,11 +8295,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MIAMI, USMIA',
                 'coordinates' => '25.7529 -80.2187',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "miami-usmia-united states", "miami ,us", "united states: miami", "miami pt", "miami port", "miami city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["miami-usmia-united states", "miami ,us", "united states: miami", "miami pt", "miami port", "miami city", "miami, fl", "miami fl", "miami florida"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-25 08:26:09',
             ),
-            200 => 
+            190 => 
             array (
                 'id' => 1442,
                 'name' => 'MOBILE',
@@ -8427,11 +8307,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MOBILE, USMOB',
                 'coordinates' => '30.65523 -88.0437',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "mobile-usmob-united states", "mobile ,us", "united states: mobile", "mobile pt", "mobile port", "mobile city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["mobile-usmob-united states", "mobile ,us", "united states: mobile", "mobile pt", "mobile port", "mobile city", "mobile, al"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-31 22:18:33',
             ),
-            201 => 
+            191 => 
             array (
                 'id' => 1443,
                 'name' => 'NEW ORLEANS',
@@ -8439,23 +8319,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NEW ORLEANS, USMSY',
                 'coordinates' => '29.95669 -90.14589',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "new orleans-usmsy-united states", "new orleans ,us", "united states: new orleans", "new orleans pt", "new orleans port", "new orleans city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["new orleans-usmsy-united states", "new orleans ,us", "united states: new orleans", "new orleans pt", "new orleans port", "new orleans city", "new orleans, la", "new orleans louisiana"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-28 09:47:12',
             ),
-            202 => 
+            192 => 
             array (
                 'id' => 1444,
-                'name' => 'NEW YORK',
+            'name' => 'NEW YORK (New York)',
                 'code' => 'USNYC',
-                'display_name' => 'NEW YORK, USNYC',
+            'display_name' => 'New York (New York), USNYC',
                 'coordinates' => '40.6759 -74.0829',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "new york-usnyc-united states", "new york ,us", "united states: new york", "new york pt", "new york port", "new york city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["new york-usnyc-united states", "new york ,us", "united states: new york", "new york pt", "new york port", "new york city", "new york (new york), united states", "new york new york united states", "new york, ny", "new york ny", "new york,ny", "new york maher terminal"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-04-03 05:03:00',
             ),
-            203 => 
+            193 => 
             array (
                 'id' => 1445,
                 'name' => 'NORFOLK',
@@ -8463,23 +8343,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'NORFOLK, USORF',
                 'coordinates' => '36.897245 -76.34761',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "norfolk-usorf-united states", "norfolk ,us", "united states: norfolk", "norfolk pt", "norfolk port", "norfolk city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["norfolk-usorf-united states", "norfolk ,us", "united states: norfolk", "norfolk pt", "norfolk port", "norfolk city", "norfolk, va", "norfolk va", "norfolk-newport news, va", "norfolk virginia"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-25 08:26:27',
             ),
-            204 => 
+            194 => 
             array (
                 'id' => 1446,
-                'name' => 'OAKLAND',
+            'name' => 'OAKLAND (California)',
                 'code' => 'USOAK',
-                'display_name' => 'OAKLAND, USOAK',
+            'display_name' => 'OAKLAND (California), USOAK',
                 'coordinates' => '37.79784 -122.2864',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "oakland-usoak-united states", "oakland ,us", "united states: oakland", "oakland pt", "oakland port", "oakland city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["oakland-usoak-united states", "oakland ,us", "united states: oakland", "oakland pt", "oakland port", "oakland city", "oakland (california), united states", "oakland california united states", "oakland,ca", "oakland, ca"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-31 22:19:04',
             ),
-            205 => 
+            195 => 
             array (
                 'id' => 1447,
                 'name' => 'PHILADELPHIA',
@@ -8487,23 +8367,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PHILADELPHIA, USPHL',
                 'coordinates' => '39.908 -75.1695',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "philadelphia-usphl-united states", "philadelphia ,us", "united states: philadelphia", "philadelphia pt", "philadelphia port", "philadelphia city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+                'varation' => '{"type": ["philadelphia-usphl-united states", "philadelphia ,us", "united states: philadelphia", "philadelphia pt", "philadelphia port", "philadelphia city", "philadelphia, pa", "philadelphia,pa", "philadelphia penn."]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2019-03-25 08:28:54',
             ),
-            206 => 
+            196 => 
             array (
                 'id' => 1448,
-                'name' => 'PORT EVERGLADES',
+            'name' => 'PORT EVERGLADES (Florida)',
                 'code' => 'USPEF',
-                'display_name' => 'PORT EVERGLADES, USPEF',
+            'display_name' => 'PORT EVERGLADES (Florida), USPEF',
                 'coordinates' => '26.09023 -80.1168',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "port everglades-uspef-united states", "port everglades ,us", "united states: port everglades", "port everglades pt", "port everglades port", "port everglades city"]}',
-                'created_at' => '2018-09-05 19:34:41',
-                'updated_at' => '2018-09-05 19:34:41',
+            'varation' => '{"type": ["port everglades-uspef-united states", "port everglades ,us", "united states: port everglades", "port everglades pt", "port everglades port", "port everglades city", "port everglades (florida), united states", "port everglades florida united states", "port everglades (florida) united states"]}',
+                'created_at' => '2018-09-05 15:34:41',
+                'updated_at' => '2018-10-19 07:25:04',
             ),
-            207 => 
+            197 => 
             array (
                 'id' => 1449,
                 'name' => 'PORTSMOUTH',
@@ -8512,10 +8392,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '43.0731 -70.7172',
                 'country_id' => 229,
                 'varation' => '{"type": ["", "", "portsmouth-usptm-united states", "portsmouth ,us", "united states: portsmouth", "portsmouth pt", "portsmouth port", "portsmouth city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-05 15:34:42',
             ),
-            208 => 
+            198 => 
             array (
                 'id' => 1450,
                 'name' => 'SAVANNAH',
@@ -8523,23 +8403,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'SAVANNAH, USSAV',
                 'coordinates' => '32.02353 -81.0558',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "savannah-ussav-united states", "savannah ,us", "united states: savannah", "savannah pt", "savannah port", "savannah city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["savannah-ussav-united states", "savannah ,us", "united states: savannah", "savannah pt", "savannah port", "savannah city", "savannah, ga", "savannah ga"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-10-25 04:10:12',
             ),
-            209 => 
+            199 => 
             array (
                 'id' => 1451,
-                'name' => 'SEATTLE',
+            'name' => 'SEATTLE (WASHINGTON)',
                 'code' => 'USSEA',
-                'display_name' => 'SEATTLE, USSEA',
+            'display_name' => 'SEATTLE (WASHINGTON), USSEA',
                 'coordinates' => '47.67293 -122.409',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "seattle-ussea-united states", "seattle ,us", "united states: seattle", "seattle pt", "seattle port", "seattle city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+            'varation' => '{"type": ["seattle-ussea-united states", "seattle ,us", "united states: seattle", "seattle pt", "seattle port", "seattle city", "seattle (washington), united states", "seattle washington united states", "seattle", "washington,"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-03-25 17:09:46',
             ),
-            210 => 
+            200 => 
             array (
                 'id' => 1452,
                 'name' => 'TAMPA',
@@ -8547,11 +8427,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'TAMPA, USTPA',
                 'coordinates' => '27.901895 -82.49585',
                 'country_id' => 229,
-                'varation' => '{"type": ["", "", "tampa-ustpa-united states", "tampa ,us", "united states: tampa", "tampa pt", "tampa port", "tampa city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["tampa-ustpa-united states", "tampa ,us", "united states: tampa", "tampa pt", "tampa port", "tampa city", "tampa fl", "tampa,fl", "tampa, fl"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-03-28 17:01:22',
             ),
-            211 => 
+            201 => 
             array (
                 'id' => 1453,
             'name' => 'WILMINGTON (DE)',
@@ -8560,10 +8440,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '39.73093 -75.5038',
                 'country_id' => 229,
             'varation' => '{"type": ["", "", "wilmington (de)-usilg-united states", "wilmington (de) ,us", "united states: wilmington (de)", "wilmington (de) pt", "wilmington (de) port", "wilmington (de) city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-05 15:34:42',
             ),
-            212 => 
+            202 => 
             array (
                 'id' => 1454,
             'name' => 'WILMINGTON (NC)',
@@ -8572,10 +8452,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '34.23903 -77.9574',
                 'country_id' => 229,
             'varation' => '{"type": ["", "", "wilmington (nc)-usilm-united states", "wilmington (nc) ,us", "united states: wilmington (nc)", "wilmington (nc) pt", "wilmington (nc) port", "wilmington (nc) city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-05 15:34:42',
             ),
-            213 => 
+            203 => 
             array (
                 'id' => 1455,
                 'name' => 'MONTEVIDEO',
@@ -8583,11 +8463,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MONTEVIDEO, UYMVD',
                 'coordinates' => '-34.89977 -56.1958',
                 'country_id' => 230,
-                'varation' => '{"type": ["", "", "montevideo-uymvd-uruguay", "montevideo ,uy", "uruguay: montevideo", "montevideo pt", "montevideo port", "montevideo city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["montevideo-uymvd-uruguay", "montevideo ,uy", "uruguay: montevideo", "montevideo pt", "montevideo port", "montevideo city", "montevideo uy", "montevideo, uy", "montevideo uy", "montevideo, uruguay"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-03-13 12:10:43',
             ),
-            214 => 
+            204 => 
             array (
                 'id' => 1456,
                 'name' => 'NUEVA PALMIRA',
@@ -8596,10 +8476,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-33.85897 -58.417',
                 'country_id' => 230,
                 'varation' => '{"type": ["", "", "nueva palmira-uynvp-uruguay", "nueva palmira ,uy", "uruguay: nueva palmira", "nueva palmira pt", "nueva palmira port", "nueva palmira city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-05 15:34:42',
             ),
-            215 => 
+            205 => 
             array (
                 'id' => 1457,
                 'name' => 'CAMPDEN PARK',
@@ -8607,11 +8487,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CAMPDEN PARK, VCCRP',
                 'coordinates' => NULL,
                 'country_id' => 233,
-                'varation' => '{"type": ["", "", "campden park-vccrp-saint vincent and the grenadines", "campden park ,vc", "saint vincent and the grenadines: campden park", "campden park pt", "campden park port", "campden park city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["campden park-vccrp-saint vincent and the grenadines", "campden park ,vc", "saint vincent and the grenadines: campden park", "campden park pt", "campden park port", "campden park city", "campden park, saint vincent and the grenadines", "campden park saint vincent and the grenadines"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-12-14 10:41:32',
             ),
-            216 => 
+            206 => 
             array (
                 'id' => 1458,
                 'name' => 'Guanta',
@@ -8619,11 +8499,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Guanta, VEGUT',
                 'coordinates' => '10.25123 -64.58',
                 'country_id' => 234,
-                'varation' => '{"type": ["", "", "guanta-vegut-venezuela", "guanta ,ve", "venezuela: guanta", "guanta pt", "guanta port", "guanta city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["guanta-vegut-venezuela", "guanta ,ve", "venezuela: guanta", "guanta pt", "guanta port", "guanta city", "guanta, venezuela", "guanta venezuela"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-12-14 10:45:26',
             ),
-            217 => 
+            207 => 
             array (
                 'id' => 1459,
                 'name' => 'Guaranao',
@@ -8631,11 +8511,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Guaranao, VEGUA',
                 'coordinates' => NULL,
                 'country_id' => 234,
-                'varation' => '{"type": ["", "", "guaranao-vegua-venezuela", "guaranao ,ve", "venezuela: guaranao", "guaranao pt", "guaranao port", "guaranao city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["guaranao-vegua-venezuela", "guaranao ,ve", "venezuela: guaranao", "guaranao pt", "guaranao port", "guaranao city", "guaranao, venezuela", "guaranao venezuela", "guaranao", "guaranao bay"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-04-02 04:27:26',
             ),
-            218 => 
+            208 => 
             array (
                 'id' => 1460,
                 'name' => 'La Guaira',
@@ -8643,11 +8523,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'La Guaira, VELAG',
                 'coordinates' => '10.60603 -66.8915',
                 'country_id' => 234,
-                'varation' => '{"type": ["", "", "la guaira-velag-venezuela", "la guaira ,ve", "venezuela: la guaira", "la guaira pt", "la guaira port", "la guaira city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["la guaira-velag-venezuela", "la guaira ,ve", "venezuela: la guaira", "la guaira pt", "la guaira port", "la guaira city", "la guaira, venezuela", "la guaira venezuela", "la guaira puerto - venezuela", "laaa x guaira puerto"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-02-22 14:57:27',
             ),
-            219 => 
+            209 => 
             array (
                 'id' => 1461,
                 'name' => 'Maracaibo',
@@ -8655,11 +8535,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Maracaibo, VEMAR',
                 'coordinates' => '10.6315 -71.642',
                 'country_id' => 234,
-                'varation' => '{"type": ["", "", "maracaibo-vemar-venezuela", "maracaibo ,ve", "venezuela: maracaibo", "maracaibo pt", "maracaibo port", "maracaibo city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["maracaibo-vemar-venezuela", "maracaibo ,ve", "venezuela: maracaibo", "maracaibo pt", "maracaibo port", "maracaibo city", "maracaibo, venezuela", "maracaibo venezuela"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-12-14 10:48:00',
             ),
-            220 => 
+            210 => 
             array (
                 'id' => 1462,
                 'name' => 'Puerto Cabello',
@@ -8667,23 +8547,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Puerto Cabello, VEPBL',
                 'coordinates' => '10.47953 -68.0093',
                 'country_id' => 234,
-                'varation' => '{"type": ["", "", "puerto cabello-vepbl-venezuela", "puerto cabello ,ve", "venezuela: puerto cabello", "puerto cabello pt", "puerto cabello port", "puerto cabello city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["puerto cabello-vepbl-venezuela", "puerto cabello ,ve", "venezuela: puerto cabello", "puerto cabello pt", "puerto cabello port", "puerto cabello city", "puerto cabello, venezuela", "puerto cabello venezuela"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-12-14 10:52:18',
             ),
-            221 => 
-            array (
-                'id' => 1463,
-                'name' => 'GUARANAO BAY',
-                'code' => 'VEGUB',
-                'display_name' => 'GUARANAO BAY, VEGUB',
-                'coordinates' => '11.66793 -70.2233',
-                'country_id' => 234,
-                'varation' => '{"type": ["", "", "guaranao bay-vegub-venezuela", "guaranao bay ,ve", "venezuela: guaranao bay", "guaranao bay pt", "guaranao bay port", "guaranao bay city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
-            ),
-            222 => 
+            211 => 
             array (
                 'id' => 1464,
                 'name' => 'Can Tho',
@@ -8691,11 +8559,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Can Tho, VNVCA',
                 'coordinates' => '10.03513 105.7869',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "can tho-vnvca-vietnam", "can tho ,vn", "vietnam: can tho", "can tho pt", "can tho port", "can tho city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["can tho-vnvca-vietnam", "can tho ,vn", "vietnam: can tho", "can tho pt", "can tho port", "can tho city", "can tho, vietnam", "can tho vietnam"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-01-03 16:26:46',
             ),
-            223 => 
+            212 => 
             array (
                 'id' => 1465,
                 'name' => 'Da Nang',
@@ -8703,11 +8571,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Da Nang, VNDAD',
                 'coordinates' => '16.07143 108.2095',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "da-nang-vndad-vietnam", "da nang ,vn", "vietnam: da nang", "da nang pt", "da nang port", "da nang city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["da-nang-vndad-vietnam", "da nang ,vn", "vietnam: da nang", "da nang pt", "da nang port", "da nang city", "da nang, vietnam", "da nang vietnam"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-03-13 08:22:18',
             ),
-            224 => 
+            213 => 
             array (
                 'id' => 1466,
                 'name' => 'Hai Phong',
@@ -8715,11 +8583,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Hai Phong, VNHPH',
                 'coordinates' => '20.86833 106.6905',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "hai phong-vnhph-vietnam", "hai phong ,vn", "vietnam: hai phong", "hai phong pt", "hai phong port", "hai phong city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["hai phong-vnhph-vietnam", "hai phong ,vn", "vietnam: hai phong", "hai phong pt", "hai phong port", "hai phong city", "hai phong, vietnam", "hai phong vietnam"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-25 06:04:15',
             ),
-            225 => 
+            214 => 
             array (
                 'id' => 1467,
                 'name' => 'Ho Chi Minh City',
@@ -8727,11 +8595,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Ho Chi Minh City, VNSGN',
                 'coordinates' => '10.75853 106.7181',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "ho chi minh city-vnsgn-viet nam", "ho chi minh city ,vn", "vietnam: ho chi minh city", "ho chi minh city pt", "ho chi minh city port", "ho chi minh city city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["ho chi minh city-vnsgn-viet nam", "ho chi minh city ,vn", "vietnam: ho chi minh city", "ho chi minh city pt", "ho chi minh city port", "ho chi minh city city", "ho chi minh, vietnam", "ho chi minh vietnam", "vietnam: ho chi minh", "vietnam ho chi minh", "hochiminh, vietnam", "hochiminh vietnam", "hochiminh city", "ho chi minh", "ho chi minh city, vietnam", "ho chi minh city olf", "ho-chi-minh", "hochiminh", "ho chi minh catlai", "ho chi min", "hochiminh ***", "hochiminh", "ho chi minh citycat l.", "ho chi ming"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-04-02 06:40:46',
             ),
-            226 => 
+            215 => 
             array (
                 'id' => 1468,
                 'name' => 'Qui Nhon',
@@ -8739,11 +8607,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Qui Nhon, VNUIH',
                 'coordinates' => '13.76643 109.2405',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "quinhon-vnuih-viet nam", "qui nhon ,vn", "vietnam: qui nhon", "qui nhon pt", "qui nhon port", "qui nhon city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["quinhon-vnuih-viet nam", "qui nhon ,vn", "vietnam: qui nhon", "qui nhon pt", "qui nhon port", "qui nhon city", "quy nhon, binh dinh, vietnam", "quy nhon binh dinh vietnam", "qui nhon danang", "qui nhon, danang", "qui nhon danang", "qui nhon, vietnam"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-12-10 15:19:51',
             ),
-            227 => 
+            216 => 
             array (
                 'id' => 1469,
                 'name' => 'Vung Tau',
@@ -8751,23 +8619,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Vung Tau, VNVUT',
                 'coordinates' => '10.32563 107.0805',
                 'country_id' => 237,
-                'varation' => '{"type": ["", "", "vung tau-vnvut-vietnam", "vung tau ,vn", "vietnam: vung tau", "vung tau pt", "vung tau port", "vung tau city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'varation' => '{"type": ["vung tau-vnvut-vietnam", "vung tau ,vn", "vietnam: vung tau", "vung tau pt", "vung tau port", "vung tau city", "ba ria-vung tau", "vung tau", "vung tau-vnvut-viet nam", "vung tao-vnvut-viet nam", "vung tau, vietnam", "vung tau vietnam"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-01-03 16:24:10',
             ),
-            228 => 
+            217 => 
             array (
                 'id' => 1470,
                 'name' => 'HO CHI MINH, VICT',
                 'code' => 'VNVIC',
                 'display_name' => 'HO CHI MINH, VICT, VNVIC',
                 'coordinates' => NULL,
-                'country_id' => 248,
-                'varation' => '{"type": ["", "", "ho chi minh, vict-vnvic-viet nam", "ho chi minh, vict ,vn", "viet nam: ho chi minh, vict", "ho chi minh, vict pt", "ho chi minh, vict port", "ho chi minh, vict city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'country_id' => 237,
+            'varation' => '{"type": ["ho chi minh, vict-vnvic-viet nam", "ho chi minh, vict ,vn", "viet nam: ho chi minh, vict", "ho chi minh, vict pt", "ho chi minh, vict port", "ho chi minh, vict city", "ho chi minh (cat lai)", "ho chi minh cat lai", "ho-chi-minh (cat lai)", "ho-chi-minh cat lai", "ho chi minh(cat lai)", "ho chi minh, vict", "ho chi minh, victoria terminal"]}',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2019-02-27 11:48:01',
             ),
-            229 => 
+            218 => 
             array (
                 'id' => 1471,
                 'name' => 'PORT VILA',
@@ -8776,10 +8644,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-17.739695 168.30625',
                 'country_id' => 238,
                 'varation' => '{"type": ["", "", "port vila-vuvli-vanuatu", "port vila ,vu", "vanuatu: port vila", "port vila pt", "port vila port", "port vila city"]}',
-                'created_at' => '2018-09-05 19:34:42',
-                'updated_at' => '2018-09-05 19:34:42',
+                'created_at' => '2018-09-05 15:34:42',
+                'updated_at' => '2018-09-05 15:34:42',
             ),
-            230 => 
+            219 => 
             array (
                 'id' => 1472,
                 'name' => 'Apia',
@@ -8787,11 +8655,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Apia, WSAPW',
                 'coordinates' => '-13.82427 -171.7553',
                 'country_id' => 240,
-                'varation' => '{"type": ["", "", "apia-wsapw-samoa", "apia ,ws", "samoa: apia", "apia pt", "apia port", "apia city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["apia-wsapw-samoa", "apia ,ws", "samoa: apia", "apia pt", "apia port", "apia city", "apia, samoa", "apia samoa"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-01-22 10:21:40',
             ),
-            231 => 
+            220 => 
             array (
                 'id' => 1473,
                 'name' => 'Aden',
@@ -8799,11 +8667,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Aden, YEADE',
                 'coordinates' => '12.78993 45.0189',
                 'country_id' => 242,
-                'varation' => '{"type": ["aden-yeade-yemen", "aden ,ye", "yemen: aden", "aden pt", "aden port", "aden city", "adendd"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2019-02-25 15:25:38',
+                'varation' => '{"type": ["aden-yeade-yemen", "aden ,ye", "yemen: aden", "aden pt", "aden port", "aden city", "yemen aden", "aden, yemen", "aden, yemen", "aden *r3", "aden r3", "aden"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-04-01 07:30:19',
             ),
-            232 => 
+            221 => 
             array (
                 'id' => 1474,
                 'name' => 'HODEIDAH',
@@ -8812,10 +8680,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '14.80593 42.9285',
                 'country_id' => 242,
                 'varation' => '{"type": ["", "", "hodeidah-yehod-yemen", "hodeidah ,ye", "yemen: hodeidah", "hodeidah pt", "hodeidah port", "hodeidah city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2018-09-05 15:34:43',
             ),
-            233 => 
+            222 => 
             array (
                 'id' => 1475,
                 'name' => 'MUKALLA',
@@ -8823,11 +8691,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'MUKALLA, YEMKX',
                 'coordinates' => '14.51753 49.1369',
                 'country_id' => 242,
-                'varation' => '{"type": ["", "", "mukalla-yemkx-yemen", "mukalla ,ye", "yemen: mukalla", "mukalla pt", "mukalla port", "mukalla city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["mukalla-yemkx-yemen", "mukalla ,ye", "yemen: mukalla", "mukalla pt", "mukalla port", "mukalla city", "mukalla *r3", "mukalla r3"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-02-27 17:21:38',
             ),
-            234 => 
+            223 => 
             array (
                 'id' => 1476,
                 'name' => 'LONGONI',
@@ -8836,10 +8704,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-12.725495 45.15956',
                 'country_id' => 243,
                 'varation' => '{"type": ["", "", "longoni-ytlon-mayotte", "longoni ,yt", "mayotte: longoni", "longoni pt", "longoni port", "longoni city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2018-09-05 15:34:43',
             ),
-            235 => 
+            224 => 
             array (
                 'id' => 1477,
                 'name' => 'CAPE TOWN',
@@ -8847,11 +8715,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'CAPE TOWN, ZACPT',
                 'coordinates' => '-33.90897 18.4651',
                 'country_id' => 244,
-                'varation' => '{"type": ["", "", "cape town-zacpt-south africa", "cape town ,za", "south africa: cape town", "cape town pt", "cape town port", "cape town city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["cape town-zacpt-south africa", "cape town ,za", "south africa: cape town", "cape town pt", "cape town port", "cape town city", "cape town, south africa", "cape town, south africa", "cape town south africa", "cape ttown"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-04-02 06:40:24',
             ),
-            236 => 
+            225 => 
             array (
                 'id' => 1478,
                 'name' => 'COEGA',
@@ -8859,11 +8727,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'COEGA, ZAZBA',
                 'coordinates' => '-33.804 25.69',
                 'country_id' => 244,
-                'varation' => '{"type": ["", "", "coega-zazba-south africa", "coega ,za", "south africa: coega", "coega pt", "coega port", "coega city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["coega-zazba-south africa", "coega ,za", "south africa: coega", "coega pt", "coega port", "coega city", "coega"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-02-27 23:06:11',
             ),
-            237 => 
+            226 => 
             array (
                 'id' => 1479,
                 'name' => 'DURBAN',
@@ -8871,11 +8739,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'DURBAN, ZADUR',
                 'coordinates' => '-29.87857 31.0101',
                 'country_id' => 244,
-                'varation' => '{"type": ["", "", "durban-zadur-south africa", "durban ,za", "south africa: durban", "durban pt", "durban port", "durban city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["durban-zadur-south africa", "durban ,za", "south africa: durban", "durban pt", "durban port", "durban city", "durban, south africa", "durban, south afric", "durban south afric"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-01-22 16:02:15',
             ),
-            238 => 
+            227 => 
             array (
                 'id' => 1480,
                 'name' => 'EAST LONDON',
@@ -8883,11 +8751,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'EAST LONDON, ZAELS',
                 'coordinates' => '-33.02837 27.9091',
                 'country_id' => 244,
-                'varation' => '{"type": ["", "", "east london-zaels-south africa", "east london ,za", "south africa: east london", "east london pt", "east london port", "east london city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["east london-zaels-south africa", "east london ,za", "south africa: east london", "east london pt", "east london port", "east london city", "east london, south africa"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-01-22 10:47:47',
             ),
-            239 => 
+            228 => 
             array (
                 'id' => 1481,
                 'name' => 'PORT ELIZABETH',
@@ -8895,11 +8763,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'PORT ELIZABETH, ZAPLZ',
                 'coordinates' => '-33.96127 25.6479',
                 'country_id' => 244,
-                'varation' => '{"type": ["", "", "port elizabeth-zaplz-south africa", "port elizabeth ,za", "south africa: port elizabeth", "port elizabeth pt", "port elizabeth port", "port elizabeth city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["port elizabeth-zaplz-south africa", "port elizabeth ,za", "south africa: port elizabeth", "port elizabeth pt", "port elizabeth port", "port elizabeth city", "port elizabeth, south africa", "coega p.elizabeth1", "port elisabeth"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-02-27 09:51:23',
             ),
-            240 => 
+            229 => 
             array (
                 'id' => 1482,
                 'name' => 'Algiers',
@@ -8907,23 +8775,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Algiers, DZALG',
                 'coordinates' => '36.7705 3.0725',
                 'country_id' => 60,
-                'varation' => '{"type": ["algiers port ,dz", "", "algiers-dzalg-algeria", "algiers ,dz", "algeria: algiers", "algiers pt", "algiers port", "algiers city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["algiers port ,dz", "algiers-dzalg-algeria", "algiers ,dz", "algeria: algiers", "algiers pt", "algiers port", "algiers city", "algiers terminal ,dz", "algiers terminal dz", "algiers terminal, algeria", "algiers terminal algeria", "algiers port, algeria", "algiers port algeria", "alger ,dz", "algeria: alger", "alger dz", "algiers terminal eight, algeria", "algiers terminal one algeria", "algiers terminal one, algeria", "algers", "algiers terminal five, algeria", "algiers terminal four, algeria", "algiers terminal seven, algeria", "algiers terminal six, algeria", "algiers terminal three, algeria", "argel", "algiers terminal three ,dz", "algiers terminal three dz", "argelalgiersargel", "alger"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-03-27 15:04:00',
             ),
-            241 => 
+            230 => 
             array (
                 'id' => 1483,
                 'name' => 'Fos sur Mer',
                 'code' => 'FRFOS',
                 'display_name' => 'Fos sur Mer, FRFOS',
                 'coordinates' => '43.422905 4.8651305',
-                'country_id' => 248,
-                'varation' => '{"type": ["fos sur mer ,fr", "", "fos sur mer-frfos-francia", "fos sur mer ,fr", "francia: fos sur mer", "fos sur mer pt", "fos sur mer port", "fos sur mer city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'country_id' => 73,
+                'varation' => '{"type": ["fos sur mer ,fr", "fos sur mer-frfos-francia", "fos sur mer ,fr", "francia: fos sur mer", "fos sur mer pt", "fos sur mer port", "fos sur mer city", "fos sur mer, france", "fos sur mer france", "fos"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-01-04 08:02:05',
             ),
-            242 => 
+            231 => 
             array (
                 'id' => 1484,
                 'name' => 'Sfax',
@@ -8931,203 +8799,203 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Sfax, TNSFA',
                 'coordinates' => '34.728 10.77885',
                 'country_id' => 219,
-                'varation' => '{"type": ["", "", "sfax-tnsfa-tunisia", "sfax ,tn", "tunisia: sfax", "sfax pt", "sfax port", "sfax city"]}',
-                'created_at' => '2018-09-05 19:34:43',
-                'updated_at' => '2018-09-05 19:34:43',
+                'varation' => '{"type": ["sfax-tnsfa-tunisia", "sfax ,tn", "tunisia: sfax", "sfax pt", "sfax port", "sfax city", "sfax, tunisia", "sfax tunisia"]}',
+                'created_at' => '2018-09-05 15:34:43',
+                'updated_at' => '2019-01-03 10:50:40',
             ),
-            243 => 
+            232 => 
             array (
                 'id' => 1485,
                 'name' => 'ALL',
                 'code' => 'ALL',
                 'display_name' => 'ALL',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 250,
-                'varation' => '{"type": ["", ""]}',
+                'varation' => '{"type": ["all"]}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2019-02-22 16:02:26',
             ),
-            244 => 
+            233 => 
             array (
                 'id' => 1486,
                 'name' => 'Jiao Xin',
                 'code' => 'CNJXN',
                 'display_name' => 'Jiao Xin, CNJXN',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["jiaoxin, guangzhou, guangdong, china", "jiaoxin guangzhou guangdong china", "jiaoxin", "jiao xin", "jiao xin guangzhou"]}',
-                'created_at' => '2018-09-25 10:09:03',
-                'updated_at' => '2019-02-21 19:15:57',
+                'varation' => '{"type": ["jiaoxin, guangzhou, guangdong, china", "jiaoxin guangzhou guangdong china", "jiaoxin", "jiao xin", "jiao xin guangzhou", "jiao xin,guangdong"]}',
+                'created_at' => '2018-09-25 06:09:03',
+                'updated_at' => '2019-03-22 10:56:31',
             ),
-            245 => 
+            234 => 
             array (
                 'id' => 1488,
                 'name' => 'Lat Krabrang',
                 'code' => 'THLKR',
                 'display_name' => 'Lat Krabang, THLKR',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 214,
             'varation' => '{"type": ["bangkokg pol=lat krabang", "bangkokg pollat krabang", "bangkokg (pol=lat krabang)", "bangkok lat krabang", "lat krabang, bangkok, thailand"]}',
-                'created_at' => '2018-09-25 10:12:03',
-                'updated_at' => '2019-03-06 11:50:48',
+                'created_at' => '2018-09-25 06:12:03',
+                'updated_at' => '2019-03-06 07:50:48',
             ),
-            246 => 
+            235 => 
             array (
                 'id' => 1489,
                 'name' => 'Lianhuashan',
                 'code' => 'CNLIH',
                 'display_name' => 'Lianhuashan, CNLIH',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["borrar"]}',
-                'created_at' => '2018-09-25 10:14:51',
-                'updated_at' => '2019-01-03 20:36:06',
+                'created_at' => '2018-09-25 06:14:51',
+                'updated_at' => '2019-01-03 16:36:06',
             ),
-            247 => 
+            236 => 
             array (
                 'id' => 1490,
                 'name' => 'Macao',
                 'code' => 'MOMFM',
                 'display_name' => 'Macao, MOMFM',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 145,
-            'varation' => '{"type": ["macao, macau", "macao macau", "macau", "macau", "macau (shenshui)", "macau shenshui", "macau (7a)", "macau 7a", "macau 7a", "macau (7a)", "macau 7a", "macau a"]}',
-                'created_at' => '2018-09-25 10:17:34',
-                'updated_at' => '2019-01-21 14:47:55',
+            'varation' => '{"type": ["macao, macau", "macao macau", "macau", "macau", "macau (shenshui)", "macau shenshui", "macau (7a)", "macau 7a", "macau 7a", "macau (7a)", "macau 7a", "macau a", "macao, macao", "macao, mo"]}',
+                'created_at' => '2018-09-25 06:17:34',
+                'updated_at' => '2019-03-22 09:20:41',
             ),
-            248 => 
+            237 => 
             array (
                 'id' => 1491,
                 'name' => 'Fangcun',
                 'code' => 'CNFCN',
                 'display_name' => 'Fangcun, CNFCN',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["fangcun, guangzhou, guangdong, china"]}',
-                'created_at' => '2018-09-25 11:50:45',
-                'updated_at' => '2018-09-25 11:50:45',
+                'created_at' => '2018-09-25 07:50:45',
+                'updated_at' => '2018-09-25 07:50:45',
             ),
-            249 => 
+            238 => 
             array (
                 'id' => 1492,
                 'name' => 'Wutu',
                 'code' => 'TWWUJ',
                 'display_name' => 'Wutu, TWWUJ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 224,
-                'varation' => '{"type": ["wutu, new taipei city, taiwan", ", taiwan", "taiwan", "wutu, taiwan", "wutu", "keelung wutu, taiwan"]}',
-                'created_at' => '2018-09-25 12:00:35',
-                'updated_at' => '2019-02-22 15:29:08',
+                'varation' => '{"type": ["wutu, new taipei city, taiwan", ", taiwan", "taiwan", "wutu, taiwan", "wutu"]}',
+                'created_at' => '2018-09-25 08:00:35',
+                'updated_at' => '2019-03-21 05:20:25',
             ),
-            250 => 
+            239 => 
             array (
                 'id' => 1494,
                 'name' => 'Itaguai',
                 'code' => 'BRIGI',
                 'display_name' => 'Itaguai, BRIGI',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 30,
-                'varation' => '{"type": ["itaguai sepetiba ,br", "port of itaguai, br", "port of itaguai br"]}',
-                'created_at' => '2018-09-25 16:54:55',
-                'updated_at' => '2018-12-20 16:03:19',
+                'varation' => '{"type": ["itaguai sepetiba ,br", "port of itaguai, br", "port of itaguai br", "itaguai sepetiba, brazil", "port of itaguai sepetiba", "itaguai, rj"]}',
+                'created_at' => '2018-09-25 12:54:55',
+                'updated_at' => '2019-04-04 09:22:42',
             ),
-            251 => 
+            240 => 
             array (
                 'id' => 1495,
                 'name' => 'Taulov',
                 'code' => 'DKTLV',
                 'display_name' => 'Taulov, DKTLV',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 57,
                 'varation' => '{"type": ["taulov ,dk", "taulov, denmark", "taulov denmark"]}',
-                'created_at' => '2018-09-25 17:09:46',
-                'updated_at' => '2019-01-22 14:49:53',
+                'created_at' => '2018-09-25 13:09:46',
+                'updated_at' => '2019-01-22 10:49:53',
             ),
-            252 => 
+            241 => 
             array (
                 'id' => 1496,
                 'name' => 'Trondheim',
                 'code' => 'NOTRD',
                 'display_name' => 'Trondheim ,NOTRD',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 164,
                 'varation' => '{"type": ["trondheim ,no", "trondheim no", "trondheim no", "trondheim ,no", "trondheim, norway", "trondheim norway"]}',
-                'created_at' => '2018-09-25 17:11:23',
-                'updated_at' => '2019-01-17 12:07:38',
+                'created_at' => '2018-09-25 13:11:23',
+                'updated_at' => '2019-01-17 08:07:38',
             ),
-            253 => 
+            242 => 
             array (
                 'id' => 1497,
                 'name' => 'Ceuta',
                 'code' => 'ESCEU',
                 'display_name' => 'Ceuta, ESCEU',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 66,
                 'varation' => '{"type": ["ceuta ,es", "ceuta, spain", "ceuta spain", "ceuta, spain", "ceuta spain"]}',
-                'created_at' => '2018-09-25 18:27:28',
-                'updated_at' => '2019-01-03 20:22:27',
+                'created_at' => '2018-09-25 14:27:28',
+                'updated_at' => '2019-01-03 16:22:27',
             ),
-            254 => 
+            243 => 
             array (
                 'id' => 1498,
                 'name' => 'Split',
                 'code' => 'HRSPU',
                 'display_name' => 'Split, HRSPU',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 95,
                 'varation' => '{"type": ["split ,hr", "split hr", "split, croatia", "split croatia", "hrspu"]}',
-                'created_at' => '2018-09-25 18:30:50',
-                'updated_at' => '2019-02-25 12:57:44',
+                'created_at' => '2018-09-25 14:30:50',
+                'updated_at' => '2019-02-25 08:57:44',
             ),
-            255 => 
+            244 => 
             array (
                 'id' => 1499,
                 'name' => 'Bobadela',
                 'code' => 'PTBBL',
                 'display_name' => 'Bobadela, PTBBL',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 181,
                 'varation' => '{"type": ["bobadela ,pt", "bobadela, portugal", "bobadela portugal", "bobadela, portugal"]}',
-                'created_at' => '2018-09-25 18:33:24',
-                'updated_at' => '2018-12-10 17:33:58',
+                'created_at' => '2018-09-25 14:33:24',
+                'updated_at' => '2018-12-10 13:33:58',
             ),
-            256 => 
+            245 => 
             array (
                 'id' => 1500,
                 'name' => 'Chengdu',
                 'code' => 'CNCDU',
                 'display_name' => 'Chengdu, CNCDU',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["chengdu ,cn", "chengdu, sc", "cnctu", "chengdu by rail", "chengdu china", "chengdu, china", "chengdu, china", "chengdu china"]}',
-                'created_at' => '2018-09-25 18:34:50',
-                'updated_at' => '2019-01-03 20:02:36',
+            'varation' => '{"type": ["chengdu ,cn", "chengdu, sc", "cnctu", "chengdu by rail", "chengdu china", "chengdu, china", "chengdu, china", "chengdu china", "chengdu (sichuan)", "chengdu (sichuan)", "chengdu sichuan", "chengdu, sichuan"]}',
+                'created_at' => '2018-09-25 14:34:50',
+                'updated_at' => '2019-04-03 12:30:25',
             ),
-            257 => 
+            246 => 
             array (
                 'id' => 1501,
                 'name' => 'Doumen',
                 'code' => 'CNDOU',
                 'display_name' => 'Doumen, CNDOU',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
             'varation' => '{"type": ["doumen ,cn", "doumen,zhuhai", "zhuhaidoumen", "zhuhai(doumen)", "zhuhai (doumen)", "zhuhai doumen", "doumen, china", "doumen china", "doumen"]}',
-                'created_at' => '2018-09-25 18:35:38',
-                'updated_at' => '2019-01-22 10:39:18',
+                'created_at' => '2018-09-25 14:35:38',
+                'updated_at' => '2019-01-22 06:39:18',
             ),
-            258 => 
+            247 => 
             array (
                 'id' => 1502,
                 'name' => 'Haiphong',
                 'code' => 'VNHPH',
                 'display_name' => 'Haiphong, VNHPH',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 237,
-                'varation' => '{"type": ["haiphong ,vn", "haiphong, vietnam", "haiphong vietnam", "haiphong ,vn", "haiphong vn", "haiphong", "haiphong-vnhph-viet nam", "haipong", "haiphong-vnhph-vietnam", "haiphong"]}',
-                'created_at' => '2018-09-25 18:36:58',
-                'updated_at' => '2019-02-28 03:07:42',
+                'varation' => '{"type": ["haiphong ,vn", "haiphong, vietnam", "haiphong vietnam", "haiphong ,vn", "haiphong vn", "haiphong", "haiphong-vnhph-viet nam", "haipong", "haiphong-vnhph-vietnam", "haiphong", "haiphong  lach huyen vietnam", "haiphong - lach huyen vietnam"]}',
+                'created_at' => '2018-09-25 14:36:58',
+                'updated_at' => '2019-03-26 13:33:03',
             ),
-            259 => 
+            248 => 
             array (
                 'id' => 1503,
                 'name' => 'Chiwan',
@@ -9136,10 +9004,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '22.462935 113.88175',
                 'country_id' => 46,
                 'varation' => '{"type": ["chiwan"]}',
-                'created_at' => '2018-10-16 16:13:09',
-                'updated_at' => '2018-10-16 16:13:09',
+                'created_at' => '2018-10-16 12:13:09',
+                'updated_at' => '2018-10-16 12:13:09',
             ),
-            260 => 
+            249 => 
             array (
                 'id' => 1504,
                 'name' => 'Davao',
@@ -9148,10 +9016,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '7.1171735 125.6668',
                 'country_id' => 174,
                 'varation' => '{"type": ["davao", "davao city, davao del sur, philippines", "davao city davao del sur philippines", "phdvo", "davao city, philippines", "davao city philippines"]}',
-                'created_at' => '2018-10-16 16:14:56',
-                'updated_at' => '2019-01-03 20:38:55',
+                'created_at' => '2018-10-16 12:14:56',
+                'updated_at' => '2019-01-03 16:38:55',
             ),
-            261 => 
+            250 => 
             array (
                 'id' => 1505,
                 'name' => 'Zhapu',
@@ -9160,10 +9028,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '30.609 121.09545',
                 'country_id' => 46,
                 'varation' => '{"type": ["zhapu", "zhapu, pinghu, jiaxing, zhejiang, china", "zhapu pinghu jiaxing zhejiang china", "cnzpu", "zhapu zj"]}',
-                'created_at' => '2018-10-16 16:23:27',
-                'updated_at' => '2018-12-20 13:59:45',
+                'created_at' => '2018-10-16 12:23:27',
+                'updated_at' => '2018-12-20 09:59:45',
             ),
-            262 => 
+            251 => 
             array (
                 'id' => 1506,
                 'name' => 'Yueyang',
@@ -9172,22 +9040,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '29.43242 113.1345',
                 'country_id' => 46,
                 'varation' => '{"type": ["yueyang", "yueyang hunan"]}',
-                'created_at' => '2018-10-16 16:29:26',
-                'updated_at' => '2018-12-20 14:13:19',
+                'created_at' => '2018-10-16 12:29:26',
+                'updated_at' => '2018-12-20 10:13:19',
             ),
-            263 => 
+            252 => 
             array (
                 'id' => 1507,
                 'name' => 'Yunfu',
                 'code' => 'CNYUF',
                 'display_name' => 'Yunfu, CNYUF',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["yunfu"]}',
-                'created_at' => '2018-10-16 16:33:03',
-                'updated_at' => '2018-10-16 16:33:03',
+                'created_at' => '2018-10-16 12:33:03',
+                'updated_at' => '2018-10-16 12:33:03',
             ),
-            264 => 
+            253 => 
             array (
                 'id' => 1508,
                 'name' => 'Yingkou',
@@ -9196,10 +9064,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '40.693625 122.26615',
                 'country_id' => 46,
             'varation' => '{"type": ["yingkou", "yingkou(bayuquan)", "yingkoubayuquan"]}',
-                'created_at' => '2018-10-16 16:34:11',
-                'updated_at' => '2018-10-18 16:50:03',
+                'created_at' => '2018-10-16 12:34:11',
+                'updated_at' => '2018-10-18 12:50:03',
             ),
-            265 => 
+            254 => 
             array (
                 'id' => 1509,
                 'name' => 'Bayuquan',
@@ -9208,22 +9076,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '40.25214 122.1039',
                 'country_id' => 46,
                 'varation' => '{"type": ["bayuquan", "bayuguan"]}',
-                'created_at' => '2018-10-16 16:37:03',
-                'updated_at' => '2018-12-21 12:04:51',
+                'created_at' => '2018-10-16 12:37:03',
+                'updated_at' => '2018-12-21 08:04:51',
             ),
-            266 => 
+            255 => 
             array (
                 'id' => 1512,
                 'name' => 'Tegucigalpa',
                 'code' => 'HNTGU',
                 'display_name' => 'Tegucigalpa, HNTGU',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 94,
                 'varation' => '{"type": ["tegucigalpa"]}',
-                'created_at' => '2018-10-18 10:57:07',
-                'updated_at' => '2018-10-18 10:57:07',
+                'created_at' => '2018-10-18 06:57:07',
+                'updated_at' => '2018-10-18 06:57:07',
             ),
-            267 => 
+            256 => 
             array (
                 'id' => 1514,
                 'name' => 'Antofagasta',
@@ -9232,10 +9100,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-23.647135 -70.405955',
                 'country_id' => 44,
                 'varation' => '{"type": ["antofagasta", "antofagasta antofagasta chile", "antofagasta ,cl", "antofagasta cl", "antofagasta chile", "antofagasta, chile", "antofagasta, cl"]}',
-                'created_at' => '2018-10-18 11:03:57',
-                'updated_at' => '2019-02-15 13:37:16',
+                'created_at' => '2018-10-18 07:03:57',
+                'updated_at' => '2019-02-15 09:37:16',
             ),
-            268 => 
+            257 => 
             array (
                 'id' => 1515,
                 'name' => 'Punta Arenas',
@@ -9244,10 +9112,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-53.1445 -70.8765',
                 'country_id' => 44,
                 'varation' => '{"type": ["punta arenas", "punta arenas magallanes chile"]}',
-                'created_at' => '2018-10-18 11:04:57',
-                'updated_at' => '2018-10-19 11:35:12',
+                'created_at' => '2018-10-18 07:04:57',
+                'updated_at' => '2018-10-19 07:35:12',
             ),
-            269 => 
+            258 => 
             array (
                 'id' => 1516,
                 'name' => 'Shenzhen',
@@ -9255,11 +9123,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Shenzhen, CNSZX',
                 'coordinates' => '22.5045 113.8535',
                 'country_id' => 46,
-                'varation' => '{"type": ["shenzhen", "shenzhen china", "shenzhen, gd", "cnszx"]}',
-                'created_at' => '2018-10-18 12:11:13',
-                'updated_at' => '2019-02-22 21:45:08',
+                'varation' => '{"type": ["shenzhen", "shenzhen china", "shenzhen, gd", "cnszx", "shenzhen cfs", "shenzhen,", "shenzhen, guangdong", "shenzhen guangdong"]}',
+                'created_at' => '2018-10-18 08:11:13',
+                'updated_at' => '2019-04-03 08:35:27',
             ),
-            270 => 
+            259 => 
             array (
                 'id' => 1518,
                 'name' => 'Haydarpasa',
@@ -9268,10 +9136,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '41.002025 29.014765',
                 'country_id' => 221,
             'varation' => '{"type": ["haydarpasa", "istanbul (haydarpasa)", "istanbul haydarpasa", "haydarpasa istanbul asian side", "trhay"]}',
-                'created_at' => '2018-10-18 13:34:12',
-                'updated_at' => '2019-02-25 12:58:32',
+                'created_at' => '2018-10-18 09:34:12',
+                'updated_at' => '2019-02-25 08:58:32',
             ),
-            271 => 
+            260 => 
             array (
                 'id' => 1519,
                 'name' => 'Lattakia',
@@ -9280,10 +9148,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '35.531865 35.754835',
                 'country_id' => 208,
                 'varation' => '{"type": ["lattakia"]}',
-                'created_at' => '2018-10-18 13:35:51',
-                'updated_at' => '2018-10-18 13:35:51',
+                'created_at' => '2018-10-18 09:35:51',
+                'updated_at' => '2018-10-18 09:35:51',
             ),
-            272 => 
+            261 => 
             array (
                 'id' => 1520,
                 'name' => 'San Lorenzo',
@@ -9292,10 +9160,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '-32.6935  -60.7085',
                 'country_id' => 10,
                 'varation' => '{"type": ["san lorenzo"]}',
-                'created_at' => '2018-10-18 13:42:57',
-                'updated_at' => '2018-10-18 13:42:57',
+                'created_at' => '2018-10-18 09:42:57',
+                'updated_at' => '2018-10-18 09:42:57',
             ),
-            273 => 
+            262 => 
             array (
                 'id' => 1521,
                 'name' => 'Riyadh',
@@ -9304,10 +9172,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '24.68773 46.72185',
                 'country_id' => 190,
                 'varation' => '{"type": ["riyadh", "ar riyad, ar riyad, saudi arabia", "ar riyad ar riyad saudi arabia", "icd riyadh", "*icd riyadh", "* icd riyadh", "* icd riyadh", "* icd riyadh", "icd riyadh"]}',
-                'created_at' => '2018-10-18 13:45:15',
-                'updated_at' => '2019-01-21 14:48:27',
+                'created_at' => '2018-10-18 09:45:15',
+                'updated_at' => '2019-01-21 10:48:27',
             ),
-            274 => 
+            263 => 
             array (
                 'id' => 1522,
                 'name' => 'Panama City',
@@ -9316,10 +9184,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '8.9900385 -79.489515',
                 'country_id' => 170,
                 'varation' => '{"type": ["panama city"]}',
-                'created_at' => '2018-10-18 13:46:35',
-                'updated_at' => '2018-10-18 13:46:35',
+                'created_at' => '2018-10-18 09:46:35',
+                'updated_at' => '2018-10-18 09:46:35',
             ),
-            275 => 
+            264 => 
             array (
                 'id' => 1523,
                 'name' => 'Progreso',
@@ -9328,10 +9196,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '21.31052 -89.670455',
                 'country_id' => 154,
                 'varation' => '{"type": ["progreso", "puerto progreso", "progreso"]}',
-                'created_at' => '2018-10-18 13:48:30',
-                'updated_at' => '2019-02-14 13:11:44',
+                'created_at' => '2018-10-18 09:48:30',
+                'updated_at' => '2019-02-14 09:11:44',
             ),
-            276 => 
+            265 => 
             array (
                 'id' => 1526,
                 'name' => 'Muara',
@@ -9340,22 +9208,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '5.0226325 115.07615',
                 'country_id' => 27,
                 'varation' => '{"type": ["muara", "brunei muara", "brunei: muara", "muara, brunei & muara, brunei", "muara brunei & muara brunei", "muara brunei muara brunei", "muara, brunei & muara, brunei", "muara brunei  muara brunei", "muara, brunei & muara, brunei", "muara, brunei & muara, brunei", "muara brunei & muara brunei", "muara brunei  muara brunei", "muara, brunei  muara, brunei"]}',
-                'created_at' => '2018-10-18 14:49:52',
-                'updated_at' => '2018-12-21 11:38:02',
+                'created_at' => '2018-10-18 10:49:52',
+                'updated_at' => '2018-12-21 07:38:02',
             ),
-            277 => 
+            266 => 
             array (
                 'id' => 1527,
                 'name' => 'Colon Free Zone',
                 'code' => 'PACFZ',
                 'display_name' => 'Colon Free Zone, PACFZ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 170,
-                'varation' => '{"type": ["colon free zone", "colon free zone ,pa", "colon free zone pa", "colon free zone ,pa", "colon free zone pa", "colon free zone, panama"]}',
-                'created_at' => '2018-10-18 14:53:08',
-                'updated_at' => '2019-02-26 15:50:54',
+                'varation' => '{"type": ["colon free zone", "colon free zone ,pa", "colon free zone pa", "colon free zone ,pa", "colon free zone pa", "colon free zone, panama", "colon, pa", "colon"]}',
+                'created_at' => '2018-10-18 10:53:08',
+                'updated_at' => '2019-04-02 04:28:29',
             ),
-            278 => 
+            267 => 
             array (
                 'id' => 1528,
                 'name' => 'Humen',
@@ -9364,22 +9232,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '22.84406 113.64155',
                 'country_id' => 46,
             'varation' => '{"type": ["humen", "dongguan (humen)", "dongguan humen", "dongguanhumen", "dongguan  humen", "dongguanhumen", "dongguan（humen）"]}',
-                'created_at' => '2018-10-18 14:55:20',
-                'updated_at' => '2018-11-23 16:09:32',
+                'created_at' => '2018-10-18 10:55:20',
+                'updated_at' => '2018-11-23 12:09:32',
             ),
-            279 => 
+            268 => 
             array (
                 'id' => 1529,
                 'name' => 'Foshan New Port',
                 'code' => 'CNFRT',
                 'display_name' => 'Foshan New Port, CNFRT',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["foshan new port", "new port,foshan", "new portfoshan", "foshan new port, gd", "foshan new port"]}',
-                'created_at' => '2018-10-18 14:57:08',
-                'updated_at' => '2018-11-15 18:24:41',
+                'created_at' => '2018-10-18 10:57:08',
+                'updated_at' => '2018-11-15 14:24:41',
             ),
-            280 => 
+            269 => 
             array (
                 'id' => 1530,
                 'name' => 'Maoming',
@@ -9388,10 +9256,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '21.449 111.0855',
                 'country_id' => 46,
             'varation' => '{"type": ["maoming (shuidong)", "maoming shuidong", "maoming"]}',
-                'created_at' => '2018-10-18 15:04:13',
-                'updated_at' => '2018-12-17 13:06:15',
+                'created_at' => '2018-10-18 11:04:13',
+                'updated_at' => '2018-12-17 09:06:15',
             ),
-            281 => 
+            270 => 
             array (
                 'id' => 1531,
                 'name' => 'Nanhai',
@@ -9399,23 +9267,23 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nanhai, CNNAH',
                 'coordinates' => '22.739535 113.28025',
                 'country_id' => 46,
-            'varation' => '{"type": ["nanhai", "nanhai, foshan, guangdong, china", "nanhai foshan guangdong china", "nanhai (sanshan)", "nanhai sanshan", "nanhai, guangdong"]}',
-                'created_at' => '2018-10-18 15:06:27',
-                'updated_at' => '2018-12-12 12:58:02',
+            'varation' => '{"type": ["nanhai", "nanhai, foshan, guangdong, china", "nanhai foshan guangdong china", "nanhai (sanshan)", "nanhai sanshan", "nanhai, guangdong", "nanhai guangdong", "nan hai, guangdong"]}',
+                'created_at' => '2018-10-18 11:06:27',
+                'updated_at' => '2019-03-31 13:27:38',
             ),
-            282 => 
+            271 => 
             array (
                 'id' => 1532,
                 'name' => 'San Pedro Sula',
                 'code' => 'HNSAP',
                 'display_name' => 'San Pedro Sula, HNSAP',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 94,
                 'varation' => '{"type": ["san pedro sula"]}',
-                'created_at' => '2018-10-18 15:08:12',
-                'updated_at' => '2018-10-18 15:08:12',
+                'created_at' => '2018-10-18 11:08:12',
+                'updated_at' => '2018-10-18 11:08:12',
             ),
-            283 => 
+            272 => 
             array (
                 'id' => 1533,
                 'name' => 'Nhava Sheva',
@@ -9423,11 +9291,11 @@ class HarborsTableSeeder extends Seeder
                 'display_name' => 'Nhava Sheva, INNSA',
                 'coordinates' => '18.952 72.948',
                 'country_id' => 98,
-            'varation' => '{"type": ["nhava sheva", "nhava sheva, maharashtra, india", "nhava sheva maharashtra india", "nhava sheva - jnpt", "nhava sheva, india", "nhava sheva india", "nhavsheva", "nhava sheva jawaharlal nehru", "nhava-sheva (mumbai)", "nhava-sheva mumbai", "nhavasheva mumbai", "nhava sheva  r3", "nhava sheva * r3"]}',
-                'created_at' => '2018-10-18 15:09:38',
-                'updated_at' => '2019-02-27 21:08:03',
+            'varation' => '{"type": ["nhava sheva", "nhava sheva, maharashtra, india", "nhava sheva maharashtra india", "nhava sheva - jnpt", "nhava sheva, india", "nhava sheva india", "nhavsheva", "nhava sheva jawaharlal nehru", "nhava-sheva (mumbai)", "nhava-sheva mumbai", "nhavasheva mumbai", "nhava sheva  r3", "nhava sheva * r3", "nhava sheva jnpt", "nhava sheva mumbai"]}',
+                'created_at' => '2018-10-18 11:09:38',
+                'updated_at' => '2019-04-03 08:31:42',
             ),
-            284 => 
+            273 => 
             array (
                 'id' => 1534,
                 'name' => 'Umm Qasr South Port',
@@ -9436,10 +9304,10 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '30.05371 47.93358',
                 'country_id' => 104,
             'varation' => '{"type": ["umm qasr (south port)", "umm qasr south port"]}',
-                'created_at' => '2018-10-18 16:11:24',
-                'updated_at' => '2018-10-18 16:11:55',
+                'created_at' => '2018-10-18 12:11:24',
+                'updated_at' => '2018-10-18 12:11:55',
             ),
-            285 => 
+            274 => 
             array (
                 'id' => 1535,
                 'name' => 'Almeria',
@@ -9448,22 +9316,22 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '36.82997 -2.473452',
                 'country_id' => 66,
                 'varation' => '{"type": ["almercia", "almeria es", "almeria ,es", "almeria es", "almeria, spain", "almeria spain", "almeria, spain"]}',
-                'created_at' => '2018-10-18 16:26:37',
-                'updated_at' => '2018-12-14 15:11:39',
+                'created_at' => '2018-10-18 12:26:37',
+                'updated_at' => '2018-12-14 11:11:39',
             ),
-            286 => 
+            275 => 
             array (
                 'id' => 1536,
                 'name' => 'Gaosha',
                 'code' => 'CNGSH',
                 'display_name' => 'Gaosha, CNGSH',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["gaosha", "gaosha,jiangmen", "gaoshajiangmen", "jiangmen（gaosha）", "jiangmengaosha", "jiangmen gaosha"]}',
-                'created_at' => '2018-10-18 16:46:36',
-                'updated_at' => '2018-10-22 12:08:49',
+                'created_at' => '2018-10-18 12:46:36',
+                'updated_at' => '2018-10-22 08:08:49',
             ),
-            287 => 
+            276 => 
             array (
                 'id' => 1537,
                 'name' => 'YANGSHAN',
@@ -9472,430 +9340,430 @@ class HarborsTableSeeder extends Seeder
                 'coordinates' => '30.6137 122.0694',
                 'country_id' => 46,
                 'varation' => '{"type": ["yangshan"]}',
-                'created_at' => '2018-10-21 15:32:33',
-                'updated_at' => '2018-10-22 16:00:38',
+                'created_at' => '2018-10-21 11:32:33',
+                'updated_at' => '2018-10-22 12:00:38',
             ),
-            288 => 
+            277 => 
             array (
                 'id' => 1539,
                 'name' => 'Phuoc Long',
                 'code' => 'VNPHG',
                 'display_name' => 'Phuoc Long, VNPHG',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 237,
                 'varation' => '{"type": ["phuoc long", "icd phuoc long 1"]}',
-                'created_at' => '2018-10-21 15:42:55',
-                'updated_at' => '2019-02-19 14:28:59',
+                'created_at' => '2018-10-21 11:42:55',
+                'updated_at' => '2019-02-19 10:28:59',
             ),
-            289 => 
+            278 => 
             array (
                 'id' => 1540,
                 'name' => 'Quanzhou',
                 'code' => 'CNQZJ',
                 'display_name' => 'Quanzhou, CNQZJ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["quanzhou", "quanzhou, quanzhou, fujian, china", "quanzhou quanzhou fujian china"]}',
-                'created_at' => '2018-10-21 15:49:16',
-                'updated_at' => '2018-10-22 15:58:50',
+                'varation' => '{"type": ["quanzhou", "quanzhou, quanzhou, fujian, china", "quanzhou quanzhou fujian china", "quanzhou fujian"]}',
+                'created_at' => '2018-10-21 11:49:16',
+                'updated_at' => '2019-04-03 08:32:50',
             ),
-            290 => 
+            279 => 
             array (
                 'id' => 1541,
                 'name' => 'Xintang',
                 'code' => 'CNXIT',
                 'display_name' => 'Xintang, CNXIT',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["xintang, gd", "xintang"]}',
-                'created_at' => '2018-10-21 15:54:03',
-                'updated_at' => '2018-10-21 15:54:03',
+                'created_at' => '2018-10-21 11:54:03',
+                'updated_at' => '2018-10-21 11:54:03',
             ),
-            291 => 
+            280 => 
             array (
                 'id' => 1542,
                 'name' => 'Kwangyang',
                 'code' => 'KRKWA',
                 'display_name' => 'Kwangyang, KRKWA',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 119,
                 'varation' => '{"type": ["kwangyang", "kwangyang, chollanam-do, south korea", "kwangyang chollanam-do south korea", "kwanguang"]}',
-                'created_at' => '2018-10-21 15:57:53',
-                'updated_at' => '2019-02-07 12:03:42',
+                'created_at' => '2018-10-21 11:57:53',
+                'updated_at' => '2019-02-07 08:03:42',
             ),
-            292 => 
+            281 => 
             array (
                 'id' => 1543,
                 'name' => 'Subic Bay',
                 'code' => 'PHSFS',
                 'display_name' => 'Subic Bay, PHSFS',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 174,
                 'varation' => '{"type": ["subic bay"]}',
-                'created_at' => '2018-10-21 16:01:01',
-                'updated_at' => '2018-10-21 16:01:01',
+                'created_at' => '2018-10-21 12:01:01',
+                'updated_at' => '2018-10-21 12:01:01',
             ),
-            293 => 
+            282 => 
             array (
                 'id' => 1546,
                 'name' => 'Fuling',
                 'code' => 'CNFLG',
                 'display_name' => 'Fuling, CNFLG',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["fuling"]}',
-                'created_at' => '2018-10-21 16:14:58',
-                'updated_at' => '2018-10-21 16:14:58',
+                'created_at' => '2018-10-21 12:14:58',
+                'updated_at' => '2018-10-21 12:14:58',
             ),
-            294 => 
+            283 => 
             array (
                 'id' => 1547,
                 'name' => 'Bengbu',
                 'code' => 'CNBBU',
                 'display_name' => 'Bengbu',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["bengbu"]}',
-                'created_at' => '2018-10-21 16:16:06',
-                'updated_at' => '2018-10-21 16:16:06',
+                'created_at' => '2018-10-21 12:16:06',
+                'updated_at' => '2018-10-21 12:16:06',
             ),
-            295 => 
+            284 => 
             array (
                 'id' => 1548,
                 'name' => 'Changde',
                 'code' => 'CNCGD',
                 'display_name' => 'Changde,',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["changde"]}',
-                'created_at' => '2018-10-21 16:16:45',
-                'updated_at' => '2018-10-21 16:16:45',
+                'created_at' => '2018-10-21 12:16:45',
+                'updated_at' => '2018-10-21 12:16:45',
             ),
-            296 => 
+            285 => 
             array (
                 'id' => 1549,
                 'name' => 'Dachan Bay',
                 'code' => 'CNDCB',
                 'display_name' => 'Dachan Bay,',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["dachan bay"]}',
-                'created_at' => '2018-10-21 16:17:40',
-                'updated_at' => '2018-10-21 16:17:40',
+                'created_at' => '2018-10-21 12:17:40',
+                'updated_at' => '2018-10-21 12:17:40',
             ),
-            297 => 
+            286 => 
             array (
                 'id' => 1550,
                 'name' => 'Jinzhou',
                 'code' => 'CNJNZ',
                 'display_name' => 'Jinzhou, CNJNZ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["jinzhou", "jinzhou ,cn", "jinzhou cn", "jinzhou ,cn", "jinzhou, china", "jinzhou china", "jingzhou"]}',
-                'created_at' => '2018-10-21 16:20:03',
-                'updated_at' => '2019-02-28 14:45:22',
+                'varation' => '{"type": ["jinzhou", "jinzhou ,cn", "jinzhou cn", "jinzhou ,cn", "jinzhou, china", "jinzhou china", "jingzhou", "jingzhou,"]}',
+                'created_at' => '2018-10-21 12:20:03',
+                'updated_at' => '2019-03-07 11:45:25',
             ),
-            298 => 
+            287 => 
             array (
                 'id' => 1551,
                 'name' => 'Luzhou',
                 'code' => 'CNLUZ',
                 'display_name' => 'Luzhou, CNLUZ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["luzhou"]}',
-                'created_at' => '2018-10-21 16:22:26',
-                'updated_at' => '2018-10-21 16:22:26',
+                'created_at' => '2018-10-21 12:22:26',
+                'updated_at' => '2018-10-21 12:22:26',
             ),
-            299 => 
+            288 => 
             array (
                 'id' => 1552,
                 'name' => 'Dhaka',
                 'code' => 'BDDAC',
                 'display_name' => 'Dhaka, BDDAC',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 18,
                 'varation' => '{"type": ["dhaka", "dahka***", "dahka", "dahka ***", "dakha"]}',
-                'created_at' => '2018-10-22 11:35:29',
-                'updated_at' => '2019-02-27 16:20:01',
+                'created_at' => '2018-10-22 07:35:29',
+                'updated_at' => '2019-02-27 12:20:01',
             ),
-            300 => 
+            289 => 
             array (
                 'id' => 1553,
                 'name' => 'Deqing',
                 'code' => 'CNDEI',
                 'display_name' => 'Deqing, CNDEI',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["deqing"]}',
-                'created_at' => '2018-10-22 11:47:24',
-                'updated_at' => '2018-10-22 11:47:24',
+                'created_at' => '2018-10-22 07:47:24',
+                'updated_at' => '2018-10-22 07:47:24',
             ),
-            301 => 
+            290 => 
             array (
                 'id' => 1554,
                 'name' => 'Guigang',
                 'code' => 'CNGUG',
                 'display_name' => 'Guigang, CNGUG',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["guigang"]}',
-                'created_at' => '2018-10-22 11:48:28',
-                'updated_at' => '2018-10-22 11:48:28',
+                'created_at' => '2018-10-22 07:48:28',
+                'updated_at' => '2018-10-22 07:48:28',
             ),
-            302 => 
+            291 => 
             array (
                 'id' => 1555,
                 'name' => 'Heshan',
                 'code' => 'CNHSN',
                 'display_name' => 'Heshan, CNHSN',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["heshan"]}',
-                'created_at' => '2018-10-22 11:49:12',
-                'updated_at' => '2018-10-22 11:49:12',
+                'created_at' => '2018-10-22 07:49:12',
+                'updated_at' => '2018-10-22 07:49:12',
             ),
-            303 => 
+            292 => 
             array (
                 'id' => 1556,
                 'name' => 'HEFEI',
                 'code' => 'CNHFI',
                 'display_name' => 'HEFEI, CNHFI',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["hefei", "hefei ,cn"]}',
-                'created_at' => '2018-10-22 11:49:56',
-                'updated_at' => '2018-12-12 13:40:17',
+                'varation' => '{"type": ["hefei", "hefei ,cn", "hefei,", "hefei, anhui", "hefei anhui"]}',
+                'created_at' => '2018-10-22 07:49:56',
+                'updated_at' => '2019-04-03 12:33:05',
             ),
-            304 => 
+            293 => 
             array (
                 'id' => 1557,
                 'name' => 'Bandung',
                 'code' => 'IDBDO',
                 'display_name' => 'Bandung, IDBDO',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 98,
                 'varation' => '{"type": ["bandung"]}',
-                'created_at' => '2018-10-22 11:49:57',
-                'updated_at' => '2018-10-22 11:49:57',
+                'created_at' => '2018-10-22 07:49:57',
+                'updated_at' => '2018-10-22 07:49:57',
             ),
-            305 => 
+            294 => 
             array (
                 'id' => 1558,
                 'name' => 'Chaozhou',
                 'code' => 'CNCOZ',
                 'display_name' => 'Chaozhou, CNCOZ',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["chaozhou"]}',
-                'created_at' => '2018-10-22 11:51:29',
-                'updated_at' => '2018-10-22 11:51:29',
+                'created_at' => '2018-10-22 07:51:29',
+                'updated_at' => '2018-10-22 07:51:29',
             ),
-            306 => 
+            295 => 
             array (
                 'id' => 1559,
                 'name' => 'Shunde',
                 'code' => 'CNSUD',
                 'display_name' => 'Shunde, CNSUD',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-                'varation' => '{"type": ["shunde", "shunde, shunde, guangdong, china", "shunde shunde guangdong china", "shunde dr", "shunderongqi  leliu", "cnsud"]}',
-                'created_at' => '2018-10-22 11:53:13',
-                'updated_at' => '2018-12-10 15:45:42',
+                'varation' => '{"type": ["shunde", "shunde, shunde, guangdong, china", "shunde shunde guangdong china", "shunde dr", "shunderongqi  leliu", "cnsud", "shunde guangdong", "shunde beijiao, leiliu, rongqi"]}',
+                'created_at' => '2018-10-22 07:53:13',
+                'updated_at' => '2019-04-05 09:08:15',
             ),
-            307 => 
+            296 => 
             array (
                 'id' => 1560,
                 'name' => 'Hongwan',
                 'code' => 'CNHGW',
                 'display_name' => 'Hongwan, CNHGW',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
-            'varation' => '{"type": ["zhuhai(hongwan)", "zhuhaihongwan", "zhuhai hongwan", "hongwan"]}',
-                'created_at' => '2018-10-22 11:53:42',
-                'updated_at' => '2019-01-24 13:16:41',
+            'varation' => '{"type": ["zhuhai(hongwan)", "zhuhaihongwan", "zhuhai hongwan", "hongwan", "zhuhai hongwan"]}',
+                'created_at' => '2018-10-22 07:53:42',
+                'updated_at' => '2019-03-12 08:26:25',
             ),
-            308 => 
+            297 => 
             array (
                 'id' => 1561,
                 'name' => 'Zhoushan',
                 'code' => 'CNZOS',
                 'display_name' => 'Zhoushan, CNZOS',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
                 'varation' => '{"type": ["zhoushan"]}',
-                'created_at' => '2018-10-22 11:55:11',
-                'updated_at' => '2018-10-22 11:55:11',
+                'created_at' => '2018-10-22 07:55:11',
+                'updated_at' => '2018-10-22 07:55:11',
             ),
-            309 => 
+            298 => 
             array (
                 'id' => 1562,
                 'name' => 'Cuntan',
                 'code' => 'CNCTN',
                 'display_name' => 'Cuntan, CNCTN',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
             'varation' => '{"type": ["cuntan", "(cuntan)", "cuntan", "chongqing (cuntan)", "chongqing cuntan", "chongqing(cuntan)", "chongqingcuntan"]}',
-                'created_at' => '2018-10-22 11:58:38',
-                'updated_at' => '2018-11-23 15:56:26',
+                'created_at' => '2018-10-22 07:58:38',
+                'updated_at' => '2018-11-23 11:56:26',
             ),
-            310 => 
+            299 => 
             array (
                 'id' => 1563,
                 'name' => 'Xinsha',
                 'code' => 'CNXNA',
                 'display_name' => 'Xinsha, CNXNA',
-                'coordinates' => '',
+                'coordinates' => NULL,
                 'country_id' => 46,
             'varation' => '{"type": ["xinsha", "huangpu （xinsha)", "huangpu （xinsha）", "huangpu xinsha"]}',
-            'created_at' => '2018-10-22 12:00:52',
-            'updated_at' => '2018-10-22 12:00:52',
+            'created_at' => '2018-10-22 08:00:52',
+            'updated_at' => '2018-10-22 08:00:52',
         ),
-        311 => 
+        300 => 
         array (
             'id' => 1564,
             'name' => 'HUANGSHI',
             'code' => 'CHNSI',
             'display_name' => 'HUANGSHI, CNHSI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["huangshi", "huangshi"]}',
-            'created_at' => '2018-10-22 12:06:52',
-            'updated_at' => '2018-10-22 12:07:21',
+            'created_at' => '2018-10-22 08:06:52',
+            'updated_at' => '2018-10-22 08:07:21',
         ),
-        312 => 
+        301 => 
         array (
             'id' => 1565,
             'name' => 'Waihai',
             'code' => 'CNWIH',
             'display_name' => 'Waihai, CNWIH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["jiangmen（waihai）", "jiangmenwaihai", "jiangmen waihai", "jiangmen waihai", "jiangmen (waihai)", "jiangmen waihai", "waihai"]}',
-            'created_at' => '2018-10-22 12:08:24',
-            'updated_at' => '2019-01-24 13:19:26',
+            'created_at' => '2018-10-22 08:08:24',
+            'updated_at' => '2019-01-24 09:19:26',
         ),
-        313 => 
+        302 => 
         array (
             'id' => 1566,
             'name' => 'Shenwan',
             'code' => 'CNSNW',
             'display_name' => 'Shenwan, CNSNW',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["shenwan", "zhongshan（shenwan）", "zhongshanshenwan", "zhongshan shenwan", "zhongshan shenwan"]}',
-            'created_at' => '2018-10-22 12:11:17',
-            'updated_at' => '2018-10-22 12:11:17',
+            'created_at' => '2018-10-22 08:11:17',
+            'updated_at' => '2018-10-22 08:11:17',
         ),
-        314 => 
+        303 => 
         array (
             'id' => 1567,
             'name' => 'Suigang',
             'code' => 'CNSUG',
             'display_name' => 'Suigang, CNSUG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["huangpu（suigang）", "huangpu suigang", "huangpu suigang", "huangpusuigang"]}',
-            'created_at' => '2018-10-22 12:15:53',
-            'updated_at' => '2018-10-22 12:15:53',
+            'created_at' => '2018-10-22 08:15:53',
+            'updated_at' => '2018-10-22 08:15:53',
         ),
-        315 => 
+        304 => 
         array (
             'id' => 1568,
             'name' => 'Dongjiang',
             'code' => 'CNDJG',
             'display_name' => 'Dongjiang , CNDJG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["huangpu（dongjiang）", "huangpu dongjiang", "huangpu dongjiang", "huangpudongjiang", "huangpu (dongjiang)", "huangpu dongjiang", "dongjiang"]}',
-            'created_at' => '2018-10-22 12:21:06',
-            'updated_at' => '2019-01-24 13:15:57',
+            'created_at' => '2018-10-22 08:21:06',
+            'updated_at' => '2019-01-24 09:15:57',
         ),
-        316 => 
+        305 => 
         array (
             'id' => 1569,
             'name' => 'Dongjiangkou',
             'code' => 'CNDJK',
             'display_name' => 'Dongjiangkou, CNDJK',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["huangpu（dongjiangkou）", "huangpudongjiangkou", "huangpu dongjiangkou", "huangpu dongjiangkou"]}',
-            'created_at' => '2018-10-22 12:23:12',
-            'updated_at' => '2018-10-22 12:23:12',
+            'created_at' => '2018-10-22 08:23:12',
+            'updated_at' => '2018-10-22 08:23:12',
         ),
-        317 => 
+        306 => 
         array (
             'id' => 1570,
             'name' => 'Sanbu',
             'code' => 'CNSAU',
             'display_name' => 'Sanbu, CNSAU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["sanbu", "kaiping(sanbu)", "kaipingsanbu", "kaiping (sanbu)", "kaiping sanbu"]}',
-            'created_at' => '2018-10-22 12:24:44',
-            'updated_at' => '2018-11-23 15:28:21',
+            'created_at' => '2018-10-22 08:24:44',
+            'updated_at' => '2018-11-23 11:28:21',
         ),
-        318 => 
+        307 => 
         array (
             'id' => 1571,
             'name' => 'JINGZHOU',
             'code' => 'CNJGZ',
             'display_name' => 'JINGZHOU, CNJGZ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["x"]}',
-            'created_at' => '2018-10-22 12:25:45',
-            'updated_at' => '2019-02-28 14:48:24',
+            'created_at' => '2018-10-22 08:25:45',
+            'updated_at' => '2019-02-28 10:48:24',
         ),
-        319 => 
+        308 => 
         array (
             'id' => 1572,
             'name' => 'Sanrong',
             'code' => 'CNSRG',
             'display_name' => 'Sanrong, CNSRG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 1,
             'varation' => '{"type": ["zhaoqing（sanrong）", "zhaoqing sanrong", "zhaoqing sanrong", "zhaoqingsanrong", "sanrong, zhaoqing, guangdong, china", "sanrong zhaoqing guangdong china"]}',
-            'created_at' => '2018-10-22 12:53:04',
-            'updated_at' => '2018-10-22 15:58:28',
+            'created_at' => '2018-10-22 08:53:04',
+            'updated_at' => '2018-10-22 11:58:28',
         ),
-        320 => 
+        309 => 
         array (
             'id' => 1574,
             'name' => 'Qingyuan',
             'code' => 'CNQGY',
             'display_name' => 'Qingyuan, CNQGY',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["qingyuan", "qingyuan ,cn", "qingyuan cn", "qingyuan, china", "qingyuan china"]}',
-            'created_at' => '2018-10-22 12:56:05',
-            'updated_at' => '2019-01-03 20:38:30',
+            'created_at' => '2018-10-22 08:56:05',
+            'updated_at' => '2019-01-03 16:38:30',
         ),
-        321 => 
+        310 => 
         array (
             'id' => 1575,
             'name' => 'Rugao',
             'code' => 'CNRUG',
             'display_name' => 'Rugao, CNRUG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["rugao"]}',
-            'created_at' => '2018-10-22 12:58:11',
-            'updated_at' => '2018-10-22 12:58:11',
+            'created_at' => '2018-10-22 08:58:11',
+            'updated_at' => '2018-10-22 08:58:11',
         ),
-        322 => 
+        311 => 
         array (
             'id' => 1576,
             'name' => 'Shanshui',
             'code' => 'CNSSI',
             'display_name' => 'Shanshui, CNSSI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["shanshui newport"]}',
-            'created_at' => '2018-10-22 12:59:05',
-            'updated_at' => '2018-10-22 12:59:05',
+            'created_at' => '2018-10-22 08:59:05',
+            'updated_at' => '2018-10-22 08:59:05',
         ),
-        323 => 
+        312 => 
         array (
             'id' => 1577,
             'name' => 'Taishan',
@@ -9904,106 +9772,106 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '22.25272 112.79435',
             'country_id' => 46,
             'varation' => '{"type": ["taishan", "taishan gd"]}',
-            'created_at' => '2018-10-22 13:01:27',
-            'updated_at' => '2018-12-20 13:56:38',
+            'created_at' => '2018-10-22 09:01:27',
+            'updated_at' => '2018-12-20 09:56:38',
         ),
-        324 => 
+        313 => 
         array (
             'id' => 1578,
             'name' => 'Mafang',
             'code' => 'CNSHM',
             'display_name' => 'Mafang, CNSHM',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["mafang", "zhaoqing（mafang）", "zhaoqingmafang", "zhaoqing mafang", "zhaoqing mafang"]}',
-            'created_at' => '2018-10-22 13:02:29',
-            'updated_at' => '2018-10-22 13:02:29',
+            'created_at' => '2018-10-22 09:02:29',
+            'updated_at' => '2018-10-22 09:02:29',
         ),
-        325 => 
+        314 => 
         array (
             'id' => 1579,
             'name' => 'WANZHOU',
             'code' => 'CNWZH',
             'display_name' => 'WANZHOU, CNWZH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["wanzhou"]}',
-            'created_at' => '2018-10-22 13:03:24',
-            'updated_at' => '2018-10-22 13:03:24',
+            'created_at' => '2018-10-22 09:03:24',
+            'updated_at' => '2018-10-22 09:03:24',
         ),
-        326 => 
+        315 => 
         array (
             'id' => 1580,
             'name' => 'Wuxi',
             'code' => 'CNWXS',
             'display_name' => 'Wuxi, CNWXS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["wuxi"]}',
-            'created_at' => '2018-10-22 13:05:42',
-            'updated_at' => '2018-10-22 13:05:42',
+            'created_at' => '2018-10-22 09:05:42',
+            'updated_at' => '2018-10-22 09:05:42',
         ),
-        327 => 
+        316 => 
         array (
             'id' => 1581,
             'name' => 'YIXING',
             'code' => 'CNYXS',
             'display_name' => 'YIXING, CNYXS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["yixing"]}',
-            'created_at' => '2018-10-22 13:07:38',
-            'updated_at' => '2018-10-22 13:07:38',
+            'created_at' => '2018-10-22 09:07:38',
+            'updated_at' => '2018-10-22 09:07:38',
         ),
-        328 => 
+        317 => 
         array (
             'id' => 1582,
             'name' => 'YONGJIA',
             'code' => 'CNYOJ',
             'display_name' => 'YONGJIA, CNYOJ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["yongjia", "zhangjiagang(yongjia)", "zhangjiagangyongjia", "zhangjiagangyongjia", "zhangjiagang (yongjia)", "zhangjiagang yongjia"]}',
-            'created_at' => '2018-10-22 13:08:31',
-            'updated_at' => '2018-11-23 15:54:17',
+            'created_at' => '2018-10-22 09:08:31',
+            'updated_at' => '2018-11-23 11:54:17',
         ),
-        329 => 
+        318 => 
         array (
             'id' => 1583,
             'name' => 'Liudu',
             'code' => 'CNLUD',
             'display_name' => 'Liudu, CNLUD',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["liudu / yunfu", "liudu / yunfu"]}',
-            'created_at' => '2018-10-22 13:21:55',
-            'updated_at' => '2018-12-17 13:06:35',
+            'created_at' => '2018-10-22 09:21:55',
+            'updated_at' => '2018-12-17 09:06:35',
         ),
-        330 => 
+        319 => 
         array (
             'id' => 1584,
             'name' => 'Bhusawal',
             'code' => 'INBSL',
             'display_name' => 'Bhusawal, INBSL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 102,
             'varation' => '{"type": ["bhusawal", "bhusawal ,in", "bhusawal in"]}',
-            'created_at' => '2018-10-22 13:55:44',
-            'updated_at' => '2018-10-22 13:55:44',
+            'created_at' => '2018-10-22 09:55:44',
+            'updated_at' => '2018-10-22 09:55:44',
         ),
-        331 => 
+        320 => 
         array (
             'id' => 1585,
             'name' => 'Bangalore',
             'code' => 'INBLR',
             'display_name' => 'Bangalore, INBLR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 102,
-            'varation' => '{"type": ["bangalore ,in", "bangalore in", "bangalore in", "bangalore in"]}',
-            'created_at' => '2018-10-22 13:58:19',
-            'updated_at' => '2018-10-22 13:58:19',
+            'varation' => '{"type": ["bangalore ,in", "bangalore in", "bangalore in", "bangalore in", "inblr"]}',
+            'created_at' => '2018-10-22 09:58:19',
+            'updated_at' => '2019-04-03 11:20:15',
         ),
-        332 => 
+        321 => 
         array (
             'id' => 1586,
             'name' => 'Livorno',
@@ -10012,10 +9880,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '43.562815 10.30616',
             'country_id' => 107,
             'varation' => '{"type": ["livorno", "livorno, toscana, italia", "livorno toscana italia"]}',
-            'created_at' => '2018-10-22 14:58:55',
-            'updated_at' => '2018-10-22 14:58:55',
+            'created_at' => '2018-10-22 10:58:55',
+            'updated_at' => '2018-10-22 10:58:55',
         ),
-        333 => 
+        322 => 
         array (
             'id' => 1587,
             'name' => 'Al Hidd',
@@ -10024,166 +9892,154 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '26.2012 50.667895',
             'country_id' => 22,
             'varation' => '{"type": ["al hidd, muharraq governorate, bahrain", "al hidd muharraq governorate bahrain"]}',
-            'created_at' => '2018-10-22 15:35:16',
-            'updated_at' => '2018-10-22 15:35:16',
+            'created_at' => '2018-10-22 11:35:16',
+            'updated_at' => '2018-10-22 11:35:16',
         ),
-        334 => 
+        323 => 
         array (
             'id' => 1588,
             'name' => 'Seoul',
             'code' => 'KRSEL',
             'display_name' => 'Seoul, KRSEL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 119,
         'varation' => '{"type": ["seoul, south korea", "seoul south korea", "seoul (dr)", "seoul dr"]}',
-            'created_at' => '2018-10-22 15:36:10',
-            'updated_at' => '2018-10-29 09:11:56',
+            'created_at' => '2018-10-22 11:36:10',
+            'updated_at' => '2018-10-29 05:11:56',
         ),
-        335 => 
+        324 => 
         array (
             'id' => 1589,
             'name' => 'Kochi',
             'code' => 'INCOK',
             'display_name' => 'Kochi, INCOK',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 102,
             'varation' => '{"type": ["kochi, kerala, india", "kochi"]}',
-            'created_at' => '2018-10-22 15:37:52',
-            'updated_at' => '2018-12-12 12:12:49',
+            'created_at' => '2018-10-22 11:37:52',
+            'updated_at' => '2018-12-12 08:12:49',
         ),
-        336 => 
+        325 => 
         array (
             'id' => 1590,
             'name' => 'Beijing',
             'code' => 'CNBJS',
             'display_name' => 'Beijing, CNBJS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["beijing, china", "beijing china"]}',
-            'created_at' => '2018-10-22 15:39:43',
-            'updated_at' => '2018-10-22 15:39:43',
+            'created_at' => '2018-10-22 11:39:43',
+            'updated_at' => '2018-10-22 11:39:43',
         ),
-        337 => 
+        326 => 
         array (
             'id' => 1591,
             'name' => 'Rajula',
             'code' => 'INRJU',
             'display_name' => 'Rajula, INRJU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 102,
             'varation' => '{"type": ["rajula, gujarat, india", "rajula gujarat india"]}',
-            'created_at' => '2018-10-22 15:40:23',
-            'updated_at' => '2018-10-22 15:40:23',
+            'created_at' => '2018-10-22 11:40:23',
+            'updated_at' => '2018-10-22 11:40:23',
         ),
-        338 => 
+        327 => 
         array (
             'id' => 1592,
             'name' => 'Fuqing',
             'code' => 'CNFQG',
             'display_name' => 'Fuqing, CNFQG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["fuqing, fuzhou, fujian, china", "fuqing fuzhou fujian china", "fuqing", "fuqing (provincia fujian)", "fuqing provincia fujian", "fuqing, fujian"]}',
-            'created_at' => '2018-10-22 15:46:43',
-            'updated_at' => '2019-03-01 11:30:14',
+            'created_at' => '2018-10-22 11:46:43',
+            'updated_at' => '2019-03-01 07:30:14',
         ),
-        339 => 
+        328 => 
         array (
             'id' => 1593,
             'name' => 'Rizhao',
             'code' => 'CNRZH',
             'display_name' => 'Rizhao, CNRZH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["rizhao, shandong, china", "rizhao shandong china", "rizhao ,cn", "rizhao cn", "rizhao china", "rizhao, china"]}',
-            'created_at' => '2018-10-22 15:57:40',
-            'updated_at' => '2019-01-03 20:34:12',
+            'created_at' => '2018-10-22 11:57:40',
+            'updated_at' => '2019-01-03 16:34:12',
         ),
-        340 => 
+        329 => 
         array (
             'id' => 1594,
             'name' => 'Changan',
             'code' => 'CNFKC',
             'display_name' => 'Changan, CNFKC',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["changan, dongguan, guangdong, china"]}',
-            'created_at' => '2018-10-22 16:06:53',
-            'updated_at' => '2018-10-22 16:06:53',
+            'created_at' => '2018-10-22 12:06:53',
+            'updated_at' => '2018-10-22 12:06:53',
         ),
-        341 => 
+        330 => 
         array (
             'id' => 1595,
             'name' => 'Weitou',
             'code' => 'CNWTU',
             'display_name' => 'Weitou, CNWTU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["weitou, quanzhou, fujian, china", "weitou quanzhou fujian china"]}',
-            'created_at' => '2018-10-22 16:13:25',
-            'updated_at' => '2018-10-22 16:13:38',
+            'created_at' => '2018-10-22 12:13:25',
+            'updated_at' => '2018-10-22 12:13:38',
         ),
-        342 => 
+        331 => 
         array (
             'id' => 1596,
             'name' => 'Sihui Mafang',
             'code' => 'CNSIH',
             'display_name' => 'Sihui Mafang, CNSIH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["sihui mafang, zhaoqing, guangdong, china"]}',
-            'created_at' => '2018-10-22 16:16:33',
-            'updated_at' => '2018-10-22 16:16:33',
+            'created_at' => '2018-10-22 12:16:33',
+            'updated_at' => '2018-10-22 12:16:33',
         ),
-        343 => 
+        332 => 
         array (
             'id' => 1597,
             'name' => 'Xinfeng',
             'code' => 'CNXAB',
             'display_name' => 'Xinfeng, CNXAB',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["xinfeng, liwan, guangzhou, guangdong, china", "xinfeng liwan, guangzhou guangdong china"]}',
-            'created_at' => '2018-10-22 16:21:31',
-            'updated_at' => '2018-10-22 16:21:31',
+            'created_at' => '2018-10-22 12:21:31',
+            'updated_at' => '2018-10-22 12:21:31',
         ),
-        344 => 
+        333 => 
         array (
             'id' => 1598,
             'name' => 'Kumport',
             'code' => 'TRKMX',
             'display_name' => 'Kumport, TRKMX',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 221,
-        'varation' => '{"type": ["istanbul (kumport)", "istanbul kumport"]}',
-            'created_at' => '2018-10-25 08:20:20',
-            'updated_at' => '2018-10-25 08:20:20',
+        'varation' => '{"type": ["istanbul (kumport)", "istanbul kumport", "istambul kumport, izmit"]}',
+            'created_at' => '2018-10-25 04:20:20',
+            'updated_at' => '2019-04-09 16:36:50',
         ),
-        345 => 
+        334 => 
         array (
             'id' => 1599,
             'name' => 'Yilport',
             'code' => 'TRYPO',
             'display_name' => 'Yilport, TRYPO',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 221,
         'varation' => '{"type": ["gebze (yilport)", "gebze yilport", "yilport"]}',
-            'created_at' => '2018-10-25 08:21:36',
-            'updated_at' => '2019-01-24 13:19:39',
+            'created_at' => '2018-10-25 04:21:36',
+            'updated_at' => '2019-01-24 09:19:39',
         ),
-        346 => 
-        array (
-            'id' => 1600,
-            'name' => 'Evyap',
-            'code' => 'TREYP',
-            'display_name' => 'Evyap, TREYP',
-            'coordinates' => '',
-            'country_id' => 221,
-        'varation' => '{"type": ["izmit (evyap)", "izmit evyap"]}',
-            'created_at' => '2018-10-25 08:24:03',
-            'updated_at' => '2018-10-25 08:24:03',
-        ),
-        347 => 
+        335 => 
         array (
             'id' => 1601,
             'name' => 'Tananger',
@@ -10192,34 +10048,34 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '58.925605 5.590093',
             'country_id' => 164,
             'varation' => '{"type": ["tananger"]}',
-            'created_at' => '2018-10-25 08:26:11',
-            'updated_at' => '2018-10-25 08:26:11',
+            'created_at' => '2018-10-25 04:26:11',
+            'updated_at' => '2018-10-25 04:26:11',
         ),
-        348 => 
+        336 => 
         array (
             'id' => 1602,
             'name' => 'Xian',
             'code' => 'CNXIA',
             'display_name' => 'Xian, CNXIA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["xi\'an"]}',
-            'created_at' => '2018-10-25 13:14:25',
-            'updated_at' => '2018-10-25 13:14:25',
+            'created_at' => '2018-10-25 09:14:25',
+            'updated_at' => '2018-10-25 09:14:25',
         ),
-        349 => 
+        337 => 
         array (
             'id' => 1603,
             'name' => 'Oranjestad',
             'code' => 'AWAUA',
             'display_name' => 'Oranjestad, AWAUA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 14,
             'varation' => '{"type": ["oranjestad", "oranjestad ,aw", "oranjestad aw", "oranjestad, aruba", "oranjestad aruba", "orangestad"]}',
-            'created_at' => '2018-11-05 19:13:05',
-            'updated_at' => '2019-01-02 11:05:29',
+            'created_at' => '2018-11-05 15:13:05',
+            'updated_at' => '2019-01-02 07:05:29',
         ),
-        350 => 
+        338 => 
         array (
             'id' => 1604,
             'name' => 'Willemstad',
@@ -10228,10 +10084,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '12.1155 -68.928',
             'country_id' => 51,
             'varation' => '{"type": ["willemstad ,cw", "willemstad, curacao", "willemstad curacao", "curacau willemstad"]}',
-            'created_at' => '2018-11-05 19:14:17',
-            'updated_at' => '2019-02-07 12:59:32',
+            'created_at' => '2018-11-05 15:14:17',
+            'updated_at' => '2019-02-07 08:59:32',
         ),
-        351 => 
+        339 => 
         array (
             'id' => 1605,
             'name' => 'Mejillones',
@@ -10240,10 +10096,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '23.08002 -70.408435',
             'country_id' => 44,
             'varation' => '{"type": ["mejillones", "mejillones ,cl", "mejillones, chile"]}',
-            'created_at' => '2018-11-05 19:15:43',
-            'updated_at' => '2019-02-26 15:50:33',
+            'created_at' => '2018-11-05 15:15:43',
+            'updated_at' => '2019-02-26 11:50:33',
         ),
-        352 => 
+        340 => 
         array (
             'id' => 1606,
             'name' => 'Basseterre',
@@ -10252,10 +10108,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '17.28948 -62.71807',
             'country_id' => 117,
             'varation' => '{"type": ["basseterre ,kn", "basseterre kn", "basseterre, st kitts-nevis", "basseterre st kittsnevis"]}',
-            'created_at' => '2018-11-05 21:33:45',
-            'updated_at' => '2018-12-14 14:40:43',
+            'created_at' => '2018-11-05 17:33:45',
+            'updated_at' => '2018-12-14 10:40:43',
         ),
-        353 => 
+        341 => 
         array (
             'id' => 1607,
             'name' => 'Charlestown',
@@ -10264,10 +10120,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '17.13062 -62.62868',
             'country_id' => 117,
             'varation' => '{"type": ["charlestown ,kn", "charlestown kn", "charlestown ,kn", "charlestown, st kitts-nevis", "charlestown st kittsnevis"]}',
-            'created_at' => '2018-11-05 21:37:21',
-            'updated_at' => '2018-12-14 14:42:13',
+            'created_at' => '2018-11-05 17:37:21',
+            'updated_at' => '2018-12-14 10:42:13',
         ),
-        354 => 
+        342 => 
         array (
             'id' => 1608,
             'name' => 'Christiansted',
@@ -10276,10 +10132,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '17.749455 -64.70452',
             'country_id' => 236,
         'varation' => '{"type": ["christiansted ,vi", "christiansted vi", "christiansted, virgin islands (us)", "christiansted virgin islands us", "christiansted, virgin islands (us", "christiansted, virgin islands (us)", "christiansted, virgin islands (us)", "christiansted virgin islands us", "christiansted, virgin islands", "christiansted, virgin islands us", "christiansted virgin islands (us)"]}',
-            'created_at' => '2018-11-05 21:40:13',
-            'updated_at' => '2018-12-14 18:32:05',
+            'created_at' => '2018-11-05 17:40:13',
+            'updated_at' => '2018-12-14 14:32:05',
         ),
-        355 => 
+        343 => 
         array (
             'id' => 1609,
             'name' => 'Grand Turk',
@@ -10288,154 +10144,154 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '21.46896 -71.14755',
             'country_id' => 210,
             'varation' => '{"type": ["grand turk", "grand turk ,tc", "grand turk tc", "grand turk, turks and caicos", "grand turk turks and caicos"]}',
-            'created_at' => '2018-11-05 21:42:38',
-            'updated_at' => '2018-12-14 14:47:07',
+            'created_at' => '2018-11-05 17:42:38',
+            'updated_at' => '2018-12-14 10:47:07',
         ),
-        356 => 
+        344 => 
         array (
             'id' => 1610,
             'name' => 'Tangshan',
             'code' => 'CNTGS',
             'display_name' => 'Tangshan, CNTGS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["tangshan ,cn", "tangshan cn", "tangshan", "tangshan ,cn", "tangshan, china", "tangshan china"]}',
-            'created_at' => '2018-11-05 21:45:50',
-            'updated_at' => '2019-01-03 20:41:37',
+            'created_at' => '2018-11-05 17:45:50',
+            'updated_at' => '2019-01-03 16:41:37',
         ),
-        357 => 
+        345 => 
         array (
             'id' => 1611,
             'name' => 'Gongyi',
             'code' => 'CNTSG',
             'display_name' => 'Gongyi, CNTSG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["gongyi", "gongyi ,cn", "gongyi cn", "gongyi, china", "gongyi china"]}',
-            'created_at' => '2018-11-05 21:47:21',
-            'updated_at' => '2019-02-20 18:04:15',
+            'created_at' => '2018-11-05 17:47:21',
+            'updated_at' => '2019-02-20 14:04:15',
         ),
-        358 => 
+        346 => 
         array (
             'id' => 1612,
             'name' => 'Phillipsburg',
             'code' => 'SXPHI',
             'display_name' => 'Phillipsburg, SXPHI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 207,
             'varation' => '{"type": ["phillipsburg", "phillipsburg ,sx", "phillipsburg sx", "phillipsburg, sint maarte", "phillipsburg sint maarte", "phillipsburg, sint maarten", "phillipsburg, sint maarten", "phillipsburg sint maarten"]}',
-            'created_at' => '2018-11-05 21:49:14',
-            'updated_at' => '2018-12-14 15:10:57',
+            'created_at' => '2018-11-05 17:49:14',
+            'updated_at' => '2018-12-14 11:10:57',
         ),
-        359 => 
+        347 => 
         array (
             'id' => 1613,
             'name' => 'Charlotte Amalie',
             'code' => 'VICHA',
             'display_name' => 'Charlotte Amalie, VICHA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 236,
-        'varation' => '{"type": ["charlotte amalie", "charlotte amalie ,vi", "charlotte amalie vi", "charlotte amalie, virgin islands us", "charlotte amalie, virgin islands (us)", "charlotte amalie virgin islands (us)", "charlotte amalie virgin islands us"]}',
-            'created_at' => '2018-11-05 21:51:08',
-            'updated_at' => '2018-12-14 18:30:51',
+        'varation' => '{"type": ["charlotte amalie", "charlotte amalie ,vi", "charlotte amalie vi", "charlotte amalie, virgin islands us", "charlotte amalie, virgin islands (us)", "charlotte amalie virgin islands (us)", "charlotte amalie virgin islands us", "charlotte, nc", "charlotte,nc"]}',
+            'created_at' => '2018-11-05 17:51:08',
+            'updated_at' => '2019-03-22 11:00:31',
         ),
-        360 => 
+        348 => 
         array (
             'id' => 1614,
             'name' => 'Georgetown, Grand Cayman',
             'code' => 'KYGEC',
             'display_name' => 'Georgetown, Grand Cayman, KYGEC',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 121,
-        'varation' => '{"type": ["georgetown ,ky", "georgetown ky", "georgetown, cayman islands", "georgetown (g.c)", "georgetown g.c"]}',
-            'created_at' => '2018-11-05 21:52:49',
-            'updated_at' => '2019-01-22 20:40:24',
+        'varation' => '{"type": ["georgetown ,ky", "georgetown ky", "georgetown, cayman islands", "georgetown (g.c)", "georgetown g.c", "georgetown gc", "grand cayman georgetown", "georgetown, grand cayman"]}',
+            'created_at' => '2018-11-05 17:52:49',
+            'updated_at' => '2019-04-04 10:04:44',
         ),
-        361 => 
+        349 => 
         array (
             'id' => 1615,
             'name' => 'Providenciales',
             'code' => 'TCPLS',
             'display_name' => 'Providenciales, TCPLS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 210,
             'varation' => '{"type": ["providenciales ,tc", "providenciales, turks and caicos"]}',
-            'created_at' => '2018-11-05 21:53:24',
-            'updated_at' => '2018-12-14 15:05:51',
+            'created_at' => '2018-11-05 17:53:24',
+            'updated_at' => '2018-12-14 11:05:51',
         ),
-        362 => 
+        350 => 
         array (
             'id' => 1616,
             'name' => 'Saint George\'s',
             'code' => 'GDSTG',
             'display_name' => 'Saint George\'s, GDSTG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 76,
             'varation' => '{"type": ["st georges ,gd", "st georges gd", "st georges, grenada", "st georges grenada"]}',
-            'created_at' => '2018-11-05 21:54:56',
-            'updated_at' => '2018-12-14 14:56:18',
+            'created_at' => '2018-11-05 17:54:56',
+            'updated_at' => '2018-12-14 10:56:18',
         ),
-        363 => 
+        351 => 
         array (
             'id' => 1617,
             'name' => 'Fusa',
             'code' => 'NOFUS',
             'display_name' => 'Fusa, NOFUS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 164,
             'varation' => '{"type": ["fusa ,no", "fusa no", "fusa, norway", "fusa norway"]}',
-            'created_at' => '2018-11-07 13:23:22',
-            'updated_at' => '2019-01-22 14:50:38',
+            'created_at' => '2018-11-07 09:23:22',
+            'updated_at' => '2019-01-22 10:50:38',
         ),
-        364 => 
+        352 => 
         array (
             'id' => 1619,
             'name' => 'Santurce',
             'code' => 'ESSNR',
             'display_name' => 'Santurce, ESSNR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["santurce ,es", "santurce es", "santurce, spain", "santurce spain", "santurce, spain", "santurce spain"]}',
-            'created_at' => '2018-11-07 13:26:23',
-            'updated_at' => '2019-01-03 20:41:04',
+            'created_at' => '2018-11-07 09:26:23',
+            'updated_at' => '2019-01-03 16:41:04',
         ),
-        365 => 
+        353 => 
         array (
             'id' => 1620,
             'name' => 'Fuerteventura',
             'code' => 'ESFUE',
             'display_name' => 'Fuerteventura, ESFUE',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
-            'varation' => '{"type": ["fuerteventura", "esfue"]}',
-            'created_at' => '2018-11-09 16:04:58',
-            'updated_at' => '2018-11-15 09:31:10',
+            'varation' => '{"type": ["fuerteventura", "esfue", "puerto del rosario-fuerteventura"]}',
+            'created_at' => '2018-11-09 12:04:58',
+            'updated_at' => '2019-04-04 09:24:36',
         ),
-        366 => 
+        354 => 
         array (
             'id' => 1621,
             'name' => 'Las Palmas de Gran Canaria',
             'code' => 'ESLPA',
             'display_name' => 'Las Palmas de Gran Canaria , ESLPA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["las palmas", "las palmas de gran canaria"]}',
-            'created_at' => '2018-11-09 16:06:14',
-            'updated_at' => '2018-11-09 16:06:14',
+            'created_at' => '2018-11-09 12:06:14',
+            'updated_at' => '2018-11-09 12:06:14',
         ),
-        367 => 
+        355 => 
         array (
             'id' => 1622,
             'name' => 'Santa Cruz de la Palma',
             'code' => 'ESSPC',
             'display_name' => 'Santa Cruz de la Palma, ESSPC',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["santa cruz de la palma", "esscp", "esspc"]}',
-            'created_at' => '2018-11-09 16:07:18',
-            'updated_at' => '2019-02-25 11:17:28',
+            'created_at' => '2018-11-09 12:07:18',
+            'updated_at' => '2019-02-25 07:17:28',
         ),
-        368 => 
+        356 => 
         array (
             'id' => 1623,
             'name' => 'Banjarmasin',
@@ -10444,118 +10300,118 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '-3.332106 114.55165',
             'country_id' => 98,
             'varation' => '{"type": ["banjarmasin", "banjarmasin"]}',
-            'created_at' => '2018-11-09 16:09:43',
-            'updated_at' => '2019-02-12 13:36:33',
+            'created_at' => '2018-11-09 12:09:43',
+            'updated_at' => '2019-02-12 09:36:33',
         ),
-        369 => 
+        357 => 
         array (
             'id' => 1624,
             'name' => 'Xian Xianyang',
             'code' => 'CNSIA',
             'display_name' => 'Xian Xianyang, CNSIA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["xian xianyang", "xi\'an", "xian", "cnsia"]}',
-            'created_at' => '2018-11-09 16:14:37',
-            'updated_at' => '2018-12-10 15:45:13',
+            'created_at' => '2018-11-09 12:14:37',
+            'updated_at' => '2018-12-10 11:45:13',
         ),
-        370 => 
+        358 => 
         array (
             'id' => 1625,
             'name' => 'Dnipro ,UA',
             'code' => 'UADNK',
             'display_name' => 'Dnipro, UADNK',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 226,
             'varation' => '{"type": ["dnipro ,ua", "dnipro ua", "dnipro", "dnipro, ukraine"]}',
-            'created_at' => '2018-11-15 20:52:06',
-            'updated_at' => '2019-02-21 12:00:57',
+            'created_at' => '2018-11-15 16:52:06',
+            'updated_at' => '2019-02-21 08:00:57',
         ),
-        371 => 
+        359 => 
         array (
             'id' => 1626,
             'name' => 'Bata',
             'code' => 'GQBSG',
             'display_name' => 'Bata, GQBSG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 86,
             'varation' => '{"type": ["bata, gq", "bata ,gq", "bata gq", "bata gq", "bata ,gq", "bata, equatorial guinea", "bata equatorial guinea", "bata"]}',
-            'created_at' => '2018-11-18 18:47:32',
-            'updated_at' => '2019-02-04 14:30:02',
+            'created_at' => '2018-11-18 14:47:32',
+            'updated_at' => '2019-02-04 10:30:02',
         ),
-        372 => 
+        360 => 
         array (
             'id' => 1627,
             'name' => 'Matadi',
             'code' => 'CDMAT',
             'display_name' => 'Matadi, CDMAT',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 38,
             'varation' => '{"type": ["matadi, cd", "matadi ,cd", "matadi cd", "matadi, congo"]}',
-            'created_at' => '2018-11-18 18:50:31',
-            'updated_at' => '2019-01-25 12:29:14',
+            'created_at' => '2018-11-18 14:50:31',
+            'updated_at' => '2019-01-25 08:29:14',
         ),
-        373 => 
+        361 => 
         array (
             'id' => 1628,
             'name' => 'Onne',
             'code' => 'NGONN',
             'display_name' => 'Onne, NGONN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 161,
             'varation' => '{"type": ["onne, ng", "onne ,ng", "onne ng", "onne, nigeria", "onne nigeria"]}',
-            'created_at' => '2018-11-18 18:51:53',
-            'updated_at' => '2019-01-25 12:38:34',
+            'created_at' => '2018-11-18 14:51:53',
+            'updated_at' => '2019-01-25 08:38:34',
         ),
-        374 => 
+        362 => 
         array (
             'id' => 1629,
             'name' => 'Pointe Noire',
             'code' => 'CGPNR',
             'display_name' => 'Pointe Noire, CG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 40,
-            'varation' => '{"type": ["pointe noire, gc", "pointe noire cg", "pointe noire ,cg", "pointe noire cg", "pointe noire, congo"]}',
-            'created_at' => '2018-11-18 18:53:56',
-            'updated_at' => '2019-01-09 18:44:02',
+            'varation' => '{"type": ["pointe noire, gc", "pointe noire cg", "pointe noire ,cg", "pointe noire cg", "pointe noire, congo", "ponte noire"]}',
+            'created_at' => '2018-11-18 14:53:56',
+            'updated_at' => '2019-03-26 21:49:35',
         ),
-        375 => 
+        363 => 
         array (
             'id' => 1630,
             'name' => 'Sanshan',
             'code' => 'CNNHS',
             'display_name' => 'Sanshan, CNNHS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
-        'varation' => '{"type": ["sanshan, foshan, guangdong, china", "sanshan (nanhai)", "nanhai（sanshan）", "sanshan", "sanshan gd", "sanshan nanhai", "sanshan, gd"]}',
-            'created_at' => '2018-11-20 09:01:26',
-            'updated_at' => '2019-01-07 16:04:09',
+            'varation' => '{"type": ["sanshan, foshan, guangdong, china", "sanshan", "sanshan gd", "sanshan, gd", "san shan, guangdong", "sanshan, nanhai", "sanshan nanhai"]}',
+            'created_at' => '2018-11-20 05:01:26',
+            'updated_at' => '2019-04-05 09:06:38',
         ),
-        376 => 
+        364 => 
         array (
             'id' => 1631,
             'name' => 'Fuyang',
             'code' => 'CNFUN',
             'display_name' => 'Fuyang, CNFUN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
-            'varation' => '{"type": ["fuyang"]}',
-            'created_at' => '2018-11-23 15:12:31',
-            'updated_at' => '2018-11-23 15:12:31',
+            'varation' => '{"type": ["fuyang", "fuyang, zhejiang"]}',
+            'created_at' => '2018-11-23 11:12:31',
+            'updated_at' => '2019-04-02 07:02:06',
         ),
-        377 => 
+        365 => 
         array (
             'id' => 1632,
             'name' => 'Guangbaotong',
             'code' => 'CNGBT',
             'display_name' => 'Guangbaotong, CNGBT',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["guangbaotong", "huangpu (guangbaotong)", "huangpu guangbaotong"]}',
-            'created_at' => '2018-11-23 15:14:03',
-            'updated_at' => '2018-11-23 15:14:03',
+            'created_at' => '2018-11-23 11:14:03',
+            'updated_at' => '2018-11-23 11:14:03',
         ),
-        378 => 
+        366 => 
         array (
             'id' => 1633,
             'name' => 'Labuan',
@@ -10564,34 +10420,34 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '5.2703805 115.2426',
             'country_id' => 155,
             'varation' => '{"type": ["labuan", "labuan, sabah"]}',
-            'created_at' => '2018-11-23 15:30:17',
-            'updated_at' => '2018-12-20 14:18:00',
+            'created_at' => '2018-11-23 11:30:17',
+            'updated_at' => '2018-12-20 10:18:00',
         ),
-        379 => 
+        367 => 
         array (
             'id' => 1634,
             'name' => 'Nanwei',
             'code' => 'CNNWI',
             'display_name' => 'Nanwei, CNNWI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["nanwei", "nansha (nanwei)", "nansha nanwei"]}',
-            'created_at' => '2018-11-23 15:34:31',
-            'updated_at' => '2018-11-23 15:34:31',
+            'created_at' => '2018-11-23 11:34:31',
+            'updated_at' => '2018-11-23 11:34:31',
         ),
-        380 => 
+        368 => 
         array (
             'id' => 1635,
             'name' => 'Khor Al Zubair',
             'code' => 'IQKAZ',
             'display_name' => 'Khor Al Zubair, IQKAZ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["khor al zubair port"]}',
-            'created_at' => '2018-11-23 15:38:29',
-            'updated_at' => '2018-11-23 15:38:29',
+            'created_at' => '2018-11-23 11:38:29',
+            'updated_at' => '2018-11-23 11:38:29',
         ),
-        381 => 
+        369 => 
         array (
             'id' => 1636,
             'name' => 'Ningde',
@@ -10600,166 +10456,166 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '26.76358 119.70695',
             'country_id' => 46,
             'varation' => '{"type": ["ningde"]}',
-            'created_at' => '2018-11-23 15:42:12',
-            'updated_at' => '2018-11-23 15:42:12',
+            'created_at' => '2018-11-23 11:42:12',
+            'updated_at' => '2018-11-23 11:42:12',
         ),
-        382 => 
+        370 => 
         array (
             'id' => 1637,
             'name' => 'Yuzhu',
             'code' => 'CNYZU',
             'display_name' => 'Yuzhu, CNYZU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
         'varation' => '{"type": ["huangpu (yuzhu)", "huangpu yuzhu", "yuzhu"]}',
-            'created_at' => '2018-11-23 15:52:24',
-            'updated_at' => '2019-01-24 13:16:19',
+            'created_at' => '2018-11-23 11:52:24',
+            'updated_at' => '2019-01-24 09:16:19',
         ),
-        383 => 
+        371 => 
         array (
             'id' => 1638,
             'name' => 'Anji',
             'code' => 'CNAN1',
             'display_name' => 'Anji, AN1',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["anji"]}',
-            'created_at' => '2018-11-23 16:00:30',
-            'updated_at' => '2018-11-23 16:00:30',
+            'created_at' => '2018-11-23 12:00:30',
+            'updated_at' => '2018-11-23 12:00:30',
         ),
-        384 => 
+        372 => 
         array (
             'id' => 1639,
             'name' => 'Tanjung Manis',
             'code' => 'MYTMP',
             'display_name' => 'Tanjung Manis,',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 155,
             'varation' => '{"type": ["tanjung manis"]}',
-            'created_at' => '2018-11-23 16:16:43',
-            'updated_at' => '2018-11-23 16:16:43',
+            'created_at' => '2018-11-23 12:16:43',
+            'updated_at' => '2018-11-23 12:16:43',
         ),
-        385 => 
+        373 => 
         array (
             'id' => 1640,
-            'name' => 'Cai Mep',
+            'name' => 'Ho Chi Minh Cai Mep',
             'code' => 'VNCMT',
-            'display_name' => 'Cai Mep, VNCMT',
-            'coordinates' => '',
+            'display_name' => 'Ho Chi Minh Cai Mep, VNCMT',
+            'coordinates' => NULL,
             'country_id' => 237,
-        'varation' => '{"type": ["ba ria-vung tau (cai mep)", "ba ria-vung tau cai mep", "cai mep", "cai mep - tcit"]}',
-            'created_at' => '2018-11-23 16:26:38',
-            'updated_at' => '2019-02-19 14:41:35',
+        'varation' => '{"type": ["ba ria-vung tau (cai mep)", "ba ria-vung tau cai mep", "cai mep", "cai mep - tcit", "ho chi minh - cai mep", "ho-chi-minh cai mep"]}',
+            'created_at' => '2018-11-23 12:26:38',
+            'updated_at' => '2019-03-14 19:50:17',
         ),
-        386 => 
+        374 => 
         array (
             'id' => 1641,
             'name' => 'Port Victoria',
             'code' => 'SCPOV',
             'display_name' => 'Port Victoria, SCPOV',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 192,
-            'varation' => '{"type": ["victoria, seychelles"]}',
-            'created_at' => '2018-11-28 12:33:51',
-            'updated_at' => '2019-01-28 12:21:30',
+            'varation' => '{"type": ["victoria, seychelles", "victoria", "port victoria"]}',
+            'created_at' => '2018-11-28 08:33:51',
+            'updated_at' => '2019-04-02 05:24:17',
         ),
-        387 => 
+        375 => 
         array (
             'id' => 1642,
             'name' => 'Port Reunion',
             'code' => 'REREU',
             'display_name' => 'Port Reunion, REREU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 185,
-            'varation' => '{"type": ["port reunion, reunion", "le port"]}',
-            'created_at' => '2018-11-28 12:35:18',
-            'updated_at' => '2019-02-27 14:36:11',
+            'varation' => '{"type": ["port reunion, reunion", "le port", "port reunion"]}',
+            'created_at' => '2018-11-28 08:35:18',
+            'updated_at' => '2019-03-14 08:17:26',
         ),
-        388 => 
+        376 => 
         array (
             'id' => 1643,
             'name' => 'Toamasina',
             'code' => 'MGTOA',
             'display_name' => 'Toamasina, MGTOA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 139,
             'varation' => '{"type": ["toamasina", "toamasina, madagascar"]}',
-            'created_at' => '2018-11-28 12:36:03',
-            'updated_at' => '2019-01-28 12:21:17',
+            'created_at' => '2018-11-28 08:36:03',
+            'updated_at' => '2019-01-28 08:21:17',
         ),
-        389 => 
+        377 => 
         array (
             'id' => 1644,
             'name' => 'San jose',
             'code' => 'CRSJO',
             'display_name' => 'San Jose, CRSJO',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 48,
-        'varation' => '{"type": ["san jose (door only)", "san jose"]}',
-            'created_at' => '2018-12-10 15:17:05',
-            'updated_at' => '2019-02-27 20:40:40',
+        'varation' => '{"type": ["san jose (door only)", "san jose", "san jose, costa rica", "san jose de costa rica", "san jose, cr", "crsjo", "sa jose, cr"]}',
+            'created_at' => '2018-12-10 11:17:05',
+            'updated_at' => '2019-04-03 11:42:39',
         ),
-        390 => 
+        378 => 
         array (
             'id' => 1645,
             'name' => 'Jiangxi',
             'code' => 'CNJNX',
             'display_name' => 'Jiangxi, CNJNX',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
-            'varation' => '{"type": ["cnjnx"]}',
-            'created_at' => '2018-12-10 15:48:44',
-            'updated_at' => '2018-12-10 15:48:44',
+            'varation' => '{"type": ["cnjnx", "jiangxi jiujiang"]}',
+            'created_at' => '2018-12-10 11:48:44',
+            'updated_at' => '2019-04-09 15:00:52',
         ),
-        391 => 
+        379 => 
         array (
             'id' => 1646,
             'name' => 'Taipei',
             'code' => 'TWTPE',
             'display_name' => 'Taipei, TWTPE',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 224,
-            'varation' => '{"type": ["twtpe", "taipei", "taipei, taiwan"]}',
-            'created_at' => '2018-12-10 15:52:32',
-            'updated_at' => '2019-03-06 11:51:10',
+            'varation' => '{"type": ["twtpe", "taipei", "taipei, taiwan", "taipei port"]}',
+            'created_at' => '2018-12-10 11:52:32',
+            'updated_at' => '2019-03-27 15:05:07',
         ),
-        392 => 
+        380 => 
         array (
             'id' => 1647,
             'name' => 'Kunshan',
             'code' => 'CNKUS',
             'display_name' => 'Kunshan, CNKUS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
-            'varation' => '{"type": ["kunshan"]}',
-            'created_at' => '2018-12-12 12:17:21',
-            'updated_at' => '2018-12-12 12:17:21',
+            'varation' => '{"type": ["kunshan", "kunshan, jiangsu"]}',
+            'created_at' => '2018-12-12 08:17:21',
+            'updated_at' => '2019-03-22 07:30:37',
         ),
-        393 => 
+        381 => 
         array (
             'id' => 1648,
             'name' => 'Imbituba',
             'code' => 'BRIBB',
             'display_name' => 'Imbituba, BRIBB',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 30,
             'varation' => '{"type": ["imbituba", "imbituba, br", "imbituba br"]}',
-            'created_at' => '2018-12-12 13:05:29',
-            'updated_at' => '2018-12-20 16:08:10',
+            'created_at' => '2018-12-12 09:05:29',
+            'updated_at' => '2018-12-20 12:08:10',
         ),
-        394 => 
+        382 => 
         array (
             'id' => 1649,
             'name' => 'Concepcion del Uruguay',
             'code' => 'ARCOU',
             'display_name' => 'Concepcion del Uruguay ,ARCOU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 10,
-            'varation' => '{"type": ["concepcion del uruguay ,ar"]}',
-            'created_at' => '2018-12-12 13:39:28',
-            'updated_at' => '2018-12-12 13:39:28',
+            'varation' => '{"type": ["concepcion del uruguay ,ar", "concepcion del uruguay, argentina"]}',
+            'created_at' => '2018-12-12 09:39:28',
+            'updated_at' => '2019-03-13 12:12:41',
         ),
-        395 => 
+        383 => 
         array (
             'id' => 1650,
             'name' => 'Cabinda',
@@ -10767,11 +10623,11 @@ class HarborsTableSeeder extends Seeder
             'display_name' => 'Cabinda, AOCAB',
             'coordinates' => '5.5482455 12.192505',
             'country_id' => 8,
-            'varation' => '{"type": ["cabinda ,ao", "cabinda ao", "cabinda ,ao", "cabinda ao", "cabinda ao", "cabinda, angola", "cabinda angola"]}',
-            'created_at' => '2018-12-13 14:21:02',
-            'updated_at' => '2019-01-25 14:14:48',
+            'varation' => '{"type": ["cabinda ,ao", "cabinda ao", "cabinda ,ao", "cabinda ao", "cabinda ao", "cabinda, angola", "cabinda angola", "aocab cabinda"]}',
+            'created_at' => '2018-12-13 10:21:02',
+            'updated_at' => '2019-03-26 21:40:36',
         ),
-        396 => 
+        384 => 
         array (
             'id' => 1651,
             'name' => 'Luderitz',
@@ -10780,346 +10636,346 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '-26.6385 15.157',
             'country_id' => 157,
             'varation' => '{"type": ["luderitz ,na", "luderitz na", "luderitz, namibia", "luderitz namibia"]}',
-            'created_at' => '2018-12-13 14:22:10',
-            'updated_at' => '2019-01-16 12:57:53',
+            'created_at' => '2018-12-13 10:22:10',
+            'updated_at' => '2019-01-16 08:57:53',
         ),
-        397 => 
+        385 => 
         array (
             'id' => 1652,
             'name' => 'Madrid',
             'code' => 'ESMAD',
             'display_name' => 'Madrid, ESMAD',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
-            'varation' => '{"type": ["madrid, spain", "madrid spain"]}',
-            'created_at' => '2018-12-14 15:19:00',
-            'updated_at' => '2018-12-14 15:19:00',
+            'varation' => '{"type": ["madrid, spain", "madrid spain", "esmad"]}',
+            'created_at' => '2018-12-14 11:19:00',
+            'updated_at' => '2019-04-02 06:45:23',
         ),
-        398 => 
+        386 => 
         array (
             'id' => 1653,
             'name' => 'Madang',
             'code' => 'PGMAG',
             'display_name' => 'Madang, PGMAG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 173,
             'varation' => '{"type": ["madang ,pg", "madang, papua new guinea", "madang, papua new guinea", "madang papua new guinea"]}',
-            'created_at' => '2018-12-17 10:42:57',
-            'updated_at' => '2019-01-22 14:26:02',
+            'created_at' => '2018-12-17 06:42:57',
+            'updated_at' => '2019-01-22 10:26:02',
         ),
-        399 => 
+        387 => 
         array (
             'id' => 1654,
             'name' => 'Newcastle',
             'code' => 'AUNTL',
             'display_name' => 'Newcastle, AUNTL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 13,
             'varation' => '{"type": ["newcastle ,au", "newcastle, australia", "newcastle australia"]}',
-            'created_at' => '2018-12-17 10:44:06',
-            'updated_at' => '2019-01-22 14:27:08',
+            'created_at' => '2018-12-17 06:44:06',
+            'updated_at' => '2019-01-22 10:27:08',
         ),
-        400 => 
+        388 => 
         array (
             'id' => 1655,
             'name' => 'Wewak',
             'code' => 'PGWWK',
             'display_name' => 'Wewak, PGWWK',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 173,
             'varation' => '{"type": ["wewak ,pg", "wewak, papua new guinea", "wewak papua new guinea"]}',
-            'created_at' => '2018-12-17 10:45:26',
-            'updated_at' => '2019-01-22 14:31:59',
+            'created_at' => '2018-12-17 06:45:26',
+            'updated_at' => '2019-01-22 10:31:59',
         ),
-        401 => 
+        389 => 
         array (
             'id' => 1656,
             'name' => 'Chizhou',
             'code' => 'CNCHI',
             'display_name' => 'Chizhou, CNCHI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["chizhou"]}',
-            'created_at' => '2018-12-17 13:01:16',
-            'updated_at' => '2018-12-17 13:01:16',
+            'created_at' => '2018-12-17 09:01:16',
+            'updated_at' => '2018-12-17 09:01:16',
         ),
-        402 => 
+        390 => 
         array (
             'id' => 1657,
             'name' => 'Tacoma',
             'code' => 'USTIW',
             'display_name' => 'Tacoma, USTIW',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 229,
             'varation' => '{"type": ["tacoma"]}',
-            'created_at' => '2019-01-02 11:10:43',
-            'updated_at' => '2019-01-02 11:10:43',
+            'created_at' => '2019-01-02 07:10:43',
+            'updated_at' => '2019-01-02 07:10:43',
         ),
-        403 => 
+        391 => 
         array (
             'id' => 1658,
             'name' => 'La union',
             'code' => 'SVLUN',
             'display_name' => 'La Union, SVLUN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 206,
             'varation' => '{"type": ["la union"]}',
-            'created_at' => '2019-01-02 11:16:25',
-            'updated_at' => '2019-01-02 11:16:25',
+            'created_at' => '2019-01-02 07:16:25',
+            'updated_at' => '2019-01-02 07:16:25',
         ),
-        404 => 
+        392 => 
         array (
             'id' => 1659,
             'name' => 'Halifax',
             'code' => 'CAHAL',
             'display_name' => 'Halifax, CAHAL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 36,
             'varation' => '{"type": ["halifax"]}',
-            'created_at' => '2019-01-02 11:18:11',
-            'updated_at' => '2019-01-02 11:18:11',
+            'created_at' => '2019-01-02 07:18:11',
+            'updated_at' => '2019-01-02 07:18:11',
         ),
-        405 => 
+        393 => 
         array (
             'id' => 1660,
             'name' => 'IR  BKM 	Bandar Khomeini',
             'code' => 'IRBKM',
             'display_name' => 'Bandar Khomeini, IRBKM',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 105,
             'varation' => '{"type": ["b. iman khomeini", "bandar imam khomeini", "b. iman khomeini", "b iman khomeini", "bandar iman khomeni"]}',
-            'created_at' => '2019-01-02 13:53:45',
-            'updated_at' => '2019-02-08 11:30:19',
+            'created_at' => '2019-01-02 09:53:45',
+            'updated_at' => '2019-02-08 07:30:19',
         ),
-        406 => 
+        394 => 
         array (
             'id' => 1661,
             'name' => 'Rades',
             'code' => 'TNRDS',
             'display_name' => 'Rades, TNRDS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 219,
-            'varation' => '{"type": ["tunez-rades", "tunezrades", "rades", "tunis rades", "rades* pol sagunto"]}',
-            'created_at' => '2019-01-02 13:59:42',
-            'updated_at' => '2019-02-27 13:50:33',
+            'varation' => '{"type": ["tunez-rades", "tunezrades", "rades", "tunis rades", "rades* pol sagunto", "tunez/tunis rades", "tuneztunis rades", "tunis rades"]}',
+            'created_at' => '2019-01-02 09:59:42',
+            'updated_at' => '2019-04-04 16:27:31',
         ),
-        407 => 
+        395 => 
         array (
             'id' => 1662,
             'name' => 'Bandar Assaluyeh',
             'code' => 'IRBAH',
             'display_name' => 'Bandar Assaluyeh, IRBAH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 105,
             'varation' => '{"type": ["assaluyeh", "asseluyeh"]}',
-            'created_at' => '2019-01-02 14:01:17',
-            'updated_at' => '2019-02-04 16:26:45',
+            'created_at' => '2019-01-02 10:01:17',
+            'updated_at' => '2019-02-04 12:26:45',
         ),
-        408 => 
+        396 => 
         array (
             'id' => 1663,
             'name' => 'KHORAMMSHAR',
             'code' => 'IRKHO',
             'display_name' => 'Khorramshahr, IRKHO',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 105,
             'varation' => '{"type": ["busher, khorammshar", "khorramshahr", "busheir, khorammshar", "khorramshar"]}',
-            'created_at' => '2019-01-02 14:07:01',
-            'updated_at' => '2019-02-08 11:30:02',
+            'created_at' => '2019-01-02 10:07:01',
+            'updated_at' => '2019-02-08 07:30:02',
         ),
-        409 => 
+        397 => 
         array (
             'id' => 1664,
             'name' => 'Binh Duong',
             'code' => 'VNBDU',
             'display_name' => 'Binh Duong, VNBDU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
             'varation' => '{"type": ["binh duong", "binh duong, vietnam", "binh duong vietnam"]}',
-            'created_at' => '2019-01-03 20:43:07',
-            'updated_at' => '2019-01-03 20:43:25',
+            'created_at' => '2019-01-03 16:43:07',
+            'updated_at' => '2019-01-03 16:43:25',
         ),
-        410 => 
+        398 => 
         array (
             'id' => 1665,
             'name' => 'Toronto',
             'code' => 'CATOR',
             'display_name' => 'Toronto, CATOR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 36,
-            'varation' => '{"type": ["toronto cy"]}',
-            'created_at' => '2019-01-07 11:59:49',
-            'updated_at' => '2019-01-07 11:59:49',
+            'varation' => '{"type": ["toronto cy", "toronto, on"]}',
+            'created_at' => '2019-01-07 07:59:49',
+            'updated_at' => '2019-03-07 15:17:01',
         ),
-        411 => 
+        399 => 
         array (
             'id' => 1666,
             'name' => 'Saigon',
             'code' => 'VNSGN',
             'display_name' => 'Saigon, VNSGN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
             'varation' => '{"type": ["saigon - ho chi minh"]}',
-            'created_at' => '2019-01-07 16:08:17',
-            'updated_at' => '2019-01-07 16:08:17',
+            'created_at' => '2019-01-07 12:08:17',
+            'updated_at' => '2019-01-07 12:08:17',
         ),
-        412 => 
+        400 => 
         array (
             'id' => 1667,
             'name' => 'Fortaleza',
             'code' => 'BRFOR',
             'display_name' => 'fortaleza, BRFOR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 30,
             'varation' => '{"type": ["fortaleza"]}',
-            'created_at' => '2019-01-09 19:20:02',
-            'updated_at' => '2019-01-09 19:20:02',
+            'created_at' => '2019-01-09 15:20:02',
+            'updated_at' => '2019-01-09 15:20:02',
         ),
-        413 => 
+        401 => 
         array (
             'id' => 1668,
             'name' => 'Sao Francisco do Sul',
             'code' => 'BRSFS',
             'display_name' => 'Sao Francisco do Sul, SFS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 30,
             'varation' => '{"type": ["são francisco do sul"]}',
-            'created_at' => '2019-01-09 19:25:23',
-            'updated_at' => '2019-01-09 19:39:45',
+            'created_at' => '2019-01-09 15:25:23',
+            'updated_at' => '2019-01-09 15:39:45',
         ),
-        414 => 
+        402 => 
         array (
             'id' => 1669,
             'name' => 'Itaqui',
             'code' => 'BRITQ',
             'display_name' => 'Itaqui, BRITQ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 30,
             'varation' => '{"type": ["itaqui"]}',
-            'created_at' => '2019-01-09 20:09:03',
-            'updated_at' => '2019-01-09 20:09:03',
+            'created_at' => '2019-01-09 16:09:03',
+            'updated_at' => '2019-01-09 16:09:03',
         ),
-        415 => 
+        403 => 
         array (
             'id' => 1670,
             'name' => 'Civet',
             'code' => 'CNCIV',
             'display_name' => 'Civet, CNCIV',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["civet, gaolan, doumen, hongwanzhuai area"]}',
-            'created_at' => '2019-01-15 12:19:40',
-            'updated_at' => '2019-01-15 12:19:40',
+            'created_at' => '2019-01-15 08:19:40',
+            'updated_at' => '2019-01-15 08:19:40',
         ),
-        416 => 
+        404 => 
         array (
             'id' => 1671,
             'name' => 'Caofeidian',
             'code' => 'CNCFD',
             'display_name' => 'Caofeidian, CNCFD',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["caofeidian"]}',
-            'created_at' => '2019-01-15 13:45:40',
-            'updated_at' => '2019-01-15 13:45:40',
+            'created_at' => '2019-01-15 09:45:40',
+            'updated_at' => '2019-01-15 09:45:40',
         ),
-        417 => 
+        405 => 
         array (
             'id' => 1672,
             'name' => 'Jingtang',
             'code' => 'CNTAS',
             'display_name' => 'Jingtang, CNTAS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["jingtang"]}',
-            'created_at' => '2019-01-15 13:47:10',
-            'updated_at' => '2019-01-15 13:47:10',
+            'created_at' => '2019-01-15 09:47:10',
+            'updated_at' => '2019-01-15 09:47:10',
         ),
-        418 => 
+        406 => 
         array (
             'id' => 1673,
             'name' => 'Shashi',
             'code' => 'CNSHS',
             'display_name' => 'Shashi, CNSHS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["shashi"]}',
-            'created_at' => '2019-01-22 10:43:24',
-            'updated_at' => '2019-01-22 10:43:24',
+            'created_at' => '2019-01-22 06:43:24',
+            'updated_at' => '2019-01-22 06:43:24',
         ),
-        419 => 
+        407 => 
         array (
             'id' => 1674,
             'name' => 'Midland Port',
             'code' => 'NZ',
             'display_name' => 'Midland Port',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 168,
             'varation' => '{"type": ["lpc midland port, new zealand", "lpc midland port new zealand"]}',
-            'created_at' => '2019-01-22 14:37:46',
-            'updated_at' => '2019-01-22 14:37:46',
+            'created_at' => '2019-01-22 10:37:46',
+            'updated_at' => '2019-01-22 10:37:46',
         ),
-        420 => 
+        408 => 
         array (
             'id' => 1675,
             'name' => 'Ennore',
             'code' => 'INENR',
             'display_name' => 'Ennore, INENR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 102,
             'varation' => '{"type": ["ennore chennai, india", "ennore chennai india"]}',
-            'created_at' => '2019-01-22 14:39:15',
-            'updated_at' => '2019-01-22 14:39:15',
+            'created_at' => '2019-01-22 10:39:15',
+            'updated_at' => '2019-01-22 10:39:15',
         ),
-        421 => 
+        409 => 
         array (
             'id' => 1676,
             'name' => 'Montego Bay',
             'code' => 'JMMBJ',
             'display_name' => 'Montego Bay, JMMBJ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 109,
             'varation' => '{"type": ["montego bay", "montego bay"]}',
-            'created_at' => '2019-01-28 15:31:01',
-            'updated_at' => '2019-02-07 12:59:51',
+            'created_at' => '2019-01-28 11:31:01',
+            'updated_at' => '2019-02-07 08:59:51',
         ),
-        422 => 
+        410 => 
         array (
             'id' => 1677,
             'name' => 'El Guamache',
             'code' => 'VEEGU',
             'display_name' => 'El Guamache, VEEGU',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 234,
             'varation' => '{"type": ["el guamache"]}',
-            'created_at' => '2019-01-28 15:31:58',
-            'updated_at' => '2019-01-28 15:31:58',
+            'created_at' => '2019-01-28 11:31:58',
+            'updated_at' => '2019-01-28 11:31:58',
         ),
-        423 => 
+        411 => 
         array (
             'id' => 1678,
             'name' => 'Barcadera',
             'code' => 'AWBAR',
             'display_name' => 'Barcadera, AWBAR',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 14,
         'varation' => '{"type": ["(aruba) barcadera", "aruba barcadera"]}',
-            'created_at' => '2019-01-28 15:32:59',
-            'updated_at' => '2019-01-28 15:32:59',
+            'created_at' => '2019-01-28 11:32:59',
+            'updated_at' => '2019-01-28 11:32:59',
         ),
-        424 => 
+        412 => 
         array (
             'id' => 1679,
             'name' => 'Ghazaouet',
             'code' => 'DZGHZ',
             'display_name' => 'Ghazaouet, DZGHZ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 60,
             'varation' => '{"type": ["ghazaouet"]}',
-            'created_at' => '2019-02-04 14:00:09',
-            'updated_at' => '2019-02-04 14:08:53',
+            'created_at' => '2019-02-04 10:00:09',
+            'updated_at' => '2019-02-04 10:08:53',
         ),
-        425 => 
+        413 => 
         array (
             'id' => 1680,
             'name' => 'Bizerte',
@@ -11128,10 +10984,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '37.261225 9.8599185',
             'country_id' => 219,
             'varation' => '{"type": ["bizerte", "bizerta"]}',
-            'created_at' => '2019-02-04 14:09:56',
-            'updated_at' => '2019-02-14 13:09:34',
+            'created_at' => '2019-02-04 10:09:56',
+            'updated_at' => '2019-02-14 09:09:34',
         ),
-        426 => 
+        414 => 
         array (
             'id' => 1681,
             'name' => 'Mostaganem',
@@ -11140,10 +10996,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '35.929275 0.06992508',
             'country_id' => 60,
             'varation' => '{"type": ["mostaganem"]}',
-            'created_at' => '2019-02-04 14:10:51',
-            'updated_at' => '2019-02-04 14:10:51',
+            'created_at' => '2019-02-04 10:10:51',
+            'updated_at' => '2019-02-04 10:10:51',
         ),
-        427 => 
+        415 => 
         array (
             'id' => 1682,
             'name' => 'Tartous',
@@ -11152,10 +11008,10 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '34.90542 35.85491',
             'country_id' => 208,
             'varation' => '{"type": ["tartous"]}',
-            'created_at' => '2019-02-04 14:12:39',
-            'updated_at' => '2019-02-04 14:12:39',
+            'created_at' => '2019-02-04 10:12:39',
+            'updated_at' => '2019-02-04 10:12:39',
         ),
-        428 => 
+        416 => 
         array (
             'id' => 1683,
             'name' => 'Sousse',
@@ -11164,250 +11020,250 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '35.8255 10.6485',
             'country_id' => 219,
             'varation' => '{"type": ["sousse"]}',
-            'created_at' => '2019-02-04 14:15:12',
-            'updated_at' => '2019-02-04 14:15:12',
+            'created_at' => '2019-02-04 10:15:12',
+            'updated_at' => '2019-02-04 10:15:12',
         ),
-        429 => 
+        417 => 
         array (
             'id' => 1684,
             'name' => 'Port Gentil',
             'code' => 'GAPOG',
             'display_name' => 'Port Gentil, GAPOG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 74,
             'varation' => '{"type": ["port gentil"]}',
-            'created_at' => '2019-02-04 14:29:46',
-            'updated_at' => '2019-02-04 14:29:46',
+            'created_at' => '2019-02-04 10:29:46',
+            'updated_at' => '2019-02-04 10:29:46',
         ),
-        430 => 
+        418 => 
         array (
             'id' => 1685,
             'name' => 'Kribi',
             'code' => 'CMKBI',
             'display_name' => 'Kribi, CMKBI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 45,
             'varation' => '{"type": ["kribi"]}',
-            'created_at' => '2019-02-04 14:30:54',
-            'updated_at' => '2019-02-04 14:30:54',
+            'created_at' => '2019-02-04 10:30:54',
+            'updated_at' => '2019-02-04 10:30:54',
         ),
-        431 => 
+        419 => 
         array (
             'id' => 1686,
             'name' => 'Boma',
             'code' => 'CDBOA',
             'display_name' => 'Boma, CDBOA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 38,
             'varation' => '{"type": ["boma"]}',
-            'created_at' => '2019-02-04 14:33:14',
-            'updated_at' => '2019-02-04 14:33:14',
+            'created_at' => '2019-02-04 10:33:14',
+            'updated_at' => '2019-02-04 10:33:14',
         ),
-        432 => 
+        420 => 
         array (
             'id' => 1687,
             'name' => 'Soyo',
             'code' => 'AOSZA',
             'display_name' => 'Soyo, AOSZA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 8,
             'varation' => '{"type": ["soyo"]}',
-            'created_at' => '2019-02-04 16:16:12',
-            'updated_at' => '2019-02-04 16:16:12',
+            'created_at' => '2019-02-04 12:16:12',
+            'updated_at' => '2019-02-04 12:16:12',
         ),
-        433 => 
+        421 => 
         array (
             'id' => 1688,
             'name' => 'Fort de France',
             'code' => 'MQFDF',
             'display_name' => 'Fort de France, MQFDF',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 147,
-            'varation' => '{"type": ["fort de france"]}',
-            'created_at' => '2019-02-04 16:21:00',
-            'updated_at' => '2019-02-04 16:21:00',
+        'varation' => '{"type": ["fort de france", "fort de france martinique", "fort de france (mq)", "fort de france mq"]}',
+            'created_at' => '2019-02-04 12:21:00',
+            'updated_at' => '2019-03-30 07:16:56',
         ),
-        434 => 
+        422 => 
         array (
             'id' => 1689,
             'name' => 'Villagarcia',
             'code' => 'ESVIL',
             'display_name' => 'Villagarcia, ESVIL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
-            'varation' => '{"type": ["vigallagarcia"]}',
-            'created_at' => '2019-02-04 16:28:52',
-            'updated_at' => '2019-02-04 16:28:52',
+            'varation' => '{"type": ["vigallagarcia", "villagracia"]}',
+            'created_at' => '2019-02-04 12:28:52',
+            'updated_at' => '2019-04-01 14:34:33',
         ),
-        435 => 
+        423 => 
         array (
             'id' => 1690,
             'name' => 'Sevilla',
             'code' => 'ESSVQ',
             'display_name' => 'Sevilla, ESSVQ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["sevilla", "sevilla pol sines", "sevilla-essvq-spain"]}',
-            'created_at' => '2019-02-04 16:29:41',
-            'updated_at' => '2019-02-22 14:21:59',
+            'created_at' => '2019-02-04 12:29:41',
+            'updated_at' => '2019-02-22 10:21:59',
         ),
-        436 => 
+        424 => 
         array (
             'id' => 1691,
             'name' => 'Taiping',
             'code' => 'CNTAP',
             'display_name' => 'Taiping, CNTAP',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 46,
             'varation' => '{"type": ["taiping"]}',
-            'created_at' => '2019-02-07 12:47:54',
-            'updated_at' => '2019-02-07 12:47:54',
+            'created_at' => '2019-02-07 08:47:54',
+            'updated_at' => '2019-02-07 08:47:54',
         ),
-        437 => 
+        425 => 
         array (
             'id' => 1692,
             'name' => 'Ain Sukhna',
             'code' => 'EGAIS',
             'display_name' => 'Ain Sukhna, EGAIS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 63,
             'varation' => '{"type": ["ain sukhna"]}',
-            'created_at' => '2019-02-07 12:49:36',
-            'updated_at' => '2019-02-07 12:49:36',
+            'created_at' => '2019-02-07 08:49:36',
+            'updated_at' => '2019-02-07 08:49:36',
         ),
-        438 => 
+        426 => 
         array (
             'id' => 1693,
             'name' => 'Miri',
             'code' => 'MYMYY',
             'display_name' => 'Miri, MYMYY',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 155,
             'varation' => '{"type": ["miri"]}',
-            'created_at' => '2019-02-07 12:54:03',
-            'updated_at' => '2019-02-07 12:54:03',
+            'created_at' => '2019-02-07 08:54:03',
+            'updated_at' => '2019-02-07 08:54:03',
         ),
-        439 => 
+        427 => 
         array (
             'id' => 1694,
             'name' => 'Lafiteau',
             'code' => 'HTLFF',
             'display_name' => 'Lafiteau, HTLFF',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 96,
             'varation' => '{"type": ["lafito"]}',
-            'created_at' => '2019-02-07 13:04:17',
-            'updated_at' => '2019-02-07 13:04:17',
+            'created_at' => '2019-02-07 09:04:17',
+            'updated_at' => '2019-02-07 09:04:17',
         ),
-        440 => 
+        428 => 
         array (
             'id' => 1695,
             'name' => 'Balikpapan',
             'code' => 'IDBPN',
             'display_name' => 'Balikpapan, IDBPN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 98,
             'varation' => '{"type": ["balikpapan"]}',
-            'created_at' => '2019-02-12 13:36:05',
-            'updated_at' => '2019-02-12 13:36:05',
+            'created_at' => '2019-02-12 09:36:05',
+            'updated_at' => '2019-02-12 09:36:05',
         ),
-        441 => 
+        429 => 
         array (
             'id' => 1696,
             'name' => 'Samarinda',
             'code' => 'IDSRI',
             'display_name' => 'Samarinda, IDSRI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 98,
             'varation' => '{"type": ["samarinda"]}',
-            'created_at' => '2019-02-12 13:38:57',
-            'updated_at' => '2019-02-12 13:38:57',
+            'created_at' => '2019-02-12 09:38:57',
+            'updated_at' => '2019-02-12 09:38:57',
         ),
-        442 => 
+        430 => 
         array (
             'id' => 1697,
             'name' => 'Shimonosek',
             'code' => 'JPSHS',
             'display_name' => 'Shimonosek, JPSHS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 111,
             'varation' => '{"type": ["shimonosek"]}',
-            'created_at' => '2019-02-12 13:39:46',
-            'updated_at' => '2019-02-12 13:39:46',
+            'created_at' => '2019-02-12 09:39:46',
+            'updated_at' => '2019-02-12 09:39:46',
         ),
-        443 => 
+        431 => 
         array (
             'id' => 1698,
             'name' => 'Hanoi',
             'code' => 'VNHAN',
             'display_name' => 'Hanoi, VNHAN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
-            'varation' => '{"type": ["hanói"]}',
-            'created_at' => '2019-02-14 11:28:33',
-            'updated_at' => '2019-02-14 11:28:33',
+            'varation' => '{"type": ["hanói", "hanoi"]}',
+            'created_at' => '2019-02-14 07:28:33',
+            'updated_at' => '2019-03-07 15:13:12',
         ),
-        444 => 
+        432 => 
         array (
             'id' => 1699,
             'name' => 'Budapest',
             'code' => 'HUBUD',
             'display_name' => 'Budapest, HUBUD',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 97,
             'varation' => '{"type": ["budapest", "budapest ,hu", "budapest hu"]}',
-            'created_at' => '2019-02-14 11:40:42',
-            'updated_at' => '2019-02-26 12:12:22',
+            'created_at' => '2019-02-14 07:40:42',
+            'updated_at' => '2019-02-26 08:12:22',
         ),
-        445 => 
+        433 => 
         array (
             'id' => 1700,
             'name' => 'Hamburg',
             'code' => 'DEHAM',
             'display_name' => 'Hamburg, DEHAM',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 55,
             'varation' => '{"type": ["hamburg", "hamburgo"]}',
-            'created_at' => '2019-02-14 11:43:25',
-            'updated_at' => '2019-02-14 11:43:25',
+            'created_at' => '2019-02-14 07:43:25',
+            'updated_at' => '2019-02-14 07:43:25',
         ),
-        446 => 
+        434 => 
         array (
             'id' => 1701,
             'name' => 'Helsingborg',
             'code' => 'SUHEL',
             'display_name' => 'Helsingborg, SUHEL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 194,
             'varation' => '{"type": ["helsingborg", "helsinford"]}',
-            'created_at' => '2019-02-14 11:45:21',
-            'updated_at' => '2019-02-14 11:45:21',
+            'created_at' => '2019-02-14 07:45:21',
+            'updated_at' => '2019-02-14 07:45:21',
         ),
-        447 => 
+        435 => 
         array (
             'id' => 1702,
             'name' => 'Cap Haitien',
             'code' => 'HTCAP',
             'display_name' => 'Cap Haitien, HTCAP',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 96,
             'varation' => '{"type": ["cap haitien"]}',
-            'created_at' => '2019-02-14 12:03:19',
-            'updated_at' => '2019-02-14 12:03:19',
+            'created_at' => '2019-02-14 08:03:19',
+            'updated_at' => '2019-02-14 08:03:19',
         ),
-        448 => 
+        436 => 
         array (
             'id' => 1703,
             'name' => 'Gavle',
             'code' => 'SEGVX',
             'display_name' => 'Gavle, SEGVX',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 194,
             'varation' => '{"type": ["gavle", "gavie"]}',
-            'created_at' => '2019-02-14 12:18:16',
-            'updated_at' => '2019-02-14 12:18:16',
+            'created_at' => '2019-02-14 08:18:16',
+            'updated_at' => '2019-02-14 08:18:16',
         ),
-        449 => 
+        437 => 
         array (
             'id' => 1704,
             'name' => 'Kiev',
@@ -11416,286 +11272,1632 @@ class HarborsTableSeeder extends Seeder
             'coordinates' => '50.475615 30.55092',
             'country_id' => 226,
             'varation' => '{"type": ["kiev"]}',
-            'created_at' => '2019-02-14 13:11:35',
-            'updated_at' => '2019-02-14 13:11:35',
+            'created_at' => '2019-02-14 09:11:35',
+            'updated_at' => '2019-02-14 09:11:35',
         ),
-        450 => 
+        438 => 
         array (
             'id' => 1705,
             'name' => 'Zaragoza',
             'code' => 'ESZAZ',
             'display_name' => 'Zaragoza, ESZAZ',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["zaragoza"]}',
-            'created_at' => '2019-02-14 13:15:31',
-            'updated_at' => '2019-02-14 13:15:31',
+            'created_at' => '2019-02-14 09:15:31',
+            'updated_at' => '2019-02-14 09:15:31',
         ),
-        451 => 
+        439 => 
         array (
             'id' => 1706,
             'name' => 'Coco Solo',
             'code' => 'PACSO',
             'display_name' => 'Coco Solo, PACSO',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 170,
             'varation' => '{"type": ["coco solo"]}',
-            'created_at' => '2019-02-15 11:38:57',
-            'updated_at' => '2019-02-15 11:38:57',
+            'created_at' => '2019-02-15 07:38:57',
+            'updated_at' => '2019-02-15 07:38:57',
         ),
-        452 => 
+        440 => 
         array (
             'id' => 1707,
             'name' => 'Noain',
             'code' => 'ESNIN',
             'display_name' => 'Noain, ESNIN',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 66,
             'varation' => '{"type": ["noain"]}',
-            'created_at' => '2019-02-19 14:15:56',
-            'updated_at' => '2019-02-19 14:15:56',
+            'created_at' => '2019-02-19 10:15:56',
+            'updated_at' => '2019-02-19 10:15:56',
         ),
-        453 => 
+        441 => 
         array (
             'id' => 1708,
             'name' => 'Bangkok',
             'code' => 'THTPT',
             'display_name' => 'Bangkok, THTPT',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 214,
-        'varation' => '{"type": ["bangkok (thai prosperity terminal, tpt)", "bangkok thai prosperity terminal, tpt"]}',
-            'created_at' => '2019-02-19 14:33:36',
-            'updated_at' => '2019-02-19 14:33:36',
+        'varation' => '{"type": ["bangkok (thai prosperity terminal, tpt)", "bangkok thai prosperity terminal, tpt", "bangkok tpt"]}',
+            'created_at' => '2019-02-19 10:33:36',
+            'updated_at' => '2019-03-27 09:00:07',
         ),
-        454 => 
+        442 => 
         array (
             'id' => 1709,
             'name' => 'Ho Chi Minh, Cat Lai',
             'code' => 'VNCLI',
             'display_name' => 'Ho Chi Minh, Cat Lai, VNCLI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
-            'varation' => '{"type": ["ho chi minh, cat lai", "hochiminh cat lai"]}',
-            'created_at' => '2019-02-19 14:36:06',
-            'updated_at' => '2019-02-27 01:49:59',
+            'varation' => '{"type": ["ho chi minh, cat lai", "hochiminh cat lai", "ho chi minh - cat lai", "hcmc - cat lai", "hcmc cat lai"]}',
+            'created_at' => '2019-02-19 10:36:06',
+            'updated_at' => '2019-03-30 07:32:14',
         ),
-        455 => 
+        443 => 
         array (
             'id' => 1710,
             'name' => 'Port Kelang West',
             'code' => 'MYWSP',
             'display_name' => 'Port Kelang West, MYWSP',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 155,
-            'varation' => '{"type": ["port kelang west", "port kelang - westport", "port kelang  westport"]}',
-            'created_at' => '2019-02-19 14:37:11',
-            'updated_at' => '2019-02-22 14:58:38',
+            'varation' => '{"type": ["port kelang west", "port kelang - westport", "port kelang  westport", "port klang west termi", "port klang west terminal"]}',
+            'created_at' => '2019-02-19 10:37:11',
+            'updated_at' => '2019-03-14 11:30:28',
         ),
-        456 => 
-        array (
-            'id' => 1711,
-            'name' => 'Ho Chi Minh, Victoria terminal',
-            'code' => 'VNVIC',
-            'display_name' => 'Ho Chi Minh, Victoria terminal, VNVIC',
-            'coordinates' => '',
-            'country_id' => 237,
-            'varation' => '{"type": ["borrar"]}',
-            'created_at' => '2019-02-19 14:42:35',
-            'updated_at' => '2019-02-20 16:31:24',
-        ),
-        457 => 
+        444 => 
         array (
             'id' => 1712,
             'name' => 'Riachos',
             'code' => 'PTRIA',
             'display_name' => 'Riachos, PTRIA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 181,
             'varation' => '{"type": ["riachos, portugal", "riachos portugal", "riachos"]}',
-            'created_at' => '2019-02-21 11:49:54',
-            'updated_at' => '2019-02-21 11:49:54',
+            'created_at' => '2019-02-21 07:49:54',
+            'updated_at' => '2019-02-21 07:49:54',
         ),
-        458 => 
+        445 => 
         array (
             'id' => 1713,
             'name' => 'Vieux Fort',
             'code' => 'LCVIF',
             'display_name' => 'Vieux Fort, LCVIF',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 125,
             'varation' => '{"type": ["vieux fort"]}',
-            'created_at' => '2019-02-21 22:03:29',
-            'updated_at' => '2019-02-21 22:03:29',
+            'created_at' => '2019-02-21 18:03:29',
+            'updated_at' => '2019-02-21 18:03:29',
         ),
-        459 => 
+        446 => 
         array (
             'id' => 1714,
             'name' => 'Aalborg',
             'code' => 'DKAAL',
             'display_name' => 'Aalborg, DKAAL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 57,
-            'varation' => '{"type": ["dkaal"]}',
-            'created_at' => '2019-02-25 14:04:58',
-            'updated_at' => '2019-02-25 14:04:58',
+            'varation' => '{"type": ["dkaal", "aalborg"]}',
+            'created_at' => '2019-02-25 10:04:58',
+            'updated_at' => '2019-03-20 14:33:38',
         ),
-        460 => 
+        447 => 
         array (
             'id' => 1715,
             'name' => 'Mantyluoto',
             'code' => 'FIMTL',
             'display_name' => 'Mantyluoto, FIMTL',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 68,
             'varation' => '{"type": ["mantyluoto", "fimtl", "fimty"]}',
-            'created_at' => '2019-02-25 14:07:12',
-            'updated_at' => '2019-02-25 14:07:12',
+            'created_at' => '2019-02-25 10:07:12',
+            'updated_at' => '2019-02-25 10:07:12',
         ),
-        461 => 
+        448 => 
         array (
             'id' => 1716,
             'name' => 'La Rochelle',
             'code' => 'FRLRH',
             'display_name' => 'La Rochelle, FRLRH',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 73,
             'varation' => '{"type": ["la rochelle", "frlrh"]}',
-            'created_at' => '2019-02-25 14:08:54',
-            'updated_at' => '2019-02-25 14:08:54',
+            'created_at' => '2019-02-25 10:08:54',
+            'updated_at' => '2019-02-25 10:08:54',
         ),
-        462 => 
+        449 => 
         array (
             'id' => 1717,
             'name' => 'Trapani',
             'code' => 'ITTPS',
             'display_name' => 'Trapani, ITTPS',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 107,
             'varation' => '{"type": ["trapani", "ittps"]}',
-            'created_at' => '2019-02-25 14:10:24',
-            'updated_at' => '2019-02-25 14:10:24',
+            'created_at' => '2019-02-25 10:10:24',
+            'updated_at' => '2019-02-25 10:10:24',
         ),
-        463 => 
+        450 => 
         array (
             'id' => 1718,
             'name' => 'Famagusta',
             'code' => 'CYFMG',
             'display_name' => 'Famagusta, CYFMG',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 53,
             'varation' => '{"type": ["famagusta"]}',
-            'created_at' => '2019-02-25 14:29:21',
-            'updated_at' => '2019-02-25 14:29:21',
+            'created_at' => '2019-02-25 10:29:21',
+            'updated_at' => '2019-02-25 10:29:21',
         ),
-        464 => 
+        451 => 
         array (
             'id' => 1719,
             'name' => 'Istanbul Marport',
             'code' => 'TRMPT',
             'display_name' => 'Istanbul Marport, TRMPT',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 221,
-            'varation' => '{"type": ["istanbul marport"]}',
-            'created_at' => '2019-02-25 14:32:19',
-            'updated_at' => '2019-02-25 14:32:19',
+        'varation' => '{"type": ["istanbul marport", "estambul marport", "istanbul marport", "istanbul (marport)"]}',
+            'created_at' => '2019-02-25 10:32:19',
+            'updated_at' => '2019-03-30 06:30:06',
         ),
-        465 => 
+        452 => 
         array (
             'id' => 1720,
             'name' => 'CHICAGO',
             'code' => 'USCHI',
             'display_name' => 'Chicago, USCHI',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 229,
-            'varation' => '{"type": ["chicago rail ramp"]}',
-            'created_at' => '2019-02-25 15:08:58',
-            'updated_at' => '2019-02-25 15:08:58',
+            'varation' => '{"type": ["chicago rail ramp", "chicago, il", "chicago, il", "chicago illinois"]}',
+            'created_at' => '2019-02-25 11:08:58',
+            'updated_at' => '2019-03-28 09:42:51',
         ),
-        466 => 
+        453 => 
         array (
             'id' => 1721,
             'name' => 'Saint John\'s',
             'code' => 'AGSJO',
             'display_name' => 'Saint John\'s, AGSJO',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 4,
-            'varation' => '{"type": ["saint john\'s", "st.john", "stjohn", "st john"]}',
-            'created_at' => '2019-02-27 11:30:12',
-            'updated_at' => '2019-02-27 20:30:06',
+            'varation' => '{"type": ["saint john\'s", "st john\'s", "st johns"]}',
+            'created_at' => '2019-02-27 07:30:12',
+            'updated_at' => '2019-04-02 04:29:18',
         ),
-        467 => 
+        454 => 
         array (
             'id' => 1722,
             'name' => 'Hamilton',
             'code' => 'BMBDA',
             'display_name' => 'Hamilton, BMBDA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 26,
             'varation' => '{"type": ["hamilton"]}',
-            'created_at' => '2019-02-28 03:13:36',
-            'updated_at' => '2019-02-28 03:13:36',
+            'created_at' => '2019-02-27 23:13:36',
+            'updated_at' => '2019-02-27 23:13:36',
         ),
-        468 => 
+        455 => 
         array (
             'id' => 1723,
             'name' => 'Malmo',
             'code' => 'SEMMA',
             'display_name' => 'Malmo, SEMMA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 194,
             'varation' => '{"type": ["malmo", "malmoe"]}',
-            'created_at' => '2019-03-05 14:10:41',
-            'updated_at' => '2019-03-05 14:10:41',
+            'created_at' => '2019-03-05 10:10:41',
+            'updated_at' => '2019-03-05 10:10:41',
         ),
-        469 => 
+        456 => 
         array (
             'id' => 1724,
             'name' => 'Bien Hoa',
             'code' => 'VNBHA',
             'display_name' => 'Bien Hoa , VNBHA',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
             'varation' => '{"type": ["bien hoa"]}',
-            'created_at' => '2019-03-06 16:31:22',
-            'updated_at' => '2019-03-06 16:31:22',
+            'created_at' => '2019-03-06 12:31:22',
+            'updated_at' => '2019-03-06 12:31:22',
         ),
-        470 => 
+        457 => 
         array (
             'id' => 1725,
             'name' => 'DI AN',
             'code' => 'VNDI2',
             'display_name' => 'Di An, VNDI2',
-            'coordinates' => '',
+            'coordinates' => NULL,
             'country_id' => 237,
             'varation' => '{"type": ["di an"]}',
-            'created_at' => '2019-03-06 16:32:56',
-            'updated_at' => '2019-03-06 16:32:56',
+            'created_at' => '2019-03-06 12:32:56',
+            'updated_at' => '2019-03-06 12:32:56',
+        ),
+        458 => 
+        array (
+            'id' => 1726,
+            'name' => 'Calgary',
+            'code' => 'CACAL',
+            'display_name' => 'Calgary, CACAL',
+            'coordinates' => NULL,
+            'country_id' => 36,
+            'varation' => '{"type": ["calgary", "calgary,ab"]}',
+            'created_at' => '2019-03-07 12:37:08',
+            'updated_at' => '2019-03-28 15:43:37',
+        ),
+        459 => 
+        array (
+            'id' => 1727,
+            'name' => 'Austin',
+            'code' => 'USAUS',
+            'display_name' => 'Austin, USAUS',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["austin, tx", "austin texas"]}',
+            'created_at' => '2019-03-07 13:08:58',
+            'updated_at' => '2019-03-28 09:40:16',
+        ),
+        460 => 
+        array (
+            'id' => 1728,
+            'name' => 'Johannesburgo',
+            'code' => 'ZAJBN',
+            'display_name' => 'Johannesburgo, ZAJBN',
+            'coordinates' => NULL,
+            'country_id' => 244,
+            'varation' => '{"type": ["johannesburg"]}',
+            'created_at' => '2019-03-07 15:24:58',
+            'updated_at' => '2019-03-07 15:24:58',
+        ),
+        461 => 
+        array (
+            'id' => 1729,
+            'name' => 'San Francisco',
+            'code' => 'USSFO',
+            'display_name' => 'San Francisco, USSFO',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["san francisco, ca", "san francisco ca", "san francisco california"]}',
+            'created_at' => '2019-03-07 15:28:06',
+            'updated_at' => '2019-03-25 08:28:33',
+        ),
+        462 => 
+        array (
+            'id' => 1730,
+            'name' => 'Seattle',
+            'code' => 'USSEA',
+            'display_name' => 'Seattle, USSEA',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["seattle, wa"]}',
+            'created_at' => '2019-03-07 15:28:47',
+            'updated_at' => '2019-03-07 15:28:47',
+        ),
+        463 => 
+        array (
+            'id' => 1731,
+            'name' => 'Atlanta',
+            'code' => 'USATL',
+            'display_name' => 'Atlanta, USATL',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["atlanta, ga", "atlanta georgia"]}',
+            'created_at' => '2019-03-07 15:32:25',
+            'updated_at' => '2019-03-25 08:25:34',
+        ),
+        464 => 
+        array (
+            'id' => 1732,
+            'name' => 'Baltimore',
+            'code' => 'USBAL',
+            'display_name' => 'Baltimore, USBAL',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["baltimore, md"]}',
+            'created_at' => '2019-03-07 15:33:17',
+            'updated_at' => '2019-03-07 15:33:17',
+        ),
+        465 => 
+        array (
+            'id' => 1733,
+            'name' => 'Santo Domingo',
+            'code' => 'DOSDQ',
+            'display_name' => 'Santo Domingo,DOSDQ',
+            'coordinates' => NULL,
+            'country_id' => 59,
+            'varation' => '{"type": ["santo domingosanto domingo"]}',
+            'created_at' => '2019-03-12 16:06:18',
+            'updated_at' => '2019-03-12 16:06:18',
+        ),
+        466 => 
+        array (
+            'id' => 1734,
+            'name' => 'Guatemala city',
+            'code' => 'GTGUA',
+            'display_name' => 'Guatemala city,GTGUA',
+            'coordinates' => NULL,
+            'country_id' => 89,
+            'varation' => '{"type": ["guatemala city"]}',
+            'created_at' => '2019-03-12 16:09:43',
+            'updated_at' => '2019-03-12 16:09:43',
+        ),
+        467 => 
+        array (
+            'id' => 1735,
+            'name' => 'Indianapolis',
+            'code' => 'USIND',
+            'display_name' => 'Indianapolis, USIND',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["indianapolis, in", "indianapolis indiana"]}',
+            'created_at' => '2019-03-12 16:39:39',
+            'updated_at' => '2019-03-28 09:49:34',
+        ),
+        468 => 
+        array (
+            'id' => 1736,
+            'name' => 'Las Vegas',
+            'code' => 'USLAS',
+            'display_name' => 'Las Vegas, USLAS',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["las vegas, nv"]}',
+            'created_at' => '2019-03-12 16:41:49',
+            'updated_at' => '2019-03-12 16:41:49',
+        ),
+        469 => 
+        array (
+            'id' => 1737,
+            'name' => 'Cleveland',
+            'code' => 'USCLE',
+            'display_name' => 'Cleveland, USCLE',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["cleveland, oh"]}',
+            'created_at' => '2019-03-12 18:16:03',
+            'updated_at' => '2019-03-12 18:16:03',
+        ),
+        470 => 
+        array (
+            'id' => 1738,
+            'name' => 'Columbus',
+            'code' => 'USCMH',
+            'display_name' => 'Columbus, USCMH',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["columbus, oh", "columbus,oh", "columbus ohio"]}',
+            'created_at' => '2019-03-12 18:16:50',
+            'updated_at' => '2019-03-28 09:39:51',
         ),
         471 => 
         array (
-            'id' => 1726,
-            'name' => 'No aplica',
-            'code' => 'NoAp',
-            'display_name' => 'NoAp, No aplica',
-            'coordinates' => 'No aplica',
-            'country_id' => 251,
-            'varation' => '{"type": ["no aplica", "noap, no aplica"]}',
-            'created_at' => '2019-04-09 13:28:22',
-            'updated_at' => '2019-04-09 13:28:22',
+            'id' => 1739,
+            'name' => 'Portland',
+            'code' => 'USPDX',
+            'display_name' => 'Portland, USPDX',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["portland, or", "portland oregon"]}',
+            'created_at' => '2019-03-12 18:20:52',
+            'updated_at' => '2019-03-28 09:47:39',
         ),
         472 => 
         array (
-            'id' => 1727,
-            'name' => 'Itaguai',
-            'code' => 'BRIGI',
-            'display_name' => 'Itaguai, BRIGI',
+            'id' => 1740,
+            'name' => 'Curitiba',
+            'code' => 'BRCWB',
+            'display_name' => 'Curitiba, BRCWB',
             'coordinates' => NULL,
             'country_id' => 30,
-            'varation' => '{"type": ["itaguai sepetiba ,br", "port of itaguai, br", "port of itaguai br", "itaguai sepetiba, brazil", "port of itaguai sepetiba", "itaguai, rj"]}',
-            'created_at' => '2019-04-09 17:22:17',
-            'updated_at' => '2019-04-09 17:22:17',
+            'varation' => '{"type": ["curitiba"]}',
+            'created_at' => '2019-03-12 18:30:18',
+            'updated_at' => '2019-03-12 18:30:18',
+        ),
+        473 => 
+        array (
+            'id' => 1741,
+            'name' => 'Bombay',
+            'code' => 'INBOM',
+            'display_name' => 'Bombay, INBOM',
+            'coordinates' => NULL,
+            'country_id' => 102,
+        'varation' => '{"type": ["mumbai (ex bombay)", "mumbai ex bombay", "mumbay", "mumbai"]}',
+            'created_at' => '2019-03-12 18:31:33',
+            'updated_at' => '2019-04-02 06:41:45',
+        ),
+        474 => 
+        array (
+            'id' => 1742,
+            'name' => 'Detroit',
+            'code' => 'USDET',
+            'display_name' => 'Detroit, USDET',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["detroit", "detroit, mi"]}',
+            'created_at' => '2019-03-14 08:21:27',
+            'updated_at' => '2019-03-14 11:26:21',
+        ),
+        475 => 
+        array (
+            'id' => 1743,
+            'name' => 'Dallas',
+            'code' => 'USDAL',
+            'display_name' => 'Dallas, USDAL',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["dallas", "dallas, tx", "dallas texas"]}',
+            'created_at' => '2019-03-14 08:22:16',
+            'updated_at' => '2019-03-28 09:43:10',
+        ),
+        476 => 
+        array (
+            'id' => 1744,
+            'name' => 'Cincinnati',
+            'code' => 'USCVG',
+            'display_name' => 'Cincinnati, USCVG',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["cincinnati", "cincinnati, oh", "cincinnati oh", "cincinatti oh", "cincinatti, oh"]}',
+            'created_at' => '2019-03-14 08:23:00',
+            'updated_at' => '2019-04-03 08:40:29',
+        ),
+        477 => 
+        array (
+            'id' => 1745,
+            'name' => 'Kingstown',
+            'code' => 'VCKTN',
+            'display_name' => 'Kingstown, VCKTN',
+            'coordinates' => NULL,
+            'country_id' => 233,
+            'varation' => '{"type": ["kingstown"]}',
+            'created_at' => '2019-03-14 09:18:56',
+            'updated_at' => '2019-03-14 09:18:56',
+        ),
+        478 => 
+        array (
+            'id' => 1746,
+            'name' => 'Mexico D.F.',
+            'code' => 'MXMEX',
+            'display_name' => 'Mexico D.F., MXMEX',
+            'coordinates' => NULL,
+            'country_id' => 154,
+            'varation' => '{"type": ["mexico d.f.", "mexico df", "ciudad de mexico"]}',
+            'created_at' => '2019-03-14 11:31:17',
+            'updated_at' => '2019-03-25 08:33:13',
+        ),
+        479 => 
+        array (
+            'id' => 1747,
+            'name' => 'Indore',
+            'code' => 'INIDR',
+            'display_name' => 'Indore, INIDR',
+            'coordinates' => NULL,
+            'country_id' => 102,
+            'varation' => '{"type": ["indore"]}',
+            'created_at' => '2019-03-14 11:35:37',
+            'updated_at' => '2019-03-14 11:35:37',
+        ),
+        480 => 
+        array (
+            'id' => 1748,
+            'name' => 'Hangzhou',
+            'code' => 'CNHAZ',
+            'display_name' => 'Hangzhou, CNHAZ',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["hangzhou, zhejiang", "hangzhou"]}',
+            'created_at' => '2019-03-14 11:36:48',
+            'updated_at' => '2019-04-02 06:41:32',
+        ),
+        481 => 
+        array (
+            'id' => 1749,
+            'name' => 'MEMPHIS',
+            'code' => 'USMEM',
+            'display_name' => 'Memphis, USMEM',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["memphis, tn", "memphis tennessee"]}',
+            'created_at' => '2019-03-14 11:39:09',
+            'updated_at' => '2019-03-28 09:46:37',
+        ),
+        482 => 
+        array (
+            'id' => 1750,
+            'name' => 'Lahore',
+            'code' => 'PKLHE',
+            'display_name' => 'Lahore, PKLHE',
+            'coordinates' => NULL,
+            'country_id' => 175,
+            'varation' => '{"type": ["lahore"]}',
+            'created_at' => '2019-03-14 11:39:13',
+            'updated_at' => '2019-03-14 11:39:13',
+        ),
+        483 => 
+        array (
+            'id' => 1751,
+            'name' => 'Hebei',
+            'code' => 'CNHEB',
+            'display_name' => 'Hebei, CNHEB',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["tianjin, hebei"]}',
+            'created_at' => '2019-03-14 11:42:53',
+            'updated_at' => '2019-03-14 11:42:53',
+        ),
+        484 => 
+        array (
+            'id' => 1752,
+            'name' => 'Sialkot',
+            'code' => 'PKSKT',
+            'display_name' => 'Sialkot, PKSKT',
+            'coordinates' => NULL,
+            'country_id' => 175,
+            'varation' => '{"type": ["sialkot"]}',
+            'created_at' => '2019-03-14 11:43:34',
+            'updated_at' => '2019-03-14 11:43:34',
+        ),
+        485 => 
+        array (
+            'id' => 1753,
+            'name' => 'Xiaoshan',
+            'code' => 'CNXIS',
+            'display_name' => 'Xiaoshan, CNXIS',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["xiaoshan, zhejiang"]}',
+            'created_at' => '2019-03-14 11:43:46',
+            'updated_at' => '2019-03-14 11:43:46',
+        ),
+        486 => 
+        array (
+            'id' => 1754,
+            'name' => 'Pune',
+            'code' => 'INPNQ',
+            'display_name' => 'Pune, INPNQ',
+            'coordinates' => NULL,
+            'country_id' => 102,
+            'varation' => '{"type": ["pune"]}',
+            'created_at' => '2019-03-14 11:48:37',
+            'updated_at' => '2019-03-14 11:48:37',
+        ),
+        487 => 
+        array (
+            'id' => 1755,
+            'name' => 'Jinhua',
+            'code' => 'CNJHA',
+            'display_name' => 'Jinhua, CNJHA',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["jinhua zhejiang"]}',
+            'created_at' => '2019-03-14 11:49:46',
+            'updated_at' => '2019-03-14 11:49:46',
+        ),
+        488 => 
+        array (
+            'id' => 1756,
+            'name' => 'Yiwu',
+            'code' => 'CNYIU',
+            'display_name' => 'Yiwu, CNYIU',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["yiwu", "yiwu, zhejiang", "yiwu zhejiang"]}',
+            'created_at' => '2019-03-14 11:50:38',
+            'updated_at' => '2019-04-03 12:36:18',
+        ),
+        489 => 
+        array (
+            'id' => 1757,
+            'name' => 'Arzew',
+            'code' => 'DZAZW',
+            'display_name' => 'Arzew, DZAZW',
+            'coordinates' => NULL,
+            'country_id' => 60,
+            'varation' => '{"type": ["arzew"]}',
+            'created_at' => '2019-03-19 17:30:17',
+            'updated_at' => '2019-03-19 17:30:17',
+        ),
+        490 => 
+        array (
+            'id' => 1758,
+            'name' => 'Suzhou',
+            'code' => 'CNSZH',
+            'display_name' => 'Suzhou, CNSZH',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["suzhou", "suzhou,jiangsu"]}',
+            'created_at' => '2019-03-22 14:49:34',
+            'updated_at' => '2019-03-22 14:49:34',
+        ),
+        491 => 
+        array (
+            'id' => 1759,
+            'name' => 'Shaoxing',
+            'code' => 'CNSXG',
+            'display_name' => 'Shaoxing, CNSXG',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["shaoxing", "shaoxing, zhejiang"]}',
+            'created_at' => '2019-03-22 14:50:25',
+            'updated_at' => '2019-03-22 14:50:25',
+        ),
+        492 => 
+        array (
+            'id' => 1761,
+            'name' => 'Porto Alegre',
+            'code' => 'BRPOA',
+            'display_name' => 'Porto Alegre, BRPOA',
+            'coordinates' => NULL,
+            'country_id' => 30,
+            'varation' => '{"type": ["porto alegre, rio grande do sul"]}',
+            'created_at' => '2019-03-22 14:55:33',
+            'updated_at' => '2019-03-22 14:55:33',
+        ),
+        493 => 
+        array (
+            'id' => 1762,
+            'name' => 'Huizhou',
+            'code' => 'CNHUI',
+            'display_name' => 'Huizhou, CNHUI',
+            'coordinates' => NULL,
+            'country_id' => 46,
+            'varation' => '{"type": ["huizhou,guangdong"]}',
+            'created_at' => '2019-03-22 14:58:22',
+            'updated_at' => '2019-03-22 14:58:22',
+        ),
+        494 => 
+        array (
+            'id' => 1763,
+        'name' => 'Denpasar (Bali)',
+            'code' => 'IDDPS',
+        'display_name' => 'Denpasar (Bali), IDDPS',
+            'coordinates' => NULL,
+            'country_id' => 98,
+            'varation' => '{"type": ["bali / denpasar", "bali  denpasar"]}',
+            'created_at' => '2019-03-22 15:00:20',
+            'updated_at' => '2019-03-22 15:00:38',
+        ),
+        495 => 
+        array (
+            'id' => 1764,
+            'name' => 'Cairo',
+            'code' => 'EGCAI',
+            'display_name' => 'Cairo, EGCAI',
+            'coordinates' => NULL,
+            'country_id' => 63,
+            'varation' => '{"type": ["cairo", "egcai"]}',
+            'created_at' => '2019-03-25 08:32:02',
+            'updated_at' => '2019-04-03 11:17:20',
+        ),
+        496 => 
+        array (
+            'id' => 1765,
+            'name' => 'San Salvador',
+            'code' => 'SVSAL',
+            'display_name' => 'San Salvador, SVSAL',
+            'coordinates' => NULL,
+            'country_id' => 206,
+            'varation' => '{"type": ["san salvador"]}',
+            'created_at' => '2019-03-25 08:37:15',
+            'updated_at' => '2019-03-25 08:37:15',
+        ),
+        497 => 
+        array (
+            'id' => 1766,
+            'name' => 'Dayton',
+            'code' => 'USDYJ',
+            'display_name' => 'Dayton, USDYJ',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["dayton", "dayton, oh"]}',
+            'created_at' => '2019-03-25 17:11:01',
+            'updated_at' => '2019-03-31 22:01:55',
+        ),
+        498 => 
+        array (
+            'id' => 1767,
+            'name' => 'Hsinchu',
+            'code' => 'TWHSZ',
+            'display_name' => 'Hsinchu, TWHSZ',
+            'coordinates' => NULL,
+            'country_id' => 224,
+            'varation' => '{"type": ["hsinchu", "hsin-chu"]}',
+            'created_at' => '2019-03-26 13:26:47',
+            'updated_at' => '2019-03-26 13:26:47',
+        ),
+        499 => 
+        array (
+            'id' => 1768,
+            'name' => 'Minneapolis',
+            'code' => 'USMES',
+            'display_name' => 'Minneapolis, USMES',
+            'coordinates' => NULL,
+            'country_id' => 229,
+            'varation' => '{"type": ["minneapolis, mn"]}',
+            'created_at' => '2019-03-27 18:11:04',
+            'updated_at' => '2019-03-27 18:11:04',
         ),
     ));
+        \DB::table('harbors')->insert(array (
+            0 => 
+            array (
+                'id' => 1769,
+                'name' => 'Milwaukee',
+                'code' => 'USMKE',
+                'display_name' => 'Milwaukee, USMKE',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["milwaukee, wi"]}',
+                'created_at' => '2019-03-27 18:12:10',
+                'updated_at' => '2019-03-27 18:12:10',
+            ),
+            1 => 
+            array (
+                'id' => 1770,
+                'name' => 'SHANGYU',
+                'code' => 'CNSGU',
+                'display_name' => 'SHANGYU, CNSGU',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["shangyu, zhejiang"]}',
+                'created_at' => '2019-03-27 18:15:08',
+                'updated_at' => '2019-03-27 18:15:08',
+            ),
+            2 => 
+            array (
+                'id' => 1771,
+                'name' => 'San diego',
+                'code' => 'USSAN',
+                'display_name' => 'San diego, USSAN',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["san diego", "san diego california", "san diego, ca"]}',
+                'created_at' => '2019-03-28 09:52:51',
+                'updated_at' => '2019-03-31 13:30:10',
+            ),
+            3 => 
+            array (
+                'id' => 1772,
+                'name' => 'Tortola',
+                'code' => 'VGTOV',
+                'display_name' => 'Tortola, VGTOV',
+                'coordinates' => NULL,
+                'country_id' => 235,
+                'varation' => '{"type": ["tortola"]}',
+                'created_at' => '2019-03-31 05:28:32',
+                'updated_at' => '2019-03-31 05:28:32',
+            ),
+            4 => 
+            array (
+                'id' => 1773,
+                'name' => 'Cayenne',
+                'code' => 'GYCAY',
+                'display_name' => 'Cayenne, GYCAY',
+                'coordinates' => NULL,
+                'country_id' => 92,
+                'varation' => '{"type": ["cayenne"]}',
+                'created_at' => '2019-03-31 05:29:46',
+                'updated_at' => '2019-03-31 05:29:46',
+            ),
+            5 => 
+            array (
+                'id' => 1774,
+                'name' => 'Saint Croix',
+                'code' => 'VISTX',
+                'display_name' => 'Saint Croix, VISTX',
+                'coordinates' => NULL,
+                'country_id' => 236,
+                'varation' => '{"type": ["saint croix"]}',
+                'created_at' => '2019-03-31 05:30:40',
+                'updated_at' => '2019-03-31 05:30:40',
+            ),
+            6 => 
+            array (
+                'id' => 1775,
+                'name' => 'Plymouth',
+                'code' => 'MSPLY',
+                'display_name' => 'Plymouth, MSPLY',
+                'coordinates' => NULL,
+                'country_id' => 149,
+                'varation' => '{"type": ["plymouth"]}',
+                'created_at' => '2019-03-31 05:32:06',
+                'updated_at' => '2019-03-31 05:32:06',
+            ),
+            7 => 
+            array (
+                'id' => 1776,
+                'name' => 'Cancun',
+                'code' => 'MXCUN',
+                'display_name' => 'Cancun, MXCUN',
+                'coordinates' => NULL,
+                'country_id' => 154,
+                'varation' => '{"type": ["cancun"]}',
+                'created_at' => '2019-03-31 05:33:41',
+                'updated_at' => '2019-03-31 05:33:41',
+            ),
+            8 => 
+            array (
+                'id' => 1777,
+                'name' => 'Saint Kitts',
+                'code' => 'KNSKB',
+                'display_name' => 'Saint Kitts, KNSKB',
+                'coordinates' => NULL,
+                'country_id' => 117,
+                'varation' => '{"type": ["saint kitts"]}',
+                'created_at' => '2019-03-31 05:36:21',
+                'updated_at' => '2019-03-31 05:36:21',
+            ),
+            9 => 
+            array (
+                'id' => 1778,
+                'name' => 'Nevis',
+                'code' => 'KNNEV',
+                'display_name' => 'Nevis',
+                'coordinates' => NULL,
+                'country_id' => 117,
+                'varation' => '{"type": ["nevis"]}',
+                'created_at' => '2019-03-31 05:36:52',
+                'updated_at' => '2019-03-31 05:36:52',
+            ),
+            10 => 
+            array (
+                'id' => 1779,
+                'name' => 'Playa del carmen',
+                'code' => 'MXPCM',
+                'display_name' => 'Playa del carmen, MXPCM',
+                'coordinates' => NULL,
+                'country_id' => 154,
+                'varation' => '{"type": ["playa del carmen"]}',
+                'created_at' => '2019-03-31 05:37:41',
+                'updated_at' => '2019-03-31 05:37:41',
+            ),
+            11 => 
+            array (
+                'id' => 1780,
+                'name' => 'Anguilla',
+                'code' => 'AIAXA',
+                'display_name' => 'Anguilla, AIAXA',
+                'coordinates' => NULL,
+                'country_id' => 5,
+                'varation' => '{"type": ["anguilla"]}',
+                'created_at' => '2019-03-31 05:38:52',
+                'updated_at' => '2019-03-31 05:38:52',
+            ),
+            12 => 
+            array (
+                'id' => 1781,
+                'name' => 'Saint Barthelemy',
+                'code' => 'GPSBH',
+                'display_name' => 'Saint Barthelemy, GPSBH',
+                'coordinates' => NULL,
+                'country_id' => 85,
+                'varation' => '{"type": ["saint barthelemy"]}',
+                'created_at' => '2019-03-31 05:39:52',
+                'updated_at' => '2019-03-31 05:39:52',
+            ),
+            13 => 
+            array (
+                'id' => 1782,
+                'name' => 'Saint Thomas',
+                'code' => 'VISTT',
+                'display_name' => 'Saint Thomas, VISTT',
+                'coordinates' => NULL,
+                'country_id' => 236,
+                'varation' => '{"type": ["saint thomas"]}',
+                'created_at' => '2019-03-31 05:44:04',
+                'updated_at' => '2019-03-31 05:44:04',
+            ),
+            14 => 
+            array (
+                'id' => 1783,
+                'name' => 'Aguascalientes',
+                'code' => 'MXAGU',
+                'display_name' => 'Aguascalientes, MXAGU',
+                'coordinates' => NULL,
+                'country_id' => 154,
+                'varation' => '{"type": ["aguascalientes"]}',
+                'created_at' => '2019-03-31 05:44:34',
+                'updated_at' => '2019-03-31 05:44:34',
+            ),
+            15 => 
+            array (
+                'id' => 1784,
+                'name' => 'Sint Maarten',
+                'code' => 'SXSXM',
+                'display_name' => 'Sint Maarten, SXSXM',
+                'coordinates' => NULL,
+                'country_id' => 207,
+                'varation' => '{"type": ["st. maarten"]}',
+                'created_at' => '2019-03-31 05:47:42',
+                'updated_at' => '2019-03-31 05:47:42',
+            ),
+            16 => 
+            array (
+                'id' => 1785,
+                'name' => 'Santiago',
+                'code' => 'CLSCL',
+                'display_name' => 'Santiago, CLSCL',
+                'coordinates' => NULL,
+                'country_id' => 44,
+                'varation' => '{"type": ["santiago, cl", "santiago de chile"]}',
+                'created_at' => '2019-03-31 13:24:37',
+                'updated_at' => '2019-04-02 06:48:32',
+            ),
+            17 => 
+            array (
+                'id' => 1786,
+                'name' => 'Belo Horizonte',
+                'code' => 'BRBHZ',
+                'display_name' => 'Belo Horizonte, BRBHZ',
+                'coordinates' => NULL,
+                'country_id' => 30,
+                'varation' => '{"type": ["belo horizonte"]}',
+                'created_at' => '2019-03-31 13:25:44',
+                'updated_at' => '2019-03-31 13:25:44',
+            ),
+            18 => 
+            array (
+                'id' => 1787,
+                'name' => 'Novo Hamburgo',
+                'code' => 'BRNHO',
+                'display_name' => 'Novo Hamburgo',
+                'coordinates' => NULL,
+                'country_id' => 30,
+                'varation' => '{"type": ["novo hamburgo"]}',
+                'created_at' => '2019-03-31 13:26:26',
+                'updated_at' => '2019-03-31 13:26:26',
+            ),
+            19 => 
+            array (
+                'id' => 1788,
+                'name' => 'Bogota',
+                'code' => 'COBOG',
+                'display_name' => 'Bogota, COBOG',
+                'coordinates' => NULL,
+                'country_id' => 47,
+                'varation' => '{"type": ["bogota"]}',
+                'created_at' => '2019-03-31 13:28:33',
+                'updated_at' => '2019-03-31 13:28:33',
+            ),
+            20 => 
+            array (
+                'id' => 1789,
+                'name' => 'Guadalajara',
+                'code' => 'MXGDL',
+                'display_name' => 'Guadalajara, MXGDL',
+                'coordinates' => NULL,
+                'country_id' => 154,
+                'varation' => '{"type": ["guadalajara, mx"]}',
+                'created_at' => '2019-03-31 13:29:39',
+                'updated_at' => '2019-03-31 13:29:39',
+            ),
+            21 => 
+            array (
+                'id' => 1790,
+                'name' => 'Edmonton',
+                'code' => 'CAEDM',
+                'display_name' => 'Edmonton, CAEDM',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["edmonton"]}',
+                'created_at' => '2019-03-31 21:53:01',
+                'updated_at' => '2019-03-31 21:53:01',
+            ),
+            22 => 
+            array (
+                'id' => 1791,
+                'name' => 'Ottawa',
+                'code' => 'CAOTT',
+                'display_name' => 'Ottawa, CAOTT',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["ottawa"]}',
+                'created_at' => '2019-03-31 21:53:39',
+                'updated_at' => '2019-03-31 21:53:39',
+            ),
+            23 => 
+            array (
+                'id' => 1792,
+                'name' => 'Quebec',
+                'code' => 'CAQUE',
+                'display_name' => 'Quebec, CAQUE',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["quebec"]}',
+                'created_at' => '2019-03-31 21:54:00',
+                'updated_at' => '2019-03-31 21:54:00',
+            ),
+            24 => 
+            array (
+                'id' => 1793,
+                'name' => 'Regina',
+                'code' => 'CAREG',
+                'display_name' => 'Regina, CAREG',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["regina"]}',
+                'created_at' => '2019-03-31 21:54:28',
+                'updated_at' => '2019-03-31 21:54:28',
+            ),
+            25 => 
+            array (
+                'id' => 1794,
+                'name' => 'SAINT JOHN, N.B.',
+                'code' => 'CABIX',
+                'display_name' => 'SAINT JOHN, N.B. ,CABIX',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["saint john, n.b.", "saint john, nb", "saint john nb"]}',
+                'created_at' => '2019-03-31 21:55:07',
+                'updated_at' => '2019-03-31 21:55:07',
+            ),
+            26 => 
+            array (
+                'id' => 1795,
+                'name' => 'SASKATOON',
+                'code' => 'CASAK',
+                'display_name' => 'SASKATOON, CASAK',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["saskatoon"]}',
+                'created_at' => '2019-03-31 21:55:46',
+                'updated_at' => '2019-03-31 21:55:46',
+            ),
+            27 => 
+            array (
+                'id' => 1796,
+                'name' => 'WINNIPEG',
+                'code' => 'CAWNP',
+                'display_name' => 'WINNIPEG , CAWNP',
+                'coordinates' => NULL,
+                'country_id' => 36,
+                'varation' => '{"type": ["winnipeg"]}',
+                'created_at' => '2019-03-31 21:56:10',
+                'updated_at' => '2019-03-31 21:56:10',
+            ),
+            28 => 
+            array (
+                'id' => 1797,
+                'name' => 'Albuquerque',
+                'code' => 'USABQ',
+                'display_name' => 'Albuquerque, USABQ',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["albuquerque", "albuquerque, nm"]}',
+                'created_at' => '2019-03-31 21:57:22',
+                'updated_at' => '2019-03-31 21:57:22',
+            ),
+            29 => 
+            array (
+                'id' => 1798,
+                'name' => 'BIRMINGHAM, Al',
+                'code' => 'USBHM',
+                'display_name' => 'BIRMINGHAM, Al, USBHM',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["birmingham, al"]}',
+                'created_at' => '2019-03-31 21:57:57',
+                'updated_at' => '2019-03-31 21:57:57',
+            ),
+            30 => 
+            array (
+                'id' => 1799,
+                'name' => 'BROWNSVILLE, Tx',
+                'code' => 'USQBR',
+                'display_name' => 'BROWNSVILLE, Tx, USQBR',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["brownsville, tx"]}',
+                'created_at' => '2019-03-31 21:59:25',
+                'updated_at' => '2019-03-31 21:59:25',
+            ),
+            31 => 
+            array (
+                'id' => 1800,
+                'name' => 'BUFFALO, Ny',
+                'code' => 'USBYG',
+                'display_name' => 'BUFFALO, Ny, USBYG',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["buffalo, ny"]}',
+                'created_at' => '2019-03-31 22:00:10',
+                'updated_at' => '2019-03-31 22:00:10',
+            ),
+            32 => 
+            array (
+                'id' => 1801,
+                'name' => 'CHATANOOGA, Tn',
+                'code' => 'USCHA',
+                'display_name' => 'CHATANOOGA, Tn, USCHA',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["chatanooga, tn"]}',
+                'created_at' => '2019-03-31 22:01:05',
+                'updated_at' => '2019-03-31 22:01:05',
+            ),
+            33 => 
+            array (
+                'id' => 1802,
+                'name' => 'DENVER, Co',
+                'code' => 'USDEN',
+                'display_name' => 'DENVER, Co, USDEN',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["denver, co"]}',
+                'created_at' => '2019-03-31 22:02:25',
+                'updated_at' => '2019-03-31 22:02:25',
+            ),
+            34 => 
+            array (
+                'id' => 1803,
+                'name' => 'DES MOINES, Ia',
+                'code' => 'USDSM',
+                'display_name' => 'DES MOINES, Ia,USDSM',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["des moines, ia"]}',
+                'created_at' => '2019-03-31 22:02:54',
+                'updated_at' => '2019-03-31 22:02:54',
+            ),
+            35 => 
+            array (
+                'id' => 1804,
+                'name' => 'EL PASO, Tx',
+                'code' => 'USELP',
+                'display_name' => 'EL PASO, Tx, USELP',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["el paso, tx"]}',
+                'created_at' => '2019-03-31 22:03:26',
+                'updated_at' => '2019-03-31 22:03:26',
+            ),
+            36 => 
+            array (
+                'id' => 1805,
+                'name' => 'GRAND RAPIDS, Mi',
+                'code' => 'USGPZ',
+                'display_name' => 'GRAND RAPIDS, Mi, USGPZ',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["grand rapids, mi"]}',
+                'created_at' => '2019-03-31 22:04:35',
+                'updated_at' => '2019-03-31 22:04:35',
+            ),
+            37 => 
+            array (
+                'id' => 1806,
+                'name' => 'GREENSBORO , Nc',
+                'code' => 'USGRB',
+                'display_name' => 'GREENSBORO , Nc, USGRB',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["greensboro , nc"]}',
+                'created_at' => '2019-03-31 22:05:07',
+                'updated_at' => '2019-03-31 22:05:07',
+            ),
+            38 => 
+            array (
+                'id' => 1807,
+                'name' => 'GREENVILLE, Sc',
+                'code' => 'USGNP',
+                'display_name' => 'GREENVILLE, Sc, USGNP',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["greenville, sc"]}',
+                'created_at' => '2019-03-31 22:06:07',
+                'updated_at' => '2019-03-31 22:06:07',
+            ),
+            39 => 
+            array (
+                'id' => 1808,
+                'name' => 'HIDALGO, Tx',
+                'code' => 'USHID',
+                'display_name' => 'HIDALGO, Tx, USHID',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["hidalgo, tx"]}',
+                'created_at' => '2019-03-31 22:07:05',
+                'updated_at' => '2019-03-31 22:07:05',
+            ),
+            40 => 
+            array (
+                'id' => 1809,
+                'name' => 'Honolulu',
+                'code' => 'USHNL',
+                'display_name' => 'Honolulu, USHNL',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["honolulu"]}',
+                'created_at' => '2019-03-31 22:09:25',
+                'updated_at' => '2019-03-31 22:09:25',
+            ),
+            41 => 
+            array (
+                'id' => 1810,
+                'name' => 'HUNTSVILLE, Al',
+                'code' => 'USHSV',
+                'display_name' => 'HUNTSVILLE, Al, USHSV',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["huntsville, al"]}',
+                'created_at' => '2019-03-31 22:10:04',
+                'updated_at' => '2019-03-31 22:10:04',
+            ),
+            42 => 
+            array (
+                'id' => 1811,
+                'name' => 'KANSAS CITY, Mo',
+                'code' => 'USKCK',
+                'display_name' => 'KANSAS CITY, Mo, USKCK',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["kansas city, mo"]}',
+                'created_at' => '2019-03-31 22:10:38',
+                'updated_at' => '2019-03-31 22:10:38',
+            ),
+            43 => 
+            array (
+                'id' => 1812,
+                'name' => 'KNOXVILLE, Tn',
+                'code' => 'USKXV',
+                'display_name' => 'KNOXVILLE, Tn, USKXV',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["knoxville, tn"]}',
+                'created_at' => '2019-03-31 22:11:49',
+                'updated_at' => '2019-03-31 22:11:49',
+            ),
+            44 => 
+            array (
+                'id' => 1813,
+                'name' => 'LAREDO, Tx',
+                'code' => 'USLRD',
+                'display_name' => 'LAREDO, Tx, USLRD',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["laredo, tx"]}',
+                'created_at' => '2019-03-31 22:12:31',
+                'updated_at' => '2019-03-31 22:12:31',
+            ),
+            45 => 
+            array (
+                'id' => 1814,
+                'name' => 'LITTLE ROCK, Ar',
+                'code' => 'USLIT',
+                'display_name' => 'LITTLE ROCK, Ar, USLIT',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["little rock, ar"]}',
+                'created_at' => '2019-03-31 22:13:29',
+                'updated_at' => '2019-03-31 22:13:29',
+            ),
+            46 => 
+            array (
+                'id' => 1815,
+                'name' => 'LOUISVILLE, Ky',
+                'code' => 'USLUY',
+                'display_name' => 'LOUISVILLE, Ky, USLUY',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["louisville, ky"]}',
+                'created_at' => '2019-03-31 22:14:21',
+                'updated_at' => '2019-03-31 22:14:21',
+            ),
+            47 => 
+            array (
+                'id' => 1816,
+                'name' => 'NASHVILLE, Tn',
+                'code' => 'USBNA',
+                'display_name' => 'NASHVILLE, Tn, USBNA',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["nashville, tn"]}',
+                'created_at' => '2019-03-31 22:15:22',
+                'updated_at' => '2019-03-31 22:15:22',
+            ),
+            48 => 
+            array (
+                'id' => 1817,
+                'name' => 'Newark',
+                'code' => 'USEWR',
+                'display_name' => 'Newark, USEWR',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["usewr", "newark"]}',
+                'created_at' => '2019-03-31 22:16:01',
+                'updated_at' => '2019-03-31 22:16:01',
+            ),
+            49 => 
+            array (
+                'id' => 1818,
+                'name' => 'Orlando, FL',
+                'code' => 'USORL',
+                'display_name' => 'Orlando, FL, USORL',
+                'coordinates' => NULL,
+                'country_id' => 1,
+                'varation' => '{"type": ["orlando, fl"]}',
+                'created_at' => '2019-03-31 22:17:04',
+                'updated_at' => '2019-03-31 22:17:04',
+            ),
+            50 => 
+            array (
+                'id' => 1819,
+                'name' => 'NOGALES, Az',
+                'code' => 'USOLS',
+                'display_name' => 'NOGALES, Az,USOLS',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["nogales, az"]}',
+                'created_at' => '2019-03-31 22:17:57',
+                'updated_at' => '2019-03-31 22:17:57',
+            ),
+            51 => 
+            array (
+                'id' => 1820,
+                'name' => 'OKLAHOMA, Ok',
+                'code' => 'USOKO',
+                'display_name' => 'OKLAHOMA, Ok, USOKO',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["usoko", "oklahoma, ok"]}',
+                'created_at' => '2019-03-31 22:19:43',
+                'updated_at' => '2019-03-31 22:19:43',
+            ),
+            52 => 
+            array (
+                'id' => 1821,
+                'name' => 'OMAHA, Ne',
+                'code' => 'USOMA',
+                'display_name' => 'OMAHA, Ne, USOMA',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["omaha, ne"]}',
+                'created_at' => '2019-03-31 22:20:26',
+                'updated_at' => '2019-03-31 22:20:26',
+            ),
+            53 => 
+            array (
+                'id' => 1822,
+                'name' => 'RICHMOND, Va,',
+                'code' => 'USRIC',
+                'display_name' => 'RICHMOND, Va, USRIC',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["richmond, va"]}',
+                'created_at' => '2019-03-31 22:22:11',
+                'updated_at' => '2019-03-31 22:22:11',
+            ),
+            54 => 
+            array (
+                'id' => 1823,
+                'name' => 'London',
+                'code' => 'GBLON',
+                'display_name' => 'London, GBLON',
+                'coordinates' => NULL,
+                'country_id' => 75,
+                'varation' => '{"type": ["london"]}',
+                'created_at' => '2019-03-31 22:23:35',
+                'updated_at' => '2019-03-31 22:23:35',
+            ),
+            55 => 
+            array (
+                'id' => 1824,
+                'name' => 'Manchester',
+                'code' => 'GBMNC',
+                'display_name' => 'Manchester, GBMNC',
+                'coordinates' => NULL,
+                'country_id' => 75,
+                'varation' => '{"type": ["manchester"]}',
+                'created_at' => '2019-03-31 22:24:02',
+                'updated_at' => '2019-03-31 22:24:02',
+            ),
+            56 => 
+            array (
+                'id' => 1825,
+                'name' => 'Thamesport',
+                'code' => 'GBTHP',
+                'display_name' => 'Thamesport, GBTHP',
+                'coordinates' => NULL,
+                'country_id' => 75,
+                'varation' => '{"type": ["thamesport"]}',
+                'created_at' => '2019-03-31 22:24:37',
+                'updated_at' => '2019-03-31 22:24:37',
+            ),
+            57 => 
+            array (
+                'id' => 1826,
+                'name' => 'LEEDS',
+                'code' => 'GBLEE',
+                'display_name' => 'LEEDS, GBLEE',
+                'coordinates' => NULL,
+                'country_id' => 75,
+                'varation' => '{"type": ["leeds"]}',
+                'created_at' => '2019-03-31 22:25:28',
+                'updated_at' => '2019-03-31 22:25:28',
+            ),
+            58 => 
+            array (
+                'id' => 1827,
+                'name' => 'GLASSGOW',
+                'code' => 'GBGLW',
+                'display_name' => 'GLASSGOW , GBGLW',
+                'coordinates' => NULL,
+                'country_id' => 75,
+                'varation' => '{"type": ["glassgow"]}',
+                'created_at' => '2019-03-31 22:26:04',
+                'updated_at' => '2019-03-31 22:26:04',
+            ),
+            59 => 
+            array (
+                'id' => 1828,
+                'name' => 'Medellin',
+                'code' => 'COMDE',
+                'display_name' => 'Medellin, COMDE',
+                'coordinates' => NULL,
+                'country_id' => 47,
+                'varation' => '{"type": ["medellin"]}',
+                'created_at' => '2019-04-01 03:31:41',
+                'updated_at' => '2019-04-01 03:31:41',
+            ),
+            60 => 
+            array (
+                'id' => 1829,
+                'name' => 'Washinton',
+                'code' => 'USWAS',
+                'display_name' => 'Washinton',
+                'coordinates' => NULL,
+                'country_id' => 229,
+                'varation' => '{"type": ["washington, dc"]}',
+                'created_at' => '2019-04-01 03:35:30',
+                'updated_at' => '2019-04-01 03:35:30',
+            ),
+            61 => 
+            array (
+                'id' => 1830,
+                'name' => 'Monterrey',
+                'code' => 'MXMTY',
+                'display_name' => 'Monterrey, MXMTY',
+                'coordinates' => NULL,
+                'country_id' => 154,
+                'varation' => '{"type": ["monterrey"]}',
+                'created_at' => '2019-04-01 08:32:45',
+                'updated_at' => '2019-04-01 08:32:45',
+            ),
+            62 => 
+            array (
+                'id' => 1831,
+                'name' => 'Cordoba',
+                'code' => 'ARCOR',
+                'display_name' => 'Cordoba, ARCOR',
+                'coordinates' => NULL,
+                'country_id' => 10,
+                'varation' => '{"type": ["cordoba, ar", "arcor"]}',
+                'created_at' => '2019-04-01 08:33:58',
+                'updated_at' => '2019-04-03 11:14:35',
+            ),
+            63 => 
+            array (
+                'id' => 1832,
+                'name' => 'GUSTAVIA',
+                'code' => 'BLGUS',
+                'display_name' => 'GUSTAVIA',
+                'coordinates' => '17.89959 -62.851715',
+                'country_id' => 25,
+                'varation' => '{"type": [""]}',
+                'created_at' => '2019-04-01 16:39:45',
+                'updated_at' => '2019-04-01 16:39:45',
+            ),
+            64 => 
+            array (
+                'id' => 1833,
+                'name' => 'Nosy Be',
+                'code' => 'MGNOS',
+                'display_name' => 'Nosy Be, MGNOS',
+                'coordinates' => NULL,
+                'country_id' => 139,
+                'varation' => '{"type": ["nossi be"]}',
+                'created_at' => '2019-04-02 05:25:45',
+                'updated_at' => '2019-04-02 05:25:45',
+            ),
+            65 => 
+            array (
+                'id' => 1834,
+                'name' => 'Vohemar',
+                'code' => 'MGVOH',
+                'display_name' => 'Vohemar',
+                'coordinates' => NULL,
+                'country_id' => 139,
+                'varation' => '{"type": ["vohemar"]}',
+                'created_at' => '2019-04-02 05:26:14',
+                'updated_at' => '2019-04-02 05:26:14',
+            ),
+            66 => 
+            array (
+                'id' => 1835,
+                'name' => 'Port D\'Ehoala',
+                'code' => 'MGEHL',
+                'display_name' => 'Port D\'Ehoala, MGEHL',
+                'coordinates' => NULL,
+                'country_id' => 139,
+                'varation' => '{"type": ["port d\'ehoala"]}',
+                'created_at' => '2019-04-02 05:27:23',
+                'updated_at' => '2019-04-02 05:27:23',
+            ),
+            67 => 
+            array (
+                'id' => 1836,
+                'name' => 'Tulear',
+                'code' => 'MGTLE',
+                'display_name' => 'Tulear',
+                'coordinates' => NULL,
+                'country_id' => 139,
+                'varation' => '{"type": ["tulear"]}',
+                'created_at' => '2019-04-02 05:27:51',
+                'updated_at' => '2019-04-02 05:27:51',
+            ),
+            68 => 
+            array (
+                'id' => 1837,
+                'name' => 'Dubai',
+                'code' => 'AEDXB',
+                'display_name' => 'Dubai, AEDXB',
+                'coordinates' => NULL,
+                'country_id' => 2,
+                'varation' => '{"type": ["aedxb", "dubai"]}',
+                'created_at' => '2019-04-03 11:15:42',
+                'updated_at' => '2019-04-03 11:15:42',
+            ),
+            69 => 
+            array (
+                'id' => 1838,
+                'name' => 'Mendoza',
+                'code' => 'ARMDZ',
+                'display_name' => 'Mendoza, ARMDZ',
+                'coordinates' => NULL,
+                'country_id' => 10,
+                'varation' => '{"type": ["armdz"]}',
+                'created_at' => '2019-04-03 11:16:11',
+                'updated_at' => '2019-04-03 11:16:11',
+            ),
+            70 => 
+            array (
+                'id' => 1839,
+                'name' => 'Burj al Arab',
+                'code' => 'EGHBE',
+                'display_name' => 'Burj al Arab,EGHBE',
+                'coordinates' => NULL,
+                'country_id' => 63,
+                'varation' => '{"type": ["eghbe"]}',
+                'created_at' => '2019-04-03 11:18:12',
+                'updated_at' => '2019-04-03 11:18:12',
+            ),
+            71 => 
+            array (
+                'id' => 1840,
+                'name' => 'ILO',
+                'code' => 'PEILQ',
+                'display_name' => 'ILO,  PEILQ',
+                'coordinates' => '-17.646765 -71.351965',
+                'country_id' => 171,
+                'varation' => '{"type": ["ilo", "ilo port"]}',
+                'created_at' => '2019-04-04 11:32:45',
+                'updated_at' => '2019-04-04 11:32:45',
+            ),
+            72 => 
+            array (
+                'id' => 1841,
+                'name' => 'Coslada',
+                'code' => 'ESCXQ',
+                'display_name' => 'Coslada, ESCXQ',
+                'coordinates' => NULL,
+                'country_id' => 66,
+                'varation' => '{"type": ["coslada"]}',
+                'created_at' => '2019-04-09 03:21:14',
+                'updated_at' => '2019-04-09 03:21:54',
+            ),
+        ));
         
         
     }
