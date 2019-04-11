@@ -319,13 +319,18 @@
                 @endforeach
                 <br>
 
+
+
+
+
+
                 <div class="row bg-light">
                   <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
                   <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
 
