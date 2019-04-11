@@ -81,7 +81,7 @@
                         </div>
                         <div class="col-xl-12 order-1 order-xl-2 m--align-right">
 
-                           <a href="{{route('Request.importaion.lcl')}}">
+                           <!--<a href="{{route('Request.importaion.lcl')}}">
 
                               <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                  <span>
@@ -91,8 +91,18 @@
                                     <i class="la la-clipboard"></i>
                                  </span>
                               </button>
-                           </a>
+                           </a>-->
+                            <a href="{{route('RequestImportationLcl.indexListClient')}}">
 
+                                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                            <span>
+                                                <span>
+                                                    New \ Status Import  &nbsp;
+                                                </span>
+                                                <i class="la la-clipboard"></i>
+                                            </span>
+                                        </button>
+                                    </a>
                            <div class="m-separator m-separator--dashed d-xl-none"></div> 
                            <a href="{{ route('contractslcl.add') }}">
                               <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
