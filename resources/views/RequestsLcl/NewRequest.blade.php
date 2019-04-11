@@ -391,7 +391,7 @@ new registration
                 status.html(xhr.responseText);
                 $('#mjsH').text('Bye');
                 $('#modaledit').modal('hide');
-                window.location.href = "{{route('contractslcl.index')}}";
+                window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
             }
         });
 

@@ -25,6 +25,10 @@ class NewContractRequestLclController extends Controller
         return view('RequestsLcl.index');
     }
 
+    public function indexListClient(){
+        $company_userid = \Auth::user()->company_user_id;
+        return view('RequestsLcl.indexClient',compact('company_userid'));
+    }
 
     public function create()
     {
@@ -90,7 +94,59 @@ class NewContractRequestLclController extends Controller
             ->make();
     }
 
+    public function listClient($id)
+    {
+        $Ncontracts = NewContractRequestLcl::where('company_user_id',$id)->get();
+        //dd($Ncontracts[0]['companyuser']['name']);
 
+        return Datatables::of($Ncontracts)
+            ->addColumn('Company', function ($Ncontracts) {
+                return $Ncontracts->companyuser->name;
+            })
+            ->addColumn('name', function ($Ncontracts) {
+                return $Ncontracts->namecontract;
+            })
+            ->addColumn('number', function ($Ncontracts) {
+                return $Ncontracts->numbercontract;
+            })
+            ->addColumn('validation', function ($Ncontracts) {
+                return $Ncontracts->validation;
+            })
+            ->addColumn('date', function ($Ncontracts) {
+                return $Ncontracts->created;
+            })
+            ->addColumn('updated', function ($Ncontracts) {
+                if(empty($Ncontract->updated) != true){
+                    return Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s');
+                } else {
+                    return '00-00-0000 00:00:00';
+                }
+            })
+            ->addColumn('user', function ($Ncontracts) {
+                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+            })
+            ->addColumn('status', function ($Ncontracts) {
+                $color='';
+                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                    //$color = 'color:#031B4E';
+                    $color = 'color:#f81538';
+                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
+                    $color = 'color:#5527f0';
+                } else {
+                    $color = 'color:#04950f';
+                }
+
+                return '<label style="'.$color.'">'.$Ncontracts->status.'</label>';
+            })
+            ->addColumn('action', function ($Ncontracts) {
+                return '<a href="/RequestsLcl/RequestImportationLcl/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>';
+            })
+
+            ->make();
+    }
+    
     public function store(Request $request)
     {
         //dd($request->all());
