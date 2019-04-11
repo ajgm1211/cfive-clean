@@ -52,7 +52,7 @@
                      </div>
                   </div>
                   <div class="col-xl-6 order-1 order-xl-2 m--align-right">
-                     <a href="{{route('quotes.automatic')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                     <a href="{{route('quotes-v2.search')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                      <span>
                         <span>
                            Search Rates
