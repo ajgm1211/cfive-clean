@@ -190,7 +190,8 @@
                       <div class="col-md-4">
                         <div class="progress m-progress--sm">
                           <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
+                        </div><br>
+                        Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                       </div>
                       <div class="col-md-4">
                         <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
