@@ -191,8 +191,7 @@
             <div class="m-portlet custom-portlet">
                 <div class="m-portlet__body">
                     @php
-                    $v=0;
-
+                        $v=0;
                     @endphp
                     @foreach($rates as $rate)
                     <div class="tab-content">
@@ -200,11 +199,7 @@
                             <ul >
                                 <li style="max-height: 20px;">
                                     @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-<<<<<<< HEAD
-                                    <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="100" height="auto" style="margin-top: -20px;" />
-=======
                                     <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
->>>>>>> merge-quote-v2
                                     @endif
                                 </li>
                                 <li class="size-14px">POL: {{$rate->origin_port->name}}, {{$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
@@ -215,10 +210,6 @@
                                 </li>
                             </ul>
                         </div>
-<<<<<<< HEAD
-                        <hr>
-=======
->>>>>>> merge-quote-v2
                         <br>
                         <div class="details_{{$v}} hide">
                             <!-- Freight charges -->
@@ -243,25 +234,15 @@
                                             </thead>
                                             <tbody>
                                                 @php
-<<<<<<< HEAD
-                                                $i=0;
-=======
                                                     $i=0;
->>>>>>> merge-quote-v2
                                                 @endphp
                                                 @foreach($rate->charge as $item)
                                                     @if($item->type_id==3)
                                                         @php
-<<<<<<< HEAD
-                                                        $freight_amounts = $item->amount['amount'];
-                                                        $freight_markups = $item->markups['markups'];
-                                                        $freight_total = $item->total['total'];
-=======
 
                                                             $rate_id=$item->automatic_rate_id;
                                                             $freight_amounts = $item->amount['amount'];
                                                             $freight_markups = $item->markups['markups'];
->>>>>>> merge-quote-v2
                                                         
                                                         @endphp
                                                         <tr >
@@ -278,11 +259,7 @@
                                                                 <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->markups->20" data-value="{{@$freight_markups['20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['20'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_freight_20">{{@$freight_amounts['20']+@$freight_markups['20']}}</span>
-=======
                                                                 <span class="total_20">{{@$freight_amounts['20']+@$freight_markups['20']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>
                                                                 <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->amount->40" data-value="{{@$freight_amounts['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -291,11 +268,7 @@
                                                                 <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->markups->40" data-value="{{@$freight_markups['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_freight_40">{{@$freight_amounts['40']+@$freight_markups['40']}}</span>
-=======
                                                                 <span class="total_40">{{@$freight_amounts['40']+@$freight_markups['40']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
                                                                 <a href="#" class="editable-amount-40hc amount_40hc"data-type="text" data-name="amount->amount->40hc" data-value="{{@$freight_amounts['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -304,11 +277,7 @@
                                                                 <a href="#" class="editable-markup-40hc markup_40hc"data-type="text" data-name="markups->markups->40hc" data-value="{{@$freight_markups['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_freight_40hc">{{@$freight_amounts['40hc']+@$freight_markups['40hc']}}</span>
-=======
                                                                 <span class="total_40hc">{{@$freight_amounts['40hc']+@$freight_markups['40hc']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
                                                                 <a href="#" class="editable-amount-40nor amount_40nor "data-type="text" data-name="amount->amount->40nor" data-value="{{@$freight_amounts['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -317,11 +286,7 @@
                                                                 <a href="#" class="editable-markup-40nor markup_40nor"data-type="text" data-name="markups->markups->40nor" data-value="{{@$freight_markups['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_freight_40nor">{{@$freight_amount['40nor']+@$freight_markups['40nor']}}</span>
-=======
                                                                 <span class="total_40nor">{{@$freight_amount['40nor']+@$freight_markups['40nor']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
                                                                 <a href="#" class="editable-amount-45 amount_45" data-type="text" data-name="amount->amount->45" data-value="{{@$freight_amounts['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -330,11 +295,7 @@
                                                                 <a href="#" class="editable-markup-45 markup_45" data-type="text" data-name="markups->markups->45" data-value="{{@$freight_markups['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_freight_45">{{@$freight_amount['45']+@$freight_markups['45']}}</span>
-=======
                                                                 <span class="total_45">{{@$freight_amount['45']+@$freight_markups['45']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td>
                                                                 <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -348,11 +309,7 @@
 
                                                 <!-- Hide Freight -->
 
-<<<<<<< HEAD
-                                                <tr class="hide" id="freight_charges_{{$i}}">
-=======
                                                 <tr class="hide" id="freight_charges_{{$v}}">
->>>>>>> merge-quote-v2
                                                     <td>
                                                         <input type="text" class="form-control" id="freight_amount_charge" value="" name="origin_ammount_charge[]" />
                                                     </td>
@@ -418,20 +375,6 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-<<<<<<< HEAD
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class="col-md-12">
-                                    <h5 class="title-quote pull-right">
-                                        <b>Add freight charge</b><a class="btn" onclick="addFreightCharge({{$i}})" style="vertical-align: middle">
-                                            <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                        </a>
-                                    </h5>
-=======
                                                 
                                                 @if($rate->id == $rate_id )
                                                 <tr>
@@ -449,19 +392,14 @@
                                             </tbody>
                                         </table>
                                     </div>
->>>>>>> merge-quote-v2
                                 </div>
                             </div>
                             <div class='row'>
                                 <div class="col-md-12">
                                     <h5 class="title-quote pull-right">
-<<<<<<< HEAD
-                                        Sub-Total: <span id="sub_total_freight"></span>&nbsp;
-=======
                                         <b>Add freight charge</b><a class="btn" onclick="addFreightCharge({{$v}})" style="vertical-align: middle">
                                             <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                         </a>
->>>>>>> merge-quote-v2
                                     </h5>
                                 </div>
                             </div>
@@ -494,15 +432,9 @@
                                                 @foreach($rate->charge as $item)
                                                     @if($item->type_id==1)
                                                         @php
-<<<<<<< HEAD
-                                                        $origin_amounts = $item->amount['amount'];
-                                                        $origin_markups = $item->markups['markups'];
-                                                        $origin_total = $item->total['total'];
-=======
                                                             $origin_amounts = $item->amount['amount'];
                                                             $origin_markups = $item->markups['markups'];
                                                             $origin_total = $item->total['total'];
->>>>>>> merge-quote-v2
                                                         @endphp
                                                         <tr>
                                                             <td>
@@ -518,11 +450,7 @@
                                                                 <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->markups->20" data-value="{{@$origin_markups['20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['20'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_20">{{@$origin_amounts['20']+@$origin_markups['20']}}</span>
-=======
                                                                 <span class="total_20">{{@$origin_amounts['20']+@$origin_markups['20']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>
                                                                 <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->amount->40" data-value="{{@$origin_amounts['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -531,11 +459,7 @@
                                                                 <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->markups->40" data-value="{{@$origin_markups['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40">{{@$origin_amounts['40']+@$origin_markups['40']}}</span>
-=======
                                                                 <span class="total_40">{{@$origin_amounts['40']+@$origin_markups['40']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
                                                                 <a href="#" class="editable-amount-40hc amount_40hc"data-type="text" data-name="amount->amount->40hc" data-value="{{@$origin_amounts[$i]['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -544,11 +468,7 @@
                                                                 <a href="#" class="editable-amount-40hc markup_40hc"data-type="text" data-name="markups->markups->40hc" data-value="{{@$origin_markups[$i]['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40hc">{{@$origin_amounts['40hc']+@$origin_markups['40hc']}}</span>
-=======
                                                                 <span class="total_40hc">{{@$origin_amounts['40hc']+@$origin_markups['40hc']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
                                                                 <a href="#" class="editable-amount-40nor amount_40nor"data-type="text" data-name="amount->amount->40nor" data-value="{{@$origin_amounts[$i]['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -557,11 +477,7 @@
                                                                 <a href="#" class="editable-markup-40nor markup_40nor"data-type="text" data-name="markups->markups->40nor" data-value="{{@$origin_markups[$i]['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40nor">{{@$origin_amounts['40nor']+@$origin_markups['40nor']}}</span>
-=======
                                                                 <span class="total_40nor">{{@$origin_amounts['40nor']+@$origin_markups['40nor']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
                                                                 <a href="#" class="editable-amount-45 amount_45" data-type="text" data-name="amount->amount->45" data-value="{{@$origin_amounts[$i]['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -570,11 +486,7 @@
                                                                 <a href="#" class="editable-markup-45 markup_45" data-type="text" data-name="amount->markups->45" data-value="{{@$origin_markups[$i]['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_45">{{@$origin_amounts['45']+@$origin_markups['45']}}</span>
-=======
                                                                 <span class="total_45">{{@$origin_amounts['45']+@$origin_markups['45']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td>
                                                                 <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -583,20 +495,12 @@
                                                         @php
                                                             $a++;
                                                         @endphp
-<<<<<<< HEAD
-
-=======
->>>>>>> merge-quote-v2
                                                     @endif
                                                 @endforeach
 
                                                 <!-- Hide origin charges-->
 
-<<<<<<< HEAD
-                                                <tr class="hide" id="origin_charges_{{$i}}">
-=======
                                                 <tr class="hide" id="origin_charges_{{$v}}">
->>>>>>> merge-quote-v2
                                                     <td>
                                                         <input type="text" class="form-control" value="" name="origin_ammount_charge[]"/>
                                                     </td>
@@ -661,8 +565,6 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-<<<<<<< HEAD
-=======
                                                 @if($rate->id == $rate_id )
                                                 <tr>
                                                     <td></td>
@@ -675,7 +577,6 @@
                                                     <td >USD</td>
                                                 </tr>
                                                 @endif
->>>>>>> merge-quote-v2
                                             </tbody>
                                         </table>
                                     </div>
@@ -685,24 +586,10 @@
                                 <div class="col-md-12">
                                     <h5 class="title-quote pull-right">
                                         <b>Add origin charge</b>
-<<<<<<< HEAD
-                                        <a class="btn" onclick="addOriginCharge({{$i}})" style="vertical-align: middle">
-                                            <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                        </a>
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class="col-md-12">
-                                    <h5 class="title-quote pull-right">
-                                        Sub-Total: <span id="sub_total_origin"></span>&nbsp;
-                                    </h5>
-=======
                                         <a class="btn" onclick="addOriginCharge({{$v}})" style="vertical-align: middle">
                                             <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                         </a>
                                     </h5>
->>>>>>> merge-quote-v2
                                 </div>
                             </div>
 
@@ -753,11 +640,7 @@
                                                                 <a href="#" class="editable destination_markup_20"data-type="text" data-name="markups->20" data-value="{{@$destination_markups[$i]['20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['20'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_destination_20">{{@$origin_amounts['20']+@$origin_markups['20']}}</span>
-=======
                                                                 <span class="total_20">{{@$origin_amounts['20']+@$origin_markups['20']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>          
                                                                 <a href="#" class="editable destination_amount_40"data-type="text" data-name="amount->40" data-value="{{@$destination_amounts[$i]['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -766,11 +649,7 @@
                                                                 <a href="#" class="editable destination_markup_40"data-type="text" data-name="markups->40" data-value="{{@$destination_markups[$i]['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40">{{@$origin_amounts['40']+@$origin_markups['40']}}</span>
-=======
                                                                 <span class="total_40">{{@$origin_amounts['40']+@$origin_markups['40']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
                                                                 <a href="#" class="editable destination_amount_40hc"data-type="text" data-name="amount->40hc" data-value="{{@$destination_amounts[$i]['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -779,11 +658,7 @@
                                                                 <a href="#" class="editable destination_markup_40hc"data-type="text" data-name="markups->40hc" data-value="{{@$destination_markups[$i]['40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40hc'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40hc">{{@$origin_amounts['40hc']+@$origin_markups['40hc']}}</span>
-=======
                                                                 <span class="total_40hc">{{@$origin_amounts['40hc']+@$origin_markups['40hc']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
                                                                 <a href="#" class="editable destination_amount_40nor"data-type="text" data-name="amount->40nor" data-value="{{@$destination_amounts[$i]['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -792,11 +667,7 @@
                                                                 <a href="#" class="editable destination_markup_40nor"data-type="text" data-name="markups->40hc" data-value="{{@$destination_markups[$i]['40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['40nor'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_40nor">{{@$origin_amounts['40nor']+@$origin_markups['40nor']}}</span>
-=======
                                                                 <span class="total_40nor">{{@$origin_amounts['40nor']+@$origin_markups['40nor']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
                                                                 <a href="#" class="editable destination_amount_45" data-type="text" data-name="amount->45" data-value="{{@$destination_amounts[$i]['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -805,11 +676,7 @@
                                                                 <a href="#" class="editable destination_markup_45" data-type="text" data-name="markups->45" data-value="{{@$destination_markups[$i]['45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             </td>
                                                             <td {{ $equipmentHides['45'] }}>
-<<<<<<< HEAD
-                                                                <span class="total_origin_45">{{@$origin_amounts['45']+@$origin_markups['45']}}</span>
-=======
                                                                 <span class="total_45">{{@$origin_amounts['45']+@$origin_markups['45']}}</span>
->>>>>>> merge-quote-v2
                                                             </td>
                                                             <td>
                                                                 <a href="#" class="editable" data-source="{{$currencies}}" data-name="markups->45" data-type="select" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -823,11 +690,7 @@
 
                                                 <!-- Hide destination charges -->
 
-<<<<<<< HEAD
-                                                <tr class="hide" id="destination_charges_{{$i}}">
-=======
                                                 <tr class="hide" id="destination_charges_{{$v}}">
->>>>>>> merge-quote-v2
                                                     <td>
                                                         <input type="text" class="form-control" value="" name="destination_ammount_charge[]"/>
                                                     </td>
@@ -892,21 +755,6 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-<<<<<<< HEAD
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class="col-md-12">
-                                    <h5 class="title-quote pull-right">
-                                        <b>Add destination charge</b>
-                                        <a class="btn" onclick="addDestinationCharge({{$i}})" style="vertical-align: middle">
-                                            <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                        </a>
-                                    </h5>
-=======
                                                 @if($rate->id == $rate_id )
                                                 <tr>
                                                     <td></td>
@@ -922,40 +770,19 @@
                                             </tbody>
                                         </table>
                                     </div>
->>>>>>> merge-quote-v2
                                 </div>
                             </div>
                             <div class='row'>
                                 <div class="col-md-12">
                                     <h5 class="title-quote pull-right">
-<<<<<<< HEAD
-                                        Sub-Total: <span id="sub_total_destination"></span>&nbsp;
-=======
                                         <b>Add destination charge</b>
                                         <a class="btn" onclick="addDestinationCharge({{$v}})" style="vertical-align: middle">
                                             <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                         </a>
->>>>>>> merge-quote-v2
                                     </h5>
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
-                    </div>
-                    <br>
-                    <br>
-                    @php
-                        $v++;
-                    @endphp
-                    @endforeach
-                    <div class='row'>
-                        <div class="col-md-12">
-                            <h5 class="title-quote pull-right size-18px">
-                                Total: <span id="total"></span>&nbsp;
-                            </h5>
-                        </div>
-=======
->>>>>>> merge-quote-v2
                     </div>
                     <br>
                     @php
@@ -1086,7 +913,7 @@
     <!-- Payments and terms conditions -->
     <div class="row">
         <div class="col-md-12">
-            <div class="m-portlet">
+            <div class="m-portlet custom-portlet">
                 <div class="m-portlet__head">
                     <div class="row" style="padding-top: 20px;">
                         <h3 class="title-quote size-14px">Payment conditions</h3>
@@ -1126,7 +953,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="m-portlet">
+            <div class="m-portlet custom-portlet">
                 <div class="m-portlet__head">
                     <div class="row" style="padding-top: 20px;">
                         <h3 class="title-quote size-14px">Terms & conditions</h3>
