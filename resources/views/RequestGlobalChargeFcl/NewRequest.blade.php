@@ -377,7 +377,7 @@
                         status.html(xhr.responseText);
                         $('#mjsH').text('Bye');
                         $('#modaledit').modal('hide');
-                        window.location.href = "{{route('globalcharges.index')}}";
+                        window.location.href = "{{route('RequestsGlobalchargersFcl.indexListClient')}}";
                     }
                 });
 
