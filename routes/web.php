@@ -556,5 +556,13 @@ Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 Route::resource('search', 'SearchController')->middleware('auth');
+// Quote V2
+
+Route::middleware(['auth'])->prefix('quote')->group(function () {
+  Route::get('search', 'QuoteAutoController@search')->name('quote.search');
+  Route::post('processSearch', 'QuoteAutoController@processSearch')->name('quote.processSearch');
+});
+Route::resource('quote', 'QuoteAutoController')->middleware('auth');
+
 Auth::routes();
 
