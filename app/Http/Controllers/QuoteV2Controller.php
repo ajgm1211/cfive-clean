@@ -133,13 +133,6 @@ class QuoteV2Controller extends Controller
             &nbsp;
             Show
             </span>
-            </a>      
-            <a href="/v2/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
-            <span>
-            <i class="la la-edit"></i>
-            &nbsp;
-            Edit
-            </span>
             </a>
             <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
             <span>
@@ -219,10 +212,12 @@ class QuoteV2Controller extends Controller
 
     public function updateQuoteCharges(Request $request)
     {
-        //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
         DB::table('charges')
         ->where('id', $request->pk)
         ->update([$request->name => $request->value]);
+
+        //$charge=Charge::find($request->pk);
+        //$rate=AutomaticRate::find($charge->automatic_rate_id);
 
         return response()->json(['success'=>'done']);
     }
