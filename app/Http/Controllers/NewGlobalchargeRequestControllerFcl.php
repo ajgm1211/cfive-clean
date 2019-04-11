@@ -41,7 +41,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
     }
 
     public function listClient($id){
-        $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
+        $Ncontracts = NewGlobalchargeRequestFcl::where('company_user_id',$id)->get();
         //dd($Ncontracts[0]['companyuser']['name']);
 
         return Datatables::of($Ncontracts)
