@@ -14,7 +14,7 @@
 
   <div class="col-lg-1"></div>
   <div class="col-lg-10">
-    {!! Form::open(['route' => 'quote.processSearch','class' => 'form-group m-form__group']) !!}
+    {!! Form::open(['route' => 'quotes-v2.processSearch','class' => 'form-group m-form__group']) !!}
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">

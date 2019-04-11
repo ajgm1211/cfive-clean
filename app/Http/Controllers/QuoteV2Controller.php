@@ -30,15 +30,18 @@ use App\LocalCharPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
+use GoogleMaps;
 use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\DataTables;
-
+use Illuminate\Support\Collection as Collection;
+use App\Repositories\Schedules;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class QuoteV2Controller extends Controller
 {
