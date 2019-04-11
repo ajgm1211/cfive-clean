@@ -18,9 +18,7 @@
                 <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry')"  name="typeroute" value="country"> Country
                 <span></span>
               </label>
-
             </div>
-
           </div>
         </div>
       </div>
@@ -36,13 +34,13 @@
         <div class="divport" >
           {!! Form::label('orig', 'Origin Port') !!}
           {{ Form::select('port_orig[]', $harbor,
-          null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true' ]) }}
+          null,['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' => 'true' ]) }}
         </div>
         <div class="divcountry" hidden="true">
 
           {!! Form::label('origC', 'Origin Country') !!}
           {{ Form::select('country_orig[]', $countries,
-          null,['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
+          null,['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple'  ]) }}
 
         </div>
       </div>			
@@ -51,7 +49,7 @@
           {!! Form::label('dest', 'Destination Port') !!}
           <div class="m-input-icon m-input-icon--right">
             {{ Form::select('port_dest[]', $harbor,
-            null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true' ]) }}
+            null,['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' => 'true' ]) }}
             <span class="m-input-icon__icon m-input-icon__icon--right">
               <span>
                 <i class="la la-info-circle"></i>
@@ -65,12 +63,7 @@
           {{ Form::select('country_dest[]',$countries,null,[ 'id' => 'country_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
 
         </div>
-
       </div>
-
-
-
-
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
@@ -107,20 +100,17 @@
             </span>
           </span>
         </div>
-
       </div>
-
       <div class="col-lg-4">
         {!! Form::label('ammountL', 'Amount') !!}
         <div class="m-input-icon m-input-icon--right">
-          {!! Form::nummber('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the Ammount','class' => 'form-control m-input' ,'required' => 'true','min' => '0','step'=>'0.01']) !!}
+          {!! Form::number('ammount', null, ['id' => 'ammount','placeholder' => 'Please enter the Ammount','class' => 'form-control m-input' ,'required' => 'true','min' => '0','step'=>'0.01']) !!}
           <span class="m-input-icon__icon m-input-icon__icon--right">
             <span>
               <i class="la la-bookmark-o"></i>
             </span>
           </span>
         </div>
-
       </div>
       <div class="col-lg-4">
         {!! Form::label('minimum', 'Minimum') !!}
@@ -132,7 +122,6 @@
             </span>
           </span>
         </div>
-
       </div>
     </div>
     <div class="form-group m-form__group row">
@@ -141,9 +130,7 @@
         <div class="m-input-icon m-input-icon--right">
           {{ Form::select('localcurrency_id',$currency,$currency_cfg->id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
         </div>
-
       </div>
-
     </div>
   </div>  
   <br>
@@ -162,11 +149,7 @@
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/globalchargeslcl.js"></script>
 <script>
-
-
   $('.m-select2-general').select2({
     placeholder: "Select an option"
   });
-
-
 </script>

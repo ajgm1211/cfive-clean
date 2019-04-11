@@ -2604,6 +2604,7 @@ class QuoteAutomaticController extends Controller
       )->values()
     );*/
 
+
     return view('quotation/index', compact('harbor','formulario','arreglo','inlandDestiny','inlandOrigin','form'));
   }
 
