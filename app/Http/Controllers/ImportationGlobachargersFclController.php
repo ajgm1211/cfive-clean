@@ -6,6 +6,7 @@ use Excel;
 use App\User;
 use PrvHarbor;
 use App\Harbor;
+use App\Region;
 use App\Carrier;
 use App\Country;
 use App\Currency;
@@ -286,11 +287,12 @@ class ImportationGlobachargersFclController extends Controller
         $harbor         = Harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.index',compact('harbor','country','carrier','companysUser','typedestiny'));
+        return view('ImportationGlobalchargersFcl.index',compact('harbor','region','country','carrier','companysUser','typedestiny'));
     }
-    
+
     public function indexRequest($id)
     {
         $requestgc      = RequestGC::find($id);
@@ -298,9 +300,10 @@ class ImportationGlobachargersFclController extends Controller
         $harbor         = Harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $carrier        = Carrier::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestgc'));
+        return view('ImportationGlobalchargersFcl.indexRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestgc'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -314,7 +317,9 @@ class ImportationGlobachargersFclController extends Controller
         $destinyArr         = $request->destiny;
         $originArr          = $request->origin;
         $originCountArr     = $request->originCount;
+        $originRegionArr    = $request->originRegion;
         $destinyCountArr    = $request->destinyCount;
+        $destinyRegionArr   = $request->destinyRegion;
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
@@ -332,6 +337,7 @@ class ImportationGlobachargersFclController extends Controller
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
 
 
@@ -479,14 +485,15 @@ class ImportationGlobachargersFclController extends Controller
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
             'originCount'       => $originCountArr,
+            'originRegion'      => $originRegionArr,
             'destinyCount'      => $destinyCountArr,
+            'destinyRegion'     => $destinyRegionArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
             'typedestiny'       => $typedestinyVal,
             'existdatevalidity' => $datevalidityBol,
             'validitydate'      => $validitydateVal,
-
             'account_id'        => $account_id,
             'date'              => $request->date,
             'name'              => $request->name,
@@ -502,11 +509,13 @@ class ImportationGlobachargersFclController extends Controller
         //dd($data);
 
         return view('ImportationGlobalchargersFcl.show',compact('harbor',
+                                                                'region',
                                                                 'country',
                                                                 'data',
                                                                 'carrier',
                                                                 'targetsArr',
                                                                 'account_id',
+                                                                'account',
                                                                 'coordenates',
                                                                 'countTarges',
                                                                 'CompanyUserId',
@@ -542,7 +551,8 @@ class ImportationGlobachargersFclController extends Controller
     // view de informacion despues de despachar el job
     public function show($id)
     {
-        return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id'));
+        $accounts = AccountImportationGlobalcharge::find($id);
+        return view('ImportationGlobalchargersFcl.ProcessedInformation',compact('id','accounts'));
     }
 
     public function edit($id){
@@ -739,8 +749,9 @@ class ImportationGlobachargersFclController extends Controller
     {
         $countfailglobal = FailedGlobalcharge::where('account_id','=',$id)->count();
         $countgoodglobal = GlobalCharge::where('account_importation_globalcharge_id','=',$id)->count();
+        $accounts = AccountImportationGlobalcharge::find($id);
         //dd('fallidos'.$countfailglobal);
-        return view('ImportationGlobalchargersFcl.showview',compact('id','tab','countfailglobal','countgoodglobal'));
+        return view('ImportationGlobalchargersFcl.showview',compact('id','tab','countfailglobal','accounts','countgoodglobal'));
     }
 
     // LLena los datatables
@@ -1254,4 +1265,58 @@ class ImportationGlobachargersFclController extends Controller
             return redirect()->route('RequestsGlobalchargersFcl.index');
         }
     }
+
+    public function indexAccount(){
+        $account = AccountImportationGlobalcharge::with('companyuser')->get();
+        return DataTables::of($account)
+            ->addColumn('status', function ( $account) {
+                return  $account->status;
+
+            })
+            ->addColumn('company_user_id', function ( $account) {
+                return  $account->companyuser->name;
+            })
+            ->addColumn('action', function ( $account) {
+                return '<a href="/ImportationGlobalchargesFcl/FailedGlobalchargers/'.$account->id.'/1" class="show"  title="Failed-Good" >
+                            <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
+                        </a>
+                        &nbsp;
+                        &nbsp;
+                        <a href="/ImportationGlobalchargesFcl/DownloadAccountgcfcl/'.$account->id.'" class="">
+                            <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
+                        </a>
+                        &nbsp; &nbsp; 
+                        <a href="/ImportationGlobalchargesFcl/DeleteAccountsGlobalchargesFcl/'.$account->id.'/2" class="eliminarrequest"  title="Delete" >
+                            <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
+                        </a>';
+            })
+            ->editColumn('id', '{{$id}}')->toJson();
+    }
+
+
+    public function testExcelImportation(){
+
+        $nopalicaHs = Harbor::where('name','No Aplica')->get();
+        $nopalicaCs = Country::where('name','No Aplica')->get();
+        foreach($nopalicaHs as $nopalicaH){
+            $nopalicaH = $nopalicaH['id'];
+        }
+        foreach($nopalicaCs as $nopalicaC){
+            $nopalicaC = $nopalicaC['id'];
+        }
+        
+        FailedGlobalcharge::where('account_id','=',30)->where('origin','LIKE','%No Aplica%')->delete();
+        FailedGlobalcharge::where('account_id','=',30)->where('destiny','LIKE','%No Aplica%')->delete();
+
+        GlobalCharge::where('account_importation_globalcharge_id',30)
+            ->whereHas('globalcharport',function($query) use($nopalicaH){
+               $query->where('port_dest',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+            })
+            ->orWhereHas('globalcharcountry',function($query) use($nopalicaC){
+               $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+            })->Delete();
+
+    }
+
+
 }

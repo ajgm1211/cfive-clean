@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'GlobalCharge')
+@section('title', 'Requests GlobalCharge')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
@@ -85,99 +85,22 @@
                                         </a>
                                     </div>
                                     <br>
-                                    <table class="table tableData"  id="html_table" >
+                                    <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                                         <thead >
                                             <tr>
-                                                <th width="1%" >
-                                                    Id
-                                                </th>
-                                                <th width="3%" >
-                                                    Company
-                                                </th>
-                                                <th width="3%" >
-                                                    Name
-                                                </th>
-                                                <th width="4%" >
-                                                    Contract Validation
-                                                </th>
-                                                <th width="5%" >
-                                                    Date
-                                                </th>
-                                                <th width="3%" >
-                                                    Last Management
-                                                </th>
-                                                <th width="5%" >
-                                                    User
-                                                </th>
-                                                <th width="5%" >
-                                                    Username Load
-                                                </th>
-                                                <th width="5%" >
-                                                    Status
-                                                </th>
-                                                <th width="5%" >
-                                                    Options
-                                                </th>
+                                                <th >ID</th>
+                                                <th >Company</th>
+                                                <th >Contract Name</th>
+                                                <th >Contract Validation</th>
+                                                <th >Date</th>
+                                                <th >Last Management</th>
+                                                <th >User</th>
+                                                <th >Username Load</th>
+                                                <th >Status</th>
+                                                <th >Options</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach($Ncontracts as $Ncontract)
-                                            <tr>
-                                                <td>
-                                                    {{$Ncontract->id}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->companyuser->name}}
-                                                </td>
-                                                <td id="{{'thnamec'.$loop->iteration}}">
-                                                    {{$Ncontract->name}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->validation}}
-                                                </td>
-                                                <td>
-                                                    {{\Carbon\Carbon::parse($Ncontract->created)->format('d-m-Y h:i:s')}}
-                                                </td>
-                                                @if(empty($Ncontract->updated) != true)
-                                                <td>
-                                                    {{\Carbon\Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s')}}
-                                                </td>
-                                                @else
-                                                <td>
-                                                    00-00-0000 00:00:00
-                                                </td>
-                                                @endif
-                                                <td>
-                                                    {{$Ncontract->user->name.' '.$Ncontract->user->lastname}}
-                                                </td>
-                                                <td>
-                                                    {{$Ncontract->username_load}}
-                                                </td>
-                                                <td>
-                                                    <a href="#" style="color:#031B4E" id="{{'thstatus'.$loop->iteration}}" onclick="LoadModalStatus({{$Ncontract->id}},{{$loop->iteration}},{{$Ncontract->status}})">{{$Ncontract->status}}</a>
-                                                    &nbsp;
-                                                    <samp class="la la-pencil-square-o" for="{{'thstatus'.$loop->iteration}}" style="font-size:15px"></samp>
-                                                </td>
-                                                <td>
-                                                    <a href="{{route('process.request.gc',$Ncontract->id)}}" title="Proccess GC Request">
-                                                        <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                    &nbsp; &nbsp;
-                                                    <a href="{{route('RequestsGlobalchargersFcl.show',$Ncontract->id)}}" title="Download File">
-                                                        <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                    <!--
-<a href="{{route('RequestImportation.edit',$Ncontract->id)}}" title="See Details" >
-<samp class="la	la-file-text" style="font-size:20px; color:#031B4E"></samp>
-</a> -->
 
-                                                    <a href="#" class="eliminarrequest" data-id-request="{{$Ncontract->id}}" data-info="{{'id: '.$Ncontract->id.' Number Contract: '.$Ncontract->numbercontract}}"  title="Delete" >
-                                                        <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -191,8 +114,8 @@
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
                                 <div class="col-xl-12 order-2 order-xl-1 conten_load">
-                                    <table class="table tableData"  id="html_table" >
-                                        <thead >
+                                    <table class="table tableData"  id="myatest" width="100%">
+                                        <thead width="100%">
                                             <tr>
                                                 <th width="1%" >
                                                     Id
@@ -214,40 +137,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @foreach($accounts as $account)
-                                            <tr>
-                                                <td>
-                                                    {{$account->id}}
-                                                </td>
-                                                <td>
-                                                    {{$account->name}}
-                                                </td>
-                                                <td >
-                                                    {{$account->date}}
-                                                </td>
-                                                <td >
-                                                    {{$account->status}}
-                                                </td>
-                                                <td>
-                                                    {{$account->companyuser->name}}
-                                                </td>
-                                                <td>
-                                                    <a href="{{route('showview.globalcharge.fcl',[$account->id,1])}}" class="show"  title="Failed-Good" >
-                                                        <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                    &nbsp;
-                                                    &nbsp;
-                                                    <a href="{{route('Download.Account.gcfcl',$account->id)}}" class=""><samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp></a>
 
-                                                    &nbsp; &nbsp; 
-                                                    <a href="{{route('delete.Accounts.Globalcharges.Fcl',[$account->id,2])}}" class="eliminarrequest"  title="Delete" >
-                                                        <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -259,11 +149,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="Loadstatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" role="document">
+    <div class="modal fade bd-example-modal-lg" id="changeStatus" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
                         Status Of The Request
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -272,31 +162,8 @@
                         </span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label id="NameCon" class="form-control-label">
-                                Name Contract:
-                            </label>
+                <div id="modal-body" class="modal-body">
 
-                        </div>
-                        <div class="form-group">
-                            <label id="NumCon" class="form-control-label">
-                                Number Contract:
-                            </label>
-
-                        </div>
-                        <input type="hidden" id="idContract" value="0"/>
-                        <input type="hidden" id="posicionval" value="0"/>
-                        <div class="form-group">
-                            <label class="form-control-label" for="statusSelectMD">Status: </label>
-                            <select class="form-control" id="statusSelectMD">
-                                <option value="Pending" id="Pending">Pending</option>
-                                <option value="Processing" id="Processing">Processing</option>
-                                <option value="Done" id="Done">Done</option>
-                            </select>
-                        </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
@@ -310,6 +177,7 @@
         </div>
     </div>
 
+
     @endsection
 
     @section('js')
@@ -318,6 +186,74 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script type="application/x-javascript" src="/js/Globalchargers/Request.GlobalC.Status.js"></script>
     <script>
+
+        $(function() {
+            $('#myatest').DataTable({
+                processing: true,
+                ajax: '{!! route("index.Account.import.gc") !!}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'date', name: 'date' },
+                    { data: 'status', name: 'status' },
+                    { data: 'company_user_id', name: "company_user_id" },
+                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                ],
+                "order": [[0, 'desc']],
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "deferLoading": 57,
+                "autoWidth": true,
+                "processing": true,
+                "dom": 'Bfrtip',
+                "paging": true,
+                //"scrollX": true,
+            });
+        });
+
+        $(function() {
+            $('#requesttable').DataTable({
+                processing: true,
+                //serverSide: true,
+                ajax: '{!! route("RequestsGlobalchargersFcl.create2") !!}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'Company', name: 'Company' },
+                    { data: 'name', name: 'name' },
+                    { data: 'validation', name: 'validation' },
+                    { data: 'date', name: 'date' },
+                    { data: 'updated', name: 'updated' },
+                    { data: 'user', name: 'user' },
+                    { data: 'username_load', name: 'username_load' },
+                    { data: 'status', name: 'status' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                ],
+                "order": [[0, 'desc']],
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "width": true,
+                "info": true,
+                "deferLoading": 57,
+                "autoWidth": false,
+                "processing": true,
+                "dom": 'Bfrtip',
+                "paging": true
+            });
+
+        });
+
+        function showModal(id){
+
+            var url = '{{ route("show.status.Request.gc",":id") }}';
+            url = url.replace(':id',id);
+            $('#modal-body').load(url,function(){
+                $('#changeStatus').modal();
+            });
+
+        }
 
         $(document).on('click','.eliminarrequest',function(e){
             var id = $(this).attr('data-id-request');

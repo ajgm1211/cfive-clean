@@ -137,6 +137,8 @@ Route::prefix('Requests')->group(function () {
 
     Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
         ->middleware(['auth','role:administrator|company|subuser']);
+    Route::get('StatusRquestFCL/{id}','NewContractRequestsController@showStatus')->name('show.status.Request')
+        ->middleware(['auth','role:administrator']);
     Route::POST('RequestImportation/two','NewContractRequestsController@store2')->name('RequestImportation.store2')
         ->middleware(['auth','role:administrator|company|subuser']);
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
@@ -151,7 +153,7 @@ Route::prefix('Importation')->group(function () {
     //Importar desde request
     Route::get('RequestProccessFCL/{id}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator']);
-    
+
     // Importar Contracto
     Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
         ->middleware(['auth','role:administrator']);
@@ -253,6 +255,8 @@ Route::prefix('Importation')->group(function () {
 Route::prefix('RequestsLcl')->group(function () {
     Route::resource('RequestImportationLcl','NewContractRequestLclController')->middleware(['auth','role:administrator']);
 
+    Route::get('StatusRquestLCL/{id}','NewContractRequestLclController@showStatus')->name('show.status.Request.lcl')
+        ->middleware(['auth','role:administrator']);    
     Route::POST('RequestImportationLcl/two','NewContractRequestLclController@store2')->name('RequestImportationLcl.store2')
         ->middleware(['auth','role:administrator|company|subuser']);
     Route::get('Requestimporlcl','NewContractRequestLclController@LoadViewRequestImporContractLcl')->name('Request.importaion.lcl')
@@ -270,7 +274,7 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->grou
     //Importar desde request
     Route::get('RequestProccessLCL/{id}','ImportationLclController@indexRequest')->name('process.request.lcl')
         ->middleware(['auth','role:administrator']);
-    
+
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
 
     // Account FCL
@@ -495,8 +499,14 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
     //Route::resource('RequestsGlobalchargersFcl','NewGlobalchargeRequestControllerFcl')->middleware(['auth','role:administrator']);
 
+    Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
+        ->middleware(['auth','role:administrator']);    
+    
     Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
         ->middleware(['auth','role:administrator|company|subuser']);
+    
+    Route::get('RequestsGlobalchargersFcl/create2/','NewGlobalchargeRequestControllerFcl@create2')->name('RequestsGlobalchargersFcl.create2')
+        ->middleware(['auth','role:administrator']);
 
     Route::POST('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@store')->name('RequestsGlobalchargersFcl.store')
         ->middleware(['auth','role:administrator|company|subuser']);
@@ -519,11 +529,12 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
 // IMPORTATION GLOBALCHARGE FCL
 Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalchargesFcl')->group(function () {
-    
+
+    Route::get('AccountGC/','ImportationGlobachargersFclController@indexAccount')->name('index.Account.import.gc');
     //Importar desde request
     Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
         ->middleware(['auth','role:administrator']);
-    
+
     Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
     Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
     Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
@@ -545,6 +556,8 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 
     // Reprocesar
     Route::get('/ReprocesarGlobalchargers/{id}','ImportationGlobachargersFclController@ReprocesarGlobalchargers')->name('Reprocesar.globalcharge.fcl');
+    
+    Route::get('/testExcelImportation','ImportationGlobachargersFclController@testExcelImportation')->name('testExcelImportation.GC')->middleware(['auth','role:administrator']);
 
 });
 // GLOBAL CHARGES LCL 
@@ -557,6 +570,12 @@ Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
     Route::get('duplicateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge-lcl']);
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('Region')->group(function () {
+    Route::resource('Region','RegionController');
+    Route::get('/LoadViewRegion','RegionController@LoadViewAdd')->name('load.View.add.region');
+});
+
 Route::resource('search', 'SearchController')->middleware('auth');
 
 // Quote V2 - Ale

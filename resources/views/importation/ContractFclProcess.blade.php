@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title', 'Contracts')
+@section('title', 'Importation FCL '.$contract['id'].' - '.$contract['number'].'/'.$contract['name'])
 @section('content')
 
 <div class="m-content">
@@ -111,29 +111,43 @@ new registration
                                 </div>
                                 @if($value['existorigin'] == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="origin" class=" ">Origin</label>
+                                    <label for="origin" class=" ">Origin Ports</label>
                                     {!! Form::select('origin[]',$harbor,$value['origin'],['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}                            
                                 </div>
+                                @if($statusPortCountry == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="origin" class=" ">Origin</label>
+                                    <label for="originCountry" class=" ">Origin Countries</label>
                                     {!! Form::select('originCount[]',$country,$value['originCount'],['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}                           
                                 </div>
+                                <div class="col-2 col-form-label">
+                                    <label for="originRegion" class=" ">Origin Regions</label>
+                                    {!! Form::select('originRegion[]',$region,$value['originRegion'],['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}                           
+                                </div>
+                                @endif
                                 @endif
 
                                 <input type="hidden" name="existorigin" id="existorigin" value="{{$value['existorigin']}}" />
 
                                 @if($value['existdestiny'] == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="destiny" class=" ">Ports</label>
+                                    <label for="destiny" class=" ">Destiny Ports</label>
                                     {!! Form::select('destiny[]',$harbor,$value['destiny'],['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                 </div>
+                                @if($statusPortCountry == true)
                                 <div class="col-2 col-form-label">
-                                    <label for="destiny" class=" ">Countries</label>
+                                    <label for="destinyCountry" class=" ">Destiny Countries</label>
                                     {!! Form::select('destinyCount[]',$country,$value['destinyCount'],['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}  
                                 </div>
+                                <div class="col-form-label" id="destinyinpRegion">
+                                        <label for="destinyRegion" class=" ">Destiny Regions</label>
+                                        {!! Form::select('destinyRegion[]',$region,$value['destinyRegion'],['class'=>'m-select2-general form-control','id'=>'destinyRegion','multiple'=>'multiple'])!!}
+                                    </div>
+                                @endif
                                 @endif
 
                                 <input type="hidden" name="existdestiny" id="existdestiny" value="{{$value['existdestiny']}}" />
+                                
+                                <input type="hidden" name="statusPortCountry" id="statusPortCountry" value="{{$statusPortCountry}}" />
 
                                 @if($value['existcarrier'] == true)
                                 <div class="col-2 col-form-label">

@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title', 'Contracts')
+@section('title','Importation LCL R. '.$requestlcl['id'].' - '.$requestlcl['numbercontract'].'/'.$requestlcl['namecontract'])
 @section('content')
 
 <div class="m-content">
