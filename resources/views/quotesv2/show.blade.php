@@ -219,7 +219,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="table-responsive">
-                                        <table class="table table-sm table-bordered table color-blue text-center">
+                                        <table class="table table-sm table-bordered table-hover table color-blue text-center">
                                             <thead class="title-quote text-center header-table">
                                                 <tr>
                                                     <td >Charge</td>
@@ -232,7 +232,7 @@
                                                     <td >Currency</td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="background-color: white;">
                                                 @php
                                                     $i=0;
                                                 @endphp
@@ -425,7 +425,7 @@
                                                     <td >Currency</td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="background-color: white;">
                                                 @php
                                                 $a=0;
                                                 @endphp
@@ -614,7 +614,7 @@
                                                     <td >Currency</td>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="background-color: white;">
                                                 @php
                                                     $a=0;
                                                 @endphp
@@ -798,6 +798,15 @@
     <div class="row">
         <div class="col-md-12">
             <div class="m-portlet custom-portlet">
+                <!--<div class="m-portlet__head-tools">
+                   <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                        <li class="nav-item m-tabs__item" id="edit_li">
+                            <a class="btn btn-primary-v2" id="edit-payments" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>-->
                 <div class="m-portlet__body">
                     @php
                     $x=0;
@@ -831,7 +840,7 @@
                                         <td >Currency</td>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style="background-color: white;">
                                     <tr >
                                         <td>
                                             <a href="#" class="editable" data-source="{{$surcharges}}" data-type="text" data-value="{{$inland->provider}}" data-pk="{{$item->id}}" data-title="Charge"></a>
