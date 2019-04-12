@@ -8,6 +8,7 @@ use App\Rate;
 use PrvRates;
 use PrvHarbor;
 use App\Harbor;
+use App\Region;
 use App\Carrier;
 use App\Country;
 use App\FileTmp;
@@ -438,22 +439,24 @@ class ImportationController extends Controller
     public function LoadViewImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImporContractFcl',compact('harbor','country','carrier','companysUser','typedestiny'));
+        return view('importation.ImporContractFcl',compact('harbor','country','region','carrier','companysUser','typedestiny'));
     }
-    
+
     // precarga la vista para importar rates o rates mas surchargers desde Request
     public function requestProccess($id){
         $requestfcl     = RequestFcl::find($id);
         //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
+        $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImportContractFCLRequest',compact('harbor','country','carrier','companysUser','typedestiny','requestfcl'));
+        return view('importation.ImportContractFCLRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestfcl'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -468,8 +471,10 @@ class ImportationController extends Controller
         $typedestinyVal     = $request->typedestiny;
         $originArr          = $request->origin;
         $originCountArr     = $request->originCount;
+        $originRegionArr    = $request->originRegion;
         $destinyArr         = $request->destiny;
         $destinyCountArr    = $request->destinyCount;
+        $destinyRegionArr   = $request->destinyRegion;
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
@@ -486,6 +491,7 @@ class ImportationController extends Controller
         $typedestiny        = TypeDestiny::all()->pluck('description','id');
         $harbor             = harbor::all()->pluck('display_name','id');
         $country            = Country::all()->pluck('name','id');
+        $region             = Region::all()->pluck('name','id');
         $carrier            = carrier::all()->pluck('name','id');
         $Contract_id;
 
@@ -636,9 +642,11 @@ class ImportationController extends Controller
             'existorigin'       => $originBol,
             'origin'            => $originArr,
             'originCount'       => $originCountArr,
+            'originRegion'      => $originRegionArr,
             'existdestiny'      => $destinyBol,
             'destiny'           => $destinyArr,
             'destinyCount'      => $destinyCountArr,
+            'destinyRegion'     => $destinyRegionArr,
             'existcarrier'      => $carrierBol,
             'carrier'           => $carrierVal,            
             'existtypedestiny'  => $typedestinyBol,
@@ -660,7 +668,9 @@ class ImportationController extends Controller
         return view('importation.ContractFclProcess',compact('harbor',
                                                              'country',
                                                              'data',
+                                                             'contract',
                                                              'type',
+                                                             'region',
                                                              'carrier',
                                                              'targetsArr',
                                                              'coordenates',
@@ -1150,22 +1160,32 @@ class ImportationController extends Controller
     }
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
-        $countrates = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
+        $countrates     = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
-        return view('importation.TestFailRates2',compact('countfailrates','countrates','id','tab'));
+        $contract       = Contract::find($id);
+        return view('importation.TestFailRates2',compact('countfailrates','countrates','contract','id','tab'));
     }
 
     // * proccesa solo cuando es Surchargers, Se envia a cola de trabajos 2do. plano
     public function ProcessContractFclRatSurch(Request $request){
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
+        /*
+        $requestobj = $request;
+        $companyUserIdVal = $companyUserId;
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = \Storage::disk('FclImport')->url($NameFile);
+
+        */
 
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
     }
     public function redirectProcessedInformation($id){
-        return view('importation.ProcessedInformation',compact('id'));
+        $contract       = Contract::find($id);
+        return view('importation.ProcessedInformation',compact('id','contract'));
     }
 
     // Rates ----------------------------------------------------------------------------
@@ -4050,7 +4070,8 @@ class ImportationController extends Controller
         //$id se refiere al id del contracto
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
         $countgoodsurcharge = LocalCharge::where('contract_id','=',$id)->count();
-        return view('importation.SurchargersFailOF',compact('countfailsurcharge','countgoodsurcharge','id','tab'));
+        $contract       = Contract::find($id);
+        return view('importation.SurchargersFailOF',compact('countfailsurcharge','contract','countgoodsurcharge','id','tab'));
 
     }
 
@@ -5508,14 +5529,10 @@ class ImportationController extends Controller
 
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
-        /*$failsurchargers = FailSurCharge::find(115);
-        $destinyEX          = explode('_',$failsurchargers['port_dest']);
-        $resultadoPortOri = PrvHarbor::get_harbor($destinyEX[0]);*/
 
-        //$originMult = explode('|','valparaiso | durres | lisbon');
-        $originMult = explode('|','valparaiso ');
-
-        dd($originMult);
+        $originVal = trim('Asuncion, Paraguay');
+        $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+        dd($resultadoPortOri);
     }
 
 }
