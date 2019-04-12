@@ -27,7 +27,7 @@
               </div>
               <div class="col-lg-2">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40hc'=>'40HC','40nor'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
+                {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
               <div class="col-lg-2">
                 <label>Company</label>
@@ -248,12 +248,12 @@
                 <br>
 
                 <div class="row bg-light">
-                  <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20O  }} </span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40O  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcO  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norO  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
                   <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
 
@@ -321,11 +321,11 @@
 
                 <div class="row bg-light">
                   <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
                   <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
 
@@ -377,13 +377,14 @@
 
                 <div class="row bg-light">
                   <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">684,00</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">684,00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
                   <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
+
 
 
                 <br><br>
