@@ -15,7 +15,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Global Charges
+                        Global Charges LCL
                     </h3>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                 <i class="la la-cog"></i>
-                                List Global Charge
+                                List Global Charge LCL
                             </a>
                         </li>
                     </ul>
@@ -49,23 +49,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xl-12 order-1 order-xl-2 m--align-right">
+                                <div class="col-md-2">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             Add New
                                             <i class="fa fa-plus"></i>
-                                        </button>
-                                    </a>
-
-                                    <a href="{{route('RequestsGlobalchargersFcl.indexListClient')}}">
-
-                                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                            <span>
-                                                <span>
-                                                    New \ Status Import  &nbsp;
-                                                </span>
-                                                <i class="la la-clipboard"></i>
-                                            </span>
                                         </button>
                                     </a>
                                 </div>
@@ -75,52 +63,33 @@
                         <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>
-                                        Type
-                                    </th>
-                                    <th>
-                                        Origin Port
-                                    </th>
-                                    <th>
-                                        Destination Port
-                                    </th>
-                                    <th>
-                                        Charge Type
-                                    </th>
-                                    <th>
-                                        Calculationtype type
-                                    </th>
-                                    <th>
-                                        Currency
-                                    </th>
-                                    <th>
-                                        Carrier
-                                    </th>
-                                    <th>
-                                        Amount
-                                    </th>
-                                    <th>
-                                        Validity
-                                    </th>
-                                    <th>
-                                        Options
-                                    </th>
+                                    <th>Type</th>
+                                    <th>Origin Port</th>
+                                    <th>Destination Port</th>
+                                    <th>Charge Type</th>
+                                    <th>Calculation type</th>
+                                    <th>Currency</th>
+                                    <th>Carrier</th>
+                                    <th>Amount</th>
+                                    <th>Minimum</th>
+                                    <th>Validity</th>
+                                    <th>Options</th>
                                 </tr>
                             </thead>
 
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade bd-example-modal-lg" id="global-modal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="modalGlobalcharge"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
-                        Global Charges
+                        Edit Global Charges
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -128,7 +97,27 @@
                         </span>
                     </button>
                 </div>
-                <div id="global-body">
+                <div class="modal-body">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bd-example-modal-lg" id="modalGlobalchargeAdd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Add Global Charges
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body-add">
 
                 </div>
 
@@ -145,43 +134,46 @@
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+<script>
+    $(document).ready( function () {
+        $('#global-table').DataTable();
+    } );
+</script>
 <script>
     function AbrirModal(action,id){
 
 
         if(action == "editGlobalCharge"){
-            var url = '{{ route("edit-global-charge", ":id") }}';
+            var url = '{{ route("edit-global-charge-lcl", ":id") }}';
             url = url.replace(':id', id);
-            $('#global-body').load(url,function(){
-                $('#global-modal').modal({show:true});
+            $('.modal-body').load(url,function(){
+                $('#modalGlobalcharge').modal({show:true});
             });
 
         }
         if(action == "addGlobalCharge"){
-            var url = '{{ route("add-global-charge")}}';
+            var url = '{{ route("add-global-charge-lcl")}}';
 
-            $('#global-body').load(url,function(){
-                $('#global-modal').modal({show:true});
+            $('.modal-body-add').load(url,function(){
+                $('#modalGlobalchargeAdd').modal({show:true});
             });
 
         }
         if(action == "duplicateGlobalCharge"){
 
-            var url = '{{ route("duplicate-global-charge", ":id") }}';
+            var url = '{{ route("duplicate-global-charge-lcl", ":id") }}';
             url = url.replace(':id', id);
-            $('#global-body').load(url,function(){
-                $('#global-modal').modal({show:true});
+            $('.modal-body-add').load(url,function(){
+                $('#modalGlobalchargeAdd').modal({show:true});
             });
         }
-
     }
 
     $(function() {
         $('#requesttable').DataTable({
             processing: true,
             //serverSide: true,
-            ajax: '{!! route("globalcharges.show",$company_userid) !!}',
+            ajax: '{!! route("globalchargeslcl.show",$company_userid) !!}',
             columns: [
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
@@ -191,6 +183,7 @@
                 { data: 'currencylb', name: 'currencylb' },
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'ammount', name: 'ammount' },
+                { data: 'minimum', name: 'minimum' },
                 { data: 'validitylb', name: 'validitylb' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
@@ -208,8 +201,9 @@
         });
 
     });
+
 </script>
-<script src="/js/globalcharges.js"></script>
+<script src="/js/globalchargeslcl.js"></script>
 @if(session('globalchar'))
 <script>
     swal(
