@@ -111,6 +111,8 @@
 @if(!empty($arreglo))
 <div class="row" >
   <div class="col-sm-1"></div>
+  {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group']) !!}
+  <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper">
   <div class="col-lg-10">
     <div class="m-portlet">
       <div class="m-portlet__body">
@@ -133,9 +135,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6" align='right'><button  class="btn-large" disabled='true'> Quote
-
-                </button></div>
+              <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Save</button></div>
             </div>
             <div class="row">
               <div class="col-lg-12"><hr></div>
@@ -201,12 +201,14 @@
               <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->total40nor  }} </span></div>
               <div class="col-lg-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->total45  }} </span></div>
               <div class="col-lg-1">
-                <button type="button" class="btn btn-sm btn-default btn-bold btn-upper">Select</button>
+
+                <input  type="checkbox" name="info[]" value="{{ json_encode($arr) }}" class="btn btn-sm btn-default btn-bold btn-upper">Select
+
               </div>
             </div>
             <!-- Gastos Origen-->
             @if(!$arr->localorigin->isEmpty())
-            <div class="row" id='origin{{$loop->iteration}}'  >
+            <div class="row" id='origin{{$loop->iteration}}' hidden='true' >
               <div class="col-lg-12">
                 <div class="row">
                   <span class="darkblue cabezeras">Origin</span><br><br>
@@ -266,7 +268,7 @@
             </div>
             @endif
             <!-- Gastos Freight-->
-            <div class="row" id='freight{{$loop->iteration}}'  >
+            <div class="row" id='freight{{$loop->iteration}}'  hidden='true' >
               <div class="col-lg-12">
                 <div class="row">
                   <span class="darkblue cabezeras">Freight</span><br><br>
@@ -334,7 +336,7 @@
             <br><br>
             <!-- Gastos Destino-->
             @if(!$arr->localdestiny->isEmpty())
-            <div class="row" id='destiny{{$loop->iteration}}'  >
+            <div class="row" id='destiny{{$loop->iteration}}'  hidden='true' >
               <div class="col-lg-12">
                 <div class="row">
                   <span class="darkblue cabezeras">Destination</span><br><br>
@@ -403,6 +405,8 @@
     <div class="col-sm-1"></div>
 
   </div>
+
+  {!! Form::close() !!}
   @endif
 
   @endsection
