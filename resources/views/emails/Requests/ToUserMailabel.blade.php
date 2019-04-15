@@ -219,7 +219,7 @@ font-family: sans-serif !important;
                 <!-- 1 Column Text + Button : BEGIN -->
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">Import Request</h1>
+                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">Import Request FCL</h1>
                 </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
@@ -228,6 +228,7 @@ font-family: sans-serif !important;
                         <ul>
                             <li>We have finished the importation process of the contract: {{' '.$contract['namecontract']}}</li>
                             <li>Number Contract: {{' '.$contract['numbercontract']}}</li>
+                            <li>Validity Contract: {{' '.$contract['validation']}}</li>
                         </ul>
                     </td>
                 </tr>

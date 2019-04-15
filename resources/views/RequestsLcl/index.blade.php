@@ -120,6 +120,9 @@
                                                     Id
                                                 </th>
                                                 <th width="3%" >
+                                                    Request Id
+                                                </th>
+                                                <th width="3%" >
                                                     Name
                                                 </th>
                                                 <th width="5%" >
@@ -189,6 +192,7 @@
                 ajax: '{!! route("index.Account.import.lcl") !!}',
                 columns: [
                     { data: 'id', name: 'id' },
+                    { data: 'requestlcl_id', name: 'requestlcl_id' },
                     { data: 'name', name: 'name' },
                     { data: 'date', name: 'date' },
                     { data: 'status', name: 'status' },
