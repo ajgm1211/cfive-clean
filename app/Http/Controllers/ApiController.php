@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\OauthClient;
 use App\User;
+use App\Rate;
+use App\Contract;
 use App\OauthAccessToken;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Collection as Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
@@ -67,10 +71,10 @@ class ApiController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Unauthorized'], 401);
-        }*/
-        $user = User::find($user_id);
-        $tokenResult = $user->createToken($user->name.' '.$user->lastname.' Token');
-        $token = $tokenResult->token;
+            }*/
+            $user = User::find($user_id);
+            $tokenResult = $user->createToken($user->name.' '.$user->lastname.' Token');
+            $token = $tokenResult->token;
         /*if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
         }*/
@@ -83,8 +87,8 @@ class ApiController extends Controller
             'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at)
                 ->toDateTimeString(),
-        ]);*/
-    }
+            ]);*/
+        }
 
     /**
      * Login user and create token
@@ -178,5 +182,49 @@ class ApiController extends Controller
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             echo "Unable to retrieve access token.";
         }
+    }
+
+    public function rates(Request $request)
+    {
+        $rates=Rate::whereHas('contract', function($q)  {
+            $q->where('contracts.company_user_id',\Auth::user()->company_user_id);
+        })->with('contract')->get();
+
+        //$contracts = DB::table('rates')->join('contracts', 'contracts.id', '=', 'rates.contract_id')->get();
+        $array = new Collection();
+        $collection = Collection::make($rates);
+        $collection->transform(function ($rate) {
+            $rate->origin_port=$rate->port_origin->display_name;
+            $rate->destination_port=$rate->port_destiny->display_name;
+            $rate->carrier_code=$rate->carrier->uncode;
+            $rate->currency_code=$rate->currency->alphacode;
+            $rate->rate_20=$rate->twuenty;
+            $rate->rate_40=$rate->forty;
+            $rate->rate_40_hc=$rate->fortyhc;
+            $rate->rate_40_nor=$rate->fortynor;
+            $rate->rate_45=$rate->fortyfive;
+            $rate->validity=$rate->contract->validity;
+            $rate->contract_name=$rate->contract->name;
+            unset($rate['id']);
+            unset($rate['port_origin']);
+            unset($rate['destiny_port']);
+            unset($rate['port_destiny']);
+            unset($rate['contract']);
+            unset($rate['contract_id']);
+            unset($rate['twuenty']);
+            unset($rate['forty']);
+            unset($rate['fortyhc']);
+            unset($rate['fortynor']);
+            unset($rate['fortyfive']);
+            unset($rate['created_at']);
+            unset($rate['updated_at']);
+            unset($rate['deleted_at']);
+            unset($rate['carrier_id']);
+            unset($rate['currency_id']);
+            unset($rate['currency']);
+            unset($rate['carrier']);
+        });
+
+        return $rates;
     }
 }
