@@ -11,6 +11,7 @@ class AccountImportationContractLcl extends Model
                            'name',
                            'date',
                            'namefile',
+                           'requestlcl_id',
                            'company_user_id'
                           ];
 

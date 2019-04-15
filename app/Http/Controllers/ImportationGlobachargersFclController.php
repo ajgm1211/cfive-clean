@@ -311,6 +311,7 @@ class ImportationGlobachargersFclController extends Controller
         //dd($request->all());
         $now = new \DateTime();
         $now = $now->format('dmY_His');
+        $request_id         = $request->request_id;
         $carrierVal         = $request->carrier;
         $typedestinyVal     = $request->typedestiny;
         $validitydateVal    = $request->validitydate;
@@ -365,6 +366,7 @@ class ImportationGlobachargersFclController extends Controller
             $account->namefile         = $nombre;
             $account->date             = $request->date;
             $account->status           = 'incomplete';
+            $account->requestgc_id     = $request_id;
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
 
@@ -1275,6 +1277,13 @@ class ImportationGlobachargersFclController extends Controller
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
+            })
+            ->addColumn('requestgc_id', function ( $account) {
+                if(empty($account->requestgc_id) != true){
+                    return  $account->requestgc_id;
+                } else {
+                    return 'Manual';
+                }
             })
             ->addColumn('action', function ( $account) {
                 return '<a href="/ImportationGlobalchargesFcl/FailedGlobalchargers/'.$account->id.'/1" class="show"  title="Failed-Good" >

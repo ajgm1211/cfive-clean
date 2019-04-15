@@ -25,8 +25,6 @@ class NewContractRequestsController extends Controller
 
     public function index()
     {
-        
-        //dd($Ncontracts);
         return view('Requests.index');
     }
 
@@ -62,6 +60,13 @@ class NewContractRequestsController extends Controller
             ->addColumn('user', function ($Ncontracts) {
                 return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
             })
+            ->addColumn('time_elapsed', function ($Ncontracts) {
+                if(empty($Ncontracts->time_total) != true){
+                    return $Ncontracts->time_total;
+                } else {
+                    return '--------';
+                }
+            })
             ->addColumn('status', function ($Ncontracts) {
                 $color='';
                 if(strnatcasecmp($Ncontracts->status,'Pending')==0){
@@ -94,14 +99,14 @@ class NewContractRequestsController extends Controller
 
             ->make();
     }
-    
+
     public function indexListClient(){
         $company_userid = \Auth::user()->company_user_id;
         return view('Requests.indexClient',compact('company_userid'));
     }
-    
+
     public function listClient($id){
-        
+
         //dd('llega');
         $Ncontracts = NewContractRequest::where('company_user_id',$id)->orderBy('id', 'desc')->get();
         //dd($Ncontracts[0]['companyuser']['name']);
@@ -526,12 +531,26 @@ class NewContractRequestsController extends Controller
 
         try {
             $Ncontract = NewContractRequest::find($id);
-            $Ncontract->status = $status;
+            $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
             $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-            $Ncontract->save();
 
-            if($Ncontract->status == 'Done'){
+
+            if($Ncontract->status == 'Processing'){
+                if($Ncontract->time_star_one == false){
+                    $Ncontract->time_star       = $now2;
+                    $Ncontract->time_star_one   = true;
+                }
+
+            } elseif($Ncontract->status == 'Done'){
+
+                $fechaEnd = Carbon::parse($now2);
+                if(empty($Ncontract->time_star) == true){
+                    $Ncontract->time_total = 'It did not go through the processing state';
+                } else{
+                    $fechaStar = Carbon::parse($Ncontract->time_star);
+                    $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                }
 
                 $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
                 $message = 'The request was processed N°: ' . $Ncontract->id;
@@ -562,6 +581,7 @@ class NewContractRequestsController extends Controller
 
             }
 
+            $Ncontract->save();
             return response()->json($data=['status'=>1,'data'=>$status]);
         } catch (\Exception $e){
             return response()->json($data=['status'=>2]);;
@@ -594,4 +614,18 @@ class NewContractRequestsController extends Controller
         return view('Requests.NewRequest',compact('harbor','carrier','user'));
     }
 
+    // TEST Request Importation ----------------------------------------------------------
+    public function test(){
+        $fecha_actual = date("Y-m-d H:i:s");
+        /*$fecha1 = new \DateTime("2019-04-15 14:26:47");
+        $fecha2 = new \DateTime($fecha_actual);
+        $tiempo_transcurrido = $fecha1->diff($fecha2);*/
+
+        $fechaExpiracion = Carbon::parse($fecha_actual);
+        //$fechaEmision = Carbon::parse("2019-04-15 14:26:47");
+        $fechaEmision = Carbon::parse($fecha_actual);
+
+        $diasDiferencia = $fechaExpiracion->diffForHumans($fechaEmision);
+        dd(str_replace('after','',$diasDiferencia));
+    }
 }

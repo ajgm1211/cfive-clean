@@ -467,6 +467,7 @@ class ImportationController extends Controller
         $now                = $now->format('dmY_His');
         $now2               = $now2->format('Y-m-d');
         $type               = $request->type;
+        $request_id         = $request->request_id;
         $carrierVal         = $request->carrier;
         $typedestinyVal     = $request->typedestiny;
         $originArr          = $request->origin;
@@ -522,6 +523,7 @@ class ImportationController extends Controller
             $account->date              = $now2;
             $account->namefile          = $nombre;
             $account->company_user_id   = $CompanyUserId;
+            $account->request_id        = $request_id;
             $account->save();
 
             ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
@@ -5480,6 +5482,13 @@ class ImportationController extends Controller
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
+            })
+            ->addColumn('request_id', function ( $account) {
+                if(empty($account->request_id) != true){
+                    return  $account->request_id;
+                } else {
+                    return 'Manual';
+                }
             })
             ->addColumn('action', function ( $account) {
                 if(empty($account->contract->status)!=true){

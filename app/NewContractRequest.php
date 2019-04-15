@@ -15,13 +15,16 @@ class NewContractRequest extends Model
                            'user_id',
                            'created',
                            'created_at',
+                           'time_star',
+                           'time_total',
+                           'time_star_one',
                            'type',
                            'data'];
-    
+
     public function user(){
         return $this->belongsTo('App\User');
     }
-    
+
     public function companyuser(){
         return $this->belongsTo('App\CompanyUser','company_user_id');
     }
