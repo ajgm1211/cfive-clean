@@ -6,11 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class AutomaticRate extends Model
 {
+    protected $casts = [
+        'amount' => 'array',
+        'markups' => 'array',
+        'total' => 'array',
+    ];
+
     protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total'];
 
     public function quote()
     {
         return $this->belongsTo('App\QuoteV2','id','quote_id');
+    }
+
+    public function inland()
+    {
+        return $this->hasMany('App\AutomaticInland','automatic_rate_id');
     }
 
     public function currency()

@@ -11,6 +11,8 @@ $('#originchk').on('click',function(){
         if($('#portcountrychk').prop('checked')){
             $('#origininpCount').removeAttr('hidden');
             $('#originCountry').attr('required','required');
+            $('#origininpRegion').removeAttr('hidden');
+            $('#originRegion').attr('required','required');
         }
     } else{
         $('#origininp').attr('hidden','hidden');
@@ -18,6 +20,8 @@ $('#originchk').on('click',function(){
         $('#destinychk').removeAttr('disabled');
         $('#origininpCount').attr('hidden','hidden');
         $('#originCountry').removeAttr('required');
+        $('#origininpRegion').attr('hidden','hidden');
+        $('#originRegion').removeAttr('required');
     }
 });
 
@@ -29,6 +33,8 @@ $('#destinychk').on('click',function(){
         if($('#portcountrychk').prop('checked')){
             $('#destinyinpCount').removeAttr('hidden');
             $('#destinyCountry').attr('required','required');
+            $('#destinyinpRegion').removeAttr('hidden');
+            $('#destinyRegion').attr('required','required');
         }
     } else{
         $('#destinyinp').attr('hidden','hidden');
@@ -37,6 +43,8 @@ $('#destinychk').on('click',function(){
 
         $('#destinyinpCount').attr('hidden','hidden');
         $('#destinyCountry').removeAttr('required');
+        $('#destinyinpRegion').attr('hidden','hidden');
+        $('#destinyRegion').removeAttr('required');
     }    
 });
 
@@ -77,10 +85,14 @@ $('#portchk').on('click',function(){
         if($('#originchk').prop('checked')){
             $('#origininpCount').attr('hidden','hidden');
             $('#originCountry').removeAttr('required');
+            $('#origininpRegion').attr('hidden','hidden');
+            $('#originRegion').removeAttr('required');
         }
         if($('#destinychk').prop('checked')){
             $('#destinyinpCount').attr('hidden','hidden');
             $('#destinyCountry').removeAttr('required');
+            $('#destinyinpRegion').attr('hidden','hidden');
+            $('#destinyRegion').removeAttr('required');
         }
     }
 });
@@ -90,10 +102,14 @@ $('#portcountrychk').on('click',function(){
         if($('#originchk').prop('checked')){
             $('#origininpCount').removeAttr('hidden');
             $('#originCountry').attr('required','required');
+            $('#origininpRegion').removeAttr('hidden');
+            $('#originRegion').attr('required','required');
         }
         if($('#destinychk').prop('checked')){
             $('#destinyinpCount').removeAttr('hidden');
             $('#destinyCountry').attr('required','required');
+            $('#destinyinpRegion').removeAttr('hidden');
+            $('#destinyRegion').attr('required','required');
         }
     }
 });

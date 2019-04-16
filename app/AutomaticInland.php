@@ -11,11 +11,16 @@ class AutomaticInland extends Model
 		'rate' => 'array',
 	];
 
-	protected $fillable = ['quote_id','provider','contract','validity_start','validity_end','port_id','type','distance','rate','markup','currency_id'];
+	protected $fillable = ['quote_id','automatic_rate_id','provider','contract','validity_start','validity_end','port_id','type','distance','rate','markup','currency_id'];
 
 	public function quote()
 	{
 		return $this->belongsTo('App\QuoteV2','id','quote_id');
+	}
+
+	public function rate()
+	{
+		return $this->belongsTo('App\AutomaticRate','id','automatic_rate_id');
 	}
 
 	public function currency()

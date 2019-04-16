@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contracts')
+@section('title','Import Information GC'.$accounts['id'].' - '.$accounts['name'])
 @section('content')
 <link rel="stylesheet" href="{{asset('css/loadviewipmort.css')}}">
 <div class="m-content">

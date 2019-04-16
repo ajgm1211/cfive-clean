@@ -88,6 +88,8 @@ $(document).ready(function() {
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
+            //$(this).closest('tr').find('.total_freight_20').html('here');
+            $('.editable-amount-20').children().css( "background-color", "red" );
             
             if(!response) {
                 return "Unknown error!";
@@ -614,6 +616,7 @@ function addOriginCharge($value){
 }
 
 function addDestinationCharge($value){
+    alert($value);
     var $template = $('#destination_charges_'+$value),
     $clone = $template
     .clone()

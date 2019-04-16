@@ -26,8 +26,8 @@ class CreateQuoteV2sTable extends Migration
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('origin_address')->nullable();
-            $table->string('destination_address')->nullable();
+            $table->integer('price_id')->unsigned()->nullable();
+            $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
             $table->date('validity_start');
             $table->date('validity_end');
             $table->date('date_issued');

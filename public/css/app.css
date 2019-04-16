@@ -10690,7 +10690,7 @@ CONTENTS:
 }
 
 .header-table {
-  background-color: #F4F3F8;
+  background-color: #D6D6D6;
   line-height: 3;
 }
 
@@ -31395,7 +31395,6 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   -ms-flex-preferred-size: auto;
       flex-basis: auto;
   text-align: center;
-  background-color: #fcfcfc;
   list-style-type: none;
   padding: 10px 20px;
   margin: 0 0 20px;
@@ -31403,7 +31402,7 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
       -ms-flex-align: center;
           align-items: center;
   font-size: 17.5px;
-  border-left: 1px solid #eee;
+  border-left: 2px solid #C6C6C6;
   color: #031B4E;
   font-weight: bold;
 }
@@ -31417,6 +31416,12 @@ blockquote {
 
 .form-control-sm {
   border: 1px solid #ebedf2 !important;
+}
+
+.carrier-logo {
+  width: 15px !important;
+  padding-top: 0 0 0 0 !important;
+  margin-top: -5px !important;
 }
 
 /**
@@ -79379,7 +79384,7 @@ h3.m-subheader__title {
   border: solid #0072FC;
   border-width: 0 5px 5px 0;
   display: inline-block;
-  padding: 10px;
+  padding: 6px;
   margin-top: -10px;
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
@@ -80041,5 +80046,6 @@ th#options-limit-fcl {
 
 .custom-portlet {
   border-radius: 10px !important;
-  background-color: #FCFCFC !important;
+  background-color: #F6F6F6 !important;
+  border: 1px solid #c5c5c5;
 }
