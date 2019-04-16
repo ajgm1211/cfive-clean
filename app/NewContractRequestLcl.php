@@ -23,6 +23,10 @@ class NewContractRequestLcl extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function direction(){
+        return $this->belongsTo('App\Direction');
+    }
+
     public function Requestcarriers(){
         return $this->hasMany('App\RequetsCarrierLcl','request_id');
     }

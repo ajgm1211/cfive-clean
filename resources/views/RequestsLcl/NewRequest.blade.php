@@ -95,6 +95,24 @@ new registration
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                             </div>
+                            <div class="form-group m-form__group row" >
+
+                                <div class="col-lg-2">
+                                    <label class="col-form-label"><b>DATA:</b></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="col-form-label">Carrier</label>
+                                    <div class="col-form-label" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierMul','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="col-form-label">Direction</label>
+                                    <div class="col-form-label" id="direction">
+                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+                            </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
                             <!-- <hr> -->
