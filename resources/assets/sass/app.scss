@@ -125,7 +125,7 @@ h3.m-subheader__title{
   border: solid $primary-color;
   border-width: 0 5px 5px 0;
   display: inline-block;
-  padding: 10px;
+  padding: 6px;
   margin-top: -10px;
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
@@ -731,5 +731,6 @@ th#options-limit-fcl {
 
 .custom-portlet{
   border-radius: 10px !important;
-  background-color: #FCFCFC !important;
+  background-color: #F6F6F6 !important;
+  border: 1px solid #c5c5c5;
 }

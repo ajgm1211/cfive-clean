@@ -133,13 +133,6 @@ class QuoteV2Controller extends Controller
             &nbsp;
             Show
             </span>
-            </a>      
-            <a href="/v2/quotes/'.$colletion['idSet'].'/edit" class="dropdown-item" >
-            <span>
-            <i class="la la-edit"></i>
-            &nbsp;
-            Edit
-            </span>
             </a>
             <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
             <span>
@@ -173,17 +166,6 @@ class QuoteV2Controller extends Controller
     $quote = QuoteV2::findOrFail($id);
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
-    foreach ($rates as $rate) {
-      foreach ($rate->charge as $item) {
-        if($item->type_id==1){
-          $origin_charges->push($item);
-        }else if($item->type_id==2){
-          $destination_charges->push($item);
-        }else{
-          $freight_charges->push($item);
-        }
-      }
-    }
 
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
@@ -313,7 +295,6 @@ class QuoteV2Controller extends Controller
     if($quote->custom_quote_id){
       $quote_duplicate->custom_quote_id=$quote->custom_quote_id;
     }
-
     $quote_duplicate->save();
 
     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
@@ -349,7 +330,6 @@ class QuoteV2Controller extends Controller
         $charge_duplicate->currency_id=$charge->currency_id;
         $charge_duplicate->save();
       }
-
     }
 
     if($request->ajax()){

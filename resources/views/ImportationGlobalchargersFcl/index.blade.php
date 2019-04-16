@@ -4,7 +4,7 @@
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
-@section('title', 'GlobalCharge')
+@section('title', 'Importation GlobalCharge')
 @section('content')
 
 <div class="m-content">
@@ -149,7 +149,7 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Ports and Countries
+                                                    Ports and Countries or Regions
                                                 </span>
                                             </span>
                                         </span>
@@ -175,7 +175,7 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Origin Port or Country Not Included
+                                                    Origin Port, Country or Regions Not Included
                                                 </span>
                                             </span>
                                         </span>
@@ -187,6 +187,10 @@
                                     <div class="col-form-label" id="origininpCount" hidden="hidden" >
                                         <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="origininpRegion" hidden="hidden" >
+                                        <label for="originRegion" class=" ">Regions</label>
+                                        {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
 
@@ -213,6 +217,10 @@
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
                                     <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
+                                    </div>
+                                    <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
+                                        <label for="destinyRegion" class=" ">Regions</label>
+                                        {!! Form::select('destinyRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'destinyRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-3">
