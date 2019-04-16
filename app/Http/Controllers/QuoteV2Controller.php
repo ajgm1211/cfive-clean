@@ -514,12 +514,12 @@ class QuoteV2Controller extends Controller
     $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
 
     $quote= QuoteV2::create($request->all());
-    
+
     foreach($info as $infoA){
       $info_D = json_decode($infoA);
       // Rates
 
-      
+
       foreach($info_D->rates as $rate){
         $rates =   json_encode($rate->rate);
         $markups =   json_encode($rate->markups);
@@ -527,25 +527,30 @@ class QuoteV2Controller extends Controller
         $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
       }
-      //CHARGES
- 
+
+
       foreach($info_D->localorigin as $localorigin){
+        //CHARGES
+        $arregloMontoO = array();
+        $arregloMarkupsO = array();
         foreach($localorigin as $localO){
 
           foreach($localO as $local){
             if($local->type != '99'){
-              $arregloMontoO[] = array('c'.$local->type => $local->monto );
-              $arregloMarkupsO[] = array('c'.$local->type => $local->markup );
+              $arregloMontoO[] = array('c'.$local->type => $local->monto);
+              $arregloMarkupsO[] = array('c'.$local->type => $local->markup);
             }
             if($local->type == '99'){
               $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
             }
+
           }
 
         }
+
         $arregloMontoO =  json_encode($arregloMontoO);
-         
         $arregloMarkupsO =  json_encode($arregloMarkupsO);
+        
         $chargeOrigin = new Charge();
         $chargeOrigin->automatic_rate_id= $rate->id;
         $chargeOrigin->type_id = $arregloO['type_id'] ;
@@ -555,7 +560,7 @@ class QuoteV2Controller extends Controller
         $chargeOrigin->markups = $arregloMarkupsO  ;
         $chargeOrigin->currency_id = $arregloO['currency_id']  ;
         $chargeOrigin->total =  $arregloMarkupsO ;
-       // $chargeOrigin->save();
+         $chargeOrigin->save();
       }
 
     }
@@ -955,7 +960,7 @@ class QuoteV2Controller extends Controller
               if(in_array($local->calculationtype_id, $array20) && in_array( '20',$equipment) ){
 
                 $monto =   $local->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$local->calculationtype_id);
+                
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1025,7 +1030,7 @@ class QuoteV2Controller extends Controller
               if(in_array($local->calculationtype_id, $array20) && in_array( '20',$equipment)  ){
 
                 $monto =   $local->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$local->calculationtype_id);
+               
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1089,7 +1094,7 @@ class QuoteV2Controller extends Controller
               if(in_array($local->calculationtype_id, $array20) && in_array( '20',$equipment) ){
 
                 $monto =   $local->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$local->calculationtype_id);
+                
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20','rate_id' => $data->id  );
@@ -1187,7 +1192,7 @@ class QuoteV2Controller extends Controller
               if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment) ){
 
                 $monto =   $global->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$global->calculationtype_id);
+               
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1256,7 +1261,7 @@ class QuoteV2Controller extends Controller
 
               if(in_array($global->calculationtype_id, $array20) &&  in_array('20',$equipment)){
                 $monto =   $global->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$global->calculationtype_id);
+               
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1321,7 +1326,7 @@ class QuoteV2Controller extends Controller
               if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment)){
 
                 $monto =   $global->ammount  / $rateMount ;
-                $monto = $this->perTeu($monto,$global->calculationtype_id);
+              
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
