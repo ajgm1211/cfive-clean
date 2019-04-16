@@ -514,10 +514,12 @@ class QuoteV2Controller extends Controller
     $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
 
     $quote= QuoteV2::create($request->all());
-
-    foreach($info as $info){
-      $info_D = json_decode($info);
+    
+    foreach($info as $infoA){
+      $info_D = json_decode($infoA);
       // Rates
+
+      
       foreach($info_D->rates as $rate){
         $rates =   json_encode($rate->rate);
         $markups =   json_encode($rate->markups);
@@ -526,6 +528,7 @@ class QuoteV2Controller extends Controller
         $rate = AutomaticRate::create($request->all());
       }
       //CHARGES
+ 
       foreach($info_D->localorigin as $localorigin){
         foreach($localorigin as $localO){
 
@@ -541,8 +544,10 @@ class QuoteV2Controller extends Controller
 
         }
         $arregloMontoO =  json_encode($arregloMontoO);
+         
         $arregloMarkupsO =  json_encode($arregloMarkupsO);
         $chargeOrigin = new Charge();
+        $chargeOrigin->automatic_rate_id= $rate->id;
         $chargeOrigin->type_id = $arregloO['type_id'] ;
         $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
         $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
@@ -550,8 +555,9 @@ class QuoteV2Controller extends Controller
         $chargeOrigin->markups = $arregloMarkupsO  ;
         $chargeOrigin->currency_id = $arregloO['currency_id']  ;
         $chargeOrigin->total =  $arregloMarkupsO ;
-        $global->save();
+       // $chargeOrigin->save();
       }
+
     }
   }
 
