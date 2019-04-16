@@ -16793,7 +16793,6 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
   flex-grow: 1;
   flex-basis: auto;
   text-align: center;
-  background-color: #F6F6F6;
   list-style-type: none;
   padding: 10px 20px;
   margin: 0 0 20px;
@@ -16813,4 +16812,10 @@ blockquote {
 
 .form-control-sm{
   border: 1px solid #ebedf2 !important;
+}
+
+.carrier-logo{
+  width: 15px !important; 
+  padding-top: 0 0 0 0!important; 
+  margin-top: -5px !important;
 }

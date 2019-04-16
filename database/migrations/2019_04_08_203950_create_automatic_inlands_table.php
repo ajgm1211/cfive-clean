@@ -17,6 +17,8 @@ class CreateAutomaticInlandsTable extends Migration
             $table->increments('id');
             $table->integer('quote_id')->unsigned();
             $table->foreign('quote_id')->references('id')->on('quote_v2s')->onDelete('cascade');
+            $table->integer('automatic_rate_id')->unsigned();
+            $table->foreign('automatic_rate_id')->references('id')->on('automatic_rates')->onDelete('cascade');
             $table->string('provider');
             $table->string('contract');
             $table->integer('port_id')->unsigned();

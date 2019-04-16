@@ -19,6 +19,11 @@ class AutomaticRate extends Model
         return $this->belongsTo('App\QuoteV2','id','quote_id');
     }
 
+    public function inland()
+    {
+        return $this->hasMany('App\AutomaticInland','automatic_rate_id');
+    }
+
     public function currency()
     {
         return $this->hasOne('App\Currency');
