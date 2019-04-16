@@ -517,21 +517,42 @@ class QuoteV2Controller extends Controller
 
     foreach($info as $info){
       $info_D = json_decode($info);
+      // Rates
       foreach($info_D->rates as $rate){
-
-
         $rates =   json_encode($rate->rate);
-       
-        $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $rates ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
+        $markups =   json_encode($rate->markups);
+
+        $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
       }
+      //CHARGES
+      foreach($info_D->localorigin as $localorigin){
+        foreach($localorigin as $localO){
+          
+          foreach($localO as $local){
+            if($local->type != '99'){
+              $arregloMontoO[] = array('c'.$local->type => $local->monto );
+              $arregloMarkupsO[] = array('c'.$local->type => $local->markup );
+            }
+            if($local->type == '99'){
+              $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
+            }
+          }
 
+        }
+        $arregloMontoO =  json_encode($arregloMontoO);
+        $arregloMarkupsO =  json_encode($arregloMarkupsO);
+        $chargeOrigin = new Charge();
+        $chargeOrigin->type_id = $arregloO['type_id'] ;
+        $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
+        $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
+        $chargeOrigin->amount =  $arregloMontoO  ;
+        $chargeOrigin->markups = $arregloMarkupsO  ;
+        $chargeOrigin->currency_id = $arregloO['currency_id']  ;
+        $chargeOrigin->total =  $arregloMarkupsO ;
+        $global->save();
+      }
     }
-
-
-
-
-
   }
 
   public function skipPluck($pluck)
@@ -563,11 +584,8 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-
     $harbors = Harbor::get()->pluck('display_name','id_complete');
-
     $countries = Country::all()->pluck('name','id');
-
 
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
@@ -785,7 +803,14 @@ class QuoteV2Controller extends Controller
 
 
       $arregloRate =  array();
-      $arregloRateSave['rate'] =  array();
+      //Arreglos para guardar el rate
+
+      $arregloRateSave['rate'] = array();
+      $arregloRateSave['markups'] = array();
+
+      //Arreglo para guardar charges
+      $arregloCharges['origin'] =  array();
+
       $arregloOrigin =  array();
       $arregloFreight =  array();
       $arregloDestiny =  array();
@@ -801,11 +826,15 @@ class QuoteV2Controller extends Controller
         //Calculo para los diferentes tipos de contenedores
         if($containers == '20'){
           $markup20 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers);
+
           $array20Detail = array('price20' => $data->twuenty, 'currency20' => $data->currency->alphacode ,'idCurrency20' => $data->currency_id);
           $tot_20_F += $markup20['monto20'] / $rateC;
           // Arreglos para guardar los rates
           $array_20_save = array('c20' => $data->twuenty);
           $arregloRateSave['rate']  = array_merge($array_20_save,$arregloRateSave['rate']);
+          // Markups
+          $array_20_markup =  array('m20' => $markup20['markup20']);
+          $arregloRateSave['markups']  = array_merge($array_20_markup,$arregloRateSave['markups']);
 
           $array20T = array_merge($array20Detail,$markup20);
           $arregloRate = array_merge($array20T,$arregloRate);
@@ -820,6 +849,9 @@ class QuoteV2Controller extends Controller
           // Arreglos para guardar los rates
           $array_40_save = array('c40' => $data->forty);
           $arregloRateSave['rate']  = array_merge($array_40_save,$arregloRateSave['rate']);
+          // Markups
+          $array_40_markup =  array('m40' => $markup40['markup40']);
+          $arregloRateSave['markups']  = array_merge($array_40_markup,$arregloRateSave['markups']);
 
           $array40T = array_merge($array40Detail,$markup40);
           $arregloRate = array_merge($array40T,$arregloRate); 
@@ -833,6 +865,9 @@ class QuoteV2Controller extends Controller
           // Arreglos para guardar los rates
           $array_40hc_save = array('c40HC' => $data->fortyhc);
           $arregloRateSave['rate']  = array_merge($array_40hc_save,$arregloRateSave['rate']);
+          // Markups
+          $array_40hc_markup =  array('m40HC' => $markup40hc['markup40HC']);
+          $arregloRateSave['markups']  = array_merge($array_40hc_markup,$arregloRateSave['markups']);
 
           $array40hcT = array_merge($array40hcDetail,$markup40hc);
           $arregloRate = array_merge($array40hcT,$arregloRate); 
@@ -846,6 +881,9 @@ class QuoteV2Controller extends Controller
           // Arreglos para guardar los rates
           $array_40nor_save = array('c40NOR' => $data->fortynor);
           $arregloRateSave['rate']  = array_merge($array_40nor_save,$arregloRateSave['rate']);
+          // Markups
+          $array_40nor_markup =  array('m40NOR' => $markup40nor['markup40NOR']);
+          $arregloRateSave['markups']  =array_merge($array_40nor_markup,$arregloRateSave['markups']);
 
           $array40norT = array_merge($array40norDetail,$markup40nor);
           $arregloRate = array_merge($array40norT,$arregloRate); 
@@ -857,8 +895,11 @@ class QuoteV2Controller extends Controller
           $array45Detail = array('price45' => $data->fortyfive, 'currency45' => $data->currency->alphacode ,'idCurrency45' => $data->currency_id);
           $tot_45_F += $markup45['monto45'] / $rateC;
           // Arreglos para guardar los rates
-          $array_45hc_save = array('c45' => $data->fortyfive);
-          $arregloRateSave['rate'] = array_merge($array_45hc_save,$arregloRateSave['rate']);
+          $array_45_save = array('c45' => $data->fortyfive);
+          $arregloRateSave['rate'] = array_merge($array_45_save,$arregloRateSave['rate']);
+          // Markups
+          $array_45_markup =  array('m45' => $markup45['markup45']);
+          $arregloRateSave['markups']  = array_merge($array_45_markup,$arregloRateSave['markups']);
 
           $array45T = array_merge($array45Detail,$markup45);
           $arregloRate = array_merge($array45T,$arregloRate); 
@@ -1349,13 +1390,12 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('tot40norD', number_format($tot_40nor_D, 2, '.', ''));
       $data->setAttribute('tot45D', number_format($tot_45_D, 2, '.', ''));
 
-
     }
-
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
   }
+
 
   public function freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$monto,$typeCurrency,$type){
 
