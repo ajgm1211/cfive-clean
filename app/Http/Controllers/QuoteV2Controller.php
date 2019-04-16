@@ -166,17 +166,6 @@ class QuoteV2Controller extends Controller
     $quote = QuoteV2::findOrFail($id);
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
-    foreach ($rates as $rate) {
-      foreach ($rate->charge as $item) {
-        if($item->type_id==1){
-          $origin_charges->push($item);
-        }else if($item->type_id==2){
-          $destination_charges->push($item);
-        }else{
-          $freight_charges->push($item);
-        }
-      }
-    }
 
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
