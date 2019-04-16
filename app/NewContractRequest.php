@@ -10,6 +10,7 @@ class NewContractRequest extends Model
     protected $fillable = ['namecontract',
                            'numbercontract',
                            'validation',
+                           'direction_id',
                            'company_user_id',
                            'namefile',
                            'user_id',
@@ -23,6 +24,14 @@ class NewContractRequest extends Model
 
     public function user(){
         return $this->belongsTo('App\User');
+    }
+    
+    public function direction(){
+        return $this->belongsTo('App\Direction');
+    }
+    
+    public function Requestcarriers(){
+        return $this->hasMany('App\RequetsCarrierFcl','request_id');
     }
 
     public function companyuser(){
