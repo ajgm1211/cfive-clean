@@ -28,12 +28,6 @@ class CreateQuoteV2sTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('price_id')->unsigned()->nullable();
             $table->foreign('price_id')->references('id')->on('prices')->onDelete('cascade');
-            $table->integer('origin_port_id')->unsigned()->nullable();
-            $table->foreign('origin_port_id')->references('id')->on('harbors');
-            $table->integer('destination_port_id')->unsigned()->nullable();
-            $table->foreign('destination_port_id')->references('id')->on('harbors');
-            $table->string('origin_address')->nullable();
-            $table->string('destination_address')->nullable();
             $table->date('validity_start');
             $table->date('validity_end');
             $table->date('date_issued');
