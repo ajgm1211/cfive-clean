@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Harbor;
 use App\Carrier;
+use Carbon\Carbon;
 use App\Direction;
 use App\CompanyUser;
 use App\RequetsCarrierLcl;
@@ -76,6 +77,13 @@ class NewContractRequestLclController extends Controller
             })
             ->addColumn('user', function ($Ncontracts) {
                 return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+            })
+            ->addColumn('time_elapsed', function ($Ncontracts) {
+                if(empty($Ncontracts->time_total) != true){
+                    return $Ncontracts->time_total;
+                } else {
+                    return '--------';
+                }
             })
             ->addColumn('status', function ($Ncontracts) {
                 $color='';
@@ -162,7 +170,7 @@ class NewContractRequestLclController extends Controller
 
             ->make();
     }
-    
+
     public function store(Request $request)
     {
         //dd($request->all());
@@ -256,7 +264,7 @@ class NewContractRequestLclController extends Controller
                     'request_id' => $Ncontract->id
                 ]);
             }
-            
+
             ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
 
             $user = User::find($request->user);
@@ -342,9 +350,23 @@ class NewContractRequestLclController extends Controller
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
             $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-            $Ncontract->save();
+            
 
-            if($Ncontract->status == 'Done'){
+            if($Ncontract->status == 'Processing'){
+                if($Ncontract->time_star_one == false){
+                    $Ncontract->time_star       = $now2;
+                    $Ncontract->time_star_one   = true;
+                }
+
+            } elseif($Ncontract->status == 'Done'){
+
+                $fechaEnd = Carbon::parse($now2);
+                if(empty($Ncontract->time_star) == true){
+                    $Ncontract->time_total = 'It did not go through the processing state';
+                } else{
+                    $fechaStar = Carbon::parse($Ncontract->time_star);
+                    $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                }
 
                 $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
                 $message = 'The request was processed N°: ' . $Ncontract->id;
@@ -369,7 +391,8 @@ class NewContractRequestLclController extends Controller
                                                                               $Ncontract->toArray()));
 
             }
-
+            
+            $Ncontract->save();
             return response()->json($data=['status'=>1,'data'=>$status]);
         } catch (\Exception $e){
             return response()->json($data=['status'=>2]);;
