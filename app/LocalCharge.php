@@ -11,6 +11,7 @@ class LocalCharge extends Model
   protected $dates    = ['deleted_at'];
   protected $table    = "localcharges";
   protected $fillable = ['id','surcharge_id','typedestiny_id','contract_id','calculationtype_id','ammount','currency_id','created_at','updated_at'];
+  
   public function contract()
   {
     return $this->belongsTo('App\Contract');
