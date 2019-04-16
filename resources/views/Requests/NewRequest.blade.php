@@ -95,6 +95,24 @@ new registration
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                             </div>
+                            <div class="form-group m-form__group row" >
+
+                                <div class="col-lg-2">
+                                    <label class="col-form-label"><b>DATA:</b></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="col-form-label">Carrier</label>
+                                    <div class="col-form-label" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierMul','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="col-form-label">Direction</label>
+                                    <div class="col-form-label" id="direction">
+                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+                            </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
                             <!-- <hr> -->
@@ -345,55 +363,55 @@ new registration
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
- <script src="http://malsup.github.com/jquery.form.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 
-        <script>
+<script>
 
-            function validate(formData, jqForm, options) {
-                var form = jqForm[0];
-                if (!form.file.value) {
-                    alert('File not found');
-                    return false;
-                }
+    function validate(formData, jqForm, options) {
+        var form = jqForm[0];
+        if (!form.file.value) {
+            alert('File not found');
+            return false;
+        }
+    }
+
+    $(function() {
+
+        var bar = $('.progress-bar');
+        var percent = $('.percent');
+        var status = $('#status');
+
+        $('form').ajaxForm({
+            beforeSubmit: validate,
+            beforeSend: function() {
+                $('#modaledit').modal('show');
+                status.empty();
+                var percentVal = '0%';
+                var posterValue = $('input[name=file]').fieldValue();
+                bar.width(percentVal)
+                percent.html(percentVal);
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function() {
+                var percentVal = 'Wait, Saving';
+                bar.width(percentVal)
+                $('#mjsH').text('OK');
+                percent.html(percentVal);
+            },
+            complete: function(xhr) {
+                status.html(xhr.responseText);
+                $('#mjsH').text('Bye');
+                $('#modaledit').modal('hide');
+                window.location.href = "{{route('RequestImportation.indexListClient')}}";
             }
+        });
 
-            $(function() {
+    })();
 
-                var bar = $('.progress-bar');
-                var percent = $('.percent');
-                var status = $('#status');
-
-                $('form').ajaxForm({
-                    beforeSubmit: validate,
-                    beforeSend: function() {
-                        $('#modaledit').modal('show');
-                        status.empty();
-                        var percentVal = '0%';
-                        var posterValue = $('input[name=file]').fieldValue();
-                        bar.width(percentVal)
-                        percent.html(percentVal);
-                    },
-                    uploadProgress: function(event, position, total, percentComplete) {
-                        var percentVal = percentComplete + '%';
-                        bar.width(percentVal);
-                        percent.html(percentVal);
-                    },
-                    success: function() {
-                        var percentVal = 'Wait, Saving';
-                        bar.width(percentVal)
-                        $('#mjsH').text('OK');
-                        percent.html(percentVal);
-                    },
-                    complete: function(xhr) {
-                        status.html(xhr.responseText);
-                        $('#mjsH').text('Bye');
-                        $('#modaledit').modal('hide');
-                        window.location.href = "{{route('RequestImportation.indexListClient')}}";
-                    }
-                });
-
-            })();
-
-        </script>
+</script>
 
 @stop
