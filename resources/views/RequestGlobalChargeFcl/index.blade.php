@@ -95,6 +95,7 @@
                                                 <th >Date</th>
                                                 <th >Last Management</th>
                                                 <th >User</th>
+                                                <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
                                                 <th >Status</th>
                                                 <th >Options</th>
@@ -230,6 +231,7 @@
                     { data: 'date', name: 'date' },
                     { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
+                    { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
