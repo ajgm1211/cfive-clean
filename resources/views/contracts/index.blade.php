@@ -415,7 +415,7 @@ Request Importation &nbsp;
                     var column = this;
                     $('#tableContracts .head .head_hide').html('');
 
-                    var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select><br>')
+                    var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select>')
                     .prependTo($(column.header()).empty())
                     .on('change', function () {
                         var val = new Array();
