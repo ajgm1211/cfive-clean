@@ -56,18 +56,28 @@
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
-
-                                    <a href="{{route('RequestsGlobalchargersFcl.indexListClient')}}">
+                                    <a href="{{route('RequestsGlobalchargersFcl.create')}}">
 
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    New \ Status Import  &nbsp;
+                                                    New Import Contract &nbsp;
                                                 </span>
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
                                     </a>
+                                    <!--<a href="{{route('RequestsGlobalchargersFcl.indexListClient')}}">
+
+<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+<span>
+<span>
+New \ Status Import  &nbsp;
+</span>
+<i class="la la-clipboard"></i>
+</span>
+</button>
+</a>-->
                                 </div>
 
                             </div>
