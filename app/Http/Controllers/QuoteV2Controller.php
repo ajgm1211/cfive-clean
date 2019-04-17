@@ -608,7 +608,7 @@ class QuoteV2Controller extends Controller
         $chargeFreight->type_id = $arregloF['type_id'] ;
         $chargeFreight->surcharge_id = $arregloF['surcharge_id']  ;
         $chargeFreight->calculation_type_id = $arregloF['calculation_type_id']  ;
-        $chargeFreight->amount =  $arregloMontoF|;
+        $chargeFreight->amount =  $arregloMontoF;
         $chargeFreight->markups = $arregloMarkupsF;
         $chargeFreight->currency_id = $arregloF['currency_id']  ;
         $chargeFreight->total =  $arregloMarkupsF;
