@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class AccountImportationGlobalcharge extends Model
 {
     protected $table    = "account_importation_globalcharge";
-    protected $fillable = ['name', 'date','company_user_id'];
+    protected $fillable = ['name',
+                           'date',
+                           'requestgc_id',
+                           'company_user_id'
+                          ];
 
 
     public function FileTmp(){

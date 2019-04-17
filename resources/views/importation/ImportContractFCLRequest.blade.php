@@ -93,6 +93,12 @@ new registration
                                     'required',
                                     'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
                                 </div>
+                                <div class="col-lg-3">
+                                    <label for="request_id" class=" ">Request id</label>
+                                    {!!  Form::text('request_id',$requestfcl['id'],['id'=>'request_id',
+                                    'placeholder'=>'Request Id',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
                             </div>
                             <hr>
                             <div class="form-group m-form__group row">

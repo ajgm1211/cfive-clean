@@ -414,6 +414,8 @@ class ContractsController extends Controller
     public function edit(Request $request,$id)
     {
         $id = obtenerRouteKey($id);
+        $user = '';
+        $company= '';
         $contracts = Contract::where('id',$id)->first();
 
         $objtypedestiny = new TypeDestiny();
@@ -458,6 +460,8 @@ class ContractsController extends Controller
         }
 
         return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
+
+        //return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
     }
 
     public function update(Request $request, $id)

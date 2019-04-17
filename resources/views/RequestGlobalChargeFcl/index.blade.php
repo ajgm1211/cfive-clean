@@ -95,6 +95,7 @@
                                                 <th >Date</th>
                                                 <th >Last Management</th>
                                                 <th >User</th>
+                                                <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
                                                 <th >Status</th>
                                                 <th >Options</th>
@@ -119,6 +120,9 @@
                                             <tr>
                                                 <th width="1%" >
                                                     Id
+                                                </th>
+                                                <th width="3%" >
+                                                    Request Id
                                                 </th>
                                                 <th width="3%" >
                                                     Name
@@ -193,6 +197,7 @@
                 ajax: '{!! route("index.Account.import.gc") !!}',
                 columns: [
                     { data: 'id', name: 'id' },
+                    { data: 'requestgc_id', name: 'requestgc_id' },
                     { data: 'name', name: 'name' },
                     { data: 'date', name: 'date' },
                     { data: 'status', name: 'status' },
@@ -226,6 +231,7 @@
                     { data: 'date', name: 'date' },
                     { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
+                    { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
