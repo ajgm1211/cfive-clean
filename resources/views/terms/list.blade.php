@@ -77,6 +77,9 @@
                         <th title="Field #2">
                             Ports
                         </th>
+                        <th title="Field #2">
+                            Carriers
+                        </th>
                         <th title="Field #5">
                             Actions
                         </th>
@@ -87,23 +90,25 @@
                     <tr>
                         <td>{{ $arr->name }}</td>
                         <td>
-                            @if($arr->harbor->count()==742)
-                                <ul>
-                                    <li>All</li>
-                                </ul>
-                            @else
-                                @foreach($arr->harbor as $harbor)
-                                    <ul>
-                                        <li>{{ $harbor->name }}</li>
-                                    </ul>
-                                @endforeach
-                            @endif
+                            @foreach($arr->harbor as $harbor)
+                            <ul>
+                                <li>{{ $harbor->name }}</li>
+                            </ul>
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach($arr->carrier as $carrier)
+                            <ul>
+                                <li>{{ $carrier->name }}</li>
+                            </ul>
+                            @endforeach
                         </td>
                         <td>
                             <a href="{{ route('terms.show', ['id' => setearRouteKey($arr->id)]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill">
                                 <i class="la la-eye"></i>
                             </a>
                             <a href="{{ route('terms.edit', ['id' => setearRouteKey($arr->id)]) }}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"   title="Edit ">
+                                <i class="la la-edit"></i>
                             </a>
                             <a href="#" id="delete-terms" data-terms-id="{{$arr->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete " >
                                 <i class="la la-eraser"></i>

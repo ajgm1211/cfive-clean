@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\TermAndCondition;
 use App\Harbor;
+use App\Carrier;
 use App\TermsPort;
 use App\CompanyUser;
+use App\TermConditionCarrier;
 
 class TermsAndConditionsController extends Controller
 {
@@ -22,7 +24,6 @@ class TermsAndConditionsController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $data = TermAndCondition::where('company_user_id', Auth::user()->company_user_id)->get();
-
         return view('terms.list', compact('data'));
     }
 
@@ -39,8 +40,8 @@ class TermsAndConditionsController extends Controller
     public function add()
     {
         $harbors = Harbor::pluck('name','id');
-
-        return view('terms.add', compact('harbors'));
+        $carriers = Carrier::pluck('name','id');
+        return view('terms.add', compact('harbors','carriers'));
     }
 
     /**
@@ -63,6 +64,7 @@ class TermsAndConditionsController extends Controller
             $term->save();
 
             $ports = $request->ports;
+            $carriers = $request->carriers;
 
             foreach($ports as $i){
                 $termsport = new TermsPort();
@@ -70,6 +72,14 @@ class TermsAndConditionsController extends Controller
                 $termsport->term()->associate($term);
                 $termsport->save();
             }
+
+            foreach($carriers as $carrier){
+                TermConditionCarrier::create([
+                    'carrier_id'        => $carrier,
+                    'termcondition_id'  => $term->id
+                ]);
+            }
+
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
@@ -91,12 +101,16 @@ class TermsAndConditionsController extends Controller
     public function show($id)
     {
         $id = obtenerRouteKey($id);
-        $term = TermAndCondition::where('id',$id)->with('harbor')->first();
-        $selected_harbors = collect($term->harbor);
-        $selected_harbors = $selected_harbors->pluck('id','name');
+        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers')->first();
+        $selected_harbors   = collect($term->harbor);
+        $selected_harbors   = $selected_harbors->pluck('id','name');
+        $selected_carriers  = collect($term->TermConditioncarriers);
+        $selected_carriers  = $selected_carriers->pluck('carrier_id');
+        //dd($selected_carriers);
         $harbors = harbor::all()->pluck('name','id');
+        $carriers = Carrier::pluck('name','id');
 
-        return view('terms.show', compact('term', 'harbors', 'selected_harbors'));
+        return view('terms.show', compact('term', 'harbors','carriers','selected_harbors','selected_carriers'));
     }
 
     /**
@@ -108,12 +122,14 @@ class TermsAndConditionsController extends Controller
     public function edit($id)
     {
         $id = obtenerRouteKey($id);
-        $term = TermAndCondition::where('id',$id)->with('harbor')->first();
+        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers')->first();
         $selected_harbors = collect($term->harbor);
         $selected_harbors = $selected_harbors->pluck('id','name');
         $harbors = harbor::all()->pluck('name','id');
-
-        return view('terms.edit', compact('term', 'harbors', 'selected_harbors'));
+        $selected_carriers  = collect($term->TermConditioncarriers);
+        $selected_carriers  = $selected_carriers->pluck('carrier_id');
+        $carriers = Carrier::pluck('name','id');
+        return view('terms.edit', compact('term', 'harbors', 'selected_harbors','carriers','selected_carriers'));
     }
 
     /**
@@ -148,6 +164,18 @@ class TermsAndConditionsController extends Controller
                     $termsport->term()->associate($term);
                     $termsport->save();
                 }
+            }
+            
+            $carriers = $request->carriers;
+            if($carriers != ''){
+                TermConditionCarrier::where('termcondition_id',$id)->delete();
+
+                foreach($carriers as $carrier){
+                TermConditionCarrier::create([
+                    'carrier_id'        => $carrier,
+                    'termcondition_id'  => $term->id
+                ]);
+            }
             }
 
             $request->session()->flash('message.nivel', 'success');
