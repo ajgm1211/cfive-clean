@@ -8,6 +8,8 @@ use App\OauthClient;
 use App\User;
 use App\Rate;
 use App\Contract;
+use App\GlobalCharPort;
+use App\LocalCharPort;
 use App\OauthAccessToken;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -226,5 +228,73 @@ class ApiController extends Controller
         });
 
         return $rates;
+    }
+
+    public function charges(Request $request)
+    {
+        $charges=LocalCharPort::whereHas('localcharge',function ($q) {
+            $q->whereHas('contract', function ($q){
+                $q->where('company_user_id', \Auth::user()->company_user_id);
+            });
+        })->with('localcharge')->get();
+
+        $collection = Collection::make($charges);
+        $collection->transform(function ($charge) {
+            $charge->id=$charge->localcharge->id;
+            $charge->charge=$charge->localcharge->surcharge['name'];
+            $charge->origin_port=$charge->portOrig->code;
+            $charge->destination_port=$charge->portDest->code;
+            $charge->charge_type=$charge->localcharge->typedestiny['description'];
+            $charge->calculation_type=$charge->localcharge->calculationtype['name'];
+            $charge->amount=$charge->localcharge->ammount;
+            $charge->currency_code=$charge->localcharge->currency['alphacode'];
+            $charge->contract=$charge->localcharge->contract['name'];
+            $charge->contract_id=$charge->localcharge->contract['id'];
+            $charge->valid_from=$charge->localcharge->contract['validity'];
+            $charge->valid_until=$charge->localcharge->contract['expire'];
+            unset($charge['portOrig']);
+            unset($charge['portDest']);
+            unset($charge['port_orig']);
+            unset($charge['port_dest']);
+            unset($charge['localcharge']);
+            unset($charge['localcharge_id']);
+        });
+
+        return $charges;
+    }
+
+    public function globalCharges(Request $request)
+    {
+        $charges=GlobalCharPort::whereHas('globalcharge',function ($q) {
+            $q->where('company_user_id', \Auth::user()->company_user_id);
+        })->with('globalcharge')->get();
+
+        $collection = Collection::make($charges);
+        $collection->transform(function ($charge) {
+            //foreach ($charge->globalCarrier as $value) {
+                $charge->id=$charge->globalcharge->id;
+                $charge->charge=$charge->globalcharge->surcharge['name'];
+                $charge->origin_port=$charge->portOrig->code;
+                $charge->destination_port=$charge->portDest->code;
+                $charge->charge_type=$charge->globalcharge->typedestiny['description'];
+                $charge->calculation_type=$charge->globalcharge->calculationtype['name'];
+                $charge->amount=$charge->globalcharge->ammount;
+                $charge->currency_code=$charge->globalcharge->currency['alphacode'];
+                $charge->carrier=$charge->globalcharge->carrier->carrier->name;
+                $charge->valid_from=$charge->globalcharge->validity;
+                $charge->valid_until=$charge->globalcharge->expire;
+                unset($charge['portOrig']);
+                unset($charge['portDest']);
+                unset($charge['port_orig']);
+                unset($charge['port_dest']);
+                unset($charge['globalcharge']);
+                unset($charge['globalcharge_id']);
+                unset($charge['typedestiny_id']);
+                unset($charge['globalCarrier']);
+            //}
+            
+        });
+
+        return $charges;
     }
 }
