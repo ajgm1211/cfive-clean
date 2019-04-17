@@ -393,7 +393,7 @@ New \ Status Import  &nbsp;
                     $('#tableContracts .head .head_hide').html('');
 
                     var select = $('<select id="formfilter" class="filterdropdown form-control"><option value="">' + $(column.header()).text() + '</option></select><br>')
-                    .prependTo($(column.header()))
+                    .prependTo($(column.header()).empty())
                     .on('change', function () {
                         var val = $.fn.dataTable.util.escapeRegex(
                             $(this).val()
