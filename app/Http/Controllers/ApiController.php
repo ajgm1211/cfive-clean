@@ -196,7 +196,6 @@ class ApiController extends Controller
         $array = new Collection();
         $collection = Collection::make($rates);
         $collection->transform(function ($rate) {
-            $rate->id=$rate->id;
             $rate->origin_port=$rate->port_origin->code;
             $rate->destination_port=$rate->port_destiny->code;
             $rate->carrier_code=$rate->carrier->uncode;
@@ -210,12 +209,10 @@ class ApiController extends Controller
             $rate->valid_until=$rate->contract->expire;
             $rate->contract_name=$rate->contract->name;
             $rate->contract_id=$rate->contract->id;
-            unset($rate['id']);
             unset($rate['port_origin']);
             unset($rate['destiny_port']);
             unset($rate['port_destiny']);
             unset($rate['contract']);
-            unset($rate['contract_id']);
             unset($rate['twuenty']);
             unset($rate['forty']);
             unset($rate['fortyhc']);
@@ -274,7 +271,6 @@ class ApiController extends Controller
 
         $collection = Collection::make($charges);
         $collection->transform(function ($charge) {
-            //foreach ($charge->globalCarrier as $value) {
                 $charge->id=$charge->globalcharge->id;
                 $charge->charge=$charge->globalcharge->surcharge['name'];
                 $charge->origin_port=$charge->portOrig->code;
@@ -294,8 +290,6 @@ class ApiController extends Controller
                 unset($charge['globalcharge_id']);
                 unset($charge['typedestiny_id']);
                 unset($charge['globalCarrier']);
-            //}
-            
         });
 
         return $charges;
