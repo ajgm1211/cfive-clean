@@ -196,8 +196,9 @@ class ApiController extends Controller
         $array = new Collection();
         $collection = Collection::make($rates);
         $collection->transform(function ($rate) {
-            $rate->origin_port=$rate->port_origin->display_name;
-            $rate->destination_port=$rate->port_destiny->display_name;
+            $rate->id=$rate->id;
+            $rate->origin_port=$rate->port_origin->code;
+            $rate->destination_port=$rate->port_destiny->code;
             $rate->carrier_code=$rate->carrier->uncode;
             $rate->currency_code=$rate->currency->alphacode;
             $rate->rate_20=$rate->twuenty;
@@ -205,8 +206,10 @@ class ApiController extends Controller
             $rate->rate_40_hc=$rate->fortyhc;
             $rate->rate_40_nor=$rate->fortynor;
             $rate->rate_45=$rate->fortyfive;
-            $rate->validity=$rate->contract->validity;
+            $rate->valid_from=$rate->contract->validity;
+            $rate->valid_until=$rate->contract->expire;
             $rate->contract_name=$rate->contract->name;
+            $rate->contract_id=$rate->contract->id;
             unset($rate['id']);
             unset($rate['port_origin']);
             unset($rate['destiny_port']);
