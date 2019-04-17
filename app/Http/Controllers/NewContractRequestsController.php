@@ -267,7 +267,8 @@ class NewContractRequestsController extends Controller
             $event->event_newRequest();
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('RequestImportation.indexListClient');
+            return redirect()->route('contracts.index');
+            //return redirect()->route('RequestImportation.indexListClient');
         } else {
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');

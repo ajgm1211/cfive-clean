@@ -93,28 +93,28 @@
                                         </button>
                                     </a>
 
-                                    <!--<a href="{{route('Request.importaion.fcl')}}">
-
-<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-<span>
-<span>
-New Import Contract &nbsp;
-</span>
-<i class="la la-clipboard"></i>
-</span>
-</button>
-</a>-->
-                                    <a href="{{route('RequestImportation.indexListClient')}}">
+                                    <a href="{{route('Request.importaion.fcl')}}">
 
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    New \ Status Import  &nbsp;
+                                                    New Import Contract &nbsp;
                                                 </span>
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
                                     </a>
+                                    <!--<a href="{{route('RequestImportation.indexListClient')}}">
+
+<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+<span>
+<span>
+New \ Status Import  &nbsp;
+</span>
+<i class="la la-clipboard"></i>
+</span>
+</button>
+</a>-->
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
