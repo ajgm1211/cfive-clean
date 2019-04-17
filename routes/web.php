@@ -133,6 +133,14 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 Route::prefix('Requests')->group(function () {
     //New Request Importation
+    
+    Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
+    
+    Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
+        ->middleware(['auth','role:administrator|company|subuser']);
+
+    Route::get('RequestImportation/listClient/{id}','NewContractRequestsController@listClient')->name('RequestImportation.listClient')
+        ->middleware(['auth','role:administrator|company|subuser']);
     Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator']);
 
     Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
@@ -141,6 +149,7 @@ Route::prefix('Requests')->group(function () {
         ->middleware(['auth','role:administrator']);
     Route::POST('RequestImportation/two','NewContractRequestsController@store2')->name('RequestImportation.store2')
         ->middleware(['auth','role:administrator|company|subuser']);
+
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
         ->middleware(['auth','role:administrator']);
     Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
@@ -253,6 +262,12 @@ Route::prefix('Importation')->group(function () {
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
+    Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
+        ->middleware(['auth','role:administrator|company|subuser']);
+
+    Route::get('RequestImportationLcl/listClient/{id}','NewContractRequestLclController@listClient')->name('RequestImportationLcl.listClient')
+        ->middleware(['auth','role:administrator|company|subuser']);
+
     Route::resource('RequestImportationLcl','NewContractRequestLclController')->middleware(['auth','role:administrator']);
 
     Route::get('StatusRquestLCL/{id}','NewContractRequestLclController@showStatus')->name('show.status.Request.lcl')
@@ -484,12 +499,18 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
     //Route::resource('RequestsGlobalchargersFcl','NewGlobalchargeRequestControllerFcl')->middleware(['auth','role:administrator']);
 
-    Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
-        ->middleware(['auth','role:administrator']);    
-    
-    Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
+    Route::get('RequestsGlobalchargersFcl/indexListClient','NewGlobalchargeRequestControllerFcl@indexListClient')->name('RequestsGlobalchargersFcl.indexListClient')
+        ->middleware(['auth','role:administrator|company|subuser']);
+
+    Route::get('RequestsGlobalchargersFcl/listClient/{id}','NewGlobalchargeRequestControllerFcl@listClient')->name('RequestsGlobalchargersFcl.listClient')
         ->middleware(['auth','role:administrator|company|subuser']);
     
+    Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
+        ->middleware(['auth','role:administrator']);    
+
+    Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
+        ->middleware(['auth','role:administrator|company|subuser']);
+
     Route::get('RequestsGlobalchargersFcl/create2/','NewGlobalchargeRequestControllerFcl@create2')->name('RequestsGlobalchargersFcl.create2')
         ->middleware(['auth','role:administrator']);
 
@@ -541,7 +562,7 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 
     // Reprocesar
     Route::get('/ReprocesarGlobalchargers/{id}','ImportationGlobachargersFclController@ReprocesarGlobalchargers')->name('Reprocesar.globalcharge.fcl');
-    
+
     Route::get('/testExcelImportation','ImportationGlobachargersFclController@testExcelImportation')->name('testExcelImportation.GC')->middleware(['auth','role:administrator']);
 
 });

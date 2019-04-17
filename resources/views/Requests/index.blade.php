@@ -95,18 +95,20 @@
                                             <tr>
                                                 <th >ID</th>
                                                 <th >Company</th>
-                                                <th >Contract Name</th>
-                                                <th >Contract Number</th>
-                                                <th >Contract Validation</th>
+                                                <th >C. Name</th>
+                                                <th >C. Number</th>
+                                                <th >C. Direction</th>
+                                                <th >Carrier</th>
+                                                <th >C. Validation</th>
                                                 <th >Date</th>
                                                 <th >Last Management</th>
                                                 <th >User</th>
+                                                <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
                                                 <th >Status</th>
                                                 <th >Options</th>
                                             </tr>
                                         </thead>
-
                                     </table>
                                 </div>
                             </div>
@@ -125,6 +127,9 @@
                                             <tr>
                                                 <th width="1%" >
                                                     Id
+                                                </th>
+                                                <th width="3%" >
+                                                    Request Id
                                                 </th>
                                                 <th width="3%" >
                                                     Name
@@ -199,6 +204,7 @@
                 ajax: '{!! route("index.Account.import.fcl") !!}',
                 columns: [
                     { data: 'id', name: 'id' },
+                    { data: 'request_id', name: 'request_id' },
                     { data: 'name', name: 'name' },
                     { data: 'date', name: 'date' },
                     { data: 'status', name: 'status' },
@@ -229,10 +235,13 @@
                     { data: 'Company', name: 'Company' },
                     { data: 'name', name: 'name' },
                     { data: 'number', name: 'number' },
+                    { data: 'direction', name: 'direction' },
+                    { data: 'carrier', name: 'carrier' },
                     { data: 'validation', name: 'validation' },
                     { data: 'date', name: 'date' },
                     { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
+                    { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },

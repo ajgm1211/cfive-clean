@@ -93,7 +93,13 @@ new registration
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-3">
+                                    <label for="request_id" class=" ">Request Lcl Id</label>
+                                    {!!  Form::text('request_id',$requestlcl['id'],['id'=>'request_id',
+                                    'placeholder'=>'Request Lcl Id',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                                <div class="col-lg-3">
                                     <label for="commentsid" class=" ">Contract Comments</label>
                                     {!!  Form::textArea('comments',null,['id'=>'commentsid',
                                     'placeholder'=>'Contract Comments',
