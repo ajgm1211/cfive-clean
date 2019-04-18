@@ -50,6 +50,7 @@
                 </li>
             </ul>
         </div>
+        <!-- Quote details -->
         <div class="col-md-12">
             <div class="m-portlet custom-portlet">
                 <div class="m-portlet__head">
@@ -187,14 +188,14 @@
     </div>
     <!-- Charges -->
     @php
-                    $v=0;
-                    @endphp
-                    @foreach($rates as $rate)
+    $v=0;
+    @endphp
+    @foreach($rates as $rate)
     <div class="row">
         <div class="col-md-12">
             <div class="m-portlet custom-portlet">
                 <div class="m-portlet__body">
-                    
+
                     <div class="tab-content">
                         <div class="flex-list">
                             <ul >
@@ -240,11 +241,11 @@
                                                 @foreach($rate->charge as $item)
                                                 @if($item->type_id==3)
                                                 @php
-
+                                                
                                                 $rate_id=$item->automatic_rate_id;
-                                                $freight_amounts = $item->amount['amount'];
+                                                $freight_amounts = json_decode($item->amount,true);
                                                 $freight_markups = $item->markups['markups'];
-
+                                                print_r($freight_amounts);
                                                 @endphp
                                                 <tr >
                                                     <td>
@@ -254,7 +255,7 @@
                                                         <a href="#" class="editable" data-source="{{$calculation_types}}" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
                                                     </td>
                                                     <td {{ $equipmentHides['20'] }}>
-                                                        <a href="#" class="editable-amount-20 amount_20"data-type="text" data-name="amount->amount->20" data-value="{{@$freight_amounts['20']}}" data-pk="{{$item->id}}" data-title="Amount"></a>
+                                                        <a href="#" class="editable-amount-20 amount_20"data-type="text" data-name="amount->amount->20" data-value="{{@$freight_amounts[$i]['c20']}}" data-pk="{{$item->id}}" data-title="Amount"></a>
                                                     </td>
                                                     <td {{ $equipmentHides['20'] }}>
                                                         <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->markups->20" data-value="{{@$freight_markups['20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
@@ -263,7 +264,7 @@
                                                         <span class="total_20">{{@$freight_amounts['20']+@$freight_markups['20']}}</span>
                                                     </td>
                                                     <td {{ $equipmentHides['40'] }}>
-                                                        <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->amount->40" data-value="{{@$freight_amounts['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->amount->40" data-value="{{@$freight_amounts[$i]['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                     </td>
                                                     <td {{ $equipmentHides['40'] }}>
                                                         <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->markups->40" data-value="{{@$freight_markups['40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
@@ -433,7 +434,7 @@
                                                 @foreach($rate->charge as $item)
                                                 @if($item->type_id==1)
                                                 @php
-                                                $origin_amounts = $item->amount['amount'];
+                                                $origin_amounts = json_decode($item->amount,true);
                                                 $origin_markups = $item->markups['markups'];
                                                 $origin_total = $item->total['total'];
                                                 @endphp
@@ -909,9 +910,9 @@
         </div>
     </div>
     @php
-                    $v++;
-                    @endphp
-                    @endforeach
+    $v++;
+    @endphp
+    @endforeach
     <!-- Payments and terms conditions -->
     <div class="row">
         <div class="col-md-12">
@@ -943,17 +944,17 @@
                                     Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
                                 </a>
                                 <a class="btn btn-primary" id="update-payments" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
-                                 Update &nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                             </a>
-                             <br>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
- </div>
- <div class="row">
+                                   Update &nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                               </a>
+                               <br>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+   <div class="row">
     <div class="col-md-12">
         <div class="m-portlet custom-portlet">
             <div class="m-portlet__head">
@@ -993,7 +994,134 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="m-portlet custom-portlet">
+            <div class="m-portlet__head">
+                <div class="row" style="padding-top: 20px;">
+                    <h3 class="title-quote size-14px">Remarks</h3>
+                </div>
+                <div class="m-portlet__head-tools">
+                    <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                        <li class="nav-item m-tabs__item" id="edit_li">
+                            <a class="btn btn-primary-v2" id="edit-remarks" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>                    
+            <div class="m-portlet__body">
+                <div class="card card-body bg-light">
+                    <span class="remarks_span">{!! $quote->remarks !!}</span>
+                    <div class="remarks_textarea" hidden>
+                        <textarea name="remarks" class="form-control remarks editor" id="remarks">{!!$quote->remarks!!}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center" id="update_remarks" hidden>
+                            <br>
+                            <a class="btn btn-danger" id="cancel-remarks" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
+                            </a>
+                            <a class="btn btn-primary" id="update-remarks" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                            </a>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="m-portlet custom-portlet">
+            <div class="m-portlet__head">
+                <div class="row" style="padding-top: 20px;">
+                    <h3 class="title-quote size-14px">PDF Layout</h3>
+                </div>
+                <div class="m-portlet__head-tools">
+                    <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                        <li class="nav-item m-tabs__item" id="edit_li">
+                            <a class="btn btn-primary-v2" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                Send &nbsp;&nbsp;<i class="fa fa-envelope"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item m-tabs__item" id="edit_li">
+                            <a class="btn btn-primary-v2" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <div class="tab-content" id="show_detailed">
+                    <div class="row" class="">
+                        <div class="col-md-2 col-xs-12">
+                           {{ Form::select('type',['1'=>'Show detailed','2'=>'Show total in'],null,['class'=>'form-control-sm type select2','id'=>'show_hide_select']) }}
+                       </div>
+                       <div class="col-md-2 col-xs-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_total" value="" id="show_total">
+                            <label class="title-quote"><b>Show total in:</b></label>
+                            {{ Form::select('currency',['1'=>'USD','2'=>'EUR'],null,['class'=>'form-control-sm type select2']) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3 group_origin_charges">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_origin_grouped" value="" id="show_origin_grouped">
+                            <label class="title-quote"><b>Group Origin Charges in:</b></label>
+                            {{ Form::select('group_origin_charges',['1'=>'USD','2'=>'EUR'],null,['class'=>'form-control-sm company_id select2']) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="title-quote"><b>Show total in:</b></label>
+                        {{ Form::select('show_total_in',['1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['class'=>'form-control-sm company_id select2']) }}
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_carrier" value="" id="show_carrier">
+                            <label class="form-check-label title-quote" for="show_carrier">
+                                Show carrier
+                            </label>
+                        </div> 
+
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_logo" value="" id="show_logo">
+                            <label class="form-check-label title-quote" for="show_logo">
+                                Show customer logo
+                            </label>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 25px;">
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-3 group_destination_charges">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="show_destination_grouped" value="" id="show_destination_grouped">
+                            <div class="form-group">
+                               <label class="title-quote"><b>Group Destination Charges in:</b></label>
+                               {{ Form::select('group_destination_charges',['1'=>'USD','2'=>'EUR'],null,['class'=>'form-control-sm company_id select2']) }}
+                           </div>
+                       </div>
+                   </div>
+               </div>                   
+           </div>
+       </div>
+   </div>
+</div>
+</div>
+</div>
+
 @include('quotesv2.partials.sendQuoteModal')
 @endsection
 

@@ -352,6 +352,45 @@ $(document).on('click', '#update-terms', function () {
     });
 });
 
+//Edit remarks
+$(document).on('click', '#edit-remarks', function () {
+    $(".remarks_span").attr('hidden','true');
+    $(".remarks_textarea").removeAttr('hidden');
+    $("#update_remarks").removeAttr('hidden');
+});
+
+$(document).on('click', '#cancel-remarks', function () {
+    $(".remarks_span").removeAttr('hidden');
+    $(".remarks_textarea").attr('hidden','true');
+    $("#update_remarks").attr('hidden','true');
+});
+
+$(document).on('click', '#update-remarks', function () {
+    var id=$(".id").val();
+    var remarks = tinymce.get("remarks").getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/remarks/'+id,
+        data: {
+            'remarks': remarks,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The remarks has been updated.',
+                    'success'
+                    )
+
+                $(".remarks_span").html(data.quote['remarks']);
+                $(".remarks_span").removeAttr('hidden');
+                $(".remarks_textarea").attr('hidden','true');
+                $("#update_remarks").attr('hidden','true');
+            }
+        }
+    });
+});
+
 //Edit main quotes details
 $(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden','true');
@@ -690,6 +729,17 @@ $(document).on('click', '#send-pdf-quotev2', function () {
       'error'
       )
 }
+});
+
+//Show and hide pdf layouts options
+$(document).on('change', '#show_hide_select', function () {
+    if($('#show_hide_select').val()==2){
+        $(".group_origin_charges").addClass('hide');
+        $(".group_destination_charges").addClass('hide');
+    }else{
+        $(".group_origin_charges").removeClass('hide');
+        $(".group_destination_charges").removeClass('hide');
+    }
 });
 
 //Custom functions
