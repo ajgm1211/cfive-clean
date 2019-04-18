@@ -119,38 +119,38 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-      ->addColumn('type', function ($colletion) {
-        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-      })->addColumn('action',function($colletion){
+    ->addColumn('type', function ($colletion) {
+      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+    })->addColumn('action',function($colletion){
       return
-        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Options
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-            <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
-            <span>
-            <i class="la la-eye"></i>
-            &nbsp;
-            Show
-            </span>
-            </a>
-            <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
-            <span>
-            <i class="la la-plus"></i>
-            &nbsp;
-            Duplicate
-            </span>
-            </a>
-            <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
-            <span>
-            <i class="la la-eraser"></i>
-            &nbsp;
-            Delete
-            </span>
-            </a>
-            </div>';
+      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+      <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
+      <span>
+      <i class="la la-eye"></i>
+      &nbsp;
+      Show
+      </span>
+      </a>
+      <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+      <span>
+      <i class="la la-plus"></i>
+      &nbsp;
+      Duplicate
+      </span>
+      </a>
+      <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+      <span>
+      <i class="la la-eraser"></i>
+      &nbsp;
+      Delete
+      </span>
+      </a>
+      </div>';
     })
-      ->editColumn('id', 'ID: {{$id}}')->make(true);
+    ->editColumn('id', 'ID: {{$id}}')->make(true);
   }
 
   public function show($id)
@@ -165,7 +165,7 @@ class QuoteV2Controller extends Controller
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
-    $rates = AutomaticRate::where('quote_id',$quote->id)->get();
+    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();   
 
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
@@ -203,8 +203,8 @@ class QuoteV2Controller extends Controller
   {
     //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
     DB::table('charges')
-      ->where('id', $request->pk)
-      ->update([$request->name => $request->value]);
+    ->where('id', $request->pk)
+    ->update([$request->name => $request->value]);
 
     return response()->json(['success'=>'done']);
   }
@@ -251,6 +251,16 @@ class QuoteV2Controller extends Controller
     $quote=QuoteV2::find($id);
 
     $quote->terms_and_conditions=$request->terms;
+    $quote->update();
+
+    return response()->json(['message'=>'Ok','quote'=>$quote]);
+  }
+
+  public function updateRemarks(Request $request,$id)
+  {
+    $quote=QuoteV2::find($id);
+
+    $quote->remarks=$request->remarks;
     $quote->update();
 
     return response()->json(['message'=>'Ok','quote'=>$quote]);
@@ -540,7 +550,7 @@ class QuoteV2Controller extends Controller
         $chargeOrigin->markups = $arregloMarkupsO  ;
         $chargeOrigin->currency_id = $arregloO['currency_id']  ;
         $chargeOrigin->total =  $arregloMarkupsO ;
-         $chargeOrigin->save();
+        $chargeOrigin->save();
       }
 
     }
@@ -730,21 +740,21 @@ class QuoteV2Controller extends Controller
 
     // Consulta base de datos rates
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-        {
-          $q->whereHas('contract_user_restriction', function($a) use($user_id){
-            $a->where('user_id', '=',$user_id);
-          })->orDoesntHave('contract_user_restriction');
-        })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-                     {
-                       $q->whereHas('contract_company_restriction', function($b) use($company_id){
-                         $b->where('company_id', '=',$company_id);
-                       })->orDoesntHave('contract_company_restriction');
-                     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-    });
-    $arreglo = $arreglo->get();
+    {
+      $q->whereHas('contract_user_restriction', function($a) use($user_id){
+        $a->where('user_id', '=',$user_id);
+      })->orDoesntHave('contract_user_restriction');
+    })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+    {
+     $q->whereHas('contract_company_restriction', function($b) use($company_id){
+       $b->where('company_id', '=',$company_id);
+     })->orDoesntHave('contract_company_restriction');
+   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+  });
+   $arreglo = $arreglo->get();
 
-    $formulario = $request;
+   $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 
@@ -1010,7 +1020,7 @@ class QuoteV2Controller extends Controller
               if(in_array($local->calculationtype_id, $array20) && in_array( '20',$equipment)  ){
 
                 $monto =   $local->ammount  / $rateMount ;
-               
+
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1172,7 +1182,7 @@ class QuoteV2Controller extends Controller
               if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment) ){
 
                 $monto =   $global->ammount  / $rateMount ;
-               
+
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1241,7 +1251,7 @@ class QuoteV2Controller extends Controller
 
               if(in_array($global->calculationtype_id, $array20) &&  in_array('20',$equipment)){
                 $monto =   $global->ammount  / $rateMount ;
-               
+
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
@@ -1306,7 +1316,7 @@ class QuoteV2Controller extends Controller
               if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment)){
 
                 $monto =   $global->ammount  / $rateMount ;
-              
+
                 $monto = number_format($monto, 2, '.', '');
                 $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                 $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id );
