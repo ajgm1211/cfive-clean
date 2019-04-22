@@ -121,6 +121,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                     //--------------------------------------------------------
                     if($i != 1){
+                        $differentiatorVal = '';
                         if($statusPortCountryTW == 2){
                             $differentiatorVal = $read[$requestobj[$differentiator]];
                         } else {
