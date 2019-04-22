@@ -529,19 +529,24 @@ class QuoteV2Controller extends Controller
       foreach($info_D->localorigin as $localorigin){
         $arregloMontoO = array();
         $arregloMarkupsO = array();
+        $montoO = array();
+        $markupO = array();
         foreach($localorigin as $localO){
           foreach($localO as $local){
             if($local->type != '99'){
-              $arregloMontoO[] = array('c'.$local->type => $local->monto);
-              $arregloMarkupsO[] = array('c'.$local->type => $local->markup);
+              $arregloMontoO = array('c'.$local->type => $local->monto);
+              $montoO = array_merge($arregloMontoO,$montoO);
+              $arregloMarkupsO = array('c'.$local->type => $local->markup);
+              $markupO = array_merge($arregloMarkupsO,$markupO);
             }
             if($local->type == '99'){
               $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
             }
           }
         }
-        $arregloMontoO =  json_encode($arregloMontoO);
-        $arregloMarkupsO =  json_encode($arregloMarkupsO);
+
+        $arregloMontoO =  json_encode($montoO);
+        $arregloMarkupsO =  json_encode($markupO);
 
         $chargeOrigin = new Charge();
         $chargeOrigin->automatic_rate_id= $rate->id;
@@ -559,19 +564,25 @@ class QuoteV2Controller extends Controller
       foreach($info_D->localdestiny as $localdestiny){
         $arregloMontoD = array();
         $arregloMarkupsD = array();
+        $montoD = array();
+        $markupD = array();
         foreach($localdestiny as $localD){
           foreach($localD as $local){
             if($local->type != '99'){
-              $arregloMontoD[] = array('c'.$local->type => $local->monto);
-              $arregloMarkupsD[] = array('c'.$local->type => $local->markup);
+
+              $arregloMontoD = array('c'.$local->type => $local->monto);
+              $montoD = array_merge($arregloMontoD,$montoD);
+              $arregloMarkupsD = array('c'.$local->type => $local->markup);
+              $markupD = array_merge($arregloMarkupsD,$markupD);
             }
             if($local->type == '99'){
               $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
             }
           }
         }
-        $arregloMontoD =  json_encode($arregloMontoD);
-        $arregloMarkupsD =  json_encode($arregloMarkupsD);
+
+        $arregloMontoD =  json_encode($montoD);
+        $arregloMarkupsD =  json_encode($markupD);
 
         $chargeDestiny = new Charge();
         $chargeDestiny->automatic_rate_id= $rate->id;
@@ -589,19 +600,23 @@ class QuoteV2Controller extends Controller
       foreach($info_D->localfreight as $localfreight){
         $arregloMontoF = array();
         $arregloMarkupsF = array();
+        $montoF = array();
+        $markupF = array();
         foreach($localfreight as $localF){
           foreach($localF as $local){
             if($local->type != '99'){
-              $arregloMontoF[] = array('c'.$local->type => $local->monto);
-              $arregloMarkupsF[] = array('c'.$local->type => $local->markup);
+              $arregloMontoF = array('c'.$local->type => $local->monto);
+              $montoF = array_merge($arregloMontoF,$montoF);
+              $arregloMarkupsF = array('c'.$local->type => $local->markup);
+              $markupF = array_merge($arregloMarkupsF,$markupF);
             }
             if($local->type == '99'){
               $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
             }
           }
         }
-        $arregloMontoF =  json_encode($arregloMontoF);
-        $arregloMarkupsF =  json_encode($arregloMarkupsF);
+        $arregloMontoF =  json_encode($montoF);
+        $arregloMarkupsF =  json_encode($markupF);
 
         $chargeFreight = new Charge();
         $chargeFreight->automatic_rate_id= $rate->id;
