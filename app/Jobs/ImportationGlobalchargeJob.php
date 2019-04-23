@@ -112,6 +112,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                     //--------------------------------------------------------
                     if($i != 1){
+                        $differentiatorVal = '';
                         if($statusPortCountryTW == 2){
                             $differentiatorVal = $read[$requestobj[$differentiator]];
                         } else {
@@ -433,21 +434,21 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     $twentyArrBol = true;
                                     $twentyArr      = explode(' ',trim($read[$requestobj[$twenty]]));
                                 } else {
-                                    $twentyArr = ['0']; 
+                                    $twentyArr = ['0.0']; 
                                 }
 
                                 if(empty($read[$requestobj[$forty]]) != true){
                                     $fortyArrBol = true;
                                     $fortyArr       = explode(' ',trim($read[$requestobj[$forty]]));
                                 } else {
-                                    $fortyArr = ['0'];
+                                    $fortyArr = ['0.0'];
                                 }
 
                                 if(empty($read[$requestobj[$fortyhc]]) != true){
                                     $fortyhcArrBol  = true;
                                     $fortyhcArr     = explode(' ',trim($read[$requestobj[$fortyhc]]));
                                 } else {
-                                    $fortyhcArr = ['0'];
+                                    $fortyhcArr = ['0.0'];
                                 }
 
 
@@ -457,7 +458,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         $fortynorArrBol  = true;
                                         $fortynorArr     = explode(' ',trim($read[$requestobj[$fortynor]]));
                                     } else {
-                                        $fortynorArr = ['0'];
+                                        $fortynorArr = ['0.0'];
                                     }
 
                                 }
@@ -468,7 +469,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         $fortyfiveArrBol  = true;
                                         $fortyfiveArr     = explode(' ',trim($read[$requestobj[$fortyfive]]));
                                     } else {
-                                        $fortyfiveArr = ['0'];
+                                        $fortyfiveArr = ['0.0'];
                                     }
 
                                 }
@@ -576,7 +577,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
                                     $twentyExiBol = true;
-                                    $twentyVal   = (int)$twentyArr[0];
+                                    $twentyVal   = floatval($twentyArr[0]);
                                 }  else{
                                     $twentyVal = $twentyArr[0].'_E_E';
                                 }
@@ -585,7 +586,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
                                     $fortyExiBol = true;
-                                    $fortyVal   = (int)$fortyArr[0];
+                                    $fortyVal   = floatval($fortyArr[0]);
                                 }  else{
                                     $fortyVal = $fortyArr[0].'_E_E';
                                 }
@@ -594,7 +595,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
                                     $fortyhcExiBol = true;
-                                    $fortyhcVal   = (int)$fortyhcArr[0];
+                                    $fortyhcVal   = floatval($fortyhcArr[0]);
                                 }   else{
                                     $fortyhcVal = $fortyhcArr[0].'_E_E';
                                 }
@@ -604,7 +605,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                     if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
                                         $fortynorExiBol = true;
-                                        $fortynorVal    = (int)$fortynorArr[0];
+                                        $fortynorVal    = floatval($fortynorArr[0]);
                                     } else{
                                         $fortynorVal = $fortynorArr[0].'_E_E';
                                     }
@@ -617,7 +618,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                 if($statusexistfortyfive == 1){
                                     if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
                                         $fortyfiveExiBol = true;
-                                        $fortyfiveVal    = (int)$fortyfiveArr[0];
+                                        $fortyfiveVal    = floatval($fortyfiveArr[0]);
                                     } else{
                                         $fortyfiveVal = $fortyfiveArr[0].'_E_E';
                                     }
@@ -805,7 +806,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 //------------------ CALCULATION TYPE ---------------------------------------------------
                                 $calculationvalvaration = '';
-                                if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
+                                if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
                                     $calculationvalvaration = 'Per Shipment';
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
                                     $calculationvalvaration = 'Per Container';
@@ -945,7 +946,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
 
                                             $ammount = $twentyVal;
-                                            if($ammount != 0){
+                                            if($ammount != 0 || $ammount != 0.0){
                                                 $globalChargeArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                     'surcharge_id'       						=> $surchargeVal,
                                                     'typedestiny_id'     						=> $typedestinyVal,
@@ -1022,16 +1023,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             if($requestobj[$statustypecurren] == 2){
                                                 // cargar valor y currency  juntos, se trae la descomposicion
                                                 // ----------------------- CARGA 20' -------------------------------------------
-                                                if($twentyVal != 0){
+                                                if($twentyVal != 0 || $twentyVal != 0.0){
                                                     $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
+                                                        'account_importation_globalcharge_id'   => $account_idVal,
                                                         'company_user_id'    						=> $companyUserIdVal,
                                                         'calculationtype_id' 						=> 2,
                                                         'ammount'            						=> $twentyVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
+                                                        'validity' 									=> $validityfromVal,
+                                                        'expire'					 				=> $validitytoVal,
                                                         'currency_id'        						=> $currencyValtwen
                                                     ]);
 
@@ -1085,16 +1086,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
                                                 //---------------------- CARGA 40' ----------------------------------------------------
 
-                                                if($fortyVal != 0){
+                                                if($fortyVal != 0 || $fortyVal != 0.0){
                                                     $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
+                                                        'account_importation_globalcharge_id'       => $account_idVal,
                                                         'company_user_id'    						=> $companyUserIdVal,
                                                         'calculationtype_id' 						=> 1,
                                                         'ammount'            						=> $fortyVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
+                                                        'validity' 									=> $validityfromVal,
+                                                        'expire'					 				=> $validitytoVal,
                                                         'currency_id'        						=> $currencyValfor
                                                     ]);
 
@@ -1151,16 +1152,16 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 40'HC --------------------------------------------------
 
-                                                if($fortyhcVal != 0){
+                                                if($fortyhcVal != 0 || $fortyhcVal != 0.0){
                                                     $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
+                                                        'account_importation_globalcharge_id'       => $account_idVal,
                                                         'company_user_id'    						=> $companyUserIdVal,
                                                         'calculationtype_id' 						=> 3,
                                                         'ammount'            						=> $fortyhcVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
+                                                        'validity' 									=> $validityfromVal,
+                                                        'expire'					 				=> $validitytoVal,
                                                         'currency_id'        						=> $currencyValforHC
                                                     ]);
 
@@ -1219,7 +1220,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 40'NOR -------------------------------------------------
 
-                                                if($fortynorVal != 0){
+                                                if($fortynorVal != 0 || $fortynorVal != 0.0){
                                                     $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -1286,7 +1287,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 45' ----------------------------------------------------
 
-                                                if($fortyfiveVal != 0){
+                                                if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
 
                                                     $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
@@ -1359,7 +1360,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // ----------------------- CARGA 20' -------------------------------------------
 
-                                                if($twentyVal != 0){
+                                                if($twentyVal != 0 || $twentyVal != 0.0){
                                                     $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -1423,7 +1424,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 //---------------------- CARGA 40' -----------------------------------------------
 
-                                                if($fortyVal != 0){
+                                                if($fortyVal != 0 || $fortyVal != 0.0){
                                                     $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -1487,7 +1488,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 40'HC ---------------------------------------------
 
-                                                if($fortyhcVal != 0){
+                                                if($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                                     $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
@@ -1554,7 +1555,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 40'NOR --------------------------------------------
 
-                                                if($fortynorVal != 0){
+                                                if($fortynorVal != 0 || $fortynorVal != 0.0){
                                                     $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -1620,7 +1621,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                                 // --------------------- CARGA 45' -----------------------------------------------
 
-                                                if($fortyfiveVal != 0){
+                                                if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                                     $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                         'surcharge_id'       						=> $surchargeVal,
                                                         'typedestiny_id'     						=> $typedestinyVal,
@@ -1689,28 +1690,28 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
 
                                     } 
-                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
+                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
                                         //per_shipment
-                                        if($twentyVal != 0){
+                                        if($twentyVal != 0 || $twentyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValtwen;
                                             } 
                                             $ammount = $twentyVal;
 
-                                        } else if ($fortyVal != 0){
+                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValfor;
                                             } 
                                             $ammount = $fortyVal;
 
-                                        }else if ($fortyhcVal != 0){
+                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValforHC;
                                             } 
                                             $ammount = $fortyhcVal;
 
-                                        }else if ($fortynorVal != 0){
+                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
                                             if($statusexistfortynor == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValfornor;
@@ -1718,7 +1719,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
                                             $ammount = $fortynorVal;
 
-                                        }else if ($fortyfiveVal != 0){
+                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                             if($statusexistfortyfive == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValforfive;
@@ -1728,7 +1729,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
 
 
-                                        if($ammount != 0){
+                                        if($ammount != 0 || $ammount != 0.0){
 
                                             $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                 'surcharge_id'       						=> $surchargeVal,
@@ -1795,26 +1796,26 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     }
                                     else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_BL') == 0){
                                         //per_shipment
-                                        if($twentyVal != 0){
+                                        if($twentyVal != 0 || $twentyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValtwen;
                                             } 
                                             $ammount = $twentyVal;
 
-                                        } else if ($fortyVal != 0){
+                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValfor;
                                             } 
                                             $ammount = $fortyVal;
 
-                                        }else if ($fortyhcVal != 0){
+                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValforHC;
                                             } 
                                             $ammount = $fortyhcVal;
 
-                                        }else if ($fortynorVal != 0){
+                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
                                             if($statusexistfortynor == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValfornor;
@@ -1822,7 +1823,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
                                             $ammount = $fortynorVal;
 
-                                        }else if ($fortyfiveVal != 0){
+                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                             if($statusexistfortyfive == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValforfive;
@@ -1832,7 +1833,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
 
 
-                                        if($ammount != 0){
+                                        if($ammount != 0 || $ammount != 0.0){
 
                                             $globalChargeBLArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                 'surcharge_id'       						=> $surchargeVal,
@@ -1899,26 +1900,26 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     }
                                     else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_TON') == 0){
                                         //per_shipment
-                                        if($twentyVal != 0){
+                                        if($twentyVal != 0 || $twentyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValtwen;
                                             } 
                                             $ammount = $twentyVal;
 
-                                        } else if ($fortyVal != 0){
+                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValfor;
                                             } 
                                             $ammount = $fortyVal;
 
-                                        }else if ($fortyhcVal != 0){
+                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                             if($requestobj[$statustypecurren] == 2){
                                                 $currencyVal = $currencyValforHC;
                                             } 
                                             $ammount = $fortyhcVal;
 
-                                        }else if ($fortynorVal != 0){
+                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
                                             if($statusexistfortynor == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValfornor;
@@ -1926,7 +1927,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
                                             $ammount = $fortynorVal;
 
-                                        }else if ($fortyfiveVal != 0){
+                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                             if($statusexistfortyfive == 1){
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValforfive;
@@ -1936,7 +1937,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
 
 
-                                        if($ammount != 0){
+                                        if($ammount != 0 || $ammount != 0.0){
                                             $globalChargeTONArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                 'surcharge_id'       						=> $surchargeVal,
                                                 'typedestiny_id'     						=> $typedestinyVal,
@@ -2191,7 +2192,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValtwen;
                                                         }
 
-                                                        if($twentyArr[0] != 0){
+                                                        if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2223,7 +2224,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValtwen;
                                                         }
 
-                                                        if($twentyArr[0] != 0){
+                                                        if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
 
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
@@ -2254,7 +2255,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValfor;
                                                         }
 
-                                                        if($fortyArr[0] != 0){
+                                                        if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2284,7 +2285,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValforHC;
                                                         }
 
-                                                        if($fortyhcArr[0] != 0){
+                                                        if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0){
 
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
@@ -2315,7 +2316,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValfornor;
                                                         }
 
-                                                        if($fortyhcArr[0] != 0){
+                                                        if($fortynorVal != 0 || $fortynorVal != 0.0){
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2344,7 +2345,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             $currencyVal = $currencyValforfive;
                                                         }
 
-                                                        if($fortyhcArr[0] != 0){
+                                                        if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                                             FailedGlobalcharge::create([
                                                                 'surcharge'       	=> $surchargeVal,
                                                                 'origin'          	=> $originVal,
@@ -2413,7 +2414,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     if($requestobj[$statustypecurren] == 2){
                                                         $currencyVal = $currencyValtwen;
                                                     }
-                                                    if($twentyArr[0] != 0){
+                                                    if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2444,7 +2445,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
 
-                                                    if($twentyArr[0] != 0){
+                                                    if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2472,7 +2473,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValfor;
                                                     }
 
-                                                    if($fortyArr[0] != 0){
+                                                    if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2502,7 +2503,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValforHC;
                                                     }
 
-                                                    if($fortyhcArr[0] != 0){
+                                                    if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2531,7 +2532,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValfornor;
                                                     }
 
-                                                    if($fortyhcArr[0] != 0){
+                                                    if($fortynorVal != 0 || $fortynorVal != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2561,7 +2562,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValforfive;
                                                     }
 
-                                                    if($fortyhcArr[0] != 0){
+                                                    if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2585,7 +2586,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
 
                                         } 
-                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0 
+                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 
                                                  || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
                                             // es una sola carga Per Shipment
 
@@ -2621,26 +2622,26 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
 
-                                                    if($twentyVal != 0){
+                                                    if($twentyVal != 0 || $twentyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValtwen;
                                                         } 
                                                         $ammount = $twentyVal;
 
-                                                    } else if ($fortyVal != 0){
+                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValfor;
                                                         } 
                                                         $ammount = $fortyVal;
 
-                                                    }else if($fortyhcVal != 0){
+                                                    }else if($fortyhcVal != 0 ||$fortyhcVal != 0.0){
 
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValforHC;
                                                         } 
                                                         $ammount = $fortyhcVal;
 
-                                                    }else if($fortynorVal != 0){
+                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
 
                                                         if($statusexistfortynor == 1){
                                                             if($requestobj[$statustypecurren] == 2){
@@ -2658,7 +2659,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $ammount = $fortyfiveVal;
                                                     }
 
-                                                    if($ammount != 0){
+                                                    if($ammount != 0 || $ammount != 0.0){
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
                                                             'origin'          	=> $originVal,
@@ -2706,7 +2707,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValtwen;
                                                 }
-                                                if($twentyArr[0] != 0){
+                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -2764,26 +2765,26 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
 
-                                                    if($twentyVal != 0){
+                                                    if($twentyVal != 0 || $twentyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValtwen;
                                                         } 
                                                         $ammount = $twentyVal;
 
-                                                    } else if ($fortyVal != 0){
+                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValfor;
                                                         } 
                                                         $ammount = $fortyVal;
 
-                                                    }else if($fortyhcVal != 0){
+                                                    }else if($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValforHC;
                                                         } 
                                                         $ammount = $fortyhcVal;
 
-                                                    }else if($fortynorVal != 0){
+                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
 
                                                         if($statusexistfortynor == 1){
                                                             if($requestobj[$statustypecurren] == 2){
@@ -2801,7 +2802,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $ammount = $fortyfiveVal;
                                                     }
 
-                                                    if($ammount != 0){
+                                                    if($ammount != 0 || $ammount != 0.0){
 
                                                         FailedGlobalcharge::create([
                                                             'surcharge'       	=> $surchargeVal,
@@ -2850,7 +2851,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValtwen;
                                                 }
-                                                if($twentyArr[0] != 0){
+                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -2908,26 +2909,26 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
 
-                                                    if($twentyVal != 0){
+                                                    if($twentyVal != 0 || $twentyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValtwen;
                                                         } 
                                                         $ammount = $twentyVal;
 
-                                                    } else if ($fortyVal != 0){
+                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValfor;
                                                         } 
                                                         $ammount = $fortyVal;
 
-                                                    }else if($fortyhcVal != 0){
+                                                    }else if($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
                                                         if($requestobj[$statustypecurren] == 2){
                                                             $currencyVal = $currencyValforHC;
                                                         } 
                                                         $ammount = $fortyhcVal;
 
-                                                    }else if($fortynorVal != 0){
+                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
 
                                                         if($statusexistfortynor == 1){
                                                             if($requestobj[$statustypecurren] == 2){
@@ -2945,7 +2946,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $ammount = $fortyfiveVal;
                                                     }
 
-                                                    if($ammount != 0){
+                                                    if($ammount != 0 || $ammount != 0.0){
                                                         FailSurCharge::create([
                                                             'surcharge_id'       => $surchargeVal,
                                                             'port_orig'          => $originVal,
@@ -2988,7 +2989,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 if($requestobj[$statustypecurren] == 2){
                                                     $currencyVal = $currencyValtwen;
                                                 }
-                                                if($twentyArr[0] != 0){
+                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3283,7 +3284,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValtwen;
                                                 }
 
-                                                if($twentyArr[0] != 0){
+                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3315,7 +3316,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValtwen;
                                                 }
 
-                                                if($twentyArr[0] != 0){
+                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3344,7 +3345,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValfor;
                                                 }
 
-                                                if($fortyArr[0] != 0){
+                                                if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3373,7 +3374,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValforHC;
                                                 }
 
-                                                if($fortyhcArr[0] != 0){
+                                                if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3402,7 +3403,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValfornor;
                                                 }
 
-                                                if($fortyhcArr[0] != 0){
+                                                if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3431,7 +3432,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValforfive;
                                                 }
 
-                                                if($fortyhcArr[0] != 0){
+                                                if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
                                                     FailedGlobalcharge::create([
                                                         'surcharge'       	=> $surchargeVal,
                                                         'origin'          	=> $originVal,
@@ -3470,7 +3471,6 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
             });
-
 
         $nopalicaHs = Harbor::where('name','No Aplica')->get();
         $nopalicaCs = Country::where('name','No Aplica')->get();

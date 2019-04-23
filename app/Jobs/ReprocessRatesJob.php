@@ -129,35 +129,35 @@ class ReprocessRatesJob implements ShouldQueue
 
                     if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
                         $twentyExiBol = true;
-                        $twentyVal   = (int)$twentyArr[0];
+                        $twentyVal   = floatval($twentyArr[0]);
                     }
 
                     //----------------- 40' -----------------------------------------------------------------
 
                     if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
                         $fortyExiBol = true;
-                        $fortyVal   = (int)$fortyArr[0];
+                        $fortyVal   = floatval($fortyArr[0]);
                     }
 
                     //----------------- 40'HC --------------------------------------------------------------
 
                     if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
                         $fortyhcExiBol = true;
-                        $fortyhcVal   = (int)$fortyhcArr[0];
+                        $fortyhcVal   = floatval($fortyhcArr[0]);
                     }
 
                     //----------------- 40'NOR -------------------------------------------------------------
 
                     if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
                         $fortynorExiBol = true;
-                        $fortynorVal   = (int)$fortynorArr[0];
+                        $fortynorVal   = floatval($fortynorArr[0]);
                     }
 
                     //----------------- 45' ----------------------------------------------------------------
 
                     if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
                         $fortyfiveExiBol = true;
-                        $fortyfiveVal   = (int)$fortyfiveArr[0];
+                        $fortyfiveVal   = floatval($fortyfiveArr[0]);
                     }
 
                     if($twentyVal == 0

@@ -18,6 +18,15 @@ class TermAndCondition extends Model
     public function harbor(){
         return $this->HasManyThrough('App\Harbor','App\TermsPort','term_id','id','id','port_id');
     }
+    
+    public function carrier(){
+        return $this->HasManyThrough('App\Carrier','App\TermConditionCarrier','termcondition_id','id','id','carrier_id');
+    }
+    
+    public function TermConditioncarriers(){
+        return $this->HasMany('App\TermConditionCarrier','termcondition_id');
+    }
+    
     /*public function ports(){
         return $this->belongsTo('App\Harbor', 'port');
     }*/

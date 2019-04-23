@@ -15,6 +15,11 @@
     {!! Form::select('ports[]',$harbors,@$selected_harbors, 
     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
 </div>
+<div class="form-group m-form__group">
+    {!! Form::label('Carriers', 'Carriers') !!}
+    {!! Form::select('carriers[]',$carriers,@$selected_carriers, 
+    ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
+</div>
 
 <div class="form-group m-form__group">
     {!! Form::label('Import', 'Import') !!}
