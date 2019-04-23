@@ -120,14 +120,14 @@ class ReprocesarRatesLclJob implements ShouldQueue
 
                 if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
                     $wmExiBol = true;
-                    $wmVal    = (int)$wmArr[0];
+                    $wmVal    = floatval($wmArr[0]);
                 }
 
                 //----------------- 40' -----------------------------------------------------------------
 
                 if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
                     $minimunExiBol = true;
-                    $minimunVal    = (int)$minimunArr[0];
+                    $minimunVal    = floatval($minimunArr[0]);
                 }
 
                 if($wmVal == 0 && $minimunVal == 0){
