@@ -964,6 +964,7 @@ class QuoteV2Controller extends Controller
                     // FIN CALCULO MARKUPS 
                     $sub_20 = number_format($sub_20, 2, '.', '');
                     $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
+                    $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
                     $arrayInland20 = array_merge($markupI20,$arrayInland20);
                     $inlandDetails[] = $arrayInland20;
                   }
@@ -1019,7 +1020,7 @@ class QuoteV2Controller extends Controller
       }//foreach inlands
       if(!empty($data)){
         $collection = Collection::make($data);
-        dd($collection); //  completo
+        //dd($collection); //  completo
         $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
           return $test;
