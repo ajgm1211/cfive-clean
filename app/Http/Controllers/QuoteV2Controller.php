@@ -741,6 +741,7 @@ class QuoteV2Controller extends Controller
     //Collection Equipment Dinamico
     $equipmentHides = $this->hideContainer($equipment);
     //Colecciones 
+    $inlandDestiny = new collection();
 
     //Markups Freight
     $freighPercentage = 0;
@@ -1747,8 +1748,13 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('tot40hcD', number_format($tot_40hc_D, 2, '.', ''));
       $data->setAttribute('tot40norD', number_format($tot_40nor_D, 2, '.', ''));
       $data->setAttribute('tot45D', number_format($tot_45_D, 2, '.', ''));
+      // INLANDS
+      $data->setAttribute('inlandDestiny',$inlandDestiny);
+
 
     }
+    
+    //dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
