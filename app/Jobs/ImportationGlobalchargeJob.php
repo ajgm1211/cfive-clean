@@ -806,7 +806,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                 //------------------ CALCULATION TYPE ---------------------------------------------------
                                 $calculationvalvaration = '';
-                                if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
+                                if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
                                     $calculationvalvaration = 'Per Shipment';
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
                                     $calculationvalvaration = 'Per Container';
@@ -1690,7 +1690,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                         }
 
                                     } 
-                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0){
+                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
                                         //per_shipment
                                         if($twentyVal != 0 || $twentyVal != 0.0){
                                             if($requestobj[$statustypecurren] == 2){
@@ -2586,7 +2586,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
 
                                         } 
-                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_DOC') == 0 
+                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 
                                                  || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
                                             // es una sola carga Per Shipment
 
