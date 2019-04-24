@@ -201,11 +201,18 @@ class QuoteV2Controller extends Controller
 
   public function updateQuoteCharges(Request $request)
   {
-    //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
-    DB::table('charges')
+    /*DB::table('charges')
     ->where('id', $request->pk)
-    ->update([$request->name => $request->value]);
+    ->update([$request->name => $request->value]);*/
 
+    $charge=Charge::find($request->pk);
+    $array = json_decode($charge->amount, true);
+    $name = explode("->", $request->name);
+    $field = (string) $name[0];
+    $array[$name[1]]=$request->value;  
+    $array = json_encode($array);
+    $charge->$field=$array;
+    $charge->update();
     return response()->json(['success'=>'done']);
   }
 
@@ -258,12 +265,12 @@ class QuoteV2Controller extends Controller
 
   public function updateRemarks(Request $request,$id)
   {
-    $quote=QuoteV2::find($id);
+    $rate=AutomaticRate::find($id);
 
-    $quote->remarks=$request->remarks;
-    $quote->update();
+    $rate->remarks=$request->remarks;
+    $rate->update();
 
-    return response()->json(['message'=>'Ok','quote'=>$quote]);
+    return response()->json(['message'=>'Ok','rate'=>$rate]);
   }
 
   public function duplicate(Request $request, $id){

@@ -353,24 +353,24 @@ $(document).on('click', '#update-terms', function () {
 });
 
 //Edit remarks
-$(document).on('click', '#edit-remarks', function () {
-    $(".remarks_span").attr('hidden','true');
-    $(".remarks_textarea").removeAttr('hidden');
-    $("#update_remarks").removeAttr('hidden');
-});
+function edit_remark($span,$textarea,$update_box){
+    $('.'+$span).attr('hidden','true');
+    $('.'+$textarea).removeAttr('hidden');
+    $('.'+$update_box).removeAttr('hidden');
+}
 
-$(document).on('click', '#cancel-remarks', function () {
-    $(".remarks_span").removeAttr('hidden');
-    $(".remarks_textarea").attr('hidden','true');
-    $("#update_remarks").attr('hidden','true');
-});
+function cancel_update($span,$textarea,$update_box){
+    $('.'+$span).removeAttr('hidden');
+    $('.'+$textarea).attr('hidden','true');
+    $('.'+$update_box).attr('hidden','true');
+}
 
-$(document).on('click', '#update-remarks', function () {
+function update_remark($id,$content,$v){
     var id=$(".id").val();
-    var remarks = tinymce.get("remarks").getContent();
+    var remarks = tinymce.get($content).getContent();
     $.ajax({
         type: 'POST',
-        url: '/v2/quotes/update/remarks/'+id,
+        url: '/v2/quotes/update/remarks/'+$id,
         data: {
             'remarks': remarks,
         },
@@ -382,14 +382,14 @@ $(document).on('click', '#update-remarks', function () {
                     'success'
                     )
 
-                $(".remarks_span").html(data.quote['remarks']);
-                $(".remarks_span").removeAttr('hidden');
-                $(".remarks_textarea").attr('hidden','true');
-                $("#update_remarks").attr('hidden','true');
+                $(".remarks_span_"+$v).html(data.rate['remarks']);
+                $(".remarks_span_"+$v).removeAttr('hidden');
+                $(".remarks_textarea_"+$v).attr('hidden','true');
+                $(".update_remarks_"+$v).attr('hidden','true');
             }
         }
     });
-});
+};
 
 //Edit main quotes details
 $(document).on('click', '#edit-quote', function () {
@@ -733,7 +733,7 @@ $(document).on('click', '#send-pdf-quotev2', function () {
 
 //Show and hide pdf layouts options
 $(document).on('change', '#show_hide_select', function () {
-    if($('#show_hide_select').val()==2){
+    if($('#show_hide_select').val()=='total in'){
         $(".group_origin_charges").addClass('hide');
         $(".group_destination_charges").addClass('hide');
     }else{
