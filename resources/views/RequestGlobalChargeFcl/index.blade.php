@@ -93,7 +93,6 @@
                                                 <th >Contract Name</th>
                                                 <th >Contract Validation</th>
                                                 <th >Date</th>
-                                                <th >Last Management</th>
                                                 <th >User</th>
                                                 <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
@@ -229,7 +228,6 @@
                     { data: 'name', name: 'name' },
                     { data: 'validation', name: 'validation' },
                     { data: 'date', name: 'date' },
-                    { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
                     { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },

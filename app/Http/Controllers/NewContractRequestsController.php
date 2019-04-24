@@ -17,6 +17,7 @@ use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\Mail\NewRequestToAdminMail;
+use App\Jobs\SendEmailRequestFclJob;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 
@@ -168,7 +169,7 @@ class NewContractRequestsController extends Controller
     {
         //dd($request->all());
     }
-    
+
     public function store2(Request $request)
     {
         //dd($request->all());
@@ -242,14 +243,14 @@ class NewContractRequestsController extends Controller
             $Ncontract->type            = $type;
             $Ncontract->data            = $data;
             $Ncontract->save();
-            
+
             foreach($request->carrierM as $carrierVal){
                 RequetsCarrierFcl::create([
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id
                 ]);
             }
-            
+
             ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -275,7 +276,7 @@ class NewContractRequestsController extends Controller
             return redirect()->route('contracts.index');
         }
     }
-    
+
     //Para descargar el archivo
     public function show($id)
     {
@@ -456,33 +457,24 @@ class NewContractRequestsController extends Controller
                     $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
                 }
 
-                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
-                $message = 'The request was processed N°: ' . $Ncontract->id;
-                foreach ($users as $user) {
+                if($Ncontract->sentemail == false){
+                    $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                    $message = 'The request was processed N°: ' . $Ncontract->id;
+                    foreach ($users as $user) {
 
-                    $user->notify(new N_general(\Auth::user(),$message));
-                }
-
-                $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
-                foreach ($usersCompa as $userCmp) {
-                    if($userCmp->id != $Ncontract->user_id){
-                        \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
-                                                                               $Ncontract->toArray()));
+                        $user->notify(new N_general(\Auth::user(),$message));
                     }
+
+                    // Intercom SEARCH
+                    $event = new  EventIntercom();
+                    $event->event_requestDone($Ncontract->user_id);
+
+                    $usercreador = User::find($Ncontract->user_id);
+                    $message = "The importation ".$Ncontract->id." was completed";
+                    $usercreador->notify(new SlackNotification($message));
+                    SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);
+
                 }
-
-                // Intercom SEARCH
-                $event = new  EventIntercom();
-                $event->event_requestDone($Ncontract->user_id);
-
-
-                $usercreador = User::find($Ncontract->user_id);
-                $message = "The importation ".$Ncontract->id." was completed";
-                $usercreador->notify(new SlackNotification($message));
-
-                \Mail::to($usercreador->email)->send(new RequestToUserMail($usercreador->toArray(),
-                                                                           $Ncontract->toArray()));
-
             }
 
             $Ncontract->save();

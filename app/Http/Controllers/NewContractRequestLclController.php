@@ -15,6 +15,7 @@ use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\Mail\RequestLclToUserMail;
+use App\Jobs\SendEmailRequestLclJob;
 use App\Mail\NewRequestLclToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
@@ -350,7 +351,7 @@ class NewContractRequestLclController extends Controller
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
             $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-            
+
 
             if($Ncontract->status == 'Processing'){
                 if($Ncontract->time_star_one == false){
@@ -367,31 +368,22 @@ class NewContractRequestLclController extends Controller
                     $fechaStar = Carbon::parse($Ncontract->time_star);
                     $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
                 }
+                if($Ncontract->sentemail == false){
+                    $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                    $message = 'The request was processed N°: ' . $Ncontract->id;
+                    foreach ($users as $user) {
 
-                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
-                $message = 'The request was processed N°: ' . $Ncontract->id;
-                foreach ($users as $user) {
-
-                    $user->notify(new N_general(\Auth::user(),$message));
-                }
-
-                $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
-                foreach ($usersCompa as $userCmp) {
-                    if($userCmp->id != $Ncontract->user_id){
-                        \Mail::to($userCmp->email)->send(new RequestLclToUserMail($userCmp->toArray(),
-                                                                                  $Ncontract->toArray()));
+                        $user->notify(new N_general(\Auth::user(),$message));
                     }
+                    
+                    $usercreador = User::find($Ncontract->user_id);
+                    $message = "The importation ".$Ncontract->id." was completed";
+                    $usercreador->notify(new SlackNotification($message));
+                    SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id);
+
                 }
-
-                $usercreador = User::find($Ncontract->user_id);
-                $message = "The importation ".$Ncontract->id." was completed";
-                $usercreador->notify(new SlackNotification($message));
-
-                \Mail::to($usercreador->email)->send(new RequestLclToUserMail($usercreador->toArray(),
-                                                                              $Ncontract->toArray()));
-
             }
-            
+
             $Ncontract->save();
             return response()->json($data=['status'=>1,'data'=>$status]);
         } catch (\Exception $e){
