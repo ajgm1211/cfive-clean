@@ -7,45 +7,65 @@
     <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
 </head>
 <body style="background-color: white; font-size: 11px;">
-<header class="clearfix">
-    <div id="logo">
-        @if($user->companyUser->logo!='')
+    <header class="clearfix">
+
+        <div id="logo">
+            @if($user->companyUser->logo!='')
             <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
-        @endif
-    </div>
-    <div id="company">
-        <div><span class="color-title"><b>Quotation Id:</b></span> <span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->quote_id:$quote->custom_quote_id}}</b></span></div>
-        <div><span class="color-title"><b>Date of issue:</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}</div>
-        @if($quote->validity_start!=''&&$quote->validity_end!='')
-            <div><span class="color-title"><b>Validity: </b></span> {{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}</div>
-        @endif
-    </div>
-</header>
-<main>
-    <div id="details" class="clearfix details">
-        <div class="client">
-            <p><b>From:</b></p>
-            <span id="destination_input" style="line-height: 0.5">
-                <p>{{$user->name}} {{$user->lastname}}</p>
-                <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
-                <p>{{$user->companyUser->address}}</p>
-                <p>{{$user->phone}}</p>
-                <p>{{$user->email}}</p>
-            </span>
+            @endif
         </div>
-        <div class="company text-right" style="float: right; width: 350px;">
-            <p><b>To:</b></p>
-            <span id="destination_input" style="line-height: 0.5">
-                <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
-                <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
-                <p>{{$quote->company->address}}</p>
-                <p>{{$quote->contact->phone}}</p>
-                <p>{{$quote->contact->email}}</p>
-            </span>
+        <div id="company">
+            <div>
+                <span class="color-title"><b>@if($quote->pdf_option->language=='English')Quotation Id:@elseif($quote->pdf_option->language=='Spanish') Cotización: @else Numero de cotação: @endif</b></span> 
+                <span style="color: #20A7EE"><b>#{{$quote->custom_id == '' ? $quote->quote_id:$quote->custom_quote_id}}</b></span>
+            </div>
+            <div>
+                <span class="color-title"><b>@if($quote->pdf_option->language=='English')Date of issue:@elseif($quote->pdf_option->language=='Spanish') Fecha creación: @else Data de emissão: @endif</b></span> {{date_format($quote->created_at, 'M d, Y H:i')}}
+            </div>
+            @if($quote->validity_start!=''&&$quote->validity_end!='')
+            <div>
+                <span class="color-title">
+                    <b>@if($quote->pdf_option->language=='English')Validity:@elseif($quote->pdf_option->language=='Spanish') Validez: @else Validade: @endif </b>
+                </span> 
+                {{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}
+            </div>
+            @endif
         </div>
-    </div>
-    <br>
-    <div class="clearfix">
+    </header>
+    <main>
+        <div id="details" class="clearfix details">
+            <div class="client">
+                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>From:</b></p>
+                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>De:</b></p>
+                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>A partir de:</b></p>
+                <span id="destination_input" style="line-height: 0.5">
+                    <p>{{$user->name}} {{$user->lastname}}</p>
+                    <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p>{{$user->companyUser->address}}</p>
+                    <p>{{$user->phone}}</p>
+                    <p>{{$user->email}}</p>
+                </span>
+            </div>
+            <div class="company text-right" style="float: right; width: 350px;">
+                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>To:</b></p>
+                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Para:</b></p>
+                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
+                <span id="destination_input" style="line-height: 0.5">
+                    @if($quote->pdf_option->show_logo==1)
+                    @if($quote->company->logo!='')
+                    <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
+                    @endif
+                    @endif
+                    <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
+                    <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
+                    <p>{{$quote->company->address}}</p>
+                    <p>{{$quote->contact->phone}}</p>
+                    <p>{{$quote->contact->email}}</p>
+                </span>
+            </div>
+        </div>
+        <br>
+        <div class="clearfix">
         <!--<div class="">
             <table class="" style="width: 45%; float: left;">
                 <thead class="title-quote text-center header-table">
@@ -100,31 +120,89 @@
         </div>-->
     </div>
     <br>
-    <table border="0" cellspacing="1" cellpadding="1">
+    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total estimated costs</p>
+    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos totales estimados</p>
+    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Custos totais estimados</p>
+    <br>
+    <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
         <thead class="title-quote text-center header-table">
-        <tr >
-            <th class="unit"><b>POL</b></th>
-            <th class="unit"><b>POD</b></th>
-            <th class="unit"><b>Carrier</b></th>
-            <th class="unit"><b>20'</b></th>
-            <th class="unit"><b>40' </b></th>
-            <th class="unit"><b>40' HC</b></th>
-            <th class="unit"><b>Currency</b></th>
-        </tr>
+            <tr >
+                <th class="unit"><b>POL</b></th>
+                <th class="unit"><b>POD</b></th>
+                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                <th {{ $equipmentHides['20'] }}><b>20'</b></th>
+                <th {{ $equipmentHides['40'] }}><b>40'</b></th>
+                <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
+                <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                <th {{ $equipmentHides['45'] }}><b>45'</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+            </tr>
         </thead>
         <tbody>
-        <tr class="text-center color-table">
-            <td class="">Barcelona, ESBCN</td>
-            <td class="">Shanghai, CNSHA</td>
-            <td class="">Maersk</td>
-            <td class="">1000</td>
-            <td class="">1000</td>
-            <td class="">1000</td>
-            <td class="">USD</td>
-        </tr>
+            $sum20=0;
+            @foreach($rates as $rate)
+                <?php 
+                    $sum20= 0;
+                    $sum40= 0;
+                    $sum40hc= 0;
+                    $sum40nor= 0;
+                    $sum45= 0;
+                ?>
+                @foreach($rate->charge as $value)
+
+                    <?php 
+                        $array_amounts = json_decode($value->amount,true);
+                        $array_markups = json_decode($value->markups,true);
+                        if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                            $amount20=$array_amounts['c20'];
+                            $markup20=$array_markups['c20'];
+                            $total20=$amount20+$markup20;
+                            $sum20 += $total20;
+                        }
+                        if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                            $amount40=$array_amounts['c40'];
+                            $markup40=$array_markups['c40'];
+                            $total40=$amount40+$markup40;
+                            $sum40 += $total40;
+                        }
+                        if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                            $amount40hc=$array_amounts['c40hc'];
+                            $markup40hc=$array_markups['c40hc'];
+                            $total40hc=$amount40hc+$markup40hc;
+                            $sum40hc += $total40hc;
+                        }
+                        if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                            $amount40nor=$array_amounts['c40nor'];
+                            $markup40nor=$array_markups['c40nor'];
+                            $total40nor=$amount40nor+$markup40nor;
+                            $sum40nor += $total40nor;
+                        }
+                        if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                            $amount45=$array_amounts['c45'];
+                            $markup45=$array_markups['c45'];
+                            $total45=$amount45+$markup45;
+                            $sum45 += $total45;
+                        }
+                    ?>
+                @endforeach
+                <tr class="text-center color-table">
+                    <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
+                    <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
+                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
+                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
+                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
+                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
+                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
+                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                    <td class="">{{$rate->currency->alphacode}}</td>
+                </tr>
+            @endforeach
         </tbody>
         <tfoot>
-    </table>
+        </table>
+    <!--
     <br>
     <p class="title">Local charges - Barcelona, ESBCN</p>
     <br>
@@ -199,36 +277,7 @@
         </tr>
         </tfoot>
     </table>
-    <br>
-    <p class="title">Total estimated costs</p>
-    <br>
-    <table border="0" cellspacing="1" cellpadding="1">
-        <thead class="title-quote text-center header-table">
-        <tr >
-            <th class="unit"><b>POL</b></th>
-            <th class="unit"><b>POD</b></th>
-            <th class="unit"><b>Carrier</b></th>
-            <th class="unit"><b>20'</b></th>
-            <th class="unit"><b>40' </b></th>
-            <th class="unit"><b>40' HC</b></th>
-            <th class="unit"><b>45'</b></th>
-            <th class="unit"><b>Currency</b></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="text-center color-table">
-            <td class="">Barcelona, ESBCN</td>
-            <td class="">Shanghai, CNSHA</td>
-            <td class="">Maersk</td>
-            <td class="">1010</td>
-            <td class="">1040</td>
-            <td class="">1040</td>
-            <td class="">1040</td>
-            <td class="">EUR</td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
+-->
 </main>
 
 </body>
