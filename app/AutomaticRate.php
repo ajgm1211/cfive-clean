@@ -12,7 +12,7 @@ class AutomaticRate extends Model
         'total' => 'array',
     ];
 
-    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total'];
+    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','amount->c20','amount->c40'];
 
     public function quote()
     {
