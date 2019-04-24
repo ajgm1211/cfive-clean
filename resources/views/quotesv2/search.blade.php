@@ -20,7 +20,6 @@
         <div class="tab-content">
           <div>
             <div class="row">
-
               <div class="col-lg-2">
                 <label>Quote Type</label>
                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['class'=>'m-select2-general form-control']) }}
@@ -402,7 +401,7 @@
             <div class="row" id='inland{{$loop->iteration}}'  hidden='true' >
               <div class="col-lg-12">
                 <div class="row">
-                  <span class="darkblue cabezeras">Inland</span><br><br>
+                  <span class="darkblue cabezeras">Inland Origin</span><br><br>
                 </div>
                 <div class="row bg-light">
                   <div class="col-lg-3"><span class="portalphacode">Provider</span></div>
@@ -418,23 +417,24 @@
 
                 <div class="row">
                   <div class="col-lg-3">{{ $inlandDestiny['providerName']  }}</div>
-                  <div class="col-lg-3">{{ $inlandDestiny['km']  }}</div>
-                  <div class="col-lg-1">
-                    {{ $inlandDestiny['inlandDetails']['i20']['sub_in']  }}
-                      <i class="la la-caret-right"></i>              
+                  <div class="col-lg-3">{{ $inlandDestiny['km']  }} KM</div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}>
+                    {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}
+                    <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}        
                   </div>  
-                  <div class="col-lg-1">
-                      {{ $inlandDestiny['inlandDetails']['i40']['sub_in']  }}
-                      <i class="la la-caret-right"></i>              
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}>
+                    {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
+                    <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}             
                   </div> 
-                  <div class="col-lg-1">
-                      <i class="la la-caret-right"></i>              
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>
+                    {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
+                    <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     
                   </div> 
-                  <div class="col-lg-1">
-                      <i class="la la-caret-right"></i>              
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>
+                    N/A
                   </div> 
-                  <div class="col-lg-1">
-                      <i class="la la-caret-right"></i>              
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}>
+                    N/A
                   </div> 
 
                   <div class="col-lg-1" ><span class="">USD</span></div>
@@ -445,35 +445,25 @@
 
                 <div class="row bg-light">
                   <div class="col-lg-6 col-lg-offset-" ><span class="portalphacode">Subtotal Inlands Charges</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
-                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['20'] }}><span class="portalphacode">0.00 </span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="portalphacode">0.00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="portalphacode">0.00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="portalphacode">0.00</span></div>
+                  <div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="portalphacode">0.00</span></div>
                   <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
                 </div>
-
-
-
                 <br><br>
                 <div class="row"><div class="col-lg-12"><hr></div></div>
                 <br><br>
-
               </div>
             </div>
             @endif
-
-
-
-
             @endforeach
-
-          </div>      
+          </div>     
         </div>
       </div>
     </div>
     <div class="col-sm-1"></div>
-
   </div>
 
   {!! Form::close() !!}
