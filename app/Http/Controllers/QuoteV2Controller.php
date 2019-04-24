@@ -19,6 +19,7 @@ use App\Quote;
 use App\QuoteV2;
 use App\Surcharge;
 use App\User;
+use App\PdfOption;
 use EventIntercom;
 use App\Jobs\SendQuotes;
 use App\SendQuote;
@@ -214,6 +215,25 @@ class QuoteV2Controller extends Controller
     $charge->$field=$array;
     $charge->update();
     return response()->json(['success'=>'done']);
+  }
+
+  public function updatePdfLanguage(Request $request){
+    $quote = PdfOption::where('quote_id',$request->id)->first();
+    $quote->language=$request->language;
+    $quote->update();
+    return response()->json(['message'=>'Ok']);
+  }
+
+  public function updateShowCarrier(Request $request){
+    $quote = PdfOption::where('quote_id',$request->id)->first();
+    if($request->value==''){
+      $quote->show_carrier=0;  
+    }else{
+      $quote->show_carrier=$request->value;
+    }
+    $quote->show_carrier=$request->value;
+    $quote->update();
+    return response()->json(['message'=>'Ok']);
   }
 
   public function update(Request $request,$id)
@@ -493,6 +513,32 @@ class QuoteV2Controller extends Controller
     $quote->status='Sent';
     $quote->update();
     return response()->json(['message' => 'Ok']);
+  }
+
+  public function pdf(Request $request,$id)
+  {
+    $id = obtenerRouteKey($id);
+    $quote = QuoteV2::findOrFail($id);
+    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $contact_email = Contact::find($quote->contact_id);
+    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $equipmentHides = $this->hideContainer($quote->equipment);
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $type=$company_user->type_pdf;
+      $ammounts_type=$company_user->pdf_ammounts;
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+    return $pdf->stream('quote');
   }
 
   // Store

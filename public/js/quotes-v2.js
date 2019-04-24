@@ -731,6 +731,8 @@ $(document).on('click', '#send-pdf-quotev2', function () {
 }
 });
 
+/*** PDF ***/
+
 //Show and hide pdf layouts options
 $(document).on('change', '#show_hide_select', function () {
     if($('#show_hide_select').val()=='total in'){
@@ -740,6 +742,46 @@ $(document).on('change', '#show_hide_select', function () {
         $(".group_origin_charges").removeClass('hide');
         $(".group_destination_charges").removeClass('hide');
     }
+});
+
+//Update pdf language
+$(document).on('change', '#language', function () {
+    var id=$(this).attr('data-quote-id');
+    var language=$(this).val();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/language/update',
+        data:{"language":language,"id":id},
+        success: function(data) {
+            /*if(data.message=='Ok'){
+                swal(
+                'Done!',
+                'Your message has been sent.',
+                'success'
+                )
+            }*/
+        }
+    });
+});
+
+//Update carrier visibility
+$(document).on('change', '#show_carrier', function () {
+    var id=$(this).attr('data-quote-id');
+    var value=$(this).val();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/carrier/show/update',
+        data:{"value":value,"id":id},
+        success: function(data) {
+            /*if(data.message=='Ok'){
+                swal(
+                'Done!',
+                'Your message has been sent.',
+                'success'
+                )
+            }*/
+        }
+    });
 });
 
 //Custom functions
