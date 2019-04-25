@@ -217,6 +217,13 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'done']);
   }
 
+  public function updateShowType(Request $request){
+    $quote = PdfOption::where('quote_id',$request->id)->first();
+    $quote->show_type=$request->show_type;
+    $quote->update();
+    return response()->json(['message'=>'Ok']);
+  }
+
   public function updatePdfLanguage(Request $request){
     $quote = PdfOption::where('quote_id',$request->id)->first();
     $quote->language=$request->language;
@@ -226,12 +233,14 @@ class QuoteV2Controller extends Controller
 
   public function updateShowCarrier(Request $request){
     $quote = PdfOption::where('quote_id',$request->id)->first();
-    if($request->value==''){
-      $quote->show_carrier=0;  
-    }else{
-      $quote->show_carrier=$request->value;
-    }
     $quote->show_carrier=$request->value;
+    $quote->update();
+    return response()->json(['message'=>'Ok']);
+  }
+
+  public function updateShowLogo(Request $request){
+    $quote = PdfOption::where('quote_id',$request->id)->first();
+    $quote->show_logo=$request->value;
     $quote->update();
     return response()->json(['message'=>'Ok']);
   }

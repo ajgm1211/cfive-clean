@@ -186,17 +186,62 @@
                             $sum45 += $total45;
                         }
                     ?>
+                    <?php 
+                        $inland20= 0;
+                        $inland40= 0;
+                        $inland40hc= 0;
+                        $inland40nor= 0;
+                        $inland45= 0;
+                    ?>
+                    @if(!$rate->inland->isEmpty())
+                        @foreach($rate->inland as $item)
+                        <?php 
+                            $arr_amounts = json_decode($item->rate,true);
+                            $arr_markups = json_decode($item->markup,true);
+                            if(isset($arr_amounts['c20']) && isset($arr_markups['c20'])){
+                                $amount_inland20=$arr_amounts['c20'];
+                                $markup_inland20=$arr_markups['c20'];
+                                $total_inland20=$amount_inland20+$markup_inland20;
+                                $inland20 += $total_inland20;
+                            }
+                            if(isset($arr_amounts['c40']) && isset($arr_markups['c40'])){
+                                $amount_inland40=$arr_amounts['c40'];
+                                $markup_inland40=$arr_markups['c40'];
+                                $total_inland40=$amount_inland40+$markup_inland40;
+                                $inland40 += $total_inland40;
+                            }
+                            if(isset($arr_amounts['c40hc']) && isset($arr_markups['c40hc'])){
+                                $amount_inland40hc=$arr_amounts['c40hc'];
+                                $markup_inland40hc=$arr_markups['c40hc'];
+                                $total_inland40hc=$amount_inland40hc+$markup_inland40hc;
+                                $inland40hc += $total_inland40hc;
+                            }
+                            if(isset($arr_amounts['c40nor']) && isset($arr_markups['c40nor'])){
+                                $amount_inland40nor=$arr_amounts['c40nor'];
+                                $markup_inland40nor=$arr_markups['c40nor'];
+                                $total_inland40nor=$amount_inland40nor+$markup4_inland40nor;
+                                $inland40nor += $total_inland40nor;
+                            }
+                            if(isset($arr_amounts['c45']) && isset($arr_markups['c45'])){
+                                $amount_inland45=$arr_amounts['c45'];
+                                $markup_inland45=$arr_markups['c45'];
+                                $total_inland45=$amount_inland45+$markup_inland45;
+                                $inland45 += $total_inland45;
+                            }
+                        ?>
+                        @endforeach
+                    @endif
                 @endforeach
                 <tr class="text-center color-table">
                     <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
                     <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
-                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
-                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
-                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
-                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
-                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
-                    <td class="">{{$rate->currency->alphacode}}</td>
+                    <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
+                    <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
+                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
+                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
+                    <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
+                    <td >{{$rate->currency->alphacode}}</td>
                 </tr>
             @endforeach
         </tbody>
