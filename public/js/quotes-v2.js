@@ -8,6 +8,12 @@ $(document).ready(function() {
         }
     });
 
+    //Hide grouped options in pdf layout
+    if($('#show_hide_select').val()=='total in'){
+        $(".group_origin_charges").addClass('hide');
+        $(".group_destination_charges").addClass('hide');
+    }    
+
     //Show total amounts for freight
     var sum_freight=0;
     $(".total_freight_20").each(function(){
@@ -738,10 +744,34 @@ $(document).on('change', '#show_hide_select', function () {
     if($('#show_hide_select').val()=='total in'){
         $(".group_origin_charges").addClass('hide');
         $(".group_destination_charges").addClass('hide');
+        $(".show_logo").removeClass('col-md-1');
+        $(".show_logo").addClass('col-md-2');
+        $(".show_carrier").removeClass('col-md-1');
+        $(".show_carrier").addClass('col-md-2');
     }else{
         $(".group_origin_charges").removeClass('hide');
         $(".group_destination_charges").removeClass('hide');
+        $(".show_logo").removeClass('col-md-2');
+        $(".show_logo").addClass('col-md-1');
+        $(".show_carrier").removeClass('col-md-2');
+        $(".show_carrier").addClass('col-md-1');        
     }
+    var id=$(this).attr('data-quote-id');
+    var show_type=$(this).val();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/type/show/update',
+        data:{"show_type":show_type,"id":id},
+        success: function(data) {
+            /*if(data.message=='Ok'){
+                swal(
+                'Done!',
+                'Your message has been sent.',
+                'success'
+                )
+            }*/
+        }
+    });
 });
 
 //Update pdf language
@@ -767,19 +797,37 @@ $(document).on('change', '#language', function () {
 //Update carrier visibility
 $(document).on('change', '#show_carrier', function () {
     var id=$(this).attr('data-quote-id');
-    var value=$(this).val();
+    var value=0;
+    if($(this). prop("checked") == true){
+        value=1;
+    }
     $.ajax({
         type: 'POST',
         url: '/v2/quotes/carrier/show/update',
         data:{"value":value,"id":id},
         success: function(data) {
-            /*if(data.message=='Ok'){
-                swal(
-                'Done!',
-                'Your message has been sent.',
-                'success'
-                )
-            }*/
+            if(data.message=='Ok'){
+                //$(this).attr('checked', true).val(0);
+            }
+        }
+    });
+});
+
+//Update logo customer visibility
+$(document).on('change', '#show_logo', function () {
+    var id=$(this).attr('data-quote-id');
+    var value=0;
+    if($(this). prop("checked") == true){
+        value=1;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/logo/show/update',
+        data:{"value":value,"id":id},
+        success: function(data) {
+            if(data.message=='Ok'){
+                //$(this).attr('checked', true).val(0);
+            }
         }
     });
 });
