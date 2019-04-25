@@ -663,8 +663,8 @@ class QuoteV2Controller extends Controller
 
         }
 
-        $arregloMontoInDest =  json_encode($arregloMontoInDest);
-        $arregloMarkupsInDest =  json_encode($arregloMarkupsInDest);
+        $arregloMontoInDest =  json_encode($montoInDest);
+        $arregloMarkupsInDest =  json_encode($markupInDest);
         $inlandDest = new AutomaticInland();
         $inlandDest->quote_id= $quote->id;
         $inlandDest->provider =  $inlandDestiny->providerName;
