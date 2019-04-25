@@ -86,6 +86,7 @@ Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
     Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
+    Route::post('destroyArr', 'GlobalChargesController@destroyArr')->name('globalcharges.destroyArr');
     Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
     Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
     Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge']);
