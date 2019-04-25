@@ -415,8 +415,8 @@ class QuoteV2Controller extends Controller
       $destinyClass = 'col-md-2';
       $dataOrigDest = 'col-md-7';
     }
-   
- //$equipmentForm = json_decode($equipmentForm);
+
+    //$equipmentForm = json_decode($equipmentForm);
 
     foreach($equipmentForm as $val){
       if($val == '20'){
@@ -508,7 +508,9 @@ class QuoteV2Controller extends Controller
   public function store(Request $request){
 
 
+
     $form =  json_decode($request->input('form'));
+    $inlandD =  $request->input('inlandD');
     $info = $request->input('info');
 
 
@@ -639,12 +641,53 @@ class QuoteV2Controller extends Controller
         $chargeFreight->total =  $arregloMarkupsF;
         $chargeFreight->save();
       }
+      // INLANDS DESTINATION inlandDestiny inlandOrigin
+
+      foreach( $inlandD as $inlandDestiny){
+
+        $inlandDestiny = json_decode($inlandDestiny);
+        $arregloMontoInDest = array();
+        $arregloMarkupsInDest = array();
+        $montoInDest = array();
+        $markupInDest = array();
+        foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
+
+          if($inlandDetails->amount != 0){
+            $arregloMontoInDest = array($key => $inlandDetails->amount);
+            $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+          }
+          if($inlandDetails->markup != 0){
+            $arregloMarkupsInDest = array($key => $inlandDetails->markup);
+            $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
+          }
+
+        }
+
+        $arregloMontoInDest =  json_encode($arregloMontoInDest);
+        $arregloMarkupsInDest =  json_encode($arregloMarkupsInDest);
+        $inlandDest = new AutomaticInland();
+        $inlandDest->quote_id= $quote->id;
+        $inlandDest->provider =  $inlandDestiny->providerName;
+        $inlandDest->distance =  $inlandDestiny->km;
+        $inlandDest->contract = $info_D->contract->id;
+        $inlandDest->port_id = $inlandDestiny->port_id;
+        $inlandDest->type = $inlandDestiny->type;
+        $inlandDest->rate = $arregloMontoInDest;
+        $inlandDest->markup = $arregloMarkupsInDest;
+        $inlandDest->validity_start =$inlandDestiny->validity_start ;
+        $inlandDest->validity_end=$inlandDestiny->validity_end ;
+        $inlandDest->currency_id =  $info_D->currency->id;
+        $inlandDest->save();
+
+      }
     }
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'Register completed successfully!');
+
+
+    //$request->session()->flash('message.nivel', 'success');
+    //$request->session()->flash('message.title', 'Well done!');
+    //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-    return redirect()->action('QuoteV2Controller@show',setearRouteKey($quote->id));
+    // return redirect()->action('QuoteV2Controller@show',setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
@@ -987,7 +1030,7 @@ class QuoteV2Controller extends Controller
                   }
                   if($km40 &&  in_array( '40',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
-              
+
                     $sub_40 = $montoKm;
                     $monto += $sub_40;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40 ;
@@ -1000,7 +1043,7 @@ class QuoteV2Controller extends Controller
                     $arrayInland40 = array("cant_cont" => '1', "sub_in" => $sub_40, "des_in" =>  $texto40,'amount' => $amount_inland ,'currency' => $inlandsValue->inlandadditionalkms->currency->alphacode , 'price_unit' => $price_per_unit, 'typeContent' => 'i40' ) ;
                     $arrayInland40 = array_merge($markupI40,$arrayInland40);
                     $inlandDetails[] = $arrayInland40;
-             
+
                   }
                   if($km40hc &&  in_array( '40HC',$equipment)){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
@@ -1024,12 +1067,12 @@ class QuoteV2Controller extends Controller
                 $monto = number_format($monto, 2, '.', '');
                 if($monto > 0){
                   $inlandDetails = Collection::make($inlandDetails);
-                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,"km" => $distancia, "monto" => $monto ,'type' => 'Destiny Port To Door','type_currency' => $inlandsValue->inlandadditionalkms->currency->alphacode ,'idCurrency' => $inlandsValue->currency_id );
+                  $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name,'port_id'=> $ports->ports->id ,'validity_start'=>$inlandsValue->validity,'validity_end'=>$inlandsValue->expire ,"km" => $distancia, "monto" => $monto ,'type' => 'Destination','type_currency' => $inlandsValue->inlandadditionalkms->currency->alphacode ,'idCurrency' => $inlandsValue->currency_id );
                   $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function($item){
                     $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
                     return $minimoDetails;
                   });
-            
+
                   $data[] =$arregloInland;
                 }
               }
@@ -1040,11 +1083,11 @@ class QuoteV2Controller extends Controller
       if(!empty($data)){
         $inlandDestiny = Collection::make($data);
         //dd($collection); //  completo
-       /* $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
+        /* $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
           return $test;
         });*/
-       // filtraor por el minimo
+        // filtraor por el minimo
       }
 
     }
