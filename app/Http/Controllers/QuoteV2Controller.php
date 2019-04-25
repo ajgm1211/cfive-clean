@@ -186,6 +186,7 @@ class QuoteV2Controller extends Controller
       }
     }
 
+
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $incoterms = Incoterm::pluck('name','id');
@@ -414,6 +415,9 @@ class QuoteV2Controller extends Controller
       $destinyClass = 'col-md-2';
       $dataOrigDest = 'col-md-7';
     }
+   
+ //$equipmentForm = json_decode($equipmentForm);
+
     foreach($equipmentForm as $val){
       if($val == '20'){
         $hidden20 = '';
@@ -506,7 +510,11 @@ class QuoteV2Controller extends Controller
 
     $form =  json_decode($request->input('form'));
     $info = $request->input('info');
-    $equipment = json_encode($form->equipment);
+
+
+
+    $equipment =  stripslashes(json_encode($form->equipment ));
+
     $dateQ = explode('/',$form->date);
     $since = $dateQ[0];
     $until = $dateQ[1];
@@ -520,6 +528,7 @@ class QuoteV2Controller extends Controller
       $info_D = json_decode($infoA);
       // Rates
       foreach($info_D->rates as $rate){
+        header("Content-type:application/json");
         $rates =   json_encode($rate->rate);
         $markups =   json_encode($rate->markups);
 
@@ -631,6 +640,11 @@ class QuoteV2Controller extends Controller
         $chargeFreight->save();
       }
     }
+    $request->session()->flash('message.nivel', 'success');
+    $request->session()->flash('message.title', 'Well done!');
+    $request->session()->flash('message.content', 'Register completed successfully!');
+    //return redirect()->route('quotes.index');
+    return redirect()->action('QuoteV2Controller@show',setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
@@ -742,6 +756,7 @@ class QuoteV2Controller extends Controller
     $equipmentHides = $this->hideContainer($equipment);
     //Colecciones 
     $inlandDestiny = new collection();
+    $inlandOrigin = new collection();
 
     //Markups Freight
     $freighPercentage = 0;
@@ -1927,8 +1942,8 @@ class QuoteV2Controller extends Controller
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
       $data->setAttribute('inlandOrigin',$inlandOrigin);
-      
-      
+
+
 
 
     }

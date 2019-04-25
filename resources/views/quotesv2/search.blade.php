@@ -131,7 +131,7 @@
   .input-select[type="checkbox"]:checked + .btn-input__select span {
     display :none;
   }
-   .input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
+  .input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
     border-color: #0072fc !important;
 
   }
@@ -244,7 +244,7 @@
   }
   .border-card-p {
     border-color: #0072fc;
-    
+
   }
   /* estilos */
 </style>
@@ -471,9 +471,9 @@
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check" name="info[]" value="{{ json_encode($arr) }}">
-                      
+
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
-                     
+
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -498,44 +498,6 @@
                     </div>
                   </div>
                 </div>
-
-                <!--<div class="{{ $equipmentHides['dataOrigDest']  }}">
-<div class="row">
-<div class="col-lg-4">
-<span class="portcss"> {{$arr->port_origin->name  }}</span><br>
-<span class="portalphacode"> {{$arr->port_origin->code  }}</span>
-</div>
-<div class="col-lg-4">
-<div class="progress m-progress--sm">
-<div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-</div><br>
-Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
-</div>
-<div class="col-lg-4">
-<span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
-<span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
-</div>
-</div>
-<br>
-<span class="workblue">Detail Cost</span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
-<i  class="la la-angle-down blue"></i>
-</a>
-
-</div>-->
-
-                <!--<div class="col-lg-1">
-<span class="portcss">{{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>    
-</div>
-<div class="col-lg-1" {{ $equipmentHides['20'] }} ><span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->total20  }}</span></div>
-<div class="col-lg-1" {{ $equipmentHides['40'] }}> <span class="currency">$USD</span> <span class="darkblue validate"> {{$arr->total40  }}</span> </div>
-<div class="col-lg-1" {{ $equipmentHides['40hc'] }}> <span class="currency">$USD</span> <span class="darkblue validate">  {{$arr->total40hc  }} </span></div>
-<div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="currency">$USD</span>   <span class="darkblue validate"> {{$arr->total40nor  }} </span></div>
-<div class="col-lg-1" {{ $equipmentHides['45'] }}> <span class="currency">$USD</span>  <span class="darkblue validate"> {{$arr->total45  }} </span></div>
-<div class="col-lg-1">
-
-<input  type="checkbox" name="info[]" value="{{ json_encode($arr) }}" class="btn btn-sm btn-default btn-bold btn-upper">Select
-
-</div>-->
               </div>
               <!-- Termina tarjeta de cotifzacion -->
 
@@ -639,16 +601,7 @@ Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                     </div>
                     <div class="col-lg-1 colorphacode" >{{$rates['currency_rate']}}</div>
                   </div>
-                  <!--<div class="row">
-<div class="col-lg-3">{{ $rates['type'] }}</div>
-<div class="col-lg-3">{{ $rates['detail'] }}</div>
-<div class="col-lg-1" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> + <span class="bg-rates">{{ @$rates['markup20'] }}</span> <i class="la la-caret-right"></i> <b>{{  @$rates['monto20'] }}</b>  </div>
-<div class="col-lg-1" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> + <span class="bg-rates">{{ @$rates['markup40'] }}</span> <i class="la la-caret-right"></i> <b>{{  @$rates['monto40'] }}</b>  </div>
-<div class="col-lg-1" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> + <span class="bg-rates">{{ @$rates['markup40hc'] }}</span> <i class="la la-caret-right"></i> <b>{{  @$rates['monto40hc'] }}</b>  </div>
-<div class="col-lg-1" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> + <span class="bg-rates">{{ @$rates['markup40nor'] }}</span> <i class="la la-caret-right"></i> <b>{{  @$rates['monto40nor'] }}</b>  </div>
-<div class="col-lg-1" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> + <span class="bg-rates">{{ @$rates['markup45'] }}</span> <i class="la la-caret-right"></i> <b>{{  @$rates['monto45'] }}</b>  </div>
-<div class="col-lg-1" >{{$rates['currency_rate']}}</div>
-</div><br>-->
+
                   @endforeach
                   @foreach($arr->localfreight as $localfreight)
 
@@ -762,7 +715,7 @@ Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
               @endif
               <!-- Gastos Inlands-->
               @if(!$arr->inlandDestiny->isEmpty() || !$arr->inlandOrigin->isEmpty() )
-              <div class="row" id='inland{{$loop->iteration}}'  hidden='true' >
+              <div class="row no-margin margin-card" id='inland{{$loop->iteration}}'  hidden='true' >
                 <div class="col-lg-12">
                   <div class="row">
                     <span class="darkblue cabezeras">Inlands</span><br><br>
@@ -782,36 +735,35 @@ Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div><br>
                   @if(!$arr->inlandDestiny->isEmpty())
-                  <div class="row">
-                    <span class="darkblue">Destiny</span><br><br>
+                  <div class="row data-rates">
+                    <div class="col-lg-12"> <span class="darkblue">Destiny</span><br><br></div>
+
+
                   </div>
                   @endif
                   @foreach($arr->inlandDestiny as $inlandDestiny)
 
-                  <div class="row">
-                    <div class="col-lg-3">{{ $inlandDestiny['providerName']  }}</div>
-                    <div class="col-lg-3">{{ $inlandDestiny['km']  }} KM</div>
-                    <div class="col-lg-1" {{ $equipmentHides['20'] }}>
-                      {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}
-                      <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}        
-                    </div>  
-                    <div class="col-lg-1" {{ $equipmentHides['40'] }}>
-                      {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
-                      <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}             
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>
-                      {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
-                      <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>
-                      N/A
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['45'] }}>
-                      N/A
-                    </div> 
-
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode" >{{ $inlandDestiny['providerName']  }}</div>
+                    <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
+                    <div class="col-lg-6 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}>
+                          {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}
+                          <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}       </div>
+                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
+                          {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
+                          <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}</div>
+                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
+                          {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
+                          <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     </div>
+                        <div class="width"  {{ $equipmentHides['40nor'] }}>    N/A</div>
+                        <div class="width" {{ $equipmentHides['45'] }}>    N/A</div>
+                      </div>
+                    </div>
                     <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1" ></div>
+                    <div class="col-lg-1" ><span class="">USD</span></div>
+
                   </div><br>
                   @endforeach
                   @if(!$arr->inlandOrigin->isEmpty())
@@ -972,7 +924,7 @@ Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
   </script>
   <script>
     $('.input-select').on('click', function(){
-		$('.card-p__quotes').toggleClass('border-card-p');
+      $('.card-p__quotes').toggleClass('border-card-p');
     });
   </script>
   @stop
