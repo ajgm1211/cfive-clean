@@ -470,9 +470,9 @@
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check" name="info[]" value="{{ json_encode($arr) }}">
+                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check" rate-id ='{{$arr->id }}' name="info[]" value="{{ json_encode($arr) }}">
 
-                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
+                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
 
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
@@ -561,7 +561,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
                   </div>
                 </div>
               </div>
@@ -640,7 +640,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
                   </div>
 
                 </div>
@@ -708,7 +708,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
                   </div>
                 </div>
               </div>
@@ -766,45 +766,46 @@
                     </div>
                     <div class="col-lg-1" ><span class="">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
-                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
+                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check" name="inlandD[]" value="{{ json_encode($arr) }}">
+                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
                     </div>
 
                   </div><br>
                   @endforeach
                   @if(!$arr->inlandOrigin->isEmpty())
-                  <div class="row">
-                    <span class="darkblue">Origin</span><br><br>
+                  <div class="row data-rates">
+                    <div class="col-lg-12"> <span class="darkblue">Origin</span><br><br></div>
+
                   </div>
                   @endif
                   @foreach($arr->inlandOrigin as $inlandOrigin)
 
-                  <div class="row">
-                    <div class="col-lg-3">{{ $inlandOrigin['providerName']  }}</div>
-                    <div class="col-lg-3">{{ $inlandOrigin['km']  }} KM</div>
-                    <div class="col-lg-1" {{ $equipmentHides['20'] }}>
-                      {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }}
-                      <i class="la la-caret-right"></i>      {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}        
-                    </div>  
-                    <div class="col-lg-1" {{ $equipmentHides['40'] }}>
-                      {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }}
-                      <i class="la la-caret-right"></i> {{ @$inlandOrigin['inlandDetails']['i40']['markup']  }}             
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>
-                      {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }}
-                      <i class="la la-caret-right"></i>         {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}     
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>
-                      N/A
-                    </div> 
-                    <div class="col-lg-1" {{ $equipmentHides['45'] }}>
-                      N/A
-                    </div> 
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['providerName']  }}</div>
+                    <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['km']  }} KM</div>
 
+                    <div class="col-lg-6 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-o20{{$loop->iteration}}-{{$arr->id}}' >
+                          {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>      {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}       </div>
+
+                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
+                          <div class="montoI40" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i> {{ @$inlandOrigin['inlandDetails']['i40']['markup']  }}</div>
+
+                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
+                          <div id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>         {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}     </div>
+
+                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
+                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
+                      </div>
+                    </div>
                     <div class="col-lg-1" ><span class="">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputI-select{{$loop->iteration}}" class="input-select no-check" name="inland[]" value="{{ json_encode($arr) }}">
-                      <label for="inputI-select{{$loop->iteration}}" class="btn m-btn--pill"  >Select <span class="la la-arrow-right"></span></label>
+                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
+                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
                     </div>
                   </div><br>
                   @endforeach
@@ -821,7 +822,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
                     <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
                   <br><br>
@@ -933,9 +934,21 @@
     }
   </script>
   <script>
-    $('.input-select').on('click', function(){
+    $('.btnrate').on('click', function(){
       $('.card-p__quotes').toggleClass('border-card-p');
+      /*      var rate = $(this).attr('rate-id');
+
+      var theElement = $(this);
+      if(theElement.prop('checked')){
+
+      }else{
+
+
+        }*/
+
     });
+
+
 
     $('.inlands').on('click', function(){
       $('.card-p__quotes').toggleClass('border-card-p');
@@ -946,6 +959,37 @@
       var  i20= $("#valor-d20"+id+"-"+idRate).html();
       var  i40= $("#valor-d40"+id+"-"+idRate).html();
       var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
+
+      var  sub20= $("#sub_inland_20"+idRate).html();
+      var  sub40= $("#sub_inland_40"+idRate).html();
+      var  sub40h= $("#sub_inland_40h"+idRate).html();
+      if(theElement.prop('checked')){
+
+        sub20 = parseFloat(sub20) +  parseFloat(i20);
+        sub40 = parseFloat(sub40) +  parseFloat(i40);
+        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+
+      }else{
+
+        sub20 = parseFloat(sub20) -  parseFloat(i20);
+        sub40 = parseFloat(sub40) -  parseFloat(i40);
+        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+      }
+      $("#sub_inland_20"+idRate).html(sub20);
+      $("#sub_inland_40"+idRate).html(sub40);
+      $("#sub_inland_40h"+idRate).html(sub40h);
+
+    });
+    
+      $('.inlandsO').on('click', function(){
+      $('.card-p__quotes').toggleClass('border-card-p');
+      var id = $(this).attr('data-inland');
+      var idRate = $(this).attr('data-rate');
+
+      var theElement = $(this);
+      var  i20= $("#valor-o20"+id+"-"+idRate).html();
+      var  i40= $("#valor-o40"+id+"-"+idRate).html();
+      var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
 
       var  sub20= $("#sub_inland_20"+idRate).html();
       var  sub40= $("#sub_inland_40"+idRate).html();
