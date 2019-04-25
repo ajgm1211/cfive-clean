@@ -106,8 +106,8 @@
     display: flex;
     color: #cecece;
     cursor: pointer;
-    font-size: 16px;
-    padding: 5px 28px;
+    font-size: 12px;
+    padding: 3px 24px;
     border-radius: 5px;
     border: 3px solid #cecece;
     transition: all 300ms ease;
@@ -723,7 +723,7 @@
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Provider</span></div>
                     <div class="col-lg-2"><span class="portalphacode">Distance</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                       <div class="d-flex justify-content-between">
                         <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
                         <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
@@ -733,11 +733,11 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div><br>
                   @if(!$arr->inlandDestiny->isEmpty())
                   <div class="row data-rates">
                     <div class="col-lg-12"> <span class="darkblue">Destiny</span><br><br></div>
-
 
                   </div>
                   @endif
@@ -748,21 +748,27 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}>
-                          {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}
+                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-d20{{$loop->iteration}}-{{$arr->id}}' >
+                          {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} </div>
                           <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}       </div>
+
                         <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
-                          {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
+                          <div class="montoI40" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }} </div>
                           <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}</div>
+
                         <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
-                          {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
+                          <div id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </div>
                           <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     </div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}>    N/A</div>
-                        <div class="width" {{ $equipmentHides['45'] }}>    N/A</div>
+
+                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
+                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
+                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
+                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
+                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
+                    </div>
 
                   </div><br>
                   @endforeach
@@ -796,23 +802,27 @@
                     </div> 
 
                     <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1" ></div>
+                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
+                      <input type="checkbox" id="inputI-select{{$loop->iteration}}" class="input-select no-check" name="inland[]" value="{{ json_encode($arr) }}">
+                      <label for="inputI-select{{$loop->iteration}}" class="btn m-btn--pill"  >Select <span class="la la-arrow-right"></span></label>
+                    </div>
                   </div><br>
                   @endforeach
                   <br>
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Inlands Charges</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-6">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">0.00 </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">0.00</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">0.00</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">0.00</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">0.00</span></div>
+                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode"><div id='sub_inland_20{{ $arr->id }}'>0.00</div> </span></div>
+                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode"><div id='sub_inland_40{{ $arr->id }}'>0.00</div></span></div>
+                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode"><div id='sub_inland_40h{{ $arr->id }}'>0.00</div></span></div>
+                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode"><div  >N/A</div></span></div>
+                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">EUR</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
                   <br><br>
                   <div class="row"><div class="col-lg-12"><hr></div></div>
@@ -926,5 +936,40 @@
     $('.input-select').on('click', function(){
       $('.card-p__quotes').toggleClass('border-card-p');
     });
+
+    $('.inlands').on('click', function(){
+      $('.card-p__quotes').toggleClass('border-card-p');
+      var id = $(this).attr('data-inland');
+      var idRate = $(this).attr('data-rate');
+
+      var theElement = $(this);
+      var  i20= $("#valor-d20"+id+"-"+idRate).html();
+      var  i40= $("#valor-d40"+id+"-"+idRate).html();
+      var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
+
+      var  sub20= $("#sub_inland_20"+idRate).html();
+      var  sub40= $("#sub_inland_40"+idRate).html();
+      var  sub40h= $("#sub_inland_40h"+idRate).html();
+      if(theElement.prop('checked')){
+
+        sub20 = parseFloat(sub20) +  parseFloat(i20);
+        sub40 = parseFloat(sub40) +  parseFloat(i40);
+        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+
+      }else{
+
+        sub20 = parseFloat(sub20) -  parseFloat(i20);
+        sub40 = parseFloat(sub40) -  parseFloat(i40);
+        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+      }
+      $("#sub_inland_20"+idRate).html(sub20);
+      $("#sub_inland_40"+idRate).html(sub40);
+      $("#sub_inland_40h"+idRate).html(sub40h);
+
+    });
+
+
+
+
   </script>
   @stop

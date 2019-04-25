@@ -890,7 +890,7 @@ class QuoteV2Controller extends Controller
         $km20 = true;
         $km40 = true;
         $km40hc = true;
-        $inlandDetails;
+        $inlandDetails = array();
 
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
@@ -967,6 +967,7 @@ class QuoteV2Controller extends Controller
 
                 if(isset($inlandsValue->inlandadditionalkms)){
 
+
                   $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                   if($km20 &&  in_array( '20',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
@@ -986,6 +987,7 @@ class QuoteV2Controller extends Controller
                   }
                   if($km40 &&  in_array( '40',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
+              
                     $sub_40 = $montoKm;
                     $monto += $sub_40;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40 ;
@@ -998,6 +1000,7 @@ class QuoteV2Controller extends Controller
                     $arrayInland40 = array("cant_cont" => '1', "sub_in" => $sub_40, "des_in" =>  $texto40,'amount' => $amount_inland ,'currency' => $inlandsValue->inlandadditionalkms->currency->alphacode , 'price_unit' => $price_per_unit, 'typeContent' => 'i40' ) ;
                     $arrayInland40 = array_merge($markupI40,$arrayInland40);
                     $inlandDetails[] = $arrayInland40;
+             
                   }
                   if($km40hc &&  in_array( '40HC',$equipment)){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
@@ -1026,7 +1029,7 @@ class QuoteV2Controller extends Controller
                     $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
                     return $minimoDetails;
                   });
-
+            
                   $data[] =$arregloInland;
                 }
               }
@@ -1035,13 +1038,13 @@ class QuoteV2Controller extends Controller
         }// foreach ports
       }//foreach inlands
       if(!empty($data)){
-        $collection = Collection::make($data);
+        $inlandDestiny = Collection::make($data);
         //dd($collection); //  completo
-        $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
+       /* $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
           return $test;
-        });
-        //dd($inlandDestiny); // filtraor por el minimo
+        });*/
+       // filtraor por el minimo
       }
 
     }
