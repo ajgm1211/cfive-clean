@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\TermAndCondition;
 use App\Harbor;
 use App\Carrier;
+use App\Language;
 use App\TermsPort;
 use App\CompanyUser;
 use App\TermConditionCarrier;
@@ -23,7 +24,9 @@ class TermsAndConditionsController extends Controller
 
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-        $data = TermAndCondition::where('company_user_id', Auth::user()->company_user_id)->get();
+        $data = TermAndCondition::where('company_user_id', Auth::user()->company_user_id)->with('language')->get();
+        
+        //dd($data);
         return view('terms.list', compact('data'));
     }
 
@@ -41,7 +44,8 @@ class TermsAndConditionsController extends Controller
     {
         $harbors = Harbor::pluck('name','id');
         $carriers = Carrier::pluck('name','id');
-        return view('terms.add', compact('harbors','carriers'));
+        $languages = Language::pluck('name','id');
+        return view('terms.add', compact('harbors','carriers','languages'));
     }
 
     /**
@@ -53,14 +57,15 @@ class TermsAndConditionsController extends Controller
     public function store(Request $request)
     {
         if($request->import!='' || $request->export!=''){
-            $companyUser = CompanyUser::All();
-            $company = Auth::user()->company_user_id;
-            $term = new TermAndCondition();
-            $term->name = $request->name;
-            $term->user_id = Auth::user()->id;
-            $term->import = $request->import;
-            $term->export = $request->export;
-            $term->company_user_id = $company;
+            $companyUser        = CompanyUser::All();
+            $company           = Auth::user()->company_user_id;
+            $term                   = new TermAndCondition();
+            $term->name             = $request->name;
+            $term->user_id          = Auth::user()->id;
+            $term->import           = $request->import;
+            $term->export           = $request->export;
+            $term->company_user_id  = $company;
+            $term->language_id      = $request->language;
             $term->save();
 
             $ports = $request->ports;
@@ -101,7 +106,9 @@ class TermsAndConditionsController extends Controller
     public function show($id)
     {
         $id = obtenerRouteKey($id);
-        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers')->first();
+        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers','language')->first();
+        
+        $languages = Language::pluck('name','id');
         $selected_harbors   = collect($term->harbor);
         $selected_harbors   = $selected_harbors->pluck('id','name');
         $selected_carriers  = collect($term->TermConditioncarriers);
@@ -110,7 +117,7 @@ class TermsAndConditionsController extends Controller
         $harbors = harbor::all()->pluck('name','id');
         $carriers = Carrier::pluck('name','id');
 
-        return view('terms.show', compact('term', 'harbors','carriers','selected_harbors','selected_carriers'));
+        return view('terms.show', compact('term', 'harbors','carriers','languages','selected_harbors','selected_carriers'));
     }
 
     /**
@@ -122,14 +129,15 @@ class TermsAndConditionsController extends Controller
     public function edit($id)
     {
         $id = obtenerRouteKey($id);
-        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers')->first();
+        $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers','language')->first();
+        $languages = Language::pluck('name','id');
         $selected_harbors = collect($term->harbor);
         $selected_harbors = $selected_harbors->pluck('id','name');
         $harbors = harbor::all()->pluck('name','id');
         $selected_carriers  = collect($term->TermConditioncarriers);
         $selected_carriers  = $selected_carriers->pluck('carrier_id');
         $carriers = Carrier::pluck('name','id');
-        return view('terms.edit', compact('term', 'harbors', 'selected_harbors','carriers','selected_carriers'));
+        return view('terms.edit', compact('term', 'harbors', 'selected_harbors','languages','carriers','selected_carriers'));
     }
 
     /**
@@ -147,10 +155,11 @@ class TermsAndConditionsController extends Controller
             $request->session()->flash('message.content', 'You must add terms to import or export');
         }else{
             $term = TermAndCondition::find($id);
-            $term->name = $request->name;
-            $term->user_id = Auth::user()->id;
-            $term->import = $request->import;
-            $term->export = $request->export;
+            $term->name         = $request->name;
+            $term->user_id      = Auth::user()->id;
+            $term->import       = $request->import;
+            $term->export       = $request->export;
+            $term->language_id  = $request->language;
             $term->company_user_id = Auth::user()->company_user_id;
             $term->update();
 
