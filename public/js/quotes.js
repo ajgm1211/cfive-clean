@@ -875,26 +875,32 @@ function change_tab(tab){
 }
 
 function display(id){
-  
+
   var freight = $("#freight"+id);
   var origin = $("#origin"+id);
   var destiny = $("#destiny"+id);
+  var inland =  $("#inland"+id);
 
   if(freight.attr('hidden')){
     $("#freight"+id).removeAttr('hidden');
   }else{
     $("#freight"+id).attr('hidden','true');
   }
-  
+
   if(origin.attr('hidden')){
     $("#origin"+id).removeAttr('hidden');
   }else{
     $("#origin"+id).attr('hidden','true');
   }
-  
+
   if(destiny.attr('hidden')){
     $("#destiny"+id).removeAttr('hidden');
   }else{
     $("#destiny"+id).attr('hidden','true');
+  }
+  if(inland.attr('hidden')){
+    $("#inland"+id).removeAttr('hidden');
+  }else{
+    $("#inland"+id).attr('hidden','true');
   }
 }
