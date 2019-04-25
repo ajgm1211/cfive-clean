@@ -95,6 +95,9 @@ New \ Status Import  &nbsp;
                             <thead>
                                 <tr>
                                     <th>
+                                        Check
+                                    </th>
+                                    <th>
                                         Type
                                     </th>
                                     <th>
@@ -123,9 +126,6 @@ New \ Status Import  &nbsp;
                                     </th>
                                     <th>
                                         Options
-                                    </th>
-                                    <th>
-                                        Check
                                     </th>
                                 </tr>
                             </thead>
@@ -205,6 +205,7 @@ New \ Status Import  &nbsp;
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
+                { data: 'checkbox', orderable:false, searchable:false},
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
                 { data: 'destiny_portLb', name: 'destiny_portLb' },
@@ -214,8 +215,7 @@ New \ Status Import  &nbsp;
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'ammount', name: 'ammount' },
                 { data: 'validitylb', name: 'validitylb' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
-                { "data":"checkbox", orderable:false, searchable:false}
+                { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             "order": [[0, 'des']],
             "lengthChange": false,
