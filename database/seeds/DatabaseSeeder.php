@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CalculationtypelclTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
         $this->call(DirectionsTableSeeder::class);
+        $this->call(LanguagesTableSeeder::class);
     }
 }

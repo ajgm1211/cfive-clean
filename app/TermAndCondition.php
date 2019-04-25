@@ -9,7 +9,14 @@ class TermAndCondition extends Model
     //
 
     protected $table = "termsAndConditions";
-    protected $fillable = ['id', 'user_id', 'name', 'import', 'export', 'company_user_id'];
+    protected $fillable = ['id', 
+                           'user_id',
+                           'name',
+                           'import',
+                           'export',
+                           'company_user_id',
+                           'language_id'
+                          ];
 
     public function user(){
         return $this->belongsTo('App\User');
@@ -25,6 +32,10 @@ class TermAndCondition extends Model
     
     public function TermConditioncarriers(){
         return $this->HasMany('App\TermConditionCarrier','termcondition_id');
+    }
+    
+    public function language(){
+        return $this->belongsTo('App\Language','language_id');
     }
     
     /*public function ports(){

@@ -77,7 +77,10 @@
                         <th title="Field #2">
                             Ports
                         </th>
-                        <th title="Field #2">
+                        <th title="Field #3">
+                            Language
+                        </th>
+                        <th title="Field #4">
                             Carriers
                         </th>
                         <th title="Field #5">
@@ -95,6 +98,13 @@
                                 <li>{{ $harbor->name }}</li>
                             </ul>
                             @endforeach
+                        </td>
+                        <td>
+                            @if(empty($arr['language']) != true)
+                            {{ $arr['language']['name'] }}
+                            @else
+                            -----
+                            @endif
                         </td>
                         <td>
                             @foreach($arr->carrier as $carrier)

@@ -24,6 +24,12 @@
                     {!! Form::select('carriers[]',$carriers,@$selected_carriers, 
                     ['class' => 'm-select2-general form-control', 'multiple' => 'multiple','disabled' => 'true']) !!}
                 </div>
+                
+                <div class="form-group m-form__group">
+                    {!! Form::label('Language', 'Language') !!}
+                    {!! Form::select('language',$languages,$term['language_id'], 
+                    ['class' => 'm-select2-general form-control','disabled' => 'true']) !!}
+                </div>
 
                 <div class="form-group m-form__group">
                     {!! Form::label('Import', 'Import terms') !!}
