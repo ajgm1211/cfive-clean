@@ -13,7 +13,7 @@
 <div class="form-group m-form__group">
     {!! Form::label('Port', 'Ports') !!}
     {!! Form::select('ports[]',$harbors,@$selected_harbors, 
-    ['class' => 'm-select2-general form-control', 'multiple' => 'multiple']) !!}
+    ['class' => 'm-select2-general form-control','required','multiple' => 'multiple']) !!}
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('Carriers', 'Carriers') !!}

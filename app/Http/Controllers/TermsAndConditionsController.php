@@ -25,7 +25,7 @@ class TermsAndConditionsController extends Controller
         $companyUser = CompanyUser::All();
         $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
         $data = TermAndCondition::where('company_user_id', Auth::user()->company_user_id)->with('language')->get();
-        
+
         //dd($data);
         return view('terms.list', compact('data'));
     }
@@ -70,21 +70,22 @@ class TermsAndConditionsController extends Controller
 
             $ports = $request->ports;
             $carriers = $request->carriers;
-
-            foreach($ports as $i){
-                $termsport = new TermsPort();
-                $termsport->port_id = $i;
-                $termsport->term()->associate($term);
-                $termsport->save();
+            if(count($ports) >= 1){
+                foreach($ports as $i){
+                    $termsport = new TermsPort();
+                    $termsport->port_id = $i;
+                    $termsport->term()->associate($term);
+                    $termsport->save();
+                }
             }
-
-            foreach($carriers as $carrier){
-                TermConditionCarrier::create([
-                    'carrier_id'        => $carrier,
-                    'termcondition_id'  => $term->id
-                ]);
+            if(count($carriers) >= 1){
+                foreach($carriers as $carrier){
+                    TermConditionCarrier::create([
+                        'carrier_id'        => $carrier,
+                        'termcondition_id'  => $term->id
+                    ]);
+                }
             }
-
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
@@ -107,7 +108,7 @@ class TermsAndConditionsController extends Controller
     {
         $id = obtenerRouteKey($id);
         $term = TermAndCondition::where('id',$id)->with('harbor','TermConditioncarriers','language')->first();
-        
+
         $languages = Language::pluck('name','id');
         $selected_harbors   = collect($term->harbor);
         $selected_harbors   = $selected_harbors->pluck('id','name');
@@ -164,7 +165,7 @@ class TermsAndConditionsController extends Controller
             $term->update();
 
             $ports = $request->ports;
-            if($ports != ''){
+            if(count($ports) >= 1){
                 TermsPort::where('term_id',$id)->delete();
 
                 foreach($ports as $i){
@@ -174,17 +175,17 @@ class TermsAndConditionsController extends Controller
                     $termsport->save();
                 }
             }
-            
-            $carriers = $request->carriers;
-            if($carriers != ''){
-                TermConditionCarrier::where('termcondition_id',$id)->delete();
 
+            $carriers = $request->carriers;
+
+            TermConditionCarrier::where('termcondition_id',$id)->delete();
+            if(count($carriers) >= 1){
                 foreach($carriers as $carrier){
-                TermConditionCarrier::create([
-                    'carrier_id'        => $carrier,
-                    'termcondition_id'  => $term->id
-                ]);
-            }
+                    TermConditionCarrier::create([
+                        'carrier_id'        => $carrier,
+                        'termcondition_id'  => $term->id
+                    ]);
+                }
             }
 
             $request->session()->flash('message.nivel', 'success');
