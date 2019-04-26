@@ -909,8 +909,6 @@ $(document).on('click', '#create-quote', function (e) {
       }else{
         $("#destination_address_panel").addClass('hide');
       }
-
-
     });
 
 $( document ).ready(function() {
