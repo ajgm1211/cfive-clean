@@ -569,7 +569,7 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 });
 // GLOBAL CHARGES LCL 
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
-
+    Route::post('destroyArr', 'GlobalChargesLclController@destroyArr')->name('globalchargeslcl.destroyArr');
     Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
     Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);
     Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl']);

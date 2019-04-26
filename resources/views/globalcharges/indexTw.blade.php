@@ -71,7 +71,7 @@
                                     <button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                         <span>
                                             <span>
-                                                Delete Check &nbsp;
+                                                Delete Selected &nbsp;
                                             </span>
                                             <i class="la la-trash"></i>
                                         </span>
@@ -95,7 +95,7 @@ New \ Status Import  &nbsp;
                             <thead>
                                 <tr>
                                     <th>
-                                        Check
+                                        Select
                                     </th>
                                     <th>
                                         Type
@@ -274,7 +274,6 @@ New \ Status Import  &nbsp;
                 }
                 else
                 {
-                    alert("Please select atleast one checkbox");
                     swal("Error!", "Please select atleast one checkbox", "error");
                 }
             } else if (result.dismiss === 'cancel') {
