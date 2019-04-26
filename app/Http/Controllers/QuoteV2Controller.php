@@ -530,7 +530,7 @@ class QuoteV2Controller extends Controller
       $info_D = json_decode($infoA);
       // Rates
       foreach($info_D->rates as $rate){
-        header("Content-type:application/json");
+        
         $rates =   json_encode($rate->rate);
         $markups =   json_encode($rate->markups);
 
@@ -643,46 +643,51 @@ class QuoteV2Controller extends Controller
       }
       // INLANDS DESTINATION inlandDestiny inlandOrigin
 
-      foreach( $inlandD as $inlandDestiny){
+      if(!empty($inlandD)){
+             
+        foreach( $inlandD as $inlandDestiny){
 
-        $inlandDestiny = json_decode($inlandDestiny);
-        $arregloMontoInDest = array();
-        $arregloMarkupsInDest = array();
-        $montoInDest = array();
-        $markupInDest = array();
-        foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
+          $inlandDestiny = json_decode($inlandDestiny);
+     
+          $arregloMontoInDest = array();
+          $arregloMarkupsInDest = array();
+          $montoInDest = array();
+          $markupInDest = array();
+          foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
 
-          if($inlandDetails->amount != 0){
-            $arregloMontoInDest = array($key => $inlandDetails->amount);
-            $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+            if($inlandDetails->amount != 0){
+              $arregloMontoInDest = array($key => $inlandDetails->amount);
+              $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+            }
+            if($inlandDetails->markup != 0){
+              $arregloMarkupsInDest = array($key => $inlandDetails->markup);
+              $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
+            }
+
           }
-          if($inlandDetails->markup != 0){
-            $arregloMarkupsInDest = array($key => $inlandDetails->markup);
-            $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
-          }
 
-        }
+          $arregloMontoInDest =  json_encode($montoInDest);
+          $arregloMarkupsInDest =  json_encode($markupInDest);
+          $inlandDest = new AutomaticInland();
+          $inlandDest->quote_id= $quote->id;
+          $inlandDest->provider =  $inlandDestiny->providerName;
+          $inlandDest->distance =  $inlandDestiny->km;
+          $inlandDest->contract = $info_D->contract->id;
+          $inlandDest->port_id = $inlandDestiny->port_id;
+          $inlandDest->type = $inlandDestiny->type;
+          $inlandDest->rate = $arregloMontoInDest;
+          $inlandDest->markup = $arregloMarkupsInDest;
+          $inlandDest->validity_start =$inlandDestiny->validity_start ;
+          $inlandDest->validity_end=$inlandDestiny->validity_end ;
+          $inlandDest->currency_id =  $info_D->currency->id;
+          $inlandDest->save();
 
-        $arregloMontoInDest =  json_encode($montoInDest);
-        $arregloMarkupsInDest =  json_encode($markupInDest);
-        $inlandDest = new AutomaticInland();
-        $inlandDest->quote_id= $quote->id;
-        $inlandDest->provider =  $inlandDestiny->providerName;
-        $inlandDest->distance =  $inlandDestiny->km;
-        $inlandDest->contract = $info_D->contract->id;
-        $inlandDest->port_id = $inlandDestiny->port_id;
-        $inlandDest->type = $inlandDestiny->type;
-        $inlandDest->rate = $arregloMontoInDest;
-        $inlandDest->markup = $arregloMarkupsInDest;
-        $inlandDest->validity_start =$inlandDestiny->validity_start ;
-        $inlandDest->validity_end=$inlandDestiny->validity_end ;
-        $inlandDest->currency_id =  $info_D->currency->id;
-        $inlandDest->save();
-
+        }  
       }
+
     }
 
-
+    return response()->file(public_path().'/images/si.gif');
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
