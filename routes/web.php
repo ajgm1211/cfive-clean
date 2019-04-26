@@ -423,10 +423,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
   Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
   Route::get('/pdf/{quote_id}', 'QuoteV2Controller@pdf')->name('quotes-v2.pdf');
-  Route::post('language/update', 'QuoteV2Controller@updatePdfLanguage')->name('quotes-v2.pdf.update.language');
-  Route::post('carrier/show/update', 'QuoteV2Controller@updateShowCarrier')->name('quotes-v2.pdf.update.show.carrier');
-  Route::post('logo/show/update', 'QuoteV2Controller@updateShowLogo')->name('quotes-v2.pdf.update.show.logo');
-  Route::post('type/show/update', 'QuoteV2Controller@updateShowType')->name('quotes-v2.pdf.update.show.type');
+  Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
 });
 
 //Settings

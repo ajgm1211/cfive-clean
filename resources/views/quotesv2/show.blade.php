@@ -236,14 +236,41 @@
                                                     <tbody style="background-color: white;">
                                                     @php
                                                         $i=0;
+                                                        $sum20=0;
+                                                        $sum40=0;
+                                                        $sum40hc=0;
+                                                        $sum40nor=0;
+                                                        $sum45=0;
                                                     @endphp
                                                     @foreach($rate->charge as $item)
                                                         @if($item->type_id==3)
-                                                            @php
+                                                            <?php
                                                                 $rate_id=$item->automatic_rate_id;
                                                                 $freight_amounts = json_decode($item->amount,true);
                                                                 $freight_markups = json_decode($item->markups,true);
-                                                            @endphp
+
+                                                                //Calculating totals
+                                                                if(isset($freight_amounts['c20']) && isset($freight_markups['c20'])){
+                                                                    $total20=$freight_amounts['c20']+$freight_markups['c20'];
+                                                                }
+                                                                if(isset($freight_amounts['c40']) && isset($freight_markups['c40'])){
+                                                                    $total40=$freight_amounts['c40']+$freight_markups['c40'];
+                                                                }
+                                                                if(isset($freight_amounts['c40hc']) && isset($freight_markups['c40hc'])){
+                                                                    $total40hc=$freight_amounts['c40hc']+$freight_markups['c40hc'];
+                                                                }
+                                                                if(isset($freight_amounts['c40nor']) && isset($freight_markups['c40nor'])){
+                                                                    $total40nor=$freight_amounts['c40nor']+$freight_markups['c40nor'];
+                                                                }
+                                                                if(isset($freight_amounts['c45']) && isset($freight_markups['c45'])){
+                                                                    $total40nor=$freight_amounts['c45']+$freight_markups['c45'];
+                                                                }
+                                                                $sum20+=@$total20;
+                                                                $sum40+=@$total40;
+                                                                $sum40hc+=@$total40hc;
+                                                                $sum40nor+=@$total40nor;
+                                                                $sum45+=@$total45;
+                                                            ?>
                                                             <tr >
                                                                 <td>
                                                                     <a href="#" class="editable" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
@@ -379,12 +406,12 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="title-quote size-12px">Total</td>
-                                                            <td {{ $equipmentHides['20'] }} class="total_freight_20" colspan="3">{{@$rate->total['total']['freight']['20']}}</td>
-                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$rate->total['total']['freight']['40']}}</td>
-                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$rate->total['total']['freight']['40hc']}}</td>
-                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$rate->total['total']['freight']['40nor']}}</td>
-                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$rate->total['total']['freight']['45']}}</td>
-                                                            <td >USD</td>
+                                                            <td {{ $equipmentHides['20'] }} colspan="3">{{@$sum20}}</td>
+                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$sum40}}</td>
+                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$sum40hc}}</td>
+                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$sum40nor}}</td>
+                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$sum45}}</td>
+                                                            <td ></td>
                                                         </tr>
                                                     @endif
 
@@ -427,14 +454,40 @@
                                                     <tbody style="background-color: white;">
                                                     @php
                                                         $a=0;
+                                                        $sum_origin_20=0;
+                                                        $sum_origin_40=0;
+                                                        $sum_origin_40hc=0;
+                                                        $sum_origin_40nor=0;
+                                                        $sum_origin_45=0;
                                                     @endphp
                                                     @foreach($rate->charge as $item)
                                                         @if($item->type_id==1)
-                                                            @php
+                                                            <?php
                                                                 $origin_amounts = json_decode($item->amount,true);
                                                                 $origin_markups = json_decode($item->markups,true);
-                                                                $origin_total = $item->total['total'];
-                                                            @endphp
+                                                        
+                                                                //Calculating totals
+                                                                if(isset($origin_amounts['c20']) && isset($origin_markups['c20'])){
+                                                                    $total20=$origin_amounts['c20']+$origin_markups['c20'];
+                                                                }
+                                                                if(isset($origin_amounts['c40']) && isset($origin_markups['c40'])){
+                                                                    $total40=$origin_amounts['c40']+$origin_markups['c40'];
+                                                                }
+                                                                if(isset($origin_amounts['c40hc']) && isset($origin_markups['c40hc'])){
+                                                                    $total40hc=$origin_amounts['c40hc']+$origin_markups['c40hc'];
+                                                                }
+                                                                if(isset($origin_amounts['c40nor']) && isset($origin_markups['c40nor'])){
+                                                                    $total40nor=$origin_amounts['c40nor']+$origin_markups['c40nor'];
+                                                                }
+                                                                if(isset($origin_amounts['c45']) && isset($origin_markups['c45'])){
+                                                                    $total40nor=$origin_amounts['c45']+$origin_markups['c45'];
+                                                                }
+                                                                $sum_origin_20+=@$total20;
+                                                                $sum_origin_40+=@$total40;
+                                                                $sum_origin_40hc+=@$total40hc;
+                                                                $sum_origin_40nor+=@$total40nor;
+                                                                $sum_origin_45+=@$total45;
+                                                            ?>
                                                             <tr>
                                                                 <td>
                                                                     <a href="#" class="editable surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
@@ -568,12 +621,12 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="title-quote size-12px">Total</td>
-                                                            <td {{ $equipmentHides['20'] }} class="total_origin_20" colspan="3">{{@$rate->total['total']['origin']['20']}}</td>
-                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$rate->total['total']['origin']['40']}}</td>
-                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$rate->total['total']['origin']['40hc']}}</td>
-                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$rate->total['total']['origin']['40nor']}}</td>
-                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$rate->total['total']['origin']['45']}}</td>
-                                                            <td >USD</td>
+                                                            <td {{ $equipmentHides['20'] }} colspan="3">{{@$sum_origin_20}}</td>
+                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$sum_origin_40}}</td>
+                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$um_origin_40hc}}</td>
+                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$sum_origin_40nor}}</td>
+                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$sum_origin_45}}</td>
+                                                            <td ></td>
                                                         </tr>
                                                     @endif
                                                     </tbody>
@@ -616,14 +669,41 @@
                                                     <tbody style="background-color: white;">
                                                     @php
                                                         $a=0;
+                                                        $sum_destination_20=0;
+                                                        $sum_destination_40=0;
+                                                        $sum_destination_40hc=0;
+                                                        $sum_destination_40nor=0;
+                                                        $sum_destination_45=0;
                                                     @endphp
 
                                                     @foreach($rate->charge as $item)
                                                         @if($item->type_id==2)
-                                                            @php
+                                                            <?php
                                                                 $destination_amounts = json_decode($item->amount,true);
                                                                 $destination_markups = json_decode($item->markups,true);
-                                                            @endphp                                                       
+                                                        
+                                                                //Calculating totals
+                                                                if(isset($destination_amounts['c20']) && isset($destination_markups['c20'])){
+                                                                    $total20=$destination_amounts['c20']+$destination_markups['c20'];
+                                                                }
+                                                                if(isset($destination_amounts['c40']) && isset($destination_markups['c40'])){
+                                                                    $total40=$destination_amounts['c40']+$destination_markups['c40'];
+                                                                }
+                                                                if(isset($destination_amounts['c40hc']) && isset($destination_markups['c40hc'])){
+                                                                    $total40hc=$destination_amounts['c40hc']+$destination_markups['c40hc'];
+                                                                }
+                                                                if(isset($destination_amounts['c40nor']) && isset($destination_markups['c40nor'])){
+                                                                    $total40nor=$destination_amounts['c40nor']+$destination_markups['c40nor'];
+                                                                }
+                                                                if(isset($destination_amounts['c45']) && isset($destination_markups['c45'])){
+                                                                    $total40nor=$destination_amounts['c45']+$destination_markups['c45'];
+                                                                }
+                                                                $sum_destination_20+=@$total20;
+                                                                $sum_destination_40+=@$total40;
+                                                                $sum_destination_40hc+=@$total40hc;
+                                                                $sum_destination_40nor+=@$total40nor;
+                                                                $sum_destination_45+=@$total45;
+                                                            ?>                                                     
 
                                                             <tr>
                                                                 <td>
@@ -758,12 +838,12 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="title-quote size-12px">Total</td>
-                                                            <td {{ $equipmentHides['20'] }} class="total_destination_20" colspan="3">{{@$rate->total['total']['destination']['20']}}</td>
-                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$rate->total['total']['destination']['40']}}</td>
-                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$rate->total['total']['destination']['40hc']}}</td>
-                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$rate->total['total']['destination']['40nor']}}</td>
-                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$rate->total['total']['destination']['45']}}</td>
-                                                            <td >USD</td>
+                                                            <td {{ $equipmentHides['20'] }} colspan="3">{{@$sum_destination_20}}</td>
+                                                            <td {{ $equipmentHides['40'] }} colspan="3">{{@$sum_destination_40}}</td>
+                                                            <td {{ $equipmentHides['40hc'] }} colspan="3">{{@$sum_destination_40hc}}</td>
+                                                            <td {{ $equipmentHides['40nor'] }} colspan="3">{{@$sum_destination40nor}}</td>
+                                                            <td {{ $equipmentHides['45'] }} colspan="3">{{@$sum_destination_45}}</td>
+                                                            <td ></td>
                                                         </tr>
                                                     @endif
                                                     </tbody>
@@ -1063,38 +1143,37 @@
                         <div class="tab-content" id="show_detailed">
                             <div class="row" class="">
                                 <div class="col-md-2 col-xs-12">
-                                    {{ Form::select('type',['detailed'=>'Show detailed','total in'=>'Show total in'],$quote->pdf_option->show_type,['class'=>'form-control-sm type select2','id'=>'show_hide_select','data-quote-id'=>$quote->id]) }}
+                                    {{ Form::select('show_type',['detailed'=>'Show detailed','total in'=>'Show total in'],$quote->pdf_option->show_type,['class'=>'form-control-sm type select2 pdf-feature','id'=>'show_hide_select','data-quote-id'=>$quote->id,'data-name'=>'show_type','data-type'=>'select']) }}
                                 </div>
                                 <div class="col-md-2 col-xs-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="show_total" value="" id="show_total">
+                                        <input class="form-check-input pdf-feature" type="checkbox" data-quote-id="{{$quote->id}}" name="grouped_total_currency" data-name="grouped_total_currency" data-type="checkbox" value="1" {{$quote->pdf_option->grouped_total_currency==1 ? 'checked':''}}>
                                         <label class="title-quote"><b>Show total in:</b></label>
-                                        {{ Form::select('currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2']) }}
+                                        {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2 pdf-feature','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-3 group_origin_charges">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="show_origin_grouped" value="" id="show_origin_grouped">
+                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="show_origin_grouped" type="checkbox" data-type="checkbox" name="show_origin_grouped" value="1" {{$quote->pdf_option->grouped_origin_charges==1 ? 'checked':''}}>
                                         <label class="title-quote"><b>Group Origin Charges in:</b></label>
-                                        {{ Form::select('group_origin_charges',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2']) }}
+                                        {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charge_currency']) }}
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="title-quote"><b>Language:</b></label>
-                                    {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2','id'=>'language','data-quote-id'=>$quote->id]) }}
+                                    {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2 pdf-feature','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
                                 </div>
                                 <div class="col-md-1 show_carrier">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="show_carrier" value="1" id="show_carrier" data-quote-id="{{$quote->id}}" {{$quote->pdf_option->show_carrier==1 ? 'checked':''}}>
+                                        <input class="form-check-input pdf-feature" type="checkbox" name="show_carrier" value="1" id="show_carrier" data-quote-id="{{$quote->id}}" data-type="checkbox" data-name="show_carrier" {{$quote->pdf_option->show_carrier==1 ? 'checked':''}}>
                                         <label class="form-check-label title-quote" for="show_carrier">
                                             Show carrier
                                         </label>
                                     </div>
-
                                 </div>
                                 <div class="col-md-1 show_logo">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="show_logo" value="1" id="show_logo" data-quote-id="{{$quote->id}}" {{$quote->pdf_option->show_logo==1 ? 'checked':''}}>
+                                        <input class="form-check-input pdf-feature" type="checkbox" name="show_logo" value="1" id="show_logo" data-quote-id="{{$quote->id}}" data-name="show_logo" data-type="checkbox" {{$quote->pdf_option->show_logo==1 ? 'checked':''}}>
                                         <label class="form-check-label title-quote" for="show_logo">
                                             Show customer logo
                                         </label>
@@ -1106,10 +1185,10 @@
                                 <div class="col-md-2"></div>
                                 <div class="col-md-3 group_destination_charges">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="show_destination_grouped" value="" id="show_destination_grouped">
+                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="show_destination_grouped" data-type="checkbox" type="checkbox" name="show_destination_grouped" value="1" {{$quote->pdf_option->grouped_destination_charges==1 ? 'checked':''}}>
                                         <div class="form-group">
                                             <label class="title-quote"><b>Group Destination Charges in:</b></label>
-                                            {{ Form::select('group_destination_charges',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2']) }}
+                                            {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charge_currency']) }}
                                         </div>
                                     </div>
                                 </div>

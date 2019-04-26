@@ -236,12 +236,28 @@
                     <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
                     <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
-                    <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
-                    <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
-                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
-                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
-                    <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
-                    <td >{{$rate->currency->alphacode}}</td>
+                    @if($quote->pdf_option->grouped_total_currency==0)
+                        <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
+                        <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
+                        <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
+                        <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
+                        <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
+                    @else
+                        @if($quote->pdf_option->total_in_currency=='USD')
+                            <td {{ $equipmentHides['20'] }}>{{number_format((float)(@$sum20+@$inland20)/$rate->currency_usd, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{number_format((float)(@$sum40+@$inland40)/$rate->currency_usd, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)(@$sum40hc+@$inland40hc)/$rate->currency_usd, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)(@$sum40nor+@$inland40nor)/$rate->currency_usd, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{number_format((float)(@$sum45+@$inland45)/$rate->currency_usd, 2, '.', '')}}</td>
+                        @else
+                            <td {{ $equipmentHides['20'] }}>{{number_format((float)(@$sum20+@$inland20)/$rate->currency_eur, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{number_format((float)(@$sum40+@$inland40)/$rate->currency_eur, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)(@$sum40hc+@$inland40hc)/$rate->currency_eur, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)(@$sum40nor+@$inland40nor)/$rate->currency_eur, 2, '.', '')}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{number_format((float)(@$sum45+@$inland45)/$rate->currency_eur, 2, '.', '')}}</td>
+                        @endif
+                    @endif
+                    <td >{{$quote->pdf_option->grouped_total_currency==0 ? $rate->currency->alphacode:$quote->pdf_option->total_in_currency}}</td>
                 </tr>
             @endforeach
         </tbody>
