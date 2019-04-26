@@ -103,19 +103,15 @@
     color: #a4a2bb;
   }
   .btn-input__select {
-    position: relative;
-    left: 25px;
-    width: 120px;
     display: flex;
-    align-items:center;
-    justify-content:center;
     color: #cecece;
     cursor: pointer;
     font-size: 12px;
-    padding: 3px 0px;
+    padding: 3px 24px;
     border-radius: 5px;
-    border: 2px solid #cecece;
+    border: 3px solid #cecece;
     transition: all 300ms ease;
+    justify-content: space-between;
   }
   .btn-input__select:hover {
     border-color: #0072fc; 
@@ -127,7 +123,7 @@
   .input-select[type="checkbox"]:checked + .btn-input__select {
     color: #fff;
     display: flex;
-    width: 120px;
+    padding: 5px 38px;
     border-color: #0072fc;
     justify-content: center;
     background-color: #0072fc;
@@ -135,11 +131,9 @@
   .input-select[type="checkbox"]:checked + .btn-input__select span {
     display :none;
   }
-  /*.input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
-  border-color: #0072fc !important;
-  }*/
-  .input-select[type="checkbox"]:checked + .btn-input__select-add {
-    width: 60px;
+  .input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
+    border-color: #0072fc !important;
+
   }
   .col-txt {
     font-weight: 600;
@@ -248,17 +242,10 @@
   .no-check {
     display: none !important;
   }
-  .btn-input__select-add {
-    width: 60px;
-    left: 60px;
-  }
-  .border-bottom {
-    border-bottom: 1px solid #ececec;
-  }
-  .border-card {
-    border-color: #0072fc !important;
-  }
+  .border-card-p {
+    border-color: #0072fc;
 
+  }
   /* estilos */
 </style>
 @endsection
@@ -267,9 +254,10 @@
 @section('content')
 <br>
 
-<div class="row padding">
+<div class="row">
 
-  <div class="col-lg-12">
+  <div class="col-lg-1"></div>
+  <div class="col-lg-10">
     {!! Form::open(['route' => 'quotes-v2.processSearch','class' => 'form-group m-form__group']) !!}
     <div class="m-portlet">
       <div class="m-portlet__body">
@@ -351,7 +339,7 @@
 
             </div>
             <br>
-            <div class ="row">  <div class="col-lg-12"> <center><button type="submit" class="btn m-btn--pill  btn-search__quotes  btn-info">Search</button></center> </div>  </div>
+            <div class ="row">  <div class="col-lg-12"> <center><button type="submit" class="btn m-btn--pill    btn-info">Search</button></center> </div>  </div>
           </div>
         </div>      
       </div>
@@ -359,6 +347,8 @@
 
     {!! Form::close() !!}
   </div>
+  <div class="col-lg-1"></div>
+
 
 </div>
 
@@ -432,10 +422,10 @@
             </div>
             @foreach($arreglo as $arr)
             <!-- Empieza tarjeta de cotifzacion -->
-
-            <div class="card-p__quotes input-select{{$loop->iteration}}"  style="margin-bottom: 50px;">
+            <!-- aqui -->
+            <div class="card-p__quotes" style="margin-bottom: 50px;">
               <div class="row" id='principal{{$loop->iteration}}' >
-                <div class="col-lg-2 d-flex align-items-center img-bottom-border">            
+                <div class="col-lg-2 d-flex align-items-center">            
                   <div class="m-widget5">
                     <div class="m-widget5__item no-padding no-margin">
                       <div class="m-widget5__pic"> 
@@ -444,7 +434,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-10 b-left info-bottom-border">
+                <div class="col-lg-10 b-left">
                   <div class="row">
                     <div class="col-lg-5 no-padding padding-min-col d-flex justify-content-center">
                       <div class="row">
@@ -464,10 +454,14 @@
                         </div>
                       </div>
                       <br>
+                      <!--<span class="workblue">Detail Cost</span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
+<i  class="la la-angle-down blue"></i>
+</a>-->
                     </div>
 
                     <div class="col-lg-6" style="padding-right: 35px;">
                       <div class="table-r__quotes">
+
                         <div class="width " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> $USD</span></div>
                         <div class="width" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">$USD </span></div>
                         <div class="width" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">$USD </span></div>
@@ -476,8 +470,10 @@
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }}' name="info[]" value="{{ json_encode($arr) }}">
+                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check" rate-id ='{{$arr->id }}' name="info[]" value="{{ json_encode($arr) }}">
+
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
+
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -485,6 +481,7 @@
                           <div class="btn-detail__quotes">
                             <span class="workblue">Salling Schedule</span>  
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
+                            <!-- m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pil -->
                           </div>
                         </div>
                         <div class="col-lg-8 d-flex align-items-center">
@@ -494,6 +491,7 @@
                           <div class="btn-detail__quotes btn-d">
                             <span class="workblue">Detailetd cost</span>  
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
+                            <!-- m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pil -->
                           </div>
                         </div>
                       </div>
@@ -531,23 +529,24 @@
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width"><span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
+                        <div class="width">
+                          {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }} + {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}          
                         </div>      
                         <div class="width">
-                          <span class="bg-rates"> {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}            </b>       
+                          {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}                  
                         </div>
                         <div class="width" {{ $equipmentHides['40hc'] }}>  
-                          {{ isset($localorigin['40hc']) ?  str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right arrow-down"></i>     <b class="monto-down"> {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('montoMarkup')) : '0.00' }}     </b> 
+                          {{ isset($localorigin['40hc']) ?  str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                         <div class="width" {{ $equipmentHides['40nor'] }}>  
-                          <span class="bg-rates"> {{ isset($localorigin['40nor']) ?  str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('monto')) :'0.00' }}</span><span class="bg-rates"> + {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('markup')) : '0.00' }} </span>    <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('montoMarkup')) : '0.00' }}    </b>  
+                          {{ isset($localorigin['40nor']) ?  str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                         <div class="width" {{ $equipmentHides['45'] }}>     
-                          <span class="bg-rates"> {{ isset($localorigin['45']) ?  str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>     <b class="monto-down"> {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('montoMarkup')) : '0.00' }}     </b>
+                          {{ isset($localorigin['45']) ?  str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="">USD</span></div>
 
                   </div><br>
                   @endforeach
@@ -676,23 +675,23 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="width">
-                          <span class="bg-rates">   {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }} </span><span class="bg-rates"> + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}   </b>       
+                          {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }}  + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}          
                         </div>      
                         <div class="width">
-                          <span class="bg-rates"> {{ isset($localdestiny['40']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('monto')) :'0.00' }}</span><span class="bg-rates"> + {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('markup')) : '0.00' }} </span>    <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('montoMarkup')) : '0.00' }}      </b>            
+                          {{ isset($localdestiny['40']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('montoMarkup')) : '0.00' }}                  
                         </div>
                         <div class="width" {{ $equipmentHides['40hc'] }}>  
-                          <span class="bg-rates">   {{ isset($localdestiny['40hc']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('montoMarkup')) : '0.00' }}   </b>  
+                          {{ isset($localdestiny['40hc']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                         <div class="width" {{ $equipmentHides['40nor'] }}>  
-                          <span class="bg-rates">  {{ isset($localdestiny['40nor']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('montoMarkup')) : '0.00' }}     </b>
+                          {{ isset($localdestiny['40nor']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                         <div class="width" {{ $equipmentHides['45'] }}>     
-                          <span class="bg-rates"> {{ isset($localdestiny['45']) ?  str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('markup')) : '0.00' }}    </span> <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('montoMarkup')) : '0.00' }}     </b>
+                          {{ isset($localdestiny['45']) ?  str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('montoMarkup')) : '0.00' }}     
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="">USD</span></div>
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
@@ -749,31 +748,28 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}<span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}</span><i class="la la-caret-right"></i><b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
-                        </div>
+                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-d20{{$loop->iteration}}-{{$arr->id}}' >
+                          {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}       </div>
 
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' >{{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}</span> 
-                          <i class="la la-caret-right"></i><b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b>
-                        </div>
+                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
+                          <div class="montoI40" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}</div>
 
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i> <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b>
-                        </div>
+                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
+                          <div id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     </div>
 
                         <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
                         <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD[]" value="{{ json_encode($inlandDestiny) }} ">
-                      
-                        <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
-                      
+                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check" name="inlandD[]" value="{{ json_encode($inlandDestiny) }}">
+                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
                     </div>
-                    <!-- aqui -->
+
                   </div><br>
                   @endforeach
                   @if(!$arr->inlandOrigin->isEmpty())
@@ -790,31 +786,26 @@
 
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
-                          <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  
-                        </div>
+                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-o20{{$loop->iteration}}-{{$arr->id}}' >
+                          {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>      {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}       </div>
 
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b>
-                        </div>
+                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
+                          <div class="montoI40" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i> {{ @$inlandOrigin['inlandDetails']['i40']['markup']  }}</div>
 
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          <span class="bg-rates" id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b>
-                        </div>
+                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
+                          <div id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </div>
+                          <i class="la la-caret-right"></i>         {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}     </div>
 
                         <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
                         <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
-
-                        <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
-                      
+                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
                     </div>
                   </div><br>
                   @endforeach
@@ -834,7 +825,9 @@
                     <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
                     <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
-
+                  <br><br>
+                  <div class="row"><div class="col-lg-12"><hr></div></div>
+                  <br><br>
                 </div>
               </div>
               @endif
@@ -941,19 +934,20 @@
     }
   </script>
   <script>
-    /*$('.detailed-cost').on('click', function(){
-			$('.card-p__quotes').toggleClass('border-card-p');
-		    var rate = $(this).attr('rate-id');
+    $('.btnrate').on('click', function(){
+      $('.card-p__quotes').toggleClass('border-card-p');
+      /*      var rate = $(this).attr('rate-id');
+
       var theElement = $(this);
       if(theElement.prop('checked')){
-      }else{
-        }
-		});*/
 
-    $('.input-select').on('click', function(){
-      var ident = $(this).attr('id');
-      $('.'+ident+'').toggleClass('border-card');
+      }else{
+
+
+        }*/
+
     });
+
 
 
     $('.inlands').on('click', function(){
@@ -961,15 +955,12 @@
       var id = $(this).attr('data-inland');
       var idRate = $(this).attr('data-rate');
 
-
-
       var theElement = $(this);
       var  i20= $("#valor-d20"+id+"-"+idRate).html();
       var  i40= $("#valor-d40"+id+"-"+idRate).html();
       var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
 
       var  sub20= $("#sub_inland_20"+idRate).html();
-
       var  sub40= $("#sub_inland_40"+idRate).html();
       var  sub40h= $("#sub_inland_40h"+idRate).html();
       if(theElement.prop('checked')){
@@ -984,7 +975,6 @@
         sub40 = parseFloat(sub40) -  parseFloat(i40);
         sub40h = parseFloat(sub40h) -  parseFloat(i40h);
       }
-
       $("#sub_inland_20"+idRate).html(sub20);
       $("#sub_inland_40"+idRate).html(sub40);
       $("#sub_inland_40h"+idRate).html(sub40h);
@@ -1021,6 +1011,9 @@
       $("#sub_inland_40h"+idRate).html(sub40h);
 
     });
+
+
+
 
   </script>
   @stop
