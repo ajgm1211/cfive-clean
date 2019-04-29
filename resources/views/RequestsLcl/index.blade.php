@@ -207,6 +207,7 @@
                 "ordering": true,
                 "info": true,
                 "deferLoading": 57,
+                "stateSave": true,
                 "autoWidth": true,
                 "processing": true,
                 "dom": 'Bfrtip',
@@ -238,11 +239,13 @@
                 "order": [[0, 'desc']],
                 "lengthChange": false,
                 "searching": true,
+                "stateSave": true,
                 "ordering": true,
                 "width": true,
                 "info": true,
                 "deferLoading": 57,
                 "autoWidth": false,
+                "stateSave": true,
                 "processing": true,
                 "dom": 'Bfrtip',
                 "paging": true
@@ -288,7 +291,8 @@
                                     'The Request has been deleted.',
                                     'success'
                                 )
-                                $(elemento).closest('tr').remove();
+                                //$(elemento).closest('tr').remove();
+                                $('#requesttable').DataTable().ajax.reload();
                             }else if(data == 2){
                                 swal("Error!", "an internal error occurred!", "error");
                             }
