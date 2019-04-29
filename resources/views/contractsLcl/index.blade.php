@@ -418,6 +418,7 @@ New \ Status Import  &nbsp;
             "dom": 'Bfrtip',
             "paging": true,
             "scrollX": true,
+            "stateSave": true,
 
             buttons: [
                 {

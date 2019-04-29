@@ -16,6 +16,7 @@ use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
+use Illuminate\Support\Facades\DB;
 use App\Mail\NewRequestToAdminMail;
 use App\Jobs\SendEmailRequestFclJob;
 use Illuminate\Support\Facades\Storage;
@@ -34,13 +35,15 @@ class NewContractRequestsController extends Controller
 
     public function create()
     {
-        $Ncontracts = NewContractRequest::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();
-        //dd($Ncontracts);
+        /*$Ncontracts = NewContractRequest::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();*/
+        
+        $Ncontracts = DB::select('call  select_request_fcl()');
+//        dd($Ncontracts);
         //dd($Ncontracts[0]['Requestcarriers']->pluck('carrier')->pluck('name'));
 
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
-                return $Ncontracts->companyuser->name;
+                return $Ncontracts->company_user;
             })
             ->addColumn('name', function ($Ncontracts) {
                 return $Ncontracts->namecontract;
@@ -52,12 +55,12 @@ class NewContractRequestsController extends Controller
                 if(empty($Ncontracts->direction) == true){
                     return " -------- ";
                 }else {
-                    return $Ncontracts->Direction->name;
+                    return $Ncontracts->direction;
                 }
             })
             ->addColumn('carrier', function ($Ncontracts) {
-                if(count($Ncontracts->Requestcarriers) >= 1){
-                    return str_replace(['[',']','"'],'',$Ncontracts->Requestcarriers->pluck('carrier')->pluck('name'));
+                if(count($Ncontracts->carriers) >= 1){
+                    return $Ncontracts->carriers;
                 } else {
                     return " -------- ";
                 }
@@ -68,19 +71,12 @@ class NewContractRequestsController extends Controller
             ->addColumn('date', function ($Ncontracts) {
                 return $Ncontracts->created;
             })
-            ->addColumn('updated', function ($Ncontracts) {
-                if(empty($Ncontract->updated) != true){
-                    return Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s');
-                } else {
-                    return '00-00-0000 00:00:00';
-                }
-            })
             ->addColumn('user', function ($Ncontracts) {
-                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+                return $Ncontracts->user;
             })
             ->addColumn('time_elapsed', function ($Ncontracts) {
-                if(empty($Ncontracts->time_total) != true){
-                    return $Ncontracts->time_total;
+                if(empty($Ncontracts->time_elapsed) != true){
+                    return $Ncontracts->time_elapsed;
                 } else {
                     return '--------';
                 }

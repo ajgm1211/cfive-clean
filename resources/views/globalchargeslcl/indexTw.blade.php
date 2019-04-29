@@ -204,6 +204,7 @@
             "width": true,
             "info": true,
             "deferLoading": 57,
+            "stateSave": true,
             "autoWidth": false,
             "processing": true,
             "dom": 'Bfrtip',
