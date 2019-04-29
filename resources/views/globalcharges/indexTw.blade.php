@@ -225,6 +225,7 @@ New \ Status Import  &nbsp;
             "info": true,
             "deferLoading": 57,
             "autoWidth": false,
+            "stateSave": true,
             "processing": true,
             "dom": 'Bfrtip',
             "paging": true
