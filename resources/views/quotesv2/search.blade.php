@@ -768,7 +768,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD[]" value="{{ json_encode($inlandDestiny) }} ">
+                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD{{$arr->id}}[]" value="{{ json_encode($inlandDestiny) }} ">
                       
                         <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
                       
@@ -811,7 +811,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
+                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO{{$arr->id}}[]" value="{{ json_encode($inlandOrigin) }}">
 
                         <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
                       
