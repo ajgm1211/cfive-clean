@@ -487,7 +487,15 @@
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
-                        <div class="col-lg-8 d-flex align-items-center">
+                        @if(isset($arr->contract->remarks))
+                        <div class="col-lg-2">
+                          <div class="btn-detail__quotes">
+                            <span class="workblue">Remarks</span>  
+                            <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
+                          </div>
+                        </div>
+                        @endif
+                        <div class="col-lg-6 d-flex align-items-center">
                           <span class="portcss">Validity: {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
                         </div>
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
@@ -769,9 +777,9 @@
                     <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD{{$arr->id}}[]" value="{{ json_encode($inlandDestiny) }} ">
-                      
-                        <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
-                      
+
+                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
+
                     </div>
                     <!-- aqui -->
                   </div><br>
@@ -813,8 +821,8 @@
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO{{$arr->id}}[]" value="{{ json_encode($inlandOrigin) }}">
 
-                        <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
-                      
+                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
+
                     </div>
                   </div><br>
                   @endforeach
@@ -837,6 +845,22 @@
 
                 </div>
               </div>
+              @endif
+
+              @if(isset($arr->contract->remarks))
+              <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
+                <div class="col-lg-12">
+                  <div class="row">
+                    <span class="darkblue cabezeras">Remarks</span><br><br>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6"><span class="monto-down">{{ $arr->contract->remarks }} </span></div>
+
+                  </div>
+                </div>
+
+              </div><br>
+
               @endif
 
 

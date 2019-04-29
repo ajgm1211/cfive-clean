@@ -880,9 +880,11 @@ function display(id){
   var origin = $("#origin"+id);
   var destiny = $("#destiny"+id);
   var inland =  $("#inland"+id);
+  var remark = $("#remark"+id);
 
   if(freight.attr('hidden')){
     $("#freight"+id).removeAttr('hidden');
+    $("#remark"+id).attr('hidden','true');
   }else{
     $("#freight"+id).attr('hidden','true');
   }
@@ -903,4 +905,23 @@ function display(id){
   }else{
     $("#inland"+id).attr('hidden','true');
   }
+}
+
+function display_r(id){
+
+  var freight = $("#freight"+id);
+  var origin = $("#origin"+id);
+  var destiny = $("#destiny"+id);
+  var inland =  $("#inland"+id);
+  var remark = $("#remark"+id);
+  if(remark.attr('hidden')){
+    $("#remark"+id).removeAttr('hidden');
+    $("#freight"+id).attr('hidden','true');
+    $("#origin"+id).attr('hidden','true');
+    $("#destiny"+id).attr('hidden','true');
+    $("#inland"+id).attr('hidden','true');
+  }else{
+    $("#remark"+id).attr('hidden','true');
+  }
+
 }

@@ -2042,7 +2042,7 @@ class QuoteV2Controller extends Controller
 
     }
 
-    //dd($arreglo);
+   // dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
