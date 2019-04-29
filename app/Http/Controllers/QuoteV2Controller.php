@@ -209,11 +209,16 @@ class QuoteV2Controller extends Controller
 
     $charge=Charge::find($request->pk);
     $array = json_decode($charge->amount, true);
-    $name = explode("->", $request->name);
-    $field = (string) $name[0];
-    $array[$name[1]]=$request->value;  
-    $array = json_encode($array);
-    $charge->$field=$array;
+    if (strpos($request->name, '->') == true) {
+      $name = explode("->", $request->name);
+      $field = (string) $name[0];
+      $array[$name[1]]=$request->value;  
+      $array = json_encode($array);
+      $charge->$field=$array;
+    }else{
+      $name = $request->name;
+      $charge->$name=$request->value;
+    }
     $charge->update();
     return response()->json(['success'=>'done']);
   }
@@ -525,25 +530,32 @@ class QuoteV2Controller extends Controller
 
     foreach ($rates as $item) {
      $currency = Currency::find($item->currency_id);
-     $rates->map(function ($item) use($currency) {
-      $item['currency_usd'] = $currency->rates;
-      $item['currency_eur'] = $currency->rates_eur;
-      return $item;
-    });
+       //$rates->map(function ($item) use($currency) {
+     $item->currency_usd = $currency->rates;
+     $item->currency_eur = $currency->rates_eur;
+        //return $item;
+      //});
+     foreach ($item->charge as $value) {
+      $currency_charge = Currency::find($value->currency_id);
+         //$item->charge->transform(function ($value) use($currency_charge) {
+      $value->currency_usd = $currency_charge->rates;
+      $value->currency_eur = $currency_charge->rates_eur;
+          //return $value;
+        //});
+    }
+  }
+  //dd(json_encode($rates));
+  $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
 
-   }
+  $pdf = \App::make('dompdf.wrapper');
+  $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-   $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
-
-   $pdf = \App::make('dompdf.wrapper');
-   $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
-
-   return $pdf->stream('quote');
- }
+  return $pdf->stream('quote');
+}
 
   // Store
 
- public function store(Request $request){
+public function store(Request $request){
 
 
   $form =  json_decode($request->input('form'));
