@@ -1152,18 +1152,11 @@
                                         {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2 pdf-feature','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
                                     </div>
                                 </div>
-                                <div class="col-md-3 group_origin_charges">
-                                    <div class="form-check">
-                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="show_origin_grouped" type="checkbox" data-type="checkbox" name="show_origin_grouped" value="1" {{$quote->pdf_option->grouped_origin_charges==1 ? 'checked':''}}>
-                                        <label class="title-quote"><b>Group Origin Charges in:</b></label>
-                                        {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charge_currency']) }}
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-auto">
                                     <label class="title-quote"><b>Language:</b></label>
                                     {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2 pdf-feature','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
                                 </div>
-                                <div class="col-md-1 show_carrier">
+                                <div class="col-auto show_carrier">
                                     <div class="form-check">
                                         <input class="form-check-input pdf-feature" type="checkbox" name="show_carrier" value="1" id="show_carrier" data-quote-id="{{$quote->id}}" data-type="checkbox" data-name="show_carrier" {{$quote->pdf_option->show_carrier==1 ? 'checked':''}}>
                                         <label class="form-check-label title-quote" for="show_carrier">
@@ -1171,7 +1164,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-1 show_logo">
+                                <div class="col-md-auto show_logo">
                                     <div class="form-check">
                                         <input class="form-check-input pdf-feature" type="checkbox" name="show_logo" value="1" id="show_logo" data-quote-id="{{$quote->id}}" data-name="show_logo" data-type="checkbox" {{$quote->pdf_option->show_logo==1 ? 'checked':''}}>
                                         <label class="form-check-label title-quote" for="show_logo">
@@ -1180,15 +1173,28 @@
                                     </div>
                                 </div>
                             </div>
+                            <br>
                             <div class="row" style="padding-top: 25px;">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-2"></div>
+                                <div class="col-md-3 group_freight_charges">
+                                    <div class="form-check">
+                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="grouped_freight_charges" type="checkbox" data-type="checkbox" name="grouped_freight_charges" value="1" {{$quote->pdf_option->grouped_freight_charges==1 ? 'checked':''}}>
+                                        <label class="title-quote"><b>Group Freight Charges in:</b></label>
+                                        {{ Form::select('freight_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->freight_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'freight_charges_currency']) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3 group_origin_charges">
+                                    <div class="form-check">
+                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="grouped_origin_charges" type="checkbox" data-type="checkbox" name="grouped_origin_charges" value="1" {{$quote->pdf_option->grouped_origin_charges==1 ? 'checked':''}}>
+                                        <label class="title-quote"><b>Group Origin Charges in:</b></label>
+                                        {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charges_currency']) }}
+                                    </div>
+                                </div>
                                 <div class="col-md-3 group_destination_charges">
                                     <div class="form-check">
-                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="show_destination_grouped" data-type="checkbox" type="checkbox" name="show_destination_grouped" value="1" {{$quote->pdf_option->grouped_destination_charges==1 ? 'checked':''}}>
+                                        <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="grouped_destination_charges" data-type="checkbox" type="checkbox" name="grouped_destination_charges" value="1" {{$quote->pdf_option->grouped_destination_charges==1 ? 'checked':''}}>
                                         <div class="form-group">
                                             <label class="title-quote"><b>Group Destination Charges in:</b></label>
-                                            {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charge_currency']) }}
+                                            {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charges_currency']) }}
                                         </div>
                                     </div>
                                 </div>
