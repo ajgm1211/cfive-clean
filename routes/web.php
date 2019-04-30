@@ -135,6 +135,9 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 Route::prefix('Requests')->group(function () {
     //New Request Importation
     
+    Route::get('SimilarContracts/{id}','NewContractRequestsController@similarcontracts')->name('Similar.Contracts.Request')
+      ->middleware(['auth','role:administrator|company|subuser']);
+    
     Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
     
     Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')

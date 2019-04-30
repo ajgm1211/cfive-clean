@@ -1,7 +1,9 @@
 @extends('layouts.app')
 @section('css')
 @parent
-<link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+
+
 @endsection
 
 @section('title', 'New Request')
@@ -62,7 +64,6 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestImportation.store2','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -70,51 +71,57 @@ new registration
                     <div class="row">
                         <div class="col-lg-12">
 
+                            {!! Form::open(['route'=>'RequestImportation.store2','method'=>'POST','files'=>true])!!}
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
-                                    <label class="col-form-labe"><b>CONTRACT:</b></label>
-                                </div>
-
-                                <div class="col-lg-3">
-                                    <label for="nameid" class="">Contract Name</label>
+                                    <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
-                                    'placeholder'=>'Contract Name',
+                                    'placeholder'=>'References  ',
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-3">
-                                    <label for="numberid" class=" ">Contract Number</label>
-                                    {!!  Form::text('number',null,['id'=>'numberid',
-                                    'placeholder'=>'Number Contract',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
-                            </div>
-                            <div class="form-group m-form__group row" >
-
                                 <div class="col-lg-2">
-                                    <label class="col-form-label"><b>DATA:</b></label>
-                                </div>
-                                <div class="col-lg-3">
-                                    <label class="col-form-label">Carrier</label>
-                                    <div class="col-form-label" id="carrierMul">
+                                    <label class="">Carrier</label>
+                                    <div class="" id="carrierMul">
                                         {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierMul','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
-                                <div class="col-lg-3">
-                                    <label class="col-form-label">Direction</label>
-                                    <div class="col-form-label" id="direction">
+                                <div class="col-lg-2">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
                                         {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','id'=>'direction'])!!}
                                     </div>
                                 </div>
+                                <div class="col-lg-1">
+                                    <br>
+                                    <button type="text" id="btnFiterSubmitSearch" style="padding: 11px 45px;" class="btn btn-primary">Submit</button>
+                                </div>
+                                <div class="col-lg-1">
+                                    <br>
+                                    <label for="file" class="btn btn-primary" style="padding: 11px 18px;">
+                                        <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                    </label>
+                                    <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                    <div id="info"></div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <br>
+
+                                    <button type="submit" class="btn btn-primary" style="padding: 11px 31px;">
+                                        <i class=""></i>Import File
+                                    </button>
+                                </div>
+
                             </div>
+
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
+                            <!--  No aplica por el momento Inicio ----------------------------------------- -->
                             <!-- <hr> -->
                             <div class="form-group m-form__group row" style='display:none;'>
 
@@ -267,33 +274,42 @@ new registration
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group m-form__group row">
 
-                            </div>
-                            <br>
-                            <br>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-4">
-                                </div>
-                                <div class="col-lg-6">
-                                    <input type="file" name="file" required>
-                                </div>
-                            </div>
-                            <div class="form-group m-form__group ">
-                                <div class="col-lg-12 col-lg-offset-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        Load Request
-                                    </button>
-                                </div>
-                            </div>
+                            <!--  No aplica por el momento Fin -------------------------------------------- -->
 
+                            {!! Form::close()!!}
                         </div>
+                        <div class="col-lg-12">
+                            <!--<form method="POST" id="search-form" class="form-inline" role="form">
+@csrf
+<div class="form-group">
+<label for="name">Name</label>
+<input type="text" class="form-control" name="namead" id="namead" placeholder="search name">
+</div>
 
+<button type="submit" class="btn btn-primary">Search</button>
+</form>-->
+
+                            <br>
+                            <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                                <thead >
+                                    <tr>
+                                        <!--   <th >Carrier</th>-->
+                                        <!--   <th >Direction</th>-->
+                                        <th >References</th>
+                                        <th >Validation</th>
+                                        <th >Expire</th>
+                                        <th >Options</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        {!! Form::close()!!}
+
         <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
@@ -361,12 +377,50 @@ new registration
 @endsection
 @section('js')
 @parent
+
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 
 <script>
+    // $(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
+    var oTable = $('#requesttable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{!! route("Similar.Contracts.Request",$user->company_user_id) !!}',
+            data: function (d) {
+                d.name = $('input[name=name]').val();
+            }
+        },
+        columns: [
+            { data: 'name', name: 'name' },
+            { data: 'validity', name: 'validity' },
+            { data: 'expire', name: 'expire' }
+        ],
+        "stateSave": true
+    });
+
+    $('#search-form').on('submit', function(e) {
+        oTable.draw();
+        e.preventDefault();
+    });    
+
+    $('#btnFiterSubmitSearch').click(function(){
+        $('#requesttable').DataTable().draw(true);
+    });
+
+    function cambiar(){
+        var pdrs = document.getElementById('file').files[0].name;
+        document.getElementById('info').innerHTML = pdrs;
+    } 
     function validate(formData, jqForm, options) {
         var form = jqForm[0];
         if (!form.file.value) {
@@ -412,6 +466,8 @@ new registration
         });
 
     })();
+
+
 
 </script>
 
