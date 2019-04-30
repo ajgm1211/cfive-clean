@@ -12,6 +12,7 @@ use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\NewGlobalchargeRequestFcl;
+use App\Jobs\SendEmailRequestGcJob;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
@@ -76,7 +77,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
             ->make();
     }
-    
+
     public function create2(){
         $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
         //dd($Ncontracts[0]['companyuser']['name']);
@@ -307,7 +308,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
             $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-            
+
 
             if($Ncontract->status == 'Processing'){
                 if($Ncontract->time_star_one == false){
@@ -324,28 +325,21 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                     $fechaStar = Carbon::parse($Ncontract->time_star);
                     $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
                 }
-                
-                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
-                $message = 'The request was processed N°: ' . $Ncontract->id;
-                foreach ($users as $user) {
 
-                    $user->notify(new N_general(\Auth::user(),$message));
-                }
+                if($Ncontract->sentemail == false){
+                    $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                    $message = 'The request was processed N°: ' . $Ncontract->id;
+                    foreach ($users as $user) {
 
-                $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
-                foreach ($usersCompa as $userCmp) {
-                    if($userCmp->id != $Ncontract->user_id){
-                        \Mail::to($userCmp->email)->send(new NewRequestGlobalChargeToAdminMail($userCmp->toArray(),
-                                                                                               $Ncontract->toArray()));
+                        $user->notify(new N_general(\Auth::user(),$message));
                     }
+
+                    $usercreador = User::find($Ncontract->user_id);
+                    $message = "The importation ".$Ncontract->id." was completed";
+                    $usercreador->notify(new SlackNotification($message));
+                    SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id);
+
                 }
-
-                $usercreador = User::find($Ncontract->user_id);
-                $message = "The importation ".$Ncontract->id." was completed";
-                $usercreador->notify(new SlackNotification($message));
-
-                \Mail::to($usercreador->email)->send(new NewRequestGlobalChargeToUserMail($usercreador->toArray(),
-                                                                                          $Ncontract->toArray()));
 
             }
 

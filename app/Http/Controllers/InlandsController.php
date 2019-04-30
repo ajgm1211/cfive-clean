@@ -311,7 +311,7 @@ class InlandsController extends Controller
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully updated this Inland.');
-    return redirect()->action('InlandsController@index');
+    return redirect()->route('inlands.edit', [setearRouteKey($inland->id)]);
   }
 
   public function deleteInland(Request $request,$id)

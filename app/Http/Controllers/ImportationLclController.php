@@ -106,14 +106,14 @@ class ImportationLclController extends Controller
 
                     if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
                         $wmExiBol = true;
-                        $wmVal    = (int)$wmArr[0];
+                        $wmVal    = floatval($wmArr[0]);
                     }
 
                     //----------------- 40' -----------------------------------------------------------------
 
                     if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
                         $minimunExiBol = true;
-                        $minimunVal    = (int)$minimunArr[0];
+                        $minimunVal    = floatval($minimunArr[0]);
                     }
 
                     if($wmVal == 0 && $minimunVal == 0){
@@ -459,7 +459,7 @@ class ImportationLclController extends Controller
 
                         if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
                             $wmExiBol = true;
-                            $wmVal   = (int)$wmArr[0];
+                            $wmVal   = floatval($wmArr[0]);
                         }else{
                             $wmVal = $wmArr[0].'_E_E';
                         }
@@ -470,7 +470,7 @@ class ImportationLclController extends Controller
 
                         if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
                             $minimunExiBol = true;
-                            $minimunVal   = (int)$minimunArr[0];
+                            $minimunVal   = floatval($minimunArr[0]);
                         }else{
                             $minimunVal = $minimunArr[0].'_E_E';
                         }
@@ -972,8 +972,8 @@ class ImportationLclController extends Controller
             "destiny_port"  => $request->destiny_port,
             "carrier_id"    => $request->carrier_id,
             "contractlcl_id" => $request->contract_id,
-            "uom"           => (int)$request->uom,
-            "minimum"       => (int)$request->minimum,
+            "uom"           => floatval($request->uom),
+            "minimum"       => floatval($request->minimum),
             "currency_id"   => $request->currency_id
         ]);
 
@@ -1023,8 +1023,8 @@ class ImportationLclController extends Controller
         $rate->destiny_port     =  $request->destiny_id;
         $rate->carrier_id       =  $request->carrier_id;
         $rate->contractlcl_id   =  $request->contract_id;
-        $rate->uom              =  $request->uom;
-        $rate->minimum          =  $request->minimum;
+        $rate->uom              =  floatval($request->uom);
+        $rate->minimum          =  floatval($request->minimum);
         $rate->currency_id      =  $request->currency_id;
         $rate->update();
 

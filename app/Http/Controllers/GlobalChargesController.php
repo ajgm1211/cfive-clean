@@ -363,6 +363,8 @@ class GlobalChargesController extends Controller
 										</a>
                     ';
             })
+            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            ->rawColumns(['checkbox','action'])
             ->editColumn('id', 'ID: {{$id}}')->toJson();
     }
 
@@ -397,6 +399,18 @@ class GlobalChargesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
+    }
+    
+    public function destroyArr(Request $request)
+    {
+        $globals_id_array = $request->input('id');
+        $global = GlobalCharge::whereIn('id', $globals_id_array);
+        if($global->delete())
+        {
+             return response()->json(['success' => '1']);
+        } else {
+             return response()->json(['success' => '2']);
+        }
     }
 }

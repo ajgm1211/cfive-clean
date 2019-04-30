@@ -335,6 +335,7 @@ Request Importation &nbsp;
             ordering: true,
             searching: true,
             processing: true,
+            stateSave: true,
             serverSide: true,
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('contract.table') }}",
@@ -447,6 +448,7 @@ Request Importation &nbsp;
                 });
             },
             "lengthChange": false,
+            "stateSave": true,
             "searching": true,
             "ordering": false,
             "info": true,
