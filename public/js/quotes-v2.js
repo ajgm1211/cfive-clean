@@ -744,17 +744,11 @@ $(document).on('change', '#show_hide_select', function () {
     if($('#show_hide_select').val()=='total in'){
         $(".group_origin_charges").addClass('hide');
         $(".group_destination_charges").addClass('hide');
-        $(".show_logo").removeClass('col-md-1');
-        $(".show_logo").addClass('col-md-2');
-        $(".show_carrier").removeClass('col-md-1');
-        $(".show_carrier").addClass('col-md-2');
+        $(".group_freight_charges").addClass('hide');
     }else{
         $(".group_origin_charges").removeClass('hide');
         $(".group_destination_charges").removeClass('hide');
-        $(".show_logo").removeClass('col-md-2');
-        $(".show_logo").addClass('col-md-1');
-        $(".show_carrier").removeClass('col-md-2');
-        $(".show_carrier").addClass('col-md-1');        
+        $(".group_freight_charges").removeClass('hide');      
     }
     
 });
