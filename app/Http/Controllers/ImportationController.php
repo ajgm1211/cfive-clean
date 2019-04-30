@@ -139,35 +139,35 @@ class ImportationController extends Controller
 
                     if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
                         $twentyExiBol = true;
-                        $twentyVal   = (int)$twentyArr[0];
+                        $twentyVal   = floatval($twentyArr[0]);
                     }
 
                     //----------------- 40' -----------------------------------------------------------------
 
                     if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
                         $fortyExiBol = true;
-                        $fortyVal   = (int)$fortyArr[0];
+                        $fortyVal   = floatval($fortyArr[0]);
                     }
 
                     //----------------- 40'HC --------------------------------------------------------------
 
                     if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
                         $fortyhcExiBol = true;
-                        $fortyhcVal   = (int)$fortyhcArr[0];
+                        $fortyhcVal   = floatval($fortyhcArr[0]);
                     }
 
                     //----------------- 40'NOR -------------------------------------------------------------
 
                     if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
                         $fortynorExiBol = true;
-                        $fortynorVal   = (int)$fortynorArr[0];
+                        $fortynorVal   = floatval($fortynorArr[0]);
                     }
 
                     //----------------- 45' ----------------------------------------------------------------
 
                     if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
                         $fortyfiveExiBol = true;
-                        $fortyfiveVal   = (int)$fortyfiveArr[0];
+                        $fortyfiveVal   = floatval($fortyfiveArr[0]);
                     }
 
                     if($twentyVal == 0
@@ -337,7 +337,7 @@ class ImportationController extends Controller
 
                     //  Amount ---------------------------------------------------------------------------------
 
-                    $amountV = (int)$ammountEX[0];
+                    $amountV = floatval($ammountEX[0]);
 
                     //  Currency -------------------------------------------------------------------------------
 
@@ -1179,7 +1179,9 @@ class ImportationController extends Controller
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('FclImport')->url($NameFile);
 
-        */
+        FailSurCharge::where('contract_id',$request->Contract_id)->forceDelete();
+        LocalCharge::where('contract_id',$request->Contract_id)->forceDelete();*/
+        
 
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
@@ -1630,11 +1632,11 @@ class ImportationController extends Controller
                         "destiny_port" => $destiny,
                         "carrier_id"   => $request->carrier_id,
                         "contract_id"  => $request->contract_id,
-                        "twuenty"      => (int)$request->twuenty,
-                        "forty"        => (int)$request->forty,
-                        "fortyhc"      => (int)$request->fortyhc,
-                        "fortynor"     => (int)$request->fortynor,
-                        "fortyfive"    => (int)$request->fortyfive,
+                        "twuenty"      => floatval($request->twuenty),
+                        "forty"        => floatval($request->forty),
+                        "fortyhc"      => floatval($request->fortyhc),
+                        "fortynor"     => floatval($request->fortynor),
+                        "fortyfive"    => floatval($request->fortyfive),
                         "currency_id"  => $request->currency_id
                     ]);
                 }
@@ -1656,11 +1658,11 @@ class ImportationController extends Controller
         $rate->destiny_port =  $request->destiny_id;
         $rate->carrier_id   =  $request->carrier_id;
         $rate->contract_id  =  $request->contract_id;
-        $rate->twuenty      =  $request->twuenty;
-        $rate->forty        =  $request->forty;
-        $rate->fortyhc      =  $request->fortyhc;
-        $rate->fortynor     =  $request->fortynor;
-        $rate->fortyfive    =  $request->fortyfive;
+        $rate->twuenty      =  floatval($request->twuenty);
+        $rate->forty        =  floatval($request->forty);
+        $rate->fortyhc      =  floatval($request->fortyhc);
+        $rate->fortynor     =  floatval($request->fortynor);
+        $rate->fortyfive    =  floatval($request->fortyfive);
         $rate->currency_id  =  $request->currency_id;
         $rate->update();
 
@@ -4290,7 +4292,7 @@ class ImportationController extends Controller
         $typedestinyVar     = $request->changetype;
         $carrierVarArr      = $request->carrier_id;
         $calculationtypeVar = $request->calculationtype_id;
-        $ammountVar         = (int)$request->ammount;
+        $ammountVar         = floatval($request->ammount);
         $currencyVar        = $request->currency_id;
         $contractVar        = $request->contract_id;
         $typerate           =  $request->typeroute;
@@ -4354,7 +4356,7 @@ class ImportationController extends Controller
         $contractVar           =  $request->contract_id;
         $typedestinyVar        =  $request->changetype;
         $calculationtypeVar    =  $request->calculationtype_id;
-        $ammountVar            =  $request->ammount;
+        $ammountVar            =  floatval($request->ammount);
         $currencyVar           =  $request->currency_id;
         $carrierVarArr         =  $request->carrier_id;
         $typerate              =  $request->typeroute;

@@ -20,6 +20,7 @@ class NewContractRequestLcl extends Model
                            'time_star_one',
                            'created',
                            'created_at',
+                           'sentemail',
                            'type',
                            'data'];
 

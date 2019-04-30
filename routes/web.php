@@ -86,6 +86,7 @@ Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
     Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
+    Route::post('destroyArr', 'GlobalChargesController@destroyArr')->name('globalcharges.destroyArr');
     Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
     Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
     Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge']);
@@ -568,7 +569,7 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 });
 // GLOBAL CHARGES LCL 
 Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
-
+    Route::post('destroyArr', 'GlobalChargesLclController@destroyArr')->name('globalchargeslcl.destroyArr');
     Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
     Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);
     Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl']);

@@ -52,7 +52,7 @@
                                 <div class="col-xl-12 order-1 order-xl-2 m--align-right">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                            Add New
+                                            Add New &nbsp;
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
@@ -67,6 +67,15 @@
                                             </span>
                                         </button>
                                     </a>
+
+                                    <button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <span>
+                                            <span>
+                                                Delete Selected &nbsp;
+                                            </span>
+                                            <i class="la la-trash"></i>
+                                        </span>
+                                    </button>
                                     <!--<a href="{{route('RequestsGlobalchargersFcl.indexListClient')}}">
 
 <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
@@ -85,6 +94,9 @@ New \ Status Import  &nbsp;
                         <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th>
+                                        Select
+                                    </th>
                                     <th>
                                         Type
                                     </th>
@@ -193,6 +205,7 @@ New \ Status Import  &nbsp;
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
+                { data: 'checkbox', orderable:false, searchable:false},
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
                 { data: 'destiny_portLb', name: 'destiny_portLb' },
@@ -202,7 +215,7 @@ New \ Status Import  &nbsp;
                 { data: 'carrierlb', name: 'carrierlb' },
                 { data: 'ammount', name: 'ammount' },
                 { data: 'validitylb', name: 'validitylb' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             "order": [[0, 'des']],
             "lengthChange": false,
@@ -212,12 +225,68 @@ New \ Status Import  &nbsp;
             "info": true,
             "deferLoading": 57,
             "autoWidth": false,
+            "stateSave": true,
             "processing": true,
             "dom": 'Bfrtip',
             "paging": true
         });
 
     });
+
+    $(document).on('click', '#bulk_delete', function(){
+        var id = [];
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+                $('.checkbox_global:checked').each(function(){
+                    id.push($(this).val());
+                });
+
+                if(id.length > 0)
+                {
+                    url='{!! route("globalcharges.destroyArr",":id") !!}';
+                    url = url.replace(':id', id);
+                    var token = $("meta[name='csrf-token']").attr("content");
+                    $.ajax({
+                        url:url,
+                        method:"post",
+                        data:{id:id,_token:token},
+                        success:function(data)
+                        {
+                            if(data.success == 1){
+                                swal(
+                                    'Deleted!',
+                                    'Your GloblaChargers has been deleted.',
+                                    'success'
+                                );
+                                $('#requesttable').DataTable().ajax.reload();
+                            }else if(data == 2){
+                                swal("Error!", "an internal error occurred!", "error");
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    swal("Error!", "Please select atleast one checkbox", "error");
+                }
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your GloblaChargers is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
+
 </script>
 <script src="/js/globalcharges.js"></script>
 @if(session('globalchar'))

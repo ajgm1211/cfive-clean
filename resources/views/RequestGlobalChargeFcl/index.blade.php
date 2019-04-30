@@ -93,7 +93,6 @@
                                                 <th >Contract Name</th>
                                                 <th >Contract Validation</th>
                                                 <th >Date</th>
-                                                <th >Last Management</th>
                                                 <th >User</th>
                                                 <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
@@ -209,7 +208,9 @@
                 "searching": true,
                 "ordering": true,
                 "info": true,
+                "stateSave": true,
                 "deferLoading": 57,
+                "stateSave": true,
                 "autoWidth": true,
                 "processing": true,
                 "dom": 'Bfrtip',
@@ -229,7 +230,6 @@
                     { data: 'name', name: 'name' },
                     { data: 'validation', name: 'validation' },
                     { data: 'date', name: 'date' },
-                    { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
                     { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },
@@ -243,6 +243,7 @@
                 "width": true,
                 "info": true,
                 "deferLoading": 57,
+                "stateSave": true,
                 "autoWidth": false,
                 "processing": true,
                 "dom": 'Bfrtip',
@@ -289,7 +290,8 @@
                                     'The Request has been deleted.',
                                     'success'
                                 )
-                                $(elemento).closest('tr').remove();
+                                //$(elemento).closest('tr').remove();
+                                $('#requesttable').DataTable().ajax.reload();
                             }else if(data == 2){
                                 swal("Error!", "an internal error occurred!", "error");
                             }

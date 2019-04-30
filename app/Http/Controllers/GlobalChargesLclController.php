@@ -98,6 +98,8 @@ class GlobalChargesLclController extends Controller
                       <i class="la la-plus"></i>
                     </a>';
             })
+            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            ->rawColumns(['checkbox','action'])
             ->editColumn('id', 'ID: {{$id}}')->toJson();
     }
 
@@ -291,5 +293,16 @@ class GlobalChargesLclController extends Controller
         $global = GlobalChargeLcl::find($id);
         $global->delete();
 
+    }
+    public function destroyArr(Request $request)
+    {
+        $globals_id_array = $request->input('id');
+        $global = GlobalChargeLcl::whereIn('id', $globals_id_array);
+        if($global->delete())
+        {
+             return response()->json(['success' => '1']);
+        } else {
+             return response()->json(['success' => '2']);
+        }
     }
 }
