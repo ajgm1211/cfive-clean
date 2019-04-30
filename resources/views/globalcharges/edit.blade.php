@@ -147,10 +147,10 @@
   </div>  
   <br>
   <hr>
-  <div class="m-portlet__foot m-portlet__foot--fit">
+  <div class="m-portlet__foot m-portlet__foot--fit" style="margin-left: 20px;">
     <div class="m-form__actions m-form__actions">
       {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
-      <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">Cancel</span>
       </button>
     </div>
