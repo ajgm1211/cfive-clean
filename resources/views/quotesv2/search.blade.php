@@ -102,7 +102,7 @@
   .btn-detail__quotes a i {
     color: #a4a2bb;
   }
-  .btn-input__select {
+  .btn-input__select, .btn-input__select-add {
     position: relative;
     left: 25px;
     width: 120px;
@@ -117,7 +117,7 @@
     border: 2px solid #cecece;
     transition: all 300ms ease;
   }
-  .btn-input__select:hover {
+  .btn-input__select:hover, .btn-input__select-add:hover {
     border-color: #0072fc; 
   }
 
@@ -132,14 +132,21 @@
     justify-content: center;
     background-color: #0072fc;
   }
+   .style__select-add {
+    color: #fff;
+    border-color: #0072fc;
+    background-color: #0072fc;
+  }
   .input-select[type="checkbox"]:checked + .btn-input__select span {
     display :none;
   }
-  /*.input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
-  border-color: #0072fc !important;
-  }*/
-  .input-select[type="checkbox"]:checked + .btn-input__select-add {
-    width: 60px;
+  .btn-input__select-add {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
+  .visible__select-add {
+    visibility: visible;
   }
   .col-txt {
     font-weight: 600;
@@ -248,16 +255,13 @@
   .no-check {
     display: none !important;
   }
-  .btn-input__select-add {
-    width: 60px;
-    left: 60px;
-  }
   .border-bottom {
     border-bottom: 1px solid #ececec;
   }
   .border-card {
     border-color: #0072fc !important;
   }
+  
 
   /* estilos */
 </style>
@@ -778,7 +782,7 @@
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD{{$arr->id}}[]" value="{{ json_encode($inlandDestiny) }} ">
 
-                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
+                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
 
                     </div>
                     <!-- aqui -->
@@ -821,7 +825,7 @@
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO{{$arr->id}}[]" value="{{ json_encode($inlandOrigin) }}">
 
-                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
+                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
 
                     </div>
                   </div><br>
@@ -965,14 +969,12 @@
     }
   </script>
   <script>
-    /*$('.detailed-cost').on('click', function(){
-			$('.card-p__quotes').toggleClass('border-card-p');
-		    var rate = $(this).attr('rate-id');
-      var theElement = $(this);
-      if(theElement.prop('checked')){
-      }else{
-        }
-		});*/
+    $('.btn-input__select').on('click', function(){
+      $('.btn-input__select-add').toggleClass('visible__select-add');
+    });
+    $('.btn-input__select-add').on('click', function(){
+      $(this).toggleClass('style__select-add');
+    });
 
     $('.input-select').on('click', function(){
       var ident = $(this).attr('id');
