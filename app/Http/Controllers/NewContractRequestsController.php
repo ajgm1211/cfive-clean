@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Harbor;
 use App\Carrier;
+use App\Contract;
 use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
@@ -503,10 +504,29 @@ class NewContractRequestsController extends Controller
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $direction      = Direction::all()->pluck('name','id');
-        $user   = \Auth::user();
+        $user           = \Auth::user();
         return view('Requests.NewRequest',compact('harbor','carrier','user','direction'));
     }
+    
+    // Similar Contracts ----------------------------------------------------------------
+    
+    public function similarcontracts(Request $request,$id){
+        $contracts = Contract::select(['name','number','company_user_id','account_id','validity','expire']);
 
+        //return Datatables::of($contracts->where('company_user_id',$id))
+        return Datatables::of($contracts->where('company_user_id',$id))
+        ->filter(function ($query) use ($request,$id) {
+            if ($request->has('name')) {
+                $query->where('name', 'like', "%{$request->get('name')}%");
+            }
+
+            if ($request->has('carrier')) {
+                $query->where('carrier_id', 'like', "%{$request->get('email')}%");
+            }
+        })
+        ->make(true);
+    }
+        
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
         $fecha_actual = date("Y-m-d H:i:s");
