@@ -508,227 +508,236 @@ class QuoteV2Controller extends Controller
   public function store(Request $request){
 
 
-    $form =  json_decode($request->input('form'));
-    $info = $request->input('info');
-    $equipment =  stripslashes(json_encode($form->equipment ));
-    $dateQ = explode('/',$form->date);
-    $since = $dateQ[0];
-    $until = $dateQ[1];
+    if(!empty($request->input('form'))){
+      $form =  json_decode($request->input('form'));
+      $info = $request->input('info');
+      $equipment =  stripslashes(json_encode($form->equipment ));
+      $dateQ = explode('/',$form->date);
+      $since = $dateQ[0];
+      $until = $dateQ[1];
 
-    $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+    }else{
+
+      $dateQ = explode('/',$request->input('date'));
+      $since = $dateQ[0];
+      $until = $dateQ[1];
+      $equipment =  stripslashes(json_encode($request->input('equipment')));
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+    }
+
 
     $quote= QuoteV2::create($request->all());
 
-    foreach($info as $infoA){
-      $info_D = json_decode($infoA);
-      // Rates
-      foreach($info_D->rates as $rateO){
+    if(!empty($info)){
+      foreach($info as $infoA){
+        $info_D = json_decode($infoA);
+        // Rates
+        foreach($info_D->rates as $rateO){
 
-        $rates =   json_encode($rateO->rate);
-        $markups =   json_encode($rateO->markups);
+          $rates =   json_encode($rateO->rate);
+          $markups =   json_encode($rateO->markups);
 
-        $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
-        $rate = AutomaticRate::create($request->all());
+          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
+          $rate = AutomaticRate::create($request->all());
 
-        $inlandD =  $request->input('inlandD'.$rateO->rate_id);
-        $inlandO =  $request->input('inlandO'.$rateO->rate_id);
-        //INLAND DESTINO
-        if(!empty($inlandD)){
+          $inlandD =  $request->input('inlandD'.$rateO->rate_id);
+          $inlandO =  $request->input('inlandO'.$rateO->rate_id);
+          //INLAND DESTINO
+          if(!empty($inlandD)){
 
-          foreach( $inlandD as $inlandDestiny){
+            foreach( $inlandD as $inlandDestiny){
 
-            $inlandDestiny = json_decode($inlandDestiny);
+              $inlandDestiny = json_decode($inlandDestiny);
 
-            $arregloMontoInDest = array();
-            $arregloMarkupsInDest = array();
-            $montoInDest = array();
-            $markupInDest = array();
-            foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
+              $arregloMontoInDest = array();
+              $arregloMarkupsInDest = array();
+              $montoInDest = array();
+              $markupInDest = array();
+              foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
 
-              if($inlandDetails->amount != 0){
-                $arregloMontoInDest = array($key => $inlandDetails->amount);
-                $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+                if($inlandDetails->amount != 0){
+                  $arregloMontoInDest = array($key => $inlandDetails->amount);
+                  $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+                }
+                if($inlandDetails->markup != 0){
+                  $arregloMarkupsInDest = array($key => $inlandDetails->markup);
+                  $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
+                }
+
               }
-              if($inlandDetails->markup != 0){
-                $arregloMarkupsInDest = array($key => $inlandDetails->markup);
-                $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
+
+              $arregloMontoInDest =  json_encode($montoInDest);
+              $arregloMarkupsInDest =  json_encode($markupInDest);
+              $inlandDest = new AutomaticInland();
+              $inlandDest->quote_id= $quote->id;
+              $inlandDest->provider =  $inlandDestiny->providerName;
+              $inlandDest->distance =  $inlandDestiny->km;
+              $inlandDest->contract = $info_D->contract->id;
+              $inlandDest->port_id = $inlandDestiny->port_id;
+              $inlandDest->type = $inlandDestiny->type;
+              $inlandDest->rate = $arregloMontoInDest;
+              $inlandDest->markup = $arregloMarkupsInDest;
+              $inlandDest->validity_start =$inlandDestiny->validity_start ;
+              $inlandDest->validity_end=$inlandDestiny->validity_end ;
+              $inlandDest->currency_id =  $info_D->currency->id;
+              $inlandDest->save();
+
+            }  
+          }
+          //INLAND ORIGEN 
+          if(!empty($inlandO)){
+
+            foreach( $inlandO as $inlandOrigin){
+
+              $inlandOrigin = json_decode($inlandOrigin);
+
+              $arregloMontoInOrig = array();
+              $arregloMarkupsInOrig = array();
+              $montoInOrig = array();
+              $markupInOrig = array();
+              foreach($inlandOrigin->inlandDetails as $key => $inlandDetails){
+
+                if($inlandDetails->amount != 0){
+                  $arregloMontoInOrig = array($key => $inlandDetails->amount);
+                  $montoInOrig = array_merge($arregloMontoInOrig,$montoInOrig);  
+                }
+                if($inlandDetails->markup != 0){
+                  $arregloMarkupsInOrig = array($key => $inlandDetails->markup);
+                  $markupInOrig = array_merge($arregloMarkupsInOrig,$markupInOrig);
+                }
+
               }
 
-            }
+              $arregloMontoInOrig =  json_encode($montoInOrig);
+              $arregloMarkupsInOrig =  json_encode($markupInOrig);
+              $inlandOrig = new AutomaticInland();
+              $inlandOrig->quote_id= $quote->id;
+              $inlandOrig->provider =  $inlandOrigin->providerName;
+              $inlandOrig->distance =  $inlandOrigin->km;
+              $inlandOrig->contract = $info_D->contract->id;
+              $inlandOrig->port_id = $inlandOrigin->port_id;
+              $inlandOrig->type = $inlandOrigin->type;
+              $inlandOrig->rate = $arregloMontoInOrig;
+              $inlandOrig->markup = $arregloMarkupsInOrig;
+              $inlandOrig->validity_start =$inlandOrigin->validity_start ;
+              $inlandOrig->validity_end=$inlandOrigin->validity_end ;
+              $inlandOrig->currency_id =  $info_D->currency->id;
+              $inlandOrig->save();
 
-            $arregloMontoInDest =  json_encode($montoInDest);
-            $arregloMarkupsInDest =  json_encode($markupInDest);
-            $inlandDest = new AutomaticInland();
-            $inlandDest->quote_id= $quote->id;
-            $inlandDest->provider =  $inlandDestiny->providerName;
-            $inlandDest->distance =  $inlandDestiny->km;
-            $inlandDest->contract = $info_D->contract->id;
-            $inlandDest->port_id = $inlandDestiny->port_id;
-            $inlandDest->type = $inlandDestiny->type;
-            $inlandDest->rate = $arregloMontoInDest;
-            $inlandDest->markup = $arregloMarkupsInDest;
-            $inlandDest->validity_start =$inlandDestiny->validity_start ;
-            $inlandDest->validity_end=$inlandDestiny->validity_end ;
-            $inlandDest->currency_id =  $info_D->currency->id;
-            $inlandDest->save();
+            }  
+          }
 
-          }  
+
+
         }
-        //INLAND ORIGEN 
-        if(!empty($inlandO)){
-
-          foreach( $inlandO as $inlandOrigin){
-
-            $inlandOrigin = json_decode($inlandOrigin);
-
-            $arregloMontoInOrig = array();
-            $arregloMarkupsInOrig = array();
-            $montoInOrig = array();
-            $markupInOrig = array();
-            foreach($inlandOrigin->inlandDetails as $key => $inlandDetails){
-
-              if($inlandDetails->amount != 0){
-                $arregloMontoInOrig = array($key => $inlandDetails->amount);
-                $montoInOrig = array_merge($arregloMontoInOrig,$montoInOrig);  
+        //CHARGES ORIGIN
+        foreach($info_D->localorigin as $localorigin){
+          $arregloMontoO = array();
+          $arregloMarkupsO = array();
+          $montoO = array();
+          $markupO = array();
+          foreach($localorigin as $localO){
+            foreach($localO as $local){
+              if($local->type != '99'){
+                $arregloMontoO = array('c'.$local->type => $local->monto);
+                $montoO = array_merge($arregloMontoO,$montoO);
+                $arregloMarkupsO = array('c'.$local->type => $local->markup);
+                $markupO = array_merge($arregloMarkupsO,$markupO);
               }
-              if($inlandDetails->markup != 0){
-                $arregloMarkupsInOrig = array($key => $inlandDetails->markup);
-                $markupInOrig = array_merge($arregloMarkupsInOrig,$markupInOrig);
+              if($local->type == '99'){
+                $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $info_D->currency->id );
               }
-
-            }
-
-            $arregloMontoInOrig =  json_encode($montoInOrig);
-            $arregloMarkupsInOrig =  json_encode($markupInOrig);
-            $inlandOrig = new AutomaticInland();
-            $inlandOrig->quote_id= $quote->id;
-            $inlandOrig->provider =  $inlandOrigin->providerName;
-            $inlandOrig->distance =  $inlandOrigin->km;
-            $inlandOrig->contract = $info_D->contract->id;
-            $inlandOrig->port_id = $inlandOrigin->port_id;
-            $inlandOrig->type = $inlandOrigin->type;
-            $inlandOrig->rate = $arregloMontoInOrig;
-            $inlandOrig->markup = $arregloMarkupsInOrig;
-            $inlandOrig->validity_start =$inlandOrigin->validity_start ;
-            $inlandOrig->validity_end=$inlandOrigin->validity_end ;
-            $inlandOrig->currency_id =  $info_D->currency->id;
-            $inlandOrig->save();
-
-          }  
-        }
-
-
-
-      }
-      //CHARGES ORIGIN
-      foreach($info_D->localorigin as $localorigin){
-        $arregloMontoO = array();
-        $arregloMarkupsO = array();
-        $montoO = array();
-        $markupO = array();
-        foreach($localorigin as $localO){
-          foreach($localO as $local){
-            if($local->type != '99'){
-              $arregloMontoO = array('c'.$local->type => $local->monto);
-              $montoO = array_merge($arregloMontoO,$montoO);
-              $arregloMarkupsO = array('c'.$local->type => $local->markup);
-              $markupO = array_merge($arregloMarkupsO,$markupO);
-            }
-            if($local->type == '99'){
-              $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $info_D->currency->id );
             }
           }
+
+          $arregloMontoO =  json_encode($montoO);
+          $arregloMarkupsO =  json_encode($markupO);
+
+          $chargeOrigin = new Charge();
+          $chargeOrigin->automatic_rate_id= $rate->id;
+          $chargeOrigin->type_id = $arregloO['type_id'] ;
+          $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
+          $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
+          $chargeOrigin->amount =  $arregloMontoO  ;
+          $chargeOrigin->markups = $arregloMarkupsO  ;
+          $chargeOrigin->currency_id = $arregloO['currency_id']  ;
+          $chargeOrigin->total =  $arregloMarkupsO ;
+          $chargeOrigin->save();
         }
 
-        $arregloMontoO =  json_encode($montoO);
-        $arregloMarkupsO =  json_encode($markupO);
+        // CHARGES DESTINY 
+        foreach($info_D->localdestiny as $localdestiny){
+          $arregloMontoD = array();
+          $arregloMarkupsD = array();
+          $montoD = array();
+          $markupD = array();
+          foreach($localdestiny as $localD){
+            foreach($localD as $local){
+              if($local->type != '99'){
 
-        $chargeOrigin = new Charge();
-        $chargeOrigin->automatic_rate_id= $rate->id;
-        $chargeOrigin->type_id = $arregloO['type_id'] ;
-        $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
-        $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
-        $chargeOrigin->amount =  $arregloMontoO  ;
-        $chargeOrigin->markups = $arregloMarkupsO  ;
-        $chargeOrigin->currency_id = $arregloO['currency_id']  ;
-        $chargeOrigin->total =  $arregloMarkupsO ;
-        $chargeOrigin->save();
-      }
-
-      // CHARGES DESTINY 
-      foreach($info_D->localdestiny as $localdestiny){
-        $arregloMontoD = array();
-        $arregloMarkupsD = array();
-        $montoD = array();
-        $markupD = array();
-        foreach($localdestiny as $localD){
-          foreach($localD as $local){
-            if($local->type != '99'){
-
-              $arregloMontoD = array('c'.$local->type => $local->monto);
-              $montoD = array_merge($arregloMontoD,$montoD);
-              $arregloMarkupsD = array('c'.$local->type => $local->markup);
-              $markupD = array_merge($arregloMarkupsD,$markupD);
-            }
-            if($local->type == '99'){
-              $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $info_D->currency->id );
+                $arregloMontoD = array('c'.$local->type => $local->monto);
+                $montoD = array_merge($arregloMontoD,$montoD);
+                $arregloMarkupsD = array('c'.$local->type => $local->markup);
+                $markupD = array_merge($arregloMarkupsD,$markupD);
+              }
+              if($local->type == '99'){
+                $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $info_D->currency->id );
+              }
             }
           }
+
+          $arregloMontoD =  json_encode($montoD);
+          $arregloMarkupsD =  json_encode($markupD);
+
+          $chargeDestiny = new Charge();
+          $chargeDestiny->automatic_rate_id= $rate->id;
+          $chargeDestiny->type_id = $arregloD['type_id'] ;
+          $chargeDestiny->surcharge_id = $arregloD['surcharge_id']  ;
+          $chargeDestiny->calculation_type_id = $arregloD['calculation_type_id']  ;
+          $chargeDestiny->amount =  $arregloMontoD;
+          $chargeDestiny->markups = $arregloMarkupsD;
+          $chargeDestiny->currency_id = $arregloD['currency_id']  ;
+          $chargeDestiny->total =  $arregloMarkupsD;
+          $chargeDestiny->save();
         }
 
-        $arregloMontoD =  json_encode($montoD);
-        $arregloMarkupsD =  json_encode($markupD);
-
-        $chargeDestiny = new Charge();
-        $chargeDestiny->automatic_rate_id= $rate->id;
-        $chargeDestiny->type_id = $arregloD['type_id'] ;
-        $chargeDestiny->surcharge_id = $arregloD['surcharge_id']  ;
-        $chargeDestiny->calculation_type_id = $arregloD['calculation_type_id']  ;
-        $chargeDestiny->amount =  $arregloMontoD;
-        $chargeDestiny->markups = $arregloMarkupsD;
-        $chargeDestiny->currency_id = $arregloD['currency_id']  ;
-        $chargeDestiny->total =  $arregloMarkupsD;
-        $chargeDestiny->save();
-      }
-
-      // CHARGES FREIGHT 
-      foreach($info_D->localfreight as $localfreight){
-        $arregloMontoF = array();
-        $arregloMarkupsF = array();
-        $montoF = array();
-        $markupF = array();
-        foreach($localfreight as $localF){
-          foreach($localF as $local){
-            if($local->type != '99'){
-              $arregloMontoF = array('c'.$local->type => $local->monto);
-              $montoF = array_merge($arregloMontoF,$montoF);
-              $arregloMarkupsF = array('c'.$local->type => $local->markup);
-              $markupF = array_merge($arregloMarkupsF,$markupF);
-            }
-            if($local->type == '99'){
-              $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id , 'currency_id' => $info_D->currency->id );
+        // CHARGES FREIGHT 
+        foreach($info_D->localfreight as $localfreight){
+          $arregloMontoF = array();
+          $arregloMarkupsF = array();
+          $montoF = array();
+          $markupF = array();
+          foreach($localfreight as $localF){
+            foreach($localF as $local){
+              if($local->type != '99'){
+                $arregloMontoF = array('c'.$local->type => $local->monto);
+                $montoF = array_merge($arregloMontoF,$montoF);
+                $arregloMarkupsF = array('c'.$local->type => $local->markup);
+                $markupF = array_merge($arregloMarkupsF,$markupF);
+              }
+              if($local->type == '99'){
+                $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id , 'currency_id' => $info_D->currency->id );
+              }
             }
           }
+          $arregloMontoF =  json_encode($montoF);
+          $arregloMarkupsF =  json_encode($markupF);
+
+          $chargeFreight = new Charge();
+          $chargeFreight->automatic_rate_id= $rate->id;
+          $chargeFreight->type_id = $arregloF['type_id'] ;
+          $chargeFreight->surcharge_id = $arregloF['surcharge_id']  ;
+          $chargeFreight->calculation_type_id = $arregloF['calculation_type_id']  ;
+          $chargeFreight->amount =  $arregloMontoF;
+          $chargeFreight->markups = $arregloMarkupsF;
+          $chargeFreight->currency_id = $arregloF['currency_id']  ;
+          $chargeFreight->total =  $arregloMarkupsF;
+          $chargeFreight->save();
         }
-        $arregloMontoF =  json_encode($montoF);
-        $arregloMarkupsF =  json_encode($markupF);
-
-        $chargeFreight = new Charge();
-        $chargeFreight->automatic_rate_id= $rate->id;
-        $chargeFreight->type_id = $arregloF['type_id'] ;
-        $chargeFreight->surcharge_id = $arregloF['surcharge_id']  ;
-        $chargeFreight->calculation_type_id = $arregloF['calculation_type_id']  ;
-        $chargeFreight->amount =  $arregloMontoF;
-        $chargeFreight->markups = $arregloMarkupsF;
-        $chargeFreight->currency_id = $arregloF['currency_id']  ;
-        $chargeFreight->total =  $arregloMarkupsF;
-        $chargeFreight->save();
-      }
-      // INLANDS DESTINATION inlandDestiny inlandOrigin
-
-
-
+      }  
     }
+
 
     return response()->file(public_path().'/images/si.gif');
     //$request->session()->flash('message.nivel', 'success');
@@ -2042,7 +2051,7 @@ class QuoteV2Controller extends Controller
 
     }
 
-   // dd($arreglo);
+     
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
 
