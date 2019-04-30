@@ -120,13 +120,27 @@
         </div>-->
     </div>
     <br>
-    <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
-        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total estimated costs</p>
-        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos totales estimados</p>
-        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Custos totais estimados</p>
-        <br>
-    </div>
-    <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+    @if($quote->pdf_option->show_type=='total in')
+        <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total estimated costs</p>
+            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos totales estimados</p>
+            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Custos totais estimados</p>
+            <br>
+        </div>
+    @else
+        <div {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
+            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total estimated costs</p>
+            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos totales estimados</p>
+            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Custos totais estimados</p>
+            <br>
+        </div>
+    @endif
+    <!-- All in table -->
+    @if($quote->pdf_option->show_type=='total in')
+        <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+    @else
+        <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
+    @endif
         <thead class="title-quote text-center header-table">
             <tr >
                 <th class="unit"><b>POL</b></th>
@@ -143,7 +157,6 @@
             </tr>
         </thead>
         <tbody>
-            $sum20=0;
             @foreach($rates as $rate)
                 <?php 
                     $sum20= 0;
@@ -153,38 +166,57 @@
                     $sum45= 0;
                 ?>
                 @foreach($rate->charge as $value)
-
-                    <?php 
+                    <?php
                         $array_amounts = json_decode($value->amount,true);
                         $array_markups = json_decode($value->markups,true);
                         if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
                             $amount20=$array_amounts['c20'];
                             $markup20=$array_markups['c20'];
-                            $total20=$amount20+$markup20;
+                            if($quote->pdf_option->total_in_currency=='USD'){
+                                $total20=($amount20+$markup20)/$value->currency_usd;
+                            }else{
+                                $total20=($amount20+$markup20)/$value->currency_eur;
+                            }
                             $sum20 += $total20;
                         }
                         if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
                             $amount40=$array_amounts['c40'];
                             $markup40=$array_markups['c40'];
-                            $total40=$amount40+$markup40;
+                            if($quote->pdf_option->total_in_currency=='USD'){
+                                $total40=($amount40+$markup40)/$value->currency_usd;
+                            }else{
+                                $total40=($amount40+$markup40)/$value->currency_eur;
+                            }
                             $sum40 += $total40;
                         }
                         if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
                             $amount40hc=$array_amounts['c40hc'];
                             $markup40hc=$array_markups['c40hc'];
-                            $total40hc=$amount40hc+$markup40hc;
+                            if($quote->pdf_option->total_in_currency=='USD'){
+                                $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                            }else{
+                                $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                            }                            
                             $sum40hc += $total40hc;
                         }
                         if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
                             $amount40nor=$array_amounts['c40nor'];
                             $markup40nor=$array_markups['c40nor'];
-                            $total40nor=$amount40nor+$markup40nor;
+                            if($quote->pdf_option->total_in_currency=='USD'){
+                                $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                            }else{
+                                $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                            }  
                             $sum40nor += $total40nor;
                         }
                         if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
                             $amount45=$array_amounts['c45'];
                             $markup45=$array_markups['c45'];
-                            $total45=$amount45+$markup45;
+                            if($quote->pdf_option->total_in_currency=='USD'){
+                                $total45=($amount45+$markup45)/$value->currency_usd;
+                            }else{
+                                $total45=($amount45+$markup45)/$value->currency_eur;
+                            }  
                             $sum45 += $total45;
                         }
                     ?>
@@ -204,30 +236,65 @@
                                 $amount_inland20=$arr_amounts['c20'];
                                 $markup_inland20=$arr_markups['c20'];
                                 $total_inland20=$amount_inland20+$markup_inland20;
+                                if($total_inland20>0){
+                                    if($quote->pdf_option->total_in_currency=='USD'){
+                                        $total_inland20=$total_inland20/$value->currency_usd;
+                                    }else{
+                                        $total_inland20=$total_inland20/$value->currency_eur;
+                                    }
+                                }
                                 $inland20 += $total_inland20;
                             }
                             if(isset($arr_amounts['c40']) && isset($arr_markups['c40'])){
                                 $amount_inland40=$arr_amounts['c40'];
                                 $markup_inland40=$arr_markups['c40'];
                                 $total_inland40=$amount_inland40+$markup_inland40;
+                                if($total_inland40>0){
+                                    if($quote->pdf_option->total_in_currency=='USD'){
+                                        $total_inland40=$total_inland40/$value->currency_usd;
+                                    }else{
+                                        $total_inland40=$total_inland40/$value->currency_eur;
+                                    }
+                                }
                                 $inland40 += $total_inland40;
                             }
                             if(isset($arr_amounts['c40hc']) && isset($arr_markups['c40hc'])){
                                 $amount_inland40hc=$arr_amounts['c40hc'];
                                 $markup_inland40hc=$arr_markups['c40hc'];
                                 $total_inland40hc=$amount_inland40hc+$markup_inland40hc;
+                                if($total_inland40hc>0){
+                                    if($quote->pdf_option->total_in_currency=='USD'){
+                                        $total_inland40hc=$total_inland40hc/$value->currency_usd;
+                                    }else{
+                                        $total_inland40hc=$total_inland40hc/$value->currency_eur;
+                                    }
+                                }
                                 $inland40hc += $total_inland40hc;
                             }
                             if(isset($arr_amounts['c40nor']) && isset($arr_markups['c40nor'])){
                                 $amount_inland40nor=$arr_amounts['c40nor'];
                                 $markup_inland40nor=$arr_markups['c40nor'];
                                 $total_inland40nor=$amount_inland40nor+$markup4_inland40nor;
+                                if($total_inland40nor>0){
+                                    if($quote->pdf_option->total_in_currency=='USD'){
+                                        $total_inland40nor=$total_inland40nor/$value->currency_usd;
+                                    }else{
+                                        $total_inland40nor=$total_inland40nor/$value->currency_eur;
+                                    }
+                                }
                                 $inland40nor += $total_inland40nor;
                             }
                             if(isset($arr_amounts['c45']) && isset($arr_markups['c45'])){
                                 $amount_inland45=$arr_amounts['c45'];
                                 $markup_inland45=$arr_markups['c45'];
                                 $total_inland45=$amount_inland45+$markup_inland45;
+                                if($total_inland45>0){
+                                    if($quote->pdf_option->total_in_currency=='USD'){
+                                        $total_inland45=$total_inland45/$value->currency_usd;
+                                    }else{
+                                        $total_inland45=$total_inland45/$value->currency_eur;
+                                    }
+                                }                                
                                 $inland45 += $total_inland45;
                             }
                         ?>
@@ -238,27 +305,11 @@
                     <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
                     <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
-                    @if($quote->pdf_option->grouped_total_currency==0)
-                        <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
-                        <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
-                        <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
-                        <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
-                        <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
-                    @else
-                        @if($quote->pdf_option->total_in_currency=='USD')
-                            <td {{ $equipmentHides['20'] }}>{{number_format((float)(@$sum20+@$inland20)/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{number_format((float)(@$sum40+@$inland40)/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)(@$sum40hc+@$inland40hc)/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)(@$sum40nor+@$inland40nor)/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{number_format((float)(@$sum45+@$inland45)/$rate->currency_usd, 2, '.', '')}}</td>
-                        @else
-                            <td {{ $equipmentHides['20'] }}>{{number_format((float)(@$sum20+@$inland20)/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{number_format((float)(@$sum40+@$inland40)/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)(@$sum40hc+@$inland40hc)/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)(@$sum40nor+@$inland40nor)/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{number_format((float)(@$sum45+@$inland45)/$rate->currency_eur, 2, '.', '')}}</td>
-                        @endif
-                    @endif
+                    <td {{ $equipmentHides['20'] }}>{{number_format((float)@$sum20+@$inland20, 2, '.', '')}}</td>
+                    <td {{ $equipmentHides['40'] }}>{{number_format((float)@$sum40+@$inland40, 2, '.', '')}}</td>
+                    <td {{ $equipmentHides['40hc'] }}>{{number_format((float)@$sum40hc+@$inland40hc, 2, '.', '')}}</td>
+                    <td {{ $equipmentHides['40nor'] }}>{{number_format((float)@$sum40nor+@$inland40nor, 2, '.', '')}}</td>
+                    <td {{ $equipmentHides['45'] }}>{{number_format((float)@$sum45+@$inland45, 2, '.', '')}}</td>
                     <td >{{$quote->pdf_option->grouped_total_currency==0 ? $rate->currency->alphacode:$quote->pdf_option->total_in_currency}}</td>
                 </tr>
             @endforeach
@@ -266,6 +317,10 @@
         <tfoot>
     </table>
     <br>
+
+    <!-- DETAILED TABLES -->
+
+    <!-- Freights table -->
     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>

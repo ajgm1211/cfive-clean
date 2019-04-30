@@ -180,6 +180,22 @@ class QuoteV2Controller extends Controller
     $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
+    foreach ($rates as $item) {
+      $currency = Currency::find($item->currency_id);
+      $item->currency_usd = $currency->rates;
+      $item->currency_eur = $currency->rates_eur;
+      foreach ($item->charge as $value) {
+        $currency_charge = Currency::find($value->currency_id);
+        $value->currency_usd = $currency_charge->rates;
+        $value->currency_eur = $currency_charge->rates_eur;
+      }
+      foreach ($item->inland as $inland) {
+        $currency_charge = Currency::find($inland->currency_id);
+        $inland->currency_usd = $currency_charge->rates;
+        $inland->currency_eur = $currency_charge->rates_eur;
+      }
+    }
+
     //Adding country codes to rates collection
     $total_freight_20=0;
     $total_by_rate_40=0;
@@ -529,21 +545,20 @@ class QuoteV2Controller extends Controller
     }
 
     foreach ($rates as $item) {
-     $currency = Currency::find($item->currency_id);
-       //$rates->map(function ($item) use($currency) {
-     $item->currency_usd = $currency->rates;
-     $item->currency_eur = $currency->rates_eur;
-        //return $item;
-      //});
-     foreach ($item->charge as $value) {
-      $currency_charge = Currency::find($value->currency_id);
-         //$item->charge->transform(function ($value) use($currency_charge) {
-      $value->currency_usd = $currency_charge->rates;
-      $value->currency_eur = $currency_charge->rates_eur;
-          //return $value;
-        //});
+      $currency = Currency::find($item->currency_id);
+      $item->currency_usd = $currency->rates;
+      $item->currency_eur = $currency->rates_eur;
+      foreach ($item->charge as $value) {
+        $currency_charge = Currency::find($value->currency_id);
+        $value->currency_usd = $currency_charge->rates;
+        $value->currency_eur = $currency_charge->rates_eur;
+      }
+      foreach ($item->inland as $inland) {
+        $currency_charge = Currency::find($inland->currency_id);
+        $inland->currency_usd = $currency_charge->rates;
+        $inland->currency_eur = $currency_charge->rates_eur;
+      }
     }
-  }
 
   //dd(json_encode($currency_cfg));
   $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
