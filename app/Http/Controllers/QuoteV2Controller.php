@@ -544,7 +544,8 @@ class QuoteV2Controller extends Controller
         //});
     }
   }
-  //dd(json_encode($rates));
+
+  //dd(json_encode($currency_cfg));
   $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
 
   $pdf = \App::make('dompdf.wrapper');

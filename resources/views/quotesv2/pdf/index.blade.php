@@ -312,10 +312,18 @@
                             if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
                                 $amount20=$array_amounts['c20'];
                                 $markup20=$array_markups['c20'];
-                                if($rate->currency->alphacode=='USD'){
-                                    $total20=($amount20+$markup20)/$value->currency_usd;
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    if($quote->pdf_option->freight_charges_currency=='USD'){
+                                        $total20=($amount20+$markup20)/$value->currency_usd;
+                                    }else{
+                                        $total20=($amount20+$markup20)/$value->currency_eur;
+                                    }
                                 }else{
-                                    $total20=($amount20+$markup20)/$value->currency_eur;
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total20=($amount20+$markup20)/$value->currency_usd;
+                                    }else{
+                                        $total20=($amount20+$markup20)/$value->currency_eur;
+                                    }
                                 }
                                 //$total20=$amount20+$markup20;
                                 $sum20 += number_format($total20, 2, '.', '');
@@ -323,41 +331,75 @@
                             if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
                                 $amount40=$array_amounts['c40'];
                                 $markup40=$array_markups['c40'];
-                                if($rate->currency->alphacode=='USD'){
-                                    $total40=($amount40+$markup40)/$value->currency_usd;
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    if($quote->pdf_option->freight_charges_currency=='USD'){
+                                        $total40=($amount40+$markup40)/$value->currency_usd;
+                                    }else{
+                                        $total40=($amount40+$markup40)/$value->currency_eur;
+                                    }
                                 }else{
-                                    $total40=($amount40+$markup40)/$value->currency_eur;
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40=($amount40+$markup40)/$value->currency_usd;
+                                    }else{
+                                        $total40=($amount40+$markup40)/$value->currency_eur;
+                                    }
                                 }
                                 $sum40 += number_format($total40, 2, '.', '');
                             }
                             if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
                                 $amount40hc=$array_amounts['c40hc'];
                                 $markup40hc=$array_markups['c40hc'];
-                                if($rate->currency->alphacode=='USD'){
-                                    $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    if($quote->pdf_option->freight_charges_currency=='USD'){
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                                    }else{
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                                    }
                                 }else{
-                                    $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                                    }else{
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                                    }
                                 }
                                 $sum40hc += number_format($total40hc, 2, '.', '');
                             }
                             if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
                                 $amount40nor=$array_amounts['c40nor'];
                                 $markup40nor=$array_markups['c40nor'];
-                                if($rate->currency->alphacode=='USD'){
-                                    $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    if($quote->pdf_option->freight_charges_currency=='USD'){
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                                    }else{
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                                    }
                                 }else{
-                                    $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                                    }else{
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                                    }
                                 }
+                                //$total40nor=$amount40nor+$markup40nor;
                                 $sum40nor += number_format($total40nor, 2, '.', '');
                             }
                             if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
                                 $amount45=$array_amounts['c45'];
                                 $markup45=$array_markups['c45'];
-                                if($rate->currency->alphacode=='USD'){
-                                    $total45=($amount45+$markup45)/$value->currency_usd;
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    if($quote->pdf_option->freight_charges_currency=='USD'){
+                                        $total45=($amount45+$markup45)/$value->currency_usd;
+                                    }else{
+                                        $total45=($amount45+$markup45)/$value->currency_eur;
+                                    }
                                 }else{
-                                    $total45=($amount45+$markup45)/$value->currency_eur;
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total45=($amount45+$markup45)/$value->currency_usd;
+                                    }else{
+                                        $total45=($amount45+$markup45)/$value->currency_eur;
+                                    }
                                 }
+                                //$total45=$amount45+$markup45;
                                 $sum45 += number_format($total45, 2, '.', '');
                             }
 
@@ -405,28 +447,23 @@
                     <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
                     <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
-                    @if($quote->pdf_option->grouped_total_currency==1)
-                        @if($quote->pdf_option->total_in_currency=='USD')
-                            <td {{ $equipmentHides['20'] }}>{{number_format((float)@$sum20/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{number_format((float)@$sum40/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)@$sum40hc/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)@$sum40nor/$rate->currency_usd, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{number_format((float)@$sum45/$rate->currency_usd, 2, '.', '')}}</td>
-                        @elseif ($quote->pdf_option->total_in_currency=='EUR')
-                            <td {{ $equipmentHides['20'] }}>{{number_format((float)@$sum20/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{number_format((float)@$sum40/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{number_format((float)@$sum40hc/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{number_format((float)@$sum40nor/$rate->currency_eur, 2, '.', '')}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{number_format((float)@$sum45/$rate->currency_eur, 2, '.', '')}}</td>
+                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
+                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
+                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
+                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
+                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                    @if($quote->pdf_option->grouped_freight_charges==1)
+                        @if($quote->pdf_option->freight_charges_currency=='USD')
+                            <td >USD</td>
+                        @else
+                            <td>EUR</td>
                         @endif
-                        <td >{{$quote->pdf_option->grouped_total_currency==0 ? $rate->currency->alphacode:$quote->pdf_option->total_in_currency}}</td>
                     @else
-                        <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
-                        <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
-                        <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
-                        <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
-                        <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
-                        <td >{{$rate->currency->alphacode}}</td>
+                        @if($currency_cfg->alphacode=='USD')
+                            <td >USD</td>
+                        @else
+                            <td>EUR</td>
+                        @endif
                     @endif
                 </tr>
             @endforeach
