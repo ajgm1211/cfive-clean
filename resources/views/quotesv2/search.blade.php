@@ -261,7 +261,31 @@
   .border-card {
     border-color: #0072fc !important;
   }
-
+  .btn-manual__quotes {
+    background-color: transparent;
+    color: #0072fc !important;
+    border-width: 2px;
+    font-weight: 600;
+  }
+  .btn-manual__quotes span {
+    top: 2px;
+    position: relative;
+  }
+  .warning-p {
+    color: #575962;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .warning-p span {
+    color: #e74c3c;
+  }
+  .warning-p i {
+    font-size: 33px;
+    top: 7px;
+    margin-right: 5px;
+    position: relative;
+    transform: rotate(180deg);
+  }
 
   /* estilos */
 </style>
@@ -360,11 +384,11 @@
               <div class="col-lg-6">
                 @if(isset($arreglo))
                 @if($arreglo->isEmpty())
-                No freight rates founded for this tradelane. You can create a quote manually.
+                <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                 @endif
                 @endif
-              </div>
-              <div class="col-lg-4" align='right'> <button type="button" class="btn m-btn--pill  btn-info quote_man">Quote Manual +</button></div>
+              </div><!-- aqui -->
+              <div class="col-lg-4" align='right'> <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span></button></div>
               <div class="col-lg-2" align='right'> </div>
             </div>
 
