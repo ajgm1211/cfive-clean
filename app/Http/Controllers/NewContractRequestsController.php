@@ -229,7 +229,6 @@ class NewContractRequestsController extends Controller
         if($fileBoll){
             $Ncontract  = new NewContractRequest();
             $Ncontract->namecontract    = $request->name;
-            $Ncontract->numbercontract  = $request->number;
             $Ncontract->validation      = $request->validation_expire;
             $Ncontract->direction_id    = $request->direction;
             $Ncontract->company_user_id = $request->CompanyUserId;
