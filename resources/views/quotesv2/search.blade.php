@@ -358,8 +358,10 @@
             <br><br>
             <div class="row">
               <div class="col-lg-6">
+                @if(isset($arreglo))
                 @if($arreglo->isEmpty())
                 No freight rates founded for this tradelane. You can create a quote manually.
+                @endif
                 @endif
               </div>
               <div class="col-lg-4" align='right'> <button type="button" class="btn m-btn--pill  btn-info quote_man">Quote Manual +</button></div>
@@ -378,7 +380,7 @@
 
 </div>
 
-
+@if(isset($arreglo))
 @if(!$arreglo->isEmpty())
 <div class="row padding">
   <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
@@ -891,6 +893,7 @@
   </div>
 
   {!! Form::close() !!}
+  @endif
   @endif
 
   @endsection
