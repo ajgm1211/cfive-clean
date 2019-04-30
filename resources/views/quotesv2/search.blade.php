@@ -132,7 +132,7 @@
     justify-content: center;
     background-color: #0072fc;
   }
-   .style__select-add {
+  .style__select-add {
     color: #fff;
     border-color: #0072fc;
     background-color: #0072fc;
@@ -261,7 +261,7 @@
   .border-card {
     border-color: #0072fc !important;
   }
-  
+
 
   /* estilos */
 </style>
@@ -274,7 +274,8 @@
 <div class="row padding">
 
   <div class="col-lg-12">
-    {!! Form::open(['route' => 'quotes-v2.processSearch','class' => 'form-group m-form__group']) !!}
+    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group']) !!}
+
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
@@ -354,8 +355,19 @@
               </div>
 
             </div>
+            <br><br>
+            <div class="row">
+              <div class="col-lg-6">
+                @if($arreglo->isEmpty())
+                No freight rates founded for this tradelane. You can create a quote manually.
+                @endif
+              </div>
+              <div class="col-lg-4" align='right'> <button type="button" class="btn m-btn--pill  btn-info quote_man">Quote Manual +</button></div>
+              <div class="col-lg-2" align='right'> </div>
+            </div>
+
             <br>
-            <div class ="row">  <div class="col-lg-12"> <center><button type="submit" class="btn m-btn--pill  btn-search__quotes  btn-info">Search</button></center> </div>  </div>
+            <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
           </div>
         </div>      
       </div>
@@ -366,10 +378,11 @@
 
 </div>
 
+
+@if(!$arreglo->isEmpty())
 <div class="row padding">
   <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
 </div>
-@if(!empty($arreglo))
 <div class="row padding" ><!-- Tabla de muestreo de las cotizaciones -->
   {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group dfw']) !!}
   <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper">
@@ -887,7 +900,7 @@
   @parent
 
 
-  <script src="{{asset('js/quotes.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
   @if(empty($arreglo))
   <script>
 
@@ -968,85 +981,5 @@
 
     }
   </script>
-  <script>
-    $('.btn-input__select').on('click', function(){
-      $('.btn-input__select-add').toggleClass('visible__select-add');
-    });
-    $('.btn-input__select-add').on('click', function(){
-      $(this).toggleClass('style__select-add');
-    });
 
-    $('.input-select').on('click', function(){
-      var ident = $(this).attr('id');
-      $('.'+ident+'').toggleClass('border-card');
-    });
-
-
-    $('.inlands').on('click', function(){
-      $('.card-p__quotes').toggleClass('border-card-p');
-      var id = $(this).attr('data-inland');
-      var idRate = $(this).attr('data-rate');
-
-
-
-      var theElement = $(this);
-      var  i20= $("#valor-d20"+id+"-"+idRate).html();
-      var  i40= $("#valor-d40"+id+"-"+idRate).html();
-      var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
-
-      var  sub20= $("#sub_inland_20"+idRate).html();
-
-      var  sub40= $("#sub_inland_40"+idRate).html();
-      var  sub40h= $("#sub_inland_40h"+idRate).html();
-      if(theElement.prop('checked')){
-
-        sub20 = parseFloat(sub20) +  parseFloat(i20);
-        sub40 = parseFloat(sub40) +  parseFloat(i40);
-        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
-
-      }else{
-
-        sub20 = parseFloat(sub20) -  parseFloat(i20);
-        sub40 = parseFloat(sub40) -  parseFloat(i40);
-        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
-      }
-
-      $("#sub_inland_20"+idRate).html(sub20);
-      $("#sub_inland_40"+idRate).html(sub40);
-      $("#sub_inland_40h"+idRate).html(sub40h);
-
-    });
-
-    $('.inlandsO').on('click', function(){
-      $('.card-p__quotes').toggleClass('border-card-p');
-      var id = $(this).attr('data-inland');
-      var idRate = $(this).attr('data-rate');
-
-      var theElement = $(this);
-      var  i20= $("#valor-o20"+id+"-"+idRate).html();
-      var  i40= $("#valor-o40"+id+"-"+idRate).html();
-      var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
-
-      var  sub20= $("#sub_inland_20"+idRate).html();
-      var  sub40= $("#sub_inland_40"+idRate).html();
-      var  sub40h= $("#sub_inland_40h"+idRate).html();
-      if(theElement.prop('checked')){
-
-        sub20 = parseFloat(sub20) +  parseFloat(i20);
-        sub40 = parseFloat(sub40) +  parseFloat(i40);
-        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
-
-      }else{
-
-        sub20 = parseFloat(sub20) -  parseFloat(i20);
-        sub40 = parseFloat(sub40) -  parseFloat(i40);
-        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
-      }
-      $("#sub_inland_20"+idRate).html(sub20);
-      $("#sub_inland_40"+idRate).html(sub40);
-      $("#sub_inland_40h"+idRate).html(sub40h);
-
-    });
-
-  </script>
   @stop
