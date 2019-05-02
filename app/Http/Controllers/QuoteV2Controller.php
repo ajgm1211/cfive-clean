@@ -805,8 +805,8 @@ class QuoteV2Controller extends Controller
     $countries = Country::all()->pluck('name','id');
 
     $prices = Price::all()->pluck('name','id');
-    $carrier = Carrier::all()->pluck('name','id');
-    $carrier->prepend("Please an option");
+    $carrierMan = Carrier::all()->pluck('name','id');
+    $carrierMan->prepend("Please an option");
 
     $company_user = User::where('id',\Auth::id())->first();
     if(count($company_user->companyUser)>0) {
@@ -815,7 +815,7 @@ class QuoteV2Controller extends Controller
       $currency_name = '';
     }
     $currencies = Currency::all()->pluck('alphacode','id');
-    return view('quotesv2/search',  compact('companies','carrier','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+    return view('quotesv2/search',  compact('companies','carrierMan','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
 
 
   }
@@ -842,7 +842,7 @@ class QuoteV2Controller extends Controller
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
-    $carrier = Carrier::all()->pluck('name','id');
+    $carrierMan = Carrier::all()->pluck('name','id');
 
     if(count($company_user->companyUser)>0) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
@@ -2082,7 +2082,7 @@ class QuoteV2Controller extends Controller
 
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrier'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan'));
 
   }
 

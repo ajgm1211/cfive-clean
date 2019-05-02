@@ -390,7 +390,7 @@
               </div><!-- aqui -->
               <div class="col-lg-2" align=''> 
                   <label>Carrier Manual</label>
-                {{ Form::select('carrieManual',$carrier,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
+                {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
               </div>
               <div class="col-lg-2" align='right'> 
                 <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
