@@ -17,6 +17,7 @@ use App\Incoterm;
 use App\Price;
 use App\Inland;
 use App\Quote;
+use App\Carrier;
 use App\QuoteV2;
 use App\Surcharge;
 use App\User;
@@ -517,17 +518,41 @@ class QuoteV2Controller extends Controller
       $until = $dateQ[1];
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $quote= QuoteV2::create($request->all());
     }else{
 
       $dateQ = explode('/',$request->input('date'));
       $since = $dateQ[0];
       $until = $dateQ[1];
+      $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+
+      $idCurrency = $company->companyUser->currency_id;
+      $arregloNull = array();
+      $arregloNull = json_encode($arregloNull);
       $equipment =  stripslashes(json_encode($request->input('equipment')));
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $quote= QuoteV2::create($request->all());
+      // MANUAL RATE
+
+
+
+
+      foreach($request->input('originport') as $origP){
+        $infoOrig = explode("-", $origP);
+        $origin_port[] = $infoOrig[0];
+      }
+      foreach($request->input('destinyport') as $destP){
+        $infoDest = explode("-", $destP);
+        $destiny_port[] = $infoDest[0];
+      }
+
+      foreach($origin_port as $orig){
+        foreach($destiny_port as $dest){
+          $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
+          $rate = AutomaticRate::create($request->all());
+        }
+      }
     }
-
-
-    $quote= QuoteV2::create($request->all());
 
     if(!empty($info)){
       foreach($info as $infoA){
@@ -780,6 +805,9 @@ class QuoteV2Controller extends Controller
     $countries = Country::all()->pluck('name','id');
 
     $prices = Price::all()->pluck('name','id');
+    $carrier = Carrier::all()->pluck('name','id');
+    $carrier->prepend("Please an option");
+
     $company_user = User::where('id',\Auth::id())->first();
     if(count($company_user->companyUser)>0) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
@@ -787,7 +815,7 @@ class QuoteV2Controller extends Controller
       $currency_name = '';
     }
     $currencies = Currency::all()->pluck('alphacode','id');
-    return view('quotesv2/search',  compact('companies','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+    return view('quotesv2/search',  compact('companies','carrier','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
 
 
   }
@@ -814,6 +842,7 @@ class QuoteV2Controller extends Controller
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
     $company_user = User::where('id',\Auth::id())->first();
+    $carrier = Carrier::all()->pluck('name','id');
 
     if(count($company_user->companyUser)>0) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
@@ -2051,9 +2080,9 @@ class QuoteV2Controller extends Controller
 
     }
 
-     
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides'));
+
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrier'));
 
   }
 
@@ -2185,5 +2214,6 @@ class QuoteV2Controller extends Controller
 
     return $collect;
   }
+
 
 }
