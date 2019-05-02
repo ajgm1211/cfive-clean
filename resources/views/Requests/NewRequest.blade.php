@@ -299,7 +299,6 @@ new registration
                                         <th >References</th>
                                         <th >Validation</th>
                                         <th >Expire</th>
-                                        <th >Options</th>
                                     </tr>
                                 </thead>
 
@@ -398,6 +397,8 @@ new registration
             url: '{!! route("Similar.Contracts.Request",$user->company_user_id) !!}',
             data: function (d) {
                 d.name = $('input[name=name]').val();
+                d.carrierM = $('input[name=carrierM]').val();
+                d.direction = $('input[name=direction]').val();
             }
         },
         columns: [

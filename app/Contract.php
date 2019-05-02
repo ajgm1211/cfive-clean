@@ -10,7 +10,7 @@ class Contract extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     protected $table    = "contracts";     
 
-    protected $fillable = ['id', 'name','number','company_user_id','account_id','validity','expire','status','remarks'];
+    protected $fillable = ['id', 'name','number','company_user_id','account_id','direction_id','validity','expire','status','remarks'];
 
     public function rates(){
         return $this->hasMany('App\Rate');
@@ -48,6 +48,14 @@ class Contract extends Model implements Auditable
 
     public function FilesTmps(){
         return $thid->hasMany('App\FileTmp');  
+    }
+    
+    public function carriers(){
+        return $this->hasMany('App\ContractCarrier','contract_id');
+    }
+    
+    public function direction(){
+        return $this->belongsTo('App\Direction','direction_id');
     }
 
 }

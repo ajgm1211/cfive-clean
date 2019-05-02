@@ -2,42 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Company;
-use App\ContractUserRestriction;
-use App\ContractCompanyRestriction;
-use Illuminate\Http\Request;
-use App\Contract;
-use App\Contact;
-use App\Country;
-use App\Carrier;
-use App\Harbor;
+use Excel;
+use App\User;
 use App\Rate;
+use App\Harbor;
+use App\Country;
+use App\Contact;
+use App\Carrier;
+use App\FileTmp;
+use App\Company;
+use App\Contract;
 use App\FailRate;
 use App\Currency;
-use App\CalculationType;
-use App\LocalCharge;
+use EventIntercom;
+use App\Direction;
 use App\Surcharge;
-use App\LocalCharCarrier;
-use App\LocalCharPort;
-use App\User;
+use App\ViewRates;
+use App\CompanyUser;
 use App\TypeDestiny;
+use App\LocalCharge;
 use App\FailSurCharge;
+use App\LocalCharPort;
+use App\ContractCarrier;
+use App\CalculationType;
+use App\LocalCharCountry;
+use App\LocalCharCarrier;
+use App\ViewLocalCharges;
+use App\ViewContractRates;
+use Illuminate\Http\Request;
+use App\ContractUserRestriction;
+use Yajra\Datatables\Datatables;
+use App\ContractCompanyRestriction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Excel;
-use Illuminate\Support\Facades\Log;
-use App\Http\Requests\UploadFileRateRequest;
-use App\FileTmp;
-use App\Jobs\ImportationRatesSurchargerJob;
 use Illuminate\Support\Facades\Storage;
-use Yajra\Datatables\Datatables;
-use App\CompanyUser;
-use App\ViewLocalCharges;
-use App\ViewRates;
-use App\ViewContractRates;
-use App\LocalCharCountry;
+use App\Jobs\ImportationRatesSurchargerJob;
+use App\Http\Requests\UploadFileRateRequest;
 use Illuminate\Support\Collection as Collection;
-use EventIntercom;
 
 
 class ContractsController extends Controller
@@ -46,13 +48,12 @@ class ContractsController extends Controller
     public function index()
     {
         if(\Auth::user()->type=='admin'){
-            $arreglo = Contract::with('rates')->get();
+            $arreglo = Contract::with('rates','carriers','direction')->get();
             $contractG = Contract::all();
         }else{
-            $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates')->get();
+            $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates','carriers','direction')->get();
             $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
         }
-
         return view('contracts/index', compact('arreglo','contractG'));
     }
 
@@ -69,6 +70,7 @@ class ContractsController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
+        $direction = Direction::pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -79,21 +81,21 @@ class ContractsController extends Controller
         })->pluck('first_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
 
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
 
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','direction'));
 
 
     }
@@ -129,10 +131,11 @@ class ContractsController extends Controller
 
     public function store(Request $request)
     {
-        //  dd($request->all());
+        //dd($request->all());
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
+        $contract->direction_id = $request->direction;
         $contract->validity = $validation[0];
         $contract->expire = $validation[1];
         $contract->save();
@@ -147,7 +150,13 @@ class ContractsController extends Controller
         $countryAllid = $this->allCountryid();
         $portAllid = $this->allHarborid();
 
-
+        // For Carrier in ContractCarrier Model
+        foreach($request->carrierAr as $carrierFA){
+            ContractCarrier::create([
+                'carrier_id'    => $carrierFA,
+                'contract_id'   => $contract->id
+            ]);
+        }
         // For Each de los rates
         $contador = 1;
         $contadorRate = 1;
@@ -396,9 +405,24 @@ class ContractsController extends Controller
 
     public function contractTable(){
 
-        $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('carriers.carrier','direction')->get();
+        //dd($contractG);
         return \DataTables::collection($contractG)
 
+            ->addColumn('direction', function (Contract $contractG) {
+                if(count($contractG->direction) != 0){
+                    return $contractG->direction->name;
+                } else {
+                    return '-----------------';
+                }
+            }) 
+            ->addColumn('carrier', function (Contract $contractG) {
+                if(count($contractG->carriers->pluck('carrier')->pluck('name')) != 0){
+                    return str_replace(['[',']','"'],' ',$contractG->carriers->pluck('carrier')->pluck('name'));
+                } else {
+                    return '-----------------';
+                }
+            })
             ->addColumn('options', function (Contract $contractG) {
                 return "      <a href='contracts/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
@@ -414,8 +438,9 @@ class ContractsController extends Controller
     public function edit(Request $request,$id)
     {
         $id = obtenerRouteKey($id);
-        $contracts = Contract::where('id',$id)->first();
-
+        $contracts = Contract::where('id',$id)->with('direction','carriers')->first();
+        //dd($contracts->carriers->pluck('carrier'));
+        
         $objtypedestiny = new TypeDestiny();
         $objcountry = new Country();
         $objcarrier = new Carrier();
@@ -427,6 +452,7 @@ class ContractsController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
+        $direction = Direction::pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -442,31 +468,32 @@ class ContractsController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         //dd($contracts);
         if (!$request->session()->exists('activeS')) {
             $request->session()->flash('activeR', 'active');
         }
 
-        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id'));
+        return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','direction'));
     }
 
     public function update(Request $request, $id)
     {
-        $requestForm = $request->all();
-        $contract = Contract::find($id);
-        $validation = explode('/',$request->validation_expire);
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
+        $requestForm            = $request->all();
+        $contract               = Contract::find($id);
+        $validation             = explode('/',$request->validation_expire);
+        $contract->direction_id = $request->direction;
+        $contract->validity     = $validation[0];
+        $contract->expire       = $validation[1];
         $contract->update($requestForm);
 
         $companies = $request->input('companies');
@@ -543,6 +570,14 @@ class ContractsController extends Controller
             $contador++;
           }
         }*/
+        
+        ContractCarrier::where('contract_id',$id)->delete();
+        foreach($request->carrierAr as $carrierFA){
+            ContractCarrier::create([
+                'carrier_id'    => $carrierFA,
+                'contract_id'   => $id
+            ]);
+        }
 
         if(!empty($companies)){
             ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
@@ -1009,26 +1044,26 @@ class ContractsController extends Controller
                 $classcurrency='color:red';
             }
             $colec = ['rate_id'         =>  $failrate->id,
-                'contract_id'     =>  $id,
-                'origin_portLb'   =>  $originA,
-                'origin_port'     =>  $originAIn,
-                'destiny_portLb'  =>  $destinationA,
-                'destiny_port'    =>  $destinationAIn,
-                'carrierLb'       =>  $carrierA,
-                'carrierAIn'      =>  $carrAIn,
-                'twuenty'         =>  $twuentyA,
-                'forty'           =>  $fortyA,
-                'fortyhc'         =>  $fortyhcA,
-                'currency_id'     =>  $currencyA,
-                'currencyAIn'     =>  $pruebacurre,
-                'classorigin'     =>  $classdorigin,
-                'classdestiny'    =>  $classddestination,
-                'classcarrier'    =>  $classcarrier,
-                'classtwuenty'    =>  $classtwuenty,
-                'classforty'      =>  $classforty,
-                'classfortyhc'    =>  $classfortyhc,
-                'classcurrency'   =>  $classcurrency
-            ];
+                      'contract_id'     =>  $id,
+                      'origin_portLb'   =>  $originA,
+                      'origin_port'     =>  $originAIn,
+                      'destiny_portLb'  =>  $destinationA,
+                      'destiny_port'    =>  $destinationAIn,
+                      'carrierLb'       =>  $carrierA,
+                      'carrierAIn'      =>  $carrAIn,
+                      'twuenty'         =>  $twuentyA,
+                      'forty'           =>  $fortyA,
+                      'fortyhc'         =>  $fortyhcA,
+                      'currency_id'     =>  $currencyA,
+                      'currencyAIn'     =>  $pruebacurre,
+                      'classorigin'     =>  $classdorigin,
+                      'classdestiny'    =>  $classddestination,
+                      'classcarrier'    =>  $classcarrier,
+                      'classtwuenty'    =>  $classtwuenty,
+                      'classforty'      =>  $classforty,
+                      'classfortyhc'    =>  $classfortyhc,
+                      'classcurrency'   =>  $classcurrency
+                     ];
             $pruebacurre = "";
             $carrAIn = "";
             $failrates->push($colec);
@@ -1166,21 +1201,21 @@ class ContractsController extends Controller
         //------------------------------------ Return ---------------------------------------------------------
 
         return  view('contracts.FailRatesSurchargerNewC',compact('rates',
-            'failrates',
-            'countfailrates',
-            'countrates',
-            'goodsurcharges',
-            'failsurchargecoll',
-            'countfailsurcharge',
-            'countgoodsurcharge',
-            'typedestiny',
-            'surchargeSelect',
-            'carrierSelect',
-            'harbor',
-            'currency',
-            'calculationtypeselect',
-            'id'
-        )); //*/
+                                                                 'failrates',
+                                                                 'countfailrates',
+                                                                 'countrates',
+                                                                 'goodsurcharges',
+                                                                 'failsurchargecoll',
+                                                                 'countfailsurcharge',
+                                                                 'countgoodsurcharge',
+                                                                 'typedestiny',
+                                                                 'surchargeSelect',
+                                                                 'carrierSelect',
+                                                                 'harbor',
+                                                                 'currency',
+                                                                 'calculationtypeselect',
+                                                                 'id'
+                                                                )); //*/
     }
 
 

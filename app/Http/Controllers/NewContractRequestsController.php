@@ -37,9 +37,9 @@ class NewContractRequestsController extends Controller
     public function create()
     {
         /*$Ncontracts = NewContractRequest::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();*/
-        
+
         $Ncontracts = DB::select('call  select_request_fcl()');
-//        dd($Ncontracts);
+        //        dd($Ncontracts);
         //dd($Ncontracts[0]['Requestcarriers']->pluck('carrier')->pluck('name'));
 
         return Datatables::of($Ncontracts)
@@ -506,26 +506,42 @@ class NewContractRequestsController extends Controller
         $user           = \Auth::user();
         return view('Requests.NewRequest',compact('harbor','carrier','user','direction'));
     }
-    
+
     // Similar Contracts ----------------------------------------------------------------
-    
+
     public function similarcontracts(Request $request,$id){
-        $contracts = Contract::select(['name','number','company_user_id','account_id','validity','expire']);
+        /*$contracts = Contract::select(['contracts.name',
+                                       'contracts.number',
+                                       'contracts.company_user_id',
+                                       'contracts.account_id',
+                                       'contracts.direction_id',
+                                       'contracts.validity',
+                                       'contracts.expire'
+                                      ]);*/
+        //            $contracts = DB::table('contracts')
+        //  ->leftJoin('directions', 'directions.id', '=', 'contracts.direction_id')->get();
+        $contracts = Contract::where('company_user_id',$id)
+            ->with('direction','carriers.carrier')
+            ->whereHas('direction',function($query) use($request){
+                if($request->has('direction')){
+                    $query->where('direction_id', '=', $request->direction);
+                }
+            })
+            ->whereHas('carriers',function($query) use($request,$id){
+                if($request->has('carrierM')){
+                    $query->whereIn('carrier_id',$request->carrierM)->where('contract_id',$id);
+                }
+            })
+            ->get();
 
-        //return Datatables::of($contracts->where('company_user_id',$id))
-        return Datatables::of($contracts->where('company_user_id',$id))
-        ->filter(function ($query) use ($request,$id) {
-            if ($request->has('name')) {
-                $query->where('name', 'like', "%{$request->get('name')}%");
-            }
-
-            if ($request->has('carrier')) {
-                $query->where('carrier_id', 'like', "%{$request->get('email')}%");
-            }
-        })
-        ->make(true);
+        //dd($contracts);
+        return Datatables::of($contracts)
+            /* ->addColumn('direction', function ($contracts->where('company_user_id',$id)) {
+                return $contracts->direction->name;
+            })*/
+            ->make(true);
     }
-        
+
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
         $fecha_actual = date("Y-m-d H:i:s");

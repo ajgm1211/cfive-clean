@@ -126,7 +126,10 @@ New \ Status Import  &nbsp;
                                         Name
                                     </th>
                                     <th title="Field #2">
-                                        Number
+                                        Carriers
+                                    </th>
+                                    <th title="Field #3">
+                                        Type
                                     </th>
                                     <th title="Field #9">
                                         Validity
@@ -405,14 +408,15 @@ Request Importation &nbsp;
             ],
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
+                {data: 'carrier', name: 'carrier'},
+                {data: 'direction', name: 'direction'},
                 {data: 'validity', name: 'validity'},
                 {data: 'expire', name: 'expire'},
                 {data: 'status', name: 'status'},
                 {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-                this.api().columns([0,1,2,3,4]).every(function () {
+                this.api().columns([0,1,2,3,4,5]).every(function () {
                     var column = this;
                     $('#tableContracts .head .head_hide').html('');
 
