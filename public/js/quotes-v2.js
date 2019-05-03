@@ -8,6 +8,12 @@ $(document).ready(function() {
         }
     });
 
+    //Hide grouped options in pdf layout
+    if($('#show_hide_select').val()=='total in'){
+        $(".group_origin_charges").addClass('hide');
+        $(".group_destination_charges").addClass('hide');
+    }    
+
     //Show total amounts for freight
     var sum_freight=0;
     $(".total_freight_20").each(function(){
@@ -352,6 +358,45 @@ $(document).on('click', '#update-terms', function () {
     });
 });
 
+//Edit remarks
+function edit_remark($span,$textarea,$update_box){
+    $('.'+$span).attr('hidden','true');
+    $('.'+$textarea).removeAttr('hidden');
+    $('.'+$update_box).removeAttr('hidden');
+}
+
+function cancel_update($span,$textarea,$update_box){
+    $('.'+$span).removeAttr('hidden');
+    $('.'+$textarea).attr('hidden','true');
+    $('.'+$update_box).attr('hidden','true');
+}
+
+function update_remark($id,$content,$v){
+    var id=$(".id").val();
+    var remarks = tinymce.get($content).getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/remarks/'+$id,
+        data: {
+            'remarks': remarks,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The remarks has been updated.',
+                    'success'
+                    )
+
+                $(".remarks_span_"+$v).html(data.rate['remarks']);
+                $(".remarks_span_"+$v).removeAttr('hidden');
+                $(".remarks_textarea_"+$v).attr('hidden','true');
+                $(".update_remarks_"+$v).attr('hidden','true');
+            }
+        }
+    });
+};
+
 //Edit main quotes details
 $(document).on('click', '#edit-quote', function () {
     $(".quote_id_span").attr('hidden','true');
@@ -692,12 +737,329 @@ $(document).on('click', '#send-pdf-quotev2', function () {
 }
 });
 
+/*** PDF ***/
+
+//Show and hide pdf layouts options
+$(document).on('change', '#show_hide_select', function () {
+    if($('#show_hide_select').val()=='total in'){
+        $(".group_origin_charges").addClass('hide');
+        $(".group_destination_charges").addClass('hide');
+        $(".group_freight_charges").addClass('hide');
+    }else{
+        $(".group_origin_charges").removeClass('hide');
+        $(".group_destination_charges").removeClass('hide');
+        $(".group_freight_charges").removeClass('hide');      
+    }
+    
+});
+
+//Updating pdf features
+$(document).on('change', '.pdf-feature', function () {
+    var id=$(this).attr('data-quote-id');
+    var name=$(this).attr('data-name');
+    var value=0;
+    if($(this).attr('data-type')=='checkbox'){
+        if($(this). prop("checked") == true){
+            value=1;
+        }
+    }else{
+        value=$(this).val();
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/feature/pdf/update',
+        data:{"value":value,"name":name,"id":id},
+        success: function(data) {
+            if(data.message=='Ok'){
+                //$(this).attr('checked', true).val(0);
+            }
+        }
+    });
+});
+
 //Custom functions
 
 function show_hide_element($element,$button){
-    if($('.'+$element).hasClass('hide')){
-        $('.'+$element).removeClass('hide');
-    }else{
-        $('.'+$element).addClass('hide');
-    }
+  if($('.'+$element).hasClass('hide')){
+    $('.'+$element).removeClass('hide');
+  }else{
+    $('.'+$element).addClass('hide');
+  }
 }
+
+function precargar(){
+  var company_id = $("#m_select2_2_modal").val();
+  var contact_id =  $("#contact_id_num").val();
+  var price_id =  $("#price_id_num").val();
+
+
+  var selected = '';
+  var selected_price = '';
+  if(company_id) {
+    $('select[name="contact_id"]').empty();
+    $('select[name="contact_id"]').prop("disabled",false);
+
+    $.ajax({
+      url: "/quotes/company/contact/id/"+company_id,
+      dataType: 'json',
+      success: function(data) {
+        $('select[name="client"]').empty();
+        $.each(data, function(key, value) {
+          if(key == contact_id){
+            selected = 'selected';
+          }else{
+            selected = '';
+          }
+          $('select[name="contact_id"]').append('<option '+selected+' value="'+ key +'">'+ value +'</option>');
+        });
+      }
+    });
+
+    $.ajax({
+      url: "/quotes/company/price/id/"+company_id,
+      dataType: 'json',
+      success: function(data) {
+
+
+        $('select[name="price_id"]').empty();
+        $.each(data, function(key, value) {
+          if(key == price_id){
+            selected_price = 'selected';
+          }else{
+            selected_price = '';
+          }
+          $('select[name="price_id"]').append('<option '+selected_price+' value="'+ key +'">'+ value +'</option>');
+        });
+      }
+    });
+
+
+
+
+  }
+}
+// SEARCH 
+
+$(document).on('change', '#delivery_type', function (e) {
+
+  if($(this).val()==1){
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#origin_address").val('');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==2){
+
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").removeClass('hide');
+    $("#origin_address").val('');
+  }
+  if($(this).val()==3){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==4){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").removeClass('hide');
+  }
+});
+
+$( document ).ready(function() {
+  $('.select2-selection__rendered').removeAttr('title');
+  $('#select2-price_id-container').text('Please an option');
+
+
+  // CLEARING COMPANIES SELECT
+
+  $( "select[name='company_id_quote']" ).on('change', function() {
+    var company_id = $(this).val();
+    $("#contact_id").val('');
+
+    $('#select2-contact_id-container').text('Please an option');
+    if(company_id) {
+      $('select[name="contact_id"]').empty();
+      $('select[name="contact_id"]').prop("disabled",false);
+
+      $.ajax({
+        url: "/quotes/company/contact/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="contact_id"]').empty();
+          $.each(data, function(key, value) {
+            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+        }
+      });
+
+      $.ajax({
+        url: "/quotes/company/price/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="price_id"]').empty();
+          $.each(data, function(key, value) {
+            $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+
+          // CLEARING PRICE SELECT
+          $("select[name='contact_id']").val('');
+          $('#select2-contact_id-container').text('Please an option');
+
+          $("select[name='price_id']").val('');
+
+        }
+      });
+    }else{
+      $('#select2-contact_id-container').text('Please an option');
+      $('select[name="contact_id"]').empty();
+      $('select[name="price_id"]').empty();
+    }
+  });
+});
+
+$('.m-select2-general').select2({
+  placeholder: "Select an option"
+});
+
+function display(id){
+
+  var freight = $("#freight"+id);
+  var origin = $("#origin"+id);
+  var destiny = $("#destiny"+id);
+  var inland =  $("#inland"+id);
+  var remark = $("#remark"+id);
+
+  if(freight.attr('hidden')){
+    $("#freight"+id).removeAttr('hidden');
+    $("#remark"+id).attr('hidden','true');
+  }else{
+    $("#freight"+id).attr('hidden','true');
+  }
+
+  if(origin.attr('hidden')){
+    $("#origin"+id).removeAttr('hidden');
+  }else{
+    $("#origin"+id).attr('hidden','true');
+  }
+
+  if(destiny.attr('hidden')){
+    $("#destiny"+id).removeAttr('hidden');
+  }else{
+    $("#destiny"+id).attr('hidden','true');
+  }
+  if(inland.attr('hidden')){
+    $("#inland"+id).removeAttr('hidden');
+  }else{
+    $("#inland"+id).attr('hidden','true');
+  }
+}
+
+function display_r(id){
+
+  var freight = $("#freight"+id);
+  var origin = $("#origin"+id);
+  var destiny = $("#destiny"+id);
+  var inland =  $("#inland"+id);
+  var remark = $("#remark"+id);
+  if(remark.attr('hidden')){
+    $("#remark"+id).removeAttr('hidden');
+    $("#freight"+id).attr('hidden','true');
+    $("#origin"+id).attr('hidden','true');
+    $("#destiny"+id).attr('hidden','true');
+    $("#inland"+id).attr('hidden','true');
+  }else{
+    $("#remark"+id).attr('hidden','true');
+  }
+
+}
+
+
+$(".quote_search").on("click", function() {
+  $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  $(".quote_search").attr("type","submit");
+
+});
+$(".quote_man").on("click", function() {
+  $('#FormQuote').attr('action', '/v2/quotes/store');
+  $(".quote_man").attr("type","submit");
+});
+
+
+$('.btn-input__select').on('click', function(){
+  $('.btn-input__select-add').toggleClass('visible__select-add');
+});
+$('.btn-input__select-add').on('click', function(){
+  $(this).toggleClass('style__select-add');
+});
+
+$('.input-select').on('click', function(){
+  var ident = $(this).attr('id');
+  $('.'+ident+'').toggleClass('border-card');
+});
+
+
+$('.inlands').on('click', function(){
+  $('.card-p__quotes').toggleClass('border-card-p');
+  var id = $(this).attr('data-inland');
+  var idRate = $(this).attr('data-rate');
+
+
+
+  var theElement = $(this);
+  var  i20= $("#valor-d20"+id+"-"+idRate).html();
+  var  i40= $("#valor-d40"+id+"-"+idRate).html();
+  var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
+
+  var  sub20= $("#sub_inland_20"+idRate).html();
+
+  var  sub40= $("#sub_inland_40"+idRate).html();
+  var  sub40h= $("#sub_inland_40h"+idRate).html();
+  if(theElement.prop('checked')){
+
+    sub20 = parseFloat(sub20) +  parseFloat(i20);
+    sub40 = parseFloat(sub40) +  parseFloat(i40);
+    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+
+  }else{
+
+    sub20 = parseFloat(sub20) -  parseFloat(i20);
+    sub40 = parseFloat(sub40) -  parseFloat(i40);
+    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+  }
+
+  $("#sub_inland_20"+idRate).html(sub20);
+  $("#sub_inland_40"+idRate).html(sub40);
+  $("#sub_inland_40h"+idRate).html(sub40h);
+
+});
+
+$('.inlandsO').on('click', function(){
+  $('.card-p__quotes').toggleClass('border-card-p');
+  var id = $(this).attr('data-inland');
+  var idRate = $(this).attr('data-rate');
+
+  var theElement = $(this);
+  var  i20= $("#valor-o20"+id+"-"+idRate).html();
+  var  i40= $("#valor-o40"+id+"-"+idRate).html();
+  var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
+
+  var  sub20= $("#sub_inland_20"+idRate).html();
+  var  sub40= $("#sub_inland_40"+idRate).html();
+  var  sub40h= $("#sub_inland_40h"+idRate).html();
+  if(theElement.prop('checked')){
+
+    sub20 = parseFloat(sub20) +  parseFloat(i20);
+    sub40 = parseFloat(sub40) +  parseFloat(i40);
+    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+
+  }else{
+
+    sub20 = parseFloat(sub20) -  parseFloat(i20);
+    sub40 = parseFloat(sub40) -  parseFloat(i40);
+    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+  }
+  $("#sub_inland_20"+idRate).html(sub20);
+  $("#sub_inland_40"+idRate).html(sub40);
+  $("#sub_inland_40h"+idRate).html(sub40h);
+
+});
