@@ -135,7 +135,7 @@
             <br>
         </div>
     @endif
-    <!-- All in table -->
+    <!-- All in table freights-->
     @if($quote->pdf_option->show_type=='total in')
         <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
     @else
@@ -304,7 +304,7 @@
                 <tr class="text-center color-table">
                     <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
                     <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
-                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
+                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
                     <td {{ $equipmentHides['20'] }}>{{number_format((float)@$sum20+@$inland20, 2, '.', '')}}</td>
                     <td {{ $equipmentHides['40'] }}>{{number_format((float)@$sum40+@$inland40, 2, '.', '')}}</td>
                     <td {{ $equipmentHides['40hc'] }}>{{number_format((float)@$sum40hc+@$inland40hc, 2, '.', '')}}</td>
@@ -498,74 +498,429 @@
                         }
                     ?>
                 @endforeach
-                <tr class="text-center color-table">
-                    <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
-                    <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
-                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>Maersk</td>
-                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
-                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
-                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
-                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
-                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
-                    @if($quote->pdf_option->grouped_freight_charges==1)
-                        @if($quote->pdf_option->freight_charges_currency=='USD')
-                            <td >USD</td>
+                @if(@$sum20>0 || @$sum40>0 || @$sum40hc>0 || @$sum40nor>0 || @$sum45>0)
+                    <tr class="text-center color-table">
+                        <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
+                        <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
+                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                        <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
+                        <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
+                        <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
+                        <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
+                        <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                        @if($quote->pdf_option->grouped_freight_charges==1)
+                            @if($quote->pdf_option->freight_charges_currency=='USD')
+                                <td >USD</td>
+                            @else
+                                <td>EUR</td>
+                            @endif
                         @else
-                            <td>EUR</td>
+                            @if($currency_cfg->alphacode=='USD')
+                                <td >USD</td>
+                            @else
+                                <td>EUR</td>
+                            @endif
                         @endif
-                    @else
-                        @if($currency_cfg->alphacode=='USD')
-                            <td >USD</td>
-                        @else
-                            <td>EUR</td>
-                        @endif
-                    @endif
-                </tr>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
         <tfoot class="footer" style="border-color: yellow">
         
         </tfoot>
     </table>
-    <!--
-    <br>
-    <p class="title">Local charges - Barcelona, ESBCN</p>
-    <br>
-    <table border="0" cellspacing="1" cellpadding="1">
+
+    <!-- ALL in origin table -->
+    @if($quote->pdf_option->grouped_origin_charges==1 && $quote->pdf_option->show_type=='detailed' )
+    <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges</p>
+        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen</p>
+        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem</p>
+        <br>
+    </div>
+    <table border="0" cellspacing="1" cellpadding="1" >
         <thead class="title-quote text-center header-table">
-        <tr >
-            <th class="unit"><b>Charge</b></th>
-            <th class="unit"><b>Detail</b></th>
-            <th class="unit"><b>Carrier</b></th>
-            <th class="unit"><b>20'</b></th>
-            <th class="unit"><b>40' </b></th>
-            <th class="unit"><b>40' HC</b></th>
-            <th class="unit"><b>Currency</b></th>
-        </tr>
+            <tr >
+                <th class="unit"><b>POL</b></th>
+                <th class="unit"><b>POD</b></th>
+                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                <th {{ $equipmentHides['20'] }}><b>20'</b></th>
+                <th {{ $equipmentHides['40'] }}><b>40'</b></th>
+                <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
+                <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                <th {{ $equipmentHides['45'] }}><b>45'</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+            </tr>
         </thead>
         <tbody>
-        <tr class="text-center color-table">
-            <td class="">THC</td>
-            <td class="">Per Container</td>
-            <td class="">Maersk</td>
-            <td class="">70</td>
-            <td class="">100</td>
-            <td class="">100</td>
-            <td class="">EUR</td>
-        </tr>
+            @foreach($rates as $rate)
+                <?php 
+                    $sum20= 0;
+                    $sum40= 0;
+                    $sum40hc= 0;
+                    $sum40nor= 0;
+                    $sum45= 0;
+                    $inland20= 0;
+                    $inland40= 0;
+                    $inland40hc= 0;
+                    $inland40nor= 0;
+                    $inland45= 0;
+                    $carrier_id='';
+                ?>
+                $carrier_id=$rate->carrier_id;
+                @foreach($rate->charge as $value)
+                    <?php
+                        if($value->type_id==1){
+                            $array_amounts = json_decode($value->amount,true);
+                            $array_markups = json_decode($value->markups,true);
+                            if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                                $amount20=$array_amounts['c20'];
+                                $markup20=$array_markups['c20'];
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    if($quote->pdf_option->origin_charges_currency=='USD'){
+                                        $total20=($amount20+$markup20)/$value->currency_usd;
+                                    }else{
+                                        $total20=($amount20+$markup20)/$value->currency_eur;
+                                    }
+                                }else{
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total20=($amount20+$markup20)/$value->currency_usd;
+                                    }else{
+                                        $total20=($amount20+$markup20)/$value->currency_eur;
+                                    }
+                                }
+                                //$total20=$amount20+$markup20;
+                                $sum20 += number_format($total20, 2, '.', '');
+                            }
+                            if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                                $amount40=$array_amounts['c40'];
+                                $markup40=$array_markups['c40'];
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    if($quote->pdf_option->origin_charges_currency=='USD'){
+                                        $total40=($amount40+$markup40)/$value->currency_usd;
+                                    }else{
+                                        $total40=($amount40+$markup40)/$value->currency_eur;
+                                    }
+                                }else{
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40=($amount40+$markup40)/$value->currency_usd;
+                                    }else{
+                                        $total40=($amount40+$markup40)/$value->currency_eur;
+                                    }
+                                }
+                                $sum40 += number_format($total40, 2, '.', '');
+                            }
+                            if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                                $amount40hc=$array_amounts['c40hc'];
+                                $markup40hc=$array_markups['c40hc'];
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    if($quote->pdf_option->origin_charges_currency=='USD'){
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                                    }else{
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                                    }
+                                }else{
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_usd;
+                                    }else{
+                                        $total40hc=($amount40hc+$markup40hc)/$value->currency_eur;
+                                    }
+                                }
+                                $sum40hc += number_format($total40hc, 2, '.', '');
+                            }
+                            if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                                $amount40nor=$array_amounts['c40nor'];
+                                $markup40nor=$array_markups['c40nor'];
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    if($quote->pdf_option->origin_charges_currency=='USD'){
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                                    }else{
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                                    }
+                                }else{
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_usd;
+                                    }else{
+                                        $total40nor=($amount40nor+$markup40nor)/$value->currency_eur;
+                                    }
+                                }
+                                //$total40nor=$amount40nor+$markup40nor;
+                                $sum40nor += number_format($total40nor, 2, '.', '');
+                            }
+                            if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                                $amount45=$array_amounts['c45'];
+                                $markup45=$array_markups['c45'];
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    if($quote->pdf_option->origin_charges_currency=='USD'){
+                                        $total45=($amount45+$markup45)/$value->currency_usd;
+                                    }else{
+                                        $total45=($amount45+$markup45)/$value->currency_eur;
+                                    }
+                                }else{
+                                    if($currency_cfg->alphacode=='USD'){
+                                        $total45=($amount45+$markup45)/$value->currency_usd;
+                                    }else{
+                                        $total45=($amount45+$markup45)/$value->currency_eur;
+                                    }
+                                }
+                                //$total45=$amount45+$markup45;
+                                $sum45 += number_format($total45, 2, '.', '');
+                            }
+
+                            if(!$rate->inland->isEmpty()){
+                                foreach($rate->inland as $item){
+                                
+                                    $arr_amounts = json_decode($item->rate,true);
+                                    $arr_markups = json_decode($item->markup,true);
+                                    if(isset($arr_amounts['c20']) && isset($arr_markups['c20'])){
+                                        $amount_inland20=$arr_amounts['c20'];
+                                        $markup_inland20=$arr_markups['c20'];
+                                        $total_inland20=$amount_inland20+$markup_inland20;
+                                        $inland20 += $total_inland20;
+                                    }
+                                    if(isset($arr_amounts['c40']) && isset($arr_markups['c40'])){
+                                        $amount_inland40=$arr_amounts['c40'];
+                                        $markup_inland40=$arr_markups['c40'];
+                                        $total_inland40=$amount_inland40+$markup_inland40;
+                                        $inland40 += $total_inland40;
+                                    }
+                                    if(isset($arr_amounts['c40hc']) && isset($arr_markups['c40hc'])){
+                                        $amount_inland40hc=$arr_amounts['c40hc'];
+                                        $markup_inland40hc=$arr_markups['c40hc'];
+                                        $total_inland40hc=$amount_inland40hc+$markup_inland40hc;
+                                        $inland40hc += $total_inland40hc;
+                                    }
+                                    if(isset($arr_amounts['c40nor']) && isset($arr_markups['c40nor'])){
+                                        $amount_inland40nor=$arr_amounts['c40nor'];
+                                        $markup_inland40nor=$arr_markups['c40nor'];
+                                        $total_inland40nor=$amount_inland40nor+$markup4_inland40nor;
+                                        $inland40nor += $total_inland40nor;
+                                    }
+                                    if(isset($arr_amounts['c45']) && isset($arr_markups['c45'])){
+                                        $amount_inland45=$arr_amounts['c45'];
+                                        $markup_inland45=$arr_markups['c45'];
+                                        $total_inland45=$amount_inland45+$markup_inland45;
+                                        $inland45 += $total_inland45;
+                                    }
+                                }
+                            }      
+                        }
+                    ?>
+                @endforeach
+                @if(@$sum20>0 || @$sum40>0 || @$sum40hc>0 || @$sum40nor>0 || @$sum45>0)
+                    <tr class="text-center color-table">
+                        <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
+                        <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
+                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                        <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
+                        <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
+                        <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
+                        <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
+                        <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                        @if($quote->pdf_option->grouped_origin_charges==1)
+                            @if($quote->pdf_option->origin_charges_currency=='USD')
+                                <td >USD</td>
+                            @else
+                                <td>EUR</td>
+                            @endif
+                        @else
+                            @if($currency_cfg->alphacode=='USD')
+                                <td >USD</td>
+                            @else
+                                <td>EUR</td>
+                            @endif
+                        @endif
+                    </tr>
+                @endif
+            @endforeach
         </tbody>
-        <tfoot>
-        <tr class="text-center subtotal header-table">
-            <td colspan="2" style="font-size: 12px; color: #01194F"><b>Total local charges</b></td>
-            <td></td>
-            <td style="font-size: 12px; color: #01194F"><b>70</b></td>
-            <td style="font-size: 12px; color: #01194F"><b>100</b></td>
-            <td style="font-size: 12px; color: #01194F"><b>100</b></td>
-            <td style="font-size: 12px; color: #01194F"><b>EUR</b></td>
-        </tr>
+        <tfoot class="footer" style="border-color: yellow">
+        
         </tfoot>
     </table>
--->
+    @endif
+    <!-- Fin all in origin -->
+
+    <!-- Origin tables grouped 
+
+            @foreach($origin_charges as $rate)
+                <?php 
+                    $sum_origin20= 0;
+                    $sum40= 0;
+                    $sum40hc= 0;
+                    $sum40nor= 0;
+                    $sum45= 0;
+                    $inland20= 0;
+                    $inland40= 0;
+                    $inland40hc= 0;
+                    $inland40nor= 0;
+                    $inland45= 0;
+                    $carrier_id='';
+                ?>
+                @foreach($rate as $value)
+                    @foreach($value as $key=>$v)
+                        <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges </p>
+                            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen </p>
+                            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem </p>
+                            <br>
+                        </div>
+                        <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                            <thead class="title-quote text-center header-table">
+                                <tr >
+                                    <th class="unit"><b>POL</b></th>
+                                    <th class="unit"><b>POD</b></th>
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                    <th {{ $equipmentHides['20'] }}><b>20'</b></th>
+                                    <th {{ $equipmentHides['40'] }}><b>40'</b></th>
+                                    <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
+                                    <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                                    <th {{ $equipmentHides['45'] }}><b>45'</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($v as $a)
+
+                                @foreach($a->charge as $amount)
+                                <?php
+                                $array_amounts = json_decode($amount->amount,true);
+                                $array_markups = json_decode($amount->markups,true);
+                                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                                    $amount20=$array_amounts['c20'];
+                                    $markup20=$array_markups['c20'];
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        if($quote->pdf_option->origin_charges_currency=='USD'){
+                                            $total20=($amount20+$markup20)/$amount->currency_usd;
+                                        }else{
+                                            $total20=($amount20+$markup20)/$amount->currency_eur;
+                                        }
+                                    }else{
+                                        if($currency_cfg->alphacode=='USD'){
+                                            $total20=($amount20+$markup20)/$amount->currency_usd;
+                                        }else{
+                                            $total20=($amount20+$markup20)/$amount->currency_eur;
+                                        }
+                                    }
+                                    //$total20=$amount20+$markup20;
+                                    $sum20 += number_format($total20, 2, '.', '');
+                                }
+                                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                                    $amount40=$array_amounts['c40'];
+                                    $markup40=$array_markups['c40'];
+
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        if($quote->pdf_option->origin_charges_currency=='USD'){
+                                            $total40=($amount40+$markup40)/$amount->currency_usd;
+                                        }else{
+                                            $total40=($amount40+$markup40)/$amount->currency_eur;
+                                        }
+                                    }else{
+                                        if($currency_cfg->alphacode=='USD'){
+                                            $total40=($amount40+$markup40)/$amount->currency_usd;
+                                        }else{
+                                            $total40=($amount40+$markup40)/$amount->currency_eur;
+                                        }
+                                    }
+                                    $sum40 += number_format($total40, 2, '.', '');
+
+                                }
+                                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                                    $amount40hc=$array_amounts['c40hc'];
+                                    $markup40hc=$array_markups['c40hc'];
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        if($quote->pdf_option->origin_charges_currency=='USD'){
+                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_usd;
+                                        }else{
+                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_eur;
+                                        }
+                                    }else{
+                                        if($currency_cfg->alphacode=='USD'){
+                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_usd;
+                                        }else{
+                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_eur;
+                                        }
+                                    }
+                                    $sum40hc += number_format($total40hc, 2, '.', '');
+                                }
+                                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                                    $amount40nor=$array_amounts['c40nor'];
+                                    $markup40nor=$array_markups['c40nor'];
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        if($quote->pdf_option->origin_charges_currency=='USD'){
+                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_usd;
+                                        }else{
+                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_eur;
+                                        }
+                                    }else{
+                                        if($currency_cfg->alphacode=='USD'){
+                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_usd;
+                                        }else{
+                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_eur;
+                                        }
+                                    }
+                                    //$total40nor=$amount40nor+$markup40nor;
+                                    $sum40nor += number_format($total40nor, 2, '.', '');
+                                }
+                                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                                    $amount45=$array_amounts['c45'];
+                                    $markup45=$array_markups['c45'];
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        if($quote->pdf_option->origin_charges_currency=='USD'){
+                                            $total45=($amount45+$markup45)/$amount->currency_usd;
+                                        }else{
+                                            $total45=($amount45+$markup45)/$amount->currency_eur;
+                                        }
+                                    }else{
+                                        if($currency_cfg->alphacode=='USD'){
+                                            $total45=($amount45+$markup45)/$amount->currency_usd;
+                                        }else{
+                                            $total45=($amount45+$markup45)/$amount->currency_eur;
+                                        }
+                                    }
+                                    //$total45=$amount45+$markup45;
+                                    $sum45 += number_format($total45, 2, '.', '');
+                                }
+
+                                ?>
+                                @endforeach
+
+                                <tr class="text-center color-table">
+                                    <td>{{$a->origin_port->name}},{{$a->origin_port->code}}</td>
+                                    <td>{{$a->destination_port->name}},{{$a->destination_port->code}}</td>
+                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$a->carrier->name}}</td>
+                                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
+                                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
+                                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
+                                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
+                                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                                    @if($quote->pdf_option->grouped_origin_charges==1)
+                                        @if($quote->pdf_option->origin_charges_currency=='USD')
+                                            <td >USD</td>
+                                        @else
+                                            <td>EUR</td>
+                                        @endif
+                                    @else
+                                        @if($currency_cfg->alphacode=='USD')
+                                            <td >USD</td>
+                                        @else
+                                            <td>EUR</td>
+                                        @endif
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+                    <tfoot class="footer" style="border-color: yellow">
+                    </tfoot>
+                </table>
+                @endforeach
+            @endforeach-->
+
 </main>
 
 </body>
