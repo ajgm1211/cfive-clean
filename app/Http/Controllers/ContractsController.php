@@ -438,7 +438,7 @@ class ContractsController extends Controller
     public function edit(Request $request,$id)
     {
         $id = obtenerRouteKey($id);
-        $contracts = Contract::where('id',$id)->with('direction','carriers')->first();
+        $contracts = Contract::where('id',$id)->with('direction','carriers.carrier')->first();
         //dd($contracts->carriers->pluck('carrier'));
         
         $objtypedestiny = new TypeDestiny();
