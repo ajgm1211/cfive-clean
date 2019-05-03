@@ -88,18 +88,18 @@ new registration
                                 <div class="col-lg-2">
                                     <label class="">Carrier</label>
                                     <div class="" id="carrierMul">
-                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','multiple'=>'multiple'])!!}
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <label class="">Direction</label>
                                     <div class="" id="direction">
-                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','id'=>'direction'])!!}
+                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
                                     </div>
                                 </div>
                                 <div class="col-lg-1">
                                     <br>
-                                    <button type="text" id="btnFiterSubmitSearch" style="padding: 11px 45px;" class="btn btn-primary">Submit</button>
+                                    <button type="text" id="btnFiterSubmitSearch" style="padding: 11px 45px;" class="btn btn-primary">Search</button>
                                 </div>
                                 <div class="col-lg-1">
                                     <br>
@@ -107,12 +107,12 @@ new registration
                                         <i class="la la-cloud-upload"></i>&nbsp; Choose File
                                     </label>
                                     <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
-                                    <div id="info"></div>
+                                    <div id="info" style="color:red"></div>
                                 </div>
                                 <div class="col-lg-1">
                                     <br>
 
-                                    <button type="submit" class="btn btn-primary" style="padding: 11px 31px;">
+                                    <button type="submit" class="btn btn-primary" onclick="fileempty()" style="padding: 11px 31px;">
                                         <i class=""></i>Import File
                                     </button>
                                 </div>
@@ -294,9 +294,9 @@ new registration
                             <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                                 <thead >
                                     <tr>
-                                        <!--   <th >Carrier</th>-->
-                                        <!--   <th >Direction</th>-->
-                                        <th >References</th>
+                                        <th style="width:30%">References</th>
+                                        <th >Type</th>
+                                        <th >Carriers</th>
                                         <th >Validation</th>
                                         <th >Expire</th>
                                     </tr>
@@ -383,7 +383,7 @@ new registration
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 
 <script>
-    // $(function() {
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -397,12 +397,16 @@ new registration
             url: '{!! route("Similar.Contracts.Request",$user->company_user_id) !!}',
             data: function (d) {
                 d.carrierM = $('select#carrierM').val();
-               /* d.carrierM = $('input[name=carrierM]').val();*/
+                var date = ($('#m_daterangepicker_1').val()).split(" / ");
+                d.dateO = date[0];
+                d.dateT = date[1];
                 d.direction = $('#direction select').val();
             }
         },
         columns: [
             { data: 'name', name: 'name' },
+            { data: 'direction', name: 'direction' },
+            { data: 'carrier', name: 'carrier' },
             { data: 'validity', name: 'validity' },
             { data: 'expire', name: 'expire' }
         ],
@@ -416,11 +420,19 @@ new registration
 
     $('#btnFiterSubmitSearch').click(function(){
         $('#nameid').removeAttr('required');
-        //alert($('select#carrierM').val());
+        $('#carrierM').removeAttr('required');
+        $('#direction').removeAttr('required');
         $('#requesttable').DataTable().draw(true);
         $('#nameid').attr('required','required');
+        $('#carrierM').attr('required','required');
+        $('#direction').attr('required','required');
     });
 
+    function fileempty(){
+        if( document.getElementById("file").files.length == 0 ){
+            swal("Error!", "Choose File", "error");
+        }
+    }
     function cambiar(){
         var pdrs = document.getElementById('file').files[0].name;
         document.getElementById('info').innerHTML = pdrs;

@@ -516,7 +516,8 @@ class NewContractRequestsController extends Controller
     // Similar Contracts ----------------------------------------------------------------
 
     public function similarcontracts(Request $request,$id){
-        $contracts = Contract::select(['name',
+        $contracts = Contract::select(['id',
+                                       'name',
                                        'number',
                                        'company_user_id',
                                        'account_id',
@@ -524,17 +525,7 @@ class NewContractRequestsController extends Controller
                                        'validity',
                                        'expire'
                                       ]);
-        /*$contracts = Contract::where('company_user_id',$id)->with('direction','carriers.carrier')->get();
-        $contracts = $contracts->filter(function ($value) use($request){
-            //dd($request->direction);
-            if($request->has('direction')){
-                return $value->direction_id == $request->direction;
-            } else {
-                return $value;
-            }
-        }); */
 
-        //dd($request->has('direction'));
         return Datatables::of($contracts->where('company_user_id',$id))
             ->filter(function ($query) use ($request,$id) {
                 if ($request->has('direction') && $request->get('direction') != null) {
@@ -547,10 +538,27 @@ class NewContractRequestsController extends Controller
                         $q->whereIn('carrier_id',$request->get('carrierM'));
                     });
                 }
+                if($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
+                    $query->where('validity', '=',$request->get('dateO'))->where('expire', '=',$request->get('dateT'));
+                }
+
+            })
+            ->addColumn('carrier', function ($contracts) {
+                $dd = $contracts->load('carriers.carrier');
+                if(count($dd->carriers) != 0){
+                    return str_replace(['[',']','"'],' ',$dd->carriers->pluck('carrier')->pluck('name'));
+                } else {
+                    return '-------';
+                }
+
             })
             ->addColumn('direction', function ($contracts) {
-                 $dds = $contracts->load('direction');
-                return $dds->direction->name;
+                $dds = $contracts->load('direction');
+                if(count($dds->direction) != 0){
+                    return $dds->direction->name;
+                } else {
+                    return '-------';
+                }
             })
             ->make(true);
     }

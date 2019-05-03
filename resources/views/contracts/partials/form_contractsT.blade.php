@@ -15,7 +15,7 @@
     </div>
     <div class="col-lg-3">
         {!! Form::label('carrier', 'Carriers') !!}
-        {!! Form::select('carrierAr[]',$carrier,@$contracts->carriers, ['class' => 'form-control m-select2-general','required' => 'required','multiple'=>'multiple']) !!}
+        {!! Form::select('carrierAr[]',$carrier,@$contracts->carriers->pluck('carrier_id'), ['class' => 'form-control m-select2-general','required' => 'required','multiple'=>'multiple']) !!}
     </div>
     <div class="col-lg-3">
         {!! Form::label('validation_expire', 'Validation') !!}
