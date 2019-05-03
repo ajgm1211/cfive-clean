@@ -415,12 +415,15 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
   Route::post('/update/payments/{id}', 'QuoteV2Controller@updatePaymentConditions')->name('quotes-v2.update.payments');
   Route::post('/update/terms/{id}', 'QuoteV2Controller@updateTerms')->name('quotes-v2.update.terms');
+  Route::post('/update/remarks/{id}', 'QuoteV2Controller@updateRemarks')->name('quotes-v2.update.remarks');
   Route::get('/duplicate/{id}', 'QuoteV2Controller@duplicate')->name('quotes-v2.duplicate');
   Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
   Route::post('send', 'QuoteV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
   Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
   Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
   Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
+  Route::get('/pdf/{quote_id}', 'QuoteV2Controller@pdf')->name('quotes-v2.pdf');
+  Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
 });
 
 //Settings

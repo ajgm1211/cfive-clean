@@ -16,7 +16,7 @@ class Charge extends Model
 
     public function automatic_rate()
     {
-        return $this->belongsTo('App\AutomaticRate','id','automatic_rate_id');
+        return $this->belongsTo('App\AutomaticRate','automatic_rate_id','id');
     }
 
     public function currency()
