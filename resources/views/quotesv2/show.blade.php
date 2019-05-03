@@ -131,7 +131,7 @@
                                 <br>
                                 <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                 <span class="equipment_span">
-                                    @foreach($quote->equipment as $item)
+                                    @foreach(json_decode($quote->equipment) as $item)
                                     {{$item}}@unless($loop->last),@endunless
                                     @endforeach
                                 </span>
@@ -140,7 +140,7 @@
                             <div class="col-md-4">
                                 <br>
                                 <label class="title-quote"><b>Price level:&nbsp;&nbsp;</b></label>
-                                <span class="price_level_span">{{$quote->price->name}}</span>
+                                <span class="price_level_span">{{@$quote->price->name}}</span>
                                 {{ Form::select('price_id',$prices,$quote->price_id,['class'=>'form-control price_id select2','hidden']) }}
                             </div>
                         </div>
