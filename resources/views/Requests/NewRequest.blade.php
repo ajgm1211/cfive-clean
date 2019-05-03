@@ -88,7 +88,7 @@ new registration
                                 <div class="col-lg-2">
                                     <label class="">Carrier</label>
                                     <div class="" id="carrierMul">
-                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierMul','multiple'=>'multiple'])!!}
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
@@ -396,9 +396,9 @@ new registration
         ajax: {
             url: '{!! route("Similar.Contracts.Request",$user->company_user_id) !!}',
             data: function (d) {
-                d.name = $('input[name=name]').val();
-                d.carrierM = $('input[name=carrierM]').val();
-                d.direction = $('input[name=direction]').val();
+                d.carrierM = $('select#carrierM').val();
+               /* d.carrierM = $('input[name=carrierM]').val();*/
+                d.direction = $('#direction select').val();
             }
         },
         columns: [
@@ -415,7 +415,10 @@ new registration
     });    
 
     $('#btnFiterSubmitSearch').click(function(){
+        $('#nameid').removeAttr('required');
+        //alert($('select#carrierM').val());
         $('#requesttable').DataTable().draw(true);
+        $('#nameid').attr('required','required');
     });
 
     function cambiar(){
