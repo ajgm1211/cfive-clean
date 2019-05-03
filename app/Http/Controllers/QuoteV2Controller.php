@@ -531,6 +531,9 @@ class QuoteV2Controller extends Controller
     $id = obtenerRouteKey($id);
     $quote = QuoteV2::findOrFail($id);
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $origin_charges = AutomaticRate::where('quote_id',$quote->id)->whereHas('charge', function ($query) {
+      $query->where('type_id', '=', 1);
+    })->with('charge')->get();
     $contact_email = Contact::find($quote->contact_id);
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -558,284 +561,315 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
+      
     }
+    $collect = new collection();
 
-  //dd(json_encode($currency_cfg));
-  $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides]);
+    $origin_charges = $origin_charges->groupBy([
 
-  $pdf = \App::make('dompdf.wrapper');
-  $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+      function ($item) {
+        return $item['carrier']['name'];
+      },
+      function ($item) {
+        return $item['origin_port']['name'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'];
+      },
 
-  return $pdf->stream('quote');
-}
+    ], $preserveKeys = true);
+
+    foreach($origin_charges as $item){
+      foreach($item as $items){
+        foreach($items as $itemsDetail){
+          foreach ($itemsDetail as $value) {
+            foreach ($value->charge as $amounts) {
+              $currency_charge = Currency::find($amounts->currency_id);
+              $amounts->currency_usd = $currency_charge->rates;
+              $amounts->currency_eur = $currency_charge->rates_eur;
+            }
+          }
+        } 
+      }
+    }
+    
+    //$origin_charges=$origin_charges->toArray();
+    //dd($origin_charges);
+    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'origin_charges'=>$origin_charges]);
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+    return $pdf->stream('quote');
+  }
 
   // Store
 
-public function store(Request $request){
+  public function store(Request $request){
 
 
-  $form =  json_decode($request->input('form'));
-  $info = $request->input('info');
-  $equipment = json_encode($form->equipment);
-  $dateQ = explode('/',$form->date);
-  $since = $dateQ[0];
-  $until = $dateQ[1];
+    $form =  json_decode($request->input('form'));
+    $info = $request->input('info');
+    $equipment = json_encode($form->equipment);
+    $dateQ = explode('/',$form->date);
+    $since = $dateQ[0];
+    $until = $dateQ[1];
 
 
-  $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+    $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
 
-  $quote= QuoteV2::create($request->all());
+    $quote= QuoteV2::create($request->all());
 
-  foreach($info as $infoA){
-    $info_D = json_decode($infoA);
+    foreach($info as $infoA){
+      $info_D = json_decode($infoA);
       // Rates
 
 
-    foreach($info_D->rates as $rate){
-      $rates =   json_encode($rate->rate);
-      $markups =   json_encode($rate->markups);
+      foreach($info_D->rates as $rate){
+        $rates =   json_encode($rate->rate);
+        $markups =   json_encode($rate->markups);
 
-      $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
-      $rate = AutomaticRate::create($request->all());
-    }
+        $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
+        $rate = AutomaticRate::create($request->all());
+      }
 
 
-    foreach($info_D->localorigin as $localorigin){
+      foreach($info_D->localorigin as $localorigin){
         //CHARGES
-      $arregloMontoO = array();
-      $arregloMarkupsO = array();
-      foreach($localorigin as $localO){
+        $arregloMontoO = array();
+        $arregloMarkupsO = array();
+        foreach($localorigin as $localO){
 
-        foreach($localO as $local){
-          if($local->type != '99'){
-            $arregloMontoO[] = array('c'.$local->type => $local->monto);
-            $arregloMarkupsO[] = array('c'.$local->type => $local->markup);
-          }
-          if($local->type == '99'){
-            $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
+          foreach($localO as $local){
+            if($local->type != '99'){
+              $arregloMontoO[] = array('c'.$local->type => $local->monto);
+              $arregloMarkupsO[] = array('c'.$local->type => $local->markup);
+            }
+            if($local->type == '99'){
+              $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => '5' , 'currency_id' => $info_D->currency->id );
+            }
+
           }
 
         }
 
+        $arregloMontoO =  json_encode($arregloMontoO);
+        $arregloMarkupsO =  json_encode($arregloMarkupsO);
+
+        $chargeOrigin = new Charge();
+        $chargeOrigin->automatic_rate_id= $rate->id;
+        $chargeOrigin->type_id = $arregloO['type_id'] ;
+        $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
+        $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
+        $chargeOrigin->amount =  $arregloMontoO  ;
+        $chargeOrigin->markups = $arregloMarkupsO  ;
+        $chargeOrigin->currency_id = $arregloO['currency_id']  ;
+        $chargeOrigin->total =  $arregloMarkupsO ;
+        $chargeOrigin->save();
       }
 
-      $arregloMontoO =  json_encode($arregloMontoO);
-      $arregloMarkupsO =  json_encode($arregloMarkupsO);
-
-      $chargeOrigin = new Charge();
-      $chargeOrigin->automatic_rate_id= $rate->id;
-      $chargeOrigin->type_id = $arregloO['type_id'] ;
-      $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
-      $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
-      $chargeOrigin->amount =  $arregloMontoO  ;
-      $chargeOrigin->markups = $arregloMarkupsO  ;
-      $chargeOrigin->currency_id = $arregloO['currency_id']  ;
-      $chargeOrigin->total =  $arregloMarkupsO ;
-      $chargeOrigin->save();
     }
-
   }
-}
 
-public function skipPluck($pluck)
-{
-  $skips = ["[","]","\""];
-  return str_replace($skips, '',$pluck);
-}
-public function ratesCurrency($id,$typeCurrency){
-  $rates = Currency::where('id','=',$id)->get();
-  foreach($rates as $rate){
-    if($typeCurrency == "USD"){
-      $rateC = $rate->rates;
+  public function skipPluck($pluck)
+  {
+    $skips = ["[","]","\""];
+    return str_replace($skips, '',$pluck);
+  }
+  public function ratesCurrency($id,$typeCurrency){
+    $rates = Currency::where('id','=',$id)->get();
+    foreach($rates as $rate){
+      if($typeCurrency == "USD"){
+        $rateC = $rate->rates;
+      }else{
+        $rateC = $rate->rates_eur;
+      }
+    }
+    return $rateC;
+  }
+  public function search()
+  {
+
+
+    $company_user_id=\Auth::user()->company_user_id;
+    $incoterm = Incoterm::pluck('name','id');
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
     }else{
-      $rateC = $rate->rates_eur;
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
+    $harbors = Harbor::get()->pluck('display_name','id_complete');
+    $countries = Country::all()->pluck('name','id');
+
+    $prices = Price::all()->pluck('name','id');
+    $company_user = User::where('id',\Auth::id())->first();
+    if(count($company_user->companyUser)>0) {
+      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+    }else{
+      $currency_name = '';
+    }
+    $currencies = Currency::all()->pluck('alphacode','id');
+    return view('quotesv2/search',  compact('companies','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+
+
   }
-  return $rateC;
-}
-public function search()
-{
 
-
-  $company_user_id=\Auth::user()->company_user_id;
-  $incoterm = Incoterm::pluck('name','id');
-  if(\Auth::user()->hasRole('subuser')){
-    $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
-      $q->where('user_id',\Auth::user()->id);
-    })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
-  }else{
-    $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
-  }
-  $harbors = Harbor::get()->pluck('display_name','id_complete');
-  $countries = Country::all()->pluck('name','id');
-
-  $prices = Price::all()->pluck('name','id');
-  $company_user = User::where('id',\Auth::id())->first();
-  if(count($company_user->companyUser)>0) {
-    $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-  }else{
-    $currency_name = '';
-  }
-  $currencies = Currency::all()->pluck('alphacode','id');
-  return view('quotesv2/search',  compact('companies','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
-
-
-}
-
-public function processSearch(Request $request){
+  public function processSearch(Request $request){
 
 
     //Variables del usuario conectado
-  $company_user_id=\Auth::user()->company_user_id;
-  $user_id =  \Auth::id();
+    $company_user_id=\Auth::user()->company_user_id;
+    $user_id =  \Auth::id();
 
     //Variables para cargar el  Formulario
-  $form  = $request->all();
-  $incoterm = Incoterm::pluck('name','id');
-  if(\Auth::user()->hasRole('subuser')){
-    $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
-      $q->where('user_id',\Auth::user()->id);
-    })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
-  }else{
-    $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
-  }
+    $form  = $request->all();
+    $incoterm = Incoterm::pluck('name','id');
+    if(\Auth::user()->hasRole('subuser')){
+      $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
+        $q->where('user_id',\Auth::user()->id);
+      })->orwhere('owner',\Auth::user()->id)->pluck('business_name','id');
+    }else{
+      $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
+    }
 
-  $harbors = Harbor::get()->pluck('display_name','id_complete');
-  $countries = Country::all()->pluck('name','id');
-  $prices = Price::all()->pluck('name','id');
-  $company_user = User::where('id',\Auth::id())->first();
+    $harbors = Harbor::get()->pluck('display_name','id_complete');
+    $countries = Country::all()->pluck('name','id');
+    $prices = Price::all()->pluck('name','id');
+    $company_user = User::where('id',\Auth::id())->first();
 
-  if(count($company_user->companyUser)>0) {
-    $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-  }else{
-    $currency_name = '';
-  }
-  $currencies = Currency::all()->pluck('alphacode','id');
+    if(count($company_user->companyUser)>0) {
+      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+    }else{
+      $currency_name = '';
+    }
+    $currencies = Currency::all()->pluck('alphacode','id');
 
 
     //Settings de la compañia 
-  $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
-  $typeCurrency =  $company->companyUser->currency->alphacode ;
-  $idCurrency = $company->companyUser->currency_id;
+    $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+    $typeCurrency =  $company->companyUser->currency->alphacode ;
+    $idCurrency = $company->companyUser->currency_id;
 
     // Request Formulario
-  foreach($request->input('originport') as $origP){
+    foreach($request->input('originport') as $origP){
 
-    $infoOrig = explode("-", $origP);
-    $origin_port[] = $infoOrig[0];
-    $origin_country[] = $infoOrig[1];
-  }
-  foreach($request->input('destinyport') as $destP){
+      $infoOrig = explode("-", $origP);
+      $origin_port[] = $infoOrig[0];
+      $origin_country[] = $infoOrig[1];
+    }
+    foreach($request->input('destinyport') as $destP){
 
-    $infoDest = explode("-", $destP);
-    $destiny_port[] = $infoDest[0];
-    $destiny_country[] = $infoDest[1];
-  }
-  $equipment = $request->input('equipment');
-  $delivery_type = $request->input('delivery_type');
-  $price_id = $request->input('price_id');
-  $modality_inland = $request->modality;
-  $company_id = $request->input('company_id_quote');
+      $infoDest = explode("-", $destP);
+      $destiny_port[] = $infoDest[0];
+      $destiny_country[] = $infoDest[1];
+    }
+    $equipment = $request->input('equipment');
+    $delivery_type = $request->input('delivery_type');
+    $price_id = $request->input('price_id');
+    $modality_inland = $request->modality;
+    $company_id = $request->input('company_id_quote');
     // Fecha Contrato
-  $dateRange =  $request->input('date');
-  $dateRange = explode("/",$dateRange);
-  $dateSince = $dateRange[0];
-  $dateUntil = $dateRange[1];
+    $dateRange =  $request->input('date');
+    $dateRange = explode("/",$dateRange);
+    $dateSince = $dateRange[0];
+    $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-  $equipmentHides = $this->hideContainer($equipment);
+    $equipmentHides = $this->hideContainer($equipment);
     //Colecciones 
 
     //Markups Freight
-  $freighPercentage = 0;
-  $freighAmmount = 0;
-  $freighMarkup= 0;
+    $freighPercentage = 0;
+    $freighAmmount = 0;
+    $freighMarkup= 0;
     // Markups Local
-  $localPercentage = 0;
-  $localAmmount = 0;
-  $localMarkup = 0;
-  $markupLocalCurre = 0;
+    $localPercentage = 0;
+    $localAmmount = 0;
+    $localMarkup = 0;
+    $markupLocalCurre = 0;
 
     // Markups
 
 
-  $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
-    $q->where('price_id', '=',$price_id);
-  })->with('freight_markup','local_markup','inland_markup')->get();
+    $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
+      $q->where('price_id', '=',$price_id);
+    })->with('freight_markup','local_markup','inland_markup')->get();
 
-  foreach($fclMarkup as $freight){
+    foreach($fclMarkup as $freight){
       // Freight
-    $fclFreight = $freight->freight_markup->where('price_type_id','=',1);
+      $fclFreight = $freight->freight_markup->where('price_type_id','=',1);
       // Valor de porcentaje
-    $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
+      $freighPercentage = $this->skipPluck($fclFreight->pluck('percent_markup'));
       // markup currency
-    $markupFreightCurre =  $this->skipPluck($fclFreight->pluck('currency'));
+      $markupFreightCurre =  $this->skipPluck($fclFreight->pluck('currency'));
       // markup con el monto segun la moneda
-    $freighMarkup = $this->ratesCurrency($markupFreightCurre,$typeCurrency);
+      $freighMarkup = $this->ratesCurrency($markupFreightCurre,$typeCurrency);
       // Objeto con las propiedades del currency
-    $markupFreightCurre = Currency::find($markupFreightCurre);
-    $markupFreightCurre = $markupFreightCurre->alphacode;
+      $markupFreightCurre = Currency::find($markupFreightCurre);
+      $markupFreightCurre = $markupFreightCurre->alphacode;
       // Monto original
-    $freighAmmount =  $this->skipPluck($fclFreight->pluck('fixed_markup'));
+      $freighAmmount =  $this->skipPluck($fclFreight->pluck('fixed_markup'));
       // monto aplicado al currency
-    $freighMarkup = $freighAmmount / $freighMarkup;
-    $freighMarkup = number_format($freighMarkup, 2, '.', '');
+      $freighMarkup = $freighAmmount / $freighMarkup;
+      $freighMarkup = number_format($freighMarkup, 2, '.', '');
 
       // Local y global
-    $fclLocal = $freight->local_markup->where('price_type_id','=',1);
+      $fclLocal = $freight->local_markup->where('price_type_id','=',1);
       // markup currency
 
-    if($request->modality == "1"){
-      $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_export'));
+      if($request->modality == "1"){
+        $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_export'));
         // valor de la conversion segun la moneda
-      $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
+        $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
         // Objeto con las propiedades del currency por monto fijo
-      $markupLocalCurre = Currency::find($markupLocalCurre);
-      $markupLocalCurre = $markupLocalCurre->alphacode;
+        $markupLocalCurre = Currency::find($markupLocalCurre);
+        $markupLocalCurre = $markupLocalCurre->alphacode;
         // En caso de ser Porcentaje
-      $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
+        $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_export')));
         // Monto original
-      $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
+        $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_export')));
         // monto aplicado al currency
-      $localMarkup = $localAmmount / $localMarkup;
-      $localMarkup = number_format($localMarkup, 2, '.', '');
-    }else{
-      $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_import'));
+        $localMarkup = $localAmmount / $localMarkup;
+        $localMarkup = number_format($localMarkup, 2, '.', '');
+      }else{
+        $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_import'));
         // valor de la conversion segun la moneda
-      $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
+        $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
         // Objeto con las propiedades del currency por monto fijo
-      $markupLocalCurre = Currency::find($markupLocalCurre);
-      $markupLocalCurre = $markupLocalCurre->alphacode;
+        $markupLocalCurre = Currency::find($markupLocalCurre);
+        $markupLocalCurre = $markupLocalCurre->alphacode;
         // en caso de ser porcentake
-      $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
+        $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
         // monto original
-      $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
+        $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
         // monto aplicado al currency
-      $localMarkup = $localAmmount / $localMarkup;
-      $localMarkup = number_format($localMarkup, 2, '.', '');
-    }
+        $localMarkup = $localAmmount / $localMarkup;
+        $localMarkup = number_format($localMarkup, 2, '.', '');
+      }
 
-  }
+    }
 
     // Fin Markups
 
     // Consulta base de datos rates
-  $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-  {
-    $q->whereHas('contract_user_restriction', function($a) use($user_id){
-      $a->where('user_id', '=',$user_id);
-    })->orDoesntHave('contract_user_restriction');
-  })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-  {
-   $q->whereHas('contract_company_restriction', function($b) use($company_id){
-     $b->where('company_id', '=',$company_id);
-   })->orDoesntHave('contract_company_restriction');
- })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-  $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-});
- $arreglo = $arreglo->get();
+    $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+    {
+      $q->whereHas('contract_user_restriction', function($a) use($user_id){
+        $a->where('user_id', '=',$user_id);
+      })->orDoesntHave('contract_user_restriction');
+    })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+    {
+     $q->whereHas('contract_company_restriction', function($b) use($company_id){
+       $b->where('company_id', '=',$company_id);
+     })->orDoesntHave('contract_company_restriction');
+   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+  });
+   $arreglo = $arreglo->get();
 
- $formulario = $request;
+   $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 

@@ -483,6 +483,7 @@
                                                     @foreach($rate->charge as $item)
                                                         @if($item->type_id==1)
                                                             <?php
+                                                                $rate_id=$item->automatic_rate_id;
                                                                 $origin_amounts = json_decode($item->amount,true);
                                                                 $origin_markups = json_decode($item->markups,true);
                                                         
@@ -720,6 +721,7 @@
                                                     @foreach($rate->charge as $item)
                                                         @if($item->type_id==2)
                                                             <?php
+                                                                $rate_id=$item->automatic_rate_id;
                                                                 $destination_amounts = json_decode($item->amount,true);
                                                                 $destination_markups = json_decode($item->markups,true);
                                                         
