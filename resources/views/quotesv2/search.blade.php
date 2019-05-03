@@ -266,6 +266,7 @@
     color: #0072fc !important;
     border-width: 2px;
     font-weight: 600;
+		padding: 0.35rem 1rem;
   }
   .btn-manual__quotes span {
     top: 2px;
@@ -275,6 +276,7 @@
     color: #575962;
     font-size: 14px;
     font-weight: 600;
+		margin-bottom: 5px;
   }
   .warning-p span {
     color: #e74c3c;
@@ -379,23 +381,23 @@
               </div>
 
             </div>
-            <br><br>
+            <br>
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-2" align=''> 
+                  <label>Carrier Manual</label>
+                {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
+              </div>
+              <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
+                </button>
+              </div>
+              <div class="col-lg-6 d-flex align-items-end">
                 @if(isset($arreglo))
                 @if($arreglo->isEmpty())
                 <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                 @endif
                 @endif
               </div><!-- aqui -->
-              <div class="col-lg-2" align=''> 
-                  <label>Carrier Manual</label>
-                {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2" align='right'> 
-                <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
-                </button>
-              </div>
               
             </div>
 
