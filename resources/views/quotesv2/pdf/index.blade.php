@@ -533,8 +533,8 @@
     <!-- ALL in origin table -->
     @if($quote->pdf_option->grouped_origin_charges==1 && $quote->pdf_option->show_type=='detailed' )
     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges</p>
-        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen</p>
+        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges grouped </p>
+        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen agrupados</p>
         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem</p>
         <br>
     </div>
@@ -767,7 +767,7 @@
         </div>        
         @foreach($value as $item)
             @foreach($item as $carrier=>$rate)
-            <table border="0" cellspacing="1" cellpadding="1" >
+            <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                 <thead class="title-quote text-center header-table">
                     <tr >
                         <th class="unit"><b>POL</b></th>
