@@ -569,7 +569,7 @@
                     $inland45= 0;
                     $carrier_id='';
                 ?>
-                $carrier_id=$rate->carrier_id;
+
                 @foreach($rate->charge as $value)
                     <?php
                         if($value->type_id==1){
@@ -741,187 +741,78 @@
         </tfoot>
     </table>
     @endif
-    <!-- Fin all in origin -->
-
-    <!-- Origin tables grouped 
-
-            @foreach($origin_charges as $rate)
-                <?php 
-                    $sum_origin20= 0;
-                    $sum40= 0;
-                    $sum40hc= 0;
-                    $sum40nor= 0;
-                    $sum45= 0;
-                    $inland20= 0;
-                    $inland40= 0;
-                    $inland40hc= 0;
-                    $inland40nor= 0;
-                    $inland45= 0;
-                    $carrier_id='';
-                ?>
-                @foreach($rate as $value)
-                    @foreach($value as $key=>$v)
-                        <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges </p>
-                            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen </p>
-                            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem </p>
-                            <br>
-                        </div>
-                        <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                            <thead class="title-quote text-center header-table">
-                                <tr >
-                                    <th class="unit"><b>POL</b></th>
-                                    <th class="unit"><b>POD</b></th>
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
-                                    <th {{ $equipmentHides['20'] }}><b>20'</b></th>
-                                    <th {{ $equipmentHides['40'] }}><b>40'</b></th>
-                                    <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
-                                    <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
-                                    <th {{ $equipmentHides['45'] }}><b>45'</b></th>
-                                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($v as $a)
-
-                                @foreach($a->charge as $amount)
-                                <?php
-                                $array_amounts = json_decode($amount->amount,true);
-                                $array_markups = json_decode($amount->markups,true);
-                                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
-                                    $amount20=$array_amounts['c20'];
-                                    $markup20=$array_markups['c20'];
-                                    if($quote->pdf_option->grouped_origin_charges==1){
-                                        if($quote->pdf_option->origin_charges_currency=='USD'){
-                                            $total20=($amount20+$markup20)/$amount->currency_usd;
-                                        }else{
-                                            $total20=($amount20+$markup20)/$amount->currency_eur;
-                                        }
-                                    }else{
-                                        if($currency_cfg->alphacode=='USD'){
-                                            $total20=($amount20+$markup20)/$amount->currency_usd;
-                                        }else{
-                                            $total20=($amount20+$markup20)/$amount->currency_eur;
-                                        }
-                                    }
-                                    //$total20=$amount20+$markup20;
-                                    $sum20 += number_format($total20, 2, '.', '');
+    <!-- -->
+    @foreach($origin_charges as $carrier => $value)
+        <?php 
+            $total20= 0;
+            $total40= 0;
+            $total40hc= 0;
+            $total40nor= 0;
+            $total45= 0;
+            $sum40hc= 0;
+            $sum40nor= 0;
+            $sum45= 0;
+            $inland20= 0;
+            $inland40= 0;
+            $inland40hc= 0;
+            $inland40nor= 0;
+            $inland45= 0;
+        ?>
+        
+        <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$carrier}}</p>
+            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen - {{$carrier}}</p>
+            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$carrier}}</p>
+            <br>
+        </div>        
+        @foreach($value as $item)
+            @foreach($item as $carrier=>$rate)
+            <table border="0" cellspacing="1" cellpadding="1" >
+                <thead class="title-quote text-center header-table">
+                    <tr >
+                        <th class="unit"><b>POL</b></th>
+                        <th class="unit"><b>POD</b></th>
+                        <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                        <th {{ $equipmentHides['20'] }}><b>20'</b></th>
+                        <th {{ $equipmentHides['40'] }}><b>40'</b></th>
+                        <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
+                        <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                        <th {{ $equipmentHides['45'] }}><b>45'</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($rate as $r)
+                        @foreach($r->charge as $v)
+                            <?php
+                                if($v->type_id==1){
+                                    $total20+=$v->total_20;
+                                    $total40+=$v->total_40;
+                                    $total40hc+=$v->total_40hc;
+                                    $total40nor+=$v->total_40nor;
+                                    $total45+=$v->total_45;
                                 }
-                                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
-                                    $amount40=$array_amounts['c40'];
-                                    $markup40=$array_markups['c40'];
-
-                                    if($quote->pdf_option->grouped_origin_charges==1){
-                                        if($quote->pdf_option->origin_charges_currency=='USD'){
-                                            $total40=($amount40+$markup40)/$amount->currency_usd;
-                                        }else{
-                                            $total40=($amount40+$markup40)/$amount->currency_eur;
-                                        }
-                                    }else{
-                                        if($currency_cfg->alphacode=='USD'){
-                                            $total40=($amount40+$markup40)/$amount->currency_usd;
-                                        }else{
-                                            $total40=($amount40+$markup40)/$amount->currency_eur;
-                                        }
-                                    }
-                                    $sum40 += number_format($total40, 2, '.', '');
-
-                                }
-                                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
-                                    $amount40hc=$array_amounts['c40hc'];
-                                    $markup40hc=$array_markups['c40hc'];
-                                    if($quote->pdf_option->grouped_origin_charges==1){
-                                        if($quote->pdf_option->origin_charges_currency=='USD'){
-                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_usd;
-                                        }else{
-                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_eur;
-                                        }
-                                    }else{
-                                        if($currency_cfg->alphacode=='USD'){
-                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_usd;
-                                        }else{
-                                            $total40hc=($amount40hc+$markup40hc)/$amount->currency_eur;
-                                        }
-                                    }
-                                    $sum40hc += number_format($total40hc, 2, '.', '');
-                                }
-                                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
-                                    $amount40nor=$array_amounts['c40nor'];
-                                    $markup40nor=$array_markups['c40nor'];
-                                    if($quote->pdf_option->grouped_origin_charges==1){
-                                        if($quote->pdf_option->origin_charges_currency=='USD'){
-                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_usd;
-                                        }else{
-                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_eur;
-                                        }
-                                    }else{
-                                        if($currency_cfg->alphacode=='USD'){
-                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_usd;
-                                        }else{
-                                            $total40nor=($amount40nor+$markup40nor)/$amount->currency_eur;
-                                        }
-                                    }
-                                    //$total40nor=$amount40nor+$markup40nor;
-                                    $sum40nor += number_format($total40nor, 2, '.', '');
-                                }
-                                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
-                                    $amount45=$array_amounts['c45'];
-                                    $markup45=$array_markups['c45'];
-                                    if($quote->pdf_option->grouped_origin_charges==1){
-                                        if($quote->pdf_option->origin_charges_currency=='USD'){
-                                            $total45=($amount45+$markup45)/$amount->currency_usd;
-                                        }else{
-                                            $total45=($amount45+$markup45)/$amount->currency_eur;
-                                        }
-                                    }else{
-                                        if($currency_cfg->alphacode=='USD'){
-                                            $total45=($amount45+$markup45)/$amount->currency_usd;
-                                        }else{
-                                            $total45=($amount45+$markup45)/$amount->currency_eur;
-                                        }
-                                    }
-                                    //$total45=$amount45+$markup45;
-                                    $sum45 += number_format($total45, 2, '.', '');
-                                }
-
-                                ?>
-                                @endforeach
-
-                                <tr class="text-center color-table">
-                                    <td>{{$a->origin_port->name}},{{$a->origin_port->code}}</td>
-                                    <td>{{$a->destination_port->name}},{{$a->destination_port->code}}</td>
-                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$a->carrier->name}}</td>
-                                    <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
-                                    <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
-                                    <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
-                                    <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
-                                    <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
-                                    @if($quote->pdf_option->grouped_origin_charges==1)
-                                        @if($quote->pdf_option->origin_charges_currency=='USD')
-                                            <td >USD</td>
-                                        @else
-                                            <td>EUR</td>
-                                        @endif
-                                    @else
-                                        @if($currency_cfg->alphacode=='USD')
-                                            <td >USD</td>
-                                        @else
-                                            <td>EUR</td>
-                                        @endif
-                                    @endif
-                                </tr>
-                            @endforeach
+                            ?>
                         @endforeach
-                    </tbody>
-                    <tfoot class="footer" style="border-color: yellow">
-                    </tfoot>
-                </table>
-                @endforeach
-            @endforeach-->
-
+                        <tr>
+                            <td>{{$r->origin_port->name}}, {{$r->origin_port->code}}</td>
+                            <td>{{$r->destination_port->name}}, {{$r->destination_port->code}}</td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                            <td {{ $equipmentHides['20'] }}>{{$total20}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{$total40}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{$total40hc}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{$total40nor}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{$total45}}</td>                            
+                            <td>{{$r->currency->alphacode}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endforeach
+        @endforeach
+    @endforeach
 </main>
-
 </body>
 </html>

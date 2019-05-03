@@ -531,9 +531,9 @@ class QuoteV2Controller extends Controller
     $id = obtenerRouteKey($id);
     $quote = QuoteV2::findOrFail($id);
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
-    $origin_charges = AutomaticRate::where('quote_id',$quote->id)->whereHas('charge', function ($query) {
-      $query->where('type_id', '=', 1);
-    })->with('charge')->get();
+    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 1);
+    })->where('quote_id',$quote->id)->get();
     $contact_email = Contact::find($quote->contact_id);
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -563,7 +563,6 @@ class QuoteV2Controller extends Controller
       }
       
     }
-    $collect = new collection();
 
     $origin_charges = $origin_charges->groupBy([
 
@@ -579,14 +578,64 @@ class QuoteV2Controller extends Controller
 
     ], $preserveKeys = true);
 
+    //dd(json_encode($origin_charges));
     foreach($origin_charges as $item){
+    
+    $sum20=0;
+    $sum40=0;
+    $sum40hc=0;
+    $sum40nor=0;
+    $sum45=0;
+    $total40=0;
+    $total20=0;
+    $total40hc=0;
+    $total40nor=0;
+    $total45=0;
       foreach($item as $items){
         foreach($items as $itemsDetail){
           foreach ($itemsDetail as $value) {
+              /* $array_amounts = json_decode($value->charge[$key]['amount'],true);
+                $currency_rate=$this->ratesCurrency($value->charge[$key]['currency_id'],'USD');
+                if($array_amounts['c20']>0){
+                  $total20+=$array_amounts['c20']/$currency_rate;
+                }
+                if($array_amounts['c40']>0){
+                  $total40+=$array_amounts['c40']/$currency_rate;
+                }                                
+                $value->charge[$key]['total_20']=$total20;*/
+                //$amounts->total_40=$total40;       
             foreach ($value->charge as $amounts) {
-              $currency_charge = Currency::find($amounts->currency_id);
-              $amounts->currency_usd = $currency_charge->rates;
-              $amounts->currency_eur = $currency_charge->rates_eur;
+              if($amounts->type_id==1){
+                $currency_rate=$this->ratesCurrency($amounts->currency_id,'USD');
+                $array_amounts = json_decode($amounts->amount,true);
+                $array_markups = json_decode($amounts->markups,true);
+                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                  $sum20=$array_amounts['c20']+$array_markups['c20'];
+                  $total20+=$sum20/$currency_rate;
+                }
+                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                  $sum40=$array_amounts['c40']+$array_markups['c40'];
+                  $total40+=$sum40/$currency_rate;
+                }
+                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                  $sum40hc=$array_amounts['c40hc']+$array_markups['c40hc'];
+                  $total40hc+=$sum40hc/$currency_rate;
+                }
+                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                  $sum40nor=$array_amounts['c40nor']+$array_markups['c40nor'];
+                  $total40nor+=$sum40nor/$currency_rate;
+                }
+                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                  $sum45=$array_amounts['c45']+$array_markups['c45'];
+                  $total45+=$sum45/$currency_rate;
+                }
+                
+                $amounts->total_20=number_format($total20, 2, '.', '');
+                $amounts->total_40=number_format($total40, 2, '.', '');
+                $amounts->total_40hc=number_format($total40hc, 2, '.', '');
+                $amounts->total_40nor=number_format($total40nor, 2, '.', '');
+                $amounts->total_45=number_format($total45, 2, '.', '');
+              }
             }
           }
         } 
@@ -594,7 +643,7 @@ class QuoteV2Controller extends Controller
     }
     
     //$origin_charges=$origin_charges->toArray();
-    //dd($origin_charges);
+    //dd(json_encode($origin_charges));
     $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'origin_charges'=>$origin_charges]);
 
     $pdf = \App::make('dompdf.wrapper');
