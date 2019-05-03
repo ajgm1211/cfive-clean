@@ -21,6 +21,7 @@ use App\Carrier;
 use App\QuoteV2;
 use App\Surcharge;
 use App\User;
+use App\PdfOption;
 use EventIntercom;
 use App\Jobs\SendQuotes;
 use App\SendQuote;
@@ -121,38 +122,38 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-      ->addColumn('type', function ($colletion) {
-        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-      })->addColumn('action',function($colletion){
+    ->addColumn('type', function ($colletion) {
+      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+    })->addColumn('action',function($colletion){
       return
-        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Options
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-            <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
-            <span>
-            <i class="la la-eye"></i>
-            &nbsp;
-            Show
-            </span>
-            </a>
-            <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
-            <span>
-            <i class="la la-plus"></i>
-            &nbsp;
-            Duplicate
-            </span>
-            </a>
-            <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
-            <span>
-            <i class="la la-eraser"></i>
-            &nbsp;
-            Delete
-            </span>
-            </a>
-            </div>';
+      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+      <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
+      <span>
+      <i class="la la-eye"></i>
+      &nbsp;
+      Show
+      </span>
+      </a>
+      <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+      <span>
+      <i class="la la-plus"></i>
+      &nbsp;
+      Duplicate
+      </span>
+      </a>
+      <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+      <span>
+      <i class="la la-eraser"></i>
+      &nbsp;
+      Delete
+      </span>
+      </a>
+      </div>';
     })
-      ->editColumn('id', 'ID: {{$id}}')->make(true);
+    ->editColumn('id', 'ID: {{$id}}')->make(true);
   }
 
   public function show($id)
@@ -167,9 +168,7 @@ class QuoteV2Controller extends Controller
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
-    $rates = AutomaticRate::where('quote_id',$quote->id)->get();
-
-
+    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
     $contacts = Contact::where('company_id',$quote->company_id)->pluck('first_name','id');
     $incoterms = Incoterm::pluck('name','id');
@@ -183,13 +182,31 @@ class QuoteV2Controller extends Controller
     $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
+    foreach ($rates as $item) {
+      $currency = Currency::find($item->currency_id);
+      $item->currency_usd = $currency->rates;
+      $item->currency_eur = $currency->rates_eur;
+      foreach ($item->charge as $value) {
+        $currency_charge = Currency::find($value->currency_id);
+        $value->currency_usd = $currency_charge->rates;
+        $value->currency_eur = $currency_charge->rates_eur;
+      }
+      foreach ($item->inland as $inland) {
+        $currency_charge = Currency::find($inland->currency_id);
+        $inland->currency_usd = $currency_charge->rates;
+        $inland->currency_eur = $currency_charge->rates_eur;
+      }
+    }
+
     //Adding country codes to rates collection
+    $total_freight_20=0;
+    $total_by_rate_40=0;
     foreach ($rates as $item) {
       $rates->map(function ($item) {
         $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
         $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
         return $item;
-      });
+      }); 
     }
 
     $emaildimanicdata = json_encode([
@@ -204,12 +221,32 @@ class QuoteV2Controller extends Controller
 
   public function updateQuoteCharges(Request $request)
   {
-    //$charge=Charge::find($request->pk)->update(['amount->20' => $request->value]);
-    DB::table('charges')
-      ->where('id', $request->pk)
-      ->update([$request->name => $request->value]);
+    /*DB::table('charges')
+    ->where('id', $request->pk)
+    ->update([$request->name => $request->value]);*/
 
+    $charge=Charge::find($request->pk);
+    $array = json_decode($charge->amount, true);
+    if (strpos($request->name, '->') == true) {
+      $name = explode("->", $request->name);
+      $field = (string) $name[0];
+      $array[$name[1]]=$request->value;  
+      $array = json_encode($array);
+      $charge->$field=$array;
+    }else{
+      $name = $request->name;
+      $charge->$name=$request->value;
+    }
+    $charge->update();
     return response()->json(['success'=>'done']);
+  }
+
+  public function updatePdfFeature(Request $request){
+    $name=$request->name;
+    $quote = PdfOption::where('quote_id',$request->id)->first();
+    $quote->$name=$request->value;
+    $quote->update();
+    return response()->json(['message'=>'Ok']);
   }
 
   public function update(Request $request,$id)
@@ -257,6 +294,16 @@ class QuoteV2Controller extends Controller
     $quote->update();
 
     return response()->json(['message'=>'Ok','quote'=>$quote]);
+  }
+
+  public function updateRemarks(Request $request,$id)
+  {
+    $rate=AutomaticRate::find($id);
+
+    $rate->remarks=$request->remarks;
+    $rate->update();
+
+    return response()->json(['message'=>'Ok','rate'=>$rate]);
   }
 
   public function duplicate(Request $request, $id){
@@ -482,6 +529,132 @@ class QuoteV2Controller extends Controller
     $quote->status='Sent';
     $quote->update();
     return response()->json(['message' => 'Ok']);
+  }
+
+  public function pdf(Request $request,$id)
+  {
+    $id = obtenerRouteKey($id);
+    $quote = QuoteV2::findOrFail($id);
+    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 1);
+    })->where('quote_id',$quote->id)->get();
+    $contact_email = Contact::find($quote->contact_id);
+    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $equipmentHides = $this->hideContainer($quote->equipment);
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $type=$company_user->type_pdf;
+      $ammounts_type=$company_user->pdf_ammounts;
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+    foreach ($rates as $item) {
+      $currency = Currency::find($item->currency_id);
+      $item->currency_usd = $currency->rates;
+      $item->currency_eur = $currency->rates_eur;
+      foreach ($item->charge as $value) {
+        $currency_charge = Currency::find($value->currency_id);
+        $value->currency_usd = $currency_charge->rates;
+        $value->currency_eur = $currency_charge->rates_eur;
+      }
+      foreach ($item->inland as $inland) {
+        $currency_charge = Currency::find($inland->currency_id);
+        $inland->currency_usd = $currency_charge->rates;
+        $inland->currency_eur = $currency_charge->rates_eur;
+      }
+      
+    }
+
+    $origin_charges = $origin_charges->groupBy([
+
+      function ($item) {
+        return $item['carrier']['name'];
+      },
+      function ($item) {
+        return $item['origin_port']['name'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'];
+      },
+
+    ], $preserveKeys = true);
+
+    //dd(json_encode($origin_charges));
+    foreach($origin_charges as $item){
+    
+    $sum20=0;
+    $sum40=0;
+    $sum40hc=0;
+    $sum40nor=0;
+    $sum45=0;
+    $total40=0;
+    $total20=0;
+    $total40hc=0;
+    $total40nor=0;
+    $total45=0;
+      foreach($item as $items){
+        foreach($items as $itemsDetail){
+          foreach ($itemsDetail as $value) {
+              /* $array_amounts = json_decode($value->charge[$key]['amount'],true);
+                $currency_rate=$this->ratesCurrency($value->charge[$key]['currency_id'],'USD');
+                if($array_amounts['c20']>0){
+                  $total20+=$array_amounts['c20']/$currency_rate;
+                }
+                if($array_amounts['c40']>0){
+                  $total40+=$array_amounts['c40']/$currency_rate;
+                }                                
+                $value->charge[$key]['total_20']=$total20;*/
+                //$amounts->total_40=$total40;       
+            foreach ($value->charge as $amounts) {
+              if($amounts->type_id==1){
+                $currency_rate=$this->ratesCurrency($amounts->currency_id,'USD');
+                $array_amounts = json_decode($amounts->amount,true);
+                $array_markups = json_decode($amounts->markups,true);
+                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                  $sum20=$array_amounts['c20']+$array_markups['c20'];
+                  $total20+=$sum20/$currency_rate;
+                }
+                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                  $sum40=$array_amounts['c40']+$array_markups['c40'];
+                  $total40+=$sum40/$currency_rate;
+                }
+                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                  $sum40hc=$array_amounts['c40hc']+$array_markups['c40hc'];
+                  $total40hc+=$sum40hc/$currency_rate;
+                }
+                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                  $sum40nor=$array_amounts['c40nor']+$array_markups['c40nor'];
+                  $total40nor+=$sum40nor/$currency_rate;
+                }
+                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                  $sum45=$array_amounts['c45']+$array_markups['c45'];
+                  $total45+=$sum45/$currency_rate;
+                }
+                
+                $amounts->total_20=number_format($total20, 2, '.', '');
+                $amounts->total_40=number_format($total40, 2, '.', '');
+                $amounts->total_40hc=number_format($total40hc, 2, '.', '');
+                $amounts->total_40nor=number_format($total40nor, 2, '.', '');
+                $amounts->total_45=number_format($total45, 2, '.', '');
+              }
+            }
+          }
+        } 
+      }
+    }
+    
+    //$origin_charges=$origin_charges->toArray();
+    //dd(json_encode($origin_charges));
+    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'origin_charges'=>$origin_charges]);
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+    return $pdf->stream('quote');
   }
 
   // Store
@@ -1339,21 +1512,21 @@ class QuoteV2Controller extends Controller
 
     // Consulta base de datos rates
     $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-        {
-          $q->whereHas('contract_user_restriction', function($a) use($user_id){
-            $a->where('user_id', '=',$user_id);
-          })->orDoesntHave('contract_user_restriction');
-        })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-                     {
-                       $q->whereHas('contract_company_restriction', function($b) use($company_id){
-                         $b->where('company_id', '=',$company_id);
-                       })->orDoesntHave('contract_company_restriction');
-                     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-    });
-    $arreglo = $arreglo->get();
+    {
+      $q->whereHas('contract_user_restriction', function($a) use($user_id){
+        $a->where('user_id', '=',$user_id);
+      })->orDoesntHave('contract_user_restriction');
+    })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+    {
+     $q->whereHas('contract_company_restriction', function($b) use($company_id){
+       $b->where('company_id', '=',$company_id);
+     })->orDoesntHave('contract_company_restriction');
+   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+  });
+   $arreglo = $arreglo->get();
 
-    $formulario = $request;
+   $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 

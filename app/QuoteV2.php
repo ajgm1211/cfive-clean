@@ -71,4 +71,9 @@ class QuoteV2 extends Model
     {
         return $this->hasManyThrough('App\Charge','App\AutomaticRate','quote_id','automatic_rate_id');
     }
+
+    public function pdf_option()
+    {
+        return $this->hasOne('App\PdfOption','quote_id','id');
+    }
 }

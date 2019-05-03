@@ -25,7 +25,7 @@ class AutomaticInland extends Model
 
 	public function currency()
 	{
-		return $this->hasOne('App\Currency');
+		return $this->hasOne('App\Currency','id','currency_id');
 	}
 
 	public function port()
