@@ -502,43 +502,56 @@ class NewContractRequestsController extends Controller
     public function LoadViewRequestImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
-        $direction      = Direction::all()->pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
         $user           = \Auth::user();
+        foreach($direction2 as $d){
+            //dd($direction2);
+            $direction[$d['id']]=$d->name;
+        }
+        //dd($direction);
         return view('Requests.NewRequest',compact('harbor','carrier','user','direction'));
     }
 
     // Similar Contracts ----------------------------------------------------------------
 
     public function similarcontracts(Request $request,$id){
-        /*$contracts = Contract::select(['contracts.name',
-                                       'contracts.number',
-                                       'contracts.company_user_id',
-                                       'contracts.account_id',
-                                       'contracts.direction_id',
-                                       'contracts.validity',
-                                       'contracts.expire'
-                                      ]);*/
-        //            $contracts = DB::table('contracts')
-        //  ->leftJoin('directions', 'directions.id', '=', 'contracts.direction_id')->get();
-        $contracts = Contract::where('company_user_id',$id)
-            ->with('direction','carriers.carrier')
-            ->whereHas('direction',function($query) use($request){
-                if($request->has('direction')){
-                    $query->where('direction_id', '=', $request->direction);
-                }
-            })
-            ->whereHas('carriers',function($query) use($request,$id){
-                if($request->has('carrierM')){
-                    $query->whereIn('carrier_id',$request->carrierM)->where('contract_id',$id);
-                }
-            })
-            ->get();
+        $contracts = Contract::select(['name',
+                                       'number',
+                                       'company_user_id',
+                                       'account_id',
+                                       'direction_id',
+                                       'validity',
+                                       'expire'
+                                      ]);
+        /*$contracts = Contract::where('company_user_id',$id)->with('direction','carriers.carrier')->get();
+        $contracts = $contracts->filter(function ($value) use($request){
+            //dd($request->direction);
+            if($request->has('direction')){
+                return $value->direction_id == $request->direction;
+            } else {
+                return $value;
+            }
+        }); */
 
-        //dd($contracts);
-        return Datatables::of($contracts)
-            /* ->addColumn('direction', function ($contracts->where('company_user_id',$id)) {
-                return $contracts->direction->name;
-            })*/
+        //dd($request->has('direction'));
+        return Datatables::of($contracts->where('company_user_id',$id))
+            ->filter(function ($query) use ($request,$id) {
+                if ($request->has('direction') && $request->get('direction') != null) {
+                    $query->where('direction_id', '=',$request->get('direction'));
+                } else{
+                    $query;
+                }
+                if ($request->has('carrierM')) {
+                    $query->whereHas('carriers',function($q) use($request) {
+                        $q->whereIn('carrier_id',$request->get('carrierM'));
+                    });
+                }
+            })
+            ->addColumn('direction', function ($contracts) {
+                 $dds = $contracts->load('direction');
+                return $dds->direction->name;
+            })
             ->make(true);
     }
 
