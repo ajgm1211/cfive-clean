@@ -58,9 +58,13 @@
   .no-shadow{
     box-shadow: none;
   }
-  .filter-table__quotes, .card-p__quotes {
+  .filter-table__quotes, .card-p__quotes, .card__quote-manual {
     padding: 25px;
     box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+  }
+  .card__quote-manual {
+    margin: 0 15px;
+    border: 2px;
   }
   .no-padding {
     padding: 0px !important;
@@ -266,7 +270,7 @@
     color: #0072fc !important;
     border-width: 2px;
     font-weight: 600;
-		padding: 0.35rem 1rem;
+    padding: 0.35rem 1rem;
   }
   .btn-manual__quotes span {
     top: 2px;
@@ -276,7 +280,7 @@
     color: #575962;
     font-size: 14px;
     font-weight: 600;
-		margin-bottom: 5px;
+    
   }
   .warning-p span {
     color: #e74c3c;
@@ -381,27 +385,6 @@
               </div>
 
             </div>
-            <br>
-            <div class="row">
-              <div class="col-lg-2" align=''> 
-                  <label>Carrier Manual</label>
-                {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-                <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
-                </button>
-              </div>
-              <div class="col-lg-6 d-flex align-items-end">
-                @if(isset($arreglo))
-                @if($arreglo->isEmpty())
-                <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
-                @endif
-                @endif
-              </div><!-- aqui -->
-              
-            </div>
-
-            <br>
             <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
           </div>
         </div>      
@@ -411,7 +394,32 @@
     {!! Form::close() !!}
   </div>
 
+
+  <div class="col-lg-12 no-padding">
+    <div class="row card__quote-manual">
+      <div class="col-lg-2" class=""> 
+        <label>Carrier Manual</label>
+        {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
+      </div>
+      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+        <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
+        </button>
+      </div>
+      <div class="col-lg-6 d-flex align-items-end align-self-end">
+        @if(isset($arreglo))
+        @if($arreglo->isEmpty())
+        <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+        @endif
+        @endif
+      </div><!-- aqui -->
+    </div>
+  </div>
+
+
+
 </div>
+
+
 
 @if(isset($arreglo))
 @if(!$arreglo->isEmpty())
