@@ -334,7 +334,6 @@ Request Importation &nbsp;
             ordering: true,
             searching: true,
             processing: true,
-            stateSave: true,
             serverSide: true,
             autoWidth: true,
             order: [[ 3, "asc" ],[ 4, "asc" ]],
