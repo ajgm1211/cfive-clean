@@ -280,7 +280,7 @@
     color: #575962;
     font-size: 14px;
     font-weight: 600;
-    
+
   }
   .warning-p span {
     color: #e74c3c;
@@ -313,7 +313,7 @@
             <div class="row">
               <div class="col-lg-2">
                 <label>Quote Type</label>
-                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['class'=>'m-select2-general form-control']) }}
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
               <div class="col-lg-2">
                 <label>Equipment</label>
@@ -385,6 +385,228 @@
               </div>
 
             </div>
+
+            <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
+              <div class="col-lg-2">
+                <label>
+                  <b>LOAD</b>
+                </label>
+              </div>
+              <div class="col-lg-10">
+                <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
+                  <li class="nav-item">
+                    <a href="#tab_1_1" class="nav-link active" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#tab_1_2" class="nav-link" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
+                  </li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane fade active show" id="tab_1_1">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label>
+                          Packages
+                        </label>
+                        <div class="m-bootstrap-touchspin-brand">
+                          <div class="input-group">
+                            <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
+                            <div class="input-group-btn">
+                              <select class="form-control" id="type_cargo" name="type_cargo">
+                                <option value="1">Pallets</option>
+                                <option value="2">Packages</option>
+                              </select>
+                            </div><!-- /btn-group -->
+                          </div><!-- /input-group -->
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label>
+                          Total weight
+                        </label>
+                        <div class="m-bootstrap-touchspin-brand">
+                          <div class="input-group">
+                            <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
+                            <div class="input-group-btn">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                              <ul class="dropdown-menu dropdown-menu-right">
+                              </ul>
+                            </div><!-- /btn-group -->
+                          </div><!-- /input-group -->
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label>
+                          Total volume
+                        </label>
+                        <div class="m-bootstrap-touchspin-brand">
+                          <div class="input-group">
+                            <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
+                            <div class="input-group-btn">
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
+                              <ul class="dropdown-menu dropdown-menu-right">
+                              </ul>
+                            </div><!-- /btn-group -->
+                          </div><!-- /input-group -->
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <br>
+                        <br>
+                        <b>Chargeable weight:</b>
+                        <span id="chargeable_weight_total"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="tab_1_2">
+                    <div class="template">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                            <option value="">Choose an option</option>
+                            <option value="1">Pallets</option>
+                            <option value="2">Packages</option>
+                          </select>
+                          <input type="hidden" id="total_pallets" name="total_pallets"/>
+                          <input type="hidden" id="total_packages" name="total_packages"/>
+                        </div>
+                        <div class="col-md-2">
+                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
+                        </div>
+                        <div class="col-md-5" >
+                          <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            <div class="btn-group" role="group">
+                              <input class="height form-control size-12px" min="0" name="height[]" id="height" type="number" placeholder="H"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <input class="width form-control size-12px" min="0" name="width[]" id="width" type="number" placeholder="W"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <input class="large form-control size-12px" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <div class="input-group-btn">
+                                <div class="btn-group">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                    <span class="xs-text size-12px">CM</span> <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu">
+
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="input-group">
+                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                          </div><!-- /input-group -->
+                        </div>
+                        <div class="col-md-1">
+                          <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
+                          <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                          <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                        </div>
+                        <div class="col-md-4">
+                          <br>
+                          <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="template hide" id="lcl_air_load_template">
+                      <div class="row" style="padding-top: 15px;">
+                        <div class="col-md-2">
+                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                            <option value="">Choose an option</option>
+                            <option value="1">Pallets</option>
+                            <option value="2">Packages</option>
+                          </select>
+                        </div>
+                        <div class="col-md-2">
+                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
+                        </div>
+                        <div class="col-md-5">
+                          <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            <div class="btn-group" role="group">
+                              <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
+                            </div>
+                            <div class="btn-group" role="group">
+                              <div class="input-group-btn">
+                                <div class="btn-group">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                    <span class="xs-text size-12px">CM</span> <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu" role="menu">
+
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <div class="input-group">
+                            <input type="number" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                          </div><!-- /input-group -->
+                        </div>
+                        <div class="col-md-1">                     
+                          <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
+                          <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
+                          <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                          <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                        </div>
+                        <div class="col-md-4">
+                          <br>
+                          <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <b>Total: </b>
+                        <span id="total_quantity_pkg"></span>
+                        <span id="total_volume_pkg"></span>
+                        <span id="total_weight_pkg"></span>
+                        <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
+                        <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
+                        <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
+                      </div>
+                      <br>
+                      <br>
+                      <div class="col-md-12">
+                        <b>Chargeable weight:</b>
+                        <span id="chargeable_weight_pkg"></span>
+                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <br>
+                        <div id="saveActions" class="form-group">
+                          <div class="btn-group">
+                            <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
+                              <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                              <span>Add load</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
             <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
           </div>
         </div>      
