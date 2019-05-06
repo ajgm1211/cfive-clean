@@ -234,22 +234,18 @@ Request Importation &nbsp;
                             </div>
                         </div><br><br>
                         <table class="table tableData" id="tableRates" class="tableRates" width="100%">
-                            <thead class="tableRatesTH">
+                            <thead width="100%" class="tableRatesTH">
                                 <tr>
-                                    <th title="Field #1">
-                                        Name
+                                    <th style="width:15%;" title="Field #1">
+                                        References
                                     </th>
-                                    <th title="Field #2">
-                                        Number
-                                    </th>
-
-                                    <th title="Field #3">
+                                    <th style="width:20%" title="Field #3">
                                         Carrier
                                     </th>
-                                    <th title="Field #4">
+                                    <th style="width:20%" title="Field #4">
                                         Origin Port
                                     </th>
-                                    <th title="Field #5">
+                                    <th style="width:20%" title="Field #5">
                                         Destination Port
                                     </th>
                                     <th title="Field #6" >
@@ -273,10 +269,10 @@ Request Importation &nbsp;
                                     <th title="Field #9">
                                         Validity
                                     </th>
-                                    <th title="Field #11">
+                                    <th style="width:20%">
                                         Status
                                     </th>
-                                    <th title="Field #12">
+                                    <th  title="Field #12">
                                         Options
                                     </th>
 
@@ -335,20 +331,16 @@ Request Importation &nbsp;
     $(function() {
 
         $('#tableRates').DataTable({
-            ordering: true,
-            searching: true,
-            processing: true,
-            stateSave: true,
-            serverSide: true,
+
+            "autoWidth": true,
+            "scrollX": true,    
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('contract.table') }}",
             "columnDefs": [
                 { className: "truncate", "targets": [ 0,1] }
             ],
             columns: [
-
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
                 {data: 'carrier', name: 'carrier'},
                 {data: 'port_orig', name: 'port_orig'},
                 {data: 'port_dest', name: 'port_dest'},
@@ -363,12 +355,12 @@ Request Importation &nbsp;
                 {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-                this.api().columns(12).every(function () {
+                this.api().columns([1,2,3,11]).every(function () {
                     var column = this;
-                    $('#tableContracts .head .head_hide').html('');
+                    $('#tableRates .head .head_hide').html('');
 
-                    var select = $('<select id="formfilter" class="filterdropdown search2"><option value="">' + $(column.header()).text() + '</option></select>')
-                    .prependTo($(column.header()).empty())
+                    var select = $('<select id="formfilter" class="filterdropdown form-control "><option value="">' + $(column.header()).text() + '</option></select><br>')
+                    .prependTo($(column.header()))
                     .on('change', function () {
                         var val = new Array();
                         //set val to current element in the dropdown.

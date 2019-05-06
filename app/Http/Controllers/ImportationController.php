@@ -17,6 +17,7 @@ use App\Contact;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use App\Direction;
 use App\Surcharge;
 use PrvSurchargers;
 use App\Failcompany;
@@ -26,6 +27,7 @@ use App\CompanyUser;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
@@ -441,22 +443,25 @@ class ImportationController extends Controller
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
+        $direction      = Direction::pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImporContractFcl',compact('harbor','country','region','carrier','companysUser','typedestiny'));
+        return view('importation.ImporContractFcl',compact('harbor','direction','country','region','carrier','companysUser','typedestiny'));
     }
 
     // precarga la vista para importar rates o rates mas surchargers desde Request
     public function requestProccess($id){
         $requestfcl     = RequestFcl::find($id);
+        $requestfcl->load('Requestcarriers');
         //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
+        $direction      = Direction::pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImportContractFCLRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestfcl'));
+        return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl'));
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -479,7 +484,8 @@ class ImportationController extends Controller
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
-
+        $direction_id       = $request->direction;
+                    
         $carrierBol         = false;
         $destinyBol         = false;
         $originBol          = false;
@@ -489,6 +495,7 @@ class ImportationController extends Controller
         $filebool           = false;
 
         $data               = collect([]);
+        $direction          = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::all()->pluck('description','id');
         $harbor             = harbor::all()->pluck('display_name','id');
         $country            = Country::all()->pluck('name','id');
@@ -530,15 +537,22 @@ class ImportationController extends Controller
 
             $contract   = new Contract();
             $contract->name             = $request->name;
-            $contract->number           = $request->number;
             $validity                   = explode('/',$request->validation_expire);
             $contract->validity         = $validity[0];
             $contract->expire           = $validity[1];
+            $contract->direction_id     = $direction_id;
             $contract->status           = 'incomplete';
             $contract->company_user_id  = $CompanyUserId;
             $contract->account_id  = $account->id;
-            $contract->save(); 
-
+            $contract->save();
+            
+            foreach($request->carrierM as $carrierVal){
+                ContractCarrier::create([
+                    'carrier_id'    => $carrierVal,
+                    'contract_id'   => $contract->id
+                ]);
+            }
+            $contract->load('carriers');
             $Contract_id = $contract->id;
             $fileTmp    = new FileTmp();
             $fileTmp->contract_id = $Contract_id;
@@ -674,6 +688,7 @@ class ImportationController extends Controller
                                                              'type',
                                                              'region',
                                                              'carrier',
+                                                             'direction',
                                                              'targetsArr',
                                                              'coordenates',
                                                              'countTarges',
