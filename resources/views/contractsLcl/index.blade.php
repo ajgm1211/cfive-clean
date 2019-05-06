@@ -121,22 +121,24 @@ New \ Status Import  &nbsp;
                         <table class="table tableData text-center" id="tableContracts" width="100%">
                             <thead width="100%">
                                 <tr >
-                                    <th title="Field #1">
-                                        Name
+                                    <th title="References">
+                                        References
                                     </th>
-                                    <th title="Field #2">
-                                        Number
+                                    <th title="Carriers">
+                                        Carriers
+                                    </th><th title="Type">
+                                        Type
                                     </th>
-                                    <th title="Field #9">
+                                    <th title="Validity">
                                         Validity
                                     </th>
-                                    <th title="Field #9">
+                                    <th title="Expire">
                                         Expire
                                     </th>
-                                    <th title="Field #11">
+                                    <th title="Status">
                                         Status
                                     </th>
-                                    <th title="Field #12">
+                                    <th title="Options">
                                         Options
                                     </th>
                                 </tr>
@@ -206,10 +208,7 @@ New \ Status Import  &nbsp;
                             <thead class="tableRatesTH">
                                 <tr>
                                     <th title="Field #1">
-                                        Name
-                                    </th>
-                                    <th title="Field #2">
-                                        Number
+                                        References
                                     </th>
                                     <th title="Field #3">
                                         Carrier
@@ -300,7 +299,6 @@ New \ Status Import  &nbsp;
             columns: [
 
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
                 {data: 'carrier', name: 'carrier'},
                 {data: 'port_orig', name: 'port_orig'},
                 {data: 'port_dest', name: 'port_dest'},
@@ -381,14 +379,15 @@ New \ Status Import  &nbsp;
             ],
             columns: [        
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
+                {data: 'carrier', name: 'carrier'},
+                {data: 'direction', name: 'direction'},
                 {data: 'validity', name: 'validity'},
                 {data: 'expire', name: 'expire'},
                 {data: 'status', name: 'status'},
                 {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-                this.api().columns([0,1,2,3,4]).every(function () {
+                this.api().columns([0,1,2,3,4,5]).every(function () {
                     var column = this;
                     $('#tableContracts .head .head_hide').html('');
 
