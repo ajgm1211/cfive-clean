@@ -331,9 +331,12 @@ Request Importation &nbsp;
     $(function() {
 
         $('#tableRates').DataTable({
-            "stateSave": true,
-            "autoWidth": true,
-            "scrollX": true,
+            ordering: true,
+            searching: true,
+            processing: true,
+            stateSave: true,
+            serverSide: true,
+            autoWidth: true,
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('contract.table') }}",
             "columnDefs": [
