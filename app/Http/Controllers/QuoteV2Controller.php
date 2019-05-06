@@ -2292,6 +2292,8 @@ class QuoteV2Controller extends Controller
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
       $data->setAttribute('inlandOrigin',$inlandOrigin);
+      
+      $data->setAttribute('typeCurrency',$typeCurrency);
 
 
 

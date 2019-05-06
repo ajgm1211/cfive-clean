@@ -750,11 +750,11 @@
 
                     <div class="col-lg-6" style="padding-right: 35px;">
                       <div class="table-r__quotes">
-                        <div class="width " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> $USD</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">$USD </span></div>
+                        <div class="width " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> {{ $arr->typeCurrency }}</span></div>
+                        <div class="width" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="width" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
@@ -837,7 +837,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
 
                   </div><br>
                   @endforeach
@@ -852,7 +852,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
                   </div>
                 </div>
               </div>
@@ -914,7 +914,7 @@
                     <div class="col-lg-1" {{ $equipmentHides['45'] }}>     
                       {{ isset($localfreight['45']) ?  str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('monto')) :'0.00' }} + {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('montoMarkup')) : '0.00' }}     
                     </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
+                    <div class="col-lg-1" ><span class="">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1" ></div>
                   </div><br>
                   @endforeach
@@ -931,7 +931,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
                   </div>
 
                 </div>
@@ -982,7 +982,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
@@ -999,7 +999,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
                   </div>
                 </div>
               </div>
@@ -1056,7 +1056,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD{{$arr->id}}[]" value="{{ json_encode($inlandDestiny) }} ">
 
@@ -1099,7 +1099,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO{{$arr->id}}[]" value="{{ json_encode($inlandOrigin) }}">
 
@@ -1121,7 +1121,7 @@
                         <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
 
