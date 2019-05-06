@@ -122,11 +122,11 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-    ->addColumn('type', function ($colletion) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-    })->addColumn('action',function($colletion){
+      ->addColumn('type', function ($colletion) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      })->addColumn('action',function($colletion){
       return
-      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -153,7 +153,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-    ->editColumn('id', 'ID: {{$id}}')->make(true);
+      ->editColumn('id', 'ID: {{$id}}')->make(true);
   }
 
   public function show($id)
@@ -569,7 +569,7 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
-      
+
     }
 
     $origin_charges = $origin_charges->groupBy([
@@ -586,26 +586,26 @@ class QuoteV2Controller extends Controller
 
     ], $preserveKeys = true);
 
-    
+
     //dd(json_encode($origin_charges));
 
     /*** ORIGIN CHARGES ***/
     foreach($origin_charges as $item){
-    $sum20=0;
-    $sum40=0;
-    $sum40hc=0;
-    $sum40nor=0;
-    $sum45=0;
-    $total40=0;
-    $total20=0;
-    $total40hc=0;
-    $total40nor=0;
-    $total45=0;
+      $sum20=0;
+      $sum40=0;
+      $sum40hc=0;
+      $sum40nor=0;
+      $sum45=0;
+      $total40=0;
+      $total20=0;
+      $total40hc=0;
+      $total40nor=0;
+      $total45=0;
 
       foreach($item as $items){
         foreach($items as $itemsDetail){
           foreach ($itemsDetail as $value) {
-              /* $array_amounts = json_decode($value->charge[$key]['amount'],true);
+            /* $array_amounts = json_decode($value->charge[$key]['amount'],true);
                 $currency_rate=$this->ratesCurrency($value->charge[$key]['currency_id'],'USD');
                 if($array_amounts['c20']>0){
                   $total20+=$array_amounts['c20']/$currency_rate;
@@ -614,7 +614,7 @@ class QuoteV2Controller extends Controller
                   $total40+=$array_amounts['c40']/$currency_rate;
                 }                                
                 $value->charge[$key]['total_20']=$total20;*/
-                //$amounts->total_40=$total40;       
+            //$amounts->total_40=$total40;       
             foreach ($value->charge as $amounts) {
               if($amounts->type_id==1){
                 if($quote->pdf_option->grouped_origin_charges==1){
@@ -645,7 +645,7 @@ class QuoteV2Controller extends Controller
                   $sum45=$array_amounts['c45']+$array_markups['c45'];
                   $total45+=$sum45/$currency_rate;
                 }
-                
+
                 $amounts->total_20=number_format($total20, 2, '.', '');
                 $amounts->total_40=number_format($total40, 2, '.', '');
                 $amounts->total_40hc=number_format($total40hc, 2, '.', '');
@@ -671,7 +671,7 @@ class QuoteV2Controller extends Controller
       $total40hc=0;
       $total40nor=0;
       $total45=0;
-      
+
       foreach ($freight->charge as $amounts) {
         if($amounts->type_id==3){
           if($quote->pdf_option->grouped_freight_charges==1){
@@ -711,7 +711,7 @@ class QuoteV2Controller extends Controller
         }
       }
     }
-    
+
     //$origin_charges=$origin_charges->toArray();
     //dd(json_encode($freight_charges));
     $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'origin_charges'=>$origin_charges,'freight_charges'=>$freight_charges]);
@@ -1033,7 +1033,9 @@ class QuoteV2Controller extends Controller
       $currency_name = '';
     }
     $currencies = Currency::all()->pluck('alphacode','id');
-    return view('quotesv2/search',  compact('companies','carrierMan','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+    $hideO = 'hide';
+    $hideD = 'hide';
+    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
 
 
   }
@@ -1217,8 +1219,11 @@ class QuoteV2Controller extends Controller
     $texto40 = 'Inland 40 x' .$request->input('forty');
     $texto40hc = 'Inland 40HC x'. $request->input('fortyhc');
     // Destination Address
+    $hideO = 'hide';
+    $hideD = 'hide';
     if($delivery_type == "2" || $delivery_type == "4" ){ 
 
+      $hideD = '';
       $inlands = Inland::whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
       })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($destiny_port) {
@@ -1397,6 +1402,7 @@ class QuoteV2Controller extends Controller
     }
     // Origin Addrees
     if($delivery_type == "3" || $delivery_type == "4" ){
+      $hideO = '';
       $inlands = Inland::whereHas('inland_company_restriction', function($a) use($company_inland){
         $a->where('company_id', '=',$company_inland);
       })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($origin_port) {
@@ -1582,16 +1588,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-    {
-     $q->whereHas('contract_company_restriction', function($b) use($company_id){
-       $b->where('company_id', '=',$company_id);
-     })->orDoesntHave('contract_company_restriction');
-   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-  });
-   $arreglo = $arreglo->get();
+                 {
+                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                     $b->where('company_id', '=',$company_id);
+                   })->orDoesntHave('contract_company_restriction');
+                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+    });
+    $arreglo = $arreglo->get();
 
-   $formulario = $request;
+    $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 
@@ -2292,7 +2298,7 @@ class QuoteV2Controller extends Controller
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
       $data->setAttribute('inlandOrigin',$inlandOrigin);
-      
+
       $data->setAttribute('typeCurrency',$typeCurrency);
 
 
@@ -2302,7 +2308,7 @@ class QuoteV2Controller extends Controller
 
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO'));
 
   }
 
