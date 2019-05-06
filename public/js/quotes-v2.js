@@ -1087,6 +1087,7 @@ $(".quote_search").on("click", function() {
 
 });
 $(".quote_man").on("click", function() {
+  
   $('#FormQuote').attr('action', '/v2/quotes/store');
   $(".quote_man").attr("type","submit");
 });

@@ -302,9 +302,10 @@
 <br>
 
 <div class="row padding">
+  {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group']) !!}
 
   <div class="col-lg-12">
-    {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group']) !!}
+
 
     <div class="m-portlet">
       <div class="m-portlet__body">
@@ -613,7 +614,7 @@
       </div>
     </div>
 
-    {!! Form::close() !!}
+
   </div>
 
 
@@ -636,7 +637,7 @@
       </div><!-- aqui -->
     </div>
   </div>
-
+  {!! Form::close() !!}
 
 
 </div>
