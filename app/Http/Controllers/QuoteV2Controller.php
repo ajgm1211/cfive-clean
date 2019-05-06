@@ -92,11 +92,11 @@ class QuoteV2Controller extends Controller
       $origin         = '';
       $destination    = '';
       if(isset($quote->company)){
-        $custom_id  = $quote->quote_id;
+        $custom_id  = $quote->custom_quote_id;
         $company  = $quote->company->business_name;
       }
 
-      if(!$quote->origin_address){
+      /*if(!$quote->origin_address){
         $origin = $quote->origin_port->display_name;
       } else {
         $origin = $quote->origin_address;
@@ -106,7 +106,7 @@ class QuoteV2Controller extends Controller
         $destination = $quote->destination_port->display_name;
       } else {
         $destination = $quote->destination_address;
-      }
+      }*/
 
       $data = [
         'id'            => $quote->id,
@@ -115,8 +115,8 @@ class QuoteV2Controller extends Controller
         'client'        => $company,
         'created'       => date_format($quote->created_at, 'M d, Y H:i'),
         'user'          => $quote->user->name.' '.$quote->user->lastname,
-        'origin'        => $origin,
-        'destination'   => $destination,
+        'origin'        => null,
+        'destination'   => null,
         'type'          => $quote->type,
       ];
       $colletions->push($data);
@@ -177,7 +177,7 @@ class QuoteV2Controller extends Controller
     $currencies = Currency::pluck('alphacode','id');
     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
     $currency_cfg = Currency::find($company_user->currency_id);
-    $equipmentHides = $this->hideContainer($quote->equipment);
+    $equipmentHides = $this->hideContainer($quote->equipment,'BD');
     $calculation_types = CalculationType::where('name','Per Container')->pluck('name','id');
     $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -410,7 +410,7 @@ class QuoteV2Controller extends Controller
     return $iniciales;
   }
 
-  public function hideContainer($equipmentForm){
+  public function hideContainer($equipmentForm,$tipo){
     $equipment = new Collection();
     $hidden20 = 'hidden';
     $hidden40 = 'hidden';
@@ -421,6 +421,13 @@ class QuoteV2Controller extends Controller
     $originClass = 'col-md-2';
     $destinyClass = 'col-md-1';
     $dataOrigDest = 'col-md-3';
+
+    if($tipo = 'BD'){
+      $equipmentForm = json_decode($equipmentForm);
+
+    }
+
+
     $countEquipment = count($equipmentForm);
     $countEquipment = 5 - $countEquipment;
     if($countEquipment == 1 ){
@@ -444,7 +451,9 @@ class QuoteV2Controller extends Controller
       $dataOrigDest = 'col-md-7';
     }
 
-    //$equipmentForm = json_decode($equipmentForm);
+
+
+
 
     foreach($equipmentForm as $val){
       if($val == '20'){
@@ -546,7 +555,7 @@ class QuoteV2Controller extends Controller
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $equipmentHides = $this->hideContainer($quote->equipment);
+    $equipmentHides = $this->hideContainer($quote->equipment,'BD');
 
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
@@ -735,7 +744,7 @@ class QuoteV2Controller extends Controller
       $since = $dateQ[0];
       $until = $dateQ[1];
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
     }else{
 
@@ -748,7 +757,7 @@ class QuoteV2Controller extends Controller
       $arregloNull = array();
       $arregloNull = json_encode($arregloNull);
       $equipment =  stripslashes(json_encode($request->input('equipment')));
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>\Auth::user()->company_user_id,'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
       // MANUAL RATE
 
@@ -982,12 +991,12 @@ class QuoteV2Controller extends Controller
     }
 
 
-    return response()->file(public_path().'/images/si.gif');
+
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-    // return redirect()->action('QuoteV2Controller@show',setearRouteKey($quote->id));
+    return redirect()->action('QuoteV2Controller@index');
   }
 
   public function skipPluck($pluck)
@@ -1102,7 +1111,7 @@ class QuoteV2Controller extends Controller
     $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-    $equipmentHides = $this->hideContainer($equipment);
+    $equipmentHides = $this->hideContainer($equipment,'');
     //Colecciones 
     $inlandDestiny = new collection();
     $inlandOrigin = new collection();
