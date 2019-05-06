@@ -401,7 +401,7 @@ class QuoteV2Controller extends Controller
       $iniciales = $iniciales."-1";
     }else{
 
-      $numeroFinal = explode('-',$quote->quote_id);
+      $numeroFinal = explode('-',$quote->custom_quote_id);
 
       $numeroFinal = $numeroFinal[1] +1;
 
@@ -422,7 +422,7 @@ class QuoteV2Controller extends Controller
     $destinyClass = 'col-md-1';
     $dataOrigDest = 'col-md-3';
 
-    if($tipo = 'BD'){
+    if($tipo == 'BD'){
       $equipmentForm = json_decode($equipmentForm);
 
     }
