@@ -7,6 +7,8 @@ use App\Harbor;
 use App\Carrier;
 use Carbon\Carbon;
 use App\Direction;
+use EventIntercom;
+use App\ContractLcl;
 use App\CompanyUser;
 use App\RequetsCarrierLcl;
 use Illuminate\Http\Request;
@@ -14,12 +16,12 @@ use App\NewContractRequestLcl;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
+use Illuminate\Support\Facades\DB;
 use App\Mail\RequestLclToUserMail;
 use App\Jobs\SendEmailRequestLclJob;
 use App\Mail\NewRequestLclToAdminMail;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
-use EventIntercom;
 
 class NewContractRequestLclController extends Controller
 {
@@ -33,34 +35,33 @@ class NewContractRequestLclController extends Controller
         $company_userid = \Auth::user()->company_user_id;
         return view('RequestsLcl.indexClient',compact('company_userid'));
     }
-
+    
+    //lista todos los request Admin
     public function create()
     {
-        $Ncontracts = NewContractRequestLcl::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();
+        //$Ncontracts = NewContractRequestLcl::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();
+        $Ncontracts = DB::select('call  select_request_lcl()');
         //dd($Ncontracts[0]['companyuser']['name']);
 
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
-                return $Ncontracts->companyuser->name;
+                return $Ncontracts->company_user;
             })
             ->addColumn('name', function ($Ncontracts) {
                 return $Ncontracts->namecontract;
             })
-            ->addColumn('number', function ($Ncontracts) {
-                return $Ncontracts->numbercontract;
-            })
             ->addColumn('direction', function ($Ncontracts) {
                 if(empty($Ncontracts->direction) == true){
-                    return " -------- ";
+                    return " ---------- ";
                 }else {
-                    return $Ncontracts->Direction->name;
+                    return $Ncontracts->direction;
                 }
             })
             ->addColumn('carrier', function ($Ncontracts) {
-                if(count($Ncontracts->Requestcarriers) >= 1){
-                    return str_replace(['[',']','"'],'',$Ncontracts->Requestcarriers->pluck('carrier')->pluck('name'));
+                if(empty($Ncontracts->carriers) != true){
+                    return $Ncontracts->carriers;
                 } else {
-                    return " -------- ";
+                    return " ------------------ ";
                 }
             })
             ->addColumn('validation', function ($Ncontracts) {
@@ -69,21 +70,14 @@ class NewContractRequestLclController extends Controller
             ->addColumn('date', function ($Ncontracts) {
                 return $Ncontracts->created;
             })
-            ->addColumn('updated', function ($Ncontracts) {
-                if(empty($Ncontract->updated) != true){
-                    return Carbon::parse($Ncontract->updated)->format('d-m-Y h:i:s');
-                } else {
-                    return '00-00-0000 00:00:00';
-                }
-            })
             ->addColumn('user', function ($Ncontracts) {
-                return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+                return $Ncontracts->user;
             })
             ->addColumn('time_elapsed', function ($Ncontracts) {
-                if(empty($Ncontracts->time_total) != true){
-                    return $Ncontracts->time_total;
+                if(empty($Ncontracts->time_elapsed) != true){
+                    return $Ncontracts->time_elapsed;
                 } else {
-                    return '--------';
+                    return '------------------------';
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
@@ -111,7 +105,7 @@ class NewContractRequestLclController extends Controller
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
+                <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' References: '.$Ncontracts->namecontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
             })
@@ -119,6 +113,7 @@ class NewContractRequestLclController extends Controller
             ->make();
     }
 
+    //lista todos los request pero por compañia
     public function listClient($id)
     {
         $Ncontracts = NewContractRequestLcl::where('company_user_id',$id)->get();
@@ -248,7 +243,6 @@ class NewContractRequestLclController extends Controller
         if($fileBoll){
             $Ncontract  = new NewContractRequestLcl();
             $Ncontract->namecontract    = $request->name;
-            $Ncontract->numbercontract  = $request->number;
             $Ncontract->validation      = $request->validation_expire;
             $Ncontract->direction_id    = $request->direction;
             $Ncontract->company_user_id = $request->CompanyUserId;
@@ -421,8 +415,59 @@ class NewContractRequestLclController extends Controller
     public function LoadViewRequestImporContractLcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
-        $direction      = Direction::all()->pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $user   = \Auth::user();
         return view('RequestsLcl.NewRequest',compact('harbor','carrier','user','direction'));
+    }
+    
+    public function similarcontracts(Request $request,$id){
+        $contracts = ContractLcl::select(['id',
+                                       'name',
+                                       'company_user_id',
+                                       'account_id',
+                                       'direction_id',
+                                       'validity',
+                                       'expire'
+                                      ]);
+
+        return Datatables::of($contracts->where('company_user_id',$id))
+            ->filter(function ($query) use ($request,$id) {
+                if ($request->has('direction') && $request->get('direction') != null) {
+                    $query->where('direction_id', '=',$request->get('direction'));
+                } else{
+                    $query;
+                }
+                if ($request->has('carrierM')) {
+                    $query->whereHas('carriers',function($q) use($request) {
+                        $q->whereIn('carrier_id',$request->get('carrierM'));
+                    });
+                }
+                if($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
+                    $query->where('validity', '=',$request->get('dateO'))->where('expire', '=',$request->get('dateT'));
+                }
+
+            })
+            ->addColumn('carrier', function ($contracts) {
+                $dd = $contracts->load('carriers.carrier');
+                if(count($dd->carriers) != 0){
+                    return str_replace(['[',']','"'],' ',$dd->carriers->pluck('carrier')->pluck('name'));
+                } else {
+                    return '-------';
+                }
+
+            })
+            ->addColumn('direction', function ($contracts) {
+                $dds = $contracts->load('direction');
+                if(count($dds->direction) != 0){
+                    return $dds->direction->name;
+                } else {
+                    return '-------';
+                }
+            })
+            ->make(true);
     }
 }

@@ -10,9 +10,11 @@ use App\RateLcl;
 use App\FileTmp;
 use App\Carrier;
 use App\Currency;
+use App\Direction;
 use App\FailRateLcl;
 use App\CompanyUser;
 use App\ContractLcl;
+use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
@@ -180,17 +182,24 @@ class ImportationLclController extends Controller
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
+        $direction      = [null=>'Please Select'];
+        $direction2     = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
+        return view('ImportationLcl.index',compact('harbor','carrier','direction','companysUser'));
     }
 
     public function indexRequest($id)
     {
         $requestlcl     = RequestLCL::find($id);
+        $requestlcl->load('Requestcarriers');
         //dd($requestlcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('ImportationLcl.indexRequest',compact('harbor','carrier','companysUser','requestlcl'));
+        $direction      = Direction::pluck('name','id');
+        return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl'));
     }
 
     // --------------- Rates ---------------------------------------------
@@ -210,12 +219,15 @@ class ImportationLclController extends Controller
         $destinyArr     = $request->destiny;
         $originArr      = $request->origin;
         $CompanyUserId  = $request->CompanyUserId;
+        $direction_id   = $request->direction;
+        
         $carrierBol     = false;
         $destinyBol     = false;
         $originBol      = false;
         $data= collect([]);
-        $harbor  = harbor::all()->pluck('display_name','id');
-        $carrier = carrier::all()->pluck('name','id');
+        $harbor     = harbor::all()->pluck('display_name','id');
+        $carrier    = carrier::all()->pluck('name','id');
+        $direction  = Direction::pluck('name','id');
         // try {
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
@@ -249,13 +261,13 @@ class ImportationLclController extends Controller
 
             $contract     = new ContractLcl();
             $contract->name             = $request->name;
-            $contract->number           = $request->number;
             $validity                   = explode('/',$request->validation_expire);
             $contract->validity         = $validity[0];
             $contract->expire           = $validity[1];
             $contract->status           = 'incomplete';
             $contract->comments         = $request->comments;
             $contract->company_user_id  = $CompanyUserId;
+            $contract->direction_id     = $direction_id;
             $contract->account_id       = $account->id;
             $contract->save(); 
             $Contract_id = $contract->id;
@@ -263,6 +275,13 @@ class ImportationLclController extends Controller
             $fileTmp->contract_id = $Contract_id;
             $fileTmp->name_file   = $nombre;
             $fileTmp->save(); //*/
+            foreach($request->carrierM as $carrierVal){
+                ContractCarrierLcl::create([
+                    'carrier_id'    => $carrierVal,
+                    'contract_id'   => $Contract_id
+                ]);
+            }
+            $contract->load('carriers');
         }
 
         $statustypecurren = $request->valuesCurrency;
@@ -343,7 +362,7 @@ class ImportationLclController extends Controller
         $countTarges = count($targetsArr);
         //dd($data);
 
-        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','contract','CompanyUserId'));
+        return view('ImportationLcl.show',compact('harbor','carrier','direction','coordenates','targetsArr','data','countTarges','type','statustypecurren','contract','CompanyUserId'));
         /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');

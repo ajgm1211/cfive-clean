@@ -70,7 +70,11 @@ class ContractsController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $country = $objcountry->all()->pluck('name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
-        $direction = Direction::pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $calculationT = $objcalculation->all()->pluck('name','id');
         $typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -440,7 +444,7 @@ class ContractsController extends Controller
         $id = obtenerRouteKey($id);
         $contracts = Contract::where('id',$id)->with('direction','carriers.carrier')->first();
         //dd($contracts->carriers->pluck('carrier'));
-        
+
         $objtypedestiny = new TypeDestiny();
         $objcountry = new Country();
         $objcarrier = new Carrier();
@@ -570,7 +574,7 @@ class ContractsController extends Controller
             $contador++;
           }
         }*/
-        
+
         ContractCarrier::where('contract_id',$id)->delete();
         foreach($request->carrierAr as $carrierFA){
             ContractCarrier::create([

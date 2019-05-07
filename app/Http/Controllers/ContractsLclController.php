@@ -55,7 +55,11 @@ class ContractsLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name','id');
         $country = Country::all()->pluck('name','id');
         $carrier = Carrier::all()->pluck('name','id');
-        $direction = Direction::pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $currency = Currency::all()->pluck('alphacode','id');
         $calculationT = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny = TypeDestiny::all()->pluck('description','id');
