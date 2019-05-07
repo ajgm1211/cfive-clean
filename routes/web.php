@@ -266,6 +266,10 @@ Route::prefix('Importation')->group(function () {
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
+    
+    Route::get('SimilarContractsLcl/{id}','NewContractRequestLclController@similarcontracts')->name('Similar.Contracts.Request.Lcl')
+      ->middleware(['auth','role:administrator|company|subuser']);
+    
     Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
         ->middleware(['auth','role:administrator|company|subuser']);
 

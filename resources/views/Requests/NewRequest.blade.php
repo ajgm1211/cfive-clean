@@ -2,8 +2,6 @@
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
-
-
 @endsection
 
 @section('title', 'New Request')

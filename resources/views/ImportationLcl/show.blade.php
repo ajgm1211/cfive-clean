@@ -72,7 +72,7 @@ new registration
                                 </div>
                                 {!! Form::hidden('Contract_id',$value['Contract_id'])!!}
                                 {!! Form::hidden('FileName',$value['fileName'])!!}
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <label for="nameid" class="">Contract Name</label>
                                     {!!  Form::text('name',$value['name'],['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
@@ -80,14 +80,6 @@ new registration
                                     'class'=>'form-control m-input',
                                     'disabled'
                                     ])!!}
-                                </div>
-                                <div class="col-lg-2">
-                                    <label for="numberid" class=" ">Contract Number</label>
-                                    {!!  Form::text('number',$value['number'],['id'=>'numberid',
-                                    'placeholder'=>'Number Contract',
-                                    'required',
-                                    'disabled',
-                                    'class'=>'form-control m-input'])!!}
                                 </div>
                                 <div class="col-lg-3">
                                     <label for="validation_expire" class=" ">Validation</label>
@@ -112,6 +104,19 @@ new registration
                                     'disabled',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
+                                <div class="col-lg-3">
+                                    <label class="">Carrier</label>
+                                    <div class="" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrierM','disabled','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
+                                        {!! Form::select('direction',$direction,$contract['direction_id'],['class'=>'m-select2-general form-control','disabled','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+
                             </div>
 
                             <hr>
@@ -165,7 +170,7 @@ new registration
                         <div class="form-group m-form__group row"></div>
                         <div class="form-group m-form__group row">
                             @foreach($targetsArr as $targets)
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="m-portlet m-portlet--metal m-portlet--head-solid-bg m-portlet--bordered">
                                     <div class="m-portlet__head">
                                         <div class="m-portlet__head-caption">

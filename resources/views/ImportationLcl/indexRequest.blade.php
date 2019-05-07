@@ -74,37 +74,42 @@ new registration
                                     'class'=>'form-control m-input'])!!}
                                 </div>
                                 <div class="col-lg-3">
-                                    <label for="numberid" class=" ">Contract Number</label>
-                                    {!!  Form::text('number',$requestlcl['numbercontract'],['id'=>'numberid',
-                                    'placeholder'=>'Number Contract',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>  
-                                <div class="col-lg-3">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="{{$requestlcl['validation']}}">
                                 </div>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-2"> </div>
                                 <div class="col-lg-3">
                                     <label for="numberid" class=" ">Company User</label>
                                     {!!  Form::select('CompanyUserId',$companysUser,$requestlcl['company_user_id'],['id'=>'CompanyUserId',
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-3">
-                                    <label for="request_id" class=" ">Request Lcl Id</label>
-                                    {!!  Form::text('request_id',$requestlcl['id'],['id'=>'request_id',
-                                    'placeholder'=>'Request Lcl Id',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2"> </div>
                                 <div class="col-lg-3">
                                     <label for="commentsid" class=" ">Contract Comments</label>
                                     {!!  Form::textArea('comments',null,['id'=>'commentsid',
                                     'placeholder'=>'Contract Comments',
                                     'required',
                                     'class'=>'form-control m-input','rows' => '2' ])!!}
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="">Carriers</label>
+                                    <div class="" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,$requestlcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
+                                        {!! Form::select('direction',$direction,$requestlcl['direction_id'],['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-1">
+                                    <label for="request_id" class=" ">Request Lcl Id</label>
+                                    {!!  Form::text('request_id',$requestlcl['id'],['id'=>'request_id',
+                                    'placeholder'=>'Request Lcl Id',
+                                    'class'=>'form-control m-input'])!!}
                                 </div>
                             </div>
                             <hr>

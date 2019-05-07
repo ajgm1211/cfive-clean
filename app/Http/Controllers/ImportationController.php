@@ -443,7 +443,11 @@ class ImportationController extends Controller
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
-        $direction      = Direction::pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         return view('importation.ImporContractFcl',compact('harbor','direction','country','region','carrier','companysUser','typedestiny'));
@@ -485,7 +489,7 @@ class ImportationController extends Controller
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
         $direction_id       = $request->direction;
-                    
+
         $carrierBol         = false;
         $destinyBol         = false;
         $originBol          = false;
@@ -545,7 +549,7 @@ class ImportationController extends Controller
             $contract->company_user_id  = $CompanyUserId;
             $contract->account_id  = $account->id;
             $contract->save();
-            
+
             foreach($request->carrierM as $carrierVal){
                 ContractCarrier::create([
                     'carrier_id'    => $carrierVal,
@@ -1196,7 +1200,7 @@ class ImportationController extends Controller
 
         FailSurCharge::where('contract_id',$request->Contract_id)->forceDelete();
         LocalCharge::where('contract_id',$request->Contract_id)->forceDelete();*/
-        
+
 
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];

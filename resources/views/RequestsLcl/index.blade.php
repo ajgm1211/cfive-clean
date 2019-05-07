@@ -89,9 +89,8 @@
                                             <tr>
                                                 <th >ID</th>
                                                 <th >Company</th>
-                                                <th >Contract Name</th>
-                                                <th >Contract Number</th>
-                                                <th >C. Direction</th>
+                                                <th >References</th>
+                                                <th >Type</th>
                                                 <th >Carrier</th>
                                                 <th >Contract Validation</th>
                                                 <th >Date</th>
@@ -125,7 +124,7 @@
                                                     Request Id
                                                 </th>
                                                 <th width="3%" >
-                                                    Name
+                                                    References
                                                 </th>
                                                 <th width="5%" >
                                                     Date
@@ -225,7 +224,6 @@
                     { data: 'id', name: 'id' },
                     { data: 'Company', name: 'Company' },
                     { data: 'name', name: 'name' },
-                    { data: 'number', name: 'number' },
                     { data: 'direction', name: 'direction' },
                     { data: 'carrier', name: 'carrier' },
                     { data: 'validation', name: 'validation' },
