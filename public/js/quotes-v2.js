@@ -550,8 +550,13 @@ $(document).on('click', '#update', function () {
                 }
                 $(".type").val(data.quote['type']);
                 $(".type_span").html(data.quote['type']);
-                $(".quote_id").val(data.quote['quote_id']);
-                $(".quote_id_span").html(data.quote['quote_id']);
+                if(data.quote['custom_quote_id']!=''){
+                    $(".quote_id").val(data.quote['custom_quote_id']);
+                    $(".quote_id_span").html(data.quote['custom_quote_id']);    
+                }else{
+                    $(".quote_id").val(data.quote['quote_id']);
+                    $(".quote_id_span").html(data.quote['quote_id']);
+                }
                 $(".company_id").val(data.quote['company_id']);
                 $(".company_id_span").html(data.quote['company_id']);
                 $(".status").val(data.quote['status']);
