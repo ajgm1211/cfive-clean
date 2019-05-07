@@ -795,7 +795,9 @@
               <!-- Termina tarjeta de cotifzacion -->
 
               <!-- Gastos Origen-->
+             
               @if(!$arr->localorigin->isEmpty())
+
               <div class="row no-margin margin-card" id='origin{{$loop->iteration}}' hidden='true' >
                 <div class="col-lg-12">
                   <div class="row">
