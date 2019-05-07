@@ -943,6 +943,75 @@ $(document).on('change', '#quoteType', function (e) {
 
   }
 
+
+
+  if($(this).val()==3){
+
+    $("#delivery_type").prop( "disabled", true );
+    $("#delivery_type_air").prop( "disabled", false );
+    $("#delivery_type_label").hide();
+    $("#delivery_type_air_label").show();
+    $("#lcl_air_load").show();
+    $("#origin_airport_label").show();
+    $("#destination_airport_label").show();
+    $("#airline_label").show();
+    $("#carrier_label").hide();
+    $("#airline_id").prop( "disabled", false );
+    $("#carrier_id").prop( "disabled", true );
+    $("#fcl_load").hide();
+    $("#origin_harbor_label").hide();
+    $("#destination_harbor_label").hide();
+    $("input[name=qty_20]").val('');
+    $("input[name=qty_40]").val('');
+    $("input[name=qty_40_hc]").val('');
+    $("input[name=qty_45_hc]").val('');
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+      total_volume=$('#total_volume').val();
+      total_weight=$('#total_weight').val();
+      if($("input[name='type']:checked").val()==2){
+        total_weight=total_weight/1000;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      }else if($("input[name='type']:checked").val()==3){
+        total_volume=total_volume*166;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+      }
+
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+      if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+        sum_vol = $('#total_volume_pkg_input').val();
+        weight = $('#total_weight_pkg_input').val();
+
+        total_vol_chargeable = sum_vol * 166;
+        if (total_vol_chargeable > weight) {
+          chargeable_weight = total_vol_chargeable;
+        } else {
+          chargeable_weight = weight;
+        }
+      }
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
+  }
 });
 
 
@@ -1087,7 +1156,7 @@ $(".quote_search").on("click", function() {
 
 });
 $(".quote_man").on("click", function() {
-  
+
   $('#FormQuote').attr('action', '/v2/quotes/store');
   $(".quote_man").attr("type","submit");
 });
