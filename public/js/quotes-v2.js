@@ -280,6 +280,36 @@ $(document).ready(function() {
     });
 });
 
+//Delete rates
+$(document).on('click', '.delete-rate', function () {
+    var id=$(this).attr('data-rate-id');
+    swal({
+      title: 'Are you sure?',
+      text: "Please confirm!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, I am sure!'
+    }).then(function (result) {
+      if (result.value) {
+        $.ajax({
+            type: 'GET',
+            url: '/v2/quotes/delete/rate/'+id,
+            success: function(data) {
+                if(data.message=='Ok'){
+                    swal(
+                        'Updated!',
+                        'The rete has been deleted.',
+                        'success'
+                        )
+                    $(this).closest('ul').remove();
+                    setTimeout(location.reload.bind(location), 3000);
+                }
+            }
+        });
+      }
+    });
+});
+
 //Edit payments
 $(document).on('click', '#edit-payments', function () {
     $(".payment_conditions_span").attr('hidden','true');

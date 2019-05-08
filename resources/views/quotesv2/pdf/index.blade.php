@@ -428,18 +428,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                    @foreach($item as $rate)
-                        <?php
-                            $sum_origin_20= 0;
-                            $sum_origin_40= 0;
-                            $sum_origin_40hc= 0;
-                            $sum_origin_40nor= 0;
-                            $sum_origin_45= 0;
-                        ?>
+                        @foreach($item as $rate)
+                            <?php
+                                $sum_origin_20= 0;
+                                $sum_origin_40= 0;
+                                $sum_origin_40hc= 0;
+                                $sum_origin_40nor= 0;
+                                $sum_origin_45= 0;
+                                $inland_20= 0;
+                                $inland_40= 0;
+                                $inland_40hc= 0;
+                                $inland_40nor= 0;
+                                $inland_45= 0;
+                            ?>
                             @foreach($rate as $r)
-
                                 @foreach($r->charge as $v)
-                                        @if($v->type_id==1)
+                                    @if($v->type_id==1)
                                         <?php
                                             $total_origin_20= 0;
                                             $total_origin_40= 0;
@@ -462,60 +466,78 @@
                                             <td {{ $equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
                                             <td {{ $equipmentHides['45'] }}>{{$v->total_45}}</td>
                                             @if($quote->pdf_option->grouped_origin_charges==1)
-                                                <td>{{$quote->pdf_option->origin_charges_currency}}</td>
+                                            <td>{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
-                                                <td>{{$currency_cfg->alphacode}}</td>
+                                            <td>{{$currency_cfg->alphacode}}</td>
                                             @endif
                                         </tr>
+                                    @endif
+                                @endforeach
+                                @if(!$r->inland->isEmpty()){
+                                    @foreach($r->inland as $v)
+                                        @if($v->type=='Origin')
+                                            <?php
+                                                $inland_20+=$v->total_20;
+                                                $inland_40+=$v->total_40;
+                                                $inland_40hc+=$v->total_40hc;
+                                                $inland_40nor+=$v->total_40nor;
+                                                $inland_45+=$v->total_45;
+                                            ?>
+                                            <tr class="text-center color-table">
+                                                <td>{{$v->provider}}</td>
+                                                <td>{{$v->distance}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{ $equipmentHides['20'] }}>{{$v->total_20}}</td>
+                                                <td {{ $equipmentHides['40'] }}>{{$v->total_40}}</td>
+                                                <td {{ $equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
+                                                <td {{ $equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
+                                                <td {{ $equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                                @if($quote->pdf_option->grouped_origin_charges==1)
+                                                    <td>{{$quote->pdf_option->origin_charges_currency}}</td>
+                                                @else
+                                                    <td>{{$currency_cfg->alphacode}}</td>
+                                                @endif
+                                            </tr>
                                         @endif
                                     @endforeach
-                                @endforeach
+                                @endif
+                            @endforeach
                         @endforeach
-                            <tr>
-                                <td colspan="3"><b>Total local charges</b></td>
-                                <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_origin_20, 2, '.', '')}}</b></td>
-                                <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_origin_40, 2, '.', '')}}</b></td>
-                                <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_origin_40hc, 2, '.', '')}}</b></td>
-                                <td {{ $equipmentHides['40nor'] }}><b>{{number_format(@$sum_origin_40nor, 2, '.', '')}}</b></td>
-                                <td {{ $equipmentHides['45'] }}><b>{{number_format(@$sum_origin_45, 2, '.', '')}}</b></td>
-                                @if($quote->pdf_option->grouped_origin_charges==1)
-                                    <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
-                                @else
-                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
-                                @endif     
-                            </tr>
-                        </tbody>
-                    </table>
+                        <tr>
+                            <td colspan="3"><b>Total local charges</b></td>
+                            <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_origin_20+@$inland_20, 2, '.', '')}}</b></td>
+                            <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_origin_40+@$inland_40, 2, '.', '')}}</b></td>
+                            <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_origin_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
+                            <td {{ $equipmentHides['40nor'] }}><b>{{number_format(@$sum_origin_40nor+@$inland_40nor, 2, '.', '')}}</b></td>
+                            <td {{ $equipmentHides['45'] }}><b>{{number_format(@$sum_origin_45+@$inland_45, 2, '.', '')}}</b></td>
+                            @if($quote->pdf_option->grouped_origin_charges==1)
+                            <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
+                            @else
+                            <td><b>{{$currency_cfg->alphacode}}</b></td>
+                            @endif     
+                        </tr>
+                    </tbody>
+                </table>
                 @endforeach
             @endforeach
         @endif
 
-        <!-- Destinations detailed -->
-        @foreach($destination_charges as $carrier => $value)
-            <?php 
-                $total20= 0;
-                $total40= 0;
-                $total40hc= 0;
-                $total40nor= 0;
-                $total45= 0;
-                $sum40hc= 0;
-                $sum40nor= 0;
-                $sum45= 0;
-            ?>
-            @foreach($value as $destination => $item)
+        <!-- DESTINATIONS -->
+
+        <!-- ALL in destination table -->
+        @if($quote->pdf_option->grouped_destination_charges==1 && $quote->pdf_option->show_type=='detailed' )
+            @foreach($destination_charges_grouped as $origin=>$detail)
             <br>
                 <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$destination}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$origin}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$origin}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$origin}}</p>
                     <br>
-                </div>  
-                @foreach($item as $rate)
-                <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                </div>
+                <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit"><b>POL</b></th>
-                            <th class="unit"><b>POD</b></th>
+                            <th class="unit" colspan="2"><b>Charge</b></th>
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                             <th {{ $equipmentHides['20'] }}><b>20'</b></th>
                             <th {{ $equipmentHides['40'] }}><b>40'</b></th>
@@ -528,37 +550,166 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($rate as $r)
-                            @foreach($r->charge as $v)
+
+                    @foreach($detail as $item)
+                        <?php
+                            $sum_destination_20= 0;
+                            $sum_destination_40= 0;
+                            $sum_destionation_40hc= 0;
+                            $sum_destination_40nor= 0;
+                            $sum_destination_45= 0;
+                        ?>  
+                        @foreach($item as $rate)
+                            @foreach($rate->charge as $value)
                                 <?php
-                                    $total20+=$v->total_20;
-                                    $total40+=$v->total_40;
-                                    $total40hc+=$v->total_40hc;
-                                    $total40nor+=$v->total_40nor;
-                                    $total45+=$v->total_45;
+                                    $sum_destination_20+=$value->total_20;
+                                    $sum_destination_40+=$value->total_40;
+                                    $sum_destionation_40hc+=$value->total_40hc;
+                                    $sum_destination_40nor+=$value->total_40nor;
+                                    $sum_destination_45+=$value->total_45;                                
                                 ?>
                             @endforeach
-                            <tr class="text-center color-table">
-                                <td>{{$r->origin_port->name}}, {{$r->origin_port->code}}</td>
-                                <td>{{$r->destination_port->name}}, {{$r->destination_port->code}}</td>
-                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
-                                <td {{ $equipmentHides['20'] }}>{{$total20}}</td>
-                                <td {{ $equipmentHides['40'] }}>{{$total40}}</td>
-                                <td {{ $equipmentHides['40hc'] }}>{{$total40hc}}</td>
-                                <td {{ $equipmentHides['40nor'] }}>{{$total40nor}}</td>
-                                <td {{ $equipmentHides['45'] }}>{{$total45}}</td>                            
-                                @if($quote->pdf_option->grouped_destination_charges==1)
-                                    <td>{{$quote->pdf_option->destination_charges_currency}}</td>
-                                @else
-                                    <td>{{$currency_cfg->alphacode}}</td>
-                                @endif
-                            </tr>
                         @endforeach
-                    </tbody>
-                </table>
+                        <tr class="text-center color-table">
+                            <td colspan="2">Total Destination Charges</td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                            <td {{ $equipmentHides['20'] }}>{{@$sum_destination_20}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{@$sum_destination_40}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{@$sum_destionation_40hc}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{@$sum_destination_40nor}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{@$sum_destination_45}}</td>
+                            @if($quote->pdf_option->grouped_destination_charges==1)
+                            <td >{{$quote->pdf_option->destination_charges_currency}}</td>
+                            @else
+                            <td >{{$currency_cfg->alphacode}}</td>
+                            @endif
+                        </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endforeach
+        @endif
+
+        <!-- Destinations detailed -->
+        @if($quote->pdf_option->grouped_destination_charges==0 && $quote->pdf_option->show_type=='detailed' )
+        @foreach($destination_charges as $carrier => $value)
+                @foreach($value as $destination => $item)
+                    <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
+                        <br>
+                    </div>
+                    <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <thead class="title-quote text-center header-table">
+                            <tr >
+                                <th class="unit"><b>Charge</b></th>
+                                <th class="unit"><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                <th {{ $equipmentHides['20'] }}><b>20'</b></th>
+                                <th {{ $equipmentHides['40'] }}><b>40'</b></th>
+                                <th {{ $equipmentHides['40hc'] }}><b>40' HC</b></th>
+                                <th {{ $equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                                <th {{ $equipmentHides['45'] }}><b>45'</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    @foreach($item as $rate)
+                        <?php
+                            $sum_destination_20= 0;
+                            $sum_destination_40= 0;
+                            $sum_destination_40hc= 0;
+                            $sum_destination_40nor= 0;
+                            $sum_destination_45= 0;
+                            $inland_20= 0;
+                            $inland_40= 0;
+                            $inland_40hc= 0;
+                            $inland_40nor= 0;
+                            $inland_45= 0;
+                        ?>
+                            @foreach($rate as $r)
+                                @foreach($r->charge as $v)
+                                    @if($v->type_id==2)
+                                        <?php
+                                            $total_destination_20= 0;
+                                            $total_destination_40= 0;
+                                            $total_destination_40hc= 0;
+                                            $total_destination_40nor= 0;
+                                            $total_destination_45= 0;                                   
+                                            $sum_destination_20+=$v->total_20;
+                                            $sum_destination_40+=$v->total_40;
+                                            $sum_destination_40hc+=$v->total_40hc;
+                                            $sum_destination_40nor+=$v->total_40nor;
+                                            $sum_destination_45+=$v->total_45;
+                                        ?>
+                                        <tr class="text-center color-table">
+                                            <td>{{$v->surcharge->name}}</td>
+                                            <td>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                            <td {{ $equipmentHides['20'] }}>{{$v->total_20}}</td>
+                                            <td {{ $equipmentHides['40'] }}>{{$v->total_40}}</td>
+                                            <td {{ $equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
+                                            <td {{ $equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
+                                            <td {{ $equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                            @if($quote->pdf_option->grouped_destination_charges==1)
+                                                <td>{{$quote->pdf_option->destination_charges_currency}}</td>
+                                            @else
+                                                <td>{{$currency_cfg->alphacode}}</td>
+                                            @endif
+                                        </tr>
+                                    @endif
+                                @endforeach
+                                @if(!$r->inland->isEmpty()){
+                                    @foreach($r->inland as $v)
+                                        @if($v->type=='Destination')
+                                            <?php
+                                                $inland_20+=$v->total_20;
+                                                $inland_40+=$v->total_40;
+                                                $inland_40hc+=$v->total_40hc;
+                                                $inland_40nor+=$v->total_40nor;
+                                                $inland_45+=$v->total_45;
+                                            ?>
+                                            <tr class="text-center color-table">
+                                                <td>{{$v->provider}}</td>
+                                                <td>{{$v->distance}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{ $equipmentHides['20'] }}>{{$v->total_20}}</td>
+                                                <td {{ $equipmentHides['40'] }}>{{$v->total_40}}</td>
+                                                <td {{ $equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
+                                                <td {{ $equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
+                                                <td {{ $equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                                @if($quote->pdf_option->grouped_origin_charges==1)
+                                                    <td>{{$quote->pdf_option->origin_charges_currency}}</td>
+                                                @else
+                                                    <td>{{$currency_cfg->alphacode}}</td>
+                                                @endif
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endforeach
+                            <tr>
+                                <td colspan="3"><b>Total local charges</b></td>
+                                <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_destination_20+@$inland_20, 2, '.', '')}}</b></td>
+                                <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_destination_40+@$inland_40, 2, '.', '')}}</b></td>
+                                <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
+                                <td {{ $equipmentHides['40nor'] }}><b>{{number_format(@$sum_destination_40nor+@$inland_40nor, 2, '.', '')}}</b></td>
+                                <td {{ $equipmentHides['45'] }}><b>{{number_format(@$sum_destination_45+@$inland_45, 2, '.', '')}}</b></td>
+                                @if($quote->pdf_option->grouped_destination_charges==1)
+                                    <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
+                                @else
+                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                @endif     
+                            </tr>
+                        </tbody>
+                    </table>
                 @endforeach
             @endforeach
-        @endforeach
+        @endif
 </main>
 </body>
 </html>
