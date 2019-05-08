@@ -209,6 +209,9 @@
                                         <li class="size-12px">
                                             <div onclick="show_hide_element('details_{{$v}}')"><i class="down"></i></div>
                                         </li>
+                                        <li class="size-12px">
+                                            <div class="delete-rate" data-rate-id="{{$rate->id}}" style="cursor:pointer;"><i class="fa fa-trash fa-4x"></i></div>
+                                        </li>
                                     </ul>
                                 </div>
                                 <br>
