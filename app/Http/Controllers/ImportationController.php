@@ -454,9 +454,15 @@ class ImportationController extends Controller
     }
 
     // precarga la vista para importar rates o rates mas surchargers desde Request
-    public function requestProccess($id){
-        $requestfcl     = RequestFcl::find($id);
-        $requestfcl->load('Requestcarriers');
+    public function requestProccess($id,$selector){
+        if($selector == 1){
+            $requestfcl     = RequestFcl::find($id);
+            $requestfcl->load('Requestcarriers');
+        } elseif($selector == 2){
+            $contract     = Contract::find($id);
+            $contract->load('carriers');
+            //dd($contract);
+        }
         //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
@@ -465,7 +471,12 @@ class ImportationController extends Controller
         $direction      = Direction::pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl'));
+        if($selector == 1){
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector'));    
+        } elseif($selector == 2){
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector'));
+        }
+
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -489,6 +500,7 @@ class ImportationController extends Controller
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
         $direction_id       = $request->direction;
+        $selector           = $request->selector;
 
         $carrierBol         = false;
         $destinyBol         = false;
@@ -539,22 +551,28 @@ class ImportationController extends Controller
 
             ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
 
-            $contract   = new Contract();
-            $contract->name             = $request->name;
-            $validity                   = explode('/',$request->validation_expire);
-            $contract->validity         = $validity[0];
-            $contract->expire           = $validity[1];
-            $contract->direction_id     = $direction_id;
-            $contract->status           = 'incomplete';
-            $contract->company_user_id  = $CompanyUserId;
-            $contract->account_id  = $account->id;
-            $contract->save();
+            if($selector == 2){
+                $contract = Contract::find($request->contract_id);
+                $contract->account_id  = $account->id;
+                $contract->update();
+            } else {
+                $contract   = new Contract();
+                $contract->name             = $request->name;
+                $validity                   = explode('/',$request->validation_expire);
+                $contract->validity         = $validity[0];
+                $contract->expire           = $validity[1];
+                $contract->direction_id     = $direction_id;
+                $contract->status           = 'incomplete';
+                $contract->company_user_id  = $CompanyUserId;
+                $contract->account_id  = $account->id;
+                $contract->save();
 
-            foreach($request->carrierM as $carrierVal){
-                ContractCarrier::create([
-                    'carrier_id'    => $carrierVal,
-                    'contract_id'   => $contract->id
-                ]);
+                foreach($request->carrierM as $carrierVal){
+                    ContractCarrier::create([
+                        'carrier_id'    => $carrierVal,
+                        'contract_id'   => $contract->id
+                    ]);
+                }
             }
             $contract->load('carriers');
             $Contract_id = $contract->id;

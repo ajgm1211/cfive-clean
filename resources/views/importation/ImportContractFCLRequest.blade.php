@@ -3,8 +3,11 @@
 @parent
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
-
-@section('title', 'Importation FCL R. '.$requestfcl['id'].' - '.$requestfcl['numbercontract'].'/'.$requestfcl['namecontract'])
+@if($selector == 1)
+@section('title', 'Importation FCL R. '.$requestfcl['id'].' / '.$requestfcl['namecontract'])
+@elseif($selector == 2)
+@section('title', 'Importation FCL C. '.$contract['id'].' / '.$contract['name'])
+@endif
 @section('content')
 
 <div class="m-content">
@@ -59,13 +62,11 @@ new registration
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <div class="row">
                         <div class="col-lg-12">
-
+                            @if($selector == 1)
                             <div class="form-group m-form__group row">
-
                                 <div class="col-lg-2">
                                     <label class="col-form-labe"><b>CONTRACT:</b></label>
                                 </div>
-
                                 <div class="col-lg-3">
                                     <label for="nameid" class="">Contract Name</label>
                                     {!!  Form::text('name',$requestfcl['namecontract'],['id'=>'nameid',
@@ -106,6 +107,57 @@ new registration
                                     </div>
                                 </div>
                             </div>
+                            @elseif($selector == 2)
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2">
+                                    <label class="col-form-labe"><b>CONTRACT:</b></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="nameid" class="">Contract Name</label>
+                                    {!!  Form::text('nameD',$contract['name'],['id'=>'nameid',
+                                    'placeholder'=>'Contract Name',
+                                    'required','disabled',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                                <input type="hidden" name="name" value="{{$contract['name']}}">
+                                <div class="col-lg-3">
+                                    <label for="validation_expire" class=" ">Validation</label>
+                                    <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" disabled required="required" name="validation_expire" type="text" value="{{$contract['validity'].' / '.$contract['expire']}}">
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="numberid" class=" ">Company User</label>
+                                    {!!  Form::select('CompanyUserIdd',$companysUser,$contract['company_user_id'],['id'=>'CompanyUserId',
+                                    'required','disabled',
+                                    'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
+                                </div>
+                                <input type="hidden" name="CompanyUserId" value="{{$contract['company_user_id']}}">                                
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2"> </div>
+
+                                <div class="col-lg-3">
+                                    <label for="request_id" class=" ">Request id</label>
+                                    {!!  Form::text('request_idd',$contract['id'],['id'=>'request_id',
+                                    'placeholder'=>'Request Id','disabled',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                                <input type="hidden" name="request_id" value="{{$contract['id']}}">
+                                <div class="col-lg-3">
+                                    <label class="">Carriers</label>
+                                    <div class="" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','disabled','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
+                                        {!! Form::select('direction',$direction,$contract['direction_id'],['class'=>'m-select2-general form-control','disabled','required','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="contract_id" value="{{$contract['id']}}">
+                            @endif
+                            <input type="hidden" name="selector" value="{{$selector}}">
                             <hr>
                             <div class="form-group m-form__group row">
 
@@ -382,11 +434,18 @@ new registration
                             </div>
                             <br>
                             <div class="form-group m-form__group row">
-                                <div class="col-lg-4">
+
+                                <div class="col-lg-12">
+                                    <br>
+                                    <center>
+                                        <label for="file" class="btn btn-primary" style="padding: 11px 18px;">
+                                            <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                        </label>
+                                        <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                        <div id="info" style="color:red"></div>
+                                    </center>
                                 </div>
-                                <div class="col-lg-6">
-                                    <input type="file" name="file" required>
-                                </div>
+
                             </div>
                             <br>
                             <br>
@@ -428,6 +487,16 @@ new registration
         $('#loadbutton').hide();
     });
 
+    function fileempty(){
+        if( document.getElementById("file").files.length == 0 ){
+            swal("Error!", "Choose File", "error");
+        }
+    }
+    function cambiar(){
+        var pdrs = document.getElementById('file').files[0].name;
+        document.getElementById('info').innerHTML = pdrs;
+    } 
+
     function selectvalidate(){
         var id = $('#CompanyUserId').val();
         //alert(id);
@@ -462,6 +531,7 @@ new registration
                         $('html,body').animate({
                             scrollTop: $("#scrollToHere").offset().top
                         }, 2000);
+                        fileempty();
 
                     } else if (result.dismiss === 'cancel') {
                         swal(

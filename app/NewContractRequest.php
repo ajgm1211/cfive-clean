@@ -20,6 +20,7 @@ class NewContractRequest extends Model
                            'time_total',
                            'time_star_one',
                            'sentemail',
+                           'contract_id',
                            'type',
                            'data'];
 
