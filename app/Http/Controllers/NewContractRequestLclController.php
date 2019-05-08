@@ -11,6 +11,7 @@ use EventIntercom;
 use App\ContractLcl;
 use App\CompanyUser;
 use App\RequetsCarrierLcl;
+use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
 use App\NewContractRequestLcl;
 use App\Notifications\N_general;
@@ -35,7 +36,7 @@ class NewContractRequestLclController extends Controller
         $company_userid = \Auth::user()->company_user_id;
         return view('RequestsLcl.indexClient',compact('company_userid'));
     }
-    
+
     //lista todos los request Admin
     public function create()
     {
@@ -96,11 +97,8 @@ class NewContractRequestLclController extends Controller
                 <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) {
-                return '
-                <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->id.'" title="Proccess LCL Request">
-                    <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
-                </a>
-                &nbsp;&nbsp;
+
+                $buttons = '&nbsp;&nbsp;
                 <a href="/RequestsLcl/RequestImportationLcl/'.$Ncontracts->id.'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
@@ -108,6 +106,22 @@ class NewContractRequestLclController extends Controller
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' References: '.$Ncontracts->namecontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
+
+                if(empty($Ncontracts->contract) != true){
+                    $butPrCt = '
+                <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess LCL Contract">
+                    <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
+                </a>';
+                    $buttons = $butPrCt . $buttons;
+                } else {
+                    $butPrRq = '
+                <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->id.'/1/0" title="Proccess LCL Request">
+                    <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
+                </a>';
+                    $buttons = $butPrRq . $buttons;
+                }
+
+                return $buttons;
             })
 
             ->make();
@@ -241,16 +255,41 @@ class NewContractRequestLclController extends Controller
         $type         = json_encode($type);
         $data         = json_encode($data);
         if($fileBoll){
+
+            $direction_id   = $request->direction;
+            $CompanyUserId  = $request->CompanyUserId;
+
+            $contract     = new ContractLcl();
+            $contract->name             = $request->name;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->status           = 'incomplete';
+            $contract->comments         = 'Loaded from Request';
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->direction_id     = $direction_id;
+            $contract->save();
+
+            $Contract_id = $contract->id;
+
+            foreach($request->carrierM as $carrierVal){
+                ContractCarrierLcl::create([
+                    'carrier_id'    => $carrierVal,
+                    'contract_id'   => $Contract_id
+                ]);
+            }
+
             $Ncontract  = new NewContractRequestLcl();
             $Ncontract->namecontract    = $request->name;
             $Ncontract->validation      = $request->validation_expire;
-            $Ncontract->direction_id    = $request->direction;
-            $Ncontract->company_user_id = $request->CompanyUserId;
+            $Ncontract->direction_id    = $direction_id;
+            $Ncontract->company_user_id = $CompanyUserId;
             $Ncontract->namefile        = $nombre;
             $Ncontract->user_id         = $request->user;
             $Ncontract->created         = $now2;
             $Ncontract->type            = $type;
             $Ncontract->data            = $data;
+            $Ncontract->contract_id     = $Contract_id;
             $Ncontract->save();
 
             foreach($request->carrierM as $carrierVal){
@@ -369,7 +408,7 @@ class NewContractRequestLclController extends Controller
 
                         $user->notify(new N_general(\Auth::user(),$message));
                     }
-                    
+
                     $usercreador = User::find($Ncontract->user_id);
                     $message = "The importation ".$Ncontract->id." was completed";
                     $usercreador->notify(new SlackNotification($message));
@@ -423,16 +462,16 @@ class NewContractRequestLclController extends Controller
         $user   = \Auth::user();
         return view('RequestsLcl.NewRequest',compact('harbor','carrier','user','direction'));
     }
-    
+
     public function similarcontracts(Request $request,$id){
         $contracts = ContractLcl::select(['id',
-                                       'name',
-                                       'company_user_id',
-                                       'account_id',
-                                       'direction_id',
-                                       'validity',
-                                       'expire'
-                                      ]);
+                                          'name',
+                                          'company_user_id',
+                                          'account_id',
+                                          'direction_id',
+                                          'validity',
+                                          'expire'
+                                         ]);
 
         return Datatables::of($contracts->where('company_user_id',$id))
             ->filter(function ($query) use ($request,$id) {

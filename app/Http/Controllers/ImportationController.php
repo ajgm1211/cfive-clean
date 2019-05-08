@@ -454,7 +454,7 @@ class ImportationController extends Controller
     }
 
     // precarga la vista para importar rates o rates mas surchargers desde Request
-    public function requestProccess($id,$selector){
+    public function requestProccess($id,$selector,$request_id){
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
             $requestfcl->load('Requestcarriers');
@@ -474,7 +474,7 @@ class ImportationController extends Controller
         if($selector == 1){
             return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector'));    
         } elseif($selector == 2){
-            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector'));
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id'));
         }
 
     }

@@ -21,6 +21,7 @@ class NewContractRequestLcl extends Model
                            'created',
                            'created_at',
                            'sentemail',
+                           'contract_id',
                            'type',
                            'data'];
 
