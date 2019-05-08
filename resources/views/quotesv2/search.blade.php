@@ -292,7 +292,9 @@
     position: relative;
     transform: rotate(180deg);
   }
-
+  .btn-remarks {
+    width: 95px;
+  }
   /* estilos */
 </style>
 @endsection
@@ -619,22 +621,22 @@
 
 
   <div class="col-lg-12 no-padding">
-    <div class="row card__quote-manual">
+    <div class="row card__quote-manual justify-content-between">
       <div class="col-lg-2" class=""> 
         <label>Carrier Manual</label>
         {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
       </div>
-      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-        <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Quote Manual <span class="la la-arrow-right"></span>
-        </button>
-      </div>
-      <div class="col-lg-6 d-flex align-items-end align-self-end">
+      <div class="col-lg-8 d-flex justify-content-center align-items-end align-self-end">
         @if(isset($arreglo))
         @if($arreglo->isEmpty())
         <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
         @endif
         @endif
       </div><!-- aqui -->
+      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+        <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+        </button>
+      </div>
     </div>
   </div>
   {!! Form::close() !!}
@@ -764,17 +766,18 @@
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
-                        <div class="col-lg-2">
+                        <!--<div class="col-lg-2">
                           <div class="btn-detail__quotes">
                             <span class="workblue">Salling Schedule</span>  
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
                           </div>
-                        </div>
+                        </div>-->
                         @if(isset($arr->contract->remarks))
                         <div class="col-lg-2">
-                          <div class="btn-detail__quotes">
+                          <div class="btn-detail__quotes btn-remarks">
+                           <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" >
                             <span class="workblue">Remarks</span>  
-                            <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
+                            <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
                         @endif
@@ -783,8 +786,9 @@
                         </div>
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
-                            <span class="workblue">Detailetd cost</span>  
-                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
+                           <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
+                            <span class="workblue">Detailed Cots</span>  
+                            <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
                       </div>
