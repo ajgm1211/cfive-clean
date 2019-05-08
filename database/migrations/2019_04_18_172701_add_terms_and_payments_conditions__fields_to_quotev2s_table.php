@@ -14,8 +14,8 @@ class AddTermsAndPaymentsConditionsFieldsToQuotev2sTable extends Migration
     public function up()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->string('payment_conditions',5000)->nullable()->after('remarks');
-            $table->string('terms_and_conditions',5000)->nullable()->after('payment_conditions');
+          /*  $table->string('payment_conditions',5000)->nullable()->after('remarks');
+            $table->string('terms_and_conditions',5000)->nullable()->after('payment_conditions');*/
         });
     }
 
