@@ -1001,7 +1001,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span></div>
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
