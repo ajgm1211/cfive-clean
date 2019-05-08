@@ -164,7 +164,7 @@ Route::prefix('Requests')->group(function () {
 Route::prefix('Importation')->group(function () {
 
     //Importar desde request
-    Route::get('RequestProccessFCL/{id}','ImportationController@requestProccess')->name('process.request.fcl')
+    Route::get('RequestProccessFCL/{id}/{selector}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator']);
 
     // Importar Contracto

@@ -10,6 +10,7 @@ use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
+use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
@@ -98,10 +99,8 @@ class NewContractRequestsController extends Controller
                 <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) {
-                return '
-                <a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'" title="Proccess FCL Request">
-                    <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
-                </a>
+
+                $buttons = '
                 &nbsp;&nbsp;
                 <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
@@ -110,6 +109,20 @@ class NewContractRequestsController extends Controller
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
+
+
+                if(empty($Ncontracts->contract) != true){
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2" title="Proccess FCL Contract">
+                    <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
+                    </a>';
+                    $buttons = $butPrCt . $buttons;
+                } else{
+                    $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1" title="Proccess FCL Request">
+                    <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
+                    </a>';
+                    $buttons = $butPrRq . $buttons;
+                }
+                return $buttons;
             })
 
             ->make();
@@ -227,17 +240,39 @@ class NewContractRequestsController extends Controller
         $type         = json_encode($type);
         $data         = json_encode($data);
         if($fileBoll){
+
+            $CompanyUserId = $request->CompanyUserId;
+            $direction_id  = $request->direction;
+
+            $contract                   = new Contract();
+            $contract->name             = $request->name;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->direction_id     = $direction_id;
+            $contract->status           = 'incomplete';
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->save();
+
+            foreach($request->carrierM as $carrierVal){
+                ContractCarrier::create([
+                    'carrier_id'    => $carrierVal,
+                    'contract_id'   => $contract->id
+                ]);
+            }
+
             $Ncontract  = new NewContractRequest();
             $Ncontract->namecontract    = $request->name;
             $Ncontract->validation      = $request->validation_expire;
-            $Ncontract->direction_id    = $request->direction;
-            $Ncontract->company_user_id = $request->CompanyUserId;
+            $Ncontract->direction_id    = $direction_id;
+            $Ncontract->company_user_id = $CompanyUserId;
             $Ncontract->namefile        = $nombre;
             $Ncontract->user_id         = $request->user;
             $Ncontract->created         = $now2;
             $Ncontract->username_load   = 'Not assigned';
             $Ncontract->type            = $type;
             $Ncontract->data            = $data;
+            $Ncontract->contract_id     = $contract->id;
             $Ncontract->save();
 
             foreach($request->carrierM as $carrierVal){

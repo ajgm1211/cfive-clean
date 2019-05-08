@@ -335,7 +335,7 @@ New \ Status Import  &nbsp;
                 }
             ],
             initComplete: function () {
-                this.api().columns(12).every(function () {
+                this.api().columns(8).every(function () {
                     var column = this;
                     $('#tableContracts .head .head_hide').html('');
 
