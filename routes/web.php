@@ -164,7 +164,7 @@ Route::prefix('Requests')->group(function () {
 Route::prefix('Importation')->group(function () {
 
     //Importar desde request
-    Route::get('RequestProccessFCL/{id}/{selector}','ImportationController@requestProccess')->name('process.request.fcl')
+    Route::get('RequestProccessFCL/{id}/{selector}/{idrqex}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator']);
 
     // Importar Contracto
@@ -295,7 +295,7 @@ Route::prefix('RequestsLcl')->group(function () {
 Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->group(function () {
 
     //Importar desde request
-    Route::get('RequestProccessLCL/{id}','ImportationLclController@indexRequest')->name('process.request.lcl')
+    Route::get('RequestProccessLCL/{id}/{selector}/{idrqex}','ImportationLclController@indexRequest')->name('process.request.lcl')
         ->middleware(['auth','role:administrator']);
 
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');

@@ -137,11 +137,11 @@ new registration
 
                                 <div class="col-lg-3">
                                     <label for="request_id" class=" ">Request id</label>
-                                    {!!  Form::text('request_idd',$contract['id'],['id'=>'request_id',
+                                    {!!  Form::text('request_idd',$request_id,['id'=>'request_id',
                                     'placeholder'=>'Request Id','disabled',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <input type="hidden" name="request_id" value="{{$contract['id']}}">
+                                <input type="hidden" name="request_id" value="{{$request_id}}">
                                 <div class="col-lg-3">
                                     <label class="">Carriers</label>
                                     <div class="" id="carrierMul">

@@ -170,7 +170,7 @@ new registration
                         <div class="form-group m-form__group row"></div>
                         <div class="form-group m-form__group row">
                             @foreach($targetsArr as $targets)
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="m-portlet m-portlet--metal m-portlet--head-solid-bg m-portlet--bordered">
                                     <div class="m-portlet__head">
                                         <div class="m-portlet__head-caption">
