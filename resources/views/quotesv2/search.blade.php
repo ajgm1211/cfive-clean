@@ -316,7 +316,7 @@
             <div class="row">
               <div class="col-lg-2">
                 <label>Quote Type</label>
-                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
               <div class="col-lg-2">
                 <label>Equipment</label>
@@ -353,13 +353,25 @@
               </div>
             </div><br>
             <div class="row">
-              <div class="col-lg-2" id="origin_harbor_label">
-                <label>Origin port</label>
-                {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+              <div class="col-lg-2">
+                <div id="origin_harbor_label">
+                  <label>Origin port</label>
+                  {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                </div>
+                <div id="origin_airport_label" style="display:none;">
+                  <label>Origin airport</label>
+                  <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
+                </div>
               </div>
-              <div class="col-lg-2" id="destination_harbor_label">
-                <label>Destination port</label>
-                {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+              <div class="col-lg-2" >
+                <div id="destination_harbor_label">
+                  <label>Destination port</label>
+                  {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                </div>
+                <div id="destination_airport_label" style="display:none;">
+                  <label>Destination airport</label>
+                  <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
+                </div>
               </div>
               <div class="col-lg-2">
                 <label>Date</label>
@@ -377,6 +389,10 @@
               <div class="col-lg-2">
                 <label>Delivery type</label>
                 {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+              </div>
+              <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
+                <label>Delivery type</label>
+                {{ Form::select('delivery_type',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
@@ -799,7 +815,7 @@
               <!-- Termina tarjeta de cotifzacion -->
 
               <!-- Gastos Origen-->
-             
+
               @if(!$arr->localorigin->isEmpty())
 
               <div class="row no-margin margin-card" id='origin{{$loop->iteration}}' hidden='true' >
@@ -844,7 +860,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span></div>
 
                   </div><br>
                   @endforeach
@@ -989,7 +1005,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span></div>
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
