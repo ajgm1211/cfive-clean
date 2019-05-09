@@ -359,64 +359,69 @@
                                                     <!-- Hide Freight -->
 
                                                     <tr class="hide" id="freight_charges_{{$v}}">
+                                                        <input name="type_id" value="3" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                        <input name="type_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         <td>
-                                                            <input type="text" class="form-control" id="freight_amount_charge" value="" name="origin_ammount_charge[]" />
+                                                            {{ Form::select('surcharge_id[]',$surcharges,null,['class'=>'form-control surcharge_id','required'=>true]) }}
                                                         </td>
                                                         <td>
                                                             {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                         </td>
                                                         <td {{ $equipmentHides['20'] }}>
-                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="amount_c20" class="amount_c20 form-control" id="amount_c20" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['20'] }}>
-                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['20'] }}>
-                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="total_c20" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;" disabled />
                                                         </td>
                                                         <td {{ $equipmentHides['40'] }}>
-                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40'] }}>
-                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="markup_c40" value="" class="form-control markup_c40" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40'] }}>
-                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="total_c40" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;" disabled />
                                                         </td>
                                                         <td {{ $equipmentHides['40hc'] }}>
-                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="amount_c40hc" value="" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40hc'] }}>
-                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="markup_c40hc" value="" class="form-control markup_c40hc" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40hc'] }}>
-                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;" disabled />
 
                                                         </td>
                                                         <td {{ $equipmentHides['40nor'] }}>
-                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="amount_c40nor" value="" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40nor'] }}>
-                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="markup_c40nor" value="" class="form-control markup_c40nor" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['40nor'] }}>
-                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;" disabled />
                                                         </td>
                                                         <td {{ $equipmentHides['45'] }}>
-                                                            <input name="freight_rate[]" value="" class="form-control freight_rate" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="amount_c45" value="" class="form-control amount_c45" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['45'] }}>
-                                                            <input name="freight_surcharge[]" value="" class="form-control freight_surcharge" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="markup_c45" value="" class="form-control markup_c45" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                         </td>
                                                         <td {{ $equipmentHides['45'] }}>
-                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                            <input name="freight_total[]" value="" class="form-control freight_total" type="number" min="0" step="0.0000001" style="max-width: 50px;" disabled/>
                                                         </td>
                                                         <td>
                                                             <div class="input-group">
                                                                 <div class="input-group-btn">
                                                                     <div class="btn-group">
-                                                                        {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control origin_ammount_currency select-2-width']) }}
+                                                                        {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
                                                                     </div>
+                                                                    <a class="btn btn-xs btn-primary-plus store_charge">
+                                                                        <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
+                                                                    </a>
                                                                     <a class="btn btn-xs btn-primary-plus removeFreightCharge">
                                                                         <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
                                                                     </a>
@@ -1025,7 +1030,7 @@
                                                                                 <span class="total_45">{{@$inland_amounts['c45']+@$inland_markups['c45']}}</span>
                                                                             </td>
                                                                             <td>
-                                                                                <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                                                <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                                             </td>
                                                                         </tr>
                                                                         </tbody>

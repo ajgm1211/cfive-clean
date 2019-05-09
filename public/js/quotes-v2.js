@@ -280,6 +280,59 @@ $(document).ready(function() {
   });
 });
 
+//Add rates
+
+//Delete rates
+$(document).on('click', '.store_charge', function () {
+  var id = $(this).closest("tr").find(".automatic_rate_id").val();
+  var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
+  var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
+  var amount_c20 = $(this).closest("tr").find(".amount_c20").val();
+  var markup_c20 = $(this).closest("tr").find(".markup_c20").val();
+  var amount_c40 = $(this).closest("tr").find(".amount_c40").val();
+  var markup_c40 = $(this).closest("tr").find(".markup_c40").val();
+  var amount_c40hc = $(this).closest("tr").find(".amount_c40hc").val();
+  var markup_c40hc = $(this).closest("tr").find(".markup_c40hc").val();
+  var amount_c40nor = $(this).closest("tr").find(".amount_c40nor").val();
+  var markup_c40nor = $(this).closest("tr").find(".markup_c40nor").val();
+  var amount_c45 = $(this).closest("tr").find(".amount_c45").val();
+  var markup_c45 = $(this).closest("tr").find(".markup_c45").val();
+  var type_id = $(this).closest("tr").find(".type_id").val();
+  var currency_id = $(this).closest("tr").find(".currency_id").val();
+  
+    $.ajax({
+      type: 'POST',
+      url: '/v2/quotes/store/charge',
+      data:{
+        "automatic_rate_id":id,
+        "surcharge_id":surcharge_id,
+        "calculation_type_id":calculation_type_id,
+        "amount_c20":amount_c20,
+        "markup_c20":markup_c20,
+        "amount_c40":amount_c40,
+        "markup_c40":markup_c40,
+        "amount_c40hc":amount_c40hc,
+        "markup_c40hc":markup_c40hc,
+        "amount_c40nor":amount_c40nor,
+        "markup_c40nor":markup_c40nor,
+        "amount_c45":amount_c45,
+        "markup_c45":markup_c45,
+        "type_id":type_id,
+        "currency_id":currency_id
+      },
+      success: function(data) {
+        if(data.message=='Ok'){
+          swal(
+            'Done!',
+            'Charge saved successfully',
+            'success'
+          )
+        }
+        setTimeout(location.reload.bind(location), 3000);
+      }
+    });
+});
+
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
     var id=$(this).attr('data-rate-id');
