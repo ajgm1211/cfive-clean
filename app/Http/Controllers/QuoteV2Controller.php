@@ -178,7 +178,7 @@ class QuoteV2Controller extends Controller
     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
     $currency_cfg = Currency::find($company_user->currency_id);
     $equipmentHides = $this->hideContainer($quote->equipment);
-    $calculation_types = CalculationType::where('name','Per Container')->pluck('name','id');
+    $calculation_types = CalculationType::pluck('name','id');
     $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
