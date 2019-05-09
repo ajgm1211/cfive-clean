@@ -95,8 +95,8 @@
                                             <tr>
                                                 <th >ID</th>
                                                 <th >Company</th>
-                                                <th >References</th>
-                                                <th >Type</th>
+                                                <th >Reference</th>
+                                                <th >Direction</th>
                                                 <th >Carrier</th>
                                                 <th >C. Validation</th>
                                                 <th >Date</th>
@@ -130,7 +130,7 @@
                                                     Request Id
                                                 </th>
                                                 <th width="3%" >
-                                                    References
+                                                    Reference
                                                 </th>
                                                 <th width="5%" >
                                                     Date
