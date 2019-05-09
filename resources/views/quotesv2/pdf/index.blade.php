@@ -369,6 +369,11 @@
                             $sum40hc= 0;
                             $sum40nor= 0;
                             $sum45= 0;
+                            $inland20= 0;
+                            $inland40= 0;
+                            $inland40hc= 0;
+                            $inland40nor= 0;
+                            $inland45= 0;                            
                         ?>  
                         @foreach($item as $rate)
                             @foreach($rate->charge as $value)
@@ -380,19 +385,28 @@
                                     $sum45+=$value->total_45;                                
                                 ?>
                             @endforeach
+                            @foreach($rate->inland as $value)
+                                <?php
+                                    $inland20+=$value->total_20;
+                                    $inland40+=$value->total_40;
+                                    $inland40hc+=$value->total_40hc;
+                                    $inland40nor+=$value->total_40nor;
+                                    $inland45+=$value->total_45;                                
+                                ?>
+                            @endforeach
                         @endforeach
                         <tr class="text-center color-table">
                             <td colspan="2">Total Origin Charges</td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                            <td {{ $equipmentHides['20'] }}>{{@$sum20}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{@$sum40}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{@$sum45}}</td>
+                            <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
                             @if($quote->pdf_option->grouped_origin_charges==1)
-                            <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+                                <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                             @else
-                            <td >{{$currency_cfg->alphacode}}</td>
+                                <td >{{$currency_cfg->alphacode}}</td>
                             @endif
                         </tr>
                         @endforeach
