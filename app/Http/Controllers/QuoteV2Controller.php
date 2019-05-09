@@ -431,7 +431,7 @@ class QuoteV2Controller extends Controller
     $dataOrigDest = 'col-md-3';
 
     if($tipo == 'BD'){
-      //$equipmentForm = json_decode($equipmentForm);
+      $equipmentForm = json_decode($equipmentForm);
     }
 
 
