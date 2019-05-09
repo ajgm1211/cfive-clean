@@ -1,10 +1,10 @@
 <div class="form-group m-form__group row">
     <div class="col-lg-2">
-        {!! Form::label('name', 'References') !!}
-        {!! Form::text('name', null, ['placeholder' => 'Contract Name','class' => 'form-control m-input','required' => 'required']) !!}
+        {!! Form::label('name', 'Reference') !!}
+        {!! Form::text('name', null, ['placeholder' => 'Reference','class' => 'form-control m-input','required' => 'required']) !!}
     </div>
     <div class="col-lg-2">
-        {!! Form::label('direction', 'Type') !!}
+        {!! Form::label('direction', 'Direction') !!}
         {!! Form::select('direction',$direction,@$contracts->direction_id, ['class' => 'form-control m-select2-general','required' => 'required']) !!}
     </div>
     <div class="col-lg-2">

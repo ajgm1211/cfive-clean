@@ -123,13 +123,13 @@ New \ Status Import  &nbsp;
                             <thead width="100%">
                                 <tr >
                                     <th title="Field #1">
-                                        References
+                                        Reference
                                     </th>
                                     <th title="Field #2">
                                         Carriers
                                     </th>
                                     <th title="Field #3">
-                                        Type
+                                        Direction
                                     </th>
                                     <th title="Field #9">
                                         Validity
@@ -232,12 +232,12 @@ Request Importation &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                        </div><br><br>
+                        </div>
                         <table class="table tableData" id="tableRates" class="tableRates" width="100%">
                             <thead width="100%" class="tableRatesTH">
                                 <tr>
                                     <th style="width:15%;" title="Field #1">
-                                        References
+                                        Reference
                                     </th>
                                     <th style="width:20%" title="Field #3">
                                         Carrier

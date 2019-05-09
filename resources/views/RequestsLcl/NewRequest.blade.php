@@ -62,13 +62,13 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <br>
                     <div class="row">
                         <div class="col-lg-12">
+                            {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','files'=>true])!!}
 
                             <div class="form-group m-form__group row">
 
@@ -95,24 +95,27 @@ new registration
                                         {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
                                     </div>
                                 </div>
-                                <div class="col-lg-1">
-                                    <br>
-                                    <button type="text" id="btnFiterSubmitSearch" style="padding: 11px 45px;" class="btn btn-primary">Search</button>
-                                </div>
-                                <div class="col-lg-1">
-                                    <br>
-                                    <label for="file" class="btn btn-primary" style="padding: 11px 18px;">
-                                        <i class="la la-cloud-upload"></i>&nbsp; Choose File
-                                    </label>
-                                    <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
-                                    <div id="info" style="color:red"></div>
-                                </div>
-                                <div class="col-lg-1">
-                                    <br>
-
-                                    <button type="submit" class="btn btn-primary" onclick="fileempty()" style="padding: 11px 31px;">
-                                        <i class=""></i>Import File
-                                    </button>
+                                <div class="col-lg-4">
+                                    <div class="form-group row ">
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="text" id="btnFiterSubmitSearch" class="btn btn-primary form-control">Search</button>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <label for="file" class="btn btn-primary form-control" >
+                                                <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                            </label>
+                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                            <div id="info" style="color:red"></div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
+                                                <i class=""></i>Import File
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -273,18 +276,12 @@ new registration
                             <div class="form-group m-form__group row">
 
                             </div>
-
-
+                            {!! Form::close()!!}
                         </div>
+                        <!--end: Form Wizard-->
+                        <div class="col-lg-12">
 
-                    </div>
-                </div>
-            </div>
-        </div>
-        {!! Form::close()!!}
-        <!--end: Form Wizard-->
-        <div class="col-lg-12">
-            <!--<form method="POST" id="search-form" class="form-inline" role="form">
+                            <!--<form method="POST" id="search-form" class="form-inline" role="form">
 @csrf
 <div class="form-group">
 <label for="name">Name</label>
@@ -293,20 +290,21 @@ new registration
 
 <button type="submit" class="btn btn-primary">Search</button>
 </form>-->
-
-            <br>
-            <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
-                <thead >
-                    <tr>
-                        <th style="width:30%">References</th>
-                        <th >Type</th>
-                        <th >Carriers</th>
-                        <th >Validation</th>
-                        <th >Expire</th>
-                    </tr>
-                </thead>
-
-            </table>
+                            <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                                <thead >
+                                    <tr>
+                                        <th style="width:30%">Reference</th>
+                                        <th >Direction</th>
+                                        <th >Carriers</th>
+                                        <th >Validation</th>
+                                        <th >Expire</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!--End::Main Portlet-->

@@ -95,26 +95,29 @@ new registration
                                         {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
                                     </div>
                                 </div>
-                                <div class="col-lg-1">
-                                    <br>
-                                    <button type="text" id="btnFiterSubmitSearch" style="padding: 11px 45px;" class="btn btn-primary">Search</button>
+                                <div class="col-lg-4">
+                                    <div class="form-group row ">
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <br>
+                                            <label for="file" class="btn btn-primary form-control-label form-control" >
+                                                <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                            </label>
+                                            <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                            <div id="info" style="color:red"></div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
+                                                <i class=""></i>Import File
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-lg-1">
-                                    <br>
-                                    <label for="file" class="btn btn-primary" style="padding: 11px 18px;">
-                                        <i class="la la-cloud-upload"></i>&nbsp; Choose File
-                                    </label>
-                                    <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
-                                    <div id="info" style="color:red"></div>
-                                </div>
-                                <div class="col-lg-1">
-                                    <br>
-
-                                    <button type="submit" class="btn btn-primary" onclick="fileempty()" style="padding: 11px 31px;">
-                                        <i class=""></i>Import File
-                                    </button>
-                                </div>
-
                             </div>
 
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
@@ -288,12 +291,11 @@ new registration
 <button type="submit" class="btn btn-primary">Search</button>
 </form>-->
 
-                            <br>
                             <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                                 <thead >
                                     <tr>
-                                        <th style="width:30%">References</th>
-                                        <th >Type</th>
+                                        <th style="width:30%">Reference</th>
+                                        <th >Direction</th>
                                         <th >Carriers</th>
                                         <th >Validation</th>
                                         <th >Expire</th>

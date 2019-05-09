@@ -122,12 +122,12 @@ New \ Status Import  &nbsp;
                             <thead width="100%">
                                 <tr >
                                     <th title="References">
-                                        References
+                                        Reference
                                     </th>
                                     <th title="Carriers">
                                         Carriers
                                     </th><th title="Type">
-                                        Type
+                                        Direction
                                     </th>
                                     <th title="Validity">
                                         Validity
@@ -203,12 +203,12 @@ New \ Status Import  &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                        </div><br><br>
+                        </div>
                         <table class="table tableData text-center" id="tableRates" class="tableRates" width="100%">
                             <thead class="tableRatesTH">
                                 <tr>
                                     <th title="Field #1">
-                                        References
+                                        Reference
                                     </th>
                                     <th title="Field #3">
                                         Carrier
