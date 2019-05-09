@@ -280,6 +280,36 @@ $(document).ready(function() {
   });
 });
 
+//Delete rates
+$(document).on('click', '.delete-rate', function () {
+    var id=$(this).attr('data-rate-id');
+    swal({
+      title: 'Are you sure?',
+      text: "Please confirm!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, I am sure!'
+    }).then(function (result) {
+      if (result.value) {
+        $.ajax({
+            type: 'GET',
+            url: '/v2/quotes/delete/rate/'+id,
+            success: function(data) {
+                if(data.message=='Ok'){
+                    swal(
+                        'Updated!',
+                        'The rete has been deleted.',
+                        'success'
+                        )
+                    $(this).closest('ul').remove();
+                    setTimeout(location.reload.bind(location), 3000);
+                }
+            }
+        });
+      }
+    });
+});
+
 //Edit payments
 $(document).on('click', '#edit-payments', function () {
   $(".payment_conditions_span").attr('hidden','true');
@@ -550,8 +580,13 @@ $(document).on('click', '#update', function () {
         }
         $(".type").val(data.quote['type']);
         $(".type_span").html(data.quote['type']);
-        $(".quote_id").val(data.quote['quote_id']);
-        $(".quote_id_span").html(data.quote['quote_id']);
+        if(data.quote['custom_quote_id']!=''){
+            $(".quote_id").val(data.quote['custom_quote_id']);
+            $(".quote_id_span").html(data.quote['custom_quote_id']);    
+        }else{
+            $(".quote_id").val(data.quote['quote_id']);
+            $(".quote_id_span").html(data.quote['quote_id']);
+        }
         $(".company_id").val(data.quote['company_id']);
         $(".company_id_span").html(data.quote['company_id']);
         $(".status").val(data.quote['status']);
