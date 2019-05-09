@@ -49,20 +49,20 @@
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <!--<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
                             <b>Quotes</b>
                         </span>
                     </a>
-                </li>
-                    <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                        <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                </li>-->
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                    <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
-                            <b>Quotes V2</b>
+                            <b>Quotes</b>
                         </span>
-                        </a>
-                    </li>
+                    </a>
+                </li>
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
