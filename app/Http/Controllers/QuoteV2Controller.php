@@ -823,6 +823,7 @@ class QuoteV2Controller extends Controller
               $arregloMarkupsInDest =  json_encode($markupInDest);
               $inlandDest = new AutomaticInland();
               $inlandDest->quote_id= $quote->id;
+              $inlandDest->automatic_rate_id = $rate->id;
               $inlandDest->provider =  $inlandDestiny->providerName;
               $inlandDest->distance =  $inlandDestiny->km;
               $inlandDest->contract = $info_D->contract->id;
@@ -865,6 +866,7 @@ class QuoteV2Controller extends Controller
               $arregloMarkupsInOrig =  json_encode($markupInOrig);
               $inlandOrig = new AutomaticInland();
               $inlandOrig->quote_id= $quote->id;
+              $inlandOrig->automatic_rate_id = $rate->id;
               $inlandOrig->provider =  $inlandOrigin->providerName;
               $inlandOrig->distance =  $inlandOrigin->km;
               $inlandOrig->contract = $info_D->contract->id;

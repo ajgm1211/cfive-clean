@@ -195,7 +195,7 @@
     text-align: center;
     background-color: #ececec;
   }
-  .width {
+  .wth {
     width: 22%;
   }
   .table-r__quotes {
@@ -696,11 +696,11 @@
                     </div>
                     <div class="col-lg-6 padding-right-table" style="padding-left: 0;">
                       <div style="display:flex; justify-content:space-between">
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['20'] }} ><span class="portcss">20'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40'] }} ><span class="portcss">40</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40hc'] }} ><span class="portcss">40HC'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40nor'] }} ><span class="portcss">40NOR'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['45'] }} ><span class="portcss">45'</span></div>
+                        <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides['20'] }} ><span class="portcss">20'</span></div>
+                        <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides['40'] }} ><span class="portcss">40</span></div>
+                        <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides['40hc'] }} ><span class="portcss">40HC'</span></div>
+                        <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides['40nor'] }} ><span class="portcss">40NOR'</span></div>
+                        <div class="wth" style="display:flex; justify-content:center;" {{ $equipmentHides['45'] }} ><span class="portcss">45'</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ></div>
@@ -751,11 +751,11 @@
 
                     <div class="col-lg-6" style="padding-right: 35px;">
                       <div class="table-r__quotes">
-                        <div class="width " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> {{ $arr->typeCurrency }}</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="wth " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> {{ $arr->typeCurrency }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
@@ -810,11 +810,11 @@
                     <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                        <div class="wth"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
@@ -826,18 +826,18 @@
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width"><span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
+                        <div class="wth"><span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
                         </div>      
-                        <div class="width">
+                        <div class="wth">
                           <span class="bg-rates"> {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}            </b>       
                         </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}>  
+                        <div class="wth" {{ $equipmentHides['40hc'] }}>  
                           {{ isset($localorigin['40hc']) ?  str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right arrow-down"></i>     <b class="monto-down"> {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('montoMarkup')) : '0.00' }}     </b> 
                         </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}>  
+                        <div class="wth" {{ $equipmentHides['40nor'] }}>  
                           <span class="bg-rates"> {{ isset($localorigin['40nor']) ?  str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('monto')) :'0.00' }}</span><span class="bg-rates"> + {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('markup')) : '0.00' }} </span>    <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('montoMarkup')) : '0.00' }}    </b>  
                         </div>
-                        <div class="width" {{ $equipmentHides['45'] }}>     
+                        <div class="wth" {{ $equipmentHides['45'] }}>     
                           <span class="bg-rates"> {{ isset($localorigin['45']) ?  str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>     <b class="monto-down"> {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
                       </div>
@@ -850,11 +850,11 @@
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20O  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40O  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcO  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norO  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20O  }} </span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40O  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcO  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norO  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
@@ -873,11 +873,11 @@
                     <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                        <div class="wth"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
@@ -888,11 +888,11 @@
                     <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ @$rates['markup20'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ @$rates['markup40'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{ @$rates['markup40hc'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40hc'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> <span class="bg-rates">+{{ @$rates['markup40nor'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40nor'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> <span class="bg-rates">+{{ @$rates['markup45'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto45'] }}</b></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ @$rates['markup20'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ @$rates['markup40'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{ @$rates['markup40hc'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40hc'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> <span class="bg-rates">+{{ @$rates['markup40nor'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40nor'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> <span class="bg-rates">+{{ @$rates['markup45'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto45'] }}</b></div>
                       </div>
                     </div>
                     <div class="col-lg-1 colorphacode" >{{$rates['currency_rate']}}</div>
@@ -906,19 +906,19 @@
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width">
+                        <div class="wth">
                          <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
                         </div>      
-                        <div class="width">
+                        <div class="wth">
                           <span class="bg-rates">{{ isset($localfreight['40']) ?  str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('montoMarkup')) : '0.00' }}                  </b>
                         </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}>  
+                        <div class="wth" {{ $equipmentHides['40hc'] }}>  
                          <span class="bg-rates"> {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}>  
+                        <div class="wth" {{ $equipmentHides['40nor'] }}>  
                           <span class="bg-rates">{{ isset($localfreight['40nor']) ?  str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('markup')) : '0.00' }}   </span>  <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
-                        <div class="width" {{ $equipmentHides['45'] }}>     
+                        <div class="wth" {{ $equipmentHides['45'] }}>     
                           <span class="bg-rates">{{ isset($localfreight['45']) ?  str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>   <b class="monto-down">   {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
                       </div>
@@ -931,11 +931,11 @@
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
@@ -956,11 +956,11 @@
                     <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                        <div class="wthwth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                        <div class="wthwth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                        <div class="wthwth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                        <div class="wthwth"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                        <div class="wthwth" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
@@ -972,19 +972,19 @@
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width">
+                        <div class="wth">
                           <span class="bg-rates">   {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }} </span><span class="bg-rates"> + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}   </b>       
                         </div>      
-                        <div class="width">
+                        <div class="wth">
                           <span class="bg-rates"> {{ isset($localdestiny['40']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('monto')) :'0.00' }}</span><span class="bg-rates"> + {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('markup')) : '0.00' }} </span>    <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('montoMarkup')) : '0.00' }}      </b>            
                         </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}>  
+                        <div class="wth" {{ $equipmentHides['40hc'] }}>  
                           <span class="bg-rates">   {{ isset($localdestiny['40hc']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('montoMarkup')) : '0.00' }}   </b>  
                         </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}>  
+                        <div class="wth" {{ $equipmentHides['40nor'] }}>  
                           <span class="bg-rates">  {{ isset($localdestiny['40nor']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
-                        <div class="width" {{ $equipmentHides['45'] }}>     
+                        <div class="wth" {{ $equipmentHides['45'] }}>     
                           <span class="bg-rates"> {{ isset($localdestiny['45']) ?  str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates"> + {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('markup')) : '0.00' }}    </span> <i class="la la-caret-right"></i>      <b class="monto-down">{{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
                       </div>
@@ -999,11 +999,11 @@
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
@@ -1023,11 +1023,11 @@
                     <div class="col-lg-2"><span class="portalphacode">Distance</span></div>
                     <div class="col-lg-6">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
+                        <div class="wth"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
@@ -1046,21 +1046,21 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}<span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}</span><i class="la la-caret-right"></i><b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
+                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}<span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}</span><i class="la la-caret-right"></i><b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
                         </div>
 
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
+                        <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
                           <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' >{{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}</span> 
                           <i class="la la-caret-right"></i><b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b>
                         </div>
 
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
+                        <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
                           <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </span>
                           <i class="la la-caret-right"></i> <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b>
                         </div>
 
-                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
-                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
+                        <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
+                        <div class="wth" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
@@ -1087,23 +1087,23 @@
 
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
+                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
                           <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </span>
                           <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  
                         </div>
 
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
+                        <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
                           <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </span>
                           <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b>
                         </div>
 
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
+                        <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
                           <span class="bg-rates" id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </span>
                           <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b>
                         </div>
 
-                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
-                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
+                        <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
+                        <div class="wth" {{ $equipmentHides['45'] }}>N/A</div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
@@ -1121,11 +1121,11 @@
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Inlands Charges</span></div>
                     <div class="col-lg-6">
                       <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode"><div id='sub_inland_20{{ $arr->id }}'>0.00</div> </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode"><div id='sub_inland_40{{ $arr->id }}'>0.00</div></span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode"><div id='sub_inland_40h{{ $arr->id }}'>0.00</div></span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode"><div  >N/A</div></span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode"><div id='sub_inland_20{{ $arr->id }}'>0.00</div> </span></div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode"><div id='sub_inland_40{{ $arr->id }}'>0.00</div></span></div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="portalphacode"><div id='sub_inland_40h{{ $arr->id }}'>0.00</div></span></div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="portalphacode"><div  >N/A</div></span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
