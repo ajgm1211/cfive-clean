@@ -938,12 +938,7 @@ $(document).on('change', '#quoteType', function (e) {
       $("#chargeable_weight_pkg_input").val(chargeable_weight);
     }
 
-
-
-
   }
-
-
 
   if($(this).val()==3){
 
