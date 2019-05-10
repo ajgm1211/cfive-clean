@@ -749,7 +749,6 @@ function addOriginCharge($value){
 }
 
 function addDestinationCharge($value){
-  alert($value);
   var $template = $('#destination_charges_'+$value),
       $clone = $template
   .clone()
