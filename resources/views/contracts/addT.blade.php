@@ -359,5 +359,16 @@ $validation_expire = 'Please enter validity date';
 
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/addcontracts.js"></script>
+<script>
 
+
+  $('.m-select2-general').select2({
+    placeholder: "Select an option"
+  });
+
+
+
+
+
+</script>
 @stop

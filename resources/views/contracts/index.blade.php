@@ -123,10 +123,13 @@ New \ Status Import  &nbsp;
                             <thead width="100%">
                                 <tr >
                                     <th title="Field #1">
-                                        Name
+                                        Reference
                                     </th>
                                     <th title="Field #2">
-                                        Number
+                                        Carriers
+                                    </th>
+                                    <th title="Field #3">
+                                        Direction
                                     </th>
                                     <th title="Field #9">
                                         Validity
@@ -229,24 +232,20 @@ Request Importation &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                        </div><br><br>
+                        </div>
                         <table class="table tableData" id="tableRates" class="tableRates" width="100%">
-                            <thead class="tableRatesTH">
+                            <thead width="100%" class="tableRatesTH">
                                 <tr>
-                                    <th title="Field #1">
-                                        Name
+                                    <th style="width:15%;" title="Field #1">
+                                        Reference
                                     </th>
-                                    <th title="Field #2">
-                                        Number
-                                    </th>
-
-                                    <th title="Field #3">
+                                    <th style="width:20%" title="Field #3">
                                         Carrier
                                     </th>
-                                    <th title="Field #4">
+                                    <th style="width:20%" title="Field #4">
                                         Origin Port
                                     </th>
-                                    <th title="Field #5">
+                                    <th style="width:20%" title="Field #5">
                                         Destination Port
                                     </th>
                                     <th title="Field #6" >
@@ -270,10 +269,10 @@ Request Importation &nbsp;
                                     <th title="Field #9">
                                         Validity
                                     </th>
-                                    <th title="Field #11">
+                                    <th style="width:20%">
                                         Status
                                     </th>
-                                    <th title="Field #12">
+                                    <th  title="Field #12">
                                         Options
                                     </th>
 
@@ -335,17 +334,15 @@ Request Importation &nbsp;
             ordering: true,
             searching: true,
             processing: true,
-            stateSave: true,
             serverSide: true,
+            autoWidth: true,
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('contract.table') }}",
             "columnDefs": [
                 { className: "truncate", "targets": [ 0,1] }
             ],
             columns: [
-
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
                 {data: 'carrier', name: 'carrier'},
                 {data: 'port_orig', name: 'port_orig'},
                 {data: 'port_dest', name: 'port_dest'},
@@ -360,12 +357,12 @@ Request Importation &nbsp;
                 {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-                this.api().columns(12).every(function () {
+                this.api().columns([1,2,3,11]).every(function () {
                     var column = this;
-                    $('#tableContracts .head .head_hide').html('');
+                    $('#tableRates .head .head_hide').html('');
 
-                    var select = $('<select id="formfilter" class="filterdropdown search2"><option value="">' + $(column.header()).text() + '</option></select>')
-                    .prependTo($(column.header()).empty())
+                    var select = $('<select id="formfilter" class="filterdropdown form-control "><option value="">' + $(column.header()).text() + '</option></select><br>')
+                    .prependTo($(column.header()))
                     .on('change', function () {
                         var val = new Array();
                         //set val to current element in the dropdown.
@@ -405,14 +402,15 @@ Request Importation &nbsp;
             ],
             columns: [
                 {data: 'name', name: 'name'},
-                {data: 'number', name: 'number'},
+                {data: 'carrier', name: 'carrier'},
+                {data: 'direction', name: 'direction'},
                 {data: 'validity', name: 'validity'},
                 {data: 'expire', name: 'expire'},
                 {data: 'status', name: 'status'},
                 {data: 'options', name: 'options'}
             ],
             initComplete: function () {
-                this.api().columns(4).every(function () {
+                this.api().columns([0,1,2,3,4,5]).every(function () {
                     var column = this;
                     $('#tableContracts .head .head_hide').html('');
 

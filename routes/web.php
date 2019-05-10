@@ -135,6 +135,9 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 Route::prefix('Requests')->group(function () {
     //New Request Importation
     
+    Route::get('SimilarContracts/{id}','NewContractRequestsController@similarcontracts')->name('Similar.Contracts.Request')
+      ->middleware(['auth','role:administrator|company|subuser']);
+    
     Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
     
     Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
@@ -161,7 +164,7 @@ Route::prefix('Requests')->group(function () {
 Route::prefix('Importation')->group(function () {
 
     //Importar desde request
-    Route::get('RequestProccessFCL/{id}','ImportationController@requestProccess')->name('process.request.fcl')
+    Route::get('RequestProccessFCL/{id}/{selector}/{idrqex}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator']);
 
     // Importar Contracto
@@ -263,6 +266,10 @@ Route::prefix('Importation')->group(function () {
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
+    
+    Route::get('SimilarContractsLcl/{id}','NewContractRequestLclController@similarcontracts')->name('Similar.Contracts.Request.Lcl')
+      ->middleware(['auth','role:administrator|company|subuser']);
+    
     Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
         ->middleware(['auth','role:administrator|company|subuser']);
 
@@ -288,7 +295,7 @@ Route::prefix('RequestsLcl')->group(function () {
 Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->group(function () {
 
     //Importar desde request
-    Route::get('RequestProccessLCL/{id}','ImportationLclController@indexRequest')->name('process.request.lcl')
+    Route::get('RequestProccessLCL/{id}/{selector}/{idrqex}','ImportationLclController@indexRequest')->name('process.request.lcl')
         ->middleware(['auth','role:administrator']);
 
     Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
