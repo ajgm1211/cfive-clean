@@ -1,3 +1,4 @@
+CREATE PROCEDURE select_for_company_rates(IN company_user_id int)
 SELECT ra.id
 ,cont.company_user_id,cont.id as contract_id,
 cont.name as name, 
@@ -16,4 +17,4 @@ INNER JOIN harbors har_orig ON har_orig.id = ra.origin_port
 INNER JOIN harbors har_dest ON har_dest.id = ra.destiny_port 
 INNER JOIN carriers car on car.id = ra.carrier_id 
 INNER JOIN currency curr on curr.id = ra.currency_id 
-INNER JOIN contracts cont on cont.id = ra.contract_id WHERE cont.company_user_id = 1
+INNER JOIN contracts cont on cont.id = ra.contract_id WHERE cont.company_user_id = company_user_id
