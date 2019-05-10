@@ -2,36 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+use App\User;
+use App\Harbor;
 use App\Company;
-use Illuminate\Http\Request;
+use App\RateLcl;
 use App\Contact;
 use App\Country;
 use App\Carrier;
-use App\Harbor;
-use App\RateLcl;
 use App\Currency;
-use App\CalculationTypeLcl;
 use App\Surcharge;
-use App\User;
-use App\TypeDestiny;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Excel;
-use Illuminate\Support\Facades\Log;
-use Yajra\Datatables\Datatables;
+use EventIntercom;
+use App\Direction;
 use App\CompanyUser;
-use App\ViewLocalCharges;
+use App\TypeDestiny;
 use App\ViewRatesLcl;
-use App\ViewContractLclRates;
-use Illuminate\Support\Collection as Collection;
 use App\ContractLcl;
 use App\LocalChargeLcl;
-use App\LocalCharCarrierLcl;
 use App\LocalCharPortLcl;
+use App\ViewLocalCharges;
+use App\ContractCarrierLcl;
+use App\CalculationTypeLcl;
+use App\LocalCharCarrierLcl;
+use Illuminate\Http\Request;
 use App\LocalCharCountryLcl;
-use App\ContractLclCompanyRestriction;
+use App\ViewContractLclRates;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Log;
 use App\ContractLclUserRestriction;
-use EventIntercom;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use App\ContractLclCompanyRestriction;
+use Illuminate\Support\Collection as Collection;
 
 class ContractsLclController extends Controller
 {
@@ -53,6 +55,11 @@ class ContractsLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name','id');
         $country = Country::all()->pluck('name','id');
         $carrier = Carrier::all()->pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $currency = Currency::all()->pluck('alphacode','id');
         $calculationT = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny = TypeDestiny::all()->pluck('description','id');
@@ -65,18 +72,18 @@ class ContractsLclController extends Controller
         })->pluck('first_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
 
-        return view('contractsLcl.add',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg'));
+        return view('contractsLcl.add',compact('country','carrier','harbor','direction','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg'));
 
     }
 
@@ -133,16 +140,25 @@ class ContractsLclController extends Controller
     public function store(Request $request)
     {
         $contract = new ContractLcl($request->all());
-        $contract->company_user_id =Auth::user()->company_user_id;
-        $validation = explode('/',$request->validation_expire);
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
-        $contract->comments =$request->input('comments');
+        $contract->company_user_id  = Auth::user()->company_user_id;
+        $validation                 = explode('/',$request->validation_expire);
+        $contract->validity         = $validation[0];
+        $contract->expire           = $validation[1];
+        $contract->direction_id     = $request->direction;
+        $contract->comments         = $request->input('comments');
         $contract->save();
-        $details = $request->input('currency_id');
+
+        foreach($request->carrierAr as $carrierFA){
+            ContractCarrierLcl::create([
+                'carrier_id'    => $carrierFA,
+                'contract_id'   => $contract->id
+            ]);
+        }
+
+        $details        = $request->input('currency_id');
         $detailscharges = $request->input('localcurrency_id');
-        $companies = $request->input('companies');
-        $users = $request->input('users');
+        $companies      = $request->input('companies');
+        $users          = $request->input('users');
 
 
         // For Each de los rates
@@ -298,6 +314,7 @@ class ContractsLclController extends Controller
         $harbor = Harbor::all()->pluck('display_name','id');
         $country = Country::all()->pluck('name','id');
         $carrier = Carrier::all()->pluck('name','id');
+        $direction = Direction::pluck('name','id');
         $currency = Currency::all()->pluck('alphacode','id');
         $calculationT = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny = TypeDestiny::all()->pluck('description','id');
@@ -315,22 +332,22 @@ class ContractsLclController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         if(Auth::user()->type == 'admin' || Auth::user()->type == 'subuser' ){
             $users =  User::whereHas('companyUser', function($q)
-            {
-                $q->where('company_user_id', '=', Auth::user()->company_user_id);
-            })->pluck('Name','id');
+                                     {
+                                         $q->where('company_user_id', '=', Auth::user()->company_user_id);
+                                     })->pluck('Name','id');
         }
         //dd($contracts);
         if (!$request->session()->exists('activeSLcl')) {
             $request->session()->flash('activeRLcl', 'active');
         }
 
-        return view('contractsLcl.edit', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','currency_cfg'));
+        return view('contractsLcl.edit', compact('contracts','harbor','country','carrier','currency','direction','calculationT','surcharge','typedestiny','company','companies','users','user','id','currency_cfg'));
     }
 
     /**
@@ -342,13 +359,22 @@ class ContractsLclController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $requestForm = $request->all();
-        $contract = ContractLcl::find($id);
-        $validation = explode('/',$request->validation_expire);
-        $contract->validity = $validation[0];
-        $contract->expire = $validation[1];
-        $contract->comments =$request->input('comments');
+        $requestForm            = $request->all();
+        $contract               = ContractLcl::find($id);
+        $validation             = explode('/',$request->validation_expire);
+        $contract->validity     = $validation[0];
+        $contract->expire       = $validation[1];
+        $contract->direction_id = $request->direction;
+        $contract->comments     = $request->input('comments');
         $contract->update($requestForm);
+
+        ContractCarrierLcl::where('contract_id',$id)->delete();
+        foreach($request->carrierAr as $carrierFA){
+            ContractCarrierLcl::create([
+                'carrier_id'    => $carrierFA,
+                'contract_id'   => $id
+            ]);
+        }
 
         $companies = $request->input('companies');
         $users = $request->input('users');
@@ -722,9 +748,24 @@ class ContractsLclController extends Controller
     }// local charges en edit
     public function contractlclTable(){
 
-        $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)
+            ->with('carriers','direction')
+            ->get();
+        
         return \DataTables::collection($contractG)
-
+            ->addColumn('carrier',function(ContractLcl $contractG){
+                if(count($contractG->carriers->pluck('carrier')->pluck('name')) != 0){
+                    return str_replace(['[',']','"'],' ',$contractG->carriers->pluck('carrier')->pluck('name'));
+                }
+                return '-----------------';
+            })
+             ->addColumn('direction', function (ContractLcl $contractG) {
+                if(count($contractG->direction) != 0){
+                    return $contractG->direction->name;
+                } else {
+                    return '-----------------';
+                }
+            }) 
             ->addColumn('options', function (ContractLcl $contractG) {
                 return "      <a href='contractslcl/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>

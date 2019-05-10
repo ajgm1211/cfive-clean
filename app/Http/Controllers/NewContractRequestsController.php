@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Harbor;
 use App\Carrier;
+use App\Contract;
 use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
+use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
@@ -36,9 +38,9 @@ class NewContractRequestsController extends Controller
     public function create()
     {
         /*$Ncontracts = NewContractRequest::with('user','companyuser','Requestcarriers.carrier','direction')->orderBy('id', 'desc')->get();*/
-        
+
         $Ncontracts = DB::select('call  select_request_fcl()');
-//        dd($Ncontracts);
+        //        dd($Ncontracts);
         //dd($Ncontracts[0]['Requestcarriers']->pluck('carrier')->pluck('name'));
 
         return Datatables::of($Ncontracts)
@@ -97,10 +99,8 @@ class NewContractRequestsController extends Controller
                 <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) {
-                return '
-                <a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'" title="Proccess FCL Request">
-                    <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
-                </a>
+
+                $buttons = '
                 &nbsp;&nbsp;
                 <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
@@ -109,6 +109,20 @@ class NewContractRequestsController extends Controller
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
+
+
+                if(empty($Ncontracts->contract) != true){
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
+                    <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
+                    </a>';
+                    $buttons = $butPrCt . $buttons;
+                } else{
+                    $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
+                    <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
+                    </a>';
+                    $buttons = $butPrRq . $buttons;
+                }
+                return $buttons;
             })
 
             ->make();
@@ -226,18 +240,39 @@ class NewContractRequestsController extends Controller
         $type         = json_encode($type);
         $data         = json_encode($data);
         if($fileBoll){
+
+            $CompanyUserId = $request->CompanyUserId;
+            $direction_id  = $request->direction;
+
+            $contract                   = new Contract();
+            $contract->name             = $request->name;
+            $validity                   = explode('/',$request->validation_expire);
+            $contract->validity         = $validity[0];
+            $contract->expire           = $validity[1];
+            $contract->direction_id     = $direction_id;
+            $contract->status           = 'incomplete';
+            $contract->company_user_id  = $CompanyUserId;
+            $contract->save();
+
+            foreach($request->carrierM as $carrierVal){
+                ContractCarrier::create([
+                    'carrier_id'    => $carrierVal,
+                    'contract_id'   => $contract->id
+                ]);
+            }
+
             $Ncontract  = new NewContractRequest();
             $Ncontract->namecontract    = $request->name;
-            $Ncontract->numbercontract  = $request->number;
             $Ncontract->validation      = $request->validation_expire;
-            $Ncontract->direction_id    = $request->direction;
-            $Ncontract->company_user_id = $request->CompanyUserId;
+            $Ncontract->direction_id    = $direction_id;
+            $Ncontract->company_user_id = $CompanyUserId;
             $Ncontract->namefile        = $nombre;
             $Ncontract->user_id         = $request->user;
             $Ncontract->created         = $now2;
             $Ncontract->username_load   = 'Not assigned';
             $Ncontract->type            = $type;
             $Ncontract->data            = $data;
+            $Ncontract->contract_id     = $contract->id;
             $Ncontract->save();
 
             foreach($request->carrierM as $carrierVal){
@@ -502,9 +537,65 @@ class NewContractRequestsController extends Controller
     public function LoadViewRequestImporContractFcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
-        $direction      = Direction::all()->pluck('name','id');
-        $user   = \Auth::user();
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        $user           = \Auth::user();
+        foreach($direction2 as $d){
+            //dd($direction2);
+            $direction[$d['id']]=$d->name;
+        }
+        //dd($direction);
         return view('Requests.NewRequest',compact('harbor','carrier','user','direction'));
+    }
+
+    // Similar Contracts ----------------------------------------------------------------
+
+    public function similarcontracts(Request $request,$id){
+        $contracts = Contract::select(['id',
+                                       'name',
+                                       'number',
+                                       'company_user_id',
+                                       'account_id',
+                                       'direction_id',
+                                       'validity',
+                                       'expire'
+                                      ]);
+
+        return Datatables::of($contracts->where('company_user_id',$id))
+            ->filter(function ($query) use ($request,$id) {
+                if ($request->has('direction') && $request->get('direction') != null) {
+                    $query->where('direction_id', '=',$request->get('direction'));
+                } else{
+                    $query;
+                }
+                if ($request->has('carrierM')) {
+                    $query->whereHas('carriers',function($q) use($request) {
+                        $q->whereIn('carrier_id',$request->get('carrierM'));
+                    });
+                }
+                if($request->has('dateO') && $request->get('dateO') != null && $request->has('dateT') && $request->get('dateT') != null) {
+                    $query->where('validity', '=',$request->get('dateO'))->where('expire', '=',$request->get('dateT'));
+                }
+
+            })
+            ->addColumn('carrier', function ($contracts) {
+                $dd = $contracts->load('carriers.carrier');
+                if(count($dd->carriers) != 0){
+                    return str_replace(['[',']','"'],' ',$dd->carriers->pluck('carrier')->pluck('name'));
+                } else {
+                    return '-------';
+                }
+
+            })
+            ->addColumn('direction', function ($contracts) {
+                $dds = $contracts->load('direction');
+                if(count($dds->direction) != 0){
+                    return $dds->direction->name;
+                } else {
+                    return '-------';
+                }
+            })
+            ->make(true);
     }
 
     // TEST Request Importation ----------------------------------------------------------
