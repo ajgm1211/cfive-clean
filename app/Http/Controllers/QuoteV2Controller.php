@@ -92,7 +92,6 @@ class QuoteV2Controller extends Controller
       $origin         = '';
       $destination    = '';
       if(isset($quote->company)){
-        $custom_id  = $quote->custom_quote_id;
         $company  = $quote->company->business_name;
       }
 
@@ -107,16 +106,37 @@ class QuoteV2Controller extends Controller
       } else {
         $destination = $quote->destination_address;
       }*/
-
+      if($quote->custom_quote_id!=''){
+        $id  = $quote->custom_quote_id;
+      }else{
+        $id = $quote->quote_id;
+      }
+      $rates = AutomaticRate::where('quote_id',$quote->id)->get();
+      $origin = '';
+      foreach($rates as $rate){
+        if($rate->origin_port_id!=''){
+          $origin.='<li>'.$rate->origin_port->name.'</li>';
+        }else if($rate->origin_address!=''){
+          $origin.='<li>'.$rate->origin_address.'</li>';
+        }
+      }
+      $destination = '';
+      foreach($rates as $rate){
+        if($rate->destination_port_id!=''){
+          $destination.='<li>'.$rate->destination_port->name.'</li>';
+        }else if($rate->destination_address!=''){
+          $destination.='<li>'.$rate->destination_address.'</li>';
+        }
+      }
+         
       $data = [
-        'id'            => $quote->id,
-        'custom_id'     => $custom_id,
+        'id'            => $id,
         'idSet'         => setearRouteKey($quote->id),
         'client'        => $company,
         'created'       => date_format($quote->created_at, 'M d, Y H:i'),
         'user'          => $quote->user->name.' '.$quote->user->lastname,
-        'origin'        => null,
-        'destination'   => null,
+        'origin'        => '<ul>'.$origin.'</ul>',
+        'destination'   => '<ul>'.$destination.'</ul>',
         'type'          => $quote->type,
       ];
       $colletions->push($data);
@@ -153,7 +173,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-    ->editColumn('id', 'ID: {{$id}}')->make(true);
+    ->editColumn('id', '{{$id}}')->make(true);
   }
 
   public function show($id)
@@ -409,7 +429,7 @@ class QuoteV2Controller extends Controller
       $iniciales = $iniciales."-1";
     }else{
 
-      $numeroFinal = explode('-',$quote->custom_quote_id);
+      $numeroFinal = explode('-',$quote->quote_id);
 
       $numeroFinal = $numeroFinal[1] +1;
 
@@ -433,7 +453,6 @@ class QuoteV2Controller extends Controller
     if($tipo == 'BD'){
       $equipmentForm = json_decode($equipmentForm);
     }
-
 
     $countEquipment = count($equipmentForm);
     $countEquipment = 5 - $countEquipment;
@@ -1114,7 +1133,7 @@ class QuoteV2Controller extends Controller
           }else{
             $typeCurrency =  $currency_cfg->alphacode;
           }
-          $currency_rate=$this->ratesCurrency($amounts->currency_id,'USD');
+          $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
           $array_amounts = json_decode($amounts->amount,true);
           $array_markups = json_decode($amounts->markups,true);
           if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
@@ -1238,8 +1257,21 @@ class QuoteV2Controller extends Controller
       $since = $dateQ[0];
       $until = $dateQ[1];
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
+
+      $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+      $currency_id = $company->companyUser->currency_id;
+      $currency = Currency::find($currency_id);
+
+      $pdf_option = new PdfOption();
+      $pdf_option->quote_id=$quote->id;
+      $pdf_option->show_type='total in';
+      $pdf_option->grouped_total_currency=0;
+      $pdf_option->total_in_currency=$currency->alphacode;
+      $pdf_option->language='English';
+      $pdf_option->save();
+
     }else{
 
       $dateQ = explode('/',$request->input('date'));

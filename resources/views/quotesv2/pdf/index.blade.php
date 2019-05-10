@@ -255,7 +255,7 @@
                         <td {{ $equipmentHides['40hc'] }}>{{number_format((float)@$sum40hc+@$inland40hc, 2, '.', '')}}</td>
                         <td {{ $equipmentHides['40nor'] }}>{{number_format((float)@$sum40nor+@$inland40nor, 2, '.', '')}}</td>
                         <td {{ $equipmentHides['45'] }}>{{number_format((float)@$sum45+@$inland45, 2, '.', '')}}</td>
-                        <td >{{$quote->pdf_option->grouped_total_currency==0 ? $rate->currency->alphacode:$quote->pdf_option->total_in_currency}}</td>
+                        <td >{{$quote->pdf_option->grouped_total_currency==0 ?$currency_cfg->alphacode:$quote->pdf_option->total_in_currency}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -324,7 +324,11 @@
                         <td {{ $equipmentHides['40hc'] }}>{{@$total40hc}}</td>
                         <td {{ $equipmentHides['40nor'] }}>{{@$total40nor}}</td>
                         <td {{ $equipmentHides['45'] }}>{{@$total45}}</td>                            
-                        <td>{{$rate->currency->alphacode}}</td>
+                        @if($quote->pdf_option->grouped_freight_charges==1)
+                            <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                        @else
+                            <td >{{$currency_cfg->alphacode}}</td>
+                        @endif
                     </tr>
                 @endforeach
             </tbody>
