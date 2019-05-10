@@ -50,22 +50,57 @@ class ContractsController extends Controller
     {
 
         $model      = new  Rate();
-        $mrates     = $model->hydrate(
-            DB::select(
-                'call select_for_company_rates('.\Auth::user()->company_user_id.')'
-            )
-        );
 
-        dd($mrates[0]);
-        
         if(\Auth::user()->type=='admin'){
-            $arreglo = Contract::with('rates','carriers','direction')->get();
-            $contractG = Contract::all();
+            $arreglo    = Contract::with('rates','carriers','direction')->get();
+            $contractG  = Contract::all();
+            $mrates     = $model->hydrate(
+                DB::select(
+                    'call select_all_rates()'
+                )
+            );
+
         }else{
-            $arreglo = Contract::where('company_user_id','=',Auth::user()->company_user_id)->with('rates','carriers','direction')->get();
-            $contractG = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+            $arreglo    = Contract::where('company_user_id','=',Auth::user()->company_user_id)
+                ->with('rates','carriers','direction')->get();
+            $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+            $mrates     = $model->hydrate(
+                DB::select(
+                    'call select_for_company_rates('.\Auth::user()->company_user_id.')'
+                )
+            );
         }
-        return view('contracts/index', compact('arreglo','contractG'));
+
+        $carriersR       = $mrates->unique('carrier');
+        $carrierAr = [ 'null' => 'Select option'];
+        foreach($carriersR as $carrierR){
+            $carrierAr[$carrierR->carrier] = $carrierR->carrier;
+        }
+
+        $originsR        = $mrates->unique('port_orig');
+        $originsAr = [ 'null' => 'Select option'];
+        foreach($originsR as $originR){
+            $originsAr[$originR->port_orig] = $originR->port_orig;
+        }
+
+        $destinationsR   = $mrates->unique('port_dest');
+        $destinationAr = [ 'null' => 'Select option'];
+        foreach($destinationsR as $destinationR){
+            $destinationAr[$destinationR->port_dest] = $destinationR->port_dest;
+        }
+
+        $statussR   = $mrates->unique('status');
+        $statusAr  = [ 'null' => 'Select option'];
+        foreach($statussR as $statusR){
+            $statusAr[$statusR->status] = $statusR->status;
+        }
+        $values = [
+            'carrier'       => $carrierAr,
+            'origin'        => $originsAr,
+            'destination'   => $destinationAr,
+            'status'        => $statusAr
+        ];
+        return view('contracts/index', compact('arreglo','contractG','values'));
     }
 
     public function add()

@@ -25,6 +25,7 @@ class UsersTableSeeder extends Seeder
                 'phone' => '+56972374655',
                 'password' =>  bcrypt('secret'),
                 'type' => 'admin',
+                'company_user_id' => 1,
                 'verified' => 1,
                 'state' => 1,
                 'created_at' => $date,
