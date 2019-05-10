@@ -32,6 +32,7 @@ use App\ViewContractRates;
 use Illuminate\Http\Request;
 use App\ContractUserRestriction;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use App\ContractCompanyRestriction;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,16 @@ class ContractsController extends Controller
 
     public function index()
     {
+
+        $model      = new  Rate();
+        $mrates     = $model->hydrate(
+            DB::select(
+                'call select_for_company_rates('.\Auth::user()->company_user_id.')'
+            )
+        );
+
+        dd($mrates[0]);
+        
         if(\Auth::user()->type=='admin'){
             $arreglo = Contract::with('rates','carriers','direction')->get();
             $contractG = Contract::all();
