@@ -1406,9 +1406,11 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
   var total_weight=0;
 
   if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+
     total_volume=$('#total_volume').val();
     total_weight=$('#total_weight').val();
-    if($("input[name='type']:checked").val()==2){
+    if($("#quoteType :selected").val()==2){
+
       total_weight=total_weight/1000;
       if(total_volume>total_weight){
         chargeable_weight=total_volume;
@@ -1416,7 +1418,8 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
         chargeable_weight=total_weight;
       }
       $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-    }else if($("input[name='type']:checked").val()==3){
+    }else  if($("#quoteType :selected").val()==3){
+      
       total_volume=total_volume*166;
       if(total_volume>total_weight){
         chargeable_weight=total_volume;
