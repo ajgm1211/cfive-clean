@@ -252,50 +252,15 @@
                                                         @if($item->type_id==3)
                                                             <?php
                                                                 $rate_id=$item->automatic_rate_id;
+                                                                
                                                                 $freight_amounts = json_decode($item->amount,true);
                                                                 $freight_markups = json_decode($item->markups,true);
-
-                                                                //Calculating totals freights
-                                                                if(isset($freight_amounts['c20']) && isset($freight_markups['c20'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total20=($freight_amounts['c20']+$freight_markups['c20'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total20=($freight_amounts['c20']+$freight_markups['c20'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($freight_amounts['c40']) && isset($freight_markups['c40'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40=($freight_amounts['c40']+$freight_markups['c40'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40=($freight_amounts['c40']+$freight_markups['c40'])/$item->currency_eur;
-                                                                    }                                                                   
-                                                                }
-                                                                if(isset($freight_amounts['c40hc']) && isset($freight_markups['c40hc'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40hc=($freight_amounts['c40hc']+$freight_markups['c40hc'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40hc=($freight_amounts['c40hc']+$freight_markups['c40hc'])/$item->currency_eur;
-                                                                    }                                                                    
-                                                                }
-                                                                if(isset($freight_amounts['c40nor']) && isset($freight_markups['c40nor'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40nor=($freight_amounts['c40nor']+$freight_markups['c40nor'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40nor=($freight_amounts['c40nor']+$freight_markups['c40nor'])/$item->currency_eur;
-                                                                    }                                                                    
-                                                                }
-                                                                if(isset($freight_amounts['c45']) && isset($freight_markups['c45'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total45=($freight_amounts['c45']+$freight_markups['c45'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total45=($freight_amounts['c45']+$freight_markups['c45'])/$item->currency_eur;
-                                                                    }                                                                    
-                                                                }
-                                                                $sum20+=@$total20;
-                                                                $sum40+=@$total40;
-                                                                $sum40hc+=@$total40hc;
-                                                                $sum40nor+=@$total40nor;
-                                                                $sum45+=@$total45;
+                                                                
+                                                                $sum20+=$item->total_20;
+                                                                $sum40+=@$item->total_40;
+                                                                $sum40hc+=@$item->total_40hc;
+                                                                $sum40nor+=@$item->total_40nor;
+                                                                $sum45+=@$item->total_45;
                                                             ?>
                                                             <tr >
                                                                 <td>
@@ -497,48 +462,11 @@
                                                                 $origin_amounts = json_decode($item->amount,true);
                                                                 $origin_markups = json_decode($item->markups,true);
                                                         
-                                                                //Calculating totals origins
-
-                                                                if(isset($origin_amounts['c20']) && isset($origin_markups['c20'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total20=($origin_amounts['c20']+$origin_markups['c20'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total20=($origin_amounts['c20']+$origin_markups['c20'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($origin_amounts['c40']) && isset($origin_markups['c40'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40=($origin_amounts['c40']+$origin_markups['c40'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40=($origin_amounts['c40']+$origin_markups['c40'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($origin_amounts['c40hc']) && isset($origin_markups['c40hc'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40hc=($origin_amounts['c40hc']+$origin_markups['c40hc'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40hc=($origin_amounts['c40hc']+$origin_markups['c40hc'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($origin_amounts['c40nor']) && isset($origin_markups['c40nor'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40nor=($origin_amounts['c40nor']+$origin_markups['c40nor'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40nor=($origin_amounts['c40nor']+$origin_markups['c40nor'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($origin_amounts['c45']) && isset($origin_markups['c45'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total45=($origin_amounts['c45']+$origin_markups['c45'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total45=($origin_amounts['c45']+$origin_markups['c45'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                $sum_origin_20+=@$total20;
-                                                                $sum_origin_40+=@$total40;
-                                                                $sum_origin_40hc+=@$total40hc;
-                                                                $sum_origin_40nor+=@$total40nor;
-                                                                $sum_origin_45+=@$total45;
+                                                                $sum_origin_20+=@$item->total_20;
+                                                                $sum_origin_40+=@$item->total_40;
+                                                                $sum_origin_40hc+=@$item->total_40hc;
+                                                                $sum_origin_40nor+=@$item->total_40nor;
+                                                                $sum_origin_45+=@$item->total_45;
                                                             ?>
                                                             <tr>
                                                                 <td>
@@ -739,48 +667,12 @@
                                                                 $rate_id=$item->automatic_rate_id;
                                                                 $destination_amounts = json_decode($item->amount,true);
                                                                 $destination_markups = json_decode($item->markups,true);
-                                                        
-                                                                //Calculating totals destinations
-                                                                if(isset($destination_amounts['c20']) && isset($destination_markups['c20'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total20=($destination_amounts['c20']+$destination_markups['c20'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total20=($destination_amounts['c20']+$destination_markups['c20'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($destination_amounts['c40']) && isset($destination_markups['c40'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40=($destination_amounts['c40']+$destination_markups['c40'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40=($destination_amounts['c40']+$destination_markups['c40'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($destination_amounts['c40hc']) && isset($destination_markups['c40hc'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40hc=($destination_amounts['c40hc']+$destination_markups['c40hc'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40hc=($destination_amounts['c40hc']+$destination_markups['c40hc'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($destination_amounts['c40nor']) && isset($destination_markups['c40nor'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total40nor=($destination_amounts['c40nor']+$destination_markups['c40nor'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total40nor=($destination_amounts['c40nor']+$destination_markups['c40nor'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                if(isset($destination_amounts['c45']) && isset($destination_markups['c45'])){
-                                                                    if($currency_cfg->alphacode=='USD'){
-                                                                        $total45=($destination_amounts['c45']+$destination_markups['c45'])/$item->currency_usd;
-                                                                    }else{
-                                                                        $total45=($destination_amounts['c45']+$destination_markups['c45'])/$item->currency_eur;
-                                                                    }
-                                                                }
-                                                                $sum_destination_20+=@$total20;
-                                                                $sum_destination_40+=@$total40;
-                                                                $sum_destination_40hc+=@$total40hc;
-                                                                $sum_destination_40nor+=@$total40nor;
-                                                                $sum_destination_45+=@$total45;
+
+                                                                $sum_destination_20+=@$item->total_20;
+                                                                $sum_destination_40+=@$item->total_40;
+                                                                $sum_destination_40hc+=@$item->total_40hc;
+                                                                $sum_destination_40nor+=@$item->total_40nor;
+                                                                $sum_destination_45+=@$item->total_45;
                                                             ?>                                                     
 
                                                             <tr>
