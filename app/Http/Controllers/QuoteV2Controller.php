@@ -1285,6 +1285,16 @@ class QuoteV2Controller extends Controller
       $equipment =  stripslashes(json_encode($request->input('equipment')));
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
+
+      $pdf_option = new PdfOption();
+      $pdf_option->quote_id=$quote->id;
+      $pdf_option->show_type='total in';
+      $pdf_option->grouped_total_currency=0;
+      $pdf_option->total_in_currency=$currency->alphacode;
+      $pdf_option->language='English';
+      $pdf_option->save();
+
+
       // MANUAL RATE
 
 

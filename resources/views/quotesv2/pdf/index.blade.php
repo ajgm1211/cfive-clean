@@ -522,7 +522,7 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td colspan="3"><b>Total local charges</b></td>
+                            <td><b>Total local charges</b></td>
                             <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_origin_20+@$inland_20, 2, '.', '')}}</b></td>
                             <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_origin_40+@$inland_40, 2, '.', '')}}</b></td>
                             <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_origin_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
@@ -711,7 +711,7 @@
                             @endforeach
                         @endforeach
                             <tr>
-                                <td colspan="3"><b>Total local charges</b></td>
+                                <td><b>Total local charges</b></td>
                                 <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_destination_20+@$inland_20, 2, '.', '')}}</b></td>
                                 <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_destination_40+@$inland_40, 2, '.', '')}}</b></td>
                                 <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
