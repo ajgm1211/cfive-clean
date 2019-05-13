@@ -11,6 +11,7 @@ $(document).ready(function() {
   //Hide grouped options in pdf layout
   if($('#show_hide_select').val()=='total in'){
     $(".group_origin_charges").addClass('hide');
+    $(".group_freight_charges").addClass('hide');
     $(".group_destination_charges").addClass('hide');
   }    
 
@@ -76,6 +77,7 @@ $(document).ready(function() {
 
   $('.editable').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       if(!response) {
@@ -90,6 +92,7 @@ $(document).ready(function() {
 
   $('.editable-amount-20').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
@@ -109,6 +112,7 @@ $(document).ready(function() {
 
   $('.editable-markup-20').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
@@ -126,6 +130,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
@@ -143,6 +148,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
@@ -160,6 +166,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40hc').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
@@ -178,6 +185,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40hc').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
@@ -195,6 +203,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40nor').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
@@ -212,6 +221,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40nor').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
@@ -229,6 +239,7 @@ $(document).ready(function() {
 
   $('.editable-amount-45').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
@@ -246,6 +257,7 @@ $(document).ready(function() {
 
   $('.editable-markup-45').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
@@ -653,7 +665,6 @@ $(document).on('click', '#update', function () {
         $(".equipment_span").empty();
         var length = $.parseJSON(data.quote['equipment']).length;
         $.each($.parseJSON(data.quote['equipment']), function( index, value ){
-
           if (index === (length-1)) {
             $(".equipment_span").append(value);
           }else{
