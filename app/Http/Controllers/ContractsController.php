@@ -54,22 +54,17 @@ class ContractsController extends Controller
         if(\Auth::user()->type=='admin'){
             $arreglo    = Contract::with('rates','carriers','direction')->get();
             $contractG  = Contract::all();
-            $mrates     = $model->hydrate(
-                DB::select(
-                    'call select_all_rates()'
-                )
-            );
-
+           
         }else{
             $arreglo    = Contract::where('company_user_id','=',Auth::user()->company_user_id)
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-            $mrates     = $model->hydrate(
-                DB::select(
-                    'call select_for_company_rates('.\Auth::user()->company_user_id.')'
-                )
-            );
         }
+        $mrates     = $model->hydrate(
+            DB::select(
+                'call select_for_company_rates('.\Auth::user()->company_user_id.')'
+            )
+        );
 
         $carriersR       = $mrates->unique('carrier');
         $carrierAr = [ 'null' => 'Select option'];
@@ -438,31 +433,31 @@ class ContractsController extends Controller
         $data     = $model->hydrate(
             DB::select('call select_for_company_rates('.\Auth::user()->company_user_id.')')
         );
-        
+
         if ($request->has('origin') &&
             $request->get('origin') != null
             && $request->get('origin') != 'null') {
             $data = $data->where('port_orig', $request->get('origin'));
         }
-        
+
         if ($request->has('destination') &&
             $request->get('destination') != null &&
             $request->get('destination') != 'null') {
             $data = $data->where('port_dest', $request->get('destination'));
         }
-        
+
         if ($request->has('carrierM') &&
             $request->get('carrierM') != null &&
             $request->get('carrierM') != 'null') {
             $data = $data->where('carrier', $request->get('carrierM'));
         }
-        
+
         if ($request->has('status') &&
             $request->get('status') != null &&
             $request->get('status') != 'null') {
             $data = $data->where('status', $request->get('status'));
         }
-        
+
         //dd($data->all());
 
         return \DataTables::of($data->all())
