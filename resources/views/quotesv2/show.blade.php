@@ -288,7 +288,7 @@
                                                                     <span class="total_40">{{@$freight_amounts['c40']+@$freight_markups['c40']}}</span>
                                                                 </td>
                                                                 <td {{ $equipmentHides['40hc'] }}>
-                                                                    <a href="#" class="editable-amount-40hc amount_40hc"data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                                    <a href="#" class="editable-amount-40hc amount_40hc"data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-emptytext="0" data-title="Total"></a>
                                                                 </td>
                                                                 <td {{ $equipmentHides['40hc'] }}>
                                                                     <a href="#" class="editable-markup-40hc markup_40hc"data-type="text" data-name="markups->c40hc" data-value="{{@$freight_markups['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
