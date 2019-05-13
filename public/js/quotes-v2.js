@@ -651,8 +651,8 @@ $(document).on('click', '#update', function () {
         $(".incoterm_id_span").html(incoterm);
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
-        var length = data.quote['equipment'].length;
-        $.each( data.quote['equipment'], function( index, value ){
+        var length = $.parseJSON(data.quote['equipment']).length;
+        $.each($.parseJSON(data.quote['equipment']), function( index, value ){
 
           if (index === (length-1)) {
             $(".equipment_span").append(value);

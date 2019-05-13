@@ -385,7 +385,7 @@ class QuoteV2Controller extends Controller
     $quote->delivery_type=$request->delivery_type;
     $quote->date_issued=$request->date_issued;
     $quote->incoterm_id=$request->incoterm_id;
-    $quote->equipment=$request->equipment;
+    $quote->equipment=json_encode($request->equipment);
     $quote->validity_start=$validity_start;
     $quote->validity_end=$validity_end;
     $quote->user_id=$request->user_id;
@@ -903,8 +903,8 @@ class QuoteV2Controller extends Controller
             }
             if(!$value->inland->isEmpty()){
               foreach($value->inland as $value){
-                if($quote->pdf_option->grouped_destination_charges==1){
-                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                if($quote->pdf_option->grouped_origin_charges==1){
+                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
                 }else{
                   $typeCurrency =  $currency_cfg->alphacode;
                 }
@@ -1116,8 +1116,9 @@ class QuoteV2Controller extends Controller
               $inland40nor= 0;
               $inland45= 0;          
               if($amounts->type_id==2){
-                if($quote->pdf_option->grouped_origin_charges==1){
-                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                //dd($quote->pdf_option->destination_charges_currency);
+                if($quote->pdf_option->grouped_destination_charges==1){
+                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
                 }else{
                   $typeCurrency =  $currency_cfg->alphacode;
                 }
