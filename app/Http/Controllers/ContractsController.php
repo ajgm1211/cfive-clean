@@ -430,11 +430,42 @@ class ContractsController extends Controller
 
     }
 
-    public function contractRates(){
-        $contractRate = new  ViewContractRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);
+    public function contractRates(Request $request){
+        /* $contractRate = new  ViewContractRates();
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);*/
 
-        return \DataTables::of($data)
+        $model    = new  ViewContractRates();
+        $data     = $model->hydrate(
+            DB::select('call select_for_company_rates('.\Auth::user()->company_user_id.')')
+        );
+        
+        if ($request->has('origin') &&
+            $request->get('origin') != null
+            && $request->get('origin') != 'null') {
+            $data = $data->where('port_orig', $request->get('origin'));
+        }
+        
+        if ($request->has('destination') &&
+            $request->get('destination') != null &&
+            $request->get('destination') != 'null') {
+            $data = $data->where('port_dest', $request->get('destination'));
+        }
+        
+        if ($request->has('carrierM') &&
+            $request->get('carrierM') != null &&
+            $request->get('carrierM') != 'null') {
+            $data = $data->where('carrier', $request->get('carrierM'));
+        }
+        
+        if ($request->has('status') &&
+            $request->get('status') != null &&
+            $request->get('status') != 'null') {
+            $data = $data->where('status', $request->get('status'));
+        }
+        
+        //dd($data->all());
+
+        return \DataTables::of($data->all())
 
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
