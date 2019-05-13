@@ -198,7 +198,7 @@
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('quotes-v2.index.datatable') }}",
             columns: [
-               {data: 'custom_id', name: 'custom_id'},
+               {data: 'id', name: 'id'},
                {data: 'client', name: 'client'},
                {data: 'created', name: 'created'},
                {data: 'user', name: 'user'},
