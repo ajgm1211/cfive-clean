@@ -931,6 +931,9 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+    $("#equipment_id").show();
+    $("#equipment").prop( "disabled", false );
+
     $("#delivery_type").prop( "disabled", false );
     $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
@@ -957,7 +960,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
-
+    $("#equipment_id").hide();
+    $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", false );
     $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
@@ -987,7 +991,7 @@ $(document).on('change', '#quoteType', function (e) {
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
       total_volume=$('#total_volume').val();
       weight=$('#total_weight').val();
-           
+
       if($('#quoteType').val()==2){
 
 
@@ -1499,7 +1503,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
 
     total_volume=$('#total_volume').val();
     total_weight=$('#total_weight').val();
-    if($("#quoteType :selected").val()==2){
+    if($("#quoteType").val()==2){
 
       total_weight=total_weight/1000;
       if(total_volume>total_weight){
@@ -1508,7 +1512,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
         chargeable_weight=total_weight;
       }
       $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-    }else  if($("#quoteType :selected").val()==3){
+    }else  if($("#quoteType").val()==3){
 
       total_volume=total_volume*166;
       if(total_volume>total_weight){

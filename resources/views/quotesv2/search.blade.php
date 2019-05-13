@@ -316,10 +316,12 @@
                 <label>Quote Type</label>
                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
-              <div class="col-lg-2">
+
+              <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
                 {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
+
               <div class="col-lg-2">
                 <label>Company</label>
 
@@ -907,13 +909,13 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth">
-                         <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
+                          <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
                         </div>      
                         <div class="wth">
                           <span class="bg-rates">{{ isset($localfreight['40']) ?  str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('montoMarkup')) : '0.00' }}                  </b>
                         </div>
                         <div class="wth" {{ $equipmentHides['40hc'] }}>  
-                         <span class="bg-rates"> {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     </b>
+                          <span class="bg-rates"> {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}>  
                           <span class="bg-rates">{{ isset($localfreight['40nor']) ?  str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('markup')) : '0.00' }}   </span>  <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('montoMarkup')) : '0.00' }}     </b>
@@ -1070,7 +1072,7 @@
                       <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
 
                     </div>
-                    
+
                   </div><br>
                   @endforeach
                   @if(!$arr->inlandOrigin->isEmpty())
