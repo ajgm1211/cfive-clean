@@ -299,68 +299,68 @@ $(document).on('click', '.store_charge', function () {
   var markup_c45 = $(this).closest("tr").find(".markup_c45").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
-  
-    $.ajax({
-      type: 'POST',
-      url: '/v2/quotes/store/charge',
-      data:{
-        "automatic_rate_id":id,
-        "surcharge_id":surcharge_id,
-        "calculation_type_id":calculation_type_id,
-        "amount_c20":amount_c20,
-        "markup_c20":markup_c20,
-        "amount_c40":amount_c40,
-        "markup_c40":markup_c40,
-        "amount_c40hc":amount_c40hc,
-        "markup_c40hc":markup_c40hc,
-        "amount_c40nor":amount_c40nor,
-        "markup_c40nor":markup_c40nor,
-        "amount_c45":amount_c45,
-        "markup_c45":markup_c45,
-        "type_id":type_id,
-        "currency_id":currency_id
-      },
-      success: function(data) {
-        if(data.message=='Ok'){
-          swal(
-            'Done!',
-            'Charge saved successfully',
-            'success'
-          )
-        }
-        setTimeout(location.reload.bind(location), 3000);
+
+  $.ajax({
+    type: 'POST',
+    url: '/v2/quotes/store/charge',
+    data:{
+      "automatic_rate_id":id,
+      "surcharge_id":surcharge_id,
+      "calculation_type_id":calculation_type_id,
+      "amount_c20":amount_c20,
+      "markup_c20":markup_c20,
+      "amount_c40":amount_c40,
+      "markup_c40":markup_c40,
+      "amount_c40hc":amount_c40hc,
+      "markup_c40hc":markup_c40hc,
+      "amount_c40nor":amount_c40nor,
+      "markup_c40nor":markup_c40nor,
+      "amount_c45":amount_c45,
+      "markup_c45":markup_c45,
+      "type_id":type_id,
+      "currency_id":currency_id
+    },
+    success: function(data) {
+      if(data.message=='Ok'){
+        swal(
+          'Done!',
+          'Charge saved successfully',
+          'success'
+        )
       }
-    });
+      setTimeout(location.reload.bind(location), 3000);
+    }
+  });
 });
 
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
-    var id=$(this).attr('data-rate-id');
-    swal({
-      title: 'Are you sure?',
-      text: "Please confirm!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, I am sure!'
-    }).then(function (result) {
-      if (result.value) {
-        $.ajax({
-            type: 'GET',
-            url: '/v2/quotes/delete/rate/'+id,
-            success: function(data) {
-                if(data.message=='Ok'){
-                    swal(
-                        'Updated!',
-                        'The rete has been deleted.',
-                        'success'
-                        )
-                    $(this).closest('ul').remove();
-                    setTimeout(location.reload.bind(location), 3000);
-                }
-            }
-        });
-      }
-    });
+  var id=$(this).attr('data-rate-id');
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/delete/rate/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The rete has been deleted.',
+              'success'
+            )
+            $(this).closest('ul').remove();
+            setTimeout(location.reload.bind(location), 3000);
+          }
+        }
+      });
+    }
+  });
 });
 
 //Edit payments
@@ -634,11 +634,11 @@ $(document).on('click', '#update', function () {
         $(".type").val(data.quote['type']);
         $(".type_span").html(data.quote['type']);
         if(data.quote['custom_quote_id']!=''){
-            $(".quote_id").val(data.quote['custom_quote_id']);
-            $(".quote_id_span").html(data.quote['custom_quote_id']);    
+          $(".quote_id").val(data.quote['custom_quote_id']);
+          $(".quote_id_span").html(data.quote['custom_quote_id']);    
         }else{
-            $(".quote_id").val(data.quote['quote_id']);
-            $(".quote_id_span").html(data.quote['quote_id']);
+          $(".quote_id").val(data.quote['quote_id']);
+          $(".quote_id_span").html(data.quote['quote_id']);
         }
         $(".company_id").val(data.quote['company_id']);
         $(".company_id_span").html(data.quote['company_id']);
@@ -987,7 +987,10 @@ $(document).on('change', '#quoteType', function (e) {
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
       total_volume=$('#total_volume').val();
       weight=$('#total_weight').val();
-      if($("input[name='type']:checked").val()==2){
+           
+      if($('#quoteType').val()==2){
+
+
         total_weight=weight/1000;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -995,7 +998,7 @@ $(document).on('change', '#quoteType', function (e) {
           chargeable_weight=total_weight;
         }
         $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-      }else if($("input[name='type']:checked").val()==3){
+      }else if($('#quoteType').val()==3){
         total_volume=total_volume*166;
         if(total_volume>weight){
           chargeable_weight=total_volume;
@@ -1058,7 +1061,7 @@ $(document).on('change', '#quoteType', function (e) {
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
       total_volume=$('#total_volume').val();
       total_weight=$('#total_weight').val();
-      if($("input[name='type']:checked").val()==2){
+      if($('#quoteType').val()==2){
         total_weight=total_weight/1000;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -1066,7 +1069,7 @@ $(document).on('change', '#quoteType', function (e) {
           chargeable_weight=total_weight;
         }
         $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-      }else if($("input[name='type']:checked").val()==3){
+      }else if($('#quoteType').val()==3){
         total_volume=total_volume*166;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -1462,7 +1465,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
   var chargeable_weight= 0;
   var weight=sum;
   //Calculate chargeable weight
-  if($("input[name='type']:checked").val()==2){
+  if($('#quoteType').val()==2){
     total_vol_chargeable=sum_vol;
     total_weight=weight/1000;
     if(total_vol_chargeable>total_weight){
@@ -1471,7 +1474,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
       chargeable_weight=total_weight;
     }
     $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-  }else if($("input[name='type']:checked").val()==3){
+  }else if($('#quoteType').val()==3){
     total_vol_chargeable=sum_vol*166;
     if(total_vol_chargeable>weight){
       chargeable_weight=total_vol_chargeable;
@@ -1506,7 +1509,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
       }
       $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
     }else  if($("#quoteType :selected").val()==3){
-      
+
       total_volume=total_volume*166;
       if(total_volume>total_weight){
         chargeable_weight=total_volume;
