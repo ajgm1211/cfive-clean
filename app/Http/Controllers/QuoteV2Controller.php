@@ -45,6 +45,7 @@ use Illuminate\Support\Collection as Collection;
 use App\Repositories\Schedules;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
+use App\PackageLoadV2;
 
 class QuoteV2Controller extends Controller
 {
@@ -1265,6 +1266,8 @@ class QuoteV2Controller extends Controller
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
 
+
+
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $currency_id = $company->companyUser->currency_id;
       $currency = Currency::find($currency_id);
@@ -1289,9 +1292,66 @@ class QuoteV2Controller extends Controller
 
       $arregloNull = array();
       $arregloNull = json_encode($arregloNull);
-      $equipment =  stripslashes(json_encode($request->input('equipment')));
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+
+
+     if($request->input('type') == '1'){
+        $typeText = "FCL";
+        $equipment =  stripslashes(json_encode($request->input('equipment')));
+      }
+      if($request->input('type') == '2'){
+        $typeText = "LCL";
+        $equipment =  $arregloNull;
+      }
+
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
+
+      // FCL
+      if($request->input('type') == '1'){
+        foreach($request->input('originport') as $origP){
+          $infoOrig = explode("-", $origP);
+          $origin_port[] = $infoOrig[0];
+        }
+        foreach($request->input('destinyport') as $destP){
+          $infoDest = explode("-", $destP);
+          $destiny_port[] = $infoDest[0];
+        }
+        foreach($origin_port as $orig){
+          foreach($destiny_port as $dest){
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
+            $rate = AutomaticRate::create($request->all());
+          }
+        }
+      }
+      //LCL        $input = Input::all();
+
+      if($request->input('type') == '2'){
+        $input = Input::all();
+        $quantity = array_values( array_filter($input['quantity']) );
+        //dd($input);
+        $type_cargo = array_values( array_filter($input['type_load_cargo']) );
+        $height = array_values( array_filter($input['height']) );
+        $width = array_values( array_filter($input['width']) );
+        $large = array_values( array_filter($input['large']) );
+        $weight = array_values( array_filter($input['weight']) );
+        $volume = array_values( array_filter($input['volume']) );
+        if(count($quantity)>0){
+          foreach($type_cargo as $key=>$item){
+            $package_load = new PackageLoadV2();
+            $package_load->quote_id = $quote->id;
+            $package_load->type_cargo = $type_cargo[$key];
+            $package_load->quantity = $quantity[$key];
+            $package_load->height = $height[$key];
+            $package_load->width = $width[$key];
+            $package_load->large = $large[$key];
+            $package_load->weight = $weight[$key];
+            $package_load->total_weight = $weight[$key]*$quantity[$key];
+            $package_load->volume = $volume[$key];
+            $package_load->save();
+          }
+        }
+      }
+
 
       $pdf_option = new PdfOption();
       $pdf_option->quote_id=$quote->id;
@@ -1300,28 +1360,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->total_in_currency=$currency->alphacode;
       $pdf_option->language='English';
       $pdf_option->save();
-
-
       // MANUAL RATE
-
-
-
-
-      foreach($request->input('originport') as $origP){
-        $infoOrig = explode("-", $origP);
-        $origin_port[] = $infoOrig[0];
-      }
-      foreach($request->input('destinyport') as $destP){
-        $infoDest = explode("-", $destP);
-        $destiny_port[] = $infoDest[0];
-      }
-
-      foreach($origin_port as $orig){
-        foreach($destiny_port as $dest){
-          $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
-          $rate = AutomaticRate::create($request->all());
-        }
-      }
     }
 
     if(!empty($info)){
@@ -1541,7 +1580,7 @@ class QuoteV2Controller extends Controller
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-    return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+    //   return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
