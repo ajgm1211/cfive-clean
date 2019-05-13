@@ -106,8 +106,8 @@ class QuoteV2Controller extends Controller
       } else {
         $destination = $quote->destination_address;
       }*/
-      if($quote->custom_quote_id!=''){
-        $id  = $quote->custom_quote_id;
+      if($quote->quote_id!=''){
+        $id  = $quote->quote_id;
       }else{
         $id = $quote->quote_id;
       }
@@ -128,7 +128,7 @@ class QuoteV2Controller extends Controller
           $destination.='<li>'.$rate->destination_address.'</li>';
         }
       }
-         
+
       $data = [
         'id'            => $id,
         'idSet'         => setearRouteKey($quote->id),
@@ -142,11 +142,11 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-    ->addColumn('type', function ($colletion) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-    })->addColumn('action',function($colletion){
+      ->addColumn('type', function ($colletion) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      })->addColumn('action',function($colletion){
       return
-      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -173,7 +173,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-    ->editColumn('id', '{{$id}}')->make(true);
+      ->editColumn('id', '{{$id}}')->make(true);
   }
 
   public function show($id)
@@ -431,6 +431,7 @@ class QuoteV2Controller extends Controller
 
       $numeroFinal = explode('-',$quote->quote_id);
 
+      //dd($quote->quote_id);
       $numeroFinal = $numeroFinal[1] +1;
 
       $iniciales = $iniciales."-".$numeroFinal;
@@ -1256,8 +1257,12 @@ class QuoteV2Controller extends Controller
       $dateQ = explode('/',$form->date);
       $since = $dateQ[0];
       $until = $dateQ[1];
+      $priceId = null;
+      if(isset($form->price_id )){
+        $priceId = $form->price_id;
+      }
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
 
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
@@ -1280,10 +1285,12 @@ class QuoteV2Controller extends Controller
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
 
       $idCurrency = $company->companyUser->currency_id;
+      $currency = Currency::find($idCurrency);
+
       $arregloNull = array();
       $arregloNull = json_encode($arregloNull);
       $equipment =  stripslashes(json_encode($request->input('equipment')));
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'custom_quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
 
       $pdf_option = new PdfOption();
@@ -1534,7 +1541,7 @@ class QuoteV2Controller extends Controller
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-    return redirect()->action('QuoteV2Controller@index');
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
@@ -1798,12 +1805,12 @@ class QuoteV2Controller extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -1974,12 +1981,12 @@ class QuoteV2Controller extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2135,16 +2142,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-    {
-     $q->whereHas('contract_company_restriction', function($b) use($company_id){
-       $b->where('company_id', '=',$company_id);
-     })->orDoesntHave('contract_company_restriction');
-   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-  });
-   $arreglo = $arreglo->get();
+                 {
+                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                     $b->where('company_id', '=',$company_id);
+                   })->orDoesntHave('contract_company_restriction');
+                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+    });
+    $arreglo = $arreglo->get();
 
-   $formulario = $request;
+    $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 

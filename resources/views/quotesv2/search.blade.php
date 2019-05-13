@@ -676,7 +676,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Quote</button></div>
+                <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Create Quote</button></div>
               </div>
 
               <div class="row">
