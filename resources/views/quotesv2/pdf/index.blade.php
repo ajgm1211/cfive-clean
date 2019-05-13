@@ -367,46 +367,47 @@
                     <tbody>
 
                     @foreach($detail as $item)
-                        <?php
-                            $sum20= 0;
-                            $sum40= 0;
-                            $sum40hc= 0;
-                            $sum40nor= 0;
-                            $sum45= 0;
-                            $inland20= 0;
-                            $inland40= 0;
-                            $inland40hc= 0;
-                            $inland40nor= 0;
-                            $inland45= 0;                            
-                        ?>  
+
                         @foreach($item as $rate)
+                            <?php
+                                $sum_origin_20= 0;
+                                $sum_origin_40= 0;
+                                $sum_origin_40hc= 0;
+                                $sum_origin_40nor= 0;
+                                $sum_origin_45= 0;
+                                $inland_origin_20= 0;
+                                $inland_origin_40= 0;
+                                $inland_origin_40hc= 0;
+                                $inland_origin_40nor= 0;
+                                $inland_origin_45= 0;
+                            ?>  
                             @foreach($rate->charge as $value)
                                 <?php
-                                    $sum20+=$value->total_20;
-                                    $sum40+=$value->total_40;
-                                    $sum40hc+=$value->total_40hc;
-                                    $sum40nor+=$value->total_40nor;
-                                    $sum45+=$value->total_45;                                
+                                    $sum_origin_20+=$value->total_20;
+                                    $sum_origin_40+=$value->total_40;
+                                    $sum_origin_40hc+=$value->total_40hc;
+                                    $sum_origin_40nor+=$value->total_40nor;
+                                    $sum_origin_45+=$value->total_45;                                
                                 ?>
                             @endforeach
                             @foreach($rate->inland as $value)
                                 <?php
-                                    $inland20+=$value->total_20;
-                                    $inland40+=$value->total_40;
-                                    $inland40hc+=$value->total_40hc;
-                                    $inland40nor+=$value->total_40nor;
-                                    $inland45+=$value->total_45;                                
+                                    $inland_origin_20+=$value->total_20;
+                                    $inland_origin_40+=$value->total_40;
+                                    $inland_origin_40hc+=$value->total_40hc;
+                                    $inland_origin_40nor+=$value->total_40nor;
+                                    $inland_origin_45+=$value->total_45;                                
                                 ?>
                             @endforeach
                         @endforeach
                         <tr class="text-center color-table">
                             <td colspan="2">Total Origin Charges</td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                            <td {{ $equipmentHides['20'] }}>{{@$sum20+@$inland20}}</td>
-                            <td {{ $equipmentHides['40'] }}>{{@$sum40+@$inland40}}</td>
-                            <td {{ $equipmentHides['40hc'] }}>{{@$sum40hc+@$inland40hc}}</td>
-                            <td {{ $equipmentHides['40nor'] }}>{{@$sum40nor+@$inland40nor}}</td>
-                            <td {{ $equipmentHides['45'] }}>{{@$sum45+@$inland45}}</td>
+                            <td {{ $equipmentHides['20'] }}>{{@$sum_origin_20+@$inland_origin_20}}</td>
+                            <td {{ $equipmentHides['40'] }}>{{@$sum_origin_40+@$inland_origin_40}}</td>
+                            <td {{ $equipmentHides['40hc'] }}>{{@$sum_origin_40hc+@$inland_origin_40hc}}</td>
+                            <td {{ $equipmentHides['40nor'] }}>{{@$sum_origin_40nor+@$inland_origin_40nor}}</td>
+                            <td {{ $equipmentHides['45'] }}>{{@$sum_origin_45+@$inland_origin_45}}</td>
                             @if($quote->pdf_option->grouped_origin_charges==1)
                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                             @else
@@ -523,6 +524,8 @@
                         @endforeach
                         <tr>
                             <td><b>Total local charges</b></td>
+                            <td></td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                             <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_origin_20+@$inland_20, 2, '.', '')}}</b></td>
                             <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_origin_40+@$inland_40, 2, '.', '')}}</b></td>
                             <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_origin_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
@@ -712,6 +715,8 @@
                         @endforeach
                             <tr>
                                 <td><b>Total local charges</b></td>
+                                <td></td>
+                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 <td {{ $equipmentHides['20'] }}><b>{{number_format(@$sum_destination_20+@$inland_20, 2, '.', '')}}</b></td>
                                 <td {{ $equipmentHides['40'] }}><b>{{number_format(@$sum_destination_40+@$inland_40, 2, '.', '')}}</b></td>
                                 <td {{ $equipmentHides['40hc'] }}><b>{{number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')}}</b></td>

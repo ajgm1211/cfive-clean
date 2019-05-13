@@ -303,7 +303,7 @@
                                                                     <a href="#" class="editable-markup-40nor markup_40nor"data-type="text" data-name="markups->c40nor" data-value="{{@$freight_markups['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                                 </td>
                                                                 <td {{ $equipmentHides['40nor'] }}>
-                                                                    <span class="total_40nor">c{{@$freight_amount['c40nor']+@$freight_markups['c40nor']}}</span>
+                                                                    <span class="total_40nor">{{@$freight_amount['c40nor']+@$freight_markups['c40nor']}}</span>
                                                                 </td>
                                                                 <td {{ $equipmentHides['45'] }}>
                                                                     <a href="#" class="editable-amount-45 amount_45" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
