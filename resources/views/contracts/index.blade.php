@@ -182,16 +182,8 @@ New \ Status Import  &nbsp;
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-
+                            
                                 <div class="col-xl-12 order-1 order-xl-2 m--align-right">
-                                    <button type="button"  id="btnFiterSubmitSearch" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                        <span>
-                                            <span>
-                                                Search  &nbsp;
-                                            </span>
-                                            <i class="la la-search"></i>
-                                        </span>
-                                    </button>
                                     <a href="{{ route('contracts.add') }}">
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
@@ -224,7 +216,7 @@ Request Importation &nbsp;
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
-                                    </a>                                 
+                                    </a>
 
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
@@ -232,7 +224,6 @@ Request Importation &nbsp;
                             <div class="row align-items-center">
                                 <div class="col-xl-12 order-2 order-xl-1">
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
-
                                     <div class="form-group m-form__group row align-items-center">
 
                                         <div class="col-lg-3">
@@ -247,19 +238,22 @@ Request Importation &nbsp;
                                                 {!! Form::select('destination',$values['destination'],null,['class'=>'m-select2-general form-control','id'=>'destinationS','required'])!!}
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <label class="">Carrier</label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('carrierM[]',$values['carrier'],null,['class'=>'m-select2-general form-control','id'=>'carrierM','required'])!!}
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <label class="">Satatus</label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
                                         </div>
-
+                                        <div class="col-lg-2">
+                                            <label><br></label>
+                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill form-control">Search</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
