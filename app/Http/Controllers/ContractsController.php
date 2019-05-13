@@ -429,7 +429,8 @@ class ContractsController extends Controller
         /* $contractRate = new  ViewContractRates();
         $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);*/
 
-        $model    = new  ViewContractRates();
+        //$model = new  ViewContractRates();
+        $model    = new  Rate();
         $data     = $model->hydrate(
             DB::select('call select_for_company_rates('.\Auth::user()->company_user_id.')')
         );

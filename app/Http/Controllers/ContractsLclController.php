@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use App\LocalCharCountryLcl;
 use App\ViewContractLclRates;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\ContractLclUserRestriction;
 use Illuminate\Support\Facades\Auth;
@@ -44,9 +45,47 @@ class ContractsLclController extends Controller
      */
     public function index()
     {
-        $arreglo = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
-        $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
-        return view('contractsLcl/index', compact('arreglo','contractG'));
+        //$arreglo = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        //$contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        //return view('contractsLcl/index', compact('arreglo','contractG'));
+        $model      = new  RateLcl();
+        $mrates     = $model->hydrate(
+            DB::select(
+                'call select_rates_contract_lcl('.\Auth::user()->company_user_id.')'
+            )
+        );
+        
+        $carriersR       = $mrates->unique('carrier');
+        $carrierAr = [ 'null' => 'Select option'];
+        foreach($carriersR as $carrierR){
+            $carrierAr[$carrierR->carrier] = $carrierR->carrier;
+        }
+
+        $originsR        = $mrates->unique('port_orig');
+        $originsAr = [ 'null' => 'Select option'];
+        foreach($originsR as $originR){
+            $originsAr[$originR->port_orig] = $originR->port_orig;
+        }
+
+        $destinationsR   = $mrates->unique('port_dest');
+        $destinationAr = [ 'null' => 'Select option'];
+        foreach($destinationsR as $destinationR){
+            $destinationAr[$destinationR->port_dest] = $destinationR->port_dest;
+        }
+
+        $statussR   = $mrates->unique('status');
+        $statusAr  = [ 'null' => 'Select option'];
+        foreach($statussR as $statusR){
+            $statusAr[$statusR->status] = $statusR->status;
+        }
+        $values = [
+            'carrier'       => $carrierAr,
+            'origin'        => $originsAr,
+            'destination'   => $destinationAr,
+            'status'        => $statusAr
+        ];
+        
+        return view('contractsLcl/index',compact('values'));
     }
 
     public function add()
@@ -651,9 +690,39 @@ class ContractsLclController extends Controller
     // DATATABLES
 
 
-    public function contractLclRates(){
-        $contractRate = new  ViewContractLclRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency')->where('company_user_id', Auth::user()->company_user_id);
+    public function contractLclRates(Request $request){
+        /*$contractRate = new  ViewContractLclRates();
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency')->where('company_user_id', Auth::user()->company_user_id);*/
+
+        $model    = new  RateLcl();
+        $data     = $model->hydrate(
+            DB::select('call select_rates_contract_lcl('.\Auth::user()->company_user_id.')')
+        );
+
+
+        if ($request->has('origin') &&
+            $request->get('origin') != null
+            && $request->get('origin') != 'null') {
+            $data = $data->where('port_orig', $request->get('origin'));
+        }
+
+        if ($request->has('destination') &&
+            $request->get('destination') != null &&
+            $request->get('destination') != 'null') {
+            $data = $data->where('port_dest', $request->get('destination'));
+        }
+
+        if ($request->has('carrierM') &&
+            $request->get('carrierM') != null &&
+            $request->get('carrierM') != 'null') {
+            $data = $data->where('carrier', $request->get('carrierM'));
+        }
+
+        if ($request->has('status') &&
+            $request->get('status') != null &&
+            $request->get('status') != 'null') {
+            $data = $data->where('status', $request->get('status'));
+        }
 
 
         return \DataTables::of($data)
@@ -751,7 +820,7 @@ class ContractsLclController extends Controller
         $contractG = ContractLcl::where('company_user_id','=',Auth::user()->company_user_id)
             ->with('carriers','direction')
             ->get();
-        
+
         return \DataTables::collection($contractG)
             ->addColumn('carrier',function(ContractLcl $contractG){
                 if(count($contractG->carriers->pluck('carrier')->pluck('name')) != 0){
@@ -759,7 +828,7 @@ class ContractsLclController extends Controller
                 }
                 return '-----------------';
             })
-             ->addColumn('direction', function (ContractLcl $contractG) {
+            ->addColumn('direction', function (ContractLcl $contractG) {
                 if(count($contractG->direction) != 0){
                     return $contractG->direction->name;
                 } else {
