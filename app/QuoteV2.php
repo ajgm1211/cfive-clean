@@ -10,7 +10,7 @@ class QuoteV2 extends Model
         'equipment' => 'array',
     ];
 
-    protected $fillable = ['company_user_id','quote_id','type','quote_validity','validity_start','validity_end','origin_address','destination_address','company_id','contact_id','delivery_type','user_id','equipment','incoterm_id','status','date_issued','price_id'];
+    protected $fillable = ['company_user_id','quote_id','type','quote_validity','validity_start','validity_end','origin_address','destination_address','company_id','contact_id','delivery_type','user_id','equipment','incoterm_id','status','date_issued','price_id','total_quantity','total_weight','total_volume'];
 
     public function company()
     {
