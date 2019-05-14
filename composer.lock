@@ -4441,7 +4441,7 @@
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.14.1",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
