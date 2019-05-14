@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.93.6",
+            "version": "3.93.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "75d6b1ec57f3438ac960d74e08366be43d52eca7"
+                "reference": "047622ae51d49a89f4045c2daa138c2b47d2e089"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/75d6b1ec57f3438ac960d74e08366be43d52eca7",
-                "reference": "75d6b1ec57f3438ac960d74e08366be43d52eca7",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/047622ae51d49a89f4045c2daa138c2b47d2e089",
+                "reference": "047622ae51d49a89f4045c2daa138c2b47d2e089",
                 "shasum": ""
             },
             "require": {
@@ -194,7 +194,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-05-08T18:16:33+00:00"
+            "time": "2019-05-14T18:16:56+00:00"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -3086,16 +3086,16 @@
         },
         {
             "name": "paragonie/sodium_compat",
-            "version": "v1.9.4",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/sodium_compat.git",
-                "reference": "91c1362bb0084c02828d43bbc9ee38831297329e"
+                "reference": "228a9fc64cf4ba84c7967c1076d94209db03e0ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/91c1362bb0084c02828d43bbc9ee38831297329e",
-                "reference": "91c1362bb0084c02828d43bbc9ee38831297329e",
+                "url": "https://api.github.com/repos/paragonie/sodium_compat/zipball/228a9fc64cf4ba84c7967c1076d94209db03e0ee",
+                "reference": "228a9fc64cf4ba84c7967c1076d94209db03e0ee",
                 "shasum": ""
             },
             "require": {
@@ -3164,7 +3164,7 @@
                 "secret-key cryptography",
                 "side-channel resistant"
             ],
-            "time": "2019-05-09T23:30:36+00:00"
+            "time": "2019-05-13T16:04:50+00:00"
         },
         {
             "name": "phenx/php-font-lib",
@@ -4441,7 +4441,7 @@
         },
         {
             "name": "spatie/db-dumper",
-            "version": "2.10.0",
+            "version": "2.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/db-dumper.git",
@@ -4488,6 +4488,79 @@
                 "spatie"
             ],
             "time": "2019-05-10T09:22:23+00:00"
+        },
+        {
+            "name": "spatie/laravel-backup",
+            "version": "5.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-backup.git",
+                "reference": "553562557ef13fda0e823cc609cd7d4f2c4f2552"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-backup/zipball/553562557ef13fda0e823cc609cd7d4f2c4f2552",
+                "reference": "553562557ef13fda0e823cc609cd7d4f2c4f2552",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/contracts": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/events": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/filesystem": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/notifications": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "illuminate/support": "~5.5.0|~5.6.0|~5.7.0|~5.8.0",
+                "league/flysystem": "^1.0.27",
+                "php": "^7.1",
+                "spatie/db-dumper": "^2.11.1",
+                "spatie/temporary-directory": "^1.1",
+                "symfony/finder": "^3.3|^4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "~3.5.0|~3.6.0|~3.7.0|~3.8.0",
+                "phpunit/phpunit": "^7.3"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "Allows notifications to be sent via Slack"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Backup\\BackupServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Backup\\": "src"
+                },
+                "files": [
+                    "src/Helpers/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel 5 package to backup your application",
+            "homepage": "https://github.com/spatie/laravel-backup",
+            "keywords": [
+                "backup",
+                "database",
+                "laravel-backup",
+                "spatie"
+            ],
+            "time": "2019-04-04T12:00:30+00:00"
         },
         {
             "name": "spatie/laravel-googletagmanager",
@@ -7603,16 +7676,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.10",
+            "version": "7.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d7d9cee051d03ed98df6023aad93f7902731a780"
+                "reference": "64cb33f5b520da490a7b13149d39b43cf3c890c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d7d9cee051d03ed98df6023aad93f7902731a780",
-                "reference": "d7d9cee051d03ed98df6023aad93f7902731a780",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/64cb33f5b520da490a7b13149d39b43cf3c890c6",
+                "reference": "64cb33f5b520da490a7b13149d39b43cf3c890c6",
                 "shasum": ""
             },
             "require": {
@@ -7683,7 +7756,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-05-09T05:06:47+00:00"
+            "time": "2019-05-14T04:53:02+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
