@@ -21,6 +21,7 @@ use App\ViewRates;
 use App\CompanyUser;
 use App\TypeDestiny;
 use App\LocalCharge;
+use App\ScheduleType;
 use App\FailSurCharge;
 use App\LocalCharPort;
 use App\ContractCarrier;
@@ -108,11 +109,12 @@ class ContractsController extends Controller
         $objsurcharge = new Surcharge();
         $objtypedestiny = new TypeDestiny();
 
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $country = $objcountry->all()->pluck('name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $direction      = [null=>'Please Select'];
-        $direction2      = Direction::all();
+        $harbor     = $objharbor->all()->pluck('display_name','id');
+        $country    = $objcountry->all()->pluck('name','id');
+        $carrier    = $objcarrier->all()->pluck('name','id');
+        $scheduleT  = ScheduleType::pluck('name','id');
+        $direction  = [null=>'Please Select'];
+        $direction2 = Direction::all();
         foreach($direction2 as $d){
             $direction[$d['id']]=$d->name;
         }
@@ -140,7 +142,7 @@ class ContractsController extends Controller
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
 
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','direction'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','direction','scheduleT'));
 
 
     }
@@ -177,6 +179,7 @@ class ContractsController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
+                
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
@@ -210,22 +213,26 @@ class ContractsController extends Controller
         foreach($details as $key => $value)
         {
 
-            $rateOrig = $request->input('origin_id'.$contadorRate);
-            $rateDest = $request->input('destiny_id'.$contadorRate);
+            $rateOrig           = $request->input('origin_id'.$contadorRate);
+            $rateDest           = $request->input('destiny_id'.$contadorRate);
+    
             foreach($rateOrig as $Rorig => $Origvalue)
             {
                 foreach($rateDest as $Rdest => $Destvalue)
                 {
                     $rates = new Rate();
-                    $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
-                    $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
-                    $rates->carrier_id = $request->input('carrier_id.'.$key);
-                    $rates->twuenty = $request->input('twuenty.'.$key);
-                    $rates->forty = $request->input('forty.'.$key);
-                    $rates->fortyhc = $request->input('fortyhc.'.$key);
-                    $rates->fortynor = $request->input('fortynor.'.$key);
-                    $rates->fortyfive = $request->input('fortyfive.'.$key);
-                    $rates->currency_id = $request->input('currency_id.'.$key);
+                    $rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
+                    $rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
+                    $rates->carrier_id          = $request->input('carrier_id.'.$key);
+                    $rates->twuenty             = $request->input('twuenty.'.$key);
+                    $rates->forty               = $request->input('forty.'.$key);
+                    $rates->fortyhc             = $request->input('fortyhc.'.$key);
+                    $rates->fortynor            = $request->input('fortynor.'.$key);
+                    $rates->fortyfive           = $request->input('fortyfive.'.$key);
+                    $rates->currency_id         = $request->input('currency_id.'.$key);
+                    $rates->schedule_type_id    = $request->input('scheduleT.'.$key);
+                    $rates->transit_time        = $request->input('transitTi.'.$key);
+                    $rates->via                 = $request->input('via.'.$key);
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
