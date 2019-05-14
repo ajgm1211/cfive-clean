@@ -1247,6 +1247,21 @@ $(".quote_search").on("click", function() {
 $(".quote_man").on("click", function() {
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
+
+  if($('#quoteType').val()==2){
+    if($("#total_quantity_pkg_input").val()>0){
+      $("#total_quantity").val($("#total_quantity_pkg_input").val());
+    }
+    if($("#total_weight_pkg_input").val()>0){
+      $("#total_weight").val($("#total_weight_pkg_input").val());
+    }
+    if($("#total_volume_pkg_input").val()>0){
+      $("#total_volume").val($("#total_volume_pkg_input").val());
+    }
+
+  }
+
+
   $(".quote_man").attr("type","submit");
 });
 

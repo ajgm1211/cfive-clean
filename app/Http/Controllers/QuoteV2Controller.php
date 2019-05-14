@@ -1251,7 +1251,7 @@ class QuoteV2Controller extends Controller
   public function store(Request $request){
 
 
-    
+
     
     if(!empty($request->input('form'))){
       $form =  json_decode($request->input('form'));
