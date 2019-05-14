@@ -1294,7 +1294,7 @@ class QuoteV2Controller extends Controller
       $arregloNull = json_encode($arregloNull);
 
 
-     if($request->input('type') == '1'){
+      if($request->input('type') == '1'){
         $typeText = "FCL";
         $equipment =  stripslashes(json_encode($request->input('equipment')));
       }
@@ -1307,7 +1307,7 @@ class QuoteV2Controller extends Controller
       $quote= QuoteV2::create($request->all());
 
       // FCL
-      if($request->input('type') == '1'){
+      if($typeText == 'FCL'){
         foreach($request->input('originport') as $origP){
           $infoOrig = explode("-", $origP);
           $origin_port[] = $infoOrig[0];
@@ -1325,7 +1325,7 @@ class QuoteV2Controller extends Controller
       }
       //LCL        $input = Input::all();
 
-      if($request->input('type') == '2'){
+      if($typeText == 'LCL'){
         $input = Input::all();
         $quantity = array_values( array_filter($input['quantity']) );
         //dd($input);
@@ -1580,7 +1580,7 @@ class QuoteV2Controller extends Controller
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-    //   return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+   return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
