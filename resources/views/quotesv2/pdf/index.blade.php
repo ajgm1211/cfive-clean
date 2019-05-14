@@ -8,7 +8,6 @@
 </head>
 <body style="background-color: white; font-size: 11px;">
     <header class="clearfix">
-
         <div id="logo">
             @if($user->companyUser->logo!='')
             <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
@@ -267,12 +266,13 @@
 
         <!-- Freights table all in-->
         @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' )
-            @foreach($freight_charges_grouped as $origin=>$detail)
-            <br>
+            @foreach($freight_charges_grouped as $origin=>$freight)
+                @foreach($freight as $destination=>$detail)
+                <br>
                 <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}} | {{$destination}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}} | {{$destination}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}} | {{$destination}}</p>
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
@@ -335,16 +335,17 @@
                         </tbody>
                     </table>
                 @endforeach
+            @endforeach
         @endif
 
         <!-- Freights table detailed-->
         @if($quote->pdf_option->grouped_freight_charges==0 && $quote->pdf_option->show_type=='detailed' )
-            @foreach($freight_charges_detailed as $carrier => $value)
-                @foreach($value as $origin => $item)
+            @foreach($freight_charges_detailed as $origin => $value)
+                @foreach($value as $destination => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}} | {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}} | {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}} | {{$destination}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
@@ -823,6 +824,49 @@
                 @endforeach
             @endforeach
         @endif
+        <br>
+        @if($quote->payment_conditions!='')
+            <br>
+            <div class="clearfix">
+                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote header-table">
+                        <tr>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Payments conditions</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Condiciones de pago</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Condições de pagamento</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">{!! $quote->payment_conditions!!}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endif
+        @if($quote->terms_and_conditions!='')
+            <br>
+            <div class="clearfix">
+                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote header-table">
+                        <tr>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:20px;">
+                                <span class="text-justify">{!! $quote->terms_and_conditions!!}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endif 
 </main>
 </body>
 </html>
