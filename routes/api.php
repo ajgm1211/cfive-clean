@@ -33,9 +33,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('logout', 'ApiController@logout');
         Route::get('user', 'ApiController@user');
         Route::get('quotes', 'QuoteController@index');
-        Route::get('rates', 'ApiController@rates');
-        Route::get('charges', 'ApiController@charges');
-        Route::get('global/charges', 'ApiController@globalCharges');
+        Route::get('fcl/rates', 'ApiController@rates');
+        Route::get('fcl/charges', 'ApiController@charges');
+        Route::get('fcl/global/charges', 'ApiController@globalCharges');
         Route::get('companies', 'CompanyController@index');
         Route::get('contacts', 'ContactController@index');
         Route::post('create/company', 'CompanyController@store');
