@@ -54,7 +54,7 @@ class ContractsController extends Controller
         if(\Auth::user()->type=='admin'){
             $arreglo    = Contract::with('rates','carriers','direction')->get();
             $contractG  = Contract::all();
-           
+
         }else{
             $arreglo    = Contract::where('company_user_id','=',Auth::user()->company_user_id)
                 ->with('rates','carriers','direction')->get();
@@ -426,42 +426,42 @@ class ContractsController extends Controller
     }
 
     public function contractRates(Request $request){
-        /* $contractRate = new  ViewContractRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);*/
+        $contractRate = new  ViewContractRates();
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);
 
-        //$model = new  ViewContractRates();
-        $model    = new  Rate();
+        /*$model = new  ViewContractRates();
+        //$model    = new  Rate();
         $data     = $model->hydrate(
             DB::select('call select_for_company_rates('.\Auth::user()->company_user_id.')')
-        );
-
-        if ($request->has('origin') &&
-            $request->get('origin') != null
-            && $request->get('origin') != 'null') {
-            $data = $data->where('port_orig', $request->get('origin'));
-        }
-
-        if ($request->has('destination') &&
-            $request->get('destination') != null &&
-            $request->get('destination') != 'null') {
-            $data = $data->where('port_dest', $request->get('destination'));
-        }
-
-        if ($request->has('carrierM') &&
-            $request->get('carrierM') != null &&
-            $request->get('carrierM') != 'null') {
-            $data = $data->where('carrier', $request->get('carrierM'));
-        }
-
-        if ($request->has('status') &&
-            $request->get('status') != null &&
-            $request->get('status') != 'null') {
-            $data = $data->where('status', $request->get('status'));
-        }
-
+        );*/
         //dd($data->all());
 
-        return \DataTables::of($data->all())
+        return \DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                if ($request->has('origin') &&
+                    $request->get('origin') != null
+                    && $request->get('origin') != 'null') {
+                    $query->where('port_orig', $request->get('origin'));
+                }
+
+                if ($request->has('destination') &&
+                    $request->get('destination') != null &&
+                    $request->get('destination') != 'null') {
+                    $query->where('port_dest', $request->get('destination'));
+                }
+
+                if ($request->has('carrierM') &&
+                    $request->get('carrierM') != null &&
+                    $request->get('carrierM') != 'null') {
+                    $query->where('carrier', $request->get('carrierM'));
+                }
+
+                if ($request->has('status') &&
+                    $request->get('status') != null &&
+                    $request->get('status') != 'null') {
+                    $query->where('status', $request->get('status'));
+                }
+            })
 
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
