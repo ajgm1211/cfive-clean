@@ -182,7 +182,7 @@ New \ Status Import  &nbsp;
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-                            
+
                                 <div class="col-xl-12 order-1 order-xl-2 m--align-right">
                                     <a href="{{ route('contracts.add') }}">
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
@@ -195,28 +195,28 @@ New \ Status Import  &nbsp;
                                         </button>
                                     </a>
 
-                                    <!--<a href="{{route('Request.importaion.fcl')}}">
-
-<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-<span>
-<span>
-Request Importation &nbsp;
-</span>
-<i class="la la-clipboard"></i>
-</span>
-</button>
-</a>-->
-                                    <a href="{{route('RequestImportation.indexListClient')}}">
+                                    <a href="{{route('Request.importaion.fcl')}}">
 
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    New \ Status Import  &nbsp;
+                                                    New Import Contract &nbsp;
                                                 </span>
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
                                     </a>
+                                    <!--a href="{{route('RequestImportation.indexListClient')}}">
+
+<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+<span>
+<span>
+New \ Status Import  &nbsp;
+</span>
+<i class="la la-clipboard"></i>
+</span>
+</button>
+</a>-->
 
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
