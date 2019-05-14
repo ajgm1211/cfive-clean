@@ -221,7 +221,7 @@ New \ Status Import  &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                            <div class="row align-items-center">
+                            <div class="row align-items-center" hidden>
                                 <div class="col-xl-12 order-2 order-xl-1">
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                     <div class="form-group m-form__group row align-items-center">
