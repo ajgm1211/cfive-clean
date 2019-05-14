@@ -182,18 +182,7 @@ New \ Status Import  &nbsp;
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-                                <div class="col-xl-6 order-2 order-xl-1">
-                                    <div class="form-group m-form__group row align-items-center">
 
-                                        <div class="col-md-4">
-
-                                            <div class="d-md-none m--margin-bottom-10"></div>
-                                        </div>
-                                        <div class="col-md-4">
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-xl-12 order-1 order-xl-2 m--align-right">
                                     <a href="{{ route('contracts.add') }}">
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
@@ -206,30 +195,66 @@ New \ Status Import  &nbsp;
                                         </button>
                                     </a>
 
-                                    <!--<a href="{{route('Request.importaion.fcl')}}">
-
-<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-<span>
-<span>
-Request Importation &nbsp;
-</span>
-<i class="la la-clipboard"></i>
-</span>
-</button>
-</a>-->
-                                    <a href="{{route('RequestImportation.indexListClient')}}">
+                                    <a href="{{route('Request.importaion.fcl')}}">
 
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    New \ Status Import  &nbsp;
+                                                    New Import Contract &nbsp;
                                                 </span>
                                                 <i class="la la-clipboard"></i>
                                             </span>
                                         </button>
                                     </a>
+                                    <!--a href="{{route('RequestImportation.indexListClient')}}">
+
+<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+<span>
+<span>
+New \ Status Import  &nbsp;
+</span>
+<i class="la la-clipboard"></i>
+</span>
+</button>
+</a>-->
 
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class="col-xl-12 order-2 order-xl-1">
+                                    <div class="m-separator m-separator--dashed d-xl-none"></div>
+                                    <div class="form-group m-form__group row align-items-center">
+
+                                        <div class="col-lg-3">
+                                            <label class="">Origin</label>
+                                            <div class="" id="carrierMul">
+                                                {!! Form::select('origin',$values['origin'],null,['class'=>'m-select2-general form-control','id'=>'originS','required'])!!}
+                                            </div>                                            
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="">Destination</label>
+                                            <div class="" id="carrierMul">
+                                                {!! Form::select('destination',$values['destination'],null,['class'=>'m-select2-general form-control','id'=>'destinationS','required'])!!}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="">Carrier</label>
+                                            <div class="" id="carrierMul">
+                                                {!! Form::select('carrierM[]',$values['carrier'],null,['class'=>'m-select2-general form-control','id'=>'carrierM','required'])!!}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="">Satatus</label>
+                                            <div class="" id="carrierMul">
+                                                {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label><br></label>
+                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill form-control">Search</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -322,15 +347,67 @@ Request Importation &nbsp;
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contracts.js"></script>
 <script>
+
+
+    $('.m-select2-general').select2({
+
+    });
+
+
+</script>
+<script>
     $(document).on('click','.tabrates',function(e){
         //console.log($(window).width());
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
 
+    var oTable = $('#tableRates').DataTable({
+        processing: true,
+        serverSide: true,
+        autoWidth: true,
+        order: [[ 3, "asc" ],[ 4, "asc" ]],
+        ajax: {
+            url: "{{ route('contract.table') }}",
+            data: function (d) {
+                d.carrierM = $('select#carrierM').val();
+                d.origin = $('select#originS').val();
+                d.destination = $('select#destinationS').val();
+                d.status = $('select#statusS').val();
+            }
+        },
+        columns: [
+            {data: 'name', name: 'name'},
+            {data: 'carrier', name: 'carrier'},
+            {data: 'port_orig', name: 'port_orig'},
+            {data: 'port_dest', name: 'port_dest'},
+            {data: 'twuenty', name: 'twuenty'},
+            {data: 'forty', name: 'forty'},
+            {data: 'fortyhc', name: 'fortyhc'},
+            {data: 'fortynor', name: 'fortynor'},
+            {data: 'fortyfive', name: 'fortyfive'},
+            {data: 'currency', name: 'currency'},
+            {data: 'validity', name: 'validity'},
+            {data: 'status', name: 'status'},
+            {data: 'options', name: 'options'}
+        ],
+
+    });
+
+    $('#btnFiterSubmitSearch').click(function(){
+        $('#originS').removeAttr('required');
+        $('#carrierM').removeAttr('required');
+        $('#destinationS').removeAttr('required');
+        //alert($('select#originS').val());
+        $('#tableRates').DataTable().draw(true);
+        $('#originS').attr('required','required');
+        $('#carrierM').attr('required','required');
+        $('#destinationS').attr('required','required');
+    });
+
     $(function() {
 
-        $('#tableRates').DataTable({
+        /*$('#tableRates').DataTable({
             ordering: true,
             searching: true,
             processing: true,
@@ -393,7 +470,7 @@ Request Importation &nbsp;
                 });
                 $('.search2').select2();
             }
-        });
+        });*/
 
         $('#tableContracts').DataTable({
             ajax:  "{{ route('contract.tableG') }}",
