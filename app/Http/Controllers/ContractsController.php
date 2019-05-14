@@ -61,35 +61,36 @@ class ContractsController extends Controller
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
         }
-        $mrates     = $model->hydrate(
+       /* $mrates     = $model->hydrate(
             DB::select(
                 'call select_for_company_rates('.\Auth::user()->company_user_id.')'
             )
         );
 
         $carriersR       = $mrates->unique('carrier');
+        $originsR        = $mrates->unique('port_orig');
+        $destinationsR   = $mrates->unique('port_dest');
+        $statussR   = $mrates->unique('status');*/
         $carrierAr = [ 'null' => 'Select option'];
-        foreach($carriersR as $carrierR){
+        $originsAr = [ 'null' => 'Select option'];
+        $destinationAr = [ 'null' => 'Select option'];
+        $statusAr  = [ 'null' => 'Select option'];
+        
+        /*foreach($carriersR as $carrierR){
             $carrierAr[$carrierR->carrier] = $carrierR->carrier;
         }
 
-        $originsR        = $mrates->unique('port_orig');
-        $originsAr = [ 'null' => 'Select option'];
         foreach($originsR as $originR){
             $originsAr[$originR->port_orig] = $originR->port_orig;
         }
 
-        $destinationsR   = $mrates->unique('port_dest');
-        $destinationAr = [ 'null' => 'Select option'];
         foreach($destinationsR as $destinationR){
             $destinationAr[$destinationR->port_dest] = $destinationR->port_dest;
         }
 
-        $statussR   = $mrates->unique('status');
-        $statusAr  = [ 'null' => 'Select option'];
         foreach($statussR as $statusR){
             $statusAr[$statusR->status] = $statusR->status;
-        }
+        }*/
         $values = [
             'carrier'       => $carrierAr,
             'origin'        => $originsAr,

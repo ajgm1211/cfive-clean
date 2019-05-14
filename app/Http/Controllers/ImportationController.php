@@ -4861,7 +4861,7 @@ class ImportationController extends Controller
                            $addressVal         = '';
                            $pricelevelVal      = '';
                            $ownerVal           = \Auth::user()->id;
-                           $company_user_id    = \Auth::user()->company_user_id	;
+                           $company_user_id    = \Auth::user()->company_user_id ;
 
                            $businessnameBol = false;
                            $phoneBol        = false;
