@@ -351,6 +351,11 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
+              <div class="col-lg-2">
+                <label>Incoterm</label>
+                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general']) }}
+
+              </div>
             </div><br>
             <div class="row">
               <div class="col-lg-2" >
