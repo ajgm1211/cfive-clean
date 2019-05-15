@@ -211,6 +211,12 @@ class QuoteV2Controller extends Controller
       $sum40nor=0;
       $sum45=0;
 
+      $total_markup20=0;
+      $total_markup40=0;
+      $total_markup40hc=0;
+      $total_markup40nor=0;
+      $total_markup45=0;
+
       $currency = Currency::find($item->currency_id);
       $item->currency_usd = $currency->rates;
       $item->currency_eur = $currency->rates_eur;
@@ -222,38 +228,48 @@ class QuoteV2Controller extends Controller
         if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
           $amount20=$array_amounts['c20'];
           $markup20=$array_markups['c20'];
-          $total20=($amount20+$markup20)/$currency_rate;
-          $sum20 = number_format($total20, 2, '.', '');
+          $total20=$amount20/$currency_rate;
+          $total_markup20=$markup20/$currency_rate;
+          $sum20 = number_format($total20+$total_markup20, 2, '.', '');
         }
         if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
           $amount40=$array_amounts['c40'];
           $markup40=$array_markups['c40'];
-          $total40=($amount40+$markup40)/$currency_rate;
-          $sum40 = number_format($total40, 2, '.', '');
+          $total40=$amount40/$currency_rate;
+          $total_markup40=$markup40/$currency_rate;
+          $sum40 = number_format($total40+$total_markup40, 2, '.', '');
         }
         if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
           $amount40hc=$array_amounts['c40hc'];
           $markup40hc=$array_markups['c40hc'];
-          $total40hc=($amount40hc+$markup40hc)/$currency_rate;
-          $sum40hc = number_format($total40hc, 2, '.', '');
+          $total40hc=$amount40hc/$currency_rate;
+          $total_markup40hc=$markup40hc/$currency_rate;
+          $sum40hc = number_format($total40hc+$total_markup40hc, 2, '.', '');
         }
         if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
           $amount40nor=$array_amounts['c40nor'];
           $markup40nor=$array_markups['c40nor'];
-          $total40nor=($amount40nor+$markup40nor)/$currency_rate;
-          $sum40nor = number_format($total40nor, 2, '.', '');
+          $total40nor=$amount40nor/$currency_rate;
+          $total_markup40nor=$markup40nor/$currency_rate;
+          $sum40nor = number_format($total40nor+$total_markup40nor, 2, '.', '');
         }
         if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
           $amount45=$array_amounts['c45'];
           $markup45=$array_markups['c45'];
           $total45=($amount45+$markup45)/$currency_rate;
-          $sum45 = number_format($total45, 2, '.', '');
+          $total_markup45=$markup45/$currency_rate;
+          $sum45 = number_format($total45+$total_markup45, 2, '.', '');
         }
         $value->total_20=number_format($sum20, 2, '.', '');
         $value->total_40=number_format($sum40, 2, '.', '');
         $value->total_40hc=number_format($sum40hc, 2, '.', '');
         $value->total_40nor=number_format($sum40nor, 2, '.', '');
         $value->total_45=number_format($sum45, 2, '.', '');
+        $value->total_markup20=number_format($total_markup20, 2, '.', '');
+        $value->total_markup40=number_format($total_markup40, 2, '.', '');
+        $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
+        $value->total_markup40nor=number_format($total_markup40nor, 2, '.', '');
+        $value->total_markup45=number_format($total_markup45, 2, '.', '');        
 
         $currency_charge = Currency::find($value->currency_id);
         $value->currency_usd = $currency_charge->rates;

@@ -55,6 +55,12 @@
                                                             $sum40hc=0;
                                                             $sum40nor=0;
                                                             $sum45=0;
+
+                                                            $sum_m20=0;
+                                                            $sum_m40=0;
+                                                            $sum_m40hc=0;
+                                                            $sum_m40nor=0;
+                                                            $sum_m45=0;
                                                         @endphp
                                                         @foreach($rate->charge as $item)
                                                             @if($item->type_id==3)
@@ -69,6 +75,12 @@
                                                                     $sum40hc+=@$item->total_40hc;
                                                                     $sum40nor+=@$item->total_40nor;
                                                                     $sum45+=@$item->total_45;
+
+                                                                    $sum_m20+=$item->total_markup20;
+                                                                    $sum_m40+=@$item->total_markup40;
+                                                                    $sum_m40hc+=@$item->total_markup40hc;
+                                                                    $sum_m40nor+=@$item->total_markup40nor;
+                                                                    $sum_m45+=@$item->total_markup45;                                                                    
                                                                 ?>
                                                                 <tr >
                                                                     <td>
@@ -262,6 +274,11 @@
                                                             $sum_origin_40hc=0;
                                                             $sum_origin_40nor=0;
                                                             $sum_origin_45=0;
+                                                            $sum_origin_m20=0;
+                                                            $sum_origin_m40=0;
+                                                            $sum_origin_m40hc=0;
+                                                            $sum_origin_m40nor=0;
+                                                            $sum_origin_m45=0;                                                            
                                                         @endphp
                                                         @foreach($rate->charge as $item)
                                                             @if($item->type_id==1)
@@ -275,6 +292,12 @@
                                                                     $sum_origin_40hc+=@$item->total_40hc;
                                                                     $sum_origin_40nor+=@$item->total_40nor;
                                                                     $sum_origin_45+=@$item->total_45;
+
+                                                                    $sum_origin_m20+=@$item->total_markup20;
+                                                                    $sum_origin_m40+=@$item->total_markup40;
+                                                                    $sum_origin_m40hc+=@$item->total_markup40hc;
+                                                                    $sum_origin_m40nor+=@$item->total_markup40nor;
+                                                                    $sum_origin_m45+=@$item->total_markup45;                                                                    
                                                                 ?>
                                                                 <tr>
                                                                     <td>
@@ -329,7 +352,7 @@
                                                                         <span class="total_45">{{@$origin_amounts['c45']+@$origin_markups['c45']}}</span>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                                        <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                                     </td>
                                                                 </tr>
                                                                 @php
@@ -467,6 +490,11 @@
                                                             $sum_destination_40hc=0;
                                                             $sum_destination_40nor=0;
                                                             $sum_destination_45=0;
+                                                            $sum_destination_m20=0;
+                                                            $sum_destination_m40=0;
+                                                            $sum_destination_m40hc=0;
+                                                            $sum_destination_m40nor=0;
+                                                            $sum_destination_m45=0;                                                            
                                                         @endphp
 
                                                         @foreach($rate->charge as $item)
@@ -481,6 +509,12 @@
                                                                     $sum_destination_40hc+=@$item->total_40hc;
                                                                     $sum_destination_40nor+=@$item->total_40nor;
                                                                     $sum_destination_45+=@$item->total_45;
+
+                                                                    $sum_destination_m20+=@$item->total_markup20;
+                                                                    $sum_destination_m40+=@$item->total_markup40;
+                                                                    $sum_destination_m40hc+=@$item->total_markup40hc;
+                                                                    $sum_destination_m40nor+=@$item->total_markup40nor;
+                                                                    $sum_destination_m45+=@$item->total_markup45;
                                                                 ?>                                                     
 
                                                                 <tr>
@@ -536,7 +570,7 @@
                                                                         <span class="total_45">{{@$destination_amounts['c45']+@$destination_markups['c45']}}</span>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="#" class="editable" data-source="{{$currencies}}" data-name="markups->45" data-type="select" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                                        <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                                     </td>
                                                                 </tr>
                                                                 @php
@@ -645,6 +679,41 @@
                                             </div>
                                         </div>
                                         <br>
+                                        @if($rate->id == @$rate_id )
+                                        <br>
+                                         <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                            <thead class="title-quote text-center header-table">
+                                                <tr>
+                                                    <td >Total</td>
+                                                    <td {{ $equipmentHides['20'] }} >20'</td>
+                                                    <td {{ $equipmentHides['20'] }} >Markup</td>
+                                                    <td {{ $equipmentHides['40'] }} >40'</td>
+                                                    <td {{ $equipmentHides['40'] }} >Markup</td>
+                                                    <td {{ $equipmentHides['40hc'] }} >40HC'</td>
+                                                    <td {{ $equipmentHides['40hc'] }} >Markup</td>
+                                                    <td {{ $equipmentHides['40nor'] }} >40NOR'</td>
+                                                    <td {{ $equipmentHides['40nor'] }} >Markup</td>
+                                                    <td {{ $equipmentHides['45'] }} >45'</td>
+                                                    <td {{ $equipmentHides['45'] }} >Markup</td>                 
+                                                    <td >Currency</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background-color: white;">
+                                                <td class="title-quote size-12px"></td>
+                                                <td {{ $equipmentHides['20'] }} >{{number_format(@$sum20+@$sum_origin_20+@$sum_destination_20, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['20'] }} >{{number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40'] }} >{{number_format(@$sum40+@$sum_origin_40+@$sum_destination_40, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40'] }} >{{number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40hc'] }} >{{number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40hc'] }} >{{number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40nor'] }} >{{number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['40nor'] }} >{{number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['45'] }} >{{number_format(@$sum45+@$sum_origin_45+@$sum_destination_45, 2, '.', '')}}</td>
+                                                <td {{ $equipmentHides['45'] }} >{{number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '')}}</td>
+                                                <td >{{$currency_cfg->alphacode}}</td>
+                                            </tbody>
+                                        </table>
+                                        @endif
                                         <!-- Inlands -->
                                         @if(!$rate->inland->isEmpty())
                                             <div class="row" >
