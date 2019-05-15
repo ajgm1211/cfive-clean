@@ -10,12 +10,11 @@ class GlobalCharge extends Model implements Auditable
 	use \OwenIt\Auditing\Auditable;
 	protected $table    = "globalcharges";
 	protected $fillable = 
-		['id','surcharge_id','typedestiny_id','company_user_id','calculationtype_id','ammount','validity','expire','currency_id','account_importation_globalcharge_id','created_at','updated_at'];
+	['id','surcharge_id','typedestiny_id','company_user_id','calculationtype_id','ammount','validity','expire','currency_id','account_importation_globalcharge_id','created_at','updated_at'];
 	public function companyUser()
 	{
 		return $this->belongsTo('App\CompanyUser');
 	}
-
 
 	public function currency(){
 
@@ -44,6 +43,10 @@ class GlobalCharge extends Model implements Auditable
 	}
 	public function globalcharcarrier(){
 		return $this->hasMany('App\GlobalCharCarrier','globalcharge_id');
+
+	}
+	public function carrier(){
+		return $this->hasOne('App\GlobalCharCarrier','globalcharge_id');
 
 	}
 	public function globalCharPortCarriers(){

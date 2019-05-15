@@ -32,13 +32,13 @@
 
             <div class="col-lg-4">
                 {!! Form::label('uom', 'W/M') !!}
-                {!! Form::number('uom', $rates->uom, ['id' => 'uom','placeholder' => 'Please enter the W/M','class' => 'form-control m-input','required' ]) !!} 
+                {!! Form::text('uom', $rates->uom, ['id' => 'uom','placeholder' => 'Please enter the W/M','class' => 'form-control m-input','required' ]) !!} 
 
             </div>
             
             <div class="col-lg-4">
                 {!! Form::label('minimum', 'Minimum') !!}
-                {!! Form::number('minimum', $rates->minimum, ['id' => 'minimum','placeholder' => 'Please enter the minimum','class' => 'form-control m-input','required' ]) !!} 
+                {!! Form::text('minimum', $rates->minimum, ['id' => 'minimum','placeholder' => 'Please enter the minimum','class' => 'form-control m-input','required' ]) !!} 
             </div>
 
         </div>

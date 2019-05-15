@@ -144,7 +144,7 @@ class ReprocessSurchargersJob implements ShouldQueue
 
                 //  Amount ---------------------------------------------------------------------------------
 
-                $amountV = (int)$ammountEX[0];
+                $amountV = floatval($ammountEX[0]);
 
                 //  Currency -------------------------------------------------------------------------------
 
