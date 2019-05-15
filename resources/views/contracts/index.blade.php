@@ -361,7 +361,7 @@ New \ Status Import  &nbsp;
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
-
+/*
     var oTable = $('#tableRates').DataTable({
         processing: true,
         serverSide: true,
@@ -403,11 +403,11 @@ New \ Status Import  &nbsp;
         $('#originS').attr('required','required');
         $('#carrierM').attr('required','required');
         $('#destinationS').attr('required','required');
-    });
+    });*/
 
     $(function() {
 
-        /*$('#tableRates').DataTable({
+        $('#tableRates').DataTable({
             ordering: true,
             searching: true,
             processing: true,
@@ -470,7 +470,7 @@ New \ Status Import  &nbsp;
                 });
                 $('.search2').select2();
             }
-        });*/
+        });
 
         $('#tableContracts').DataTable({
             ajax:  "{{ route('contract.tableG') }}",

@@ -273,6 +273,7 @@ class NewContractRequestsController extends Controller
             $Ncontract->type            = $type;
             $Ncontract->data            = $data;
             $Ncontract->contract_id     = $contract->id;
+            //$Ncontract->contract_id     = 100;
             $Ncontract->save();
 
             foreach($request->carrierM as $carrierVal){
@@ -297,14 +298,15 @@ class NewContractRequestsController extends Controller
             //evento Intercom 
             $event = new  EventIntercom();
             $event->event_newRequest();
-            $request->session()->flash('message.nivel', 'success');
+            /*$request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('contracts.index');*/
             //return redirect()->route('RequestImportation.indexListClient');
+            dd($request->all());
         } else {
-            $request->session()->flash('message.nivel', 'error');
+            /*$request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('contracts.index');*/
         }
     }
 

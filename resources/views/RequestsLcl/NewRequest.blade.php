@@ -68,7 +68,7 @@ new registration
                     <br>
                     <div class="row">
                         <div class="col-lg-12">
-                            {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','files'=>true])!!}
+                            {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','id'=>'form','files'=>true])!!}
 
                             <div class="form-group m-form__group row">
 
@@ -104,7 +104,7 @@ new registration
                                         <div class="col-lg-4">
                                             <label><br></label>
                                             <label for="file" class="btn btn-primary form-control" >
-                                                <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                                Choose File
                                             </label>
                                             <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
                                             <div id="info" style="color:red"></div>
@@ -441,12 +441,12 @@ new registration
     }
 
     $(function() {
-
+        var count = 0;
         var bar = $('.progress-bar');
         var percent = $('.percent');
         var status = $('#status');
 
-        $('form').ajaxForm({
+        $('#form').ajaxForm({
             beforeSubmit: validate,
             beforeSend: function() {
                 $('#modaledit').modal('show');
@@ -461,6 +461,12 @@ new registration
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
+            error: function(req, textStatus, errorThrown) {
+                //window.location = ErrorUrl;
+                //swal("Error!", "Choose File", "error");
+                //alert(req+' '+textStatus+' '+errorThrown);
+                count = 1;
+            },
             success: function() {
                 var percentVal = 'Wait, Saving';
                 bar.width(percentVal)
@@ -469,14 +475,35 @@ new registration
             },
             complete: function(xhr) {
                 status.html(xhr.responseText);
-                $('#mjsH').text('Bye');
-                $('#modaledit').modal('hide');
-                window.location.href = "{{route('contractslcl.index')}}";
+                $('#mjsH').text('Bye');   
+                if(count == 1){
+                    swal({
+                        title: "Error",
+                        text: "Error, Please try again !",
+                        icon: "error",
+                        buttons: true,
+                    })
+                        .then((willDelete) => {
+                        if (willDelete) {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contractslcl.index')}}";
+                        } else {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contractslcl.index')}}";
+                        }
+                    });
+
+                } else{
+                    window.location.href = "{{route('contractslcl.index')}}";
+                }
+                
                 //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
             }
         });
 
-    })();
+    });
 
 </script>
 

@@ -69,7 +69,7 @@ new registration
                     <div class="row">
                         <div class="col-lg-12">
 
-                            {!! Form::open(['route'=>'RequestImportation.store2','method'=>'POST','files'=>true])!!}
+                            {!! Form::open(['route'=>'RequestImportation.store2','method'=>'POST','id'=>'form','files'=>true])!!}
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
@@ -105,7 +105,7 @@ new registration
                                             <label><br></label>
                                             <br>
                                             <label for="file" class="btn btn-primary form-control-label form-control" >
-                                                <i class="la la-cloud-upload"></i>&nbsp; Choose File
+                                                 Choose File
                                             </label>
                                             <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required style='display: none;'>
                                             <div id="info" style="color:red"></div>
@@ -446,12 +446,12 @@ new registration
     }
 
     $(function() {
-
+        var count =0;
         var bar = $('.progress-bar');
         var percent = $('.percent');
         var status = $('#status');
 
-        $('form').ajaxForm({
+        $('#form').ajaxForm({
             beforeSubmit: validate,
             beforeSend: function() {
                 $('#modaledit').modal('show');
@@ -466,22 +466,53 @@ new registration
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
-            success: function() {
+
+            error: function(req, textStatus, errorThrown) {
+                //window.location = ErrorUrl;
+                //swal("Error!", "Choose File", "error");
+                //alert(req+' '+textStatus+' '+errorThrown);
+                count = 1;
+            },
+
+            success: function(statusText) {
+                //alert(statusText);
                 var percentVal = 'Wait, Saving';
                 bar.width(percentVal)
                 $('#mjsH').text('OK');
                 percent.html(percentVal);
             },
+
             complete: function(xhr) {
                 status.html(xhr.responseText);
                 $('#mjsH').text('Bye');
-                $('#modaledit').modal('hide');
-                window.location.href = "{{route('contracts.index')}}";
+                if(count == 1){
+                    swal({
+                        title: "Error",
+                        text: "Error, Please try again !",
+                        icon: "error",
+                        buttons: true,
+                    })
+                        .then((willDelete) => {
+                        if (willDelete) {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contracts.index')}}";
+                        } else {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contracts.index')}}";
+                        }
+                    });
+
+                } else{
+                    window.location.href = "{{route('contracts.index')}}";
+                }
                 //window.location.href = "{{route('RequestImportation.indexListClient')}}";
-            }
+            },
+
         });
 
-    })();
+    });
 
 
 
