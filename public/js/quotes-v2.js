@@ -1035,7 +1035,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
-
+    $("#equipment_id").hide();
+    $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", true );
     $("#delivery_type_air").prop( "disabled", false );
     $("#delivery_type_label").hide();

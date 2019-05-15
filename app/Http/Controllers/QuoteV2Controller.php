@@ -46,6 +46,7 @@ use App\Repositories\Schedules;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use App\PackageLoadV2;
+use App\Airline;
 
 class QuoteV2Controller extends Controller
 {
@@ -1250,8 +1251,6 @@ class QuoteV2Controller extends Controller
 
   public function store(Request $request){
 
-
-
     
     if(!empty($request->input('form'))){
       $form =  json_decode($request->input('form'));
@@ -1619,6 +1618,7 @@ class QuoteV2Controller extends Controller
 
     $prices = Price::all()->pluck('name','id');
     $carrierMan = Carrier::all()->pluck('name','id');
+    $airlines = Airline::all()->pluck('name','id');
     $carrierMan->prepend("Please an option");
 
     $company_user = User::where('id',\Auth::id())->first();
@@ -1630,7 +1630,7 @@ class QuoteV2Controller extends Controller
     $currencies = Currency::all()->pluck('alphacode','id');
     $hideO = 'hide';
     $hideD = 'hide';
-    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm'));
+    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines'));
 
 
   }
