@@ -931,6 +931,8 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+    $("#origin_harbor").prop( "disabled", false );
+    $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").show();
     $("#equipment").prop( "disabled", false );
 
@@ -960,6 +962,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+    $("#origin_harbor").prop( "disabled", false );
+    $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").hide();
     $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", false );
@@ -1035,6 +1039,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+    $("#origin_harbor").prop( "disabled", true );
+    $("#destination_harbor").prop( "disabled", true );
     $("#equipment_id").hide();
     $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", true );
@@ -1563,6 +1569,67 @@ function change_tab(tab){
   }
 }
 
+$(document).on('change', '#delivery_type_air', function (e) {
+
+  if($(this).val()==5){
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#origin_address").val('');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==6){
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").removeClass('hide');
+    $("#origin_address").val('');
+  }
+  if($(this).val()==7){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==8){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").removeClass('hide');
+  }
+});
+
+$('#origin_airport').select2({
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
+
+$('#destination_airport').select2({
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
   var $template = $('#lcl_air_load_template'),

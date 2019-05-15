@@ -1251,7 +1251,7 @@ class QuoteV2Controller extends Controller
 
   public function store(Request $request){
 
-    
+
     if(!empty($request->input('form'))){
       $form =  json_decode($request->input('form'));
       $info = $request->input('info');
@@ -1264,7 +1264,7 @@ class QuoteV2Controller extends Controller
         $priceId = $form->price_id;
       }
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since ,'price_id' => $priceId ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
 
 
@@ -1303,8 +1303,12 @@ class QuoteV2Controller extends Controller
         $typeText = "LCL";
         $equipment =  $arregloNull;
       }
+      if($request->input('type') == '3'){
+        $typeText = "AIR";
+        $equipment =  $arregloNull;
+      }
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment , 'incoterm_id'=>'1' , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
 
       // FCL
@@ -1326,7 +1330,7 @@ class QuoteV2Controller extends Controller
       }
       //LCL        $input = Input::all();
 
-      if($typeText == 'LCL'){
+      if($typeText == 'LCL' || $typeText == 'AIR' ){
         $input = Input::all();
         $quantity = array_values( array_filter($input['quantity']) );
         //dd($input);
@@ -1581,7 +1585,7 @@ class QuoteV2Controller extends Controller
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
-   return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
   public function skipPluck($pluck)
@@ -1606,6 +1610,7 @@ class QuoteV2Controller extends Controller
 
     $company_user_id=\Auth::user()->company_user_id;
     $incoterm = Incoterm::pluck('name','id');
+    $incoterm->prepend('Select at option','');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
         $q->where('user_id',\Auth::user()->id);
@@ -1652,7 +1657,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-
+    $airlines = Airline::all()->pluck('name','id');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
     $prices = Price::all()->pluck('name','id');
@@ -2950,7 +2955,7 @@ class QuoteV2Controller extends Controller
 
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines'));
 
   }
 
