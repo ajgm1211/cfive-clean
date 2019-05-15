@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('css')
 @parent
-<link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 
 @section('title', 'New Request LCL')
@@ -62,38 +62,62 @@ new registration
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <br>
                     <div class="row">
                         <div class="col-lg-12">
+                            {!! Form::open(['route'=>'RequestImportationLcl.store2','method'=>'POST','id'=>'form','files'=>true])!!}
 
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
-                                    <label class="col-form-labe"><b>CONTRACT:</b></label>
-                                </div>
-
-                                <div class="col-lg-3">
-                                    <label for="nameid" class="">Contract Name</label>
+                                    <label for="nameid" class="">References</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
-                                <div class="col-lg-3">
-                                    <label for="numberid" class=" ">Contract Number</label>
-                                    {!!  Form::text('number',null,['id'=>'numberid',
-                                    'placeholder'=>'Number Contract',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
-                                <div class="col-lg-3">
+                                <div class="col-lg-2">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
+                                <div class="col-lg-2">
+                                    <label class="">Carrier</label>
+                                    <div class="" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
+                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group row ">
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="text" id="btnFiterSubmitSearch" class="btn btn-primary form-control">Search</button>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <label for="file" class="btn btn-primary form-control" >
+                                                Choose File
+                                            </label>
+                                            <input type="file" class="" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                            <div id="info" style="color:red"></div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <label><br></label>
+                                            <button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
+                                                <i class=""></i>Import File
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
@@ -252,34 +276,36 @@ new registration
                             <div class="form-group m-form__group row">
 
                             </div>
-                            <br>
-                            <br>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-4">
-                                </div>
-                                <div class="col-lg-6">
-                                    <input type="file" name="file" required>
-                                </div>
-                            </div>
-                            <div class="form-group m-form__group ">
-                                <div class="col-lg-12 col-lg-offset-12 ">
-                                    <center>
-                                        <br />
-                                        <button type="submit" class="btn btn-primary">
-                                            Load Request
-                                        </button>
-                                    </center>
-                                </div>
-                            </div>
-
+                            {!! Form::close()!!}
                         </div>
+                        <!--end: Form Wizard-->
+                        <div class="col-lg-12">
 
+                            <!--<form method="POST" id="search-form" class="form-inline" role="form">
+@csrf
+<div class="form-group">
+<label for="name">Name</label>
+<input type="text" class="form-control" name="namead" id="namead" placeholder="search name">
+</div>
+
+<button type="submit" class="btn btn-primary">Search</button>
+</form>-->
+                            <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                                <thead >
+                                    <tr>
+                                        <th style="width:30%">Reference</th>
+                                        <th >Direction</th>
+                                        <th >Carriers</th>
+                                        <th >Validation</th>
+                                        <th >Expire</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        {!! Form::close()!!}
-        <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
     <!--  begin modal editar rate -->
@@ -349,8 +375,62 @@ new registration
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
-
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script>
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    var oTable = $('#requesttable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{!! route("Similar.Contracts.Request.Lcl",$user->company_user_id) !!}',
+            data: function (d) {
+                d.carrierM = $('select#carrierM').val();
+                var date = ($('#m_daterangepicker_1').val()).split(" / ");
+                d.dateO = date[0];
+                d.dateT = date[1];
+                d.direction = $('#direction select').val();
+            }
+        },
+        columns: [
+            { data: 'name', name: 'name' },
+            { data: 'direction', name: 'direction' },
+            { data: 'carrier', name: 'carrier' },
+            { data: 'validity', name: 'validity' },
+            { data: 'expire', name: 'expire' }
+        ],
+        "stateSave": true
+    });
+
+    $('#search-form').on('submit', function(e) {
+        oTable.draw();
+        e.preventDefault();
+    });    
+
+    $('#btnFiterSubmitSearch').click(function(){
+        $('#nameid').removeAttr('required');
+        $('#carrierM').removeAttr('required');
+        $('#direction').removeAttr('required');
+        $('#requesttable').DataTable().draw(true);
+        $('#nameid').attr('required','required');
+        $('#carrierM').attr('required','required');
+        $('#direction').attr('required','required');
+    });
+
+    function fileempty(){
+        if( document.getElementById("file").files.length == 0 ){
+            swal("Error!", "Choose File", "error");
+        }
+    }
+    function cambiar(){
+        var pdrs = document.getElementById('file').files[0].name;
+        document.getElementById('info').innerHTML = pdrs;
+    } 
 
     function validate(formData, jqForm, options) {
         var form = jqForm[0];
@@ -361,12 +441,12 @@ new registration
     }
 
     $(function() {
-
+        var count = 0;
         var bar = $('.progress-bar');
         var percent = $('.percent');
         var status = $('#status');
 
-        $('form').ajaxForm({
+        $('#form').ajaxForm({
             beforeSubmit: validate,
             beforeSend: function() {
                 $('#modaledit').modal('show');
@@ -381,6 +461,12 @@ new registration
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
+            error: function(req, textStatus, errorThrown) {
+                //window.location = ErrorUrl;
+                //swal("Error!", "Choose File", "error");
+                //alert(req+' '+textStatus+' '+errorThrown);
+                count = 1;
+            },
             success: function() {
                 var percentVal = 'Wait, Saving';
                 bar.width(percentVal)
@@ -389,13 +475,35 @@ new registration
             },
             complete: function(xhr) {
                 status.html(xhr.responseText);
-                $('#mjsH').text('Bye');
-                $('#modaledit').modal('hide');
-                window.location.href = "{{route('contractslcl.index')}}";
+                $('#mjsH').text('Bye');   
+                if(count == 1){
+                    swal({
+                        title: "Error",
+                        text: "Error, Please try again !",
+                        icon: "error",
+                        buttons: true,
+                    })
+                        .then((willDelete) => {
+                        if (willDelete) {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contractslcl.index')}}";
+                        } else {
+                            count = 0;
+                            $('#modaledit').modal('hide');
+                            window.location.href = "{{route('contractslcl.index')}}";
+                        }
+                    });
+
+                } else{
+                    window.location.href = "{{route('contractslcl.index')}}";
+                }
+                
+                //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
             }
         });
 
-    })();
+    });
 
 </script>
 
