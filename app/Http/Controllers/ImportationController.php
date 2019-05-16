@@ -749,35 +749,7 @@ class ImportationController extends Controller
 
                        $i = 1;
                        foreach($reader->get() as $read){
-                           $carrierVal      = '';
-                           $originVal       = '';
-                           $destinyVal      = '';
-                           $origenFL        = '';
-                           $destinyFL       = '';
-                           $currencyVal     = '';
-                           $twentyVal       = '';
-                           $fortyVal        = '';
-                           $fortyhcVal      = '';
-                           $fortynorVal     = '';
-                           $fortyfiveVal    = '';
-                           $originResul     = '';
-                           $destinResul     = '';
-                           $currencResul    = '';
-                           $carrierResul    = '';
 
-                           $originBol       = false;
-                           $origExiBol      = false;
-                           $destinyBol      = false;
-                           $destiExitBol    = false;
-                           $carriExitBol    = false;
-                           $curreExiBol     = false;
-                           $twentyExiBol    = false;
-                           $fortyExiBol     = false;
-                           $fortyhcExiBol   = false;
-                           $fortynorExiBol  = false;
-                           $fortyfiveExiBol = false;
-                           $carriBol        = false;
-                           $values          = true;
 
                            //$originMultps      = [];
                            // $destinyMultps     = [];
@@ -803,6 +775,35 @@ class ImportationController extends Controller
                                foreach($originMultps as $originMult){
                                    foreach($destinyMultps as $destinyMult){
 
+                                       $carrierVal      = '';
+                                       $originVal       = '';
+                                       $destinyVal      = '';
+                                       $origenFL        = '';
+                                       $destinyFL       = '';
+                                       $currencyVal     = '';
+                                       $twentyVal       = '';
+                                       $fortyVal        = '';
+                                       $fortyhcVal      = '';
+                                       $fortynorVal     = '';
+                                       $fortyfiveVal    = '';
+                                       $originResul     = '';
+                                       $destinResul     = '';
+                                       $currencResul    = '';
+                                       $carrierResul    = '';
+
+                                       $originBol       = false;
+                                       $origExiBol      = false;
+                                       $destinyBol      = false;
+                                       $destiExitBol    = false;
+                                       $carriExitBol    = false;
+                                       $curreExiBol     = false;
+                                       $twentyExiBol    = false;
+                                       $fortyExiBol     = false;
+                                       $fortyhcExiBol   = false;
+                                       $fortynorExiBol  = false;
+                                       $fortyfiveExiBol = false;
+                                       $carriBol        = false;
+                                       $values          = true;
 
                                        // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
                                        //--------------- CARRIER -----------------------------------------------------------------
