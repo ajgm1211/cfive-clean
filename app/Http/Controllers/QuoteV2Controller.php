@@ -1264,7 +1264,7 @@ class QuoteV2Controller extends Controller
         $priceId = $form->price_id;
       }
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>1,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
 
 
@@ -1298,17 +1298,20 @@ class QuoteV2Controller extends Controller
       if($request->input('type') == '1'){
         $typeText = "FCL";
         $equipment =  stripslashes(json_encode($request->input('equipment')));
+        $delivery_type = $request->input('delivery_type') ;
       }
       if($request->input('type') == '2'){
         $typeText = "LCL";
         $equipment =  $arregloNull;
+        $delivery_type = $request->input('delivery_type') ;
       }
       if($request->input('type') == '3'){
         $typeText = "AIR";
         $equipment =  $arregloNull;
+        $delivery_type = $request->input('delivery_type_air') ;
       }
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>1,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since  ]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
 
       // FCL
