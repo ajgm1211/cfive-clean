@@ -1150,6 +1150,14 @@
                   <br>
 
                   <div class="row bg-light">
+                    <input type='hidden' id='sub_inland_20_o{{ $arr->id }}' value="0">
+                    <input  type='hidden' id='sub_inland_40_o{{ $arr->id }}' value="0">
+                    <input  type='hidden' id='sub_inland_40h_o{{ $arr->id }}' value="0">
+
+                    <input type='hidden' id='sub_inland_20_d{{ $arr->id }}' value="0">
+                    <input type='hidden'  id='sub_inland_40_d{{ $arr->id }}' value="0">
+                    <input type='hidden'  id='sub_inland_40h_d{{ $arr->id }}' value="0">
+
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Inlands Charges</span></div>
                     <div class="col-lg-6">
                       <div class="d-flex justify-content-between">

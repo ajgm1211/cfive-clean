@@ -1310,21 +1310,52 @@ $('.inlands').on('click', function(){
   var  i40= $("#valor-d40"+id+"-"+idRate).html();
   var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
 
-  var  sub20= $("#sub_inland_20"+idRate).html();
 
+  var  sub20o= $("#sub_inland_20_o"+idRate);
+  var  sub40o= $("#sub_inland_40_o"+idRate);
+  var  sub40ho= $("#sub_inland_40h_o"+idRate);
+
+  var  sub20d= $("#sub_inland_20_d"+idRate);
+  var  sub40d= $("#sub_inland_40_d"+idRate);
+  var  sub40hd= $("#sub_inland_40h_d"+idRate);
+
+
+  var  sub20= $("#sub_inland_20"+idRate).html();
   var  sub40= $("#sub_inland_40"+idRate).html();
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 =  parseFloat(i20);
-    sub40 =  parseFloat(i40);
-    sub40h =  parseFloat(i40h);
+    sub20d.val(parseFloat(i20));
+    sub40d.val(parseFloat(i40));
+    sub40hd.val(parseFloat(i40h));
+
+    sub20 = parseFloat(sub20o.val()) +  parseFloat(sub20d.val());
+    sub40 = parseFloat(sub40o.val()) + parseFloat(sub40d.val());
+    sub40h = parseFloat(sub40ho.val()) + parseFloat(sub40hd.val());
+
 
   }else{
 
-    sub20 ='0.00';
-    sub40 = '0.00';
-    sub40h = '0.00';
+    sub20d.val(0.00);
+    sub40d.val(0.00);
+    sub40hd.val(0.00);
+
+    if(parseFloat(sub20o.val())  > parseFloat(sub20d.val()) )
+      sub20 = parseFloat(sub20o.val())  - parseFloat(sub20d.val()) ;
+    else
+      sub20 = parseFloat(sub20d.val()) -  parseFloat(sub20o.val()) ;
+
+    if( parseFloat(sub40o.val())  >  parseFloat(sub40d.val()))
+      sub40 =parseFloat(sub40o.val())   - parseFloat(sub40d.val())  ;
+    else
+      sub40 =  parseFloat(sub40d.val())  - parseFloat(sub40o.val()) ;
+
+    if(parseFloat(sub40ho.val()) > parseFloat(sub40hd.val()) )
+      sub40h = parseFloat(sub40ho.val())   - parseFloat(sub40hd.val())  ;
+    else
+      sub40h =  parseFloat(sub40hd.val() -  parseFloat(sub40ho.val()) )  ;
+
+
   }
 
   $("#sub_inland_20"+idRate).html(sub20);
@@ -1357,20 +1388,52 @@ $('.inlandsO').on('click', function(){
   var  i40= $("#valor-o40"+id+"-"+idRate).html();
   var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
 
+  var  sub20o= $("#sub_inland_20_o"+idRate);
+  var  sub40o= $("#sub_inland_40_o"+idRate);
+  var  sub40ho= $("#sub_inland_40h_o"+idRate);
+
+  var  sub20d= $("#sub_inland_20_d"+idRate);
+  var  sub40d= $("#sub_inland_40_d"+idRate);
+  var  sub40hd= $("#sub_inland_40h_d"+idRate);
+
+
   var  sub20= $("#sub_inland_20"+idRate).html();
   var  sub40= $("#sub_inland_40"+idRate).html();
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 = parseFloat(i20);
-    sub40 = parseFloat(i40);
-    sub40h =  parseFloat(i40h);
+    sub20o.val(parseFloat(i20));
+    sub40o.val(parseFloat(i40));
+    sub40ho.val(parseFloat(i40h));
+
+    sub20 = parseFloat(sub20o.val()) + parseFloat(sub20d.val());
+    sub40 =parseFloat(sub40o.val()) + parseFloat(sub40d.val());
+    sub40h = parseFloat(sub40ho.val()) + parseFloat(sub40hd.val());
+
 
   }else{
 
-    sub20 ='0.00';
-    sub40 ='0.00';
-    sub40h='0.00';
+    sub20o.val(0.00);
+    sub40o.val(0.00);
+    sub40ho.val(0.00);
+
+    if(parseFloat(sub20o.val())  > parseFloat(sub20d.val()) )
+      sub20 = parseFloat(sub20o.val())  - parseFloat(sub20d.val()) ;
+    else
+      sub20 = parseFloat(sub20d.val()) -  parseFloat(sub20o.val()) ;
+
+    if( parseFloat(sub40o.val())  >  parseFloat(sub40d.val()))
+      sub40 =parseFloat(sub40o.val())   - parseFloat(sub40d.val())  ;
+    else
+      sub40 =  parseFloat(sub40d.val())  - parseFloat(sub40o.val()) ;
+
+    if(parseFloat(sub40ho.val()) > parseFloat(sub40hd.val()) )
+      sub40h = parseFloat(sub40ho.val())   - parseFloat(sub40hd.val())  ;
+    else
+      sub40h =  parseFloat(sub40hd.val() -  parseFloat(sub40ho.val()) )  ;
+
+
+
   }
   $("#sub_inland_20"+idRate).html(sub20);
   $("#sub_inland_40"+idRate).html(sub40);
