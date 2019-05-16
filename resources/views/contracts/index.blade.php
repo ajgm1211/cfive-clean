@@ -361,11 +361,17 @@ New \ Status Import  &nbsp;
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
-/*
+
     var oTable = $('#tableRates').DataTable({
+        searching: true,
+        ordering: true,
+        processing: true,
         processing: true,
         serverSide: true,
         autoWidth: true,
+        "columnDefs": [
+            { className: "truncate", "targets": [ 0,1] }
+        ],
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         ajax: {
             url: "{{ route('contract.table') }}",
@@ -403,10 +409,10 @@ New \ Status Import  &nbsp;
         $('#originS').attr('required','required');
         $('#carrierM').attr('required','required');
         $('#destinationS').attr('required','required');
-    });*/
+    });
 
     $(function() {
-
+        /*
         $('#tableRates').DataTable({
             ordering: true,
             searching: true,
@@ -471,7 +477,7 @@ New \ Status Import  &nbsp;
                 $('.search2').select2();
             }
         });
-
+*/
         $('#tableContracts').DataTable({
             ajax:  "{{ route('contract.tableG') }}",
             "columnDefs": [
