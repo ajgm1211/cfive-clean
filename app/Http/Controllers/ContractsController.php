@@ -66,24 +66,28 @@ class ContractsController extends Controller
             )
         );*/
         $originsR = DB::table('views_contract_rates')
-                 ->select('port_orig')
-                 ->groupBy('port_orig')
-                 ->get();
-        
+            ->select('port_orig')
+            ->groupBy('port_orig')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
         $destinationsR = DB::table('views_contract_rates')
-                 ->select('port_dest')
-                 ->groupBy('port_dest')
-                 ->get();
-        
+            ->select('port_dest')
+            ->groupBy('port_dest')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
         $carriersR = DB::table('views_contract_rates')
-                 ->select('carrier')
-                 ->groupBy('carrier')
-                 ->get();
-        
+            ->select('carrier')
+            ->groupBy('carrier')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
         $statussR = DB::table('views_contract_rates')
-                 ->select('status')
-                 ->groupBy('status')
-                 ->get();
+            ->select('status')
+            ->groupBy('status')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
 
         //dd($destinationsR);
         /*$carriersR       = $mrates->unique('carrier');
@@ -458,7 +462,7 @@ class ContractsController extends Controller
         //dd($data->all());
 
         return \DataTables::of($data)
-             ->filter(function ($query) use ($request) {
+            ->filter(function ($query) use ($request) {
                 if ($request->has('origin') &&
                     $request->get('origin') != null
                     && $request->get('origin') != 'null') {
