@@ -60,7 +60,7 @@ class ContractsController extends Controller
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
         }
-       /* $mrates     = $model->hydrate(
+        $mrates     = $model->hydrate(
             DB::select(
                 'call select_for_company_rates('.\Auth::user()->company_user_id.')'
             )
@@ -69,13 +69,13 @@ class ContractsController extends Controller
         $carriersR       = $mrates->unique('carrier');
         $originsR        = $mrates->unique('port_orig');
         $destinationsR   = $mrates->unique('port_dest');
-        $statussR   = $mrates->unique('status');*/
+        $statussR   = $mrates->unique('status');
         $carrierAr = [ 'null' => 'Select option'];
         $originsAr = [ 'null' => 'Select option'];
         $destinationAr = [ 'null' => 'Select option'];
         $statusAr  = [ 'null' => 'Select option'];
         
-        /*foreach($carriersR as $carrierR){
+        foreach($carriersR as $carrierR){
             $carrierAr[$carrierR->carrier] = $carrierR->carrier;
         }
 
@@ -89,7 +89,7 @@ class ContractsController extends Controller
 
         foreach($statussR as $statusR){
             $statusAr[$statusR->status] = $statusR->status;
-        }*/
+        }
         $values = [
             'carrier'       => $carrierAr,
             'origin'        => $originsAr,
