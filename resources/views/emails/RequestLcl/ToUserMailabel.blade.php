@@ -227,7 +227,6 @@ font-family: sans-serif !important;
                         <p>The importation process of the contract {{' '.$contract['namecontract'].' '}} was finished  </p>
                         <ul>
                             <li>We have finished the importation process of the contract: {{' '.$contract['namecontract']}}</li>
-                            <li>Number Contract: {{' '.$contract['numbercontract']}}</li>
                             <li>Validity Contract: {{' '.$contract['validation']}}</li>
                         </ul>
                     </td>
