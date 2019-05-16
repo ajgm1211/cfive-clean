@@ -60,11 +60,7 @@ class ContractsController extends Controller
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
         }
-        /*$mrates     = $model->hydrate(
-            DB::select(
-                'call select_for_company_rates('.\Auth::user()->company_user_id.')'
-            )
-        );*/
+
         $originsR = DB::table('views_contract_rates')
             ->select('port_orig')
             ->groupBy('port_orig')
@@ -89,11 +85,6 @@ class ContractsController extends Controller
             ->where('company_user_id', Auth::user()->company_user_id)
             ->get();
 
-        //dd($destinationsR);
-        /*$carriersR       = $mrates->unique('carrier');
-        $originsR        = $mrates->unique('port_orig');
-        $destinationsR   = $mrates->unique('port_dest');
-        $statussR   = $mrates->unique('status');*/
         $carrierAr = [ 'null' => 'Select option'];
         $originsAr = [ 'null' => 'Select option'];
         $destinationAr = [ 'null' => 'Select option'];
