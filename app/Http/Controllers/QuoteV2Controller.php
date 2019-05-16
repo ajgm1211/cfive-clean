@@ -232,41 +232,42 @@ class QuoteV2Controller extends Controller
           $markup20=$array_markups['c20'];
           $total20=$amount20/$currency_rate;
           $total_markup20=$markup20/$currency_rate;
-          $sum20 = number_format($total20+$total_markup20, 2, '.', '');
+          $sum20 = number_format($total20, 2, '.', '');
         }
         if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
           $amount40=$array_amounts['c40'];
           $markup40=$array_markups['c40'];
           $total40=$amount40/$currency_rate;
           $total_markup40=$markup40/$currency_rate;
-          $sum40 = number_format($total40+$total_markup40, 2, '.', '');
+          $sum40 = number_format($total40, 2, '.', '');
         }
         if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
           $amount40hc=$array_amounts['c40hc'];
           $markup40hc=$array_markups['c40hc'];
           $total40hc=$amount40hc/$currency_rate;
           $total_markup40hc=$markup40hc/$currency_rate;
-          $sum40hc = number_format($total40hc+$total_markup40hc, 2, '.', '');
+          $sum40hc = number_format($total40hc, 2, '.', '');
         }
         if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
           $amount40nor=$array_amounts['c40nor'];
           $markup40nor=$array_markups['c40nor'];
           $total40nor=$amount40nor/$currency_rate;
           $total_markup40nor=$markup40nor/$currency_rate;
-          $sum40nor = number_format($total40nor+$total_markup40nor, 2, '.', '');
+          $sum40nor = number_format($total40nor, 2, '.', '');
         }
         if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
           $amount45=$array_amounts['c45'];
           $markup45=$array_markups['c45'];
           $total45=($amount45+$markup45)/$currency_rate;
           $total_markup45=$markup45/$currency_rate;
-          $sum45 = number_format($total45+$total_markup45, 2, '.', '');
+          $sum45 = number_format($total45, 2, '.', '');
         }
         $value->total_20=number_format($sum20, 2, '.', '');
         $value->total_40=number_format($sum40, 2, '.', '');
         $value->total_40hc=number_format($sum40hc, 2, '.', '');
         $value->total_40nor=number_format($sum40nor, 2, '.', '');
         $value->total_45=number_format($sum45, 2, '.', '');
+
         $value->total_markup20=number_format($total_markup20, 2, '.', '');
         $value->total_markup40=number_format($total_markup40, 2, '.', '');
         $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
@@ -351,13 +352,13 @@ class QuoteV2Controller extends Controller
     ->update([$request->name => $request->value]);*/
 
     $charge=Charge::find($request->pk);
-    if (strpos($request->name, 'amount') == true) {
-      $array = json_decode($charge->amount, true);
-    }else{
-      $array = json_decode($charge->markups, true);
-    }
+    $name = explode("->", $request->name);
     if (strpos($request->name, '->') == true) {
-      $name = explode("->", $request->name);
+      if ($name[0] == 'amount') {
+        $array = json_decode($charge->amount, true);
+      }else{
+        $array = json_decode($charge->markups, true);
+      }
       $field = (string) $name[0];
       $array[$name[1]]=$request->value;
       $array = json_encode($array);
@@ -367,7 +368,7 @@ class QuoteV2Controller extends Controller
       $charge->$name=$request->value;
     }
     $charge->update();
-    return response()->json(['success'=>$array]);
+    return response()->json(['success'=>strpos($request->name, 'amount')]);
   }
 
   public function updatePdfFeature(Request $request){
@@ -1433,11 +1434,11 @@ class QuoteV2Controller extends Controller
     if($request->amount_c45){
       $array_amount_45 = array('c45' => $request->amount_c45);
     }
-    if($request->markup_c45r){
+    if($request->markup_c45){
       $array_markup_45 = array('c45' => $request->markup_c45);
     }
     $merge_amounts = array_merge($array_amount_20,$array_amount_40,$array_amount_40hc,$array_amount_40nor,$array_amount_45);
-    $merge_markups = array_merge($array_markup_20,$array_markup_40,$array_amount_40hc,$array_amount_40nor,$array_amount_45);
+    $merge_markups = array_merge($array_markup_20,$array_markup_40,$array_markup_40hc,$array_markup_40nor,$array_markup_45);
 
     $charge = new Charge();
     $charge->automatic_rate_id=$request->automatic_rate_id;

@@ -120,7 +120,7 @@
                                                 <td >Price per unit</td>
                                                 <td >Total</td>
                                                 <td >Markup</td>
-                                                <td >Total {{$currency_cfg->alphacode}}</td>
+                                                <td >Currency</td>
                                               </tr>
                                             </thead>
                                             <tbody style="background-color: white;">
@@ -146,7 +146,7 @@
                                                   <a href="#" class="editable-amount-40 amount_40" data-type="text" data-name="amount->c40" data-value="20" data-pk="{{@$item->id}}" data-title="Total"></a>
                                                 </td>
                                                 <td >
-                                                  <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->c40" data-value="170" data-pk="{{@$item->id}}" data-title="Total"></a>
+                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                 </td>
                                               </tr>
                                               @endif
@@ -238,7 +238,7 @@
                                                 <td >Price per unit</td>
                                                 <td >Total</td>
                                                 <td >Markup</td>
-                                                <td >Total {{$currency_cfg->alphacode}}</td>
+                                                <td >Currency</td>
                                               </tr>
                                             </thead>
                                             <tbody style="background-color: white;">
@@ -283,7 +283,7 @@
                                                   <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->c40" data-value="10" data-pk="{{$item->id}}" data-title="Total"></a>
                                                 </td>
                                                 <td >
-                                                  <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->c40" data-value="60" data-pk="{{@$item->id}}" data-title="Total"></a>
+                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                 </td>
                                                 
                                               </tr>
@@ -365,7 +365,7 @@
                                                 <td >Price per unit</td>
                                                 <td >Total</td>
                                                 <td >Markup</td>
-                                                <td >Total {{$currency_cfg->alphacode}}</td>
+                                                <td >Currency</td>
                                               </tr>
                                             </thead>
                                             <tbody style="background-color: white;">
@@ -412,7 +412,7 @@
                                                   <a href="#" class="editable destination_amount_40"data-type="text" data-name="amount->c40" data-value="5" data-pk="{{@$item->id}}" data-title="Total"></a>
                                                 </td>
                                                 <td >
-                                                  <a href="#" class="editable destination_markup_40"data-type="text" data-name="markups->c40" data-value="25" data-pk="{{@$item->id}}" data-title="Total"></a>
+                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                 </td>                                               
                                               </tr>
                                               @php
