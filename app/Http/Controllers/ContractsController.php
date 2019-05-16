@@ -458,7 +458,7 @@ class ContractsController extends Controller
         //dd($data->all());
 
         return \DataTables::of($data)
-            /* ->filter(function ($query) use ($request) {
+             ->filter(function ($query) use ($request) {
                 if ($request->has('origin') &&
                     $request->get('origin') != null
                     && $request->get('origin') != 'null') {
@@ -482,7 +482,7 @@ class ContractsController extends Controller
                     $request->get('status') != 'null') {
                     $query->where('status', $request->get('status'));
                 }
-            })*/
+            })
 
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
