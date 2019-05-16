@@ -311,68 +311,68 @@ $(document).on('click', '.store_charge', function () {
   var markup_c45 = $(this).closest("tr").find(".markup_c45").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
-  
-    $.ajax({
-      type: 'POST',
-      url: '/v2/quotes/store/charge',
-      data:{
-        "automatic_rate_id":id,
-        "surcharge_id":surcharge_id,
-        "calculation_type_id":calculation_type_id,
-        "amount_c20":amount_c20,
-        "markup_c20":markup_c20,
-        "amount_c40":amount_c40,
-        "markup_c40":markup_c40,
-        "amount_c40hc":amount_c40hc,
-        "markup_c40hc":markup_c40hc,
-        "amount_c40nor":amount_c40nor,
-        "markup_c40nor":markup_c40nor,
-        "amount_c45":amount_c45,
-        "markup_c45":markup_c45,
-        "type_id":type_id,
-        "currency_id":currency_id
-      },
-      success: function(data) {
-        if(data.message=='Ok'){
-          swal(
-            'Done!',
-            'Charge saved successfully',
-            'success'
-          )
-        }
-        setTimeout(location.reload.bind(location), 3000);
+
+  $.ajax({
+    type: 'POST',
+    url: '/v2/quotes/store/charge',
+    data:{
+      "automatic_rate_id":id,
+      "surcharge_id":surcharge_id,
+      "calculation_type_id":calculation_type_id,
+      "amount_c20":amount_c20,
+      "markup_c20":markup_c20,
+      "amount_c40":amount_c40,
+      "markup_c40":markup_c40,
+      "amount_c40hc":amount_c40hc,
+      "markup_c40hc":markup_c40hc,
+      "amount_c40nor":amount_c40nor,
+      "markup_c40nor":markup_c40nor,
+      "amount_c45":amount_c45,
+      "markup_c45":markup_c45,
+      "type_id":type_id,
+      "currency_id":currency_id
+    },
+    success: function(data) {
+      if(data.message=='Ok'){
+        swal(
+          'Done!',
+          'Charge saved successfully',
+          'success'
+        )
       }
-    });
+      setTimeout(location.reload.bind(location), 3000);
+    }
+  });
 });
 
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
-    var id=$(this).attr('data-rate-id');
-    swal({
-      title: 'Are you sure?',
-      text: "Please confirm!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, I am sure!'
-    }).then(function (result) {
-      if (result.value) {
-        $.ajax({
-            type: 'GET',
-            url: '/v2/quotes/delete/rate/'+id,
-            success: function(data) {
-                if(data.message=='Ok'){
-                    swal(
-                        'Updated!',
-                        'The rete has been deleted.',
-                        'success'
-                        )
-                    $(this).closest('ul').remove();
-                    setTimeout(location.reload.bind(location), 3000);
-                }
-            }
-        });
-      }
-    });
+  var id=$(this).attr('data-rate-id');
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/delete/rate/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The rete has been deleted.',
+              'success'
+            )
+            $(this).closest('ul').remove();
+            setTimeout(location.reload.bind(location), 3000);
+          }
+        }
+      });
+    }
+  });
 });
 
 //Edit payments
@@ -646,11 +646,11 @@ $(document).on('click', '#update', function () {
         $(".type").val(data.quote['type']);
         $(".type_span").html(data.quote['type']);
         if(data.quote['custom_quote_id']!=''){
-            $(".quote_id").val(data.quote['custom_quote_id']);
-            $(".quote_id_span").html(data.quote['custom_quote_id']);    
+          $(".quote_id").val(data.quote['custom_quote_id']);
+          $(".quote_id_span").html(data.quote['custom_quote_id']);    
         }else{
-            $(".quote_id").val(data.quote['quote_id']);
-            $(".quote_id_span").html(data.quote['quote_id']);
+          $(".quote_id").val(data.quote['quote_id']);
+          $(".quote_id_span").html(data.quote['quote_id']);
         }
         $(".company_id").val(data.quote['company_id']);
         $(".company_id_span").html(data.quote['company_id']);
@@ -942,6 +942,11 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+    $("#origin_harbor").prop( "disabled", false );
+    $("#destination_harbor").prop( "disabled", false );
+    $("#equipment_id").show();
+    $("#equipment").prop( "disabled", false );
+
     $("#delivery_type").prop( "disabled", false );
     $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
@@ -968,7 +973,10 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
-
+    $("#origin_harbor").prop( "disabled", false );
+    $("#destination_harbor").prop( "disabled", false );
+    $("#equipment_id").hide();
+    $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", false );
     $("#delivery_type_air").prop( "disabled", true );
     $("#delivery_type_label").show();
@@ -998,7 +1006,10 @@ $(document).on('change', '#quoteType', function (e) {
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
       total_volume=$('#total_volume').val();
       weight=$('#total_weight').val();
-      if($("input[name='type']:checked").val()==2){
+
+      if($('#quoteType').val()==2){
+
+
         total_weight=weight/1000;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -1006,7 +1017,7 @@ $(document).on('change', '#quoteType', function (e) {
           chargeable_weight=total_weight;
         }
         $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-      }else if($("input[name='type']:checked").val()==3){
+      }else if($('#quoteType').val()==3){
         total_volume=total_volume*166;
         if(total_volume>weight){
           chargeable_weight=total_volume;
@@ -1039,7 +1050,10 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
-
+    $("#origin_harbor").prop( "disabled", true );
+    $("#destination_harbor").prop( "disabled", true );
+    $("#equipment_id").hide();
+    $("#equipment").prop( "disabled", true );
     $("#delivery_type").prop( "disabled", true );
     $("#delivery_type_air").prop( "disabled", false );
     $("#delivery_type_label").hide();
@@ -1069,7 +1083,7 @@ $(document).on('change', '#quoteType', function (e) {
     if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
       total_volume=$('#total_volume').val();
       total_weight=$('#total_weight').val();
-      if($("input[name='type']:checked").val()==2){
+      if($('#quoteType').val()==2){
         total_weight=total_weight/1000;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -1077,7 +1091,7 @@ $(document).on('change', '#quoteType', function (e) {
           chargeable_weight=total_weight;
         }
         $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-      }else if($("input[name='type']:checked").val()==3){
+      }else if($('#quoteType').val()==3){
         total_volume=total_volume*166;
         if(total_volume>total_weight){
           chargeable_weight=total_volume;
@@ -1251,6 +1265,21 @@ $(".quote_search").on("click", function() {
 $(".quote_man").on("click", function() {
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
+
+  if($('#quoteType').val()==2){
+    if($("#total_quantity_pkg_input").val()>0){
+      $("#total_quantity").val($("#total_quantity_pkg_input").val());
+    }
+    if($("#total_weight_pkg_input").val()>0){
+      $("#total_weight").val($("#total_weight_pkg_input").val());
+    }
+    if($("#total_volume_pkg_input").val()>0){
+      $("#total_volume").val($("#total_volume_pkg_input").val());
+    }
+
+  }
+
+
   $(".quote_man").attr("type","submit");
 });
 
@@ -1274,8 +1303,20 @@ $('.inlands').on('click', function(){
   var idRate = $(this).attr('data-rate');
 
 
-
   var theElement = $(this);
+
+  if(theElement.prop('checked')){
+    var group = "input:checkbox[name='" + theElement.attr("name") + "']";
+    $(group).prop("checked", false);
+    theElement.prop("checked", true);
+  } else {
+    theElement.prop("checked", false);
+  }
+
+
+
+
+
   var  i20= $("#valor-d20"+id+"-"+idRate).html();
   var  i40= $("#valor-d40"+id+"-"+idRate).html();
   var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
@@ -1286,15 +1327,15 @@ $('.inlands').on('click', function(){
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 = parseFloat(sub20) +  parseFloat(i20);
-    sub40 = parseFloat(sub40) +  parseFloat(i40);
-    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+    sub20 =  parseFloat(i20);
+    sub40 =  parseFloat(i40);
+    sub40h =  parseFloat(i40h);
 
   }else{
 
-    sub20 = parseFloat(sub20) -  parseFloat(i20);
-    sub40 = parseFloat(sub40) -  parseFloat(i40);
-    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+    sub20 ='0.00';
+    sub40 = '0.00';
+    sub40h = '0.00';
   }
 
   $("#sub_inland_20"+idRate).html(sub20);
@@ -1309,6 +1350,20 @@ $('.inlandsO').on('click', function(){
   var idRate = $(this).attr('data-rate');
 
   var theElement = $(this);
+
+
+  if(theElement.prop('checked')){
+    var group = "input:checkbox[name='" + theElement.attr("name") + "']";
+    $(group).prop("checked", false);
+    theElement.prop("checked", true);
+  } else {
+    theElement.prop("checked", false);
+  }
+
+
+
+
+
   var  i20= $("#valor-o20"+id+"-"+idRate).html();
   var  i40= $("#valor-o40"+id+"-"+idRate).html();
   var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
@@ -1318,15 +1373,15 @@ $('.inlandsO').on('click', function(){
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 = parseFloat(sub20) +  parseFloat(i20);
-    sub40 = parseFloat(sub40) +  parseFloat(i40);
-    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+    sub20 = parseFloat(i20);
+    sub40 = parseFloat(i40);
+    sub40h =  parseFloat(i40h);
 
   }else{
 
-    sub20 = parseFloat(sub20) -  parseFloat(i20);
-    sub40 = parseFloat(sub40) -  parseFloat(i40);
-    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+    sub20 ='0.00';
+    sub40 ='0.00';
+    sub40h='0.00';
   }
   $("#sub_inland_20"+idRate).html(sub20);
   $("#sub_inland_40"+idRate).html(sub40);
@@ -1473,7 +1528,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
   var chargeable_weight= 0;
   var weight=sum;
   //Calculate chargeable weight
-  if($("input[name='type']:checked").val()==2){
+  if($('#quoteType').val()==2){
     total_vol_chargeable=sum_vol;
     total_weight=weight/1000;
     if(total_vol_chargeable>total_weight){
@@ -1482,7 +1537,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
       chargeable_weight=total_weight;
     }
     $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-  }else if($("input[name='type']:checked").val()==3){
+  }else if($('#quoteType').val()==3){
     total_vol_chargeable=sum_vol*166;
     if(total_vol_chargeable>weight){
       chargeable_weight=total_vol_chargeable;
@@ -1504,9 +1559,11 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
   var total_weight=0;
 
   if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+
     total_volume=$('#total_volume').val();
     total_weight=$('#total_weight').val();
-    if($("input[name='type']:checked").val()==2){
+    if($("#quoteType").val()==2){
+
       total_weight=total_weight/1000;
       if(total_volume>total_weight){
         chargeable_weight=total_volume;
@@ -1514,7 +1571,8 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
         chargeable_weight=total_weight;
       }
       $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
-    }else if($("input[name='type']:checked").val()==3){
+    }else  if($("#quoteType").val()==3){
+
       total_volume=total_volume*166;
       if(total_volume>total_weight){
         chargeable_weight=total_volume;
@@ -1548,6 +1606,67 @@ function change_tab(tab){
   }
 }
 
+$(document).on('change', '#delivery_type_air', function (e) {
+
+  if($(this).val()==5){
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#origin_address").val('');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==6){
+    $("#origin_address_label").addClass('hide');
+    $("#destination_address_label").removeClass('hide');
+    $("#origin_address").val('');
+  }
+  if($(this).val()==7){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").addClass('hide');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==8){
+    $("#origin_address_label").removeClass('hide');
+    $("#destination_address_label").removeClass('hide');
+  }
+});
+
+$('#origin_airport').select2({
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
+
+$('#destination_airport').select2({
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
   var $template = $('#lcl_air_load_template'),

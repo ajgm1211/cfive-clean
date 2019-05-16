@@ -314,12 +314,14 @@
             <div class="row">
               <div class="col-lg-2">
                 <label>Quote Type</label>
-                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
-              <div class="col-lg-2">
+
+              <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
                 {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
+
               <div class="col-lg-2">
                 <label>Company</label>
 
@@ -349,15 +351,34 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
+              <div class="col-lg-2">
+                <label>Incoterm</label>
+                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
+
+              </div>
             </div><br>
             <div class="row">
-              <div class="col-lg-2" id="origin_harbor_label">
-                <label>Origin port</label>
-                {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+              <div class="col-lg-2" >
+                <div id="origin_harbor_label">
+                  <label>Origin port</label>
+                  {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                </div>
+
+                <div id="origin_airport_label" style="display:none;">
+                  <label>Origin airport</label>
+                  <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
+                </div>
+
               </div>
-              <div class="col-lg-2" id="destination_harbor_label">
-                <label>Destination port</label>
-                {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+              <div class="col-lg-2">
+                <div  id="destination_harbor_label">
+                  <label>Destination port</label>
+                  {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                </div>
+                <div id="destination_airport_label" style="display:none;">
+                  <label>Destination airport</label>
+                  <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
+                </div>
               </div>
               <div class="col-lg-2">
                 <label>Date</label>
@@ -372,9 +393,13 @@
                   </div>
                 </div>
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-2" id="delivery_type_label">
                 <label>Delivery type</label>
                 {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+              </div>
+              <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
+                <label>Delivery type</label>
+                {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
@@ -620,9 +645,16 @@
 
   <div class="col-lg-12 no-padding">
     <div class="row card__quote-manual justify-content-between">
-      <div class="col-lg-2" class=""> 
+      <div class="col-lg-2" class="" id="carrier_label"> 
         <label>Carrier Manual</label>
         {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
+      </div>
+      <div class="col-lg-2" id="airline_label" style="display:none;">
+        <br>
+        <label>Airline</label>
+        <div class="form-group">
+          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
+        </div>
       </div>
       <div class="col-lg-8 d-flex justify-content-center align-items-end align-self-end">
         @if(isset($arreglo))
@@ -676,7 +708,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Quote</button></div>
+                <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Create Quote</button></div>
               </div>
 
               <div class="row">
@@ -907,13 +939,13 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth">
-                         <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
+                          <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
                         </div>      
                         <div class="wth">
                           <span class="bg-rates">{{ isset($localfreight['40']) ?  str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('montoMarkup')) : '0.00' }}                  </b>
                         </div>
                         <div class="wth" {{ $equipmentHides['40hc'] }}>  
-                         <span class="bg-rates"> {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     </b>
+                          <span class="bg-rates"> {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}</span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     </b>
                         </div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}>  
                           <span class="bg-rates">{{ isset($localfreight['40nor']) ?  str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('markup')) : '0.00' }}   </span>  <i class="la la-caret-right arrow-down"></i>      <b class="monto-down">{{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('montoMarkup')) : '0.00' }}     </b>
@@ -1070,7 +1102,7 @@
                       <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex justify-content-center align-items-center"  >Add</label>
 
                     </div>
-                    
+
                   </div><br>
                   @endforeach
                   @if(!$arr->inlandOrigin->isEmpty())
