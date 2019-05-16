@@ -127,7 +127,7 @@ New \ Status Import  &nbsp;
                                     <th title="Carriers">
                                         Carriers
                                     </th><th title="Type">
-                                        Direction
+                                    Direction
                                     </th>
                                     <th title="Validity">
                                         Validity
@@ -227,7 +227,7 @@ New \ Status Import  &nbsp;
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Satatus</label>
+                                            <label class="">Status</label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
@@ -321,11 +321,16 @@ New \ Status Import  &nbsp;
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contractsLcl.js"></script>
 <script>
-        var oTable = $('#tableRates').DataTable({
+    var oTable = $('#tableRates').DataTable({
         processing: true,
         serverSide: true,
         autoWidth: true,
+        searching: true,
+        ordering: true,
         order: [[ 3, "asc" ],[ 4, "asc" ]],
+        "columnDefs": [
+            { className: "truncate", "targets": [ 0,1] }
+        ],
         ajax: {
             url: "{{ route('contractlcl.table') }}",
             data: function (d) {
@@ -336,16 +341,16 @@ New \ Status Import  &nbsp;
             }
         },
         columns: [
-             {data: 'name', name: 'name'},
-                {data: 'carrier', name: 'carrier'},
-                {data: 'port_orig', name: 'port_orig'},
-                {data: 'port_dest', name: 'port_dest'},
-                {data: 'uom', name: 'uom'},
-                {data: 'minimum', name: 'minimum'},
-                {data: 'currency', name: 'currency'},
-                {data: 'validity', name: 'validity'},
-                {data: 'status', name: 'status'},
-                {data: 'options', name: 'options'}
+            {data: 'name', name: 'name'},
+            {data: 'carrier', name: 'carrier'},
+            {data: 'port_orig', name: 'port_orig'},
+            {data: 'port_dest', name: 'port_dest'},
+            {data: 'uom', name: 'uom'},
+            {data: 'minimum', name: 'minimum'},
+            {data: 'currency', name: 'currency'},
+            {data: 'validity', name: 'validity'},
+            {data: 'status', name: 'status'},
+            {data: 'options', name: 'options'}
         ],
 
     });
@@ -361,7 +366,7 @@ New \ Status Import  &nbsp;
         $('#destinationS').attr('required','required');
     });
     $(function() {
-       /* $('#tableRates').DataTable({
+        /* $('#tableRates').DataTable({
             ordering: true,
             searching: true,
             processing: true,
