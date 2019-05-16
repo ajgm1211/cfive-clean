@@ -1292,8 +1292,20 @@ $('.inlands').on('click', function(){
   var idRate = $(this).attr('data-rate');
 
 
-
   var theElement = $(this);
+
+  if(theElement.prop('checked')){
+    var group = "input:checkbox[name='" + theElement.attr("name") + "']";
+    $(group).prop("checked", false);
+    theElement.prop("checked", true);
+  } else {
+    theElement.prop("checked", false);
+  }
+
+
+
+
+
   var  i20= $("#valor-d20"+id+"-"+idRate).html();
   var  i40= $("#valor-d40"+id+"-"+idRate).html();
   var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
@@ -1304,15 +1316,15 @@ $('.inlands').on('click', function(){
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 = parseFloat(sub20) +  parseFloat(i20);
-    sub40 = parseFloat(sub40) +  parseFloat(i40);
-    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+    sub20 =  parseFloat(i20);
+    sub40 =  parseFloat(i40);
+    sub40h =  parseFloat(i40h);
 
   }else{
 
-    sub20 = parseFloat(sub20) -  parseFloat(i20);
-    sub40 = parseFloat(sub40) -  parseFloat(i40);
-    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+    sub20 ='0.00';
+    sub40 = '0.00';
+    sub40h = '0.00';
   }
 
   $("#sub_inland_20"+idRate).html(sub20);
@@ -1327,6 +1339,20 @@ $('.inlandsO').on('click', function(){
   var idRate = $(this).attr('data-rate');
 
   var theElement = $(this);
+
+
+  if(theElement.prop('checked')){
+    var group = "input:checkbox[name='" + theElement.attr("name") + "']";
+    $(group).prop("checked", false);
+    theElement.prop("checked", true);
+  } else {
+    theElement.prop("checked", false);
+  }
+
+
+
+
+
   var  i20= $("#valor-o20"+id+"-"+idRate).html();
   var  i40= $("#valor-o40"+id+"-"+idRate).html();
   var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
@@ -1336,15 +1362,15 @@ $('.inlandsO').on('click', function(){
   var  sub40h= $("#sub_inland_40h"+idRate).html();
   if(theElement.prop('checked')){
 
-    sub20 = parseFloat(sub20) +  parseFloat(i20);
-    sub40 = parseFloat(sub40) +  parseFloat(i40);
-    sub40h = parseFloat(sub40h) +  parseFloat(i40h);
+    sub20 = parseFloat(i20);
+    sub40 = parseFloat(i40);
+    sub40h =  parseFloat(i40h);
 
   }else{
 
-    sub20 = parseFloat(sub20) -  parseFloat(i20);
-    sub40 = parseFloat(sub40) -  parseFloat(i40);
-    sub40h = parseFloat(sub40h) -  parseFloat(i40h);
+    sub20 ='0.00';
+    sub40 ='0.00';
+    sub40h='0.00';
   }
   $("#sub_inland_20"+idRate).html(sub20);
   $("#sub_inland_40"+idRate).html(sub40);
