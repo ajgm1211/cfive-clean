@@ -245,7 +245,7 @@ New \ Status Import  &nbsp;
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Satatus</label>
+                                            <label class="">Status</label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
