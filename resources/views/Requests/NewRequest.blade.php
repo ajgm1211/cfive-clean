@@ -99,7 +99,8 @@ new registration
                                     <div class="form-group row ">
                                         <div class="col-lg-4">
                                             <label><br></label>
-                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>
+                                            <!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
+                                            <a href="#" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</a>
                                         </div>
                                         <div class="col-lg-4">
                                             <label><br></label>
@@ -484,7 +485,7 @@ new registration
 
             complete: function(xhr) {
                 status.html(xhr.responseText);
-                $('#mjsH').text('Bye');
+                $('#mjsH').text('Contract Uploaded');
                 if(count == 1){
                     swal({
                         title: "Error",
