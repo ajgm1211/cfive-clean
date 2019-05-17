@@ -56,7 +56,7 @@
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->quote_id}}" class="form-control" hidden >
-                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
+                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL','AIR'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
                                     <span class="type_span">{{$quote->type}}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -72,7 +72,7 @@
                                     {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
                                     <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4" {{$quote->type!='AIR' ? '':'hidden'}}>
                                     <br>
                                     <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
@@ -83,6 +83,22 @@
                                             Port to Door
                                         @elseif($quote->delivery_type==3)
                                             Door to Port
+                                        @else
+                                            Door to Door
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="col-md-4" {{$quote->type=='AIR' ? '':'hidden'}}>
+                                    <br>
+                                    <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
+                                    {{ Form::select('status',[1=>'Airport to Airport',2=>'Airport to Door',3=>'Door to Airport',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
+                                    <span class="delivery_type_span">
+                                        @if($quote->delivery_type==1)
+                                            Airport to Airport
+                                        @elseif($quote->delivery_type==2)
+                                            Airport to Door
+                                        @elseif($quote->delivery_type==3)
+                                            Door to Airport
                                         @else
                                             Door to Door
                                         @endif
@@ -104,10 +120,8 @@
                                     @endphp
                                     <span class="date_issued_span">{{date_format($date, 'M d, Y H:i')}}</span>
                                     {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
-                                </div>
-                               @if($quote->type=='FCL')
-                                <div class="col-md-4">
-                                    
+                                </div>                              
+                                <div class="col-md-4" {{$quote->type=='FCL' ? '':'hidden'}}>
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
@@ -119,9 +133,13 @@
                                         @endforeach
                                     </span>
                                     {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
-
                                 </div>
-                                @endif
+                                <div class="col-md-4" {{$quote->type!='FCL' ? '':'hidden'}}>
+                                    <br>
+                                    <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
+                                    {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden','']) }}
+                                    <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
+                                </div>
                                 <div class="col-md-4">
                                     <br>
                                     <label class="title-quote"><b>Price level:&nbsp;&nbsp;</b></label>
@@ -145,12 +163,14 @@
                                     {{ Form::select('incoterm_id',$incoterms,$quote->incoterm_id,['class'=>'form-control incoterm_id select2','hidden','']) }}
                                     <span class="incoterm_id_span">{{$quote->incoterm->name}}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <br>
-                                    <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
-                                    {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden','']) }}
-                                    <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
-                                </div>
+                                @if($quote->type=='FCL')
+                                    <div class="col-md-4">
+                                        <br>
+                                        <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
+                                        {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden','']) }}
+                                        <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
+                                    </div>
+                                @endif
                             </div>
                             <div class="row">
                                 <div class="col-md-12 text-center" id="update_buttons" hidden>

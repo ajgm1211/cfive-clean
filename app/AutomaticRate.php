@@ -63,4 +63,9 @@ class AutomaticRate extends Model
     {
         return $this->hasMany('App\Charge','automatic_rate_id');
     }
+
+    public function charge_lcl_air()
+    {
+        return $this->hasMany('App\ChargeLclAir','automatic_rate_id');
+    }    
 }

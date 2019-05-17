@@ -23,34 +23,36 @@
                         @if(!empty($package_loads) && count($package_loads)>0)
                         <div class="row">
                           <div class="col-md-12">
-                            <table class="table table-sm table-bordered table-hover table color-blue text-center">
-                              <thead class="title-quote text-center header-table">
-                                <tr>
-                                  <td >Cargo type</td>
-                                  <td >Quantity</td>
-                                  <td >Height</td>
-                                  <td >Width</td>
-                                  <td >Large</td>
-                                  <td >Weight</td>
-                                  <td >Total weight</td>
-                                  <td >Volume</td>
-                                </tr>
-                              </thead>
-                              <tbody style="background-color: white;">
-                                @foreach($package_loads as $package_load)
-                                <tr class="text-center">
-                                  <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
-                                  <td>{{$package_load->quantity}}</td>
-                                  <td>{{$package_load->height}} cm</td>
-                                  <td>{{$package_load->width}} cm</td>
-                                  <td>{{$package_load->large}} cm</td>
-                                  <td>{{$package_load->weight}} kg</td>
-                                  <td>{{$package_load->total_weight}} kg</td>
-                                  <td>{{$package_load->volume}} m<sup>3</sup></td>
-                                </tr>
-                                @endforeach
-                              </tbody>
-                            </table>
+                            <div class="table-responsive">
+                              <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                <thead class="title-quote text-center header-table">
+                                  <tr>
+                                    <td >Cargo type</td>
+                                    <td >Quantity</td>
+                                    <td >Height</td>
+                                    <td >Width</td>
+                                    <td >Large</td>
+                                    <td >Weight</td>
+                                    <td >Total weight</td>
+                                    <td >Volume</td>
+                                  </tr>
+                                </thead>
+                                <tbody style="background-color: white;">
+                                  @foreach($package_loads as $package_load)
+                                  <tr class="text-center">
+                                    <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
+                                    <td>{{$package_load->quantity}}</td>
+                                    <td>{{$package_load->height}} cm</td>
+                                    <td>{{$package_load->width}} cm</td>
+                                    <td>{{$package_load->large}} cm</td>
+                                    <td>{{$package_load->weight}} kg</td>
+                                    <td>{{$package_load->total_weight}} kg</td>
+                                    <td>{{$package_load->volume}} m<sup>3</sup></td>
+                                  </tr>
+                                  @endforeach
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                         <br>
@@ -70,9 +72,9 @@
                           </div>
                         </div>
                         @endif
-
+                        <br>
                         <hr>
-
+                        <br>
                         <!-- Rates -->
 
                         @php
@@ -124,35 +126,33 @@
                                               </tr>
                                             </thead>
                                             <tbody style="background-color: white;">
-                                               @foreach($rate->charge as $item)
-                                                @if($item->type_id==3)
-                                                <tr >
-                                                <td>
-                                                  <a href="#" class="editable" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                </td>
-                                                <td>
-                                                  <a href="#" class="editable" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-amount-20 amount_20"data-type="text" data-name="amount->c20" data-value="100" data-pk="{{@$item->id}}" data-title="Amount"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->c20" data-value="50" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td>
-                                                  <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->c20" data-value="50" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-amount-40 amount_40" data-type="text" data-name="amount->c40" data-value="20" data-pk="{{@$item->id}}" data-title="Total"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
-                                                </td>
-                                              </tr>
-                                              @endif
+                                               @foreach($rate->charge_lcl_air as $item)
+                                                  @if($item->type_id==3)
+                                                  <tr >
+                                                  <td>
+                                                    <a href="#" class="editable-lcl-air-lcl-air" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                  </td>
+                                                  <td>
+                                                    <a href="#" class="editable-lcl-air" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                  </td>
+                                                  <td >
+                                                    <a href="#" class="editable-lcl-air units"data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                  </td>
+                                                  <td >
+                                                    <a href="#" class="editable-lcl-air price_per_unit"data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                  </td>
+                                                  <td>
+                                                    {{$item->units*$item->price_per_unit}}
+                                                  </td>
+                                                  <td >
+                                                    <a href="#" class="editable-lcl-air" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                  </td>
+                                                  <td >
+                                                    <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                  </td>
+                                                </tr>
+                                                @endif
                                               @endforeach
-
-
 
                                               <!-- Hide Freight -->
 
@@ -166,24 +166,24 @@
                                                   {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c20" class="amount_c20 form-control" id="amount_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total_c20" class="form-control freight_total" type="number" min="0" step="0.0000001" />
+                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
+                                                  <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <div class="input-group">
                                                     <div class="input-group-btn">
                                                       <div class="btn-group">
-                                                        <input name="markup_c40" value="" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
+                                                        {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
                                                       </div>
-                                                      <a class="btn btn-xs btn-primary-plus store_charge">
+                                                      <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                         <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
                                                       </a>
                                                       <a class="btn btn-xs btn-primary-plus removeFreightCharge">
@@ -243,54 +243,54 @@
                                             </thead>
                                             <tbody style="background-color: white;">
                                               @php
-                                              $a=0;
-                                              $sum_origin_20=0;
-                                              $sum_origin_40=0;
-                                              $sum_origin_40hc=0;
-                                              $sum_origin_40nor=0;
-                                              $sum_origin_45=0;
+                                                $a=0;
+                                                $sum_origin_20=0;
+                                                $sum_origin_40=0;
+                                                $sum_origin_40hc=0;
+                                                $sum_origin_40nor=0;
+                                                $sum_origin_45=0;
                                               @endphp
                                               @foreach($rate->charge as $item)
-                                              @if($item->type_id==1)
-                                              <?php
-                                              $rate_id=$item->automatic_rate_id;
-                                              $origin_amounts = json_decode($item->amount,true);
-                                              $origin_markups = json_decode($item->markups,true);
+                                                @if($item->type_id==1)
+                                                  <?php
+                                                  $rate_id=$item->automatic_rate_id;
+                                                  $origin_amounts = json_decode($item->amount,true);
+                                                  $origin_markups = json_decode($item->markups,true);
 
-                                              $sum_origin_20+=@$item->total_20;
-                                              $sum_origin_40+=@$item->total_40;
-                                              $sum_origin_40hc+=@$item->total_40hc;
-                                              $sum_origin_40nor+=@$item->total_40nor;
-                                              $sum_origin_45+=@$item->total_45;
-                                              ?>
-                                              <tr>
-                                                <td>
-                                                  <a href="#" class="editable surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                </td>
-                                                <td>
-                                                  <a href="#" class="editable calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-amount-20 amount_20"data-type="text" data-name="amount->c20" data-value="20" data-pk="{{@$item->id}}" data-title="Amount"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->c20" data-value="50" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-markup-20 markup_20"data-type="text" data-name="markups->c20" data-value="50" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->c40" data-value="10" data-pk="{{$item->id}}" data-title="Total"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
-                                                </td>
-                                                
-                                              </tr>
-                                              @php
-                                              $a++;
-                                              @endphp
-                                              @endif
+                                                  $sum_origin_20+=@$item->total_20;
+                                                  $sum_origin_40+=@$item->total_40;
+                                                  $sum_origin_40hc+=@$item->total_40hc;
+                                                  $sum_origin_40nor+=@$item->total_40nor;
+                                                  $sum_origin_45+=@$item->total_45;
+                                                  ?>
+                                                  <tr>
+                                                    <td>
+                                                      <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                    </td>
+                                                    <td>
+                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air"data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air"data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                    </td>
+                                                    <td >
+                                                      {{$item->units*$item->price_per_unit}}
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air"data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{$item->id}}" data-title="Markup"></a>
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                    </td>
+                                                    
+                                                  </tr>
+                                                  @php
+                                                    $a++;
+                                                  @endphp
+                                                @endif
                                               @endforeach
 
                                               <!-- Hide origin charges-->
@@ -305,16 +305,16 @@
                                                   {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c20" class="amount_c20 form-control" id="amount_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total_c20" class="form-control origin_total" type="number" min="0" step="0.0000001" />
+                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
+                                                  <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <div class="input-group">
@@ -322,7 +322,7 @@
                                                       <div class="btn-group">
                                                         <input name="markup_c40" value="" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
                                                       </div>
-                                                      <a class="btn btn-xs btn-primary-plus store_charge">
+                                                      <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                         <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
                                                       </a>
                                                       <a class="btn btn-xs btn-primary-plus removeOriginCharge">
@@ -370,55 +370,55 @@
                                             </thead>
                                             <tbody style="background-color: white;">
                                               @php
-                                              $a=0;
-                                              $sum_destination_20=0;
-                                              $sum_destination_40=0;
-                                              $sum_destination_40hc=0;
-                                              $sum_destination_40nor=0;
-                                              $sum_destination_45=0;
+                                                $a=0;
+                                                $sum_destination_20=0;
+                                                $sum_destination_40=0;
+                                                $sum_destination_40hc=0;
+                                                $sum_destination_40nor=0;
+                                                $sum_destination_45=0;
                                               @endphp
 
                                               @foreach($rate->charge as $item)
-                                              @if($item->type_id==2)
-                                              <?php
-                                              $rate_id=$item->automatic_rate_id;
-                                              $destination_amounts = json_decode($item->amount,true);
-                                              $destination_markups = json_decode($item->markups,true);
+                                                @if($item->type_id==2)
+                                                  <?php
+                                                  $rate_id=$item->automatic_rate_id;
+                                                  $destination_amounts = json_decode($item->amount,true);
+                                                  $destination_markups = json_decode($item->markups,true);
 
-                                              $sum_destination_20+=@$item->total_20;
-                                              $sum_destination_40+=@$item->total_40;
-                                              $sum_destination_40hc+=@$item->total_40hc;
-                                              $sum_destination_40nor+=@$item->total_40nor;
-                                              $sum_destination_45+=@$item->total_45;
-                                              ?>                                                     
+                                                  $sum_destination_20+=@$item->total_20;
+                                                  $sum_destination_40+=@$item->total_40;
+                                                  $sum_destination_40hc+=@$item->total_40hc;
+                                                  $sum_destination_40nor+=@$item->total_40nor;
+                                                  $sum_destination_45+=@$item->total_45;
+                                                  ?>                                                     
 
-                                              <tr>
-                                                <td>
-                                                  <a href="#" class="editable surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                </td>
-                                                <td>
-                                                  <a href="#" class="editable calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable destination_amount_20"data-type="text" data-name="amount->c20" data-value="1" data-pk="{{@$item->id}}" data-title="Amount"></a>
-                                                </td>
-                                                <td {>
-                                                  <a href="#" class="editable destination_markup_20"data-type="text" data-name="markups->c20" data-value="20" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable destination_markup_20"data-type="text" data-name="markups->c20" data-value="20" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable destination_amount_40"data-type="text" data-name="amount->c40" data-value="5" data-pk="{{@$item->id}}" data-title="Total"></a>
-                                                </td>
-                                                <td >
-                                                  <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
-                                                </td>                                               
-                                              </tr>
-                                              @php
-                                              $a++;
-                                              @endphp
-                                              @endif
+                                                  <tr>
+                                                    <td>
+                                                      <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                    </td>
+                                                    <td>
+                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                    </td>
+                                                    <td {>
+                                                      <a href="#" class="editable-lcl-air" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                    </td>
+                                                    <td >
+                                                     {{$item->units*$item->price_per_unit}}
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                    </td>
+                                                    <td >
+                                                      <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                    </td>                                               
+                                                  </tr>
+                                                  @php
+                                                    $a++;
+                                                  @endphp
+                                                @endif
                                               @endforeach
 
                                               <!-- Hide destination charges -->
@@ -433,16 +433,16 @@
                                                   {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c20" class="amount_c20 form-control" id="amount_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
+                                                  <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total_c20" class="form-control destination_total" type="number" min="0" step="0.0000001"  />
+                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001"  />
                                                 </td>
                                                 <td >
-                                                  <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
+                                                  <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <div class="input-group">
@@ -450,7 +450,7 @@
                                                       <div class="btn-group">
                                                        <input name="markup_c40" value="" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
                                                       </div>
-                                                      <a class="btn btn-xs btn-primary-plus store_charge">
+                                                      <a class="btn btn-xs btn-primary-plus store_charge_lcl">
                                                         <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
                                                       </a>
                                                       <a class="btn btn-xs btn-primary-plus removeOriginCharge">
@@ -533,58 +533,58 @@
                                                   <tbody style="background-color: white;">
                                                     <tr >
                                                       <td>
-                                                        <a href="#" class="editable" data-source="{{$surcharges}}" data-type="text" data-value="{{$inland->provider}}" data-pk="{{$item->id}}" data-title="Charge"></a>
+                                                        <a href="#" class="editable-lcl-air" data-source="{{$surcharges}}" data-type="text" data-value="{{$inland->provider}}" data-pk="{{$item->id}}" data-title="Charge"></a>
                                                       </td>
                                                       <td>
-                                                        <a href="#" class="editable-amount-20 amount_20" data-type="text" data-name="amount->c20" data-value="{{@$inland->distance}}" data-pk="{{$item->id}}" data-title="Amount"></a> &nbsp;km
+                                                        <a href="#" class="editable-lcl-air-amount-20 amount_20" data-type="text" data-name="amount->c20" data-value="{{@$inland->distance}}" data-pk="{{$item->id}}" data-title="Amount"></a> &nbsp;km
                                                       </td>
                                                       <td {{ $equipmentHides['20'] }}>
-                                                        <a href="#" class="editable-amount-20 amount_20" data-type="text" data-name="amount->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{$item->id}}" data-title="Amount"></a>
+                                                        <a href="#" class="editable-lcl-air-amount-20 amount_20" data-type="text" data-name="amount->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{$item->id}}" data-title="Amount"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['20'] }}>
-                                                        <a href="#" class="editable-markup-20 markup_20" data-type="text" data-name="markups->20" data-value="{{@$inland_markups['c20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
+                                                        <a href="#" class="editable-lcl-air-markup-20 markup_20" data-type="text" data-name="markups->20" data-value="{{@$inland_markups['c20']}}" data-pk="{{$item->id}}" data-title="Markup"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['20'] }}>
                                                         <span class="total_20">{{@$inland_rates['c20']+@$inland_markups['c20']}}</span>
                                                       </td>
                                                       <td {{ $equipmentHides['40'] }}>
-                                                        <a href="#" class="editable-amount-40 amount_40"data-type="text" data-name="amount->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-amount-40 amount_40"data-type="text" data-name="amount->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40'] }}>
-                                                        <a href="#" class="editable-markup-40 markup_40"data-type="text" data-name="markups->40" data-value="{{@$inland_markups['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-markup-40 markup_40"data-type="text" data-name="markups->40" data-value="{{@$inland_markups['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40'] }}>
                                                         <span class="total_40">{{@$inland_rates['c40']+@$inland_markups['c40']}}</span>
                                                       </td>
                                                       <td {{ $equipmentHides['40hc'] }}>
-                                                        <a href="#" class="editable-amount-40hc amount_40hc"data-type="text" data-name="amount->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-amount-40hc amount_40hc"data-type="text" data-name="amount->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40hc'] }}>
-                                                        <a href="#" class="editable-markup-40hc markup_40hc"data-type="text" data-name="markups->40hc" data-value="{{@$inland_markups['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-markup-40hc markup_40hc"data-type="text" data-name="markups->40hc" data-value="{{@$inland_markups['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40hc'] }}>
                                                         <span class="total_40hc">{{@$inland_amounts['c40hc']+@$inland_markups['c40hc']}}</span>
                                                       </td>
                                                       <td {{ $equipmentHides['40nor'] }}>
-                                                        <a href="#" class="editable-amount-40nor amount_40nor "data-type="text" data-name="amount->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-amount-40nor amount_40nor "data-type="text" data-name="amount->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40nor'] }}>
-                                                        <a href="#" class="editable-markup-40nor markup_40nor"data-type="text" data-name="markups->40nor" data-value="{{@$inland_markups['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-markup-40nor markup_40nor"data-type="text" data-name="markups->40nor" data-value="{{@$inland_markups['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['40nor'] }}>
                                                         <span class="total_40nor">{{@$inland_amounts['c40nor']+@$inland_markups['c40nor']}}</span>
                                                       </td>
                                                       <td {{ $equipmentHides['45'] }}>
-                                                        <a href="#" class="editable-amount-45 amount_45" data-type="text" data-name="amount->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-amount-45 amount_45" data-type="text" data-name="amount->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['45'] }}>
-                                                        <a href="#" class="editable-markup-45 markup_45" data-type="text" data-name="markups->45" data-value="{{@$inland_markups['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                        <a href="#" class="editable-lcl-air-markup-45 markup_45" data-type="text" data-name="markups->45" data-value="{{@$inland_markups['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                       </td>
                                                       <td {{ $equipmentHides['45'] }}>
                                                         <span class="total_45">{{@$inland_amounts['c45']+@$inland_markups['c45']}}</span>
                                                       </td>
                                                       <td>
-                                                        <a href="#" class="editable" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                        <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                       </td>
                                                     </tr>
                                                   </tbody>

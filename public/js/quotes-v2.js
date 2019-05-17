@@ -90,6 +90,21 @@ $(document).ready(function() {
     }
   });
 
+    $('.editable-lcl-air').editable({
+    url:'/v2/quotes/lcl/charges/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
   $('.editable-amount-20').editable({
     url:'/v2/quotes/charges/update',
     emptytext:0,
