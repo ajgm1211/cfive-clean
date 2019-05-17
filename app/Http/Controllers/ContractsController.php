@@ -49,8 +49,7 @@ class ContractsController extends Controller
     public function index()
     {
 
-        $model      = new  Rate();
-
+        /*
         if(\Auth::user()->type=='admin'){
             $arreglo    = Contract::with('rates','carriers','direction')->get();
             $contractG  = Contract::all();
@@ -59,7 +58,7 @@ class ContractsController extends Controller
             $arreglo    = Contract::where('company_user_id','=',Auth::user()->company_user_id)
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-        }
+        }*/
 
         $originsR = DB::table('views_contract_rates')
             ->select('port_orig')
