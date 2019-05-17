@@ -194,7 +194,7 @@ class ContractsController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-                
+
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
@@ -230,7 +230,7 @@ class ContractsController extends Controller
 
             $rateOrig           = $request->input('origin_id'.$contadorRate);
             $rateDest           = $request->input('destiny_id'.$contadorRate);
-    
+
             foreach($rateOrig as $Rorig => $Origvalue)
             {
                 foreach($rateDest as $Rdest => $Destvalue)
@@ -449,7 +449,7 @@ class ContractsController extends Controller
 
     public function contractRates(Request $request){
         $contractRate = new  ViewContractRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency','schedule_type','transit_time','via')->where('company_user_id', Auth::user()->company_user_id);
 
         /*$model = new  ViewContractRates();
         //$model    = new  Rate();
@@ -485,6 +485,27 @@ class ContractsController extends Controller
                 }
             })
 
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
             })
