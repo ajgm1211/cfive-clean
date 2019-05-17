@@ -436,6 +436,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
   Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
   Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
+  Route::post('lcl/charges/update', 'QuoteV2Controller@updateQuoteChargesLcl')->name('quotes-v2.update.charges.lcl');
   Route::post('/update/payments/{id}', 'QuoteV2Controller@updatePaymentConditions')->name('quotes-v2.update.payments');
   Route::post('/update/terms/{id}', 'QuoteV2Controller@updateTerms')->name('quotes-v2.update.terms');
   Route::post('/update/remarks/{id}', 'QuoteV2Controller@updateRemarks')->name('quotes-v2.update.remarks');
