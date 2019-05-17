@@ -11,7 +11,8 @@ class AccountImportationContractFcl extends Model
                            'name',
                            'date',
                            'namefile',
-                           'company_user_id'
+                           'company_user_id',
+                           'request_id'
                           ];
 
     public function companyuser(){

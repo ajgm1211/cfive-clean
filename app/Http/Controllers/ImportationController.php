@@ -17,6 +17,7 @@ use App\Contact;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use App\Direction;
 use App\Surcharge;
 use PrvSurchargers;
 use App\Failcompany;
@@ -26,6 +27,7 @@ use App\CompanyUser;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
@@ -139,35 +141,35 @@ class ImportationController extends Controller
 
                     if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
                         $twentyExiBol = true;
-                        $twentyVal   = (int)$twentyArr[0];
+                        $twentyVal   = floatval($twentyArr[0]);
                     }
 
                     //----------------- 40' -----------------------------------------------------------------
 
                     if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
                         $fortyExiBol = true;
-                        $fortyVal   = (int)$fortyArr[0];
+                        $fortyVal   = floatval($fortyArr[0]);
                     }
 
                     //----------------- 40'HC --------------------------------------------------------------
 
                     if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
                         $fortyhcExiBol = true;
-                        $fortyhcVal   = (int)$fortyhcArr[0];
+                        $fortyhcVal   = floatval($fortyhcArr[0]);
                     }
 
                     //----------------- 40'NOR -------------------------------------------------------------
 
                     if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
                         $fortynorExiBol = true;
-                        $fortynorVal   = (int)$fortynorArr[0];
+                        $fortynorVal   = floatval($fortynorArr[0]);
                     }
 
                     //----------------- 45' ----------------------------------------------------------------
 
                     if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
                         $fortyfiveExiBol = true;
-                        $fortyfiveVal   = (int)$fortyfiveArr[0];
+                        $fortyfiveVal   = floatval($fortyfiveArr[0]);
                     }
 
                     if($twentyVal == 0
@@ -337,7 +339,7 @@ class ImportationController extends Controller
 
                     //  Amount ---------------------------------------------------------------------------------
 
-                    $amountV = (int)$ammountEX[0];
+                    $amountV = floatval($ammountEX[0]);
 
                     //  Currency -------------------------------------------------------------------------------
 
@@ -441,22 +443,40 @@ class ImportationController extends Controller
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
+        $direction      = [null=>'Please Select'];
+        $direction2      = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImporContractFcl',compact('harbor','country','region','carrier','companysUser','typedestiny'));
+        return view('importation.ImporContractFcl',compact('harbor','direction','country','region','carrier','companysUser','typedestiny'));
     }
 
     // precarga la vista para importar rates o rates mas surchargers desde Request
-    public function requestProccess($id){
-        $requestfcl     = RequestFcl::find($id);
+    public function requestProccess($id,$selector,$request_id){
+        if($selector == 1){
+            $requestfcl     = RequestFcl::find($id);
+            $requestfcl->load('Requestcarriers');
+        } elseif($selector == 2){
+            $contract     = Contract::find($id);
+            $contract->load('carriers');
+            //dd($contract);
+        }
         //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
         $carrier        = carrier::all()->pluck('name','id');
+        $direction      = Direction::pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImportContractFCLRequest',compact('harbor','country','region','carrier','companysUser','typedestiny','requestfcl'));
+        if($selector == 1){
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector'));    
+        } elseif($selector == 2){
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id'));
+        }
+
     }
 
     // carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
@@ -467,6 +487,7 @@ class ImportationController extends Controller
         $now                = $now->format('dmY_His');
         $now2               = $now2->format('Y-m-d');
         $type               = $request->type;
+        $request_id         = $request->request_id;
         $carrierVal         = $request->carrier;
         $typedestinyVal     = $request->typedestiny;
         $originArr          = $request->origin;
@@ -478,6 +499,8 @@ class ImportationController extends Controller
         $CompanyUserId      = $request->CompanyUserId;
         $statustypecurren   = $request->valuesCurrency;
         $statusPortCountry  = $request->valuesportcountry;
+        $direction_id       = $request->direction;
+        $selector           = $request->selector;
 
         $carrierBol         = false;
         $destinyBol         = false;
@@ -488,6 +511,7 @@ class ImportationController extends Controller
         $filebool           = false;
 
         $data               = collect([]);
+        $direction          = Direction::pluck('name','id');
         $typedestiny        = TypeDestiny::all()->pluck('description','id');
         $harbor             = harbor::all()->pluck('display_name','id');
         $country            = Country::all()->pluck('name','id');
@@ -522,21 +546,35 @@ class ImportationController extends Controller
             $account->date              = $now2;
             $account->namefile          = $nombre;
             $account->company_user_id   = $CompanyUserId;
+            $account->request_id        = $request_id;
             $account->save();
 
             ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
 
-            $contract   = new Contract();
-            $contract->name             = $request->name;
-            $contract->number           = $request->number;
-            $validity                   = explode('/',$request->validation_expire);
-            $contract->validity         = $validity[0];
-            $contract->expire           = $validity[1];
-            $contract->status           = 'incomplete';
-            $contract->company_user_id  = $CompanyUserId;
-            $contract->account_id  = $account->id;
-            $contract->save(); 
+            if($selector == 2){
+                $contract = Contract::find($request->contract_id);
+                $contract->account_id  = $account->id;
+                $contract->update();
+            } else {
+                $contract   = new Contract();
+                $contract->name             = $request->name;
+                $validity                   = explode('/',$request->validation_expire);
+                $contract->validity         = $validity[0];
+                $contract->expire           = $validity[1];
+                $contract->direction_id     = $direction_id;
+                $contract->status           = 'incomplete';
+                $contract->company_user_id  = $CompanyUserId;
+                $contract->account_id  = $account->id;
+                $contract->save();
 
+                foreach($request->carrierM as $carrierVal){
+                    ContractCarrier::create([
+                        'carrier_id'    => $carrierVal,
+                        'contract_id'   => $contract->id
+                    ]);
+                }
+            }
+            $contract->load('carriers');
             $Contract_id = $contract->id;
             $fileTmp    = new FileTmp();
             $fileTmp->contract_id = $Contract_id;
@@ -672,6 +710,7 @@ class ImportationController extends Controller
                                                              'type',
                                                              'region',
                                                              'carrier',
+                                                             'direction',
                                                              'targetsArr',
                                                              'coordenates',
                                                              'countTarges',
@@ -1177,7 +1216,9 @@ class ImportationController extends Controller
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('FclImport')->url($NameFile);
 
-        */
+        FailSurCharge::where('contract_id',$request->Contract_id)->forceDelete();
+        LocalCharge::where('contract_id',$request->Contract_id)->forceDelete();*/
+
 
         ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['Contract_id'];
@@ -1628,11 +1669,11 @@ class ImportationController extends Controller
                         "destiny_port" => $destiny,
                         "carrier_id"   => $request->carrier_id,
                         "contract_id"  => $request->contract_id,
-                        "twuenty"      => (int)$request->twuenty,
-                        "forty"        => (int)$request->forty,
-                        "fortyhc"      => (int)$request->fortyhc,
-                        "fortynor"     => (int)$request->fortynor,
-                        "fortyfive"    => (int)$request->fortyfive,
+                        "twuenty"      => floatval($request->twuenty),
+                        "forty"        => floatval($request->forty),
+                        "fortyhc"      => floatval($request->fortyhc),
+                        "fortynor"     => floatval($request->fortynor),
+                        "fortyfive"    => floatval($request->fortyfive),
                         "currency_id"  => $request->currency_id
                     ]);
                 }
@@ -1654,11 +1695,11 @@ class ImportationController extends Controller
         $rate->destiny_port =  $request->destiny_id;
         $rate->carrier_id   =  $request->carrier_id;
         $rate->contract_id  =  $request->contract_id;
-        $rate->twuenty      =  $request->twuenty;
-        $rate->forty        =  $request->forty;
-        $rate->fortyhc      =  $request->fortyhc;
-        $rate->fortynor     =  $request->fortynor;
-        $rate->fortyfive    =  $request->fortyfive;
+        $rate->twuenty      =  floatval($request->twuenty);
+        $rate->forty        =  floatval($request->forty);
+        $rate->fortyhc      =  floatval($request->fortyhc);
+        $rate->fortynor     =  floatval($request->fortynor);
+        $rate->fortyfive    =  floatval($request->fortyfive);
         $rate->currency_id  =  $request->currency_id;
         $rate->update();
 
@@ -4288,7 +4329,7 @@ class ImportationController extends Controller
         $typedestinyVar     = $request->changetype;
         $carrierVarArr      = $request->carrier_id;
         $calculationtypeVar = $request->calculationtype_id;
-        $ammountVar         = (int)$request->ammount;
+        $ammountVar         = floatval($request->ammount);
         $currencyVar        = $request->currency_id;
         $contractVar        = $request->contract_id;
         $typerate           =  $request->typeroute;
@@ -4352,7 +4393,7 @@ class ImportationController extends Controller
         $contractVar           =  $request->contract_id;
         $typedestinyVar        =  $request->changetype;
         $calculationtypeVar    =  $request->calculationtype_id;
-        $ammountVar            =  $request->ammount;
+        $ammountVar            =  floatval($request->ammount);
         $currencyVar           =  $request->currency_id;
         $carrierVarArr         =  $request->carrier_id;
         $typerate              =  $request->typeroute;
@@ -4820,7 +4861,7 @@ class ImportationController extends Controller
                            $addressVal         = '';
                            $pricelevelVal      = '';
                            $ownerVal           = \Auth::user()->id;
-                           $company_user_id    = \Auth::user()->company_user_id	;
+                           $company_user_id    = \Auth::user()->company_user_id ;
 
                            $businessnameBol = false;
                            $phoneBol        = false;
@@ -5480,6 +5521,13 @@ class ImportationController extends Controller
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
+            })
+            ->addColumn('request_id', function ( $account) {
+                if(empty($account->request_id) != true){
+                    return  $account->request_id;
+                } else {
+                    return 'Manual';
+                }
             })
             ->addColumn('action', function ( $account) {
                 if(empty($account->contract->status)!=true){

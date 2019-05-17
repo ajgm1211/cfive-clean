@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\CompanyUser;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\GlobalChargeLcl;
-use App\Carrier;
-use App\Harbor;
 use App\Rate;
-use App\Currency;
-use App\CalculationTypeLcl;
-use App\Surcharge;
-use App\GlobalCharPortLcl;
-use App\GlobalCharCarrierLcl;
-use App\TypeDestiny;
+use App\Harbor;
+use App\Carrier;
 use App\Country;
-use App\GlobalCharCountryLcl;
+use App\Currency;
 use EventIntercom;
+use App\Surcharge;
+use App\CompanyUser;
+use App\TypeDestiny;
+use App\GlobalChargeLcl;
+use App\GlobalCharPortLcl;
+use App\CalculationTypeLcl;
+use Illuminate\Http\Request;
+use App\GlobalCharCountryLcl;
+use App\GlobalCharCarrierLcl;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class GlobalChargesLclController extends Controller
 {
@@ -29,7 +31,7 @@ class GlobalChargesLclController extends Controller
     public function index()
     {
 
-        $global =  GlobalChargeLcl::whereHas('companyUser', function($q) {
+        /* $global =  GlobalChargeLcl::whereHas('companyUser', function($q) {
             $q->where('company_user_id', '=', Auth::user()->company_user_id);
         })->with('globalcharportlcl.portOrig','globalcharportlcl.portDest','globalcharcarrierslcl.carrier','typedestiny','globalcharcountrylcl.countryOrig','globalcharcountrylcl.countryDest')->get();
 
@@ -39,7 +41,66 @@ class GlobalChargesLclController extends Controller
         $calculationT = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny = TypeDestiny::all()->pluck('description','id');
         $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        return view('globalchargeslcl/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));
+        return view('globalchargeslcl/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
+
+        $company_userid = \Auth::user()->company_user_id;
+        return view('globalchargeslcl.indexTw', compact('company_userid'));
+    }
+
+    public function show($id){
+        $globalcharges = DB::select('call  select_for_company_globalcharger_lcl('.$id.')');
+
+        return DataTables::of($globalcharges)
+            ->editColumn('surchargelb', function ($globalcharges){ 
+                return $globalcharges->surcharges;
+            })
+            ->editColumn('origin_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->port_orig) != true){
+                    return $globalcharges->port_orig;
+                } else if(empty($globalcharges->country_orig) != true) {
+                    return $globalcharges->country_orig; 
+                }
+            })
+            ->editColumn('destiny_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->port_dest) != true){
+                    return $globalcharges->port_dest;
+                } else if(empty($globalcharges->country_dest) != true) {
+                    return $globalcharges->country_dest; 
+                }
+            })
+            ->editColumn('typedestinylb', function ($globalcharges){ 
+                return $globalcharges->typedestiny;
+            })
+            ->editColumn('calculationtypelb', function ($globalcharges){ 
+                return $globalcharges->calculationtype;
+            })
+            ->editColumn('currencylb', function ($globalcharges){ 
+                return $globalcharges->currency;
+            })
+            ->editColumn('carrierlb', function ($globalcharges){ 
+                return $globalcharges->carrier;
+            })
+            ->editColumn('validitylb', function ($globalcharges){ 
+                return $globalcharges->validity.'/'.$globalcharges->expire;
+            })
+            ->addColumn('action', function ( $globalcharges) {
+                return '
+
+                    <a  id="edit_l{{$loop->index}}" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                      <i class="la la-edit"></i>
+                    </a>    
+
+                    <a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
+                      <i id="rm_l'.$globalcharges->id.'" class="la la-times-circle"></i>
+                    </a>
+
+                    <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges->id.')">
+                      <i class="la la-plus"></i>
+                    </a>';
+            })
+            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            ->rawColumns(['checkbox','action'])
+            ->editColumn('id', 'ID: {{$id}}')->toJson();
     }
 
     public function addGlobalChar(){
@@ -198,7 +259,7 @@ class GlobalChargesLclController extends Controller
                     $detailcountry = new GlobalCharCountryLcl();
                     $detailcountry->country_orig = $valueC;
                     $detailcountry->country_dest =  $valuedestC;
-                    $detailcountry->globalcharge()->associate($global);
+                    $detailcountry->globalchargelcl_id = $global->id;
                     $detailcountry->save();
                 }
             }
@@ -232,5 +293,16 @@ class GlobalChargesLclController extends Controller
         $global = GlobalChargeLcl::find($id);
         $global->delete();
 
+    }
+    public function destroyArr(Request $request)
+    {
+        $globals_id_array = $request->input('id');
+        $global = GlobalChargeLcl::whereIn('id', $globals_id_array);
+        if($global->delete())
+        {
+             return response()->json(['success' => '1']);
+        } else {
+             return response()->json(['success' => '2']);
+        }
     }
 }

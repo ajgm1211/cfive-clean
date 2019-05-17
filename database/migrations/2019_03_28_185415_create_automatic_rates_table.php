@@ -20,9 +20,9 @@ class CreateAutomaticRatesTable extends Migration
             $table->string('contract');
             $table->date('validity_start');
             $table->date('validity_end');
-            $table->integer('origin_port_id')->unsigned();
+            $table->integer('origin_port_id')->unsigned()->nullable();
             $table->foreign('origin_port_id')->references('id')->on('harbors')->onDelete('cascade');
-            $table->integer('destination_port_id')->unsigned();
+            $table->integer('destination_port_id')->unsigned()->nullable();
             $table->foreign('destination_port_id')->references('id')->on('harbors')->onDelete('cascade');
             $table->integer('carrier_id')->unsigned();
             $table->foreign('carrier_id')->references('id')->on('carriers')->onDelete('cascade');

@@ -29,5 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ModelHasRolesTableSeeder::class);
         $this->call(CalculationtypelclTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
+        $this->call(DirectionsTableSeeder::class);
+        $this->call(LanguagesTableSeeder::class);
+        $this->call(CompanyUsersTableSeeder::class);
     }
 }
