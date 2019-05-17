@@ -77,7 +77,7 @@
                                     <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
                                     <span class="delivery_type_span">
-                                    @if($quote->delivery_type==1)
+                                        @if($quote->delivery_type==1)
                                             Port to Port
                                         @elseif($quote->delivery_type==2)
                                             Port to Door
@@ -86,7 +86,7 @@
                                         @else
                                             Door to Door
                                         @endif
-                                </span>
+                                    </span>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -105,7 +105,9 @@
                                     <span class="date_issued_span">{{date_format($date, 'M d, Y H:i')}}</span>
                                     {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
                                 </div>
+                               @if($quote->type=='FCL')
                                 <div class="col-md-4">
+                                    
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
@@ -117,7 +119,9 @@
                                         @endforeach
                                     </span>
                                     {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
+
                                 </div>
+                                @endif
                                 <div class="col-md-4">
                                     <br>
                                     <label class="title-quote"><b>Price level:&nbsp;&nbsp;</b></label>
