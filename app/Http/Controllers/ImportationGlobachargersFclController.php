@@ -148,7 +148,7 @@ class ImportationGlobachargersFclController extends Controller
 
                     //  Amount ---------------------------------------------------------------------------------
 
-                    $amountV = (int)$ammountEX[0];
+                    $amountV = floatval($ammountEX[0]);
 
                     //  Currency -------------------------------------------------------------------------------
 
@@ -311,6 +311,7 @@ class ImportationGlobachargersFclController extends Controller
         //dd($request->all());
         $now = new \DateTime();
         $now = $now->format('dmY_His');
+        $request_id         = $request->request_id;
         $carrierVal         = $request->carrier;
         $typedestinyVal     = $request->typedestiny;
         $validitydateVal    = $request->validitydate;
@@ -365,6 +366,7 @@ class ImportationGlobachargersFclController extends Controller
             $account->namefile         = $nombre;
             $account->date             = $request->date;
             $account->status           = 'incomplete';
+            $account->requestgc_id     = $request_id;
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
 
@@ -530,6 +532,16 @@ class ImportationGlobachargersFclController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         //dd($request->all());
+        /*
+        $requestobj = $request;
+        $companyUserIdVal = $companyUserId;
+        $errors = 0;
+        $NameFile = $requestobj['FileName'];
+        $path = \Storage::disk('GCImport')->url($NameFile);
+
+        FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
+        GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();*/
+
 
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];
@@ -660,7 +672,7 @@ class ImportationGlobachargersFclController extends Controller
         // -------------- AMMOUNT -----------------------------------------------------------
         $ammountC = count($ammountA);
         if($ammountC <= 1){
-            $ammountA = (int)$failglobal['ammount'];
+            $ammountA = floatval($failglobal['ammount']);
         }
         else{
             $ammountA       = $ammountA[0].' (error)';
@@ -1276,6 +1288,13 @@ class ImportationGlobachargersFclController extends Controller
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
             })
+            ->addColumn('requestgc_id', function ( $account) {
+                if(empty($account->requestgc_id) != true){
+                    return  $account->requestgc_id;
+                } else {
+                    return 'Manual';
+                }
+            })
             ->addColumn('action', function ( $account) {
                 return '<a href="/ImportationGlobalchargesFcl/FailedGlobalchargers/'.$account->id.'/1" class="show"  title="Failed-Good" >
                             <samp class="la la-pencil-square-o" style="font-size:20px; color:#031B4E"></samp>
@@ -1296,26 +1315,10 @@ class ImportationGlobachargersFclController extends Controller
 
     public function testExcelImportation(){
 
-        $nopalicaHs = Harbor::where('name','No Aplica')->get();
-        $nopalicaCs = Country::where('name','No Aplica')->get();
-        foreach($nopalicaHs as $nopalicaH){
-            $nopalicaH = $nopalicaH['id'];
-        }
-        foreach($nopalicaCs as $nopalicaC){
-            $nopalicaC = $nopalicaC['id'];
-        }
-        
-        FailedGlobalcharge::where('account_id','=',30)->where('origin','LIKE','%No Aplica%')->delete();
-        FailedGlobalcharge::where('account_id','=',30)->where('destiny','LIKE','%No Aplica%')->delete();
+        $var = 255;
+        $var = floatval($var);
 
-        GlobalCharge::where('account_importation_globalcharge_id',30)
-            ->whereHas('globalcharport',function($query) use($nopalicaH){
-               $query->where('port_dest',$nopalicaH)->orWhere('port_orig',$nopalicaH);
-            })
-            ->orWhereHas('globalcharcountry',function($query) use($nopalicaC){
-               $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
-            })->Delete();
-
+        dd($var);
     }
 
 

@@ -17,7 +17,7 @@ class CreateQuoteV2sTable extends Migration
             $table->increments('id');
             $table->string('quote_id');
             $table->string('custom_quote_id')->nullable();
-            $table->enum('type',['LCL','FCL']);
+            $table->enum('type',['LCL','FCL','AIR']);
             $table->string('delivery_type');
             $table->json('equipment');
             $table->integer('company_id')->unsigned();

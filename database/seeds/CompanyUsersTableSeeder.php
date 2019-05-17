@@ -4,32 +4,36 @@ use Illuminate\Database\Seeder;
 
 class CompanyUsersTableSeeder extends Seeder
 {
+
     /**
-     * Run the database seeds.
+     * Auto generated seed file
      *
      * @return void
      */
     public function run()
     {
         
-        $date = Carbon\Carbon::now();
-        
-        \DB::table('company_users')->delete();
 
+        \DB::table('company_users')->delete();
+        
         \DB::table('company_users')->insert(array (
-            0 =>
+            0 => 
             array (
                 'id' => 1,
                 'name' => 'Cargofive',
-                'address' => 'Lisbon, Portugal',
-                'phone' => '+56972374655',
-                'hash' => \Hash::make('Cargofive'),
-                'currency_id' =>  149,
-                'pdf_language' => 1,
+                'address' => 'Portugal',
+                'phone' => '36586289542',
+                'logo' => NULL,
+                'hash' => '$2y$10$3.L5S4V1kCVJzukHKZ2DEOAJMl8MNTFd9vLFkj0YIKKd6i1J5LLSe',
+                'currency_id' => 149,
+                'pdf_language' => 2,
                 'type_pdf' => 2,
-                'created_at' => $date,
-                'updated_at' => $date,
-            )
+                'pdf_ammounts' => 2,
+                'created_at' => '2019-05-08 18:42:44',
+                'updated_at' => '2019-05-08 18:42:44',
+            ),
         ));
+        
+        
     }
 }

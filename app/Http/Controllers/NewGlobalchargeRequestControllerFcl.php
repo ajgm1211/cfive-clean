@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Harbor;
 use App\Carrier;
+use Carbon\Carbon;
 use App\CompanyUser;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\NewGlobalchargeRequestFcl;
+use App\Jobs\SendEmailRequestGcJob;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
@@ -26,12 +28,54 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         return view('RequestGlobalChargeFcl.index',compact('accounts'));
     }
 
+    public function indexListClient(){
+        $company_userid = \Auth::user()->company_user_id;
+        return view('RequestGlobalChargeFcl.indexClient',compact('company_userid'));
+    }
+
+
     public function create()
     {
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $user   = \Auth::user();
         return view('RequestGlobalChargeFcl.NewRequest',compact('harbor','carrier','user'));
+    }
+
+    public function listClient($id){
+        $Ncontracts = NewGlobalchargeRequestFcl::where('company_user_id',$id)->get();
+        //dd($Ncontracts[0]['companyuser']['name']);
+
+        return Datatables::of($Ncontracts)
+            ->addColumn('name', function ($Ncontracts) {
+                return $Ncontracts->name;
+            })
+            ->addColumn('validation', function ($Ncontracts) {
+                return $Ncontracts->validation;
+            })
+            ->addColumn('date', function ($Ncontracts) {
+                return $Ncontracts->created;
+            })
+            ->addColumn('status', function ($Ncontracts) {
+                $color='';
+                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                    //$color = 'color:#031B4E';
+                    $color = 'color:#f81538';
+                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
+                    $color = 'color:#5527f0';
+                } else {
+                    $color = 'color:#04950f';
+                }
+
+                return '<label style="'.$color.'">'.$Ncontracts->status.'</label>';
+            })
+            ->addColumn('action', function ($Ncontracts) {
+                return '<a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>';
+            })
+
+            ->make();
     }
 
     public function create2(){
@@ -60,6 +104,13 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             })
             ->addColumn('user', function ($Ncontracts) {
                 return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
+            })
+            ->addColumn('time_elapsed', function ($Ncontracts) {
+                if(empty($Ncontracts->time_total) != true){
+                    return $Ncontracts->time_total;
+                } else {
+                    return '--------';
+                }
             })
             ->addColumn('status', function ($Ncontracts) {
                 $color='';
@@ -257,34 +308,42 @@ class NewGlobalchargeRequestControllerFcl extends Controller
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
             $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-            $Ncontract->save();
 
-            if($Ncontract->status == 'Done'){
 
-                $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
-                $message = 'The request was processed N°: ' . $Ncontract->id;
-                foreach ($users as $user) {
-
-                    $user->notify(new N_general(\Auth::user(),$message));
+            if($Ncontract->status == 'Processing'){
+                if($Ncontract->time_star_one == false){
+                    $Ncontract->time_star       = $now2;
+                    $Ncontract->time_star_one   = true;
                 }
 
-                $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
-                foreach ($usersCompa as $userCmp) {
-                    if($userCmp->id != $Ncontract->user_id){
-                        \Mail::to($userCmp->email)->send(new NewRequestGlobalChargeToAdminMail($userCmp->toArray(),
-                                                                                               $Ncontract->toArray()));
+            } elseif($Ncontract->status == 'Done'){
+
+                $fechaEnd = Carbon::parse($now2);
+                if(empty($Ncontract->time_star) == true){
+                    $Ncontract->time_total = 'It did not go through the processing state';
+                } else{
+                    $fechaStar = Carbon::parse($Ncontract->time_star);
+                    $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                }
+
+                if($Ncontract->sentemail == false){
+                    $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
+                    $message = 'The request was processed N°: ' . $Ncontract->id;
+                    foreach ($users as $user) {
+
+                        $user->notify(new N_general(\Auth::user(),$message));
                     }
+
+                    $usercreador = User::find($Ncontract->user_id);
+                    $message = "The importation ".$Ncontract->id." was completed";
+                    $usercreador->notify(new SlackNotification($message));
+                    SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id);
+
                 }
-
-                $usercreador = User::find($Ncontract->user_id);
-                $message = "The importation ".$Ncontract->id." was completed";
-                $usercreador->notify(new SlackNotification($message));
-
-                \Mail::to($usercreador->email)->send(new NewRequestGlobalChargeToUserMail($usercreador->toArray(),
-                                                                                          $Ncontract->toArray()));
 
             }
 
+            $Ncontract->save();
             return response()->json($data=['status'=>1,'data'=>$status]);
         } catch (\Exception $e){
             return response()->json($data=['status'=>2]);;
