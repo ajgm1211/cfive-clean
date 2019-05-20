@@ -59,7 +59,7 @@
                                 <div class="col-md-3 group_freight_charges">
                                     <div class="form-check">
                                         <input class="form-check-input pdf-feature" data-quote-id="{{$quote->id}}" data-name="grouped_freight_charges" type="checkbox" data-type="checkbox" name="grouped_freight_charges" value="1" {{$quote->pdf_option->grouped_freight_charges==1 ? 'checked':''}}>
-                                        <label class="title-quote"><b>Group Freight Charges in:</b></label>
+                                        <label class="title-quote"><b>Show Freight Charges in:</b></label>
                                         {{ Form::select('freight_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->freight_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'freight_charges_currency']) }}
                                     </div>
                                 </div>

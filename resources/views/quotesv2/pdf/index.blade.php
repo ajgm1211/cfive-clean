@@ -278,7 +278,8 @@
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit" colspan="2"><b>Charge</b></th>
+                            <th class="unit"><b>POL</b></th>
+                            <th class="unit"><b>POD</b></th>
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                             <th {{ $equipmentHides['20'] }}><b>20'</b></th>
                             <th {{ $equipmentHides['40'] }}><b>40'</b></th>
@@ -318,7 +319,24 @@
                             @endforeach
                         @endforeach
                         <tr class="text-center color-table">
-                            <td colspan="2">Total freight Charges</td>
+                            <td >
+                                @if($rate->origin_port_id!='') 
+                                    {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                                @elseif($rate->origin_address!='') 
+                                    {{$rate->origin_address}} 
+                                @else 
+                                    {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                @endif
+                            </td>
+                            <td >
+                                @if($rate->destination_port_id!='') 
+                                    {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                                @elseif($rate->destination_address!='') 
+                                    {{$rate->destination_address}} 
+                                @else 
+                                    {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                @endif
+                            </td>                            
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
                             <td {{ $equipmentHides['20'] }}>{{@$sum_freight_20}}</td>
                             <td {{ $equipmentHides['40'] }}>{{@$sum_freight_40}}</td>
@@ -342,7 +360,7 @@
         @if($quote->pdf_option->grouped_freight_charges==0 && $quote->pdf_option->show_type=='detailed' )
             @foreach($freight_charges_detailed as $origin => $value)
                 @foreach($value as $destination => $item)
-                    <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                    <!--<div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}} | {{$destination}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}} | {{$destination}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}} | {{$destination}}</p>
@@ -351,8 +369,8 @@
                     <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                         <thead class="title-quote text-center header-table">
                             <tr >
-                                <th class="unit"><b>Charge</b></th>
-                                <th class="unit"><b>Detail</b></th>
+                                <th class="unit"><b>POL</b></th>
+                                <th class="unit"><b>POD</b></th>
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                 <th {{ $equipmentHides['20'] }}><b>20'</b></th>
                                 <th {{ $equipmentHides['40'] }}><b>40'</b></th>
@@ -423,7 +441,7 @@
                             @endif     
                         </tr>
                     </tbody>
-                </table>
+                    </table>-->
                 @endforeach
             @endforeach
         @endif
