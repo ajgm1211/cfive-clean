@@ -416,8 +416,9 @@ class QuoteV2Controller extends Controller
     $quote->update();
 
     $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
+    $owner=$quote->user->name.' '.$quote->user->lastname;
 
-    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name]);
+    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner]);
   }
 
   public function updatePaymentConditions(Request $request,$id)
@@ -1457,6 +1458,24 @@ class QuoteV2Controller extends Controller
     $charge->calculation_type_id=$request->calculation_type_id;
     $charge->amount=json_encode($merge_amounts);
     $charge->markups=json_encode($merge_markups);
+    $charge->currency_id=$request->currency_id;
+    $charge->save();
+
+    return response()->json(['message' => 'Ok']);
+
+  }
+
+  public function storeChargeLclAir(Request $request){
+
+    $charge = new ChargeLclAir();
+    $charge->automatic_rate_id=$request->automatic_rate_id;
+    $charge->type_id=$request->type_id;
+    $charge->surcharge_id=$request->surcharge_id;
+    $charge->calculation_type_id=$request->calculation_type_id;
+    $charge->units=$request->units;
+    $charge->price_per_unit=$request->price_per_unit;
+    $charge->total=$request->total;
+    $charge->markup=$request->markup;
     $charge->currency_id=$request->currency_id;
     $charge->save();
 
