@@ -130,6 +130,8 @@
                                                   @if($item->type_id==3)
                                                   <tr >
                                                   <td>
+                                                    <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+
                                                     <a href="#" class="editable-lcl-air-lcl-air" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                   </td>
                                                   <td>
@@ -149,6 +151,10 @@
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                    &nbsp;
+                                                    <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                      <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                    </a>
                                                   </td>
                                                 </tr>
                                                 @endif
@@ -265,6 +271,8 @@
                                                   ?>
                                                   <tr>
                                                     <td>
+                                                      <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+
                                                       <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                     </td>
                                                     <td>
@@ -284,6 +292,10 @@
                                                     </td>
                                                     <td >
                                                       <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                      &nbsp;
+                                                      <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                      </a>
                                                     </td>
                                                     
                                                   </tr>
@@ -394,6 +406,8 @@
 
                                                   <tr>
                                                     <td>
+                                                      <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+
                                                       <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                     </td>
                                                     <td>
@@ -413,6 +427,10 @@
                                                     </td>
                                                     <td >
                                                       <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                      &nbsp;
+                                                      <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                      </a>                                                      
                                                     </td>                                               
                                                   </tr>
                                                   @php

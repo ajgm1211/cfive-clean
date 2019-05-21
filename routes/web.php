@@ -449,6 +449,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('/pdf/{quote_id}', 'QuoteV2Controller@pdf')->name('quotes-v2.pdf');
   Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
   Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
+  Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
+  Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
   Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
   Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
 });

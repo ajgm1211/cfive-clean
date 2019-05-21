@@ -318,7 +318,7 @@ $(document).on('click', '.store_charge_lcl', function () {
   var markup = $(this).closest("tr").find(".markup").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
-  alert('here');
+
   $.ajax({
     type: 'POST',
     url: '/v2/quotes/lcl/store/charge',
@@ -400,6 +400,7 @@ $(document).on('click', '.store_charge', function () {
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
   var id=$(this).attr('data-rate-id');
+  var theElement = $(this);
   swal({
     title: 'Are you sure?',
     text: "Please confirm!",
@@ -418,9 +419,70 @@ $(document).on('click', '.delete-rate', function () {
               'The rete has been deleted.',
               'success'
             )
-            $(this).closest('ul').remove();
-            setTimeout(location.reload.bind(location), 3000);
+            $(theElement).closest('.row').find('.tab-content').remove();
+            //setTimeout(location.reload.bind(location), 3000);
           }
+        }
+      });
+    }
+  });
+});
+
+//Delete charges
+$(document).on('click', '.delete-charge', function () {
+  var id=$(this).closest('tr').find('.charge_id').val();
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/delete/charge/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The charge has been deleted.',
+              'success'
+            )
+          }
+          $(theElement).closest('tr').remove();
+          //setTimeout(location.reload.bind(location), 3000);
+        }
+      });
+    }
+  });
+});
+
+$(document).on('click', '.delete-charge-lcl', function () {
+  var id=$(this).closest('tr').find('.charge_id').val();
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/lcl/delete/charge/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The charge has been deleted.',
+              'success'
+            )
+          }
+          $(theElement).closest('tr').remove();
+          //setTimeout(location.reload.bind(location), 3000);
         }
       });
     }

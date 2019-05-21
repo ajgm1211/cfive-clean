@@ -1402,6 +1402,20 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
+  //Delete charge
+
+  public function deleteCharge($id){
+    Charge::where('id',$id)->delete();
+    return response()->json(['message' => 'Ok']);
+  }
+
+  //Delete charge lcl air
+
+  public function deleteChargeLclAir($id){
+    ChargeLclAir::where('id',$id)->delete();
+    return response()->json(['message' => 'Ok']);
+  }
+
   // Store
 
   public function storeCharge(Request $request){
