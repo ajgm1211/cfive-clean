@@ -49,8 +49,7 @@ class ContractsController extends Controller
     public function index()
     {
 
-        $model      = new  Rate();
-
+        /*
         if(\Auth::user()->type=='admin'){
             $arreglo    = Contract::with('rates','carriers','direction')->get();
             $contractG  = Contract::all();
@@ -59,23 +58,38 @@ class ContractsController extends Controller
             $arreglo    = Contract::where('company_user_id','=',Auth::user()->company_user_id)
                 ->with('rates','carriers','direction')->get();
             $contractG  = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
-        }
-       /* $mrates     = $model->hydrate(
-            DB::select(
-                'call select_for_company_rates('.\Auth::user()->company_user_id.')'
-            )
-        );
+        }*/
 
-        $carriersR       = $mrates->unique('carrier');
-        $originsR        = $mrates->unique('port_orig');
-        $destinationsR   = $mrates->unique('port_dest');
-        $statussR   = $mrates->unique('status');*/
+        $originsR = DB::table('views_contract_rates')
+            ->select('port_orig')
+            ->groupBy('port_orig')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
+        $destinationsR = DB::table('views_contract_rates')
+            ->select('port_dest')
+            ->groupBy('port_dest')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
+        $carriersR = DB::table('views_contract_rates')
+            ->select('carrier')
+            ->groupBy('carrier')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
+        $statussR = DB::table('views_contract_rates')
+            ->select('status')
+            ->groupBy('status')
+            ->where('company_user_id', Auth::user()->company_user_id)
+            ->get();
+
         $carrierAr = [ 'null' => 'Select option'];
         $originsAr = [ 'null' => 'Select option'];
         $destinationAr = [ 'null' => 'Select option'];
         $statusAr  = [ 'null' => 'Select option'];
-        
-        /*foreach($carriersR as $carrierR){
+
+        foreach($carriersR as $carrierR){
             $carrierAr[$carrierR->carrier] = $carrierR->carrier;
         }
 
@@ -89,7 +103,7 @@ class ContractsController extends Controller
 
         foreach($statussR as $statusR){
             $statusAr[$statusR->status] = $statusR->status;
-        }*/
+        }
         $values = [
             'carrier'       => $carrierAr,
             'origin'        => $originsAr,
@@ -438,7 +452,7 @@ class ContractsController extends Controller
         //dd($data->all());
 
         return \DataTables::of($data)
-           /* ->filter(function ($query) use ($request) {
+            ->filter(function ($query) use ($request) {
                 if ($request->has('origin') &&
                     $request->get('origin') != null
                     && $request->get('origin') != 'null') {
@@ -462,7 +476,7 @@ class ContractsController extends Controller
                     $request->get('status') != 'null') {
                     $query->where('status', $request->get('status'));
                 }
-            })*/
+            })
 
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];

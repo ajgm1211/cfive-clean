@@ -221,7 +221,7 @@ New \ Status Import  &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                            <div class="row align-items-center" hidden>
+                            <div class="row align-items-center" >
                                 <div class="col-xl-12 order-2 order-xl-1">
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                     <div class="form-group m-form__group row align-items-center">
@@ -245,7 +245,7 @@ New \ Status Import  &nbsp;
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Satatus</label>
+                                            <label class="">Status</label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
@@ -361,11 +361,17 @@ New \ Status Import  &nbsp;
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
-/*
+
     var oTable = $('#tableRates').DataTable({
+        searching: true,
+        ordering: true,
+        processing: true,
         processing: true,
         serverSide: true,
         autoWidth: true,
+        "columnDefs": [
+            { className: "truncate", "targets": [ 0,1] }
+        ],
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         ajax: {
             url: "{{ route('contract.table') }}",
@@ -403,10 +409,10 @@ New \ Status Import  &nbsp;
         $('#originS').attr('required','required');
         $('#carrierM').attr('required','required');
         $('#destinationS').attr('required','required');
-    });*/
+    });
 
     $(function() {
-
+        /*
         $('#tableRates').DataTable({
             ordering: true,
             searching: true,
@@ -471,7 +477,7 @@ New \ Status Import  &nbsp;
                 $('.search2').select2();
             }
         });
-
+*/
         $('#tableContracts').DataTable({
             ajax:  "{{ route('contract.tableG') }}",
             "columnDefs": [
