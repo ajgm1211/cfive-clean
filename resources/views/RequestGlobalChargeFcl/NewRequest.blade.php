@@ -392,7 +392,7 @@
                 },
                 complete: function(xhr) {
                     status.html(xhr.responseText);
-                    $('#mjsH').text('Bye');
+                    $('#mjsH').text('Contract Uploaded');
                     if(count == 1){
                         swal({
                             title: "Error",
