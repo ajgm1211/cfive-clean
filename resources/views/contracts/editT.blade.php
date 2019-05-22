@@ -675,6 +675,7 @@
         searching: true,
         processing: true,
         serverSide: true,
+        stateSave: true,
         order: [[ 1, "asc" ],[ 2, "asc" ]],
         ajax:  "{{ route('localchar.table',['id' => $id]) }}",
         columns: [
@@ -697,6 +698,7 @@
         searching: true,
         processing: true,
         serverSide: true,
+        stateSave: true,
         order: [[ 0, "asc" ],[ 1, "asc" ]],
 
         ajax:  "{{ route('rate.table',['id' => $id]) }}",

@@ -33,6 +33,8 @@ use App\LocalCharPort;
 use App\GlobalCharge;
 use App\GlobalCharPort;
 use App\GlobalCharCarrier;
+use App\PackageLoad;
+use App\ChargeLclAir;
 use GoogleMaps;
 use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
@@ -144,11 +146,11 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-      ->addColumn('type', function ($colletion) {
-        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-      })->addColumn('action',function($colletion){
+    ->addColumn('type', function ($colletion) {
+      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+    })->addColumn('action',function($colletion){
       return
-        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -175,7 +177,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-      ->editColumn('id', '{{$id}}')->make(true);
+    ->editColumn('id', '{{$id}}')->make(true);
   }
 
   public function show($id)
@@ -189,6 +191,7 @@ class QuoteV2Controller extends Controller
     //Retrieving all data
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
+    $package_loads = PackageLoad::where('quote_id',$quote->id)->get();
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
@@ -205,24 +208,126 @@ class QuoteV2Controller extends Controller
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
     foreach ($rates as $item) {
+      $sum20=0;
+      $sum40=0;
+      $sum40hc=0;
+      $sum40nor=0;
+      $sum45=0;
+
+      $total_markup20=0;
+      $total_markup40=0;
+      $total_markup40hc=0;
+      $total_markup40nor=0;
+      $total_markup45=0;
+
       $currency = Currency::find($item->currency_id);
       $item->currency_usd = $currency->rates;
       $item->currency_eur = $currency->rates_eur;
       foreach ($item->charge as $value) {
+        $typeCurrency =  $currency_cfg->alphacode;
+        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+        $array_amounts = json_decode($value->amount,true);
+        $array_markups = json_decode($value->markups,true);
+        if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+          $amount20=$array_amounts['c20'];
+          $markup20=$array_markups['c20'];
+          $total20=$amount20/$currency_rate;
+          $total_markup20=$markup20/$currency_rate;
+          $sum20 = number_format($total20, 2, '.', '');
+        }
+        if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+          $amount40=$array_amounts['c40'];
+          $markup40=$array_markups['c40'];
+          $total40=$amount40/$currency_rate;
+          $total_markup40=$markup40/$currency_rate;
+          $sum40 = number_format($total40, 2, '.', '');
+        }
+        if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+          $amount40hc=$array_amounts['c40hc'];
+          $markup40hc=$array_markups['c40hc'];
+          $total40hc=$amount40hc/$currency_rate;
+          $total_markup40hc=$markup40hc/$currency_rate;
+          $sum40hc = number_format($total40hc, 2, '.', '');
+        }
+        if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+          $amount40nor=$array_amounts['c40nor'];
+          $markup40nor=$array_markups['c40nor'];
+          $total40nor=$amount40nor/$currency_rate;
+          $total_markup40nor=$markup40nor/$currency_rate;
+          $sum40nor = number_format($total40nor, 2, '.', '');
+        }
+        if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+          $amount45=$array_amounts['c45'];
+          $markup45=$array_markups['c45'];
+          $total45=($amount45+$markup45)/$currency_rate;
+          $total_markup45=$markup45/$currency_rate;
+          $sum45 = number_format($total45, 2, '.', '');
+        }
+        $value->total_20=number_format($sum20, 2, '.', '');
+        $value->total_40=number_format($sum40, 2, '.', '');
+        $value->total_40hc=number_format($sum40hc, 2, '.', '');
+        $value->total_40nor=number_format($sum40nor, 2, '.', '');
+        $value->total_45=number_format($sum45, 2, '.', '');
+
+        $value->total_markup20=number_format($total_markup20, 2, '.', '');
+        $value->total_markup40=number_format($total_markup40, 2, '.', '');
+        $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
+        $value->total_markup40nor=number_format($total_markup40nor, 2, '.', '');
+        $value->total_markup45=number_format($total_markup45, 2, '.', '');        
+
         $currency_charge = Currency::find($value->currency_id);
         $value->currency_usd = $currency_charge->rates;
         $value->currency_eur = $currency_charge->rates_eur;
       }
       foreach ($item->inland as $inland) {
+        $typeCurrency =  $currency_cfg->alphacode;
+        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+        $array_amounts = json_decode($value->rate,true);
+        $array_markups = json_decode($value->markup,true);
+        if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+          $amount20=$array_amounts['c20'];
+          $markup20=$array_markups['c20'];
+          $total20=($amount20+$markup20)/$currency_rate;
+          $sum20 = number_format($total20, 2, '.', '');
+        }
+        if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+          $amount40=$array_amounts['c40'];
+          $markup40=$array_markups['c40'];
+          $total40=($amount40+$markup40)/$currency_rate;
+          $sum40 = number_format($total40, 2, '.', '');
+        }
+        if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+          $amount40hc=$array_amounts['c40hc'];
+          $markup40hc=$array_markups['c40hc'];
+          $total40hc=($amount40hc+$markup40hc)/$currency_rate;
+          $sum40hc = number_format($total40hc, 2, '.', '');
+        }
+        if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+          $amount40nor=$array_amounts['c40nor'];
+          $markup40nor=$array_markups['c40nor'];
+          $total40nor=($amount40nor+$markup40nor)/$currency_rate;
+          $sum40nor = number_format($total40nor, 2, '.', '');
+        }
+        if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+          $amount45=$array_amounts['c45'];
+          $markup45=$array_markups['c45'];
+          $total45=($amount45+$markup45)/$currency_rate;
+          $sum45 = number_format($total45, 2, '.', '');
+        }
+        $value->total_20=number_format($sum20, 2, '.', '');
+        $value->total_40=number_format($sum40, 2, '.', '');
+        $value->total_40hc=number_format($sum40hc, 2, '.', '');
+        $value->total_40nor=number_format($sum40nor, 2, '.', '');
+        $value->total_45=number_format($sum45, 2, '.', '');
+
         $currency_charge = Currency::find($inland->currency_id);
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
     }
-
+    
     //Adding country codes to rates collection
-    $total_freight_20=0;
-    $total_by_rate_40=0;
+
     foreach ($rates as $item) {
       $rates->map(function ($item) {
         $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
@@ -238,7 +343,7 @@ class QuoteV2Controller extends Controller
       'quote_id'     => $quote->id
     ]);
 
-    return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands','emaildimanicdata'));
+    return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads'));
   }
 
   public function updateQuoteCharges(Request $request)
@@ -248,13 +353,13 @@ class QuoteV2Controller extends Controller
     ->update([$request->name => $request->value]);*/
 
     $charge=Charge::find($request->pk);
-    if (strpos($request->name, 'amount') == true) {
-      $array = json_decode($charge->amount, true);
-    }else{
-      $array = json_decode($charge->markups, true);
-    }
+    $name = explode("->", $request->name);
     if (strpos($request->name, '->') == true) {
-      $name = explode("->", $request->name);
+      if ($name[0] == 'amount') {
+        $array = json_decode($charge->amount, true);
+      }else{
+        $array = json_decode($charge->markups, true);
+      }
       $field = (string) $name[0];
       $array[$name[1]]=$request->value;
       $array = json_encode($array);
@@ -264,7 +369,16 @@ class QuoteV2Controller extends Controller
       $charge->$name=$request->value;
     }
     $charge->update();
-    return response()->json(['success'=>$array]);
+    return response()->json(['success'=>'Ok']);
+  }
+
+  public function updateQuoteChargesLcl(Request $request)
+  {
+    $charge=ChargeLclAir::find($request->pk);
+    $name = $request->name;
+    $charge->$name=$request->value;
+    $charge->update();
+    return response()->json(['success'=>'Ok']);
   }
 
   public function updatePdfFeature(Request $request){
@@ -294,7 +408,7 @@ class QuoteV2Controller extends Controller
     $quote->delivery_type=$request->delivery_type;
     $quote->date_issued=$request->date_issued;
     $quote->incoterm_id=$request->incoterm_id;
-    $quote->equipment=$request->equipment;
+    $quote->equipment=json_encode($request->equipment);
     $quote->validity_start=$validity_start;
     $quote->validity_end=$validity_end;
     $quote->user_id=$request->user_id;
@@ -302,8 +416,9 @@ class QuoteV2Controller extends Controller
     $quote->update();
 
     $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
+    $owner=$quote->user->name.' '.$quote->user->lastname;
 
-    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name]);
+    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner]);
   }
 
   public function updatePaymentConditions(Request $request,$id)
@@ -774,7 +889,7 @@ class QuoteV2Controller extends Controller
               $inland40= 0;
               $inland40hc= 0;
               $inland40nor= 0;
-              $inland45= 0;        
+              $inland45= 0;
               if($amounts->type_id==1){
                 if($quote->pdf_option->grouped_origin_charges==1){
                   $typeCurrency =  $quote->pdf_option->origin_charges_currency;
@@ -813,8 +928,8 @@ class QuoteV2Controller extends Controller
             }
             if(!$value->inland->isEmpty()){
               foreach($value->inland as $value){
-                if($quote->pdf_option->grouped_destination_charges==1){
-                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                if($quote->pdf_option->grouped_origin_charges==1){
+                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
                 }else{
                   $typeCurrency =  $currency_cfg->alphacode;
                 }
@@ -825,31 +940,31 @@ class QuoteV2Controller extends Controller
                   $amount20=$array_amounts['c20'];
                   $markup20=$array_markups['c20'];
                   $total20=($amount20+$markup20)/$currency_rate;
-                  $inland20 += number_format($total20, 2, '.', '');
+                  $inland20 = number_format($total20, 2, '.', '');
                 }
                 if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
                   $amount40=$array_amounts['c40'];
                   $markup40=$array_markups['c40'];
                   $total40=($amount40+$markup40)/$currency_rate;
-                  $inland40 += number_format($total40, 2, '.', '');
+                  $inland40 = number_format($total40, 2, '.', '');
                 }
                 if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
                   $amount40hc=$array_amounts['c40hc'];
                   $markup40hc=$array_markups['c40hc'];
                   $total40hc=($amount40hc+$markup40hc)/$currency_rate;
-                  $inland40hc += number_format($total40hc, 2, '.', '');
+                  $inland40hc = number_format($total40hc, 2, '.', '');
                 }
                 if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
                   $amount40nor=$array_amounts['c40nor'];
                   $markup40nor=$array_markups['c40nor'];
                   $total40nor=($amount40nor+$markup40nor)/$currency_rate;
-                  $inland40nor += number_format($total40nor, 2, '.', '');
+                  $inland40nor = number_format($total40nor, 2, '.', '');
                 }
                 if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
                   $amount45=$array_amounts['c45'];
                   $markup45=$array_markups['c45'];
                   $total45=($amount45+$markup45)/$currency_rate;
-                  $inland45 += number_format($total45, 2, '.', '');
+                  $inland45 = number_format($total45, 2, '.', '');
                 }
                 $value->total_20=number_format($inland20, 2, '.', '');
                 $value->total_40=number_format($inland40, 2, '.', '');
@@ -870,7 +985,7 @@ class QuoteV2Controller extends Controller
     $destination_charges_grouped = $destination_charges_grouped->groupBy([
 
       function ($item) {
-        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
       },
       function ($item) {
         return $item['carrier']['name'];
@@ -997,10 +1112,10 @@ class QuoteV2Controller extends Controller
         return $item['carrier']['name'];
       },   
       function ($item) {
-        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
       },
       function ($item) {
-        return $item['destination_port']['name'];
+        return $item['origin_port']['name'];
       },
 
     ], $preserveKeys = true);
@@ -1026,8 +1141,9 @@ class QuoteV2Controller extends Controller
               $inland40nor= 0;
               $inland45= 0;          
               if($amounts->type_id==2){
-                if($quote->pdf_option->grouped_origin_charges==1){
-                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                //dd($quote->pdf_option->destination_charges_currency);
+                if($quote->pdf_option->grouped_destination_charges==1){
+                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
                 }else{
                   $typeCurrency =  $currency_cfg->alphacode;
                 }
@@ -1076,31 +1192,31 @@ class QuoteV2Controller extends Controller
                   $amount20=$array_amounts['c20'];
                   $markup20=$array_markups['c20'];
                   $total20=($amount20+$markup20)/$currency_rate;
-                  $inland20 += number_format($total20, 2, '.', '');
+                  $inland20 = number_format($total20, 2, '.', '');
                 }
                 if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
                   $amount40=$array_amounts['c40'];
                   $markup40=$array_markups['c40'];
                   $total40=($amount40+$markup40)/$currency_rate;
-                  $inland40 += number_format($total40, 2, '.', '');
+                  $inland40 = number_format($total40, 2, '.', '');
                 }
                 if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
                   $amount40hc=$array_amounts['c40hc'];
                   $markup40hc=$array_markups['c40hc'];
                   $total40hc=($amount40hc+$markup40hc)/$currency_rate;
-                  $inland40hc += number_format($total40hc, 2, '.', '');
+                  $inland40hc = number_format($total40hc, 2, '.', '');
                 }
                 if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
                   $amount40nor=$array_amounts['c40nor'];
                   $markup40nor=$array_markups['c40nor'];
                   $total40nor=($amount40nor+$markup40nor)/$currency_rate;
-                  $inland40nor += number_format($total40nor, 2, '.', '');
+                  $inland40nor = number_format($total40nor, 2, '.', '');
                 }
                 if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
                   $amount45=$array_amounts['c45'];
                   $markup45=$array_markups['c45'];
                   $total45=($amount45+$markup45)/$currency_rate;
-                  $inland45 += number_format($total45, 2, '.', '');
+                  $inland45 = number_format($total45, 2, '.', '');
                 }
                 $value->total_20=number_format($inland20, 2, '.', '');
                 $value->total_40=number_format($inland40, 2, '.', '');
@@ -1115,63 +1231,163 @@ class QuoteV2Controller extends Controller
     }
     //dd(json_encode($destination_charges));
 
-    /**** FREIGHT CHARGES DETAILED ****/
+    /**** FREIGHT CHARGES ****/
 
-    foreach($freight_charges as $freight){
-      $sum20=0;
-      $sum40=0;
-      $sum40hc=0;
-      $sum40nor=0;
-      $sum45=0;
-      $total40=0;
-      $total20=0;
-      $total40hc=0;
-      $total40nor=0;
-      $total45=0;
+    /*** Detailed ***/
 
-      foreach ($freight->charge as $amounts) {
-        if($amounts->type_id==3){
-          if($quote->pdf_option->grouped_freight_charges==1){
-            $typeCurrency =  $quote->pdf_option->freight_charges_currency;
-          }else{
-            $typeCurrency =  $currency_cfg->alphacode;
-          }
-          $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
-          $array_amounts = json_decode($amounts->amount,true);
-          $array_markups = json_decode($amounts->markups,true);
-          if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
-            $sum20=$array_amounts['c20']+$array_markups['c20'];
-            $total20+=$sum20/$currency_rate;
-          }
-          if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
-            $sum40=$array_amounts['c40']+$array_markups['c40'];
-            $total40+=$sum40/$currency_rate;
-          }
-          if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
-            $sum40hc=$array_amounts['c40hc']+$array_markups['c40hc'];
-            $total40hc+=$sum40hc/$currency_rate;
-          }
-          if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
-            $sum40nor=$array_amounts['c40nor']+$array_markups['c40nor'];
-            $total40nor+=$sum40nor/$currency_rate;
-          }
-          if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
-            $sum45=$array_amounts['c45']+$array_markups['c45'];
-            $total45+=$sum45/$currency_rate;
-          }
+    $freight_charges_detailed = collect($freight_charges);
 
-          $amounts->total_20=number_format($total20, 2, '.', '');
-          $amounts->total_40=number_format($total40, 2, '.', '');
-          $amounts->total_40hc=number_format($total40hc, 2, '.', '');
-          $amounts->total_40nor=number_format($total40nor, 2, '.', '');
-          $amounts->total_45=number_format($total45, 2, '.', '');
+    $freight_charges_detailed = $freight_charges_detailed->groupBy([   
+      function ($item) {
+        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },      
+    ], $preserveKeys = true);
+
+    foreach($freight_charges_detailed as $origin=>$item){
+      foreach($item as $destination=>$items){
+        foreach($items as $carrier=>$itemsDetail){
+          foreach ($itemsDetail as $value) {     
+            foreach ($value->charge as $amounts) {
+              if($amounts->type_id==3){
+                $sum_freight_20=0;
+                $sum_freight_40=0;
+                $sum_freight_40hc=0;
+                $sum_freight_40nor=0;
+                $sum_freight_45=0;
+                $total_freight_40=0;
+                $total_freight_20=0;
+                $total_freight_40hc=0;
+                $total_freight_40nor=0;
+                $total_freight_45=0;
+                //dd($quote->pdf_option->destination_charges_currency);
+                if($quote->pdf_option->grouped_freight_charges==1){
+                  $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
+                $array_amounts = json_decode($amounts->amount,true);
+                $array_markups = json_decode($amounts->markups,true);
+                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                  $sum_freight_20=$array_amounts['c20']+$array_markups['c20'];
+                  $total_freight_20=$sum_freight_20/$currency_rate;
+                }
+                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                  $sum_freight_40=$array_amounts['c40']+$array_markups['c40'];
+                  $total_freight_40=$sum_freight_40/$currency_rate;
+                }
+                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                  $sum_freight_40hc=$array_amounts['c40hc']+$array_markups['c40hc'];
+                  $total_freight_40hc=$sum_freight_40hc/$currency_rate;
+                }
+                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                  $sum_freight_40nor=$array_amounts['c40nor']+$array_markups['c40nor'];
+                  $total_freight_40nor=$sum_freight_40nor/$currency_rate;
+                }
+                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                  $sum_freight_45=$array_amounts['c45']+$array_markups['c45'];
+                  $total_freight_45=$sum_freight_45/$currency_rate;
+                }            
+
+                $amounts->total_20 = number_format($total_freight_20, 2, '.', '');
+                $amounts->total_40 = number_format($total_freight_40, 2, '.', '');
+                $amounts->total_40hc = number_format($total_freight_40hc, 2, '.', '');
+                $amounts->total_40nor = number_format($total_freight_40nor, 2, '.', '');
+                $amounts->total_45 = number_format($total_freight_45, 2, '.', '');
+              }
+            }
+          }
+        } 
+      }
+    }
+
+    //dd($freight_charges_detailed);
+
+    /*** Grouped in ***/
+
+    $freight_charges_grouped = collect($freight_charges);
+
+    $freight_charges_grouped = $freight_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },
+
+    ], $preserveKeys = true);
+
+    foreach($freight_charges_grouped as $freight){
+      foreach($freight as $detail){
+        foreach($detail as $item){
+          foreach($item as $rate){
+            $sum20=0;
+            $sum40=0;
+            $sum40hc=0;
+            $sum40nor=0;
+            $sum45=0;
+            $total40=0;
+            $total20=0;
+            $total40hc=0;
+            $total40nor=0;
+            $total45=0;
+
+            foreach ($rate->charge as $amounts) {
+              if($amounts->type_id==3){
+                if($quote->pdf_option->grouped_freight_charges==1){
+                  $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
+                $array_amounts = json_decode($amounts->amount,true);
+                $array_markups = json_decode($amounts->markups,true);
+                if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+                  $sum20=$array_amounts['c20']+$array_markups['c20'];
+                  $total20=$sum20/$currency_rate;
+                }
+                if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
+                  $sum40=$array_amounts['c40']+$array_markups['c40'];
+                  $total40=$sum40/$currency_rate;
+                }
+                if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
+                  $sum40hc=$array_amounts['c40hc']+$array_markups['c40hc'];
+                  $total40hc=$sum40hc/$currency_rate;
+                }
+                if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
+                  $sum40nor=$array_amounts['c40nor']+$array_markups['c40nor'];
+                  $total40nor=$sum40nor/$currency_rate;
+                }
+                if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
+                  $sum45=$array_amounts['c45']+$array_markups['c45'];
+                  $total45=$sum45/$currency_rate;
+                }
+
+                $amounts->total_20=number_format($total20, 2, '.', '');
+                $amounts->total_40=number_format($total40, 2, '.', '');
+                $amounts->total_40hc=number_format($total40hc, 2, '.', '');
+                $amounts->total_40nor=number_format($total40nor, 2, '.', '');
+                $amounts->total_45=number_format($total45, 2, '.', '');
+              }
+            }
+          }
         }
       }
     }
 
     //$origin_charges=$origin_charges->toArray();
     //dd(json_encode($origin_charges_grouped));
-    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges'=>$freight_charges,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped]);
+    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed]);
 
     $pdf = \App::make('dompdf.wrapper');
     $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -1183,6 +1399,20 @@ class QuoteV2Controller extends Controller
 
   public function delete($id){
     AutomaticRate::where('id',$id)->delete();
+    return response()->json(['message' => 'Ok']);
+  }
+
+  //Delete charge
+
+  public function deleteCharge($id){
+    Charge::where('id',$id)->delete();
+    return response()->json(['message' => 'Ok']);
+  }
+
+  //Delete charge lcl air
+
+  public function deleteChargeLclAir($id){
+    ChargeLclAir::where('id',$id)->delete();
     return response()->json(['message' => 'Ok']);
   }
 
@@ -1229,11 +1459,11 @@ class QuoteV2Controller extends Controller
     if($request->amount_c45){
       $array_amount_45 = array('c45' => $request->amount_c45);
     }
-    if($request->markup_c45r){
+    if($request->markup_c45){
       $array_markup_45 = array('c45' => $request->markup_c45);
     }
     $merge_amounts = array_merge($array_amount_20,$array_amount_40,$array_amount_40hc,$array_amount_40nor,$array_amount_45);
-    $merge_markups = array_merge($array_markup_20,$array_markup_40,$array_amount_40hc,$array_amount_40nor,$array_amount_45);
+    $merge_markups = array_merge($array_markup_20,$array_markup_40,$array_markup_40hc,$array_markup_40nor,$array_markup_45);
 
     $charge = new Charge();
     $charge->automatic_rate_id=$request->automatic_rate_id;
@@ -1242,6 +1472,24 @@ class QuoteV2Controller extends Controller
     $charge->calculation_type_id=$request->calculation_type_id;
     $charge->amount=json_encode($merge_amounts);
     $charge->markups=json_encode($merge_markups);
+    $charge->currency_id=$request->currency_id;
+    $charge->save();
+
+    return response()->json(['message' => 'Ok']);
+
+  }
+
+  public function storeChargeLclAir(Request $request){
+
+    $charge = new ChargeLclAir();
+    $charge->automatic_rate_id=$request->automatic_rate_id;
+    $charge->type_id=$request->type_id;
+    $charge->surcharge_id=$request->surcharge_id;
+    $charge->calculation_type_id=$request->calculation_type_id;
+    $charge->units=$request->units;
+    $charge->price_per_unit=$request->price_per_unit;
+    $charge->total=$request->total;
+    $charge->markup=$request->markup;
     $charge->currency_id=$request->currency_id;
     $charge->save();
 
@@ -1854,12 +2102,12 @@ class QuoteV2Controller extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
-              ])->get();
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2030,12 +2278,12 @@ class QuoteV2Controller extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
-              ])->get();
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2191,16 +2439,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-                 {
-                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
-                     $b->where('company_id', '=',$company_id);
-                   })->orDoesntHave('contract_company_restriction');
-                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-    });
-    $arreglo = $arreglo->get();
+    {
+     $q->whereHas('contract_company_restriction', function($b) use($company_id){
+       $b->where('company_id', '=',$company_id);
+     })->orDoesntHave('contract_company_restriction');
+   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+  });
+   $arreglo = $arreglo->get();
 
-    $formulario = $request;
+   $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 

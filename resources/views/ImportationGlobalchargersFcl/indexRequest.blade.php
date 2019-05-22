@@ -74,6 +74,18 @@
                                 </div>
 
                             </div>
+                            <div class="form-group m-form__group row">
+
+                                <div class="col-lg-2">
+                                    <label class="col-form-labe"><b></b></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="request_id" class=" ">Request Gc Id</label>
+                                    {!!  Form::text('request_id',$requestgc['id'],['id'=>'request_id',
+                                    'placeholder'=>'Request Gc Id',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                            </div>
                             <hr>
                             <div class="form-group m-form__group row"  id="divvaluescurren">
                                 <div class="col-lg-2">

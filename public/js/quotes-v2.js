@@ -11,6 +11,7 @@ $(document).ready(function() {
   //Hide grouped options in pdf layout
   if($('#show_hide_select').val()=='total in'){
     $(".group_origin_charges").addClass('hide');
+    $(".group_freight_charges").addClass('hide');
     $(".group_destination_charges").addClass('hide');
   }    
 
@@ -76,6 +77,22 @@ $(document).ready(function() {
 
   $('.editable').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+    $('.editable-lcl-air').editable({
+    url:'/v2/quotes/lcl/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       if(!response) {
@@ -90,6 +107,7 @@ $(document).ready(function() {
 
   $('.editable-amount-20').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
@@ -109,6 +127,7 @@ $(document).ready(function() {
 
   $('.editable-markup-20').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
@@ -126,6 +145,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
@@ -143,6 +163,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
@@ -160,6 +181,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40hc').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
@@ -178,6 +200,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40hc').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
@@ -195,6 +218,7 @@ $(document).ready(function() {
 
   $('.editable-amount-40nor').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
@@ -212,6 +236,7 @@ $(document).ready(function() {
 
   $('.editable-markup-40nor').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
@@ -229,6 +254,7 @@ $(document).ready(function() {
 
   $('.editable-amount-45').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
@@ -246,6 +272,7 @@ $(document).ready(function() {
 
   $('.editable-markup-45').editable({
     url:'/v2/quotes/charges/update',
+    emptytext:0,    
     success: function(response, newValue) {
 
       total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
@@ -280,9 +307,46 @@ $(document).ready(function() {
   });
 });
 
-//Add rates
+//Add rates lcl
+$(document).on('click', '.store_charge_lcl', function () {
+  var id = $(this).closest("tr").find(".automatic_rate_id").val();
+  var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
+  var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
+  var units = $(this).closest("tr").find(".units").val();
+  var price_per_unit = $(this).closest("tr").find(".price_per_unit").val();
+  var total = $(this).closest("tr").find(".total").val();
+  var markup = $(this).closest("tr").find(".markup").val();
+  var type_id = $(this).closest("tr").find(".type_id").val();
+  var currency_id = $(this).closest("tr").find(".currency_id").val();
 
-//Delete rates
+  $.ajax({
+    type: 'POST',
+    url: '/v2/quotes/lcl/store/charge',
+    data:{
+      "automatic_rate_id":id,
+      "surcharge_id":surcharge_id,
+      "calculation_type_id":calculation_type_id,
+      "units":units,
+      "price_per_unit":price_per_unit,
+      "total":total,
+      "markup":markup,
+      "type_id":type_id,
+      "currency_id":currency_id
+    },
+    success: function(data) {
+      if(data.message=='Ok'){
+        swal(
+          'Done!',
+          'Charge saved successfully',
+          'success'
+        )
+      }
+      setTimeout(location.reload.bind(location), 3000);
+    }
+  });
+});
+
+//Add rates
 $(document).on('click', '.store_charge', function () {
   var id = $(this).closest("tr").find(".automatic_rate_id").val();
   var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
@@ -336,6 +400,7 @@ $(document).on('click', '.store_charge', function () {
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
   var id=$(this).attr('data-rate-id');
+  var theElement = $(this);
   swal({
     title: 'Are you sure?',
     text: "Please confirm!",
@@ -354,9 +419,70 @@ $(document).on('click', '.delete-rate', function () {
               'The rete has been deleted.',
               'success'
             )
-            $(this).closest('ul').remove();
-            setTimeout(location.reload.bind(location), 3000);
+            $(theElement).closest('.row').find('.tab-content').remove();
+            //setTimeout(location.reload.bind(location), 3000);
           }
+        }
+      });
+    }
+  });
+});
+
+//Delete charges
+$(document).on('click', '.delete-charge', function () {
+  var id=$(this).closest('tr').find('.charge_id').val();
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/delete/charge/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The charge has been deleted.',
+              'success'
+            )
+          }
+          $(theElement).closest('tr').remove();
+          //setTimeout(location.reload.bind(location), 3000);
+        }
+      });
+    }
+  });
+});
+
+$(document).on('click', '.delete-charge-lcl', function () {
+  var id=$(this).closest('tr').find('.charge_id').val();
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/lcl/delete/charge/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The charge has been deleted.',
+              'success'
+            )
+          }
+          $(theElement).closest('tr').remove();
+          //setTimeout(location.reload.bind(location), 3000);
         }
       });
     }
@@ -651,9 +777,8 @@ $(document).on('click', '#update', function () {
         $(".incoterm_id_span").html(incoterm);
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
-        var length = data.quote['equipment'].length;
-        $.each( data.quote['equipment'], function( index, value ){
-
+        var length = $.parseJSON(data.quote['equipment']).length;
+        $.each($.parseJSON(data.quote['equipment']), function( index, value ){
           if (index === (length-1)) {
             $(".equipment_span").append(value);
           }else{
@@ -664,7 +789,7 @@ $(document).on('click', '#update', function () {
         $(".contact_id").val(data.quote['contact_id']);
         $(".contact_id_span").html(data.contact_name);
         $(".user_id").val(data.quote['user_id']);
-        $(".user_id_span").val(data.quote['user_id']);
+        $(".user_id_span").html(data['owner']);
         $(".date_issued").val(data.quote['date_issued']);
         $(".date_issued_span").html(data.quote['date_issued']);
         $(".price_id").val(data.quote['price_id']);
@@ -709,7 +834,7 @@ $(document).on('click', '#update', function () {
         $(".equipment").select2('destroy');
 
         //Refresh page after 5 seconds
-        setTimeout(location.reload.bind(location), 5000);
+        //setTimeout(location.reload.bind(location), 5000);
       }
     }
   });

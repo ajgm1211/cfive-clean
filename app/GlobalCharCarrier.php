@@ -19,4 +19,5 @@ class GlobalCharCarrier extends Model
         return $this->belongsTo('App\Carrier');
 
     }
+
 }
