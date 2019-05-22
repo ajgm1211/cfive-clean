@@ -1873,8 +1873,8 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'twuenty' &&  in_array( '20',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_20 =  $details->ammount / $rateI;
-                      $monto += $sub_20;
-                      $amount_inland = $details->ammount;
+                      $monto += number_format($sub_20, 2, '.', ''); 
+                      $amount_inland = number_format($details->ammount, 2, '.', ''); 
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $km20 = false;
                       // CALCULO MARKUPS 
@@ -1889,7 +1889,7 @@ class QuoteV2Controller extends Controller
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40 = $details->ammount / $rateI;
-                      $monto += $sub_40;
+                      $monto +=  number_format($sub_40, 2, '.', ''); 
                       $amount_inland = $details->ammount;
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $km40 = false;
@@ -1904,7 +1904,7 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'fortyhc' &&   in_array( '40HC',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40hc =  $details->ammount / $rateI;
-                      $monto += $sub_40hc;
+                      $monto +=  number_format($sub_40hc, 2, '.', ''); 
                       $price_per_unit = number_format($details->ammount / $distancia, 2, '.', '');
                       $amount_inland =  $details->ammount;
                       $km40hc = false;
@@ -1926,7 +1926,7 @@ class QuoteV2Controller extends Controller
                   $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                   if($km20 &&  in_array( '20',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-                    $sub_20 = $montoKm;
+                    $sub_20 =  number_format($montoKm, 2, '.', '');
                     $monto += $sub_20;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_20;
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -1943,7 +1943,7 @@ class QuoteV2Controller extends Controller
                   if($km40 &&  in_array( '40',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
 
-                    $sub_40 = $montoKm;
+                    $sub_40 = number_format($montoKm, 2, '.', '');
                     $monto += $sub_40;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40 ;
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -1959,7 +1959,7 @@ class QuoteV2Controller extends Controller
                   }
                   if($km40hc &&  in_array( '40HC',$equipment)){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
-                    $sub_40hc = $montoKm;
+                    $sub_40hc = number_format($montoKm, 2, '.', '');
                     $monto += $sub_40hc;
 
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40hc;
@@ -3064,7 +3064,7 @@ class QuoteV2Controller extends Controller
           }
           $itemsDetail['monto'] = number_format($monto, 2, '.', '');
           $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
-          $itemsDetail['markup'] = $totalMarkup;
+          $itemsDetail['markup'] =  number_format($totalMarkup, 2, '.', '');
           $itemsDetail['currency'] = $itemsDetail['typecurrency'];
           $itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
           $collect->push($itemsDetail);
@@ -3074,7 +3074,7 @@ class QuoteV2Controller extends Controller
 
         }else{
           foreach($items as $itemsDetail){
-            $itemsDetail['monto'] = $itemsDetail['montoOrig'];
+            $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
             $collect->push($itemsDetail); 
             $monto = 0;
             $montoMarkup = 0;
