@@ -989,6 +989,61 @@ $(document).on('change', '.pdf-feature', function () {
   });
 });
 
+//Calculating total in charges air lcl
+
+$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function() {
+  var sum = 0;
+  var total_amount = 0;
+  var markup = 0;
+  var total=0;
+  var self = this;
+  var currency_cfg = $("#currency_id").val();
+  $(".price_per_unit").each(function(){
+    $( this).each(function() {
+      var quantity = $(this).closest('tr').find('.units').val();
+      var currency_id = $(self).closest('tr').find('.currency_id').val();
+
+      if(quantity > 0) {
+        if ($(self).closest('tr').find('.currency_id').val() != "") {
+          $.ajax({
+            url: '/api/currency/'+currency_id,
+            dataType: 'json',
+            success: function (json) {
+              var amount = $(self).closest('tr').find('.price_per_unit').val();
+              var quantity = $(self).closest('tr').find('.units').val();
+              markup = $(self).closest('tr').find('.markup').val();
+              var sub_total = amount * quantity;
+              
+              /*if(currency_cfg+json.alphacode == json.api_code){
+                total = sub_total / json.rates;
+              }else{
+                total = sub_total / json.rates_eur;
+              }*/
+              total = sub_total.toFixed(2);
+              
+              if(markup > 0){
+                var total_amount_m = Number(total)+ Number(markup);
+                $(self).closest('tr').find('.total_2').val(total_amount_m.toFixed(2));
+                $(self).closest('tr').find('.total_2').change();
+              }else{
+                $(self).closest('tr').find('.total_2').val(total);
+                $(self).closest('tr').find('.total_2').change();
+              }
+            }
+          });
+        }
+        total_amount = quantity * $(this).val();
+        $(this).closest('tr').find('.total').val(total_amount);
+        $(this).closest('tr').find('.total').change();
+      }else{
+        total_amount = 0;
+        $(this).closest('tr').find('.total').val(total_amount);
+        $(this).closest('tr').find('.total').change();
+      }
+    });
+  });
+});
+
 //Custom functions
 
 function show_hide_element($element,$button){
