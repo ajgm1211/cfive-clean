@@ -24,6 +24,7 @@ use App\Failcompany;
 use App\LocalCharge;
 use App\TypeDestiny;
 use App\CompanyUser;
+use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
@@ -509,6 +510,7 @@ class ImportationController extends Controller
         $fortynorBol        = false;
         $fortyfiveBol       = false;
         $filebool           = false;
+        $scheduleinfoBoll   = false;
 
         $data               = collect([]);
         $direction          = Direction::pluck('name','id');
@@ -588,11 +590,6 @@ class ImportationController extends Controller
 
         $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
 
-        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
-
-        if($type == 2){
-            array_push($targetsArr,"Calculation Type","Charge");
-        }
 
         // Datftynor Datftyfive - DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
 
@@ -608,6 +605,15 @@ class ImportationController extends Controller
             $fortyfiveBol = true;
         }
 
+        if($request->DatShe != true){
+            $scheduleinfoBoll = true;
+            array_push($targetsArr,"Schedule Type","Transit Time","Via");
+        }
+        // si type es igual a  1, el proceso va por rates, si es 2 va por rate mas surchargers
+
+        if($type == 2){
+            array_push($targetsArr,"Calculation Type","Charge");
+        }
         /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
         , si es 1 el solo se mapean puertos        
         */
@@ -697,6 +703,7 @@ class ImportationController extends Controller
             'existfortyfive'    => $fortyfiveBol,
             'fortyfive'         => 0,
             'fileName'          => $nombre,
+            'scheduleinfo'      => $scheduleinfoBoll,
             'validatiion'       => $request->validation_expire,
         ];
         $data->push($boxdinamy);
@@ -730,17 +737,22 @@ class ImportationController extends Controller
                    ->url($requestobj['FileName']),function($reader) use($requestobj,$request,$errors) {
                        $reader->noHeading = true;
                        //$reader->ignoreEmpty();
-                       $currency   = "Currency";
-                       $twenty     = "20'";
-                       $forty      = "40'";
-                       $fortyhc    = "40'HC";
-                       $fortynor   = "40'NOR";
-                       $fortyfive  = "45'";
-                       $origin     = "origin";
-                       $originExc  = "Origin";
-                       $destiny    = "destiny";
-                       $destinyExc = "Destiny";
-                       $carrier    = "Carrier";
+                       $currency        = "Currency";
+                       $twenty          = "20'";
+                       $forty           = "40'";
+                       $fortyhc         = "40'HC";
+                       $fortynor        = "40'NOR";
+                       $fortyfive       = "45'";
+                       $origin          = "origin";
+                       $originExc       = "Origin";
+                       $destiny         = "destiny";
+                       $destinyExc      = "Destiny";
+                       $carrier         = "Carrier";
+                       $scheduleTExc    = "Schedule_Type";
+                       $transittimeExc  = "Transit_Time";
+                       $viaExc          = "Via";
+                       $scheduleinfo    = "scheduleinfo";
+
                        $statustypecurren        = "statustypecurren";
                        $statusexistfortynor     = "existfortynor";
                        $statusexistfortyfive    = "existfortyfive";
@@ -775,21 +787,24 @@ class ImportationController extends Controller
                                foreach($originMultps as $originMult){
                                    foreach($destinyMultps as $destinyMult){
 
-                                       $carrierVal      = '';
-                                       $originVal       = '';
-                                       $destinyVal      = '';
-                                       $origenFL        = '';
-                                       $destinyFL       = '';
-                                       $currencyVal     = '';
-                                       $twentyVal       = '';
-                                       $fortyVal        = '';
-                                       $fortyhcVal      = '';
-                                       $fortynorVal     = '';
-                                       $fortyfiveVal    = '';
-                                       $originResul     = '';
-                                       $destinResul     = '';
-                                       $currencResul    = '';
-                                       $carrierResul    = '';
+                                       $carrierVal          = '';
+                                       $originVal           = '';
+                                       $destinyVal          = '';
+                                       $origenFL            = '';
+                                       $destinyFL           = '';
+                                       $currencyVal         = '';
+                                       $twentyVal           = '';
+                                       $fortyVal            = '';
+                                       $fortyhcVal          = '';
+                                       $fortynorVal         = '';
+                                       $fortyfiveVal        = '';
+                                       $originResul         = '';
+                                       $destinResul         = '';
+                                       $currencResul        = '';
+                                       $carrierResul        = '';
+                                       $scheduleTResul      = '';
+                                       $transittimeResul    = '';
+                                       $viaResul            = '';
 
                                        $originBol       = false;
                                        $origExiBol      = false;
@@ -803,7 +818,41 @@ class ImportationController extends Controller
                                        $fortynorExiBol  = false;
                                        $fortyfiveExiBol = false;
                                        $carriBol        = false;
+                                       $scheduleTBol    = false;
+                                       $transittimeBol  = false;
+                                       $viaBol          = false;
                                        $values          = true;
+
+                                       $rqScheduleinfoBol = $requestobj[$scheduleinfo];
+
+                                       //--------------- SCHEDULE TYPE --------------------------------------------
+
+                                       if($rqScheduleinfoBol == true){
+                                           $scheduleTResul = ScheduleType::where('name',$read[$requestobj[$scheduleTExc]])->first();
+                                           if(count($scheduleTResul) >= 1){
+                                               $scheduleTBol = true;
+                                               $scheduleTResul = $scheduleTResul['id'];
+                                           } else {
+                                               $scheduleTResul = $read[$requestobj[$scheduleTExc]].'_E_E'; 
+                                           }
+                                       } else {
+                                           $scheduleTBol = true;
+                                       }
+                                       //--------------- TRANSIT TIME ---------------------------------------------
+                                       if($rqScheduleinfoBol == true){
+                                           $transittimeBol      = true;
+                                           $transittimeResul   = (INT)$read[$requestobj[$transittimeExc]];
+                                       } else {
+                                           $transittimeBol      = true;
+                                       }
+
+                                       //--------------- VIA --------------------------------------------
+                                       if($rqScheduleinfoBol == true){
+                                           $viaBol     = true;
+                                           $viaResul   = $read[$requestobj[$viaExc]];
+                                       } else {
+                                           $viaBol     = true;
+                                       }
 
                                        // 0 => 'Currency', 1 => "20'", 2 => "40'", 3 => "40'HC"
                                        //--------------- CARRIER -----------------------------------------------------------------
@@ -986,15 +1035,12 @@ class ImportationController extends Controller
                                            $values = false;
                                        }
 
-                                       if( $origExiBol == true 
-                                          && $destiExitBol  == true
-                                          && $carriExitBol  == true 
-                                          && $curreExiBol   == true 
-                                          && $twentyExiBol  == true 
-                                          && $fortyExiBol   == true 
-                                          && $twentyExiBol  == true 
-                                          && $fortynorExiBol == true
-                                          && $fortyfiveExiBol == true
+                                       if( $origExiBol == true && $destiExitBol  == true
+                                          && $carriExitBol  == true && $curreExiBol   == true 
+                                          && $twentyExiBol  == true && $fortyExiBol   == true 
+                                          && $twentyExiBol  == true && $fortynorExiBol == true
+                                          && $fortyfiveExiBol == true && $scheduleTBol == true
+                                          && $transittimeBol == true && $viaBol == true
                                           && $values == true ){
                                            //good rates
 
@@ -1009,35 +1055,47 @@ class ImportationController extends Controller
                                                    }
 
                                                    Rate::create([
-                                                       'origin_port'   => $originVal,
-                                                       'destiny_port'  => $destinyVal,
-                                                       'carrier_id'    => $carrierVal,
-                                                       'contract_id'   => $requestobj['Contract_id'],
-                                                       'twuenty'       => $twentyVal,
-                                                       'forty'         => $fortyVal,
-                                                       'fortyhc'       => $fortyhcVal,
-                                                       'fortynor'      => $fortynorVal,
-                                                       'fortyfive'     => $fortyfiveVal,
-                                                       'currency_id'   => $currencyVal
+                                                       'origin_port'        => $originVal,
+                                                       'destiny_port'       => $destinyVal,
+                                                       'carrier_id'         => $carrierVal,
+                                                       'contract_id'        => $requestobj['Contract_id'],
+                                                       'twuenty'            => $twentyVal,
+                                                       'forty'              => $fortyVal,
+                                                       'fortyhc'            => $fortyhcVal,
+                                                       'fortynor'           => $fortynorVal,
+                                                       'fortyfive'          => $fortyfiveVal,
+                                                       'currency_id'        => $currencyVal,
+                                                       'schedule_type_id'   => $scheduleTResul,
+                                                       'transit_time'       => $transittimeResul,
+                                                       'via'                => $viaResul
                                                    ]);
                                                }
                                            }else {
                                                // fila por puerto, sin expecificar origen ni destino manualmente
                                                Rate::create([
-                                                   'origin_port'   => $originVal,
-                                                   'destiny_port'  => $destinyVal,
-                                                   'carrier_id'    => $carrierVal,
-                                                   'contract_id'   => $requestobj['Contract_id'],
-                                                   'twuenty'       => $twentyVal,
-                                                   'forty'         => $fortyVal,
-                                                   'fortyhc'       => $fortyhcVal,
-                                                   'fortynor'      => $fortynorVal,
-                                                   'fortyfive'     => $fortyfiveVal,
-                                                   'currency_id'   => $currencyVal
+                                                   'origin_port'        => $originVal,
+                                                   'destiny_port'       => $destinyVal,
+                                                   'carrier_id'         => $carrierVal,
+                                                   'contract_id'        => $requestobj['Contract_id'],
+                                                   'twuenty'            => $twentyVal,
+                                                   'forty'              => $fortyVal,
+                                                   'fortyhc'            => $fortyhcVal,
+                                                   'fortynor'           => $fortynorVal,
+                                                   'fortyfive'          => $fortyfiveVal,
+                                                   'currency_id'        => $currencyVal,
+                                                   'schedule_type_id'   => $scheduleTResul,
+                                                   'transit_time'       => $transittimeResul,
+                                                   'via'                => $viaResul
                                                ]);
                                            }
                                        } else {
                                            // fail rates
+
+                                           if( $scheduleTBol == true && $rqScheduleinfoBol == true){
+                                               $scheduleTResul = ScheduleType::find($scheduleTResul);
+                                               $scheduleTResul = $scheduleTResul['name'];
+                                           }
+                                           //**********************
                                            if($carriExitBol == true){
                                                if($carriBol == true){
                                                    $carrier = Carrier::find($requestobj['carrier']); 
@@ -1130,16 +1188,19 @@ class ImportationController extends Controller
                                                            }
                                                        }
                                                        FailRate::create([
-                                                           'origin_port'   => $originVal,
-                                                           'destiny_port'  => $destinyVal,
-                                                           'carrier_id'    => $carrierVal,
-                                                           'contract_id'   => $requestobj['Contract_id'],
-                                                           'twuenty'       => $twentyVal,
-                                                           'forty'         => $fortyVal,
-                                                           'fortyhc'       => $fortyhcVal,
-                                                           'fortynor'      => $fortynorVal,
-                                                           'fortyfive'     => $fortyfiveVal,
-                                                           'currency_id'   => $currencyVal
+                                                           'origin_port'        => $originVal,
+                                                           'destiny_port'       => $destinyVal,
+                                                           'carrier_id'         => $carrierVal,
+                                                           'contract_id'        => $requestobj['Contract_id'],
+                                                           'twuenty'            => $twentyVal,
+                                                           'forty'              => $fortyVal,
+                                                           'fortyhc'            => $fortyhcVal,
+                                                           'fortynor'           => $fortynorVal,
+                                                           'fortyfive'          => $fortyfiveVal,
+                                                           'currency_id'        => $currencyVal,
+                                                           'schedule_type'      => $scheduleTResul,
+                                                           'transit_time'       => $transittimeResul,
+                                                           'via'                => $viaResul
                                                        ]);
                                                    }
                                                } else {
@@ -1152,16 +1213,19 @@ class ImportationController extends Controller
                                                        $destinyVal = $destinyExits->name;
                                                    }
                                                    FailRate::create([
-                                                       'origin_port'   => $originVal,
-                                                       'destiny_port'  => $destinyVal,
-                                                       'carrier_id'    => $carrierVal,
-                                                       'contract_id'   => $requestobj['Contract_id'],
-                                                       'twuenty'       => $twentyVal,
-                                                       'forty'         => $fortyVal,
-                                                       'fortyhc'       => $fortyhcVal,
-                                                       'fortynor'      => $fortynorVal,
-                                                       'fortyfive'     => $fortyfiveVal,
-                                                       'currency_id'   => $currencyVal
+                                                       'origin_port'        => $originVal,
+                                                       'destiny_port'       => $destinyVal,
+                                                       'carrier_id'         => $carrierVal,
+                                                       'contract_id'        => $requestobj['Contract_id'],
+                                                       'twuenty'            => $twentyVal,
+                                                       'forty'              => $fortyVal,
+                                                       'fortyhc'            => $fortyhcVal,
+                                                       'fortynor'           => $fortynorVal,
+                                                       'fortyfive'          => $fortyfiveVal,
+                                                       'currency_id'        => $currencyVal,
+                                                       'schedule_type'      => $scheduleTResul,
+                                                       'transit_time'       => $transittimeResul,
+                                                       'via'                => $viaResul
                                                    ]); //*/
                                                    $errors++;
                                                }
@@ -1501,14 +1565,13 @@ class ImportationController extends Controller
     }
 
     public function EditRatesGood($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $rates = Rate::find($id);
-        return view('importation.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','currency'));
+        $harbor         = Harbor::pluck('display_name','id');
+        $carrier        = Carrier::pluck('name','id');
+        $currency       = Currency::pluck('alphacode','id');
+        $schedulesT     = ScheduleType::pluck('name','id');
+        $rates          = Rate::find($id);
+        //dd($rates);
+        return view('importation.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','schedulesT','currency'));
     }
     public function EditRatesFail($id){
         $objcarrier = new Carrier();
@@ -1517,8 +1580,9 @@ class ImportationController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
+        $schedulesT = ScheduleType::pluck('name','id');
         $failrate = FailRate::find($id);
-
+        //dd($failrate);
         $originV;
         $destinationV;
         $carrierV;
@@ -1544,6 +1608,11 @@ class ImportationController extends Controller
         $classfortyhc   ='color:green';
         $classfortynor  ='color:green';
         $classfortyfive ='color:green';
+
+        $classscheduleT     ='color:green';
+        $classtransittime   ='color:green';
+        $classvia           ='color:green';
+
         $originA =  explode("_",$failrate['origin_port']);
         //dd($originA);
         $destinationA   = explode("_",$failrate['destiny_port']);
@@ -1554,6 +1623,16 @@ class ImportationController extends Controller
         $fortyhcA       = explode("_",$failrate['fortyhc']);
         $fortynorA      = explode("_",$failrate['fortynor']);
         $fortyfiveA     = explode("_",$failrate['fortyfive']);
+        $schedueleTA    = explode("_",$failrate['schedule_type']);
+
+        if(count($schedueleTA) <= 1){
+            $schedueleTA = ScheduleType::where('name',$schedueleTA[0])->first();
+            $schedueleTA = $schedueleTA['id'];
+        } else{
+            $schedueleTA = '';
+            $classscheduleT='color:red';
+        }
+
         $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
             ->first();
         $originAIn = $originOb['id'];
@@ -1644,6 +1723,12 @@ class ImportationController extends Controller
                       'fortynor'        =>  $fortynorA,  
                       'fortyfive'       =>  $fortyfiveA,  
                       'currencyAIn'     =>  $pruebacurre,
+                      'transit_time'    =>  $failrate->transit_time,
+                      'via'             =>  $failrate->via,
+                      'schedueleT'      =>  $schedueleTA,
+                      'classtransittime'=>  $classtransittime,
+                      'classvia'        =>  $classvia,
+                      'classscheduleT'  =>  $classscheduleT,
                       'classorigin'     =>  $classdorigin,
                       'classdestiny'    =>  $classddestination,
                       'classcarrier'    =>  $classcarrier,
@@ -1657,25 +1742,29 @@ class ImportationController extends Controller
         $pruebacurre = "";
         $carrAIn = "";
         // dd($failrates);
-        return view('importation.Body-Modals.FailEditRates', compact('failrates','harbor','carrier','currency'));
+        return view('importation.Body-Modals.FailEditRates',compact('failrates','schedulesT','harbor','carrier','currency'));
     }
     public function CreateRates(Request $request, $id){
+        //dd($request->all());
         $origins = $request->origin_port;
         $destinis = $request->destiny_port;
         foreach($origins as $origin){
             foreach($destinis as $destiny){
                 if($origin != $destiny){
                     $return = Rate::create([
-                        "origin_port"  => $origin,
-                        "destiny_port" => $destiny,
-                        "carrier_id"   => $request->carrier_id,
-                        "contract_id"  => $request->contract_id,
-                        "twuenty"      => floatval($request->twuenty),
-                        "forty"        => floatval($request->forty),
-                        "fortyhc"      => floatval($request->fortyhc),
-                        "fortynor"     => floatval($request->fortynor),
-                        "fortyfive"    => floatval($request->fortyfive),
-                        "currency_id"  => $request->currency_id
+                        "origin_port"       => $origin,
+                        "destiny_port"      => $destiny,
+                        "carrier_id"        => $request->carrier_id,
+                        "contract_id"       => $request->contract_id,
+                        "twuenty"           => floatval($request->twuenty),
+                        "forty"             => floatval($request->forty),
+                        "fortyhc"           => floatval($request->fortyhc),
+                        "fortynor"          => floatval($request->fortynor),
+                        "fortyfive"         => floatval($request->fortyfive),
+                        "currency_id"       => $request->currency_id,
+                        "schedule_type_id"  => $request->scheduleT,
+                        "transit_time"      => $request->transit_time,
+                        "via"               => $request->via
                     ]);
                 }
             }
@@ -1692,16 +1781,18 @@ class ImportationController extends Controller
         //dd($request->all());
 
         $rate = Rate::find($id);
-        $rate->origin_port  =  $request->origin_id;
-        $rate->destiny_port =  $request->destiny_id;
-        $rate->carrier_id   =  $request->carrier_id;
-        $rate->contract_id  =  $request->contract_id;
-        $rate->twuenty      =  floatval($request->twuenty);
-        $rate->forty        =  floatval($request->forty);
-        $rate->fortyhc      =  floatval($request->fortyhc);
-        $rate->fortynor     =  floatval($request->fortynor);
-        $rate->fortyfive    =  floatval($request->fortyfive);
-        $rate->currency_id  =  $request->currency_id;
+        $rate->origin_port      =  $request->origin_id;
+        $rate->destiny_port     =  $request->destiny_id;
+        $rate->carrier_id       =  $request->carrier_id;
+        $rate->contract_id      =  $request->contract_id;
+        $rate->twuenty          =  floatval($request->twuenty);
+        $rate->forty            =  floatval($request->forty);
+        $rate->fortyhc          =  floatval($request->fortyhc);
+        $rate->fortynor         =  floatval($request->fortynor);
+        $rate->fortyfive        =  floatval($request->fortyfive);
+        $rate->schedule_type_id =  $request->scheduleT;
+        $rate->transit_time     =  (int)$request->transit_time;
+        $rate->via              =  $request->via;
         $rate->update();
 
         $request->session()->flash('message.content', 'Updated Rate' );
@@ -4508,6 +4599,10 @@ class ImportationController extends Controller
                 $fortynorA      = explode("_",$failrate['fortynor']);
                 $fortyfiveA     = explode("_",$failrate['fortyfive']);
 
+                $schedule_typeA = explode("_",$failrate['schedule_type']);
+                $transit_timeA  = explode("_",$failrate['transit_time']);
+                $viaA           = explode("_",$failrate['via']);
+
                 $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
                 //$originAIn = $originOb['id'];
@@ -4564,6 +4659,27 @@ class ImportationController extends Controller
                     $fortyfiveA = $fortyfiveA[0].' (error)';
                 }
 
+                //-------------------------------------------
+
+                if(count($schedule_typeA) <= 1){
+                    $schedule_typeA = $schedule_typeA[0];
+                } else{
+                    $schedule_typeA = $schedule_typeA[0].' (error)';
+                }
+
+                if(count($transit_timeA) <= 1){
+                    $transit_timeA = $transit_timeA[0];
+                } else{
+                    $transit_timeA = $transit_timeA[0].' (error)';
+                }
+
+                if(count($viaA) <= 1){
+                    $viaA = $viaA[0];
+                } else{
+                    $viaA = $viaA[0].' (error)';
+                }
+
+                //-------------------------------------------
                 $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
                 //$carrAIn = $carrierOb['id'];
                 $carrierC = count($carrierA);
@@ -4594,7 +4710,10 @@ class ImportationController extends Controller
                           'fortynor'        =>  $fortynorA,     //
                           'fortyfive'       =>  $fortyfiveA,    //
                           'currency_id'     =>  $currencyA,     //
-                          'operation'       =>  '1'
+                          'operation'       =>  '1',
+                          'schedule_type'   =>  $schedule_typeA,
+                          'transit_time'    =>  $transit_timeA,
+                          'via'             =>  $viaA
                          ];
 
                 $pruebacurre = "";

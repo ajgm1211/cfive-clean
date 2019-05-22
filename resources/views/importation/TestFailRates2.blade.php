@@ -123,6 +123,9 @@
                                         <th>40'NOR</th>
                                         <th>45'</th>
                                         <th>Currency</th>
+                                        <th>Schedule Type</th>
+                                        <th>Transit time</th>
+                                        <th>Via</th>
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -173,6 +176,9 @@
                                             <th>40'NOR</th>
                                             <th>45'</th>
                                             <th>Currency</th>
+                                            <th>Schedule Type</th>
+                                            <th>Transit time</th>
+                                            <th>Via</th>
                                             <th>Option</th>
                                         </tr>
                                     </thead>
@@ -241,9 +247,12 @@
                         { data: 'fortynor', name: "fortynor" },
                         { data: 'fortyfive', name: "fortyfive" },
                         { data: 'currency_id', name: 'currency_id' },
+                        { data: 'schedule_type', name: 'schedule_type' },
+                        { data: 'transit_time', name: 'transit_time' },
+                        { data: 'via', name: 'via' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
-                   //"scrollX": true,
+                    //"scrollX": true,
                     "lengthChange": false,
                     "searching": true,
                     "ordering": true,
@@ -270,6 +279,9 @@
                         { data: 'fortynor', name: "fortynor" },
                         { data: 'fortyfive', name: "fortyfive" },
                         { data: 'currency_id', name: 'currency_id' },
+                        { data: 'schedule_type_id', name: 'schedule_type_id' },
+                        { data: 'transit_time', name: 'transit_time' },
+                        { data: 'via', name: 'via' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -282,7 +294,7 @@
                     "processing": true,
                     "dom": 'Bfrtip',
                     "paging": true,
-                   //"scrollX": true
+                    //"scrollX": true
                 });
             });
 
