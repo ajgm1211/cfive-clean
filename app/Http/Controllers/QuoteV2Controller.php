@@ -408,7 +408,9 @@ class QuoteV2Controller extends Controller
     $quote->delivery_type=$request->delivery_type;
     $quote->date_issued=$request->date_issued;
     $quote->incoterm_id=$request->incoterm_id;
-    $quote->equipment=json_encode($request->equipment);
+    if($request->equipment!=''){
+      $quote->equipment=json_encode($request->equipment);
+    }
     $quote->validity_start=$validity_start;
     $quote->validity_end=$validity_end;
     $quote->user_id=$request->user_id;
@@ -594,10 +596,6 @@ class QuoteV2Controller extends Controller
       $destinyClass = 'col-md-2';
       $dataOrigDest = 'col-md-7';
     }
-
-
-
-
 
     foreach($equipmentForm as $val){
       if($val == '20'){
