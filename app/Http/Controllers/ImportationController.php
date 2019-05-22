@@ -80,6 +80,7 @@ class ImportationController extends Controller
                 $currenct           = '';
                 $fortynorVal        = '';
                 $fortyfiveVal       = '';
+                $scheduleTVal       = '';
 
                 $curreExitBol       = false;
                 $originB            = false;
@@ -91,6 +92,7 @@ class ImportationController extends Controller
                 $carriExitBol       = false;
                 $fortynorExiBol     = false;
                 $fortyfiveExiBol    = false;
+                $scheduleTBol       = false;
 
                 $originEX       = explode('_',$failrate->origin_port);
                 $destinyEX      = explode('_',$failrate->destiny_port);
@@ -101,6 +103,7 @@ class ImportationController extends Controller
                 $fortynorArr    = explode('_',$failrate->fortynor);
                 $fortyfiveArr   = explode('_',$failrate->fortyfive);
                 $currencyArr    = explode('_',$failrate->currency_id);
+                $scheduleTArr   = explode('_',$failrate->schedule_type);
 
 
                 $carrierEX     = count($carrierArr);
@@ -188,26 +191,38 @@ class ImportationController extends Controller
                         $curreExitBol = true;
                         $currencyVal =  $currenct->id;
                     }
+                    
+                     $scheduleT = ScheduleType::where('name','=',$scheduleTArr[0])->first();
+
+                    if(empty($scheduleT->id) != true){
+                        $scheduleTBol = true;
+                        $scheduleTVal =  $scheduleT->id;
+                    }
+
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
                     if($originB == true && $destinyB == true &&
                        $twentyExiBol   == true && $fortyExiBol    == true &&
                        $fortyhcExiBol  == true && $fortynorExiBol == true &&
                        $fortyfiveExiBol == true && $values        == true &&
-                       $carriExitBol   == true && $curreExitBol   == true){
+                       $scheduleTBol == true && $carriExitBol   == true && 
+                       $curreExitBol   == true){
                         $collecciont = '';
 
                         $collecciont = Rate::create([
-                            'origin_port'   => $originV,
-                            'destiny_port'  => $destinationV,
-                            'carrier_id'    => $carrierVal,                            
-                            'contract_id'   => $id,
-                            'twuenty'       => $twentyVal,
-                            'forty'         => $fortyVal,
-                            'fortyhc'       => $fortyhcVal,
-                            'fortynor'      => $fortynorVal,
-                            'fortyfive'     => $fortyfiveVal,
-                            'currency_id'   => $currencyVal
+                            'origin_port'       => $originV,
+                            'destiny_port'      => $destinationV,
+                            'carrier_id'        => $carrierVal,                            
+                            'contract_id'       => $id,
+                            'twuenty'           => $twentyVal,
+                            'forty'             => $fortyVal,
+                            'fortyhc'           => $fortyhcVal,
+                            'fortynor'          => $fortynorVal,
+                            'fortyfive'         => $fortyfiveVal,
+                            'currency_id'       => $currencyVal,
+                            'schedule_type_id'  => $scheduleTVal,
+                            'transit_time'      => $scheduleTVal,
+                            'via'               => $failrate['via']
                         ]);
                         $failrate->forceDelete();
 
