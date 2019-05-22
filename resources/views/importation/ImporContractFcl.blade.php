@@ -74,24 +74,36 @@ new registration
                                     'class'=>'form-control m-input'])!!}
                                 </div>
                                 <div class="col-lg-3">
-                                    <label for="numberid" class=" ">Contract Number</label>
-                                    {!!  Form::text('number',null,['id'=>'numberid',
-                                    'placeholder'=>'Number Contract',
-                                    'required',
-                                    'class'=>'form-control m-input'])!!}
-                                </div>
-                                <div class="col-lg-3">
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
-                            </div>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-2"> </div>
                                 <div class="col-lg-3">
                                     <label for="numberid" class=" ">Company User</label>
                                     {!!  Form::select('CompanyUserId',$companysUser,null,['id'=>'CompanyUserId',
                                     'required',
                                     'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-2"> </div>
+                                
+                                <div class="col-lg-3">
+                                    <label for="request_id" class=" ">Request id</label>
+                                    {!!  Form::text('request_id',null,['id'=>'request_id',
+                                    'placeholder'=>'Request Id',
+                                    'class'=>'form-control m-input'])!!}
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="">Carriers</label>
+                                    <div class="" id="carrierMul">
+                                        {!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="">Direction</label>
+                                    <div class="" id="direction">
+                                        {!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
+                                    </div>
                                 </div>
                             </div>
                             <hr>

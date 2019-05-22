@@ -227,7 +227,6 @@ font-family: sans-serif !important;
                         <p>The User {{$user['name']}} created a new request LCL:</p>
                         <ul>
                             <li>Name Contract: {{' '.$contract['namecontract']}}</li>
-                            <li>Number Contract: {{' '.$contract['numbercontract']}}</li>
                             <li>Validation: {{' '.$contract['validation']}}</li>
                         </ul>
                     </td>

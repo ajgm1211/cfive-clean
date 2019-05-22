@@ -83,6 +83,16 @@
                                     <label for="validation_expire" class=" ">Validation</label>
                                     <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
+                                <div class="col-lg-2">
+                                    <label><br></label>
+                                    <br>
+                                    <label for="file" class="btn btn-primary form-control-label form-control" >
+                                        Choose File
+                                    </label>
+                                    <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                    <div id="info" style="color:red"></div>
+                                </div>
+
                             </div>
                             <input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
                             <input type="hidden" name="user" value="{{$user->id}}" />
@@ -241,22 +251,17 @@
                             <div class="form-group m-form__group row">
 
                             </div>
-                            <br>
-                            <br>
-                            <div class="form-group m-form__group row">
-                                <div class="col-lg-5">
-                                </div>
-                                <div class="col-lg-6">
-                                    <input type="file" name="file" required>
-                                </div>
-                            </div>
+
+
                             <div class="form-group m-form__group ">
                                 <div class="col-lg-12 col-lg-offset-12 ">
                                     <center>
-                                        <br />
-                                        <button type="submit" class="btn btn-primary">
-                                            Load Request
-                                        </button>
+                                        <div class="col-lg-2 col-lg-offset-2 ">
+                                            <br />
+                                            <button type="submit" onclick="fileempty()" class="btn btn-primary form-control">
+                                                Load Request
+                                            </button>
+                                        </div>
                                     </center>
                                 </div>
                             </div>
@@ -329,60 +334,94 @@
         </div>
     </div>
 
-        @endsection
-        @section('js')
-        @parent
-        <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-        <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
-        <script src="http://malsup.github.com/jquery.form.js"></script>
+    @endsection
+    @section('js')
+    @parent
+    <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+    <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
 
-        <script>
-
-            function validate(formData, jqForm, options) {
-                var form = jqForm[0];
-                if (!form.file.value) {
-                    alert('File not found');
-                    return false;
-                }
+    <script>
+        function fileempty(){
+            if( document.getElementById("file").files.length == 0 ){
+                swal("Error!", "Choose File", "error");
             }
+        }
+        function cambiar(){
+            var pdrs = document.getElementById('file').files[0].name;
+            document.getElementById('info').innerHTML = pdrs;
+        } 
 
-            $(function() {
+        function validate(formData, jqForm, options) {
+            var form = jqForm[0];
+            if (!form.file.value) {
+                alert('File not found');
+                return false;
+            }
+        }
 
-                var bar = $('.progress-bar');
-                var percent = $('.percent');
-                var status = $('#status');
+        $(function() {
+            var count = 0;
+            var bar = $('.progress-bar');
+            var percent = $('.percent');
+            var status = $('#status');
 
-                $('form').ajaxForm({
-                    beforeSubmit: validate,
-                    beforeSend: function() {
-                        $('#modaledit').modal('show');
-                        status.empty();
-                        var percentVal = '0%';
-                        var posterValue = $('input[name=file]').fieldValue();
-                        bar.width(percentVal)
-                        percent.html(percentVal);
-                    },
-                    uploadProgress: function(event, position, total, percentComplete) {
-                        var percentVal = percentComplete + '%';
-                        bar.width(percentVal);
-                        percent.html(percentVal);
-                    },
-                    success: function() {
-                        var percentVal = 'Wait, Saving';
-                        bar.width(percentVal)
-                        $('#mjsH').text('OK');
-                        percent.html(percentVal);
-                    },
-                    complete: function(xhr) {
-                        status.html(xhr.responseText);
-                        $('#mjsH').text('Bye');
-                        $('#modaledit').modal('hide');
+            $('form').ajaxForm({
+                beforeSubmit: validate,
+                beforeSend: function() {
+                    $('#modaledit').modal('show');
+                    status.empty();
+                    var percentVal = '0%';
+                    var posterValue = $('input[name=file]').fieldValue();
+                    bar.width(percentVal)
+                    percent.html(percentVal);
+                },
+                uploadProgress: function(event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                },
+                error: function(req, textStatus, errorThrown) {
+                    count = 1;
+                },
+                success: function() {
+                    var percentVal = 'Wait, Saving';
+                    bar.width(percentVal)
+                    $('#mjsH').text('OK');
+                    percent.html(percentVal);
+                },
+                complete: function(xhr) {
+                    status.html(xhr.responseText);
+                    $('#mjsH').text('Contract Uploaded');
+                    if(count == 1){
+                        swal({
+                            title: "Error",
+                            text: "Error, Please try again !",
+                            icon: "error",
+                            buttons: true,
+                        })
+                            .then((willDelete) => {
+                            if (willDelete) {
+                                count = 0;
+                                $('#modaledit').modal('hide');
+                                window.location.href = "{{route('globalcharges.index')}}";
+                            } else {
+                                count = 0;
+                                $('#modaledit').modal('hide');
+                                window.location.href = "{{route('globalcharges.index')}}";
+                            }
+                        });
+
+                    } else{
                         window.location.href = "{{route('globalcharges.index')}}";
                     }
-                });
 
-            })();
+                    //window.location.href = "{{route('RequestsGlobalchargersFcl.indexListClient')}}";
+                }
+            });
 
-        </script>
+        });
 
-        @stop
+    </script>
+
+    @stop

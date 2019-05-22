@@ -89,12 +89,13 @@
                                             <tr>
                                                 <th >ID</th>
                                                 <th >Company</th>
-                                                <th >Contract Name</th>
-                                                <th >Contract Number</th>
+                                                <th >Reference</th>
+                                                <th >Direction</th>
+                                                <th >Carrier</th>
                                                 <th >Contract Validation</th>
                                                 <th >Date</th>
-                                                <th >Last Management</th>
                                                 <th >User</th>
+                                                <th width="14%">Time elapsed</th>
                                                 <th >Username Load</th>
                                                 <th >Status</th>
                                                 <th >Options</th>
@@ -120,7 +121,10 @@
                                                     Id
                                                 </th>
                                                 <th width="3%" >
-                                                    Name
+                                                    Request Id
+                                                </th>
+                                                <th width="3%" >
+                                                    Reference
                                                 </th>
                                                 <th width="5%" >
                                                     Date
@@ -189,6 +193,7 @@
                 ajax: '{!! route("index.Account.import.lcl") !!}',
                 columns: [
                     { data: 'id', name: 'id' },
+                    { data: 'requestlcl_id', name: 'requestlcl_id' },
                     { data: 'name', name: 'name' },
                     { data: 'date', name: 'date' },
                     { data: 'status', name: 'status' },
@@ -201,6 +206,7 @@
                 "ordering": true,
                 "info": true,
                 "deferLoading": 57,
+                "stateSave": true,
                 "autoWidth": true,
                 "processing": true,
                 "dom": 'Bfrtip',
@@ -218,11 +224,12 @@
                     { data: 'id', name: 'id' },
                     { data: 'Company', name: 'Company' },
                     { data: 'name', name: 'name' },
-                    { data: 'number', name: 'number' },
+                    { data: 'direction', name: 'direction' },
+                    { data: 'carrier', name: 'carrier' },
                     { data: 'validation', name: 'validation' },
                     { data: 'date', name: 'date' },
-                    { data: 'updated', name: 'updated' },
                     { data: 'user', name: 'user' },
+                    { data: 'time_elapsed', name: 'time_elapsed' },
                     { data: 'username_load', name: 'username_load' },
                     { data: 'status', name: 'status' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
@@ -230,11 +237,13 @@
                 "order": [[0, 'desc']],
                 "lengthChange": false,
                 "searching": true,
+                "stateSave": true,
                 "ordering": true,
                 "width": true,
                 "info": true,
                 "deferLoading": 57,
                 "autoWidth": false,
+                "stateSave": true,
                 "processing": true,
                 "dom": 'Bfrtip',
                 "paging": true
@@ -280,7 +289,8 @@
                                     'The Request has been deleted.',
                                     'success'
                                 )
-                                $(elemento).closest('tr').remove();
+                                //$(elemento).closest('tr').remove();
+                                $('#requesttable').DataTable().ajax.reload();
                             }else if(data == 2){
                                 swal("Error!", "an internal error occurred!", "error");
                             }

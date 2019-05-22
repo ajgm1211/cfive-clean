@@ -10,9 +10,11 @@ use App\RateLcl;
 use App\FileTmp;
 use App\Carrier;
 use App\Currency;
+use App\Direction;
 use App\FailRateLcl;
 use App\CompanyUser;
 use App\ContractLcl;
+use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
@@ -106,14 +108,14 @@ class ImportationLclController extends Controller
 
                     if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
                         $wmExiBol = true;
-                        $wmVal    = (int)$wmArr[0];
+                        $wmVal    = floatval($wmArr[0]);
                     }
 
                     //----------------- 40' -----------------------------------------------------------------
 
                     if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
                         $minimunExiBol = true;
-                        $minimunVal    = (int)$minimunArr[0];
+                        $minimunVal    = floatval($minimunArr[0]);
                     }
 
                     if($wmVal == 0 && $minimunVal == 0){
@@ -180,17 +182,33 @@ class ImportationLclController extends Controller
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('ImportationLcl.index',compact('harbor','carrier','companysUser'));
+        $direction      = [null=>'Please Select'];
+        $direction2     = Direction::all();
+        foreach($direction2 as $d){
+            $direction[$d['id']]=$d->name;
+        }
+        return view('ImportationLcl.index',compact('harbor','carrier','direction','companysUser'));
     }
 
-    public function indexRequest($id)
+    public function indexRequest($id,$selector,$request_id)
     {
-        $requestlcl     = RequestLCL::find($id);
+        if($selector == 1){
+            $requestlcl     = RequestLCL::find($id);
+            $requestlcl->load('Requestcarriers');
+        } elseif($selector == 2){
+            $contract = ContractLcl::find($id);
+            $contract->load('carriers');
+        }
         //dd($requestlcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
         $companysUser   = CompanyUser::all()->pluck('name','id');
-        return view('ImportationLcl.indexRequest',compact('harbor','carrier','companysUser','requestlcl'));
+        $direction      = Direction::pluck('name','id');
+        if($selector == 1){
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl','selector'));
+        } elseif($selector == 2){
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','contract','selector','request_id'));
+        }
     }
 
     // --------------- Rates ---------------------------------------------
@@ -205,16 +223,21 @@ class ImportationLclController extends Controller
         $now2           = $now2->format('Y-m-d');
         $now            = $now->format('dmY_His');
         $type           = $request->type;
+        $request_id     = $request->request_id;
         $carrierVal     = $request->carrier;
         $destinyArr     = $request->destiny;
         $originArr      = $request->origin;
         $CompanyUserId  = $request->CompanyUserId;
+        $direction_id   = $request->direction;
+        $selector       = $request->selector;
+
         $carrierBol     = false;
         $destinyBol     = false;
         $originBol      = false;
         $data= collect([]);
-        $harbor  = harbor::all()->pluck('display_name','id');
-        $carrier = carrier::all()->pluck('name','id');
+        $harbor     = harbor::all()->pluck('display_name','id');
+        $carrier    = carrier::all()->pluck('name','id');
+        $direction  = Direction::pluck('name','id');
         // try {
         $file = $request->file('file');
         $ext = strtolower($file->getClientOriginalExtension());
@@ -241,26 +264,40 @@ class ImportationLclController extends Controller
             $account->date              = $now2;
             $account->namefile          = $nombre;
             $account->company_user_id   = $CompanyUserId;
+            $account->requestlcl_id     = $request_id;
             $account->save();
 
             ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account');
-
-            $contract     = new ContractLcl();
-            $contract->name             = $request->name;
-            $contract->number           = $request->number;
-            $validity                   = explode('/',$request->validation_expire);
-            $contract->validity         = $validity[0];
-            $contract->expire           = $validity[1];
-            $contract->status           = 'incomplete';
-            $contract->comments         = $request->comments;
-            $contract->company_user_id  = $CompanyUserId;
-            $contract->account_id       = $account->id;
-            $contract->save(); 
-            $Contract_id = $contract->id;
-            /* $fileTmp = new FileTmp();
+            if($selector == 2){
+                $contract               = ContractLcl::find($request->contract_id);
+                $contract->account_id   = $account->id;
+                $contract->update();
+            } else {
+                $contract     = new ContractLcl();
+                $contract->name             = $request->name;
+                $validity                   = explode('/',$request->validation_expire);
+                $contract->validity         = $validity[0];
+                $contract->expire           = $validity[1];
+                $contract->status           = 'incomplete';
+                $contract->comments         = $request->comments;
+                $contract->company_user_id  = $CompanyUserId;
+                $contract->direction_id     = $direction_id;
+                $contract->account_id       = $account->id;
+                $contract->save(); 
+                
+                /* $fileTmp = new FileTmp();
             $fileTmp->contract_id = $Contract_id;
             $fileTmp->name_file   = $nombre;
             $fileTmp->save(); //*/
+                foreach($request->carrierM as $carrierVal){
+                    ContractCarrierLcl::create([
+                        'carrier_id'    => $carrierVal,
+                        'contract_id'   => $contract->id
+                    ]);
+                }
+            }
+            $contract->load('carriers');
+            $Contract_id = $contract->id;
         }
 
         $statustypecurren = $request->valuesCurrency;
@@ -330,6 +367,7 @@ class ImportationLclController extends Controller
             'destiny'         => $destinyArr,
             'existcarrier'    => $carrierBol,
             'carrier'         => $carrierVal,
+            'comments'        => $contract->comments,
             'Contract_id'     => $Contract_id,
             'number'          => $request->number,
             'name'            => $request->name,
@@ -341,7 +379,7 @@ class ImportationLclController extends Controller
         $countTarges = count($targetsArr);
         //dd($data);
 
-        return view('ImportationLcl.show',compact('harbor','carrier','coordenates','targetsArr','data','countTarges','type','statustypecurren','contract','CompanyUserId'));
+        return view('ImportationLcl.show',compact('harbor','carrier','direction','coordenates','targetsArr','data','countTarges','type','statustypecurren','contract','CompanyUserId'));
         /*}catch(\Exception $e){
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error with the archive');
@@ -457,7 +495,7 @@ class ImportationLclController extends Controller
 
                         if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
                             $wmExiBol = true;
-                            $wmVal   = (int)$wmArr[0];
+                            $wmVal   = floatval($wmArr[0]);
                         }else{
                             $wmVal = $wmArr[0].'_E_E';
                         }
@@ -468,7 +506,7 @@ class ImportationLclController extends Controller
 
                         if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
                             $minimunExiBol = true;
-                            $minimunVal   = (int)$minimunArr[0];
+                            $minimunVal   = floatval($minimunArr[0]);
                         }else{
                             $minimunVal = $minimunArr[0].'_E_E';
                         }
@@ -970,8 +1008,8 @@ class ImportationLclController extends Controller
             "destiny_port"  => $request->destiny_port,
             "carrier_id"    => $request->carrier_id,
             "contractlcl_id" => $request->contract_id,
-            "uom"           => (int)$request->uom,
-            "minimum"       => (int)$request->minimum,
+            "uom"           => floatval($request->uom),
+            "minimum"       => floatval($request->minimum),
             "currency_id"   => $request->currency_id
         ]);
 
@@ -1021,8 +1059,8 @@ class ImportationLclController extends Controller
         $rate->destiny_port     =  $request->destiny_id;
         $rate->carrier_id       =  $request->carrier_id;
         $rate->contractlcl_id   =  $request->contract_id;
-        $rate->uom              =  $request->uom;
-        $rate->minimum          =  $request->minimum;
+        $rate->uom              =  floatval($request->uom);
+        $rate->minimum          =  floatval($request->minimum);
         $rate->currency_id      =  $request->currency_id;
         $rate->update();
 
@@ -1059,6 +1097,13 @@ class ImportationLclController extends Controller
             })
             ->addColumn('company_user_id', function ( $account) {
                 return  $account->companyuser->name;
+            })
+            ->addColumn('requestlcl_id', function ( $account) {
+                if(empty($account->requestlcl_id) != true){
+                    return  $account->requestlcl_id;
+                } else {
+                    return 'Manual';
+                }
             })
             ->addColumn('action', function ( $account) {
                 if(empty($account->contractlcl->status)!=true){
