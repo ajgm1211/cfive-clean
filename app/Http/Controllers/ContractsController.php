@@ -428,9 +428,30 @@ class ContractsController extends Controller
     public function dataRates($id){
 
         $rate = new  ViewRates();
-        $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('contract_id',$id);
+        $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency','schedule_type','transit_time','via')->where('contract_id',$id);
 
         return \DataTables::of($data)
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('options', function ($data) {
                 return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
           <i class='la la-edit'></i>
@@ -752,32 +773,37 @@ class ContractsController extends Controller
         {
             foreach($rateDest as $Rdest => $Destvalue)
             {
-
                 $rates = new Rate();
-                $rates->origin_port =$Origvalue;
-                $rates->destiny_port =$Destvalue;
-                $rates->carrier_id = $request->input('carrier_id');
-                $rates->twuenty = $request->input('twuenty');
-                $rates->forty = $request->input('forty');
-                $rates->fortyhc = $request->input('fortyhc');
-                $rates->fortynor = $request->input('fortynor');
-                $rates->fortyfive = $request->input('fortyfive');
-                $rates->currency_id = $request->input('currency_id');
-                $rates->contract_id = $id;
+                $rates->origin_port     = $Origvalue;
+                $rates->destiny_port    = $Destvalue;
+                $rates->carrier_id      = $request->input('carrier_id');
+                $rates->twuenty         = $request->input('twuenty');
+                $rates->forty           = $request->input('forty');
+                $rates->fortyhc         = $request->input('fortyhc');
+                $rates->fortynor        = $request->input('fortynor');
+                $rates->fortyfive       = $request->input('fortyfive');
+                $rates->currency_id     = $request->input('currency_id');
+                $rates->schedule_type_id = $request->input('schedule_type_id');
+                $rates->transit_time    = $request->input('transit_time');
+                $rates->via             = $request->input('via');
+                $rates->contract_id     = $id;
                 $rates->save();
             }
         }
         return redirect()->back()->with('ratesSave','true');
     }
     public function editRates($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $rates = Rate::find($id);
-        return view('contracts.editRates', compact('rates','harbor','carrier','currency'));
+        $objcarrier     = new Carrier();
+        $objharbor      = new Harbor();
+        $objcurrency    = new Currency();
+        $harbor         = $objharbor->all()->pluck('display_name','id');
+        $carrier        = $objcarrier->all()->pluck('name','id');
+        $currency       = $objcurrency->all()->pluck('alphacode','id');
+        $schedulesT     = ScheduleType::pluck('name','id');
+        $rates          = Rate::find($id);
+        $rates->load('scheduletype');
+        //dd($rates);
+        return view('contracts.editRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }
     public function updateRates(Request $request, $id){
         $requestForm = $request->all();
@@ -787,14 +813,15 @@ class ContractsController extends Controller
     }
 
     public function duplicateRates($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $rates = Rate::find($id);
-        return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency'));
+        $objcarrier     = new Carrier();
+        $objharbor      = new Harbor();
+        $objcurrency    = new Currency();
+        $harbor         = $objharbor->all()->pluck('display_name','id');
+        $carrier        = $objcarrier->all()->pluck('name','id');
+        $currency       = $objcurrency->all()->pluck('alphacode','id');
+        $schedulesT     = ScheduleType::pluck('name','id');
+        $rates          = Rate::find($id);
+        return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }
 
     public function addLocalChar($id){
