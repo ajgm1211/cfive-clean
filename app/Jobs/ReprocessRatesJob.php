@@ -7,15 +7,17 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\FailRate;
+
 use App\Rate;
+use App\User;
+use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
 use App\Currency;
 use App\Contract;
-use App\User;
+use App\FailRate;
+use App\ScheduleType;
 use App\Notifications\N_general;
-use PrvHarbor;
 
 class ReprocessRatesJob implements ShouldQueue
 {
