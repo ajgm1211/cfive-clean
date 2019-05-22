@@ -93,8 +93,8 @@
                                         <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
                                         @endif
                                       </li>
-                                      <li class="size-12px">POL: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
-                                      <li class="size-12px">POD: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
+                                      <li class="size-12px">POL: @if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
+                                      <li class="size-12px">POD: @if($quote->type=='LCL') {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
                                       <li class="size-12px">Contract: {{$rate->contract}}</li>
                                       <li class="size-12px">
                                         <div onclick="show_hide_element('details_{{$v}}')"><i class="down"></i></div>
@@ -122,6 +122,7 @@
                                                 <td >Rate</td>
                                                 <td >Total</td>
                                                 <td >Markup</td>
+                                                <td >Total + markup</td>
                                                 <td >Currency</td>
                                               </tr>
                                             </thead>
@@ -132,10 +133,11 @@
                                                   <td>
                                                     <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
-                                                    <a href="#" class="editable-lcl-air-lcl-air" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                    
+                                                    <a href="#" class="editable-lcl-air" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                   </td>
                                                   <td>
-                                                    <a href="#" class="editable-lcl-air" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                    <a href="#" class="editable-lcl-air" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air units"data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
@@ -148,6 +150,9 @@
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                  </td>
+                                                  <td>
+                                                    {{($item->units*$item->price_per_unit)+$item->markup}}
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
@@ -169,7 +174,7 @@
                                                   {{ Form::select('surcharge_id[]',$surcharges,null,['class'=>'form-control surcharge_id','required'=>true]) }}
                                                 </td>
                                                 <td>
-                                                  {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
+                                                  {{ Form::select('calculation_type_id[]',$calculation_types_lcl_air,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
                                                   <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
@@ -182,6 +187,9 @@
                                                 </td>
                                                 <td >
                                                   <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
+                                                </td>
+                                                <td >
+                                                  <input name="total_2" class="form-control total_2" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <div class="input-group">
@@ -276,7 +284,7 @@
                                                       <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                     </td>
                                                     <td>
-                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types_lcl_air}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
                                                     </td>
                                                     <td >
                                                       <a href="#" class="editable-lcl-air"data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
@@ -314,7 +322,7 @@
                                                   {{ Form::select('surcharge_id[]',$surcharges,null,['class'=>'form-control surcharge_id','required'=>true]) }}
                                                 </td>
                                                 <td>
-                                                  {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
+                                                  {{ Form::select('calculation_type_id[]',$calculation_types_lcl_air,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
                                                   <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
@@ -411,7 +419,7 @@
                                                       <a href="#" class="editable-lcl-air surcharge_id" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                                     </td>
                                                     <td>
-                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                      <a href="#" class="editable-lcl-air calculation_type_id" data-source="{{$calculation_types_lcl_air}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
                                                     </td>
                                                     <td >
                                                       <a href="#" class="editable-lcl-air" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
@@ -448,7 +456,7 @@
                                                   {{ Form::select('surcharge_id[]',$surcharges,null,['class'=>'form-control surcharge_id','required'=>true]) }}
                                                 </td>
                                                 <td>
-                                                  {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
+                                                  {{ Form::select('calculation_type_id[]',$calculation_types_lcl_air,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
                                                 <td >
                                                   <input name="units" class="units form-control" type="number" min="0" step="0.0000001" />
