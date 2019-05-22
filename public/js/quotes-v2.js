@@ -931,6 +931,9 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+    
+    $(".formu").val('');
+    $(".search").hide();
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").show();
@@ -962,6 +965,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+    $(".formu").val('');
+    $(".search").hide();
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").hide();
@@ -1039,6 +1044,8 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+    $(".formu").val('');
+    $(".search").hide();
     $("#origin_harbor").prop( "disabled", true );
     $("#destination_harbor").prop( "disabled", true );
     $("#equipment_id").hide();
@@ -1550,8 +1557,8 @@ $(document).on("change keydown keyup", ".volume_input", function(){
     }
   });
 
-  $("#total_volume_pkg").html((sum) + " m3");
-  $("#total_volume_pkg_input").val(sum);
+  $("#total_volume_pkg").html((parseFloat(sum).toFixed(2)) + " m3");
+  $("#total_volume_pkg_input").val(parseFloat(sum).toFixed(2));
 });
 
 $(document).on("change keydown keyup", ".weight_input", function(){
