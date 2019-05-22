@@ -212,6 +212,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionMachineLearning(array $args = [])
  * @method \Aws\Macie\MacieClient createMacie(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionMacie(array $args = [])
+ * @method \Aws\ManagedBlockchain\ManagedBlockchainClient createManagedBlockchain(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionManagedBlockchain(array $args = [])
  * @method \Aws\MarketplaceCommerceAnalytics\MarketplaceCommerceAnalyticsClient createMarketplaceCommerceAnalytics(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionMarketplaceCommerceAnalytics(array $args = [])
  * @method \Aws\MarketplaceEntitlementService\MarketplaceEntitlementServiceClient createMarketplaceEntitlementService(array $args = [])
@@ -226,6 +228,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionMediaLive(array $args = [])
  * @method \Aws\MediaPackage\MediaPackageClient createMediaPackage(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionMediaPackage(array $args = [])
+ * @method \Aws\MediaPackageVod\MediaPackageVodClient createMediaPackageVod(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionMediaPackageVod(array $args = [])
  * @method \Aws\MediaStore\MediaStoreClient createMediaStore(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionMediaStore(array $args = [])
  * @method \Aws\MediaStoreData\MediaStoreDataClient createMediaStoreData(array $args = [])
@@ -349,7 +353,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.91.0';
+    const VERSION = '3.94.1';
 
     /** @var array Arguments for creating clients */
     private $args;
