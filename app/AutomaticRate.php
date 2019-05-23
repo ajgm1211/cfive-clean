@@ -22,7 +22,8 @@ class AutomaticRate extends Model
         'total' => 'array',
     ];
 
-    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','origin_airport_id','destination_airport_id','carrier_id','airline_id','rates','markups','currency_id','total','amount','markups'];
+
+    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id'];
 
     public function quote()
     {
@@ -57,6 +58,16 @@ class AutomaticRate extends Model
     public function destination_port()
     {
         return $this->hasOne('App\Harbor','id','destination_port_id');
+    }
+  
+      public function origin_airport()
+    {
+        return $this->hasOne('App\Airline','id','origin_airport_id');
+    }
+
+    public function destination_airport()
+    {
+        return $this->hasOne('App\Airline','id','destination_airport_id');
     }
 
     public function origin_airport()
