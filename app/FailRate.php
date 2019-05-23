@@ -21,6 +21,9 @@ class FailRate extends Model
         'fortyhc',
         'currency_id',
         'fortynor',
-        'fortyfive'
+        'fortyfive',
+        'schedule_type',
+        'transit_time',
+        'via'
     ];
 }
