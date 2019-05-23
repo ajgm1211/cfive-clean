@@ -147,11 +147,11 @@ class QuoteV2Controller extends Controller
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-    ->addColumn('type', function ($colletion) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-    })->addColumn('action',function($colletion){
+      ->addColumn('type', function ($colletion) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      })->addColumn('action',function($colletion){
       return
-      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -178,7 +178,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-    ->editColumn('id', '{{$id}}')->make(true);
+      ->editColumn('id', '{{$id}}')->make(true);
   }
 
   public function show($id)
@@ -417,10 +417,11 @@ class QuoteV2Controller extends Controller
         $item->total_rate40nor=number_format($total_rate40nor+$total_rate_markup40nor, 2, '.', '');
         $item->total_rate45=number_format($total_rate45+$total_rate_markup45, 2, '.', ''); 
     }
-    
+
     //Adding country codes to rates collection
 
     foreach ($rates as $item) {
+  
       $rates->map(function ($item) {
         if($item->origin_port_id!='' ){
           $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
@@ -433,10 +434,12 @@ class QuoteV2Controller extends Controller
         }else{
           $item['destination_country_code'] = strtolower($item->destination_airport->code); 
         }
-
+        
         return $item;
       }); 
     }
+
+
 
     $emaildimanicdata = json_encode([
       'quote_bool'   => 'true',
@@ -1647,6 +1650,8 @@ class QuoteV2Controller extends Controller
         $typeText = "FCL";
         $equipment =  stripslashes(json_encode($request->input('equipment')));
         $delivery_type = $request->input('delivery_type') ;
+
+
       }
       if($request->input('type') == '2'){
         $typeText = "LCL";
@@ -1657,13 +1662,14 @@ class QuoteV2Controller extends Controller
         $typeText = "AIR";
         $equipment =  $arregloNull;
         $delivery_type = $request->input('delivery_type_air') ;
+
       }
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since  ]);
       $quote= QuoteV2::create($request->all());
 
       // FCL
-      if($typeText == 'FCL'){
+      if($typeText == 'FCL' || $typeText == 'LCL'){
         foreach($request->input('originport') as $origP){
           $infoOrig = explode("-", $origP);
           $origin_port[] = $infoOrig[0];
@@ -1678,6 +1684,12 @@ class QuoteV2Controller extends Controller
             $rate = AutomaticRate::create($request->all());
           }
         }
+      }
+      if($typeText == 'AIR' ){
+
+        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
+        $rate = AutomaticRate::create($request->all());
+
       }
       //LCL        $input = Input::all();
 
@@ -2202,12 +2214,12 @@ class QuoteV2Controller extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2221,8 +2233,8 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'twuenty' &&  in_array( '20',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_20 =  $details->ammount / $rateI;
-                      $monto += $sub_20;
-                      $amount_inland = $details->ammount;
+                      $monto += number_format($sub_20, 2, '.', ''); 
+                      $amount_inland = number_format($details->ammount, 2, '.', ''); 
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $km20 = false;
                       // CALCULO MARKUPS 
@@ -2237,7 +2249,7 @@ class QuoteV2Controller extends Controller
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40 = $details->ammount / $rateI;
-                      $monto += $sub_40;
+                      $monto +=  number_format($sub_40, 2, '.', ''); 
                       $amount_inland = $details->ammount;
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $km40 = false;
@@ -2252,7 +2264,7 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'fortyhc' &&   in_array( '40HC',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
                       $sub_40hc =  $details->ammount / $rateI;
-                      $monto += $sub_40hc;
+                      $monto +=  number_format($sub_40hc, 2, '.', ''); 
                       $price_per_unit = number_format($details->ammount / $distancia, 2, '.', '');
                       $amount_inland =  $details->ammount;
                       $km40hc = false;
@@ -2274,7 +2286,7 @@ class QuoteV2Controller extends Controller
                   $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                   if($km20 &&  in_array( '20',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-                    $sub_20 = $montoKm;
+                    $sub_20 =  number_format($montoKm, 2, '.', '');
                     $monto += $sub_20;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_20;
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2291,7 +2303,7 @@ class QuoteV2Controller extends Controller
                   if($km40 &&  in_array( '40',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40) / $rateGeneral;
 
-                    $sub_40 = $montoKm;
+                    $sub_40 = number_format($montoKm, 2, '.', '');
                     $monto += $sub_40;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40 ;
                     $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2307,7 +2319,7 @@ class QuoteV2Controller extends Controller
                   }
                   if($km40hc &&  in_array( '40HC',$equipment)){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_40hc) / $rateGeneral;
-                    $sub_40hc = $montoKm;
+                    $sub_40hc = number_format($montoKm, 2, '.', '');
                     $monto += $sub_40hc;
 
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_40hc;
@@ -2378,12 +2390,12 @@ class QuoteV2Controller extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2539,16 +2551,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-    {
-     $q->whereHas('contract_company_restriction', function($b) use($company_id){
-       $b->where('company_id', '=',$company_id);
-     })->orDoesntHave('contract_company_restriction');
-   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-  });
-   $arreglo = $arreglo->get();
+                 {
+                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                     $b->where('company_id', '=',$company_id);
+                   })->orDoesntHave('contract_company_restriction');
+                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+    });
+    $arreglo = $arreglo->get();
 
-   $formulario = $request;
+    $formulario = $request;
     $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 
@@ -3412,7 +3424,7 @@ class QuoteV2Controller extends Controller
           }
           $itemsDetail['monto'] = number_format($monto, 2, '.', '');
           $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
-          $itemsDetail['markup'] = $totalMarkup;
+          $itemsDetail['markup'] =  number_format($totalMarkup, 2, '.', '');
           $itemsDetail['currency'] = $itemsDetail['typecurrency'];
           $itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
           $collect->push($itemsDetail);
@@ -3422,7 +3434,7 @@ class QuoteV2Controller extends Controller
 
         }else{
           foreach($items as $itemsDetail){
-            $itemsDetail['monto'] = $itemsDetail['montoOrig'];
+            $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
             $collect->push($itemsDetail); 
             $monto = 0;
             $montoMarkup = 0;
