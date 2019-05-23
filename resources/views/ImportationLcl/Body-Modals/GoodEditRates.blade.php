@@ -40,9 +40,6 @@
                 {!! Form::label('minimum', 'Minimum') !!}
                 {!! Form::text('minimum', $rates->minimum, ['id' => 'minimum','placeholder' => 'Please enter the minimum','class' => 'form-control m-input','required' ]) !!} 
             </div>
-
-        </div>
-        <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 {!! Form::label('currency', 'Currency') !!}
 
@@ -56,8 +53,24 @@
                 </div>
 
             </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                {!! Form::label('scheduleT','Schedule Type') !!}
+                {{ Form::select('scheduleT',$schedulesT,$rates['schedule_type_id'],['id' => 'schedulesT','class'=>'m-select2-general form-control']) }}
+            </div>
+            <div class="col-lg-4">
 
+                {!! Form::label('Transit Time', 'Transit Time') !!}
+                {!! Form::number('transit_time',$rates['transit_time'], ['id' => 'transit_time','placeholder' => 'Transit Time','class' => 'form-control ','required']) !!}
 
+            </div>
+            <div class="col-lg-4">
+
+                {!! Form::label('via', 'Via') !!}
+                {!! Form::text('via',$rates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ','required']) !!}
+
+            </div>
         </div>
     </div>  
     <input type="hidden" value="{{$rates['contractlcl_id']}}" name="contract_id" id="contract_id" />

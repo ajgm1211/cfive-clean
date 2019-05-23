@@ -270,19 +270,22 @@ New \ Status Import  &nbsp;
                                     <th title="Field #11">
                                         Status
                                     </th>
+                                    <th style="width:13%">
+                                        Schedule
+                                    </th>
+                                    <th style="width:7%">
+                                        Transit Time
+                                    </th>
+                                    <th style="width:10%">
+                                        Via
+                                    </th>
                                     <th title="Field #12">
                                         Options
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-
-
-                            </tbody>
+                            <tbody></tbody>
                         </table>
-
-
-
                         <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -350,6 +353,9 @@ New \ Status Import  &nbsp;
             {data: 'currency', name: 'currency'},
             {data: 'validity', name: 'validity'},
             {data: 'status', name: 'status'},
+            {data: 'schedule_type', name: 'schedule_type'},
+            {data: 'transit_time', name: 'transit_time'},
+            {data: 'via', name: 'via'},
             {data: 'options', name: 'options'}
         ],
 
