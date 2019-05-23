@@ -71,7 +71,7 @@ class ReprocessRatesJob implements ShouldQueue
                 $currenct           = '';
                 $fortynorVal        = '';
                 $fortyfiveVal       = '';
-                $scheduleTVal       = '';
+                $scheduleTVal       = null;
 
                 $curreExitBol       = false;
                 $originB            = false;
