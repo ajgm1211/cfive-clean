@@ -25,6 +25,7 @@ use App\Currency;
 use App\Surcharge;
 use App\LocalCharge;
 use App\TypeDestiny;
+use App\ScheduleType;
 use App\LocalCharPort;
 use App\FailSurCharge;
 use App\CalculationType;
@@ -40,16 +41,13 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use App\Http\Requests\UploadFileRateRequest;
+
 class ImportationRatesSurchargerJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $request,$companyUserId,$UserId;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
+    
     public function __construct($request,$companyUserId,$UserId)
     {
         $this->request          = $request;
@@ -57,12 +55,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $this->UserId           = $UserId;
 
     }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
+    
     public function handle()
     {
         $requestobj = $this->request;
@@ -99,6 +92,11 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $contractId             = "Contract_id";
                 $typedestiny            = "Type_Destiny";
                 $differentiator         = "Differentiator";
+                $scheduleTExc           = "Schedule_Type";
+                $transittimeExc         = "Transit_Time";
+                $viaExc                 = "Via";
+                $scheduleinfo           = "scheduleinfo";
+
                 $statusPortCountryTW    = $requestobj['statusPortCountry'];
                 $chargeVal              = $requestobj['chargeVal'];
                 $contract_id            = $requestobj['Contract_id'];
@@ -127,7 +125,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                         } else {
                             $differentiatorVal = 'port';
                         }
-                        
+
                         //--------------- CARGADOR DE ARREGLO ORIGEN DESTINO MULTIPLES ----------------------------
                         //--- ORIGIN ------------------------------------------------------
                         $oricount = 0;
@@ -239,6 +237,10 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $fortynorVal         = '';
                                 $fortyfiveVal        = '';
 
+                                $scheduleTResul      = null;
+                                $transittimeResul    = 0;
+                                $viaResul            = null;
+
                                 $originBol               = false;
                                 $origExiBol              = false;
                                 $destinyBol              = false;
@@ -268,7 +270,13 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 $fortynorArrBol          = false;
                                 $fortyfiveArrBol         = false;
                                 $differentiatorBol       = false;
+                                $scheduleTBol            = false;
+                                $transittimeBol          = false;
+                                $viaBol                  = false;
+                                $ratesSchedulesValuesBol = true;
                                 $values                  = true;
+
+
 
                                 //--------------- Type Destiny ------------------------------------------------------------
 
@@ -828,6 +836,42 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     $surchargeVal = $read[$requestobj[$Charge]].'_E_E';
                                 }
                                 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                $rqScheduleinfoBol = $requestobj[$scheduleinfo];
+
+                                //--------------- SCHEDULE TYPE --------------------------------------------
+
+                                if($rqScheduleinfoBol == true && strnatcasecmp($read[$requestobj[$Charge]],$chargeVal) == 0){
+                                    $scheduleTResul = ScheduleType::where('name',$read[$requestobj[$scheduleTExc]])->first();
+                                    if(count($scheduleTResul) >= 1){
+                                        $scheduleTBol = true;
+                                        $scheduleTResul = $scheduleTResul['id'];
+                                    } else {
+                                        $scheduleTResul = $read[$requestobj[$scheduleTExc]].'_E_E'; 
+                                    }
+                                } else {
+                                    $scheduleTBol = true;
+                                }
+                                //--------------- TRANSIT TIME ---------------------------------------------
+                                if($rqScheduleinfoBol == true && strnatcasecmp($read[$requestobj[$Charge]],$chargeVal) == 0){
+                                    $transittimeBol      = true;
+                                    $transittimeResul   = (INT)$read[$requestobj[$transittimeExc]];
+                                } else {
+                                    $transittimeBol      = true;
+                                }
+
+                                //--------------- VIA --------------------------------------------
+                                if($rqScheduleinfoBol == true && strnatcasecmp($read[$requestobj[$Charge]],$chargeVal) == 0){
+                                    $viaBol     = true;
+                                    $viaResul   = $read[$requestobj[$viaExc]];
+                                } else {
+                                    $viaBol     = true;
+                                }
+
+                                if($viaBol == false || $transittimeBol == false || $scheduleTBol == false){
+                                    $ratesSchedulesValuesBol = false;
+                                }
+
                                 /* $pruebas = collect([]);
                         $prueba = collect([]);
 
@@ -893,6 +937,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                    && $variantecurrency     == true
                                    && $typeExiBol           == true
                                    && $typedestinyExitBol   == true
+                                   && $ratesSchedulesValuesBol  == true
                                    && $values == true){
 
                                     if($read[$requestobj[$Charge]] == $chargeVal){
@@ -913,16 +958,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
 
                                                 if($differentiatorBol == false){
                                                     $ratesArre = Rate::create([
-                                                        'origin_port'    => $originVal,
-                                                        'destiny_port'   => $destinyVal,
-                                                        'carrier_id'     => $carrierVal,
-                                                        'contract_id'    => $contractIdVal,
-                                                        'twuenty'        => $twentyVal,
-                                                        'forty'          => $fortyVal,
-                                                        'fortyhc'        => $fortyhcVal,
-                                                        'fortynor'       => $fortynorVal,
-                                                        'fortyfive'      => $fortyfiveVal,
-                                                        'currency_id'    => $currencyVal
+                                                        'origin_port'       => $originVal,
+                                                        'destiny_port'      => $destinyVal,
+                                                        'carrier_id'        => $carrierVal,
+                                                        'contract_id'       => $contractIdVal,
+                                                        'twuenty'           => $twentyVal,
+                                                        'forty'             => $fortyVal,
+                                                        'fortyhc'           => $fortyhcVal,
+                                                        'fortynor'          => $fortynorVal,
+                                                        'fortyfive'         => $fortyfiveVal,
+                                                        'currency_id'       => $currencyVal,
+                                                        'schedule_type_id'  => $scheduleTResul,
+                                                        'transit_time'      => $transittimeResul,
+                                                        'via'               => $viaResul
                                                     ]);
                                                     //dd($ratesArre);
                                                 }
@@ -934,16 +982,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             }
                                             if($differentiatorBol == false){
                                                 $ratesArre =  Rate::create([
-                                                    'origin_port'    => $originVal,
-                                                    'destiny_port'   => $destinyVal,
-                                                    'carrier_id'     => $carrierVal,
-                                                    'contract_id'    => $contractIdVal,
-                                                    'twuenty'        => $twentyVal,
-                                                    'forty'          => $fortyVal,
-                                                    'fortyhc'        => $fortyhcVal,
-                                                    'fortynor'       => $fortynorVal,
-                                                    'fortyfive'      => $fortyfiveVal,
-                                                    'currency_id'    => $currencyVal
+                                                    'origin_port'       => $originVal,
+                                                    'destiny_port'      => $destinyVal,
+                                                    'carrier_id'        => $carrierVal,
+                                                    'contract_id'       => $contractIdVal,
+                                                    'twuenty'           => $twentyVal,
+                                                    'forty'             => $fortyVal,
+                                                    'fortyhc'           => $fortyhcVal,
+                                                    'fortynor'          => $fortynorVal,
+                                                    'fortyfive'         => $fortyfiveVal,
+                                                    'currency_id'       => $currencyVal,
+                                                    'schedule_type_id'  => $scheduleTResul,
+                                                    'transit_time'      => $transittimeResul,
+                                                    'via'               => $viaResul
                                                 ]);
 
                                                 //dd($ratesArre);
@@ -1969,6 +2020,14 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                 } else {
                                     // van los fallidos
 
+                                    //---------------------------- SCHEDULE TYPE ----------------------------------------------------
+                                    if( strnatcasecmp($read[$requestobj[$Charge]],$chargeVal) == 0 && $rqScheduleinfoBol == true){
+                                        if( $scheduleTBol == true){
+                                            $scheduleTResul = ScheduleType::find($scheduleTResul);
+                                            $scheduleTResul = $scheduleTResul['name'];
+                                        }
+                                    }
+
                                     //---------------------------- TYPE DESTINY  ----------------------------------------------------
 
                                     if($typedestinyExitBol == true){
@@ -2119,16 +2178,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                         }
                                                     }
                                                     FailRate::create([
-                                                        'origin_port'   => $originVal,
-                                                        'destiny_port'  => $destinyVal,
-                                                        'carrier_id'    => $carrierVal,
-                                                        'contract_id'   => $contractIdVal,
-                                                        'twuenty'       => $twentyVal,
-                                                        'forty'         => $fortyVal,
-                                                        'fortyhc'       => $fortyhcVal,
-                                                        'fortynor'      => $fortynorVal,
-                                                        'fortyfive'     => $fortyfiveVal,
-                                                        'currency_id'   => $currencyVal,
+                                                        'origin_port'        => $originVal,
+                                                        'destiny_port'       => $destinyVal,
+                                                        'carrier_id'         => $carrierVal,
+                                                        'contract_id'        => $contractIdVal,
+                                                        'twuenty'            => $twentyVal,
+                                                        'forty'              => $fortyVal,
+                                                        'fortyhc'            => $fortyhcVal,
+                                                        'fortynor'           => $fortynorVal,
+                                                        'fortyfive'          => $fortyfiveVal,
+                                                        'currency_id'        => $currencyVal,
+                                                        'schedule_type'      => $scheduleTResul,
+                                                        'transit_time'       => $transittimeResul,
+                                                        'via'                => $viaResul
                                                     ]);
 
                                                 }
@@ -2152,16 +2214,19 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     }
                                                 }
                                                 FailRate::create([
-                                                    'origin_port'   => $originVal,
-                                                    'destiny_port'  => $destinyVal,
-                                                    'carrier_id'    => $carrierVal,
-                                                    'contract_id'   => $contractIdVal,
-                                                    'twuenty'       => $twentyVal,
-                                                    'forty'         => $fortyVal,
-                                                    'fortyhc'       => $fortyhcVal,
-                                                    'fortynor'      => $fortynorVal,
-                                                    'fortyfive'     => $fortyfiveVal,
-                                                    'currency_id'   => $currencyVal,
+                                                    'origin_port'        => $originVal,
+                                                    'destiny_port'       => $destinyVal,
+                                                    'carrier_id'         => $carrierVal,
+                                                    'contract_id'        => $contractIdVal,
+                                                    'twuenty'            => $twentyVal,
+                                                    'forty'              => $fortyVal,
+                                                    'fortyhc'            => $fortyhcVal,
+                                                    'fortynor'           => $fortynorVal,
+                                                    'fortyfive'          => $fortyfiveVal,
+                                                    'currency_id'        => $currencyVal,
+                                                    'schedule_type'      => $scheduleTResul,
+                                                    'transit_time'       => $transittimeResul,
+                                                    'via'                => $viaResul
                                                 ]);
 
                                             } //*/
@@ -3343,7 +3408,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 }
 
                 //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
-                //dd($pruebas);
+                //dd('Listo');
             });
 
         $nopalicaHs = Harbor::where('name','No Aplica')->get();
