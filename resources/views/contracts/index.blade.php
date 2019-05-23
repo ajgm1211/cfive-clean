@@ -294,8 +294,17 @@ New \ Status Import  &nbsp;
                                     <th title="Field #9">
                                         Validity
                                     </th>
-                                    <th style="width:20%">
+                                    <th style="width:10%">
                                         Status
+                                    </th>
+                                    <th style="width:15%">
+                                        Schedule
+                                    </th>
+                                    <th style="width:5%">
+                                        Transit Time
+                                    </th>
+                                    <th style="width:5%">
+                                        Via
                                     </th>
                                     <th  title="Field #12">
                                         Options
@@ -395,6 +404,9 @@ New \ Status Import  &nbsp;
             {data: 'currency', name: 'currency'},
             {data: 'validity', name: 'validity'},
             {data: 'status', name: 'status'},
+            {data: 'schedule_type', name: 'schedule_type'},
+            {data: 'transit_time', name: 'transit_time'},
+            {data: 'via', name: 'via'},
             {data: 'options', name: 'options'}
         ],
 

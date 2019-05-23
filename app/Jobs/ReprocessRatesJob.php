@@ -7,15 +7,17 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\FailRate;
+
 use App\Rate;
+use App\User;
+use PrvHarbor;
 use App\Harbor;
 use App\Carrier;
 use App\Currency;
 use App\Contract;
-use App\User;
+use App\FailRate;
+use App\ScheduleType;
 use App\Notifications\N_general;
-use PrvHarbor;
 
 class ReprocessRatesJob implements ShouldQueue
 {
@@ -69,6 +71,7 @@ class ReprocessRatesJob implements ShouldQueue
                 $currenct           = '';
                 $fortynorVal        = '';
                 $fortyfiveVal       = '';
+                $scheduleTVal       = null;
 
                 $curreExitBol       = false;
                 $originB            = false;
@@ -80,6 +83,7 @@ class ReprocessRatesJob implements ShouldQueue
                 $carriExitBol       = false;
                 $fortynorExiBol     = false;
                 $fortyfiveExiBol    = false;
+                $scheduleTBol       = false;
 
                 $originEX       = explode('_',$failrate->origin_port);
                 $destinyEX      = explode('_',$failrate->destiny_port);
@@ -90,6 +94,7 @@ class ReprocessRatesJob implements ShouldQueue
                 $fortynorArr    = explode('_',$failrate->fortynor);
                 $fortyfiveArr   = explode('_',$failrate->fortyfive);
                 $currencyArr    = explode('_',$failrate->currency_id);
+                $scheduleTArr   = explode('_',$failrate->schedule_type);
 
 
                 $carrierEX     = count($carrierArr);
@@ -98,12 +103,13 @@ class ReprocessRatesJob implements ShouldQueue
                 $fortyhcEX     = count($fortyhcArr);
                 $currencyEX    = count($currencyArr);
 
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
                 if($carrierEX   <= 1 &&  $twuentyEX   <= 1 &&
                    $fortyEX     <= 1 &&  $fortyhcEX   <= 1 &&
                    $currencyEX  <= 1 ){
-                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
-                    // Origen Y Destino ------------------------------------------------------------------------
-                   $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
+
+                    $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
                     if($resultadoPortOri['boolean']){
                         $originB = true;    
                     }
@@ -115,6 +121,7 @@ class ReprocessRatesJob implements ShouldQueue
                         $destinyB = true;    
                     }
                     $destinationV  = $resultadoPortDes['puerto'];
+
 
                     //---------------- Carrier ------------------------------------------------------------------
 
@@ -175,26 +182,38 @@ class ReprocessRatesJob implements ShouldQueue
                         $curreExitBol = true;
                         $currencyVal =  $currenct->id;
                     }
+                    
+                     $scheduleT = ScheduleType::where('name','=',$scheduleTArr[0])->first();
+
+                    if(empty($scheduleT->id) != true){
+                        $scheduleTBol = true;
+                        $scheduleTVal =  $scheduleT->id;
+                    }
+
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
                     if($originB == true && $destinyB == true &&
                        $twentyExiBol   == true && $fortyExiBol    == true &&
                        $fortyhcExiBol  == true && $fortynorExiBol == true &&
                        $fortyfiveExiBol == true && $values        == true &&
-                       $carriExitBol   == true && $curreExitBol   == true){
+                       $scheduleTBol == true && $carriExitBol   == true && 
+                       $curreExitBol   == true){
                         $collecciont = '';
 
                         $collecciont = Rate::create([
-                            'origin_port'   => $originV,
-                            'destiny_port'  => $destinationV,
-                            'carrier_id'    => $carrierVal,                            
-                            'contract_id'   => $id,
-                            'twuenty'       => $twentyVal,
-                            'forty'         => $fortyVal,
-                            'fortyhc'       => $fortyhcVal,
-                            'fortynor'      => $fortynorVal,
-                            'fortyfive'     => $fortyfiveVal,
-                            'currency_id'   => $currencyVal
+                            'origin_port'       => $originV,
+                            'destiny_port'      => $destinationV,
+                            'carrier_id'        => $carrierVal,                            
+                            'contract_id'       => $id,
+                            'twuenty'           => $twentyVal,
+                            'forty'             => $fortyVal,
+                            'fortyhc'           => $fortyhcVal,
+                            'fortynor'          => $fortynorVal,
+                            'fortyfive'         => $fortyfiveVal,
+                            'currency_id'       => $currencyVal,
+                            'schedule_type_id'  => $scheduleTVal,
+                            'transit_time'      => $scheduleTVal,
+                            'via'               => $failrate['via']
                         ]);
                         $failrate->forceDelete();
 
