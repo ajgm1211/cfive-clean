@@ -90,8 +90,11 @@
                                     <ul >
                                       <li style="max-height: 20px;">                                            
                                         @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-                                        <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
+                                          <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
                                         @endif
+                                        @if(isset($rate->airline->image) && $rate->airline->image!='')
+                                          <img src="{{ url('imgcarrier/'.$rate->airline->image) }}"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
+                                        @endif                                        
                                       </li>
                                       <li class="size-12px">POL: @if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
                                       <li class="size-12px">POD: @if($quote->type=='LCL') {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
@@ -120,9 +123,8 @@
                                                 <td >Detail</td>
                                                 <td >Units</td>
                                                 <td >Rate</td>
-                                                <td >Total</td>
                                                 <td >Markup</td>
-                                                <td >Total + markup</td>
+                                                <td >Total</td>
                                                 <td >Currency</td>
                                               </tr>
                                             </thead>
@@ -144,9 +146,6 @@
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air price_per_unit"data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
-                                                  </td>
-                                                  <td>
-                                                    {{$item->units*$item->price_per_unit}}
                                                   </td>
                                                   <td >
                                                     <a href="#" class="editable-lcl-air" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
@@ -181,9 +180,6 @@
                                                 </td>
                                                 <td >
                                                   <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
-                                                </td>
-                                                <td >
-                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
@@ -250,8 +246,8 @@
                                                 <td >Detail</td>
                                                 <td >Units</td>
                                                 <td >Rate</td>
-                                                <td >Total</td>
                                                 <td >Markup</td>
+                                                <td >Total</td>
                                                 <td >Currency</td>
                                               </tr>
                                             </thead>
@@ -293,11 +289,11 @@
                                                       <a href="#" class="editable-lcl-air"data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
                                                     </td>
                                                     <td >
-                                                      {{$item->units*$item->price_per_unit}}
-                                                    </td>
-                                                    <td >
                                                       <a href="#" class="editable-lcl-air"data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
                                                     </td>
+                                                    <td >
+                                                      {{($item->units*$item->price_per_unit)+$item->markup}}
+                                                    </td>                                                    
                                                     <td >
                                                       <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
                                                       &nbsp;
@@ -383,8 +379,8 @@
                                                 <td >Detail</td>
                                                 <td >Units</td>
                                                 <td >Rate</td>
-                                                <td >Total</td>
                                                 <td >Markup</td>
+                                                <td >Total</td>
                                                 <td >Currency</td>
                                               </tr>
                                             </thead>
@@ -428,11 +424,11 @@
                                                       <a href="#" class="editable-lcl-air" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
                                                     </td>
                                                     <td >
-                                                     {{$item->units*$item->price_per_unit}}
-                                                    </td>
-                                                    <td >
                                                       <a href="#" class="editable-lcl-air" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
                                                     </td>
+                                                    <td>
+                                                      {{($item->units*$item->price_per_unit)+$item->markup}}
+                                                    </td>                                                    
                                                     <td >
                                                       <a href="#" class="editable-lcl-air" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
                                                       &nbsp;
