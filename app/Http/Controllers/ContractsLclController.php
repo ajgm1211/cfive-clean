@@ -14,10 +14,11 @@ use App\Currency;
 use App\Surcharge;
 use EventIntercom;
 use App\Direction;
+use App\ContractLcl;
 use App\CompanyUser;
 use App\TypeDestiny;
+use App\ScheduleType;
 use App\ViewRatesLcl;
-use App\ContractLcl;
 use App\LocalChargeLcl;
 use App\LocalCharPortLcl;
 use App\ViewLocalCharges;
@@ -129,6 +130,7 @@ class ContractsLclController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
+        $scheduleT  = ScheduleType::pluck('name','id');
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
         })->pluck('first_name','id');
@@ -145,7 +147,7 @@ class ContractsLclController extends Controller
                                      })->pluck('Name','id');
         }
 
-        return view('contractsLcl.add',compact('country','carrier','harbor','direction','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg'));
+        return view('contractsLcl.add',compact('country','carrier','harbor','direction','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','scheduleT'));
 
     }
 
@@ -239,12 +241,15 @@ class ContractsLclController extends Controller
                 foreach($rateDest as $Rdest => $Destvalue)
                 {
                     $rates = new RateLcl();
-                    $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
-                    $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
-                    $rates->carrier_id = $request->input('carrier_id.'.$key);
-                    $rates->uom = $request->input('uom.'.$key);
-                    $rates->minimum = $request->input('minimum.'.$key);
-                    $rates->currency_id = $request->input('currency_id.'.$key);
+                    $rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
+                    $rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
+                    $rates->carrier_id          = $request->input('carrier_id.'.$key);
+                    $rates->uom                 = $request->input('uom.'.$key);
+                    $rates->minimum             = $request->input('minimum.'.$key);
+                    $rates->currency_id         = $request->input('currency_id.'.$key);
+                    $rates->schedule_type_id    = $request->input('scheduleT.'.$key);
+                    $rates->transit_time        = $request->input('transitTi.'.$key);
+                    $rates->via                 = $request->input('via.'.$key);
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
@@ -372,19 +377,19 @@ class ContractsLclController extends Controller
     public function edit(Request $request,$id)
     {
         $id = obtenerRouteKey($id);
-        $contracts = ContractLcl::where('id',$id)->first();
-        $harbor = Harbor::all()->pluck('display_name','id');
-        $country = Country::all()->pluck('name','id');
-        $carrier = Carrier::all()->pluck('name','id');
-        $direction = Direction::pluck('name','id');
-        $currency = Currency::all()->pluck('alphacode','id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name','id');
-        $typedestiny = TypeDestiny::all()->pluck('description','id');
-        $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        $company_restriction = ContractLclCompanyRestriction::where('contractlcl_id',$contracts->id)->first();
-        $user_restriction = ContractLclUserRestriction::where('contractlcl_id',$contracts->id)->first();
-        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-        $currency_cfg = Currency::find($company_user->currency_id);
+        $contracts      = ContractLcl::where('id',$id)->first();
+        $harbor         = Harbor::all()->pluck('display_name','id');
+        $country        = Country::all()->pluck('name','id');
+        $carrier        = Carrier::all()->pluck('name','id');
+        $direction      = Direction::pluck('name','id');
+        $currency       = Currency::all()->pluck('alphacode','id');
+        $calculationT   = CalculationTypeLcl::all()->pluck('name','id');
+        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+        $surcharge      = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $company_restriction    = ContractLclCompanyRestriction::where('contractlcl_id',$contracts->id)->first();
+        $user_restriction       = ContractLclUserRestriction::where('contractlcl_id',$contracts->id)->first();
+        $company_user           =CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg           = Currency::find($company_user->currency_id);
         if(!empty($company_restriction)){
             $company = Company::where('id',$company_restriction->company_id)->select('id')->first();
         }
@@ -497,11 +502,13 @@ class ContractsLclController extends Controller
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
         $objcurrency = new Currency();
+        $schedulesT  = ScheduleType::pluck('name','id');
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
+        
         $rates = RateLcl::find($id);
-        return view('contractsLcl.editRates', compact('rates','harbor','carrier','currency'));
+        return view('contractsLcl.editRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }
 
     public function storeRates(Request $request,$id){
@@ -715,7 +722,7 @@ class ContractsLclController extends Controller
 
     public function contractLclRates(Request $request){
         $contractRate = new  ViewContractLclRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency')->where('company_user_id', Auth::user()->company_user_id);
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','uom','minimum','currency','schedule_type','transit_time','via')->where('company_user_id', Auth::user()->company_user_id);
 
         return \DataTables::of($data)
              ->filter(function ($query) use ($request) {
@@ -743,6 +750,27 @@ class ContractsLclController extends Controller
                     $query->where('status', $request->get('status'));
                 }
             })
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
             })
@@ -764,9 +792,30 @@ class ContractsLclController extends Controller
     public function dataRatesLcl($id){
 
         $rate = new  ViewRatesLcl();
-        $data = $rate->select('id','port_orig','port_dest','carrier','uom','minimum','currency')->where('contract_id',$id);
+        $data = $rate->select('id','port_orig','port_dest','carrier','uom','minimum','currency','schedule_type','transit_time','via')->where('contract_id',$id);
 
         return \DataTables::of($data)
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('options', function ($data) {
                 return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
           <i class='la la-edit'></i>
@@ -777,7 +826,6 @@ class ContractsLclController extends Controller
              <a  class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='duplicate '  onclick='AbrirModal(\"duplicateRate\",$data[id])'>
                       <i class='la la-plus'></i>
              </a>
-
         ";
             }) ->setRowId('id')->rawColumns(['options'])->make(true);
 

@@ -18,6 +18,9 @@ class FailRateLcl extends Model
         'contractlcl_id',
         'uom',
         'minimum',
-        'currency_id'
+        'currency_id',
+        'schedule_type',
+        'transit_time',
+        'via'
     ];
 }
