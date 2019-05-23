@@ -70,16 +70,6 @@ class AutomaticRate extends Model
         return $this->hasOne('App\Airline','id','destination_airport_id');
     }
 
-    public function origin_airport()
-    {
-        return $this->hasOne('App\Airport','id','origin_airport_id');
-    }
-
-    public function destination_airport()
-    {
-        return $this->hasOne('App\Airport','id','destination_airport_id');
-    }
-
     public function country_code()
     {
         return $this->hasManyThrough('App\Country','App\Harbor','country_id','id');
