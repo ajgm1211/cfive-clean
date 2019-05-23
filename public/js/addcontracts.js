@@ -11,6 +11,7 @@ $("#new").on("click", function() {
   $myClone = $template.clone().removeAttr('hidden').removeAttr('id');
   $myClone.find(".rateOrig").attr('name', 'origin_id'+$ids+'[]');
   $myClone.find(".rateDest").attr('name', 'destiny_id'+$ids+'[]');
+  //$myClone.find(".rateScheduleT").attr('name', 'scheduleT_id'+$ids+'[]');
   $myClone.find("select").select2();
   $("#sample_editable_1").append($myClone);
   // $("#tclone").clone().removeAttr('hidden').removeAttr('class').appendTo("#sample_editable_1");
