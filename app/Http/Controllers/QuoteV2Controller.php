@@ -234,6 +234,10 @@ class QuoteV2Controller extends Controller
       $total_rate_markup40nor=0;
       $total_rate_markup45=0;
 
+      $total_lcl_air_freight=0;
+      $total_lcl_air_origin=0;
+      $total_lcl_air_destination=0;
+
       $currency = Currency::find($item->currency_id);
       $item->currency_usd = $currency->rates;
       $item->currency_eur = $currency->rates_eur;
@@ -365,6 +369,22 @@ class QuoteV2Controller extends Controller
         $value->currency_usd = $currency_charge->rates;
         $value->currency_eur = $currency_charge->rates_eur;
       }
+
+      //Charges
+      foreach ($item->charge_lcl_air as $value) {
+
+        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+        if($value->type_id==3){
+          $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+        }elseif($value->type_id==1){
+          $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+        }else{
+          $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+        }
+      }
+
+      //Inland
       foreach ($item->inland as $inland) {
         $typeCurrency =  $currency_cfg->alphacode;
         $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
