@@ -678,12 +678,12 @@
 
 @if(isset($arreglo))
 @if(!$arreglo->isEmpty())
-<div class="row padding">
+<div class="row padding search">
   <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
 </div>
-<div class="row padding" ><!-- Tabla de muestreo de las cotizaciones -->
+<div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
   {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group']) !!}
-  <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper">
+  <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
     <div class="m-portlet no-shadow">
       <div class="m-portlet__body no-padding">
@@ -1203,6 +1203,7 @@
   </div>
 
   {!! Form::close() !!}
+</div>
   @endif
   @endif
 
