@@ -21,56 +21,55 @@
                         @endif
                         
                         @if(!empty($package_loads) && count($package_loads)>0)
-                        <div class="row">
-                          <div class="col-md-12">
-                            <div class="table-responsive">
-                              <table class="table table-sm table-bordered table-hover table color-blue text-center">
-                                <thead class="title-quote text-center header-table">
-                                  <tr>
-                                    <td >Cargo type</td>
-                                    <td >Quantity</td>
-                                    <td >Height</td>
-                                    <td >Width</td>
-                                    <td >Large</td>
-                                    <td >Weight</td>
-                                    <td >Total weight</td>
-                                    <td >Volume</td>
-                                  </tr>
-                                </thead>
-                                <tbody style="background-color: white;">
-                                  @foreach($package_loads as $package_load)
-                                  <tr class="text-center">
-                                    <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
-                                    <td>{{$package_load->quantity}}</td>
-                                    <td>{{$package_load->height}} cm</td>
-                                    <td>{{$package_load->width}} cm</td>
-                                    <td>{{$package_load->large}} cm</td>
-                                    <td>{{$package_load->weight}} kg</td>
-                                    <td>{{$package_load->total_weight}} kg</td>
-                                    <td>{{$package_load->volume}} m<sup>3</sup></td>
-                                  </tr>
-                                  @endforeach
-                                </tbody>
-                              </table>
+                          <div class="row">
+                            <div class="col-md-12">
+                              <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                  <thead class="title-quote text-center header-table">
+                                    <tr>
+                                      <td >Cargo type</td>
+                                      <td >Quantity</td>
+                                      <td >Height</td>
+                                      <td >Width</td>
+                                      <td >Large</td>
+                                      <td >Weight</td>
+                                      <td >Total weight</td>
+                                      <td >Volume</td>
+                                    </tr>
+                                  </thead>
+                                  <tbody style="background-color: white;">
+                                    @foreach($package_loads as $package_load)
+                                    <tr class="text-center">
+                                      <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
+                                      <td>{{$package_load->quantity}}</td>
+                                      <td>{{$package_load->height}} cm</td>
+                                      <td>{{$package_load->width}} cm</td>
+                                      <td>{{$package_load->large}} cm</td>
+                                      <td>{{$package_load->weight}} kg</td>
+                                      <td>{{$package_load->total_weight}} kg</td>
+                                      <td>{{$package_load->volume}} m<sup>3</sup></td>
+                                    </tr>
+                                    @endforeach
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                          <div class="col-md-12 ">
-                            <span class="pull-right">
-                              <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
-                            </span>
+                          <br>
+                          <div class="row">
+                            @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                              <div class="col-md-6 ">
+                                <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                              </div>
+                            @else
+                              <div class="col-md-6 "></div>
+                            @endif
+                            <div class="col-md-6 ">
+                              <span class="pull-right">
+                                <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        @endif
-                        @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
-                        <div class="row">
-                          <div class="col-md-12 ">
-                            <br>
-                            <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
-                          </div>
-                        </div>
                         @endif
                         <br>
                         <hr>
@@ -129,8 +128,17 @@
                                               </tr>
                                             </thead>
                                             <tbody style="background-color: white;">
+                                              <?php
+                                                $total_freight=0;
+                                                $total_origin=0;
+                                                $total_destination=0;
+                                              ?>
                                                @foreach($rate->charge_lcl_air as $item)
                                                   @if($item->type_id==3)
+                                                  <?php
+                                                    $rate_id=$item->automatic_rate_id;
+                                                    $total_freight+=$item->total_freight;
+                                                  ?>
                                                   <tr >
                                                   <td>
                                                     <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
@@ -185,7 +193,7 @@
                                                   <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total_2" class="form-control total_2" type="number" min="0" step="0.0000001" />
+                                                  <input name="total" class="form-control total_2" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
                                                   <div class="input-group">
@@ -205,15 +213,12 @@
                                               </tr>
 
                                               @if($rate->id == @$rate_id )
-                                              <!--<tr>
-                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                <td {{ $equipmentHides['20'] }} colspan="3">{{number_format(@$sum20, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40'] }} colspan="3">{{number_format(@$sum40, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40hc'] }} colspan="3">{{number_format(@$sum40hc, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40nor'] }} colspan="3">{{number_format(@$sum40nor, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['45'] }} colspan="3">{{number_format(@$sum45, 2, '.', '')}}</td>
-                                                <td >{{$currency_cfg->alphacode}}</td>
-                                              </tr>-->
+                                                <tr>
+                                                  <td class="title-quote size-12px" >Total</td>
+                                                  <td colspan="4"></td>
+                                                  <td {{ $equipmentHides['20'] }} ><b>{{$total_freight}}</b></td>
+                                                  <td ><b>{{$currency_cfg->alphacode}}</b></td>
+                                                </tr>
                                               @endif
 
                                             </tbody>
@@ -263,15 +268,10 @@
                                               @foreach($rate->charge_lcl_air as $item)
                                                 @if($item->type_id==1)
                                                   <?php
-                                                  $rate_id=$item->automatic_rate_id;
-                                                  $origin_amounts = json_decode($item->amount,true);
-                                                  $origin_markups = json_decode($item->markups,true);
-
-                                                  $sum_origin_20+=@$item->total_20;
-                                                  $sum_origin_40+=@$item->total_40;
-                                                  $sum_origin_40hc+=@$item->total_40hc;
-                                                  $sum_origin_40nor+=@$item->total_40nor;
-                                                  $sum_origin_45+=@$item->total_45;
+                                                  
+                                                    $rate_id=$item->automatic_rate_id;
+                                                    $total_origin+=$item->total_origin;
+                                                  
                                                   ?>
                                                   <tr>
                                                     <td>
@@ -348,6 +348,14 @@
                                                   </div>                                                  
                                                 </td>
                                               </tr>
+                                              @if($rate->id == @$rate_id )
+                                                <tr>
+                                                  <td class="title-quote size-12px" >Total</td>
+                                                  <td colspan="4"></td>
+                                                  <td {{ $equipmentHides['20'] }} ><b>{{$total_origin}}</b></td>
+                                                  <td ><b>{{$currency_cfg->alphacode}}</b></td>
+                                                </tr>
+                                              @endif                                              
                                             </tbody>
                                           </table>
                                         </div>
@@ -397,16 +405,9 @@
                                               @foreach($rate->charge_lcl_air as $item)
                                                 @if($item->type_id==2)
                                                   <?php
-                                                  $rate_id=$item->automatic_rate_id;
-                                                  $destination_amounts = json_decode($item->amount,true);
-                                                  $destination_markups = json_decode($item->markups,true);
-
-                                                  $sum_destination_20+=@$item->total_20;
-                                                  $sum_destination_40+=@$item->total_40;
-                                                  $sum_destination_40hc+=@$item->total_40hc;
-                                                  $sum_destination_40nor+=@$item->total_40nor;
-                                                  $sum_destination_45+=@$item->total_45;
-                                                  ?>                                                     
+                                                    $rate_id=$item->automatic_rate_id;
+                                                    $total_destination+=$item->total_destination;
+                                                  ?>                                                   
 
                                                   <tr>
                                                     <td>
@@ -483,15 +484,12 @@
                                                 </td>                                                
                                               </tr>
                                               @if($rate->id == @$rate_id )
-                                              <!--<tr>
-                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                <td {{ $equipmentHides['20'] }} colspan="3">{{number_format(@$sum_destination_20, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40'] }} colspan="3">{{number_format(@$sum_destination_40, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40hc'] }} colspan="3">{{number_format(@$sum_destination_40hc, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['40nor'] }} colspan="3">{{number_format(@$sum_destination_40nor, 2, '.', '')}}</td>
-                                                <td {{ $equipmentHides['45'] }} colspan="3">{{number_format(@$sum_destination_45, 2, '.', '')}}</td>
-                                                <td >{{$currency_cfg->alphacode}}</td>
-                                              </tr>-->
+                                                <tr>
+                                                  <td class="title-quote size-12px" >Total</td>
+                                                  <td colspan="4"></td>
+                                                  <td {{ $equipmentHides['20'] }} ><b>{{$total_destination}}</b></td>
+                                                  <td ><b>{{$currency_cfg->alphacode}}</b></td>
+                                                </tr>
                                               @endif
                                             </tbody>
                                           </table>

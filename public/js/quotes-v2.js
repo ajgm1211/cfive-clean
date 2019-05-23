@@ -314,7 +314,7 @@ $(document).on('click', '.store_charge_lcl', function () {
   var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
   var units = $(this).closest("tr").find(".units").val();
   var price_per_unit = $(this).closest("tr").find(".price_per_unit").val();
-  var total = $(this).closest("tr").find(".total").val();
+  var total = $(this).closest("tr").find(".total_2").val();
   var markup = $(this).closest("tr").find(".markup").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
