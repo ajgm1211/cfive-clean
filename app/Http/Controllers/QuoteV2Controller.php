@@ -3224,6 +3224,7 @@ class QuoteV2Controller extends Controller
 
         $arreglo  =  $arreglo->sortBy('total20');
 
+    //dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines'));
 
