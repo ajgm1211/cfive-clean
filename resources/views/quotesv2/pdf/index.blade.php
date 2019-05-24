@@ -290,6 +290,40 @@
                 </tr>
             </thead>
             <tbody>
+                <?php
+                    $rate_amounts = json_decode($rate->rates,true);
+                    $rate_markups = json_decode($rate->markups,true);
+                    $rate_amounts = json_decode($rate_amounts,true);
+                ?>
+                @foreach($rates as $rate)
+                    <!--<tr class="text-center color-table">
+                        <td >
+                            @if($rate->origin_port_id!='') 
+                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                            @elseif($rate->origin_address!='') 
+                                {{$rate->origin_address}} 
+                            @else 
+                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @endif
+                        </td>
+                        <td >
+                            @if($rate->destination_port_id!='') 
+                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                            @elseif($rate->destination_address!='') 
+                                {{$rate->destination_address}} 
+                            @else 
+                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                            @endif
+                        </td>                            
+                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                        <td {{ $equipmentHides['20'] }}>{{@$rate_amounts['c20']+@$rate_markups['m20']}}</td>
+                        <td {{ $equipmentHides['40'] }}>{{@$rate_amounts['c40']+@$rate_markups['m40']}}</td>
+                        <td {{ $equipmentHides['40hc'] }}>{{@$rate_amounts['c40hc']+@$rate_markups['m40hc']}}</td>
+                        <td {{ $equipmentHides['40nor'] }}>{{@$rate_amounts['c40nor']+@$rate_markups['m40nor']}}</td>
+                        <td {{ $equipmentHides['45'] }}>{{@$rate_amounts['c45']+@$rate_markups['m45']}}</td>
+                        <td >{{$rate->currency->alphacode}}</td>
+                    </tr>-->
+                @endforeach
                 @foreach($freight_charges_grouped as $origin=>$freight)
                     @foreach($freight as $destination=>$detail)
                         @foreach($detail as $item)
