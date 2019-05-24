@@ -126,14 +126,16 @@
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
-                                        <?php
-                                            $equipment=json_decode($quote->equipment);
-                                        ?>
-                                        @foreach($equipment as $item)
-                                            {{$item}}@unless($loop->last),@endunless
-                                        @endforeach
+                                        @if($quote->equipment!='')
+                                            <?php
+                                                $equipment=json_decode($quote->equipment);
+                                            ?>
+                                            @foreach($equipment as $item)
+                                                {{$item}}@unless($loop->last),@endunless
+                                            @endforeach
+                                        @endif
                                     </span>
-                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
+                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
                                 </div>
                                 <div class="col-md-4" {{$quote->type!='FCL' ? '':'hidden'}}>
                                     <br>
