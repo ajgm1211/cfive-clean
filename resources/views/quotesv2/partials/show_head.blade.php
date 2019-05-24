@@ -49,6 +49,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <input type="text" value="{{$quote->id}}" class="form-control id" hidden >
+                                    <input type="text" id="currency_id" value="{{$currency_cfg->alphacode}}" class="form-control id" hidden >
                                     <label class="title-quote"><b>Quotation ID:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}" class="form-control quote_id" hidden >
                                     <span class="quote_id_span">{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</span>
@@ -125,14 +126,16 @@
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
-                                        <?php
-                                            $equipment=json_decode($quote->equipment);
-                                        ?>
-                                        @foreach($equipment as $item)
-                                            {{$item}}@unless($loop->last),@endunless
-                                        @endforeach
+                                        @if($quote->equipment!='')
+                                            <?php
+                                                $equipment=json_decode($quote->equipment);
+                                            ?>
+                                            @foreach($equipment as $item)
+                                                {{$item}}@unless($loop->last),@endunless
+                                            @endforeach
+                                        @endif
                                     </span>
-                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden']) }}
+                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
                                 </div>
                                 <div class="col-md-4" {{$quote->type!='FCL' ? '':'hidden'}}>
                                     <br>
