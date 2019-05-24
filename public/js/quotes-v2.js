@@ -1022,7 +1022,7 @@ function precargar(){
           }else{
             selected = '';
           }
-          
+
           $('select[name="contact_id"]').append('<option '+selected+' value="'+ key +'">'+ value +'</option>');
         });
       }
@@ -1411,7 +1411,11 @@ $(".quote_man").on("click", function() {
 
 
 $('.btn-input__select').on('click', function(){
-  $('.btn-input__select-add').toggleClass('visible__select-add');
+
+  var idRate = $(this).attr('rate-id');
+
+  $('.labelOrig'+idRate).toggleClass('visible__select-add');
+  $('.labelDest'+idRate).toggleClass('visible__select-add');
 });
 $('.btn-input__select-add').on('click', function(){
   $(this).toggleClass('style__select-add');
@@ -1429,13 +1433,17 @@ $('.inlands').on('click', function(){
   var idRate = $(this).attr('data-rate');
 
 
-  var theElement = $(this);
 
+  var theElement = $(this);
+  $('.labelDest'+idRate).removeClass('style__select-add');
   if(theElement.prop('checked')){
+
+    $('.labelI'+idRate+'-'+id).addClass('style__select-add');
     var group = "input:checkbox[name='" + theElement.attr("name") + "']";
     $(group).prop("checked", false);
     theElement.prop("checked", true);
   } else {
+
     theElement.prop("checked", false);
   }
 
@@ -1508,8 +1516,10 @@ $('.inlandsO').on('click', function(){
 
   var theElement = $(this);
 
+  $('.labelOrig'+idRate).removeClass('style__select-add');
 
   if(theElement.prop('checked')){
+    $('.labelO'+idRate+'-'+id).addClass('style__select-add');
     var group = "input:checkbox[name='" + theElement.attr("name") + "']";
     $(group).prop("checked", false);
     theElement.prop("checked", true);
