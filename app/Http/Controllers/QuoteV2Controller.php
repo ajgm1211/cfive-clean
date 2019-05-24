@@ -312,7 +312,7 @@ class QuoteV2Controller extends Controller
           $total20=$amount20/$currency_rate;
           $total_markup20=$markup20/$currency_rate;
 
-          $sum20 = number_format($total20+$total_markup20, 2, '.', '');
+          $sum20 = number_format($total20, 2, '.', '');
         }
         if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
           //Values charges
@@ -322,7 +322,7 @@ class QuoteV2Controller extends Controller
           $total40=$amount40/$currency_rate;
           $total_markup40=$markup40/$currency_rate;
 
-          $sum40 = number_format($total40+$total_markup40, 2, '.', '');
+          $sum40 = number_format($total40, 2, '.', '');
         }
         if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
           //Values charges
@@ -332,7 +332,7 @@ class QuoteV2Controller extends Controller
           $total40hc=$amount40hc/$currency_rate;
           $total_markup40hc=$markup40hc/$currency_rate;
 
-          $sum40hc = number_format($total40hc+$total_markup40hc, 2, '.', '');
+          $sum40hc = number_format($total40hc, 2, '.', '');
         }
         if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
           //Values charges
@@ -342,7 +342,7 @@ class QuoteV2Controller extends Controller
           $total40nor=$amount40nor/$currency_rate;
           $total_markup40nor=$markup40nor/$currency_rate;
 
-          $sum40nor = number_format($total40nor+$total_markup40nor, 2, '.', '');
+          $sum40nor = number_format($total40nor, 2, '.', '');
         }
         if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
           //Values charges          
@@ -352,7 +352,7 @@ class QuoteV2Controller extends Controller
           $total45=($amount45+$markup45)/$currency_rate;
           $total_markup45=$markup45/$currency_rate;
 
-          $sum45 = number_format($total45+$total_markup45, 2, '.', '');
+          $sum45 = number_format($total45, 2, '.', '');
         }
 
         $value->total_20=number_format($sum20, 2, '.', '');
