@@ -64,7 +64,6 @@
 
                                                             $rate_amounts = json_decode($rate->rates,true);
                                                             $rate_markups = json_decode($rate->markups,true);
-                                                            $rate_amounts = json_decode($rate_amounts,true);
 
                                                         @endphp
                                                         <tr >
@@ -283,11 +282,11 @@
                                                         @if($rate->id == @$rate_id )
                                                             <tr>
                                                                 <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum20+$rate->total_rate20, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum40+$rate->total_rate40, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum40hc+$rate->total_rate40hc, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum40nor+$rate->total_rate40nor, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum45+$rate->total_rate45, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum20+@$sum_m20+$rate->total_rate20, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum40+@$sum_m40+$rate->total_rate40, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum40hc+@$sum_m40hc+$rate->total_rate40hc, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum40nor+@$sum_m40nor+$rate->total_rate40nor, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum45+@$sum_m45+$rate->total_rate45, 2, '.', '')}}</td>
                                                                 <td >{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @else
@@ -523,11 +522,11 @@
                                                         @if($rate->id == @$rate_id )
                                                             <tr>
                                                                 <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum_origin_20, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum_origin_40, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum_origin_40hc, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum_origin_40nor, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum_origin_45, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</td>
                                                                 <td >{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @endif
@@ -755,11 +754,11 @@
                                                         @if($rate->id == @$rate_id )
                                                             <tr>
                                                                 <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum_destination_20, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum_destination_40, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum_destination_40hc, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum_destination_40nor, 2, '.', '')}}</td>
-                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum_destination_45, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['20'] }} colspan="">{{number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40'] }} colspan="">{{number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} colspan="">{{number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} colspan="">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</td>
+                                                                <td {{ @$equipmentHides['45'] }} colspan="">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</td>
                                                                 <td >{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @endif

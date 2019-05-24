@@ -218,7 +218,7 @@
                                                 <tr>
                                                   <td class="title-quote size-12px" >Total</td>
                                                   <td colspan="4"></td>
-                                                  <td {{ @$equipmentHides['20'] }} ><b>{{$total_freight}}</b></td>
+                                                  <td ><b>{{$total_freight}}</b></td>
                                                   <td ><b>{{$currency_cfg->alphacode}}</b></td>
                                                 </tr>
                                               @endif
@@ -354,7 +354,7 @@
                                                 <tr>
                                                   <td class="title-quote size-12px" >Total</td>
                                                   <td colspan="4"></td>
-                                                  <td {{ @$equipmentHides['20'] }} ><b>{{$total_origin}}</b></td>
+                                                  <td ><b>{{$total_origin}}</b></td>
                                                   <td ><b>{{$currency_cfg->alphacode}}</b></td>
                                                 </tr>
                                               @endif                                              
@@ -489,7 +489,7 @@
                                                 <tr>
                                                   <td class="title-quote size-12px" >Total</td>
                                                   <td colspan="4"></td>
-                                                  <td {{ @$equipmentHides['20'] }} ><b>{{$total_destination}}</b></td>
+                                                  <td ><b>{{$total_destination}}</b></td>
                                                   <td ><b>{{$currency_cfg->alphacode}}</b></td>
                                                 </tr>
                                               @endif
