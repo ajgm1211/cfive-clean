@@ -1022,6 +1022,7 @@ function precargar(){
           }else{
             selected = '';
           }
+          
           $('select[name="contact_id"]').append('<option '+selected+' value="'+ key +'">'+ value +'</option>');
         });
       }
@@ -1040,6 +1041,7 @@ function precargar(){
           }else{
             selected_price = '';
           }
+          $('select[name="price_id"]').append('<option '+selected_price+' value="0">Select at option</option>');
           $('select[name="price_id"]').append('<option '+selected_price+' value="'+ key +'">'+ value +'</option>');
         });
       }
@@ -1303,6 +1305,7 @@ $( document ).ready(function() {
         dataType: 'json',
         success: function(data) {
           $('select[name="price_id"]').empty();
+          $('select[name="price_id"]').append('<option value="0">Select at option</option>');
           $.each(data, function(key, value) {
             $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
