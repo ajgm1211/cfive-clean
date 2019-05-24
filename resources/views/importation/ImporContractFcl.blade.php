@@ -86,7 +86,7 @@ new registration
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2"> </div>
-                                
+
                                 <div class="col-lg-3">
                                     <label for="request_id" class=" ">Request id</label>
                                     {!!  Form::text('request_id',null,['id'=>'request_id',
@@ -183,6 +183,26 @@ new registration
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
                                                     Values With Currency
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row"  id="divvaluesschedules">
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                <input name="DatShe" id="schedulechk" checked type="checkbox">
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Info Schedules Not Included
                                                 </span>
                                             </span>
                                         </span>

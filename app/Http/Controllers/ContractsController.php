@@ -21,6 +21,7 @@ use App\ViewRates;
 use App\CompanyUser;
 use App\TypeDestiny;
 use App\LocalCharge;
+use App\ScheduleType;
 use App\FailSurCharge;
 use App\LocalCharPort;
 use App\ContractCarrier;
@@ -123,11 +124,12 @@ class ContractsController extends Controller
         $objsurcharge = new Surcharge();
         $objtypedestiny = new TypeDestiny();
 
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $country = $objcountry->all()->pluck('name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $direction      = [null=>'Please Select'];
-        $direction2      = Direction::all();
+        $harbor     = $objharbor->all()->pluck('display_name','id');
+        $country    = $objcountry->all()->pluck('name','id');
+        $carrier    = $objcarrier->all()->pluck('name','id');
+        $scheduleT  = ScheduleType::pluck('name','id');
+        $direction  = [null=>'Please Select'];
+        $direction2 = Direction::all();
         foreach($direction2 as $d){
             $direction[$d['id']]=$d->name;
         }
@@ -155,7 +157,7 @@ class ContractsController extends Controller
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
 
-        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','direction'));
+        return view('contracts.addT',compact('country','carrier','harbor','currency','calculationT','surcharge','typedestiny','companies','contacts','users','currency_cfg','direction','scheduleT'));
 
 
     }
@@ -192,6 +194,7 @@ class ContractsController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
+
         $contract = new Contract($request->all());
         $contract->company_user_id =Auth::user()->company_user_id;
         $validation = explode('/',$request->validation_expire);
@@ -225,22 +228,26 @@ class ContractsController extends Controller
         foreach($details as $key => $value)
         {
 
-            $rateOrig = $request->input('origin_id'.$contadorRate);
-            $rateDest = $request->input('destiny_id'.$contadorRate);
+            $rateOrig           = $request->input('origin_id'.$contadorRate);
+            $rateDest           = $request->input('destiny_id'.$contadorRate);
+
             foreach($rateOrig as $Rorig => $Origvalue)
             {
                 foreach($rateDest as $Rdest => $Destvalue)
                 {
                     $rates = new Rate();
-                    $rates->origin_port = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
-                    $rates->destiny_port = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
-                    $rates->carrier_id = $request->input('carrier_id.'.$key);
-                    $rates->twuenty = $request->input('twuenty.'.$key);
-                    $rates->forty = $request->input('forty.'.$key);
-                    $rates->fortyhc = $request->input('fortyhc.'.$key);
-                    $rates->fortynor = $request->input('fortynor.'.$key);
-                    $rates->fortyfive = $request->input('fortyfive.'.$key);
-                    $rates->currency_id = $request->input('currency_id.'.$key);
+                    $rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
+                    $rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
+                    $rates->carrier_id          = $request->input('carrier_id.'.$key);
+                    $rates->twuenty             = $request->input('twuenty.'.$key);
+                    $rates->forty               = $request->input('forty.'.$key);
+                    $rates->fortyhc             = $request->input('fortyhc.'.$key);
+                    $rates->fortynor            = $request->input('fortynor.'.$key);
+                    $rates->fortyfive           = $request->input('fortyfive.'.$key);
+                    $rates->currency_id         = $request->input('currency_id.'.$key);
+                    $rates->schedule_type_id    = $request->input('scheduleT.'.$key);
+                    $rates->transit_time        = $request->input('transitTi.'.$key);
+                    $rates->via                 = $request->input('via.'.$key);
                     $rates->contract()->associate($contract);
                     $rates->save();
                 }
@@ -421,9 +428,30 @@ class ContractsController extends Controller
     public function dataRates($id){
 
         $rate = new  ViewRates();
-        $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('contract_id',$id);
+        $data = $rate->select('id','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency','schedule_type','transit_time','via')->where('contract_id',$id);
 
         return \DataTables::of($data)
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('options', function ($data) {
                 return " <a   class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test' title='Edit'  onclick='AbrirModal(\"editRate\",$data[id])'>
           <i class='la la-edit'></i>
@@ -442,7 +470,7 @@ class ContractsController extends Controller
 
     public function contractRates(Request $request){
         $contractRate = new  ViewContractRates();
-        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency')->where('company_user_id', Auth::user()->company_user_id);
+        $data = $contractRate->select('id','contract_id','name','number','validy','expire','status','port_orig','port_dest','carrier','twuenty','forty','fortyhc','fortynor','fortyfive','currency','schedule_type','transit_time','via')->where('company_user_id', Auth::user()->company_user_id);
 
         /*$model = new  ViewContractRates();
         //$model    = new  Rate();
@@ -478,6 +506,27 @@ class ContractsController extends Controller
                 }
             })
 
+            ->addColumn('schedule_type', function ($data) {
+                if(empty($data['schedule_type']) != true){
+                    return $data['schedule_type'];
+                } else {
+                    return '-------------';
+                }
+            })
+            ->addColumn('transit_time', function ($data) {
+                if(empty($data['transit_time']) != true){
+                    return $data['transit_time'];
+                } else {
+                    return '-----';
+                }
+            })
+            ->addColumn('via', function ($data) {
+                if(empty($data['via']) != true){
+                    return $data['via'];
+                } else {
+                    return '-----';
+                }
+            })
             ->addColumn('validity', function ($data) {
                 return $data['validy'] ." / ".$data['expire'];
             })
@@ -724,32 +773,37 @@ class ContractsController extends Controller
         {
             foreach($rateDest as $Rdest => $Destvalue)
             {
-
                 $rates = new Rate();
-                $rates->origin_port =$Origvalue;
-                $rates->destiny_port =$Destvalue;
-                $rates->carrier_id = $request->input('carrier_id');
-                $rates->twuenty = $request->input('twuenty');
-                $rates->forty = $request->input('forty');
-                $rates->fortyhc = $request->input('fortyhc');
-                $rates->fortynor = $request->input('fortynor');
-                $rates->fortyfive = $request->input('fortyfive');
-                $rates->currency_id = $request->input('currency_id');
-                $rates->contract_id = $id;
+                $rates->origin_port     = $Origvalue;
+                $rates->destiny_port    = $Destvalue;
+                $rates->carrier_id      = $request->input('carrier_id');
+                $rates->twuenty         = $request->input('twuenty');
+                $rates->forty           = $request->input('forty');
+                $rates->fortyhc         = $request->input('fortyhc');
+                $rates->fortynor        = $request->input('fortynor');
+                $rates->fortyfive       = $request->input('fortyfive');
+                $rates->currency_id     = $request->input('currency_id');
+                $rates->schedule_type_id = $request->input('schedule_type_id');
+                $rates->transit_time    = $request->input('transit_time');
+                $rates->via             = $request->input('via');
+                $rates->contract_id     = $id;
                 $rates->save();
             }
         }
         return redirect()->back()->with('ratesSave','true');
     }
     public function editRates($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $rates = Rate::find($id);
-        return view('contracts.editRates', compact('rates','harbor','carrier','currency'));
+        $objcarrier     = new Carrier();
+        $objharbor      = new Harbor();
+        $objcurrency    = new Currency();
+        $harbor         = $objharbor->all()->pluck('display_name','id');
+        $carrier        = $objcarrier->all()->pluck('name','id');
+        $currency       = $objcurrency->all()->pluck('alphacode','id');
+        $schedulesT     = ScheduleType::pluck('name','id');
+        $rates          = Rate::find($id);
+        $rates->load('scheduletype');
+        //dd($rates);
+        return view('contracts.editRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }
     public function updateRates(Request $request, $id){
         $requestForm = $request->all();
@@ -759,14 +813,15 @@ class ContractsController extends Controller
     }
 
     public function duplicateRates($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $rates = Rate::find($id);
-        return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency'));
+        $objcarrier     = new Carrier();
+        $objharbor      = new Harbor();
+        $objcurrency    = new Currency();
+        $harbor         = $objharbor->all()->pluck('display_name','id');
+        $carrier        = $objcarrier->all()->pluck('name','id');
+        $currency       = $objcurrency->all()->pluck('alphacode','id');
+        $schedulesT     = ScheduleType::pluck('name','id');
+        $rates          = Rate::find($id);
+        return view('contracts.duplicateRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }
 
     public function addLocalChar($id){
