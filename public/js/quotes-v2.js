@@ -90,7 +90,7 @@ $(document).ready(function() {
     }
   });
 
-    $('.editable-lcl-air').editable({
+  $('.editable-lcl-air').editable({
     url:'/v2/quotes/lcl/charges/update',
     emptytext:0,
     success: function(response, newValue) {
@@ -1056,7 +1056,7 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
-    
+    $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
     $("#origin_harbor").prop( "disabled", false );
@@ -1090,6 +1090,7 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+    $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
     $("#origin_harbor").prop( "disabled", false );
@@ -1169,6 +1170,7 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+    $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
     $("#origin_harbor").prop( "disabled", true );
