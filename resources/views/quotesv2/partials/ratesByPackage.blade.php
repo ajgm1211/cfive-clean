@@ -2,24 +2,6 @@
                   <div class="col-md-12">
                     <div class="m-portlet custom-portlet">
                       <div class="m-portlet__body">
-
-                        @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                        <div class="row">
-                          <div class="col-md-3">
-                            <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->type_cargo == 1 ? 'Pallets' : 'Packages'}}</div>
-                          </div>
-                          <div class="col-md-3">
-                            <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
-                          </div>
-                          <div class="col-md-3">
-                            <div id="cargo_details_total_weight_p"><b>Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</div>
-                          </div>
-                          <div class="col-md-3">
-                            <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</p>
-                          </div>
-                        </div>
-                        @endif
-                        
                         @if(!empty($package_loads) && count($package_loads)>0)
                           <div class="row">
                             <div class="col-md-12">
@@ -70,6 +52,26 @@
                               </span>
                             </div>
                           </div>
+                          @else
+                            @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div id="cargo_details_total_weight_p"><b>Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</div>
+                                </div>
+                                <div class="col-md-2">
+                                  <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</p>
+                                </div>
+                                <div class="col-md-2">
+                                  <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b> {!!$quote->chargeable_weight != '' ? $quote->chargeable_weight.' kg' : ''!!}</p>
+                                </div>
+                              </div>
+                            @endif
                         @endif
                         <br>
                         <hr>
@@ -327,11 +329,11 @@
                                                   <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001" />
-                                                </td>
-                                                <td >
                                                   <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
+                                                <td >
+                                                  <input name="total" class="form-control total_2" type="number" min="0" step="0.0000001" />
+                                                </td>                                                
                                                 <td >
                                                   <div class="input-group">
                                                     <div class="input-group-btn">
@@ -462,11 +464,11 @@
                                                   <input name="price_per_unit" class="form-control price_per_unit" type="number" min="0" step="0.0000001" />
                                                 </td>
                                                 <td >
-                                                  <input name="total" class="form-control total" type="number" min="0" step="0.0000001"  />
-                                                </td>
-                                                <td >
                                                   <input name="markup" class="form-control markup" type="number" min="0" step="0.0000001" />
                                                 </td>
+                                                <td >
+                                                  <input name="total" class="form-control total_2" type="number" min="0" step="0.0000001"  />
+                                                </td>                                                
                                                 <td >
                                                   <div class="input-group">
                                                     <div class="input-group-btn">

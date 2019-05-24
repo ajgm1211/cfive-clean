@@ -193,7 +193,7 @@ class QuoteV2Controller extends Controller
     //Retrieving all data
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
-    $package_loads = PackageLoad::where('quote_id',$quote->id)->get();
+    $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
@@ -250,7 +250,6 @@ class QuoteV2Controller extends Controller
       $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
 
       $array_rate_amounts = json_decode($item->rates,true);
-      $array_rate_amounts = json_decode($array_rate_amounts,true);
       $array_rate_markups = json_decode($item->markups,true);
 
       if(isset($array_rate_amounts['c20']) && isset($array_rate_markups['m20'])){
