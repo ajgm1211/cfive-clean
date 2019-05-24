@@ -249,6 +249,8 @@ class ImportationLclController extends Controller
         $carrierBol     = false;
         $destinyBol     = false;
         $originBol      = false;
+        $scheduleinfoBoll   = false;
+
         $data= collect([]);
         $harbor     = harbor::all()->pluck('display_name','id');
         $carrier    = carrier::all()->pluck('name','id');
@@ -326,7 +328,10 @@ class ImportationLclController extends Controller
 
         // DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
 
-
+        if($request->DatShe != true){
+            $scheduleinfoBoll = true;
+            array_push($targetsArr,"Schedule Type","Transit Time","Via");
+        }
 
         /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
         con los valores, si es uno el currency viene en una colmna aparte        
@@ -389,6 +394,7 @@ class ImportationLclController extends Controller
             'fileName'        => $nombre,
             'validatiion'     => $request->validation_expire,
             'comments'        => $request->comments,
+            'scheduleinfo'      => $scheduleinfoBoll
         ];
         $data->push($boxdinamy);
         $countTarges = count($targetsArr);
@@ -427,6 +433,10 @@ class ImportationLclController extends Controller
                 $minimun                = "Minimun";
                 $contractId             = "Contract_id";
                 $statustypecurren       = "statustypecurren";
+                $scheduleTExc           = "Schedule_Type";
+                $transittimeExc         = "Transit_Time";
+                $viaExc                 = "Via";
+                $scheduleinfo           = "scheduleinfo";
                 $contractIdVal          = $requestobj['Contract_id'];
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
@@ -445,6 +455,9 @@ class ImportationLclController extends Controller
                     $wmVal              = '';
                     $currencResul       = '';
                     $minimunVal         = '';
+                    $scheduleTResul     = null;
+                    $transittimeResul   = 0;
+                    $viaResul           = null;
 
                     $carriBol           = false;
                     $wmExiBol           = false;
@@ -455,8 +468,43 @@ class ImportationLclController extends Controller
                     $destiExitBol       = false;
                     $carriExitBol       = false;
                     $minimunExiBol      = false;
+                    $scheduleTBol       = false;
+                    $transittimeBol     = false;
+                    $viaBol             = false;
+
+                    $rqScheduleinfoBol = $requestobj[$scheduleinfo];
 
                     if($i != 0){
+
+                        //--------------- SCHEDULE TYPE --------------------------------------------
+
+                        if($rqScheduleinfoBol == true){
+                            $scheduleTResul = ScheduleType::where('name',$read[$requestobj[$scheduleTExc]])->first();
+                            if(count($scheduleTResul) >= 1){
+                                $scheduleTBol = true;
+                                $scheduleTResul = $scheduleTResul['id'];
+                            } else {
+                                $scheduleTResul = $read[$requestobj[$scheduleTExc]].'_E_E'; 
+                            }
+                        } else {
+                            $scheduleTBol = true;
+                        }
+                        //--------------- TRANSIT TIME ---------------------------------------------
+                        if($rqScheduleinfoBol == true){
+                            $transittimeBol      = true;
+                            $transittimeResul   = (INT)$read[$requestobj[$transittimeExc]];
+                        } else {
+                            $transittimeBol      = true;
+                        }
+
+                        //--------------- VIA --------------------------------------------
+                        if($rqScheduleinfoBol == true){
+                            $viaBol     = true;
+                            $viaResul   = $read[$requestobj[$viaExc]];
+                        } else {
+                            $viaBol     = true;
+                        }
+
                         //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
 
                         if($requestobj['existorigin'] == 1){
@@ -596,7 +644,9 @@ class ImportationLclController extends Controller
                         dd($data);*/
                         if($carriExitBol == true && $destiExitBol     == true &&
                            $origExiBol   == true && $curreExitBol     == true &&
-                           $wmExiBol     == true && $minimunExiBol    == true ){
+                           $wmExiBol     == true && $scheduleTBol     == true && 
+                           $transittimeBol == true && $viaBol == true
+                           && $minimunExiBol    == true ){
 
                             if($originBol == true || $destinyBol == true){
                                 foreach($randons as  $rando){
@@ -608,13 +658,16 @@ class ImportationLclController extends Controller
                                     }
 
                                     $ratesArre = RateLcl::create([
-                                        'origin_port'    => $originVal,
-                                        'destiny_port'   => $destinyVal,
-                                        'carrier_id'     => $carrierVal,
-                                        'contractlcl_id' => $contractIdVal,
-                                        'uom'            => $wmVal,
-                                        'minimum'        => $minimunVal,
-                                        'currency_id'    => $currencyVal
+                                        'origin_port'       => $originVal,
+                                        'destiny_port'      => $destinyVal,
+                                        'carrier_id'        => $carrierVal,
+                                        'contractlcl_id'    => $contractIdVal,
+                                        'uom'               => $wmVal,
+                                        'minimum'           => $minimunVal,
+                                        'currency_id'       => $currencyVal,
+                                        'schedule_type_id'  => $scheduleTResul,
+                                        'transit_time'      => $transittimeResul,
+                                        'via'               => $viaResul
                                     ]);
                                 } 
                                 //dd($ratesArre);
@@ -622,19 +675,28 @@ class ImportationLclController extends Controller
                                 // fila por puerto, sin expecificar origen ni destino manualmente
 
                                 $ratesArre = RateLcl::create([
-                                    'origin_port'    => $originVal,
-                                    'destiny_port'   => $destinyVal,
-                                    'carrier_id'     => $carrierVal,
-                                    'contractlcl_id' => $contractIdVal,
-                                    'uom'            => $wmVal,
-                                    'minimum'        => $minimunVal,
-                                    'currency_id'    => $currencyVal
+                                    'origin_port'       => $originVal,
+                                    'destiny_port'      => $destinyVal,
+                                    'carrier_id'        => $carrierVal,
+                                    'contractlcl_id'    => $contractIdVal,
+                                    'uom'               => $wmVal,
+                                    'minimum'           => $minimunVal,
+                                    'currency_id'       => $currencyVal,
+                                    'schedule_type_id'  => $scheduleTResul,
+                                    'transit_time'      => $transittimeResul,
+                                    'via'               => $viaResul
                                 ]);
 
                                 //dd($ratesArre);
                             }
                         } else {
                             // aqui van los fallidos
+                            //---------------------------- SHEDULES ---------------------------------------------------------
+
+                            if( $scheduleTBol == true && $rqScheduleinfoBol == true){
+                                $scheduleTResul = ScheduleType::find($scheduleTResul);
+                                $scheduleTResul = $scheduleTResul['name'];
+                            }
 
                             //---------------------------- CARRIER  ---------------------------------------------------------
 
@@ -702,7 +764,10 @@ class ImportationLclController extends Controller
                                         'contractlcl_id' => $contractIdVal,
                                         'uom'            => $wmVal,
                                         'minimum'        => $minimunVal,
-                                        'currency_id'    => $currencyVal
+                                        'currency_id'    => $currencyVal,
+                                        'schedule_type'  => $scheduleTResul,
+                                        'transit_time'   => $transittimeResul,
+                                        'via'            => $viaResul
                                     ]);
                                 }
 
@@ -723,7 +788,10 @@ class ImportationLclController extends Controller
                                     'contractlcl_id' => $contractIdVal,
                                     'uom'            => $wmVal,
                                     'minimum'        => $minimunVal,
-                                    'currency_id'    => $currencyVal
+                                    'currency_id'    => $currencyVal,
+                                    'schedule_type'  => $scheduleTResul,
+                                    'transit_time'   => $transittimeResul,
+                                    'via'            => $viaResul
                                 ]);
                             }
                             $errors = $errors + 1;
@@ -731,7 +799,7 @@ class ImportationLclController extends Controller
                     }
                     $i =$i + 1;
                 }
-
+                //dd('fin import');
                 \Storage::disk('LclImport')->delete($requestobj['FileName']);
             });
 
@@ -947,7 +1015,12 @@ class ImportationLclController extends Controller
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
         $currency       = Currency::pluck('alphacode','id');
-        $schedulesT     = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
+
 
         $failrate       = FailRateLcl::find($id);
 
@@ -1127,7 +1200,11 @@ class ImportationLclController extends Controller
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
         $currency       = Currency::pluck('alphacode','id');
-        $schedulesT     = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
         $rates = RateLcl::find($id);
         return view('ImportationLcl.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','currency','schedulesT'));
     }

@@ -163,6 +163,7 @@ new registration
 
                                 <input type="hidden" name="existcarrier" id="existcarrier" value="{{$value['existcarrier']}}" />
                                 <input type="hidden" name="statustypecurren" id="existcarrier" value="{{$statustypecurren}}" />
+                                <input type="hidden" name="scheduleinfo" id="scheduleinfo" value="{{$value['scheduleinfo']}}" />
 
                             </div>
                         </div>

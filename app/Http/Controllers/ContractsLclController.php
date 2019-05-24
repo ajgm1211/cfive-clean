@@ -130,7 +130,11 @@ class ContractsLclController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
-        $scheduleT  = ScheduleType::pluck('name','id');
+        $scheduleT   = ['null'=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $scheduleT[$d['id']]=$d->name;
+        }        
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
         })->pluck('first_name','id');
@@ -240,6 +244,10 @@ class ContractsLclController extends Controller
             {
                 foreach($rateDest as $Rdest => $Destvalue)
                 {
+                    $sch = null;
+                    if($request->input('scheduleT.'.$key) != 'null'){
+                            $sch = $request->input('scheduleT.'.$key);
+                    }
                     $rates = new RateLcl();
                     $rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
                     $rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
@@ -247,7 +255,7 @@ class ContractsLclController extends Controller
                     $rates->uom                 = $request->input('uom.'.$key);
                     $rates->minimum             = $request->input('minimum.'.$key);
                     $rates->currency_id         = $request->input('currency_id.'.$key);
-                    $rates->schedule_type_id    = $request->input('scheduleT.'.$key);
+                    $rates->schedule_type_id    = $sch;
                     $rates->transit_time        = $request->input('transitTi.'.$key);
                     $rates->via                 = $request->input('via.'.$key);
                     $rates->contract()->associate($contract);
@@ -496,13 +504,22 @@ class ContractsLclController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
-        return view('contractsLcl.addRates', compact('harbor','carrier','currency','id'));
+        $scheduleT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $scheduleT[$d['id']]=$d->name;
+        } 
+        return view('contractsLcl.addRates', compact('harbor','carrier','currency','id','scheduleT'));
     }
     public function editRates($id){
         $objcarrier = new Carrier();
         $objharbor = new Harbor();
         $objcurrency = new Currency();
-        $schedulesT  = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
@@ -522,13 +539,16 @@ class ContractsLclController extends Controller
             {
 
                 $rates = new RateLcl();
-                $rates->origin_port =$Origvalue;
-                $rates->destiny_port =$Destvalue;
-                $rates->carrier_id = $request->input('carrier_id');
-                $rates->uom = $request->input('uom');
-                $rates->minimum = $request->input('minimum');
-                $rates->currency_id = $request->input('currency_id');
-                $rates->contractlcl_id = $id;
+                $rates->origin_port     =$Origvalue;
+                $rates->destiny_port    =$Destvalue;
+                $rates->carrier_id      = $request->input('carrier_id');
+                $rates->uom             = $request->input('uom');
+                $rates->minimum         = $request->input('minimum');
+                $rates->currency_id     = $request->input('currency_id');
+                $rates->schedule_type_id = $request->input('schedule_type_id');
+                $rates->transit_time    = $request->input('transit_time');
+                $rates->via             = $request->input('via');
+                $rates->contractlcl_id  = $id;
                 $rates->save();
             }
         }

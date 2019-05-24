@@ -1060,7 +1060,11 @@ class ImportationController extends Controller
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
         $currency       = Currency::pluck('alphacode','id');
-        $schedulesT     = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
         $rates          = Rate::find($id);
         //dd($rates);
         return view('importation.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','schedulesT','currency'));
@@ -1072,7 +1076,11 @@ class ImportationController extends Controller
         $harbor = $objharbor->all()->pluck('display_name','id');
         $carrier = $objcarrier->all()->pluck('name','id');
         $currency = $objcurrency->all()->pluck('alphacode','id');
-        $schedulesT = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
         $failrate = FailRate::find($id);
         //dd($failrate);
         $originV;
