@@ -188,6 +188,7 @@ class QuoteV2Controller extends Controller
     $origin_charges = new Collection();
     $freight_charges = new Collection();
     $destination_charges = new Collection();
+    $equipmentHides = '';
 
     //Retrieving all data
     $company_user_id = \Auth::user()->company_user_id;
@@ -203,7 +204,9 @@ class QuoteV2Controller extends Controller
     $currencies = Currency::pluck('alphacode','id');
     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
     $currency_cfg = Currency::find($company_user->currency_id);
-    $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    if($quote->equipment!=''){
+      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    }
     $calculation_types = CalculationType::pluck('name','id');
     $calculation_types_lcl_air = CalculationTypeLcl::pluck('name','id');
     $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
@@ -459,8 +462,6 @@ class QuoteV2Controller extends Controller
       }); 
     }
 
-
-
     $emaildimanicdata = json_encode([
       'quote_bool'   => 'true',
       'company_id'   => '',
@@ -473,10 +474,6 @@ class QuoteV2Controller extends Controller
 
   public function updateQuoteCharges(Request $request)
   {
-    /*DB::table('charges')
-    ->where('id', $request->pk)
-    ->update([$request->name => $request->value]);*/
-
     $charge=Charge::find($request->pk);
     $name = explode("->", $request->name);
     if (strpos($request->name, '->') == true) {
@@ -484,6 +481,28 @@ class QuoteV2Controller extends Controller
         $array = json_decode($charge->amount, true);
       }else{
         $array = json_decode($charge->markups, true);
+      }
+      $field = (string) $name[0];
+      $array[$name[1]]=$request->value;
+      $array = json_encode($array);
+      $charge->$field=$array;
+    }else{
+      $name = $request->name;
+      $charge->$name=$request->value;
+    }
+    $charge->update();
+    return response()->json(['success'=>'Ok']);
+  }
+
+  public function updateInlandCharges(Request $request)
+  {
+    $charge=AutomaticInland::find($request->pk);
+    $name = explode("->", $request->name);
+    if (strpos($request->name, '->') == true) {
+      if ($name[0] == 'rate') {
+        $array = json_decode($charge->rate, true);
+      }else{
+        $array = json_decode($charge->markup, true);
       }
       $field = (string) $name[0];
       $array[$name[1]]=$request->value;
