@@ -828,6 +828,7 @@ class QuoteV2Controller extends Controller
   public function pdf(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
+    $equipmentHides = '';
     $quote = QuoteV2::findOrFail($id);
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
     $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
@@ -843,7 +844,9 @@ class QuoteV2Controller extends Controller
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
     $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    if($quote->equipment!=''){
+      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    }
 
     if(\Auth::user()->company_user_id){
       $company_user=CompanyUser::find(\Auth::user()->company_user_id);
