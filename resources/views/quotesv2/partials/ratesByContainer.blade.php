@@ -26,13 +26,13 @@
                                         </ul>
                                     </div>
                                     <br>
-                                    <div class="details_{{$v}} hide" style="background-color: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
-                                        <!-- Freight charges -->
-                                        <div class="row no-mg-row">
+                                    <div class="details_{{$v}} hide" style="background-color: white; border-radius: 5px; margin-top: 20px;">
+                                      <!-- Freight charges -->
+                                          <div class="row no-mg-row">
                                             <div class="col-md-12 header-charges">
-                                                <h5 class="title-quote size-12px">Freight charges</h5>
-                                            </div>
-                                            <div class="col-md-12 thead">
+                                              <h5 class="title-quote size-12px">Freight charges</h5>
+                                          </div>
+                                          <div class="col-md-12 thead">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-bordered table-hover table color-blue text-center">
                                                       <thead class="title-quote text-center header-table">
@@ -785,60 +785,70 @@
                                         <!-- Total -->
                                         @if($rate->id == @$rate_id )
                                         <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-bordered table-hover table color-blue text-center">
-                                                <thead class="title-quote text-center header-table">
-                                                    <tr style="height:40px;">
-                                                        <td class="tds" style="padding-left: 30px"></td>
-                                                        <td {{ @$equipmentHides['20'] }} class="tds">20'</td>
-                                                        <td {{ @$equipmentHides['40'] }} class="tds">40'</td>
-                                                        <td {{ @$equipmentHides['40hc'] }} class="tds">40HC'</td>
-                                                        <td {{ @$equipmentHides['40nor'] }} class="tds">40NOR'</td>
-                                                        <td {{ @$equipmentHides['45'] }} class="tds">45'</td>
-                                                        <td class="tds">Currency</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody style="background-color: white;">
-                                                    <?php
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
+                                                <h5 class="title-quote size-12px">Total</h5>
+                                            </div>
+                                            <div class="col-md-12 thead">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                        <thead class="title-quote text-center header-table">
+                                                            <tr style="height:40px;">
+                                                                <td class="tds" style="padding-left: 30px"></td>
+                                                                <td {{ @$equipmentHides['20'] }} class="tds">20'</td>
+                                                                <td {{ @$equipmentHides['40'] }} class="tds">40'</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} class="tds">40HC'</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} class="tds">40NOR'</td>
+                                                                <td {{ @$equipmentHides['45'] }} class="tds">45'</td>
+                                                                <td class="tds">Currency</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="background-color: white;">
+                                                            <?php
 
-                                                        $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20, 2, '.', '');
-                                                        $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40, 2, '.', '');
-                                                        $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc, 2, '.', '');
-                                                        $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor, 2, '.', '');
-                                                        $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45, 2, '.', '');
+                                                            $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20, 2, '.', '');
+                                                            $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40, 2, '.', '');
+                                                            $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc, 2, '.', '');
+                                                            $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor, 2, '.', '');
+                                                            $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45, 2, '.', '');
 
-                                                        $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '');
-                                                        $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '');
-                                                        $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '');
-                                                        $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
-                                                        $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
+                                                            $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '');
+                                                            $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '');
+                                                            $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '');
+                                                            $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
+                                                            $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
 
-                                                        $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
-                                                        $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
-                                                        $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
-                                                        $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
-                                                        $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
-                                                    ?>
-                                                    <td class="title-quote size-12px tds"><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="bg-rates td-a">{{$amount_20}}</span> + <span class="bg-rates">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="bg-rates td-a">{{$amount_40}}</span> + <span class="bg-rates">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="bg-rates td-a">{{$amount_40hc}}</span> + <span class="bg-rates">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="bg-rates td-a">{{$amount_40nor}}</span> + <span class="bg-rates">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="bg-rates td-a">{{$amount_45}}</span> + <span class="bg-rates">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
-                                                    <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
-                                                </tbody>
-                                            </table>
-                                            <br>
-                                            <hr>
+                                                            $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
+                                                            $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
+                                                            $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
+                                                            $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
+                                                            $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
+                                                            ?>
+                                                            <tr style="height:40px;">
+                                                                <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
+                                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="bg-rates td-a">{{$amount_20}}</span> + <span class="bg-rates td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="bg-rates td-a">{{$amount_40}}</span> + <span class="bg-rates td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="bg-rates td-a">{{$amount_40hc}}</span> + <span class="bg-rates td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="bg-rates td-a">{{$amount_40nor}}</span> + <span class="bg-rates td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
+                                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="bg-rates td-a">{{$amount_45}}</span> + <span class="bg-rates td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
+                                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </div>
                                         </div>
                                         @endif
                                         <!-- Inlands -->
                                         @if(!$rate->inland->isEmpty())
-                                            <div class="row" >
-                                                <div class="col-md-12">
-                                                    <br>
-                                                    <h5 class="title-quote size-12px">Inland charges</h5>
-                                                    <hr>
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
+                                                <h5 class="title-quote size-12px">Inlands</h5>
+                                            </div>
+                                            <div class="col-md-12 thead">
                                                     <div class="">
                                                         <div class="">
                                                             @php
@@ -856,70 +866,70 @@
                                                                             <li class="size-12px">From: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->origin_port->code, 0, 2))}}.svg"></li>
                                                                             <li class="size-12px">To: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->destination_port->code, 0, 2))}}.svg"></li>
                                                                             <li class="size-12px">Contract: {{$inland->contract}}</li>
-                                                                            <li class="size-12px">
-                                                                                <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="down"></i></div>
+                                                                            <li class="size-12px no-border-left d-flex justify-content-end">
+                                                                              <div onclick="show_hide_element('details_inland_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
                                                                     <div class="details_inland_{{$x}} hide">
-                                                                        <table class="table table-sm table-bordered color-blue text-center">
-                                                                            <thead class="title-quote text-center header-table">
-                                                                            <tr>
-                                                                                <td >Charge</td>
-                                                                                <td >Distance</td>
-                                                                                <td {{ @$equipmentHides['20'] }} colspan="3">20'</td>
-                                                                                <td {{ @$equipmentHides['40'] }} colspan="3">40'</td>
-                                                                                <td {{ @$equipmentHides['40hc'] }} colspan="3">40HC'</td>
-                                                                                <td {{ @$equipmentHides['40nor'] }} colspan="3">40NOR'</td>
-                                                                                <td {{ @$equipmentHides['45'] }} colspan="3">45'</td>
-                                                                                <td >Currency</td>
-                                                                            </tr>
+                                                                            <table class="table table-sm table-bordered color-blue text-center">
+                                                                                <thead class="title-quote text-center header-table">
+                                                                                    <tr style="height: 40px;">
+                                                                                        <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                                                        <td class="td-table">Distance</td>
+                                                                                        <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
+                                                                                        <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
+                                                                                        <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
+                                                                                        <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
+                                                                                        <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
+                                                                                        <td class="td-table" >Currency</td>
+                                                                                    </tr>
                                                                             </thead>
                                                                             <tbody style="background-color: white;">
-                                                                                <tr >
-                                                                                  <td>
-                                                                                    <a href="#" class="editable-inland provider" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
+                                                                                <tr style="height:40px;">
+                                                                                    <td class="tds" style="padding-left: 30px">
+                                                                                    <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <a href="#" class="editable-inland distance" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
+                                                                                <td class="tds">
+                                                                                    <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
                                                                                 </td>
-                                                                                <td {{ @$equipmentHides['20'] }}>
-                                                                                    <a href="#" class="editable-inland-20 amount_20" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
+                                                                                <td {{ @$equipmentHides['20'] }} class="tds">
+                                                                                    <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m20 markup_20" data-type="text" data-name="markup->c20" data-value="{{@$inland_markups['c20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
+                                                                                    <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->c20" data-value="{{@$inland_markups['c20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_20">{{@$inland_rates['c20']+@$inland_markups['c20']}}</span>
+                                                                                    <span class="total_20 td-a">{{@$inland_rates['c20']+@$inland_markups['c20']}}</span>
                                                                                 </td>
-                                                                                <td {{ @$equipmentHides['40'] }}>
-                                                                                    <a href="#" class="editable-inland-40 amount_40" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                <td {{ @$equipmentHides['40'] }} class="tds">
+                                                                                    <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40 markup_40"data-type="text" data-name="markup->c40" data-value="{{@$inland_markups['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->c40" data-value="{{@$inland_markups['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40">{{@$inland_rates['c40']+@$inland_markups['c40']}}</span>
+                                                                                    <span class="total_40 td-a">{{@$inland_rates['c40']+@$inland_markups['c40']}}</span>
                                                                                 </td>
-                                                                                <td {{ @$equipmentHides['40hc'] }}>
-                                                                                    <a href="#" class="editable-inland-40hc amount_40hc" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                <td {{ @$equipmentHides['40hc'] }} class="tds">
+                                                                                    <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40hc markup_40hc" data-type="text" data-name="markup->c40hc" data-value="{{@$inland_markups['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->c40hc" data-value="{{@$inland_markups['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40hc">{{@$inland_amounts['c40hc']+@$inland_markups['c40hc']}}</span>
+                                                                                    <span class="total_40hc td-a">{{@$inland_amounts['c40hc']+@$inland_markups['c40hc']}}</span>
                                                                                 </td>
-                                                                                <td {{ @$equipmentHides['40nor'] }}>
-                                                                                    <a href="#" class="editable-inland-40nor amount_40nor " data-type="text" data-name="rate->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                <td {{ @$equipmentHides['40nor'] }} class="tds">
+                                                                                    <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40nor markup_40nor" data-type="text" data-name="markup->c40nor" data-value="{{@$inland_markups['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->c40nor" data-value="{{@$inland_markups['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40nor">{{@$inland_amounts['c40nor']+@$inland_markups['c40nor']}}</span>
+                                                                                    <span class="total_40nor td-a">{{@$inland_amounts['c40nor']+@$inland_markups['c40nor']}}</span>
                                                                                 </td>
-                                                                                <td {{ @$equipmentHides['45'] }}>
-                                                                                    <a href="#" class="editable-inland-45 amount_45" data-type="text" data-name="rate->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                <td {{ @$equipmentHides['45'] }} class="tds">
+                                                                                    <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m45 markup_45" data-type="text" data-name="markup->c45" data-value="{{@$inland_markups['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->c45" data-value="{{@$inland_markups['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_45">{{@$inland_amounts['c45']+@$inland_markups['c45']}}</span>
+                                                                                    <span class="total_45 td-a">{{@$inland_amounts['c45']+@$inland_markups['c45']}}</span>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <a href="#" class="editable-inland" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
+                                                                                <td class="tds">
+                                                                                    <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
                                                                                 </td>
                                                                             </tr>
                                                                             </tbody>
