@@ -89,11 +89,11 @@
                                       $v=0;
                                       @endphp
                                       @foreach($rates as $rate)
-                                      <div class="row">
-                                        <div class="col-md-12">
-                                          <div class="m-portlet custom-portlet no-border">
-                                            <div class="m-portlet__body padding-portlet">
-                                              <div class="tab-content">
+                                        <div class="row">
+                                          <div class="col-md-12">
+                                            <div class="m-portlet custom-portlet no-border">
+                                              <div class="m-portlet__body padding-portlet">
+                                                <div class="tab-content">
                                                 <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
                                                   <ul >
                                                     <li style="max-height: 20px;">                                            
@@ -116,9 +116,9 @@
                                                   </ul>
                                                 </div>
                                                 <br>
-                                                <div class="details_{{$v}} hide" style="background-color: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
+                                                <div class="details_{{$v}} hide" style="background-color: white; border-radius: 5px; margin-top: 20px;">
                                                   <!-- Freight charges -->
-                                                  <div class="no-mg-row">
+                                                  <div class="row no-mg-row">
                                                     <div class="col-md-12 header-charges">
                                                       <h5 class="title-quote size-12px">Freight charges</h5>
                                                     </div>
@@ -148,8 +148,8 @@
                                                             $rate_id=$item->automatic_rate_id;
                                                             $total_freight+=$item->total_freight;
                                                             ?>
-                                                            <tr >
-                                                              <td class="tds">
+                                                            <tr style="height:40px;">
+                                                              <td class="tds" style="padding-left: 30px">
                                                                 <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
@@ -281,8 +281,8 @@
                                                             $total_origin+=$item->total_origin;
 
                                                             ?>
-                                                            <tr >
-                                                              <td class="tds">
+                                                            <tr style="height:40px;">
+                                                              <td class="tds" style="padding-left: 30px">
                                                                 <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
@@ -417,8 +417,8 @@
                                                             $total_destination+=$item->total_destination;
                                                             ?>                                                   
 
-                                                            <tr >
-                                                              <td class="tds">
+                                                            <tr style="height:40px;">
+                                                              <td class="tds" style="padding-left: 30px">
                                                                 <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 

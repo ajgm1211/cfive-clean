@@ -26,13 +26,13 @@
                                         </ul>
                                     </div>
                                     <br>
-                                    <div class="details_<?php echo e($v); ?> hide" style="background-color: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
-                                        <!-- Freight charges -->
-                                        <div class="row no-mg-row">
+                                    <div class="details_<?php echo e($v); ?> hide" style="background-color: white; border-radius: 5px; margin-top: 20px;">
+                                      <!-- Freight charges -->
+                                          <div class="row no-mg-row">
                                             <div class="col-md-12 header-charges">
-                                                <h5 class="title-quote size-12px">Freight charges</h5>
-                                            </div>
-                                            <div class="col-md-12 thead">
+                                              <h5 class="title-quote size-12px">Freight charges</h5>
+                                          </div>
+                                          <div class="col-md-12 thead">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-bordered table-hover table color-blue text-center">
                                                       <thead class="title-quote text-center header-table">
@@ -64,7 +64,7 @@
 
                                                             $rate_amounts = json_decode($rate->rates,true);
                                                             $rate_amounts = json_decode($rate_amounts,true);
-                                                            $rate_markups = json_decode($rate->markups,true);
+                                                            
                                                         ?>
                                                         <tr style="height:40px;">
                                                           <td class="tds" style="padding-left: 30px">
@@ -794,60 +794,70 @@
                                         <!-- Total -->
                                         <?php if($rate->id == @$rate_id ): ?>
                                         <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-bordered table-hover table color-blue text-center">
-                                                <thead class="title-quote text-center header-table">
-                                                    <tr style="height:40px;">
-                                                        <td class="tds" style="padding-left: 30px"></td>
-                                                        <td <?php echo e(@$equipmentHides['20']); ?> class="tds">20'</td>
-                                                        <td <?php echo e(@$equipmentHides['40']); ?> class="tds">40'</td>
-                                                        <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">40HC'</td>
-                                                        <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">40NOR'</td>
-                                                        <td <?php echo e(@$equipmentHides['45']); ?> class="tds">45'</td>
-                                                        <td class="tds">Currency</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody style="background-color: white;">
-                                                    <?php
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
+                                                <h5 class="title-quote size-12px">Total</h5>
+                                            </div>
+                                            <div class="col-md-12 thead">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                        <thead class="title-quote text-center header-table">
+                                                            <tr style="height:40px;">
+                                                                <td class="tds" style="padding-left: 30px"></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds">20'</td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds">40'</td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">40HC'</td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">40NOR'</td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds">45'</td>
+                                                                <td class="tds">Currency</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="background-color: white;">
+                                                            <?php
 
-                                                        $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20, 2, '.', '');
-                                                        $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40, 2, '.', '');
-                                                        $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc, 2, '.', '');
-                                                        $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor, 2, '.', '');
-                                                        $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45, 2, '.', '');
+                                                            $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20, 2, '.', '');
+                                                            $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40, 2, '.', '');
+                                                            $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc, 2, '.', '');
+                                                            $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor, 2, '.', '');
+                                                            $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45, 2, '.', '');
 
-                                                        $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '');
-                                                        $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '');
-                                                        $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '');
-                                                        $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
-                                                        $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
+                                                            $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '');
+                                                            $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '');
+                                                            $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '');
+                                                            $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
+                                                            $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
 
-                                                        $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
-                                                        $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
-                                                        $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
-                                                        $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
-                                                        $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
-                                                    ?>
-                                                    <td class="title-quote size-12px tds"><span class="td-a">Total</span></td>
-                                                    <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_20); ?></span> + <span class="bg-rates"><?php echo e($markup_20); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_20); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40); ?></span> + <span class="bg-rates"><?php echo e($markup_40); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40hc); ?></span> + <span class="bg-rates"><?php echo e($markup_40hc); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40hc); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40nor); ?></span> + <span class="bg-rates"><?php echo e($markup_40nor); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40nor); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_45); ?></span> + <span class="bg-rates"><?php echo e($markup_45); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_45); ?></td>
-                                                    <td class="tds"><span class="td-a"><?php echo e($currency_cfg->alphacode); ?></span></td>
-                                                </tbody>
-                                            </table>
-                                            <br>
-                                            <hr>
+                                                            $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
+                                                            $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
+                                                            $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
+                                                            $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
+                                                            $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
+                                                            ?>
+                                                            <tr style="height:40px;">
+                                                                <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_20); ?></span> + <span class="bg-rates td-a"><?php echo e($markup_20); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_20); ?></td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40); ?></span> + <span class="bg-rates td-a"><?php echo e($markup_40); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40); ?></td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40hc); ?></span> + <span class="bg-rates td-a"><?php echo e($markup_40hc); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40hc); ?></td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40nor); ?></span> + <span class="bg-rates td-a"><?php echo e($markup_40nor); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40nor); ?></td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_45); ?></span> + <span class="bg-rates td-a"><?php echo e($markup_45); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_45); ?></td>
+                                                                <td class="tds"><span class="td-a"><?php echo e($currency_cfg->alphacode); ?></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </div>
                                         </div>
                                         <?php endif; ?>
                                         <!-- Inlands -->
                                         <?php if(!$rate->inland->isEmpty()): ?>
-                                            <div class="row" >
-                                                <div class="col-md-12">
-                                                    <br>
-                                                    <h5 class="title-quote size-12px">Inland charges</h5>
-                                                    <hr>
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
+                                                <h5 class="title-quote size-12px">Inlands</h5>
+                                            </div>
+                                            <div class="col-md-12 thead">
                                                     <div class="">
                                                         <div class="">
                                                             <?php
@@ -865,70 +875,70 @@
                                                                             <li class="size-12px">From: <?php echo e($rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name); ?> &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/<?php echo e(strtolower(substr($rate->origin_port->code, 0, 2))); ?>.svg"></li>
                                                                             <li class="size-12px">To: <?php echo e($rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name); ?> &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/<?php echo e(strtolower(substr($rate->destination_port->code, 0, 2))); ?>.svg"></li>
                                                                             <li class="size-12px">Contract: <?php echo e($inland->contract); ?></li>
-                                                                            <li class="size-12px">
-                                                                                <div onclick="show_hide_element('details_inland_<?php echo e($x); ?>')"><i class="down"></i></div>
+                                                                            <li class="size-12px no-border-left d-flex justify-content-end">
+                                                                              <div onclick="show_hide_element('details_inland_<?php echo e($v); ?>')"><i class="fa fa-angle-down"></i></div>
                                                                             </li>
                                                                         </ul>
                                                                     </div>
                                                                     <div class="details_inland_<?php echo e($x); ?> hide">
-                                                                        <table class="table table-sm table-bordered color-blue text-center">
-                                                                            <thead class="title-quote text-center header-table">
-                                                                            <tr>
-                                                                                <td >Charge</td>
-                                                                                <td >Distance</td>
-                                                                                <td <?php echo e(@$equipmentHides['20']); ?> colspan="3">20'</td>
-                                                                                <td <?php echo e(@$equipmentHides['40']); ?> colspan="3">40'</td>
-                                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan="3">40HC'</td>
-                                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> colspan="3">40NOR'</td>
-                                                                                <td <?php echo e(@$equipmentHides['45']); ?> colspan="3">45'</td>
-                                                                                <td >Currency</td>
-                                                                            </tr>
+                                                                            <table class="table table-sm table-bordered color-blue text-center">
+                                                                                <thead class="title-quote text-center header-table">
+                                                                                    <tr style="height: 40px;">
+                                                                                        <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                                                        <td class="td-table">Distance</td>
+                                                                                        <td class="td-table" <?php echo e(@$equipmentHides['20']); ?>>20'</td>
+                                                                                        <td class="td-table" <?php echo e(@$equipmentHides['40']); ?>>40'</td>
+                                                                                        <td class="td-table" <?php echo e(@$equipmentHides['40hc']); ?>>40HC'</td>
+                                                                                        <td class="td-table" <?php echo e(@$equipmentHides['40nor']); ?>>40NOR'</td>
+                                                                                        <td class="td-table" <?php echo e(@$equipmentHides['45']); ?>>45'</td>
+                                                                                        <td class="td-table" >Currency</td>
+                                                                                    </tr>
                                                                             </thead>
                                                                             <tbody style="background-color: white;">
-                                                                                <tr >
-                                                                                  <td>
-                                                                                    <a href="#" class="editable-inland provider" data-type="text" data-value="<?php echo e($inland->provider); ?>" data-name="provider" data-pk="<?php echo e(@$inland->id); ?>" data-title="Provider"></a>
+                                                                                <tr style="height:40px;">
+                                                                                    <td class="tds" style="padding-left: 30px">
+                                                                                    <a href="#" class="editable-inland provider td-a" data-type="text" data-value="<?php echo e($inland->provider); ?>" data-name="provider" data-pk="<?php echo e(@$inland->id); ?>" data-title="Provider"></a>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <a href="#" class="editable-inland distance" data-type="text" data-name="distance" data-value="<?php echo e(@$inland->distance); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Distance"></a> &nbsp;km
+                                                                                <td class="tds">
+                                                                                    <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="<?php echo e(@$inland->distance); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Distance"></a> &nbsp;km
                                                                                 </td>
-                                                                                <td <?php echo e(@$equipmentHides['20']); ?>>
-                                                                                    <a href="#" class="editable-inland-20 amount_20" data-type="text" data-name="rate->c20" data-value="<?php echo e(@$inland_rates['c20']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Amount"></a>
+                                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds">
+                                                                                    <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="<?php echo e(@$inland_rates['c20']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Amount"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m20 markup_20" data-type="text" data-name="markup->c20" data-value="<?php echo e(@$inland_markups['c20']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Markup"></a>
+                                                                                    <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->c20" data-value="<?php echo e(@$inland_markups['c20']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Markup"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_20"><?php echo e(@$inland_rates['c20']+@$inland_markups['c20']); ?></span>
+                                                                                    <span class="total_20 td-a"><?php echo e(@$inland_rates['c20']+@$inland_markups['c20']); ?></span>
                                                                                 </td>
-                                                                                <td <?php echo e(@$equipmentHides['40']); ?>>
-                                                                                    <a href="#" class="editable-inland-40 amount_40" data-type="text" data-name="rate->c40" data-value="<?php echo e(@$inland_rates['c40']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds">
+                                                                                    <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="<?php echo e(@$inland_rates['c40']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40 markup_40"data-type="text" data-name="markup->c40" data-value="<?php echo e(@$inland_markups['c40']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->c40" data-value="<?php echo e(@$inland_markups['c40']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40"><?php echo e(@$inland_rates['c40']+@$inland_markups['c40']); ?></span>
+                                                                                    <span class="total_40 td-a"><?php echo e(@$inland_rates['c40']+@$inland_markups['c40']); ?></span>
                                                                                 </td>
-                                                                                <td <?php echo e(@$equipmentHides['40hc']); ?>>
-                                                                                    <a href="#" class="editable-inland-40hc amount_40hc" data-type="text" data-name="rate->c40hc" data-value="<?php echo e(@$inland_amounts['c40hc']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">
+                                                                                    <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="<?php echo e(@$inland_amounts['c40hc']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40hc markup_40hc" data-type="text" data-name="markup->c40hc" data-value="<?php echo e(@$inland_markups['c40hc']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->c40hc" data-value="<?php echo e(@$inland_markups['c40hc']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40hc"><?php echo e(@$inland_amounts['c40hc']+@$inland_markups['c40hc']); ?></span>
+                                                                                    <span class="total_40hc td-a"><?php echo e(@$inland_amounts['c40hc']+@$inland_markups['c40hc']); ?></span>
                                                                                 </td>
-                                                                                <td <?php echo e(@$equipmentHides['40nor']); ?>>
-                                                                                    <a href="#" class="editable-inland-40nor amount_40nor " data-type="text" data-name="rate->c40nor" data-value="<?php echo e(@$inland_amounts['c40nor']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">
+                                                                                    <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="<?php echo e(@$inland_amounts['c40nor']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m40nor markup_40nor" data-type="text" data-name="markup->c40nor" data-value="<?php echo e(@$inland_markups['c40nor']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->c40nor" data-value="<?php echo e(@$inland_markups['c40nor']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_40nor"><?php echo e(@$inland_amounts['c40nor']+@$inland_markups['c40nor']); ?></span>
+                                                                                    <span class="total_40nor td-a"><?php echo e(@$inland_amounts['c40nor']+@$inland_markups['c40nor']); ?></span>
                                                                                 </td>
-                                                                                <td <?php echo e(@$equipmentHides['45']); ?>>
-                                                                                    <a href="#" class="editable-inland-45 amount_45" data-type="text" data-name="rate->45" data-value="<?php echo e(@$inland_amounts['c45']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds">
+                                                                                    <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="<?php echo e(@$inland_amounts['c45']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     +
-                                                                                    <a href="#" class="editable-inland-m45 markup_45" data-type="text" data-name="markup->c45" data-value="<?php echo e(@$inland_markups['c45']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
+                                                                                    <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->c45" data-value="<?php echo e(@$inland_markups['c45']); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Total"></a>
                                                                                     <i class="la la-caret-right arrow-down"></i> 
-                                                                                    <span class="total_45"><?php echo e(@$inland_amounts['c45']+@$inland_markups['c45']); ?></span>
+                                                                                    <span class="total_45 td-a"><?php echo e(@$inland_amounts['c45']+@$inland_markups['c45']); ?></span>
                                                                                 </td>
-                                                                                <td>
-                                                                                    <a href="#" class="editable-inland" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($inland->currency_id); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Select currency"></a>
+                                                                                <td class="tds">
+                                                                                    <a href="#" class="editable-inland td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($inland->currency_id); ?>" data-pk="<?php echo e(@$inland->id); ?>" data-title="Select currency"></a>
                                                                                 </td>
                                                                             </tr>
                                                                             </tbody>
