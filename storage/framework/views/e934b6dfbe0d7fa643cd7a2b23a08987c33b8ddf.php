@@ -92,11 +92,11 @@
                     <th class="unit"><b>POL</b></th>
                     <th class="unit"><b>POD</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                    <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                    <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                    <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                    <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                    <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                    <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                    <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                    <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                    <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                    <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -251,11 +251,11 @@
                         <td ><?php echo e($rate->origin_port->name); ?>, <?php echo e($rate->origin_port->code); ?></td>
                         <td ><?php echo e($rate->destination_port->name); ?>, <?php echo e($rate->destination_port->code); ?></td>
                         <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                        <td <?php echo e($equipmentHides['20']); ?>><?php echo e(number_format((float)@$sum20+@$inland20, 2, '.', '')); ?></td>
-                        <td <?php echo e($equipmentHides['40']); ?>><?php echo e(number_format((float)@$sum40+@$inland40, 2, '.', '')); ?></td>
-                        <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e(number_format((float)@$sum40hc+@$inland40hc, 2, '.', '')); ?></td>
-                        <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e(number_format((float)@$sum40nor+@$inland40nor, 2, '.', '')); ?></td>
-                        <td <?php echo e($equipmentHides['45']); ?>><?php echo e(number_format((float)@$sum45+@$inland45, 2, '.', '')); ?></td>
+                        <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(number_format((float)@$sum20+@$inland20, 2, '.', '')); ?></td>
+                        <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(number_format((float)@$sum40+@$inland40, 2, '.', '')); ?></td>
+                        <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(number_format((float)@$sum40hc+@$inland40hc, 2, '.', '')); ?></td>
+                        <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(number_format((float)@$sum40nor+@$inland40nor, 2, '.', '')); ?></td>
+                        <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(number_format((float)@$sum45+@$inland45, 2, '.', '')); ?></td>
                         <td ><?php echo e($quote->pdf_option->grouped_total_currency==0 ?$currency_cfg->alphacode:$quote->pdf_option->total_in_currency); ?></td>
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -281,11 +281,11 @@
                     <th class="unit"><b>POL</b></th>
                     <th class="unit"><b>POD</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                    <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                    <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                    <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                    <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                    <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                    <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                    <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                    <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                    <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                    <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                     <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -320,11 +320,11 @@
                             <?php endif; ?>
                         </td>                            
                         <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                        <td <?php echo e($equipmentHides['20']); ?>><?php echo e(@$rate_amounts['c20']+@$rate_markups['m20']); ?></td>
-                        <td <?php echo e($equipmentHides['40']); ?>><?php echo e(@$rate_amounts['c40']+@$rate_markups['m40']); ?></td>
-                        <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e(@$rate_amounts['c40hc']+@$rate_markups['m40hc']); ?></td>
-                        <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e(@$rate_amounts['c40nor']+@$rate_markups['m40nor']); ?></td>
-                        <td <?php echo e($equipmentHides['45']); ?>><?php echo e(@$rate_amounts['c45']+@$rate_markups['m45']); ?></td>
+                        <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$rate_amounts['c20']+@$rate_markups['m20']); ?></td>
+                        <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$rate_amounts['c40']+@$rate_markups['m40']); ?></td>
+                        <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$rate_amounts['c40hc']+@$rate_markups['m40hc']); ?></td>
+                        <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$rate_amounts['c40nor']+@$rate_markups['m40nor']); ?></td>
+                        <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$rate_amounts['c45']+@$rate_markups['m45']); ?></td>
                         <td ><?php echo e($rate->currency->alphacode); ?></td>
                     </tr>-->
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -376,11 +376,11 @@
                                 <?php endif; ?>
                             </td>                            
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e(@$sum_freight_20); ?></td>
-                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e(@$sum_freight_40); ?></td>
-                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e(@$sum_freight_40hc); ?></td>
-                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e(@$sum_freight_40nor); ?></td>
-                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e(@$sum_freight_45); ?></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$sum_freight_20); ?></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$sum_freight_40); ?></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$sum_freight_40hc); ?></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$sum_freight_40nor); ?></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$sum_freight_45); ?></td>
                             <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
                                 <td ><?php echo e($quote->pdf_option->freight_charges_currency); ?></td>
                             <?php else: ?>
@@ -410,11 +410,11 @@
                                 <th class="unit"><b>POL</b></th>
                                 <th class="unit"><b>POD</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                                <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                                <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                                <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                                <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                                <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                                <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                                <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                                <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                                <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                                <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -448,11 +448,11 @@
                                             <td><?php echo e($v->surcharge->name); ?></td>
                                             <td><?php echo e($v->calculation_type->name); ?></td>
                                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($r->carrier->name); ?></td>
-                                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
-                                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
-                                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
-                                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
-                                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
+                                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
+                                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
                                             <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
                                                 <td><?php echo e($quote->pdf_option->freight_charges_currency); ?></td>
                                             <?php else: ?>
@@ -467,11 +467,11 @@
                             <td><b>Total local charges</b></td>
                             <td></td>
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>></td>
-                            <td <?php echo e($equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_freight_20, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_freight_40, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_freight_40hc, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_freight_40nor, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_freight_45, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_freight_20, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_freight_40, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_freight_40hc, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_freight_40nor, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_freight_45, 2, '.', '')); ?></b></td>
                             <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
                                 <td><b><?php echo e($quote->pdf_option->freight_charges_currency); ?></b></td>
                             <?php else: ?>
@@ -501,11 +501,11 @@
                         <tr >
                             <th class="unit" colspan="2"><b>Charge</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                            <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                            <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                            <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                            <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                            <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                            <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                            <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                            <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                            <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                            <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -550,11 +550,11 @@
                         <tr class="text-center color-table">
                             <td colspan="2">Total Origin Charges</td>
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e(@$sum_origin_20+@$inland_origin_20); ?></td>
-                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e(@$sum_origin_40+@$inland_origin_40); ?></td>
-                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e(@$sum_origin_40hc+@$inland_origin_40hc); ?></td>
-                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e(@$sum_origin_40nor+@$inland_origin_40nor); ?></td>
-                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e(@$sum_origin_45+@$inland_origin_45); ?></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$sum_origin_20+@$inland_origin_20); ?></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$sum_origin_40+@$inland_origin_40); ?></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$sum_origin_40hc+@$inland_origin_40hc); ?></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$sum_origin_40nor+@$inland_origin_40nor); ?></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$sum_origin_45+@$inland_origin_45); ?></td>
                             <?php if($quote->pdf_option->grouped_origin_charges==1): ?>
                                 <td ><?php echo e($quote->pdf_option->origin_charges_currency); ?></td>
                             <?php else: ?>
@@ -583,11 +583,11 @@
                                 <th class="unit"><b>Charge</b></th>
                                 <th class="unit"><b>Detail</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                                <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                                <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                                <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                                <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                                <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                                <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                                <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                                <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                                <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                                <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -626,11 +626,11 @@
                                             <td><?php echo e($v->surcharge->name); ?></td>
                                             <td><?php echo e($v->calculation_type->name); ?></td>
                                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($r->carrier->name); ?></td>
-                                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
-                                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
-                                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
-                                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
-                                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
+                                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
+                                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
                                             <?php if($quote->pdf_option->grouped_origin_charges==1): ?>
                                                 <td><?php echo e($quote->pdf_option->origin_charges_currency); ?></td>
                                             <?php else: ?>
@@ -653,11 +653,11 @@
                                                 <td><?php echo e($v->provider); ?></td>
                                                 <td><?php echo e($v->distance); ?></td>
                                                 <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($r->carrier->name); ?></td>
-                                                <td <?php echo e($equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
-                                                <td <?php echo e($equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
-                                                <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
-                                                <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
-                                                <td <?php echo e($equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
+                                                <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
+                                                <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
                                                 <?php if($quote->pdf_option->grouped_origin_charges==1): ?>
                                                     <td><?php echo e($quote->pdf_option->origin_charges_currency); ?></td>
                                                 <?php else: ?>
@@ -673,11 +673,11 @@
                             <td><b>Total local charges</b></td>
                             <td></td>
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>></td>
-                            <td <?php echo e($equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_origin_20+@$inland_20, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_origin_40+@$inland_40, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_origin_40hc+@$inland_40hc, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_origin_40nor+@$inland_40nor, 2, '.', '')); ?></b></td>
-                            <td <?php echo e($equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_origin_45+@$inland_45, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_origin_20+@$inland_20, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_origin_40+@$inland_40, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_origin_40hc+@$inland_40hc, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_origin_40nor+@$inland_40nor, 2, '.', '')); ?></b></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_origin_45+@$inland_45, 2, '.', '')); ?></b></td>
                             <?php if($quote->pdf_option->grouped_origin_charges==1): ?>
                             <td><b><?php echo e($quote->pdf_option->origin_charges_currency); ?></b></td>
                             <?php else: ?>
@@ -707,11 +707,11 @@
                         <tr >
                             <th class="unit" colspan="2"><b>Charge</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                            <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                            <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                            <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                            <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                            <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                            <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                            <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                            <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                            <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                            <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                             <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -741,11 +741,11 @@
                         <tr class="text-center color-table">
                             <td colspan="2">Total Destination Charges</td>
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e(@$sum_destination_20); ?></td>
-                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e(@$sum_destination_40); ?></td>
-                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e(@$sum_destionation_40hc); ?></td>
-                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e(@$sum_destination_40nor); ?></td>
-                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e(@$sum_destination_45); ?></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$sum_destination_20); ?></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$sum_destination_40); ?></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$sum_destionation_40hc); ?></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$sum_destination_40nor); ?></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$sum_destination_45); ?></td>
                             <?php if($quote->pdf_option->grouped_destination_charges==1): ?>
                             <td ><?php echo e($quote->pdf_option->destination_charges_currency); ?></td>
                             <?php else: ?>
@@ -774,11 +774,11 @@
                                 <th class="unit"><b>Charge</b></th>
                                 <th class="unit"><b>Detail</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><b><?php if($quote->pdf_option->language=='English'): ?> Carrier <?php elseif($quote->pdf_option->language=='Spanish'): ?> Línea marítima <?php else: ?> Linha Maritima <?php endif; ?></b></th>
-                                <th <?php echo e($equipmentHides['20']); ?>><b>20'</b></th>
-                                <th <?php echo e($equipmentHides['40']); ?>><b>40'</b></th>
-                                <th <?php echo e($equipmentHides['40hc']); ?>><b>40' HC</b></th>
-                                <th <?php echo e($equipmentHides['40nor']); ?>><b>40' NOR</b></th>
-                                <th <?php echo e($equipmentHides['45']); ?>><b>45'</b></th>
+                                <th <?php echo e(@$equipmentHides['20']); ?>><b>20'</b></th>
+                                <th <?php echo e(@$equipmentHides['40']); ?>><b>40'</b></th>
+                                <th <?php echo e(@$equipmentHides['40hc']); ?>><b>40' HC</b></th>
+                                <th <?php echo e(@$equipmentHides['40nor']); ?>><b>40' NOR</b></th>
+                                <th <?php echo e(@$equipmentHides['45']); ?>><b>45'</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='English' ? '':'hidden'); ?>><b>Currency</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>Moneda</b></th>
                                 <th class="unit" <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>Moeda</b></th>
@@ -817,11 +817,11 @@
                                             <td><?php echo e($v->surcharge->name); ?></td>
                                             <td><?php echo e($v->calculation_type->name); ?></td>
                                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($r->carrier->name); ?></td>
-                                            <td <?php echo e($equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
-                                            <td <?php echo e($equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
-                                            <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
-                                            <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
-                                            <td <?php echo e($equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
+                                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
+                                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
+                                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
                                             <?php if($quote->pdf_option->grouped_destination_charges==1): ?>
                                                 <td><?php echo e($quote->pdf_option->destination_charges_currency); ?></td>
                                             <?php else: ?>
@@ -844,11 +844,11 @@
                                                 <td><?php echo e($v->provider); ?></td>
                                                 <td><?php echo e($v->distance); ?></td>
                                                 <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($r->carrier->name); ?></td>
-                                                <td <?php echo e($equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
-                                                <td <?php echo e($equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
-                                                <td <?php echo e($equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
-                                                <td <?php echo e($equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
-                                                <td <?php echo e($equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
+                                                <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($v->total_20); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($v->total_40); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($v->total_40hc); ?></td>
+                                                <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($v->total_40nor); ?></td>
+                                                <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($v->total_45); ?></td>
                                                 <?php if($quote->pdf_option->grouped_origin_charges==1): ?>
                                                     <td><?php echo e($quote->pdf_option->origin_charges_currency); ?></td>
                                                 <?php else: ?>
@@ -864,11 +864,11 @@
                                 <td><b>Total local charges</b></td>
                                 <td></td>
                                 <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>></td>
-                                <td <?php echo e($equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_destination_20+@$inland_20, 2, '.', '')); ?></b></td>
-                                <td <?php echo e($equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_destination_40+@$inland_40, 2, '.', '')); ?></b></td>
-                                <td <?php echo e($equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')); ?></b></td>
-                                <td <?php echo e($equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_destination_40nor+@$inland_40nor, 2, '.', '')); ?></b></td>
-                                <td <?php echo e($equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_destination_45+@$inland_45, 2, '.', '')); ?></b></td>
+                                <td <?php echo e(@$equipmentHides['20']); ?>><b><?php echo e(number_format(@$sum_destination_20+@$inland_20, 2, '.', '')); ?></b></td>
+                                <td <?php echo e(@$equipmentHides['40']); ?>><b><?php echo e(number_format(@$sum_destination_40+@$inland_40, 2, '.', '')); ?></b></td>
+                                <td <?php echo e(@$equipmentHides['40hc']); ?>><b><?php echo e(number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')); ?></b></td>
+                                <td <?php echo e(@$equipmentHides['40nor']); ?>><b><?php echo e(number_format(@$sum_destination_40nor+@$inland_40nor, 2, '.', '')); ?></b></td>
+                                <td <?php echo e(@$equipmentHides['45']); ?>><b><?php echo e(number_format(@$sum_destination_45+@$inland_45, 2, '.', '')); ?></b></td>
                                 <?php if($quote->pdf_option->grouped_destination_charges==1): ?>
                                     <td><b><?php echo e($quote->pdf_option->destination_charges_currency); ?></b></td>
                                 <?php else: ?>
