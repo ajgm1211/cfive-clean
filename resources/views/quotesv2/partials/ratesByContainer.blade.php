@@ -63,7 +63,7 @@
                                                             $sum_m45=0;
 
                                                             $rate_amounts = json_decode($rate->rates,true);
-                                                            $rate_amounts = json_decode($rate_amounts,true);
+                                                            $rate_markups = json_decode($rate->markups,true);
                                                             
                                                         @endphp
                                                         <tr style="height:40px;">
