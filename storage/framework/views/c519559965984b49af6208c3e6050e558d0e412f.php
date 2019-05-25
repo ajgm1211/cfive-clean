@@ -4,21 +4,21 @@
         <?php $__currentLoopData = $rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="m-portlet custom-portlet">
-                            <div class="m-portlet__body">
+                        <div class="m-portlet custom-portlet no-border">
+                            <div class="m-portlet__body padding-portlet">
                                 <div class="tab-content">
-                                    <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
+                                     <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
                                         <ul >
                                             <li style="max-height: 20px;">                                            
                                                 <?php if(isset($rate->carrier->image) && $rate->carrier->image!=''): ?>
-                                                    <img src="<?php echo e(url('imgcarrier/'.$rate->carrier->image)); ?>"  class="img img-responsive" width="80" height="auto" style="margin-top: -15px;" />
+                                                    <img src="<?php echo e(url('imgcarrier/'.$rate->carrier->image)); ?>"  class="img img-responsive" width="45" height="auto" style="margin-top: 15px;" />
                                                 <?php endif; ?>
                                             </li>
                                             <li class="size-12px">POL: <?php echo e($rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code); ?> &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/<?php echo e($rate->origin_country_code); ?>.svg"/></li>
                                             <li class="size-12px">POD: <?php echo e($rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code); ?> &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/<?php echo e($rate->destination_country_code); ?>.svg"/></li>
                                             <li class="size-12px">Contract: <?php echo e($rate->contract); ?></li>
-                                            <li class="size-12px">
-                                                <div onclick="show_hide_element('details_<?php echo e($v); ?>')"><i class="down"></i></div>
+                                            <li class="size-12px no-border-left d-flex justify-content-end">
+                                              <div onclick="show_hide_element('details_<?php echo e($v); ?>')"><i class="fa fa-angle-down"></i></div>
                                             </li>
                                             <li class="size-12px">
                                                 <div class="delete-rate" data-rate-id="<?php echo e($rate->id); ?>" style="cursor:pointer;"><i class="fa fa-trash fa-4x"></i></div>
@@ -28,23 +28,23 @@
                                     <br>
                                     <div class="details_<?php echo e($v); ?> hide" style="background-color: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
                                         <!-- Freight charges -->
-                                        <div class="row">
-                                            <div class="col-md-3">
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
                                                 <h5 class="title-quote size-12px">Freight charges</h5>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 thead">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-bordered table-hover table color-blue text-center">
-                                                        <thead class="title-quote text-center header-table">
-                                                        <tr>
-                                                            <td >Charge</td>
-                                                            <td >Detail</td>
-                                                            <td <?php echo e(@$equipmentHides['20']); ?> colspan="">20'</td>
-                                                            <td <?php echo e(@$equipmentHides['40']); ?> colspan="">40'</td>
-                                                            <td <?php echo e(@$equipmentHides['40hc']); ?> colspan="">40HC'</td>
-                                                            <td <?php echo e(@$equipmentHides['40nor']); ?> colspan="">40NOR'</td>
-                                                            <td <?php echo e(@$equipmentHides['45']); ?> colspan="">45'</td>
-                                                            <td >Currency</td>
+                                                      <thead class="title-quote text-center header-table">
+                                                        <tr style="height: 40px;">
+                                                          <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                          <td class="td-table">Detail</td>
+                                                          <td class="td-table" <?php echo e(@$equipmentHides['20']); ?>>20'</td>
+                                                          <td class="td-table" <?php echo e(@$equipmentHides['40']); ?>>40'</td>
+                                                          <td class="td-table" <?php echo e(@$equipmentHides['40hc']); ?>>40HC'</td>
+                                                          <td class="td-table" <?php echo e(@$equipmentHides['40nor']); ?>>40NOR'</td>
+                                                          <td class="td-table" <?php echo e(@$equipmentHides['45']); ?>>45'</td>
+                                                          <td class="td-table" >Currency</td>
                                                         </tr>
                                                         </thead>
                                                         <tbody style="background-color: white;">
@@ -63,58 +63,57 @@
                                                             $sum_m45=0;
 
                                                             $rate_amounts = json_decode($rate->rates,true);
-                                                            $rate_markups = json_decode($rate->markups,true);
                                                             $rate_amounts = json_decode($rate_amounts,true);
-
+                                                            $rate_markups = json_decode($rate->markups,true);
                                                         ?>
-                                                        <tr >
-                                                            <td>
-                                                                <input name="charge_id" value="<?php echo e($rate->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                        <tr style="height:40px;">
+                                                          <td class="tds" style="padding-left: 30px">
+                                                                <input name="charge_id" value="<?php echo e($rate->id); ?>" class="form-control charge_id td-a" type="hidden" style="max-width: 50px;"/>
                                                                 Ocean freight
                                                             </td>
-                                                            <td>
+                                                            <td class="tds">
                                                                Per Container
                                                             </td>
-                                                            <td <?php echo e(@$equipmentHides['20']); ?>>                                    
-                                                                <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$rate_amounts['c20']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                            <td <?php echo e(@$equipmentHides['20']); ?> class="tds">
+                                                                <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$rate_amounts['c20']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-20 markup_20 bg-rates"data-type="text" data-name="markups->c20" data-value="<?php echo e(@$rate_markups['m20']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                                <a href="#" class="editable-markup-20 markup_20 bg-rates td-a"data-type="text" data-name="markups->c20" data-value="<?php echo e(@$rate_markups['m20']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_20"><?php echo e(@$rate_amounts['c20']+@$rate_markups['m20']); ?></span>
                                                             </td>
-                                                            <td <?php echo e(@$equipmentHides['40']); ?>>
-                                                                <a href="#" class="editable-amount-40 amount_40 bg-rates" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$rate_amounts['c40']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                            <td <?php echo e(@$equipmentHides['40']); ?> class="tds">
+                                                                <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$rate_amounts['c40']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40 markup_40 bg-rates" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$rate_markups['m40']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                                <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$rate_markups['m40']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40"><?php echo e(@$rate_amounts['c40']+@$rate_markups['m40']); ?></span>
                                                             </td>
-                                                            <td <?php echo e(@$equipmentHides['40hc']); ?>>
-                                                                <a href="#" class="editable-amount-40hc amount_40hc bg-rates" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$rate_amounts['c40hc']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                            <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">
+                                                                <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$rate_amounts['c40hc']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40hc markup_40hc bg-rates" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$rate_markups['m40hc']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                                <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$rate_markups['m40hc']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40hc"><?php echo e(@$rate_amounts['c40hc']+@$rate_markups['m40hc']); ?></span>
                                                             </td>
-                                                            <td <?php echo e(@$equipmentHides['40nor']); ?>>
-                                                                <a href="#" class="editable-amount-40nor amount_40nor bg-rates" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$rate_amounts['c40nor']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                            <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">
+                                                                <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$rate_amounts['c40nor']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40nor markup_40nor bg-rates" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$rate_markups['m40nor']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                                <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$rate_markups['m40nor']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40nor"><?php echo e(@$rate_amounts['c40nor']+@$rate_markups['m40nor']); ?></span>
                                                             </td>
-                                                            <td <?php echo e(@$equipmentHides['45']); ?>>
-                                                                <a href="#" class="editable-amount-45 amount_45 bg-rates" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$rate_amounts['c45']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                            <td <?php echo e(@$equipmentHides['45']); ?> class="tds">
+                                                                <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$rate_amounts['c45']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-45 markup_45 bg-rates" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$rate_markups['m45']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
+                                                                <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$rate_markups['m45']); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_45"><?php echo e(@$rate_amounts['c45']+@$rate_markups['m45']); ?></span>
                                                             </td>
-                                                            <td>
-                                                                <a href="#" class="editable" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($rate->currency_id); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Select currency"></a>
+                                                            <td class="tds">
+                                                                <a href="#" class="editable td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($rate->currency_id); ?>" data-pk="<?php echo e($rate->id); ?>" data-title="Select currency"></a>
                                                                 &nbsp;
                                                                 <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                     <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
@@ -141,23 +140,23 @@
                                                                     $sum_m40nor+=@$item->total_markup40nor;
                                                                     $sum_m45+=@$item->total_markup45;                                                                    
                                                                 ?>
-                                                                <tr >
-                                                                    <td>
-                                                                        <input name="charge_id" value="<?php echo e($item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                                <tr style="height:40px;">
+                                                                  <td class="tds" style="padding-left: 30px">
+                                                                        <input name="charge_id" value="<?php echo e($item->id); ?>" class="form-control charge_id" type="hidden" />
 
-                                                                        <a href="#" class="editable" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
+                                                                        <a href="#" class="editable td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable" data-source="<?php echo e($calculation_types); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable td-a" data-source="<?php echo e($calculation_types); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['20']); ?>>
-                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$freight_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['20']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$freight_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates"data-type="text" data-name="markups->c20" data-value="<?php echo e(@$freight_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="<?php echo e(@$freight_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_20"><?php echo e(@$freight_amounts['c20']+@$freight_markups['c20']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40']); ?>>
+                                                                    <td <?php echo e(@$equipmentHides['40']); ?> class="tds">
                                                                         <a href="#" class="editable-amount-40 amount_40 bg-rates" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$freight_amounts['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
                                                                         <a href="#" class="editable-markup-40 markup_40 bg-rates" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$freight_markups['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
@@ -165,14 +164,14 @@
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40"><?php echo e(@$freight_amounts['c40']+@$freight_markups['c40']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?>>
+                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">
                                                                         <a href="#" class="editable-amount-40hc amount_40hc bg-rates" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$freight_amounts['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
                                                                         <a href="#" class="editable-markup-40hc markup_40hc bg-rates" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$freight_markups['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40hc"><?php echo e(@$freight_amounts['c40hc']+@$freight_markups['c40hc']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?>>
+                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">
                                                                         <a href="#" class="editable-amount-40nor amount_40nor bg-rates" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$freight_amounts['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
                                                                         <a href="#" class="editable-markup-40nor markup_40nor bg-rates" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$freight_markups['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
@@ -180,16 +179,16 @@
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40nor"><?php echo e(@$freight_amounts['c40nor']+@$freight_markups['c40nor']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['45']); ?>>
-                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$freight_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['45']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$freight_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$freight_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$freight_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_45"><?php echo e(@$freight_amounts['c45']+@$freight_markups['c45']); ?></span>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
                                                                         &nbsp;
                                                                         <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
@@ -218,20 +217,20 @@
                                                             <td <?php echo e(@$equipmentHides['20']); ?>>
                                                                 <div class="row ">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -285,23 +284,25 @@
 
                                                         <?php if($rate->id == @$rate_id ): ?>
                                                             <tr>
-                                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td <?php echo e(@$equipmentHides['20']); ?> colspan=""><?php echo e(number_format(@$sum20+$rate->total_rate20, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40']); ?> colspan=""><?php echo e(number_format(@$sum40+$rate->total_rate40, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan=""><?php echo e(number_format(@$sum40hc+$rate->total_rate40hc, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> colspan=""><?php echo e(number_format(@$sum40nor+$rate->total_rate40nor, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['45']); ?> colspan=""><?php echo e(number_format(@$sum45+$rate->total_rate45, 2, '.', '')); ?></td>
-                                                                <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                                                <td></td>
+                                                                <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum20+@$sum_m20+$rate->total_rate20, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum40+@$sum_m40+$rate->total_rate40, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan=""><span class="td-a"><?php echo e(number_format(@$sum40hc+@$sum_m40hc+$rate->total_rate40hc, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum40nor+@$sum_m40nor+$rate->total_rate40nor, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum45+@$sum_m45+$rate->total_rate45, 2, '.', '')); ?></span></td>
+                                                                <td class="tds"><span class="td-a"><?php echo e($rate->currency->alphacode); ?></span></td>
                                                             </tr>
                                                         <?php else: ?>
                                                             <tr>
-                                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td <?php echo e(@$equipmentHides['20']); ?> colspan=""><?php echo e(number_format(@$rate->total_rate20, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40']); ?> colspan=""><?php echo e(number_format(@$rate->total_rate40, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan=""><?php echo e(number_format(@$rate->total_rate40hc, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> colspan=""><?php echo e(number_format(@$rate->total_rate40nor, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['45']); ?> colspan=""><?php echo e(number_format(@$rate->total_rate45, 2, '.', '')); ?></td>
-                                                                <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                                                <td></td>
+                                                                <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$rate->total_rate20, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$rate->total_rate40, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$rate->total_rate40hc, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$rate->total_rate40nor, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$rate->total_rate45, 2, '.', '')); ?></span></td>
+                                                                <td class="tds"><span class="td-a"><?php echo e($rate->currency->alphacode); ?></span></td>
                                                             </tr>
                                                         <?php endif; ?>
 
@@ -322,23 +323,23 @@
 
                                         <!-- Origin charges -->
 
-                                        <div class="row">
-                                            <div class="col-md-3">
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
                                                 <h5 class="title-quote size-12px">Origin charges</h5>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 thead">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-bordered color-blue text-center">
                                                         <thead class="title-quote text-center header-table">
-                                                        <tr>
-                                                            <td >Charge</td>
-                                                            <td >Detail</td>
-                                                            <td <?php echo e(@$equipmentHides['20']); ?> colspan="">20'</td>
-                                                            <td <?php echo e(@$equipmentHides['40']); ?> colspan="">40'</td>
-                                                            <td <?php echo e(@$equipmentHides['40hc']); ?> colspan="">40HC'</td>
-                                                            <td <?php echo e(@$equipmentHides['40nor']); ?> colspan="">40NOR'</td>
-                                                            <td <?php echo e(@$equipmentHides['45']); ?> colspan="">45'</td>
-                                                            <td >Currency</td>
+                                                        <tr style="height: 40px;">
+                                                            <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                            <td class="td-table">Detail</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['20']); ?>>20'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40']); ?>>40'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40hc']); ?>>40HC'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40nor']); ?>>40NOR'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['45']); ?>>45'</td>
+                                                            <td class="td-table" >Currency</td>
                                                         </tr>
                                                         </thead>
                                                         <tbody style="background-color: white;">
@@ -374,16 +375,16 @@
                                                                     $sum_origin_m40nor+=@$item->total_markup40nor;
                                                                     $sum_origin_m45+=@$item->total_markup45;                                                                    
                                                                 ?>
-                                                                <tr>
-                                                                    <td>
-                                                                        <input name="charge_id" value="<?php echo e($item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                                <tr style="height:40px;">
+                                                                    <td class="tds" style="padding-left: 30px">
+                                                                        <input name="charge_id td-a" value="<?php echo e($item->id); ?>" class="form-control charge_id" type="hidden" />
 
-                                                                        <a href="#" class="editable surcharge_id" data-source="<?php echo e($surcharges); ?>" data-type="select" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
+                                                                        <a href="#" class="editable surcharge_id td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable calculation_type_id" data-source="<?php echo e($calculation_types); ?>" data-name="calculation_type_id" data-type="select" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable calculation_type_id td-a" data-source="<?php echo e($calculation_types); ?>" data-name="calculation_type_id" data-type="select" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
                                                                     </td>
-                                                                   <td <?php echo e(@$equipmentHides['20']); ?>>
+                                                                   <td <?php echo e(@$equipmentHides['20']); ?> class="tds">
                                                                         <!--<div class="row">
                                                                             <div class="col-8 text-center">
                                                                                 <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$origin_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
@@ -395,45 +396,45 @@
                                                                                 <span class="total_20"><?php echo e(@$origin_amounts['c20']+@$origin_markups['c20']); ?></span>
                                                                             </div>
                                                                         </div>-->
-                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$origin_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$origin_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates"data-type="text" data-name="markups->c20" data-value="<?php echo e(@$origin_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="<?php echo e(@$origin_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_20"><?php echo e(@$origin_amounts['c20']+@$origin_markups['c20']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40']); ?>>
-                                                                        <a href="#" class="editable-amount-40 amount_40 bg-rates" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$origin_amounts['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$origin_amounts['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40 markup_40 bg-rates" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$origin_markups['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$origin_markups['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40"><?php echo e(@$origin_amounts['c40']+@$origin_markups['c40']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?>>
-                                                                        <a href="#" class="editable-amount-40hc amount_40hc bg-rates" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$origin_amounts['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$origin_amounts['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40hc markup_40hc bg-rates" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$origin_markups['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$origin_markups['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40hc"><?php echo e(@$origin_amounts['c40hc']+@$origin_markups['c40hc']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?>>
-                                                                        <a href="#" class="editable-amount-40nor amount_40nor bg-rates" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$origin_amounts['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$origin_amounts['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40nor markup_40nor bg-rates" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$origin_markups['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$origin_markups['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40nor"><?php echo e(@$origin_amounts['c40nor']+@$origin_markups['c40nor']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['45']); ?>>
-                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$origin_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['45']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$origin_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$origin_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$origin_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_45"><?php echo e(@$origin_amounts['c45']+@$origin_markups['c45']); ?></span>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
                                                                         &nbsp;
                                                                         <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
@@ -462,50 +463,50 @@
                                                            <td <?php echo e(@$equipmentHides['20']); ?>>
                                                                 <div class="row ">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40hc']); ?>>
                                                                  <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40hc" class="form-control markup_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40hc" class="form-control markup_c40hc" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40nor']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40nor" class="form-control markup_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40nor" class="form-control markup_c40nor" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['45']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">                                                                
-                                                                        <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c45" class="form-control markup_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;" />
+                                                                        <input name="markup_c45" class="form-control markup_c45" type="number" min="0" step="0.0000001"  />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -528,13 +529,14 @@
                                                         </tr>
                                                         <?php if($rate->id == @$rate_id ): ?>
                                                             <tr>
-                                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td <?php echo e(@$equipmentHides['20']); ?> colspan=""><?php echo e(number_format(@$sum_origin_20, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40']); ?> colspan=""><?php echo e(number_format(@$sum_origin_40, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan=""><?php echo e(number_format(@$sum_origin_40hc, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> colspan=""><?php echo e(number_format(@$sum_origin_40nor, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['45']); ?> colspan=""><?php echo e(number_format(@$sum_origin_45, 2, '.', '')); ?></td>
-                                                                <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                                                <td></td>
+                                                                <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')); ?></span></td>
+                                                                <td class="tds"><span class="td-a"><?php echo e($currency_cfg->alphacode); ?></span></td>
                                                             </tr>
                                                         <?php endif; ?>
                                                         </tbody>
@@ -555,23 +557,23 @@
 
                                         <!-- Destination charges -->
 
-                                        <div class="row">
-                                            <div class="col-md-3">
+                                        <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
                                                 <h5 class="title-quote size-12px">Destination charges</h5>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 thead">
                                                 <div class="table-responsive">
                                                     <table class="table table-sm table-bordered color-blue text-center">
                                                         <thead class="title-quote text-center header-table">
-                                                        <tr>
-                                                            <td >Charge</td>
-                                                            <td >Detail</td>
-                                                            <td <?php echo e(@$equipmentHides['20']); ?> colspan="">20'</td>
-                                                            <td <?php echo e(@$equipmentHides['40']); ?> colspan="">40'</td>
-                                                            <td <?php echo e(@$equipmentHides['40hc']); ?> colspan="">40HC'</td>
-                                                            <td <?php echo e(@$equipmentHides['40nor']); ?> colspan="">40NOR'</td>
-                                                            <td <?php echo e(@$equipmentHides['45']); ?> colspan="">45'</td>
-                                                            <td >Currency</td>
+                                                        <tr style="height: 40px;">
+                                                            <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                            <td class="td-table">Detail</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['20']); ?>>20'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40']); ?>>40'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40hc']); ?>>40HC'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['40nor']); ?>>40NOR'</td>
+                                                            <td class="td-table" <?php echo e(@$equipmentHides['45']); ?>>45'</td>
+                                                            <td class="td-table" >Currency</td>
                                                         </tr>
                                                         </thead>
                                                         <tbody style="background-color: white;">
@@ -609,16 +611,16 @@
                                                                     $sum_destination_m45+=@$item->total_markup45;
                                                                 ?>                                                     
 
-                                                                <tr>
-                                                                    <td>
-                                                                        <input name="charge_id" value="<?php echo e($item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                                <tr style="height:40px;">
+                                                                    <td class="tds" style="padding-left: 30px">
+                                                                        <input name="charge_id" value="<?php echo e($item->id); ?>" class="form-control charge_id td-a" type="hidden" />
 
-                                                                        <a href="#" class="editable surcharge_id" data-source="<?php echo e($surcharges); ?>" data-type="select" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
+                                                                        <a href="#" class="editable surcharge_id td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select surcharge"></a>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable calculation_type_id" data-source="<?php echo e($calculation_types); ?>" data-name="calculation_type_id" data-type="select" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable calculation_type_id td-a" data-source="<?php echo e($calculation_types); ?>" data-name="calculation_type_id" data-type="select" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select calculation type"></a>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['20']); ?>>
+                                                                    <td <?php echo e(@$equipmentHides['20']); ?> class="tds">
                                                                         <!--<div class="row">
                                                                             <div class="col-8 text-center">
                                                                                 <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$destination_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
@@ -630,45 +632,45 @@
                                                                                 <span class="total_20"><?php echo e(@$destination_amounts['c20']+@$destination_markups['c20']); ?></span>
                                                                             </div>
                                                                         </div>-->
-                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$destination_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="<?php echo e(@$destination_amounts['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates"data-type="text" data-name="markups->c20" data-value="<?php echo e(@$destination_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="<?php echo e(@$destination_markups['c20']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_20"><?php echo e(@$destination_amounts['c20']+@$destination_markups['c20']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40']); ?>>
-                                                                        <a href="#" class="editable-amount-40 amount_40 bg-rates" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$destination_amounts['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="<?php echo e(@$destination_amounts['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40 markup_40 bg-rates" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$destination_markups['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="<?php echo e(@$destination_markups['c40']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40"><?php echo e(@$destination_amounts['c40']+@$destination_markups['c40']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?>>
-                                                                        <a href="#" class="editable-amount-40hc amount_40hc bg-rates" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$destination_amounts['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="<?php echo e(@$destination_amounts['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40hc markup_40hc bg-rates" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$destination_markups['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="<?php echo e(@$destination_markups['c40hc']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40hc"><?php echo e(@$destination_amounts['c40hc']+@$destination_markups['c40hc']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?>>
-                                                                        <a href="#" class="editable-amount-40nor amount_40nor bg-rates" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$destination_amounts['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="<?php echo e(@$destination_amounts['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-40nor markup_40nor bg-rates" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$destination_markups['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="<?php echo e(@$destination_markups['c40nor']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_40nor"><?php echo e(@$destination_amounts['c40nor']+@$destination_markups['c40nor']); ?></span>
                                                                     </td>
-                                                                    <td <?php echo e(@$equipmentHides['45']); ?>>
-                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$destination_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                    <td <?php echo e(@$equipmentHides['45']); ?> class="tds">
+                                                                        <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="<?php echo e(@$destination_amounts['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
                                                                         +
-                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$destination_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
+                                                                        <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="<?php echo e(@$destination_markups['c45']); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Total"></a>
 
                                                                         <i class="la la-caret-right arrow-down"></i> 
                                                                         <span class="total_45"><?php echo e(@$destination_amounts['c45']+@$destination_markups['c45']); ?></span>
                                                                     </td>
-                                                                    <td>
-                                                                        <a href="#" class="editable" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
+                                                                    <td class="tds">
+                                                                        <a href="#" class="editable td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e($item->id); ?>" data-title="Select currency"></a>
                                                                         &nbsp;
                                                                         <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                             <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
@@ -697,50 +699,50 @@
                                                             <td <?php echo e(@$equipmentHides['20']); ?>>
                                                                 <div class="row ">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c20" class="form-control markup_c20" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40" class="form-control markup_c40" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40hc']); ?>>
                                                                  <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40hc" class="form-control markup_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40hc" class="form-control markup_c40hc" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['40nor']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">
-                                                                        <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c40nor" class="form-control markup_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="markup_c40nor" class="form-control markup_c40nor" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td <?php echo e(@$equipmentHides['45']); ?>>
                                                                 <div class="row">
                                                                     <div class="col-6">                                                                
-                                                                        <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                                        <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001"/>
                                                                     </div>
                                                                     <div class="col-6">
-                                                                        <input name="markup_c45" class="form-control markup_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;" />
+                                                                        <input name="markup_c45" class="form-control markup_c45" type="number" min="0" step="0.0000001" />
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -763,13 +765,14 @@
                                                         </tr>
                                                         <?php if($rate->id == @$rate_id ): ?>
                                                             <tr>
-                                                                <td class="title-quote size-12px" colspan="2">Total</td>
-                                                                <td <?php echo e(@$equipmentHides['20']); ?> colspan=""><?php echo e(number_format(@$sum_destination_20, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40']); ?> colspan=""><?php echo e(number_format(@$sum_destination_40, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> colspan=""><?php echo e(number_format(@$sum_destination_40hc, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> colspan=""><?php echo e(number_format(@$sum_destination_40nor, 2, '.', '')); ?></td>
-                                                                <td <?php echo e(@$equipmentHides['45']); ?> colspan=""><?php echo e(number_format(@$sum_destination_45, 2, '.', '')); ?></td>
-                                                                <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                                                <td></td>
+                                                                <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                                <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')); ?></span></td>
+                                                                <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="td-a"><?php echo e(number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')); ?></span></td>
+                                                                <td class="tds"><span class="td-a"><?php echo e($currency_cfg->alphacode); ?></span></td>
                                                             </tr>
                                                         <?php endif; ?>
                                                         </tbody>
@@ -794,14 +797,14 @@
                                         <div class="table-responsive">
                                             <table class="table table-sm table-bordered table-hover table color-blue text-center">
                                                 <thead class="title-quote text-center header-table">
-                                                    <tr>
-                                                        <td ></td>
-                                                        <td <?php echo e(@$equipmentHides['20']); ?> >20'</td>
-                                                        <td <?php echo e(@$equipmentHides['40']); ?> >40'</td>
-                                                        <td <?php echo e(@$equipmentHides['40hc']); ?> >40HC'</td>
-                                                        <td <?php echo e(@$equipmentHides['40nor']); ?> >40NOR'</td>
-                                                        <td <?php echo e(@$equipmentHides['45']); ?> >45'</td>
-                                                        <td >Currency</td>
+                                                    <tr style="height:40px;">
+                                                        <td class="tds" style="padding-left: 30px"></td>
+                                                        <td <?php echo e(@$equipmentHides['20']); ?> class="tds">20'</td>
+                                                        <td <?php echo e(@$equipmentHides['40']); ?> class="tds">40'</td>
+                                                        <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds">40HC'</td>
+                                                        <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds">40NOR'</td>
+                                                        <td <?php echo e(@$equipmentHides['45']); ?> class="tds">45'</td>
+                                                        <td class="tds">Currency</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody style="background-color: white;">
@@ -825,13 +828,13 @@
                                                         $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
                                                         $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
                                                     ?>
-                                                    <td class="title-quote size-12px">Total</td>
-                                                    <td <?php echo e(@$equipmentHides['20']); ?> ><span class="bg-rates"><?php echo e($amount_20); ?></span> + <span class="bg-rates"><?php echo e($markup_20); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_20); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40']); ?> ><span class="bg-rates"><?php echo e($amount_40); ?></span> + <span class="bg-rates"><?php echo e($markup_40); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> ><span class="bg-rates"><?php echo e($amount_40hc); ?></span> + <span class="bg-rates"><?php echo e($markup_40hc); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40hc); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> ><span class="bg-rates"><?php echo e($amount_40nor); ?></span> + <span class="bg-rates"><?php echo e($markup_40nor); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40nor); ?></td>
-                                                    <td <?php echo e(@$equipmentHides['45']); ?> ><span class="bg-rates"><?php echo e($amount_45); ?></span> + <span class="bg-rates"><?php echo e($markup_45); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_45); ?></td>
-                                                    <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                                    <td class="title-quote size-12px tds"><span class="td-a">Total</span></td>
+                                                    <td <?php echo e(@$equipmentHides['20']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_20); ?></span> + <span class="bg-rates"><?php echo e($markup_20); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_20); ?></td>
+                                                    <td <?php echo e(@$equipmentHides['40']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40); ?></span> + <span class="bg-rates"><?php echo e($markup_40); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40); ?></td>
+                                                    <td <?php echo e(@$equipmentHides['40hc']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40hc); ?></span> + <span class="bg-rates"><?php echo e($markup_40hc); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40hc); ?></td>
+                                                    <td <?php echo e(@$equipmentHides['40nor']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_40nor); ?></span> + <span class="bg-rates"><?php echo e($markup_40nor); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_40nor); ?></td>
+                                                    <td <?php echo e(@$equipmentHides['45']); ?> class="tds"><span class="bg-rates td-a"><?php echo e($amount_45); ?></span> + <span class="bg-rates"><?php echo e($markup_45); ?></span> <i class="la la-caret-right arrow-down"></i> <?php echo e($amount_markup_45); ?></td>
+                                                    <td class="tds"><span class="td-a"><?php echo e($currency_cfg->alphacode); ?></span></td>
                                                 </tbody>
                                             </table>
                                             <br>
@@ -954,7 +957,7 @@
                                     <!-- Remarks -->
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="m-portlet" style="box-shadow: none;">
+                                                <div class="m-portlet custom-portlet" style="box-shadow: none; background-color: #fff !important; border:none;">
                                                     <div class="m-portlet__head">
                                                         <div class="row" style="padding-top: 20px;">
                                                             <h5 class="title-quote size-12px">Remarks</h5>
@@ -962,7 +965,7 @@
                                                         <div class="m-portlet__head-tools">
                                                             <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
                                                                 <li class="nav-item m-tabs__item" id="edit_li">
-                                                                    <button class="btn btn-primary-v2 edit-remarks" onclick="edit_remark('remarks_span_<?php echo e($v); ?>','remarks_textarea_<?php echo e($v); ?>','update_remarks_<?php echo e($v); ?>')">
+                                                                    <button class="btn btn-primary-v2 edit-remarks btn-edit" onclick="edit_remark('remarks_span_<?php echo e($v); ?>','remarks_textarea_<?php echo e($v); ?>','update_remarks_<?php echo e($v); ?>')">
                                                                         Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
                                                                     </button>
                                                                 </li>

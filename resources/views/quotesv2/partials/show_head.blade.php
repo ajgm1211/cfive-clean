@@ -3,9 +3,7 @@
                 <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left" role="tablist" style="border-bottom: none;">
                     <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
                     <li class="nav-item m-tabs__item size-14px" >
-                        <a href="{{url('/v2/quotes/search')}}">
-                            <- Back to search
-                        </a>
+                        <a  href="{{url('/v2/quotes/search')}}" class="btn-backto"><span class="fa fa-arrow-left"></span> Back to search</a>
                     </li>                    
                 </ul>                
                 <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
@@ -29,24 +27,24 @@
             </div>
             <!-- Quote details -->
             <div class="col-md-12">
-                <div class="m-portlet custom-portlet">
+                <div class="m-portlet custom-portlet no-border">
                     <div class="m-portlet__head">
-                        <div class="row" style="padding-top: 20px;">
-                            <h3 class="title-quote size-14px">Quote info</h3>
-                        </div>
-                        <div class="m-portlet__head-tools">
-                            <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
-                                <li class="nav-item m-tabs__item" id="edit_li">
-                                    <a class="btn btn-primary-v2" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
-                                        Edit &nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                      <div class="row" style="padding-top: 20px;">
+                        <h3 class="title-quote size-14px">Quote info</h3>
+                      </div>
+                      <div class="m-portlet__head-tools">
+                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
+                          <li class="nav-item m-tabs__item" id="edit_li">
+                            <a class="btn btn-primary-v2 btn-edit" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                              Edit &nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                     <div class="m-portlet__body">
                         <div class="tab-content">
-                            <div class="row">
+                            <div class="row quote-info-mb">
                                 <div class="col-md-4">
                                     <input type="text" value="{{$quote->id}}" class="form-control id" hidden >
                                     <input type="text" id="currency_id" value="{{$currency_cfg->alphacode}}" class="form-control id" hidden >
