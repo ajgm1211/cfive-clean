@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTermsAndPaymentsConditionsFieldsToQuotev2sTable extends Migration
+class AddCommodityAndKindOfCargoFieldsToQuoteV2sTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddTermsAndPaymentsConditionsFieldsToQuotev2sTable extends Migration
     public function up()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->string('payment_conditions',5000)->nullable()->after('remarks');
-            $table->string('terms_and_conditions',5000)->nullable()->after('payment_conditions');
+            $table->string('commodity')->nullable()->after('validity_end');
+            $table->enum('kind_of_cargo',['General','Perishable','Dangerous','Valuable Cargo','All Live Animals','Human Remains','Pharma'])->nullable()->after('commodity');
         });
     }
 
@@ -27,8 +27,8 @@ class AddTermsAndPaymentsConditionsFieldsToQuotev2sTable extends Migration
     public function down()
     {
         Schema::table('quote_v2s', function (Blueprint $table) {
-            $table->dropColumn('payment_conditions');
-            $table->dropColumn('terms_and_conditions');
+            $table->dropColumn('commodity');
+            $table->dropColumn('kind_of_cargo');
         });
     }
 }
