@@ -590,6 +590,12 @@ Route::middleware(['auth'])->prefix('Region')->group(function () {
     Route::get('/LoadViewRegion','RegionController@LoadViewAdd')->name('load.View.add.region');
 });
 
+//Manager Carriers
+
+Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->group(function(){
+    Route::resource('managercarriers', 'CarriersController');
+});
+
 Route::resource('search', 'SearchController')->middleware('auth');
 Auth::routes();
 

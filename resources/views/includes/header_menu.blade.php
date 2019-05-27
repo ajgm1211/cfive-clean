@@ -319,6 +319,14 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-ship"></i>
+                                    <span class="m-menu__link-text">
+                                        Manage Carriers
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-user-settings"></i>
                                     <span class="m-menu__link-text">
