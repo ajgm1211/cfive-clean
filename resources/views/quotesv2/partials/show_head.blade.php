@@ -120,26 +120,24 @@
                                     <span class="date_issued_span">{{date_format($date, 'M d, Y H:i')}}</span>
                                     {!! Form::text('created_at', date_format($date, 'Y-m-d H:i'), ['placeholder' => 'Validity','class' => 'form-control m-input date_issued','readonly'=>true,'required' => 'required','hidden']) !!}
                                 </div>                              
-                                <div class="col-md-4" {{$quote->type=='FCL' ? '':'hidden'}}>
+                                <div class="col-md-4" >
                                     <br>
                                     <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                                     <span class="equipment_span">
-                                        @if($quote->equipment!='')
-                                            <?php
-                                                $equipment=json_decode($quote->equipment);
-                                            ?>
-                                            @foreach($equipment as $item)
-                                                {{$item}}@unless($loop->last),@endunless
-                                            @endforeach
+                                        @if($quote->type=='FCL')
+                                            @if($quote->equipment!='')
+                                                <?php
+                                                    $equipment=json_decode($quote->equipment);
+                                                ?>
+                                                @foreach($equipment as $item)
+                                                    {{$item}}@unless($loop->last),@endunless
+                                                @endforeach
+                                            @endif
+                                        @else
+                                            N/A
                                         @endif
                                     </span>
-                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','id'=>'equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
-                                </div>
-                                <div class="col-md-4" {{$quote->type!='FCL' ? '':'hidden'}}>
-                                    <br>
-                                    <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
-                                    {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden','']) }}
-                                    <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
+                                    {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -164,14 +162,26 @@
                                     {{ Form::select('incoterm_id',$incoterms,$quote->incoterm_id,['class'=>'form-control incoterm_id select2','hidden','']) }}
                                     <span class="incoterm_id_span">{{$quote->incoterm->name}}</span>
                                 </div>
-                                @if($quote->type=='FCL')
-                                    <div class="col-md-4">
-                                        <br>
-                                        <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
-                                        {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden','']) }}
-                                        <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
-                                    </div>
-                                @endif
+                                <div class="col-md-4">
+                                    <br>
+                                    <label class="title-quote"><b>Owner:&nbsp;&nbsp;</b></label>
+                                    {{ Form::select('user_id',$users,$quote->user_id,['class'=>'form-control user_id select2','hidden']) }}
+                                    <span class="user_id_span">{{$quote->user->name}} {{$quote->user->lastname}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <br>
+                                    <label class="title-quote"><b>Kind of cargo:&nbsp;&nbsp;</b></label>
+                                    <span class="kind_of_cargo_span">{{$quote->kind_of_cargo}}</span>
+                                    {{ Form::select('user_id',[''=>'Select an option','General'=>'General','Perishable'=>'Perishable','Dangerous'=>'Dangerous','Valuable Cargo'=>'Valuable Cargo','All Live Animals'=>'All Live Animals','Human Remains'=>'Human Remains','Pharma'=>'Pharma'],$quote->kind_of_cargo,['class'=>'form-control kind_of_cargo select2','hidden']) }}
+                                </div>
+                                <div class="col-md-4">
+                                    <br>
+                                    <label class="title-quote"><b>Commodity:&nbsp;&nbsp;</b></label>
+                                    <span class="commodity_span">{{$quote->commodity}}</span>
+                                    {!! Form::textarea('commodity', $quote->commodity, ['placeholder' => 'Commodity','class' => 'form-control m-input commodity','hidden']) !!}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 text-center" id="update_buttons" hidden>

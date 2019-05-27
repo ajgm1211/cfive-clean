@@ -56,7 +56,7 @@
               <div class="col-md-3 group_freight_charges">
                 <div class="form-check">
                   <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_freight_charges" type="checkbox" data-type="checkbox" name="grouped_freight_charges" value="1" {{$quote->pdf_option->grouped_freight_charges==1 ? 'checked':''}}>
-                  <label class="title-quote input_form"><b>Group Freight Charges in:</b></label>
+                  <label class="title-quote input_form"><b>Show Freight Charges in:</b></label>
                   {{ Form::select('freight_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->freight_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'freight_charges_currency']) }}
                 </div>
               </div>
@@ -69,7 +69,7 @@
                 </div>
               </div>
 
-              <div class="col-md-2 show_carrier">
+              <div class="col-md-3 show_carrier">
                 <div class="form-check">
                   <input class="form-check-input pdf-feature check" type="checkbox" name="show_carrier" value="1" id="show_carrier" data-quote-id="{{$quote->id}}" data-type="checkbox" data-name="show_carrier" {{$quote->pdf_option->show_carrier==1 ? 'checked':''}}>
                   <label class="form-check-label title-quote input_form" for="show_carrier">
@@ -83,9 +83,8 @@
                 {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
               </div>
 
-
-
-              <div class="col-md-2 col-xs-12">
+              <div class="col-md-12 col-xs-12">
+                <hr>
                 {{ Form::select('show_type',['detailed'=>'Show detailed','total in'=>'Show total in'],$quote->pdf_option->show_type,['class'=>'form-control-sm type select2 pdf-feature select_forms','id'=>'show_hide_select','data-quote-id'=>$quote->id,'data-name'=>'show_type','data-type'=>'select']) }}
               </div>
 
