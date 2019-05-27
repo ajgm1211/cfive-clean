@@ -192,7 +192,7 @@ $(document).ready(function() {
     }
   });
 
-    $('.editable-inland-40hc').editable({
+  $('.editable-inland-40hc').editable({
     url:'/v2/quotes/inland/update',
     emptytext:0,
     success: function(response, newValue) {
@@ -228,7 +228,7 @@ $(document).ready(function() {
     }
   });
 
-    $('.editable-inland-40nor').editable({
+  $('.editable-inland-40nor').editable({
     url:'/v2/quotes/inland/update',
     emptytext:0,
     success: function(response, newValue) {
@@ -264,7 +264,7 @@ $(document).ready(function() {
     }
   });
 
-    $('.editable-inland-45').editable({
+  $('.editable-inland-45').editable({
     url:'/v2/quotes/inland/update',
     emptytext:0,
     success: function(response, newValue) {
@@ -811,6 +811,8 @@ $(document).on('click', '#edit-quote', function () {
   $(".price_level_span").attr('hidden','true');
   $(".type_span").attr('hidden','true');
   $(".incoterm_id_span").attr('hidden','true');
+  $(".commodity_span").attr('hidden','true');
+  $(".kind_of_cargo_span").attr('hidden','true');
   $(".contact_id_span").attr('hidden','true');
   $(".validity_span").attr('hidden','true');
   $(".user_id_span").attr('hidden','true');
@@ -822,6 +824,8 @@ $(document).on('click', '#edit-quote', function () {
   $(".status").removeAttr('hidden');
   $(".delivery_type").removeAttr('hidden');
   $(".incoterm_id").removeAttr('hidden');
+  $(".commodity").removeAttr('hidden');
+  $(".kind_of_cargo").removeAttr('hidden');
   $(".contact_id").removeAttr('hidden');
   $(".contact_id").prop('disabled',false);
   $(".validity").removeAttr('hidden');
@@ -833,6 +837,7 @@ $(document).on('click', '#edit-quote', function () {
   $("#edit_li").attr('hidden','true');
   $(".type").select2();
   $(".status").select2();
+  $(".kind_of_cargo").select2();
   $(".company_id").select2();
   $(".delivery_type").select2();
   $(".incoterm_id").select2();
@@ -850,6 +855,8 @@ $(document).on('click', '#cancel', function () {
   $(".price_level_span").removeAttr('hidden');
   $(".type_span").removeAttr('hidden');
   $(".incoterm_id_span").removeAttr('hidden');
+  $(".commodity_span").removeAttr('hidden');
+  $(".kind_of_cargo_span").removeAttr('hidden');
   $(".contact_id_span").removeAttr('hidden');
   $(".validity_span").removeAttr('hidden');
   $(".user_id_span").removeAttr('hidden');
@@ -861,6 +868,8 @@ $(document).on('click', '#cancel', function () {
   $(".status").attr('hidden','true');
   $(".delivery_type").attr('hidden','true');
   $(".incoterm_id").attr('hidden','true');
+  $(".commodity_span").attr('hidden','true');
+  $(".kind_of_cargo_span").attr('hidden','true');
   $(".contact_id").attr('hidden','true');
   $(".validity").attr('hidden','true');
   $(".user_id").attr('hidden','true');
@@ -870,6 +879,7 @@ $(document).on('click', '#cancel', function () {
   $("#update_buttons").attr('hidden','true');
   $("#edit_li").removeAttr('hidden');
   $(".type").select2('destroy');
+  $(".kind_of_cargo").select2('destroy');
   $(".status").select2('destroy');
   $(".company_id").select2('destroy');
   $(".delivery_type").select2('destroy');
@@ -894,6 +904,8 @@ $(document).on('click', '#update', function () {
   var user_id=$(".user_id").val();
   var date_issued=$(".date_issued").val();
   var price_id=$(".price_id").val();
+  var commodity=$(".commodity").val();
+  var kind_of_cargo=$(".kind_of_cargo").val();
 
   $.ajax({
     type: 'POST',
@@ -911,6 +923,8 @@ $(document).on('click', '#update', function () {
       'user_id': user_id,
       'date_issued': date_issued,
       'price_id': price_id,
+      'commodity': commodity,
+      'kind_of_cargo': kind_of_cargo,
     },
     success: function(data) {
       if(data.message=='Ok'){
@@ -971,6 +985,10 @@ $(document).on('click', '#update', function () {
         $(".delivery_type_span").html(delivery_type);
         $(".incoterm_id").val(data.quote['incoterm_id']);
         $(".incoterm_id_span").html(incoterm);
+        $(".commodity").val(data.quote['commodity']);
+        $(".commodity_span").html(data.quote['commodity']);
+        $(".kind_of_cargo").val(data.quote['kind_of_cargo']);
+        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);        
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
         var length = $.parseJSON(data.quote['equipment']).length;
@@ -1000,6 +1018,8 @@ $(document).on('click', '#update', function () {
         $(".price_level_span").removeAttr('hidden');
         $(".type_span").removeAttr('hidden');
         $(".incoterm_id_span").removeAttr('hidden');
+        $(".commodity_span").removeAttr('hidden');
+        $(".kind_of_cargo_span").removeAttr('hidden');
         $(".contact_id_span").removeAttr('hidden');
         $(".validity_span").removeAttr('hidden');
         $(".user_id_span").removeAttr('hidden');
@@ -1011,6 +1031,8 @@ $(document).on('click', '#update', function () {
         $(".status").attr('hidden','true');
         $(".delivery_type").attr('hidden','true');
         $(".incoterm_id").attr('hidden','true');
+        $(".commodity").attr('hidden','true');
+        $(".kind_of_cargo").attr('hidden','true');
         $(".contact_id").attr('hidden','true');
         $(".validity").attr('hidden','true');
         $(".user_id").attr('hidden','true');
@@ -1028,6 +1050,7 @@ $(document).on('click', '#update', function () {
         $(".user_id").select2('destroy');
         $(".price_id").select2('destroy');
         $(".equipment").select2('destroy');
+        $(".kind_of_cargo").select2('destroy');
 
         //Refresh page after 5 seconds
         //setTimeout(location.reload.bind(location), 5000);
