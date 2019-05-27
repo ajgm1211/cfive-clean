@@ -1893,7 +1893,6 @@ class QuoteV2Controller extends Controller
     $prices = Price::all()->pluck('name','id');
     $carrierMan = Carrier::all()->pluck('name','id');
     $airlines = Airline::all()->pluck('name','id');
-    $carrierMan->prepend("Please an option");
 
     $company_user = User::where('id',\Auth::id())->first();
     if(count($company_user->companyUser)>0) {
@@ -3246,13 +3245,13 @@ class QuoteV2Controller extends Controller
       $markup = ( $monto *  $inlandPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
-      $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)") ;
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)",'montoInlandT' => $monto ) ;
     }else{
 
       $markup =$inlandAmmount;
       $markup = number_format($markup, 2, '.', '');
       $monto += $inlandMarkup;
-      $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre) ;
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ) ;
 
     }
     return $arraymarkupI;

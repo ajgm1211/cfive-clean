@@ -1061,6 +1061,7 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
+
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").show();
@@ -1095,6 +1096,7 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
+
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").hide();
@@ -1175,6 +1177,8 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
+
+
     $("#origin_harbor").prop( "disabled", true );
     $("#destination_harbor").prop( "disabled", true );
     $("#equipment_id").hide();
@@ -1384,12 +1388,18 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
+  $("#carrieManual").prop( "required", false );
   $('#FormQuote').attr('action', '/v2/quotes/processSearch');
   $(".quote_search").attr("type","submit");
 
 });
-$(".quote_man").on("click", function() {
 
+
+
+$(".quote_man").on("click", function() {
+  
+  $("#carrieManual").attr( "required", true );
+  
   $('#FormQuote').attr('action', '/v2/quotes/store');
 
   if($('#quoteType').val()==2){
@@ -1414,6 +1424,8 @@ $('.btn-input__select').on('click', function(){
 
   var idRate = $(this).attr('rate-id');
 
+
+  $('.labelSelectDest'+idRate).toggleClass('hidden-general');
   $('.labelOrig'+idRate).toggleClass('visible__select-add');
   $('.labelDest'+idRate).toggleClass('visible__select-add');
 });
