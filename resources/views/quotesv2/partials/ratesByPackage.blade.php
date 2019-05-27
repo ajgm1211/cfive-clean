@@ -104,8 +104,16 @@
                                                       <img src="{{ url('imgcarrier/'.$rate->airline->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
                                                       @endif                                        
                                                     </li>
-                                                    <li class="size-12px">POL: @if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
-                                                    <li class="size-12px">POD: @if($quote->type=='LCL') {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_airport->display_name}} @endif &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
+                                                    <li class="size-12px">POL: @if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;
+                                                    @if($quote->type!='AIR')
+                                                      <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/>
+                                                    @endif
+                                                    </li>
+                                                    <li class="size-12px">POD: @if($quote->type=='LCL') {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_airport->display_name}} @endif &nbsp;
+                                                    @if($quote->type!='AIR')
+                                                      <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/>
+                                                    @endif
+                                                    </li>
                                                     <li class="size-12px">Contract: {{$rate->contract}}</li>
                                                     <li class="size-12px no-border-left d-flex justify-content-end">
                                                       <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
