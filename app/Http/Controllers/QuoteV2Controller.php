@@ -121,6 +121,8 @@ class QuoteV2Controller extends Controller
       foreach($rates as $rate){
         if($rate->origin_port_id!=''){
           $origin.='<li>'.$rate->origin_port->name.'</li>';
+        }else if($rate->destination_airport_id!=''){
+          $origin.='<li>'.$rate->origin_airport->name.'</li>';
         }else if($rate->origin_address!=''){
           $origin.='<li>'.$rate->origin_address.'</li>';
         }
@@ -129,9 +131,17 @@ class QuoteV2Controller extends Controller
       foreach($rates as $rate){
         if($rate->destination_port_id!=''){
           $destination.='<li>'.$rate->destination_port->name.'</li>';
+        }else if($rate->destination_airport_id!=''){
+          $destination.='<li>'.$rate->destination_airport->name.'</li>';
         }else if($rate->destination_address!=''){
           $destination.='<li>'.$rate->destination_address.'</li>';
         }
+      }
+
+      if($quote->type=='AIR'){
+        $img='<img src="/images/plane-blue.svg" class="img img-responsive" width="25">';
+      }else{
+        $img='<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
       }
 
       $data = [
@@ -143,12 +153,13 @@ class QuoteV2Controller extends Controller
         'origin'        => '<ul>'.$origin.'</ul>',
         'destination'   => '<ul>'.$destination.'</ul>',
         'type'          => $quote->type,
+        'img'          => $img,
       ];
       $colletions->push($data);
     }
     return DataTables::of($colletions)
-    ->addColumn('type', function ($colletion) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+    ->addColumn('type', function ($colletion) use($quote) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
     })->addColumn('action',function($colletion){
       return
       '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
