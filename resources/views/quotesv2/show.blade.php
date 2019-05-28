@@ -1,15 +1,145 @@
 @extends('layouts.app')
 @section('css')
-    @parent
-    <link href="/css/quote.css" rel="stylesheet" type="text/css" />
+@parent
+<link href="/css/quote.css" rel="stylesheet" type="text/css" />
 
-    <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
+<style>
+  .bg-quotes {
+    background-color: #e3e8ee !important;
+  }
+  .no-border {
+    border: none;
+    box-shadow: none;
+    background-color: #fff !important;
+  }
+  .btn-edit {
+    border-color: #eee !import;
+  }
+  .span_draft {
+    background-color: #d6ebff !important;
+    color: #066efa !important;
+  }
+  .padding-portlet { 
+    padding: 10px 0 !important;
+  }
+  .padding-portlet .flex-list li {
+    margin: 0 !important;
+    border-left: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px !important;
+  }
+  .no-border-left {
+    border-left: none !important;
+  }
+  .no-border-left i {
+    font-size: 35px;
+  }
+  .header-charges {
+    padding: 13px 30px;
+    background-color: #f6fafc;
+    height: 40px !important;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  .thead {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .no-mg-row {
+    margin: 0 !important;
+  }
+  .header-table {
+    background-color: #f5f5f9 !important;
+    line-height: 0 !important;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+  .td-table {
+    line-height: 30px;
+    text-align: left !important;
+    margin-left: 50px;
+  }
+  td {
+    border: none !important;
+  }
+  td a {
+    border-bottom: none !important;
+  }
+  .td-a {
+    border: 1px solid #eee !important;
+    border-radius: 5px;
+    padding: 6px;
+  }
+  .tds {
+    line-height: 40px;
+    text-align: left;
+  }
+  .btn-edit {
+    height: 25px;
+    font-size: 12px;
+    line-height: 15px;
+    padding: 5px 10px;
+  }
+  .portlet-padding {
+    padding: 10px 2.2rem 2.2rem 2.2rem !important;
+  }
+  .display-none {
+    display: none;
+  }
+  .btn-primary-v2 {
+    background-color: transparent !important;
+  }
+  .quote-info-mb {
+    margin-bottom: 5px;
+  }
+  .btn-open span {
+    font-size: 35px;
+  }
+  .btn-backto {
+    font-size: 16px;
+  }
+  .select_forms {
+    background-color: transparent;
+  }
+  .input_form:before {
+    content: '';
+    color: #fff;
+    background-color: transparent;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #066efa;
+    border-radius: 2px;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    text-align: center;
+    z-index: 1
+  }
+  .check {
+    position: relative;
+    z-index: 5;
+    opacity: 0;
+    margin-right: 5px;
+  }
+  .check[type="checkbox"]:checked + .input_form:before {
+    content: '✔';
+    background-color: #066efa;
+    color: #fff;
+  }
+  .form-check {
+    display: flex;
+    align-items: center;
+  }
+  /*estilos*/
+
+</style>
 @endsection
-
 @section('title', 'Quotes')
 @section('content')
-    <br>
-    <div class="m-content">
+    <div class="m-content bg-quotes">
         @if(Session::has('message.nivel'))
             <div class="col-md-12">
                 <br>
@@ -39,14 +169,14 @@
             @include('quotesv2.partials.ratesByPackage')
         @endif
 
+        <!-- PDF Layout -->
+        @include('quotesv2.partials.pdf_layout')
+
         <!-- Payments and terms conditions -->
         @include('quotesv2.partials.payments')
 
         <!-- Terms and conditions -->
         @include('quotesv2.partials.terms')
-
-        <!-- PDF Layout -->
-        @include('quotesv2.partials.pdf_layout')
 
     </div>
     @include('quotesv2.partials.sendQuoteModal')
@@ -101,5 +231,22 @@
 
         tinymce.init(editor_config);
 
+          $('.btn-open').on('click', function(){
+    var element = $(this).attr('id');
+
+    if(element == 'pay')
+    {
+      $('.pay').toggle();
+    }
+    if(element == 'terms')
+    {
+      $('.terms').toggle();
+    }
+    if(element == 'remks')
+    {
+      $('.remks').toggle();
+    }
+
+  });
     </script>
 @stop

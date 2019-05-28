@@ -105,6 +105,202 @@ $(document).ready(function() {
     }
   });
 
+  $('.editable-inland').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-20').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
+      $(this).closest('tr').find('.total_20').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-m20').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
+      $(this).closest('tr').find('.total_20').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-40').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
+      $(this).closest('tr').find('.total_40').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-m40').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
+      $(this).closest('tr').find('.total_40').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-40hc').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+      $(this).closest('tr').find('.total_40hc').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-m40hc').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
+      $(this).closest('tr').find('.total_40hc').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-40nor').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
+      $(this).closest('tr').find('.total_40nor').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-m40nor').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
+      $(this).closest('tr').find('.total_40nor').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-45').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
+      $(this).closest('tr').find('.total_45').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-inland-m45').editable({
+    url:'/v2/quotes/inland/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
+      $(this).closest('tr').find('.total_45').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  //Inline edit amounts
   $('.editable-amount-20').editable({
     url:'/v2/quotes/charges/update',
     emptytext:0,
@@ -314,7 +510,7 @@ $(document).on('click', '.store_charge_lcl', function () {
   var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
   var units = $(this).closest("tr").find(".units").val();
   var price_per_unit = $(this).closest("tr").find(".price_per_unit").val();
-  var total = $(this).closest("tr").find(".total").val();
+  var total = $(this).closest("tr").find(".total_2").val();
   var markup = $(this).closest("tr").find(".markup").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
@@ -339,7 +535,7 @@ $(document).on('click', '.store_charge_lcl', function () {
           'Done!',
           'Charge saved successfully',
           'success'
-        )
+          )
       }
       setTimeout(location.reload.bind(location), 3000);
     }
@@ -390,7 +586,7 @@ $(document).on('click', '.store_charge', function () {
           'Done!',
           'Charge saved successfully',
           'success'
-        )
+          )
       }
       setTimeout(location.reload.bind(location), 3000);
     }
@@ -418,7 +614,7 @@ $(document).on('click', '.delete-rate', function () {
               'Updated!',
               'The rete has been deleted.',
               'success'
-            )
+              )
             $(theElement).closest('.row').find('.tab-content').remove();
             //setTimeout(location.reload.bind(location), 3000);
           }
@@ -449,7 +645,7 @@ $(document).on('click', '.delete-charge', function () {
               'Updated!',
               'The charge has been deleted.',
               'success'
-            )
+              )
           }
           $(theElement).closest('tr').remove();
           //setTimeout(location.reload.bind(location), 3000);
@@ -479,7 +675,7 @@ $(document).on('click', '.delete-charge-lcl', function () {
               'Updated!',
               'The charge has been deleted.',
               'success'
-            )
+              )
           }
           $(theElement).closest('tr').remove();
           //setTimeout(location.reload.bind(location), 3000);
@@ -517,7 +713,7 @@ $(document).on('click', '#update-payments', function () {
           'Updated!',
           'The payment conditions has been updated.',
           'success'
-        )
+          )
 
         $(".payment_conditions_span").html(data.quote['payment_conditions']);
         $(".payment_conditions_span").removeAttr('hidden');
@@ -556,7 +752,7 @@ $(document).on('click', '#update-terms', function () {
           'Updated!',
           'The terms and conditions has been updated.',
           'success'
-        )
+          )
 
         $(".terms_and_conditions_span").html(data.quote['terms_and_conditions']);
         $(".terms_and_conditions_span").removeAttr('hidden');
@@ -595,7 +791,7 @@ function update_remark($id,$content,$v){
           'Updated!',
           'The remarks has been updated.',
           'success'
-        )
+          )
 
         $(".remarks_span_"+$v).html(data.rate['remarks']);
         $(".remarks_span_"+$v).removeAttr('hidden');
@@ -615,6 +811,8 @@ $(document).on('click', '#edit-quote', function () {
   $(".price_level_span").attr('hidden','true');
   $(".type_span").attr('hidden','true');
   $(".incoterm_id_span").attr('hidden','true');
+  $(".commodity_span").attr('hidden','true');
+  $(".kind_of_cargo_span").attr('hidden','true');
   $(".contact_id_span").attr('hidden','true');
   $(".validity_span").attr('hidden','true');
   $(".user_id_span").attr('hidden','true');
@@ -626,6 +824,8 @@ $(document).on('click', '#edit-quote', function () {
   $(".status").removeAttr('hidden');
   $(".delivery_type").removeAttr('hidden');
   $(".incoterm_id").removeAttr('hidden');
+  $(".commodity").removeAttr('hidden');
+  $(".kind_of_cargo").removeAttr('hidden');
   $(".contact_id").removeAttr('hidden');
   $(".contact_id").prop('disabled',false);
   $(".validity").removeAttr('hidden');
@@ -637,6 +837,7 @@ $(document).on('click', '#edit-quote', function () {
   $("#edit_li").attr('hidden','true');
   $(".type").select2();
   $(".status").select2();
+  $(".kind_of_cargo").select2();
   $(".company_id").select2();
   $(".delivery_type").select2();
   $(".incoterm_id").select2();
@@ -654,6 +855,8 @@ $(document).on('click', '#cancel', function () {
   $(".price_level_span").removeAttr('hidden');
   $(".type_span").removeAttr('hidden');
   $(".incoterm_id_span").removeAttr('hidden');
+  $(".commodity_span").removeAttr('hidden');
+  $(".kind_of_cargo_span").removeAttr('hidden');
   $(".contact_id_span").removeAttr('hidden');
   $(".validity_span").removeAttr('hidden');
   $(".user_id_span").removeAttr('hidden');
@@ -665,6 +868,8 @@ $(document).on('click', '#cancel', function () {
   $(".status").attr('hidden','true');
   $(".delivery_type").attr('hidden','true');
   $(".incoterm_id").attr('hidden','true');
+  $(".commodity_span").attr('hidden','true');
+  $(".kind_of_cargo_span").attr('hidden','true');
   $(".contact_id").attr('hidden','true');
   $(".validity").attr('hidden','true');
   $(".user_id").attr('hidden','true');
@@ -674,6 +879,7 @@ $(document).on('click', '#cancel', function () {
   $("#update_buttons").attr('hidden','true');
   $("#edit_li").removeAttr('hidden');
   $(".type").select2('destroy');
+  $(".kind_of_cargo").select2('destroy');
   $(".status").select2('destroy');
   $(".company_id").select2('destroy');
   $(".delivery_type").select2('destroy');
@@ -698,6 +904,8 @@ $(document).on('click', '#update', function () {
   var user_id=$(".user_id").val();
   var date_issued=$(".date_issued").val();
   var price_id=$(".price_id").val();
+  var commodity=$(".commodity").val();
+  var kind_of_cargo=$(".kind_of_cargo").val();
 
   $.ajax({
     type: 'POST',
@@ -715,6 +923,8 @@ $(document).on('click', '#update', function () {
       'user_id': user_id,
       'date_issued': date_issued,
       'price_id': price_id,
+      'commodity': commodity,
+      'kind_of_cargo': kind_of_cargo,
     },
     success: function(data) {
       if(data.message=='Ok'){
@@ -722,7 +932,7 @@ $(document).on('click', '#update', function () {
           'Updated!',
           'Your quote has been updated.',
           'success'
-        )
+          )
         var incoterm = data.quote['incoterm_id'];
         var delivery_type = data.quote['delivery_type'];
 
@@ -775,6 +985,10 @@ $(document).on('click', '#update', function () {
         $(".delivery_type_span").html(delivery_type);
         $(".incoterm_id").val(data.quote['incoterm_id']);
         $(".incoterm_id_span").html(incoterm);
+        $(".commodity").val(data.quote['commodity']);
+        $(".commodity_span").html(data.quote['commodity']);
+        $(".kind_of_cargo").val(data.quote['kind_of_cargo']);
+        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);        
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
         var length = $.parseJSON(data.quote['equipment']).length;
@@ -804,6 +1018,8 @@ $(document).on('click', '#update', function () {
         $(".price_level_span").removeAttr('hidden');
         $(".type_span").removeAttr('hidden');
         $(".incoterm_id_span").removeAttr('hidden');
+        $(".commodity_span").removeAttr('hidden');
+        $(".kind_of_cargo_span").removeAttr('hidden');
         $(".contact_id_span").removeAttr('hidden');
         $(".validity_span").removeAttr('hidden');
         $(".user_id_span").removeAttr('hidden');
@@ -815,6 +1031,8 @@ $(document).on('click', '#update', function () {
         $(".status").attr('hidden','true');
         $(".delivery_type").attr('hidden','true');
         $(".incoterm_id").attr('hidden','true');
+        $(".commodity").attr('hidden','true');
+        $(".kind_of_cargo").attr('hidden','true');
         $(".contact_id").attr('hidden','true');
         $(".validity").attr('hidden','true');
         $(".user_id").attr('hidden','true');
@@ -832,6 +1050,7 @@ $(document).on('click', '#update', function () {
         $(".user_id").select2('destroy');
         $(".price_id").select2('destroy');
         $(".equipment").select2('destroy');
+        $(".kind_of_cargo").select2('destroy');
 
         //Refresh page after 5 seconds
         //setTimeout(location.reload.bind(location), 5000);
@@ -851,7 +1070,7 @@ $('.select2-destination').select2();
 
 function addFreightCharge($value){
   var $template = $('#freight_charges_'+$value),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -863,7 +1082,7 @@ function addFreightCharge($value){
 
 function addOriginCharge($value){
   var $template = $('#origin_charges_'+$value),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -875,7 +1094,7 @@ function addOriginCharge($value){
 
 function addDestinationCharge($value){
   var $template = $('#destination_charges_'+$value),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -930,13 +1149,13 @@ $(document).on('click', '#send-pdf-quotev2', function () {
             'Done!',
             'Your message has been sent.',
             'success'
-          )
+            )
         }else{
           swal(
             'Error!',
             'Your message has not been sent.',
             'error'
-          )
+            )
         }
       }
     });
@@ -945,7 +1164,7 @@ $(document).on('click', '#send-pdf-quotev2', function () {
       '',
       'Please complete all fields',
       'error'
-    )
+      )
   }
 });
 
@@ -986,6 +1205,61 @@ $(document).on('change', '.pdf-feature', function () {
         //$(this).attr('checked', true).val(0);
       }
     }
+  });
+});
+
+//Calculating total in charges air lcl
+
+$(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function() {
+  var sum = 0;
+  var total_amount = 0;
+  var markup = 0;
+  var total=0;
+  var self = this;
+  var currency_cfg = $("#currency_id").val();
+  $(".price_per_unit").each(function(){
+    $( this).each(function() {
+      var quantity = $(this).closest('tr').find('.units').val();
+      var currency_id = $(self).closest('tr').find('.currency_id').val();
+
+      if(quantity > 0) {
+        if ($(self).closest('tr').find('.currency_id').val() != "") {
+          $.ajax({
+            url: '/api/currency/'+currency_id,
+            dataType: 'json',
+            success: function (json) {
+              var amount = $(self).closest('tr').find('.price_per_unit').val();
+              var quantity = $(self).closest('tr').find('.units').val();
+              markup = $(self).closest('tr').find('.markup').val();
+              var sub_total = amount * quantity;
+              
+              /*if(currency_cfg+json.alphacode == json.api_code){
+                total = sub_total / json.rates;
+              }else{
+                total = sub_total / json.rates_eur;
+              }*/
+              total = sub_total.toFixed(2);
+              
+              if(markup > 0){
+                var total_amount_m = Number(total)+ Number(markup);
+                $(self).closest('tr').find('.total_2').val(total_amount_m.toFixed(2));
+                $(self).closest('tr').find('.total_2').change();
+              }else{
+                $(self).closest('tr').find('.total_2').val(total);
+                $(self).closest('tr').find('.total_2').change();
+              }
+            }
+          });
+        }
+        total_amount = quantity * $(this).val();
+        $(this).closest('tr').find('.total').val(total_amount);
+        $(this).closest('tr').find('.total').change();
+      }else{
+        total_amount = 0;
+        $(this).closest('tr').find('.total').val(total_amount);
+        $(this).closest('tr').find('.total').change();
+      }
+    });
   });
 });
 
@@ -1954,7 +2228,7 @@ $('#destination_airport').select2({
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
   var $template = $('#lcl_air_load_template'),
-      $clone = $template
+  $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
