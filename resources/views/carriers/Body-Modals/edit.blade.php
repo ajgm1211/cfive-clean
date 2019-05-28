@@ -36,7 +36,7 @@
 <div class="form-group row">
     <div class="col-lg-5">
         <label for="number" class="form-control-label">
-            Preview Picture:
+            Preview:
         </label>
         <br>
         <img id="blah" src="{{$image}}" alt="your image" width="175" height="150"/>

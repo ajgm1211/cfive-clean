@@ -594,6 +594,7 @@ Route::middleware(['auth'])->prefix('Region')->group(function () {
 
 Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->group(function(){
     Route::resource('managercarriers', 'CarriersController');
+    Route::get('synchronousCarrier','CarriersController@synchronous')->name('synchronous.carrier');
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
