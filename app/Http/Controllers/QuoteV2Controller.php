@@ -49,7 +49,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use App\PackageLoadV2;
 use App\Airline;
-
+use App\TermsPort;
+use App\TermsAndCondition;
 class QuoteV2Controller extends Controller
 {
   public function index(Request $request){
@@ -281,9 +282,9 @@ class QuoteV2Controller extends Controller
       }
       foreach ($item->inland as $inland) {
         $typeCurrency =  $currency_cfg->alphacode;
-        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-        $array_amounts = json_decode($value->rate,true);
-        $array_markups = json_decode($value->markup,true);
+        $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
+        $array_amounts = json_decode($inland->rate,true);
+        $array_markups = json_decode($inland->markup,true);
         if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
           $amount20=$array_amounts['c20'];
           $markup20=$array_markups['c20'];
@@ -314,11 +315,11 @@ class QuoteV2Controller extends Controller
           $total45=($amount45+$markup45)/$currency_rate;
           $sum45 = number_format($total45, 2, '.', '');
         }
-        $value->total_20=number_format($sum20, 2, '.', '');
-        $value->total_40=number_format($sum40, 2, '.', '');
-        $value->total_40hc=number_format($sum40hc, 2, '.', '');
-        $value->total_40nor=number_format($sum40nor, 2, '.', '');
-        $value->total_45=number_format($sum45, 2, '.', '');
+        $inland->total_20=number_format($sum20, 2, '.', '');
+        $inland->total_40=number_format($sum40, 2, '.', '');
+        $inland->total_40hc=number_format($sum40hc, 2, '.', '');
+        $inland->total_40nor=number_format($sum40nor, 2, '.', '');
+        $inland->total_45=number_format($sum45, 2, '.', '');
 
         $currency_charge = Currency::find($inland->currency_id);
         $inland->currency_usd = $currency_charge->rates;
@@ -329,7 +330,7 @@ class QuoteV2Controller extends Controller
     //Adding country codes to rates collection
 
     foreach ($rates as $item) {
-  
+
       $rates->map(function ($item) {
         if(isset($item->origin_port->code)){
           $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
@@ -337,7 +338,7 @@ class QuoteV2Controller extends Controller
           return $item;
         }else{
 
-        
+
           return $item;
 
         }
@@ -1538,7 +1539,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->language='English';
       $pdf_option->save();
 
-    }else{
+    }else{// COTIZACION MANUAL
 
       $dateQ = explode('/',$request->input('date'));
       $since = $dateQ[0];
@@ -1637,9 +1638,11 @@ class QuoteV2Controller extends Controller
       // MANUAL RATE
     }
 
+    //AUTOMATIC QUOTE
     if(!empty($info)){
       foreach($info as $infoA){
         $info_D = json_decode($infoA);
+       
         // Rates
         foreach($info_D->rates as $rateO){
 
@@ -1695,6 +1698,7 @@ class QuoteV2Controller extends Controller
             }  
           }
           //INLAND ORIGEN 
+          
           if(!empty($inlandO)){
 
             foreach( $inlandO as $inlandOrigin){
@@ -1845,10 +1849,16 @@ class QuoteV2Controller extends Controller
           $chargeFreight->total =  $arregloMarkupsF;
           $chargeFreight->save();
         }
+
+ 
+
+          $terms = new TermsAndCondition();
+          $terms->quote_id= $quote->id;
+          $terms->content =$info_D->terms;
+          $terms->save();
+        
       }  
     }
-
-
 
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
@@ -1963,6 +1973,7 @@ class QuoteV2Controller extends Controller
     $price_id = $request->input('price_id');
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
+    $mode = $request->mode;
     // Fecha Contrato
     $dateRange =  $request->input('date');
     $dateRange = explode("/",$dateRange);
@@ -3180,6 +3191,58 @@ class QuoteV2Controller extends Controller
       $collectionRate->push($array);
 
 
+      // TERMS AND CONDITIONS 
+      $port_all = harbor::where('name','ALL')->first();
+      $term_port_orig = array($data->origin_port);
+      $term_port_dest = array($data->destiny_port);
+      $term_carrier_id[] = $data->carrier_id;
+      array_push($term_carrier_id,$carrier_all);
+
+      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+          $b->wherein('carrier_id',$term_carrier_id);
+        });
+      })->get();
+      $terms_origin = TermsPort::wherein('port_id',$term_port_orig)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+          $b->wherein('carrier_id',$term_carrier_id);
+        });
+      })->get();
+
+      $terms_destination = TermsPort::wherein('port_id',$term_port_dest)->with('term')->whereHas('term', function($q)  use($term_carrier_id) {
+        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+          $b->wherein('carrier_id',$term_carrier_id);
+        });
+      })->get();
+
+      $termsO='';
+      $termsD='';
+      $terms ='';
+      if($mode=='1'){
+        $termsO= 'Export:';
+        foreach($terms_origin as $termOrig){
+          $termsO .=  "<br>".$termOrig->term->export;
+        }
+        foreach($terms_destination as $termDest){
+          $termsD .=  "<br>".$termDest->term->export;
+        }
+
+      }else if($mode=='2' ){
+        $termsO= 'Import:';
+        foreach($terms_origin as $termOrig){
+          $termsO .=  "<br>".$termOrig->term->import;
+        }
+        foreach($terms_destination as $termDest){
+          $termsD .=  "<br>".$termDest->term->import;
+        }
+      }
+      $terms = $termsO." ".$termsD ; 
+
+
+
+      //TERMS 
+
+      $data->setAttribute('terms',$terms);
       // Valores
       $data->setAttribute('rates',$collectionRate);
       $data->setAttribute('localfreight',$collectionFreight);
@@ -3221,7 +3284,9 @@ class QuoteV2Controller extends Controller
 
     }
 
-        $arreglo  =  $arreglo->sortBy('total20');
+    $arreglo  =  $arreglo->sortBy('total20');
+
+
 
     //dd($arreglo);
 
