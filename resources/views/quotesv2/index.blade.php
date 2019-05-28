@@ -204,7 +204,7 @@
                {data: 'user', name: 'user'},
                {data: 'origin', name: 'origin'},
                {data: 'destination', name: 'destination'},
-               {data: 'type', name: 'type'},
+               {data: 'img', name: 'img'},
                {data: 'action', name: 'action', orderable: false, searchable: false },
             ] ,
             "autoWidth": true,
