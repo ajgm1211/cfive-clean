@@ -889,7 +889,7 @@ class QuoteV2Controller extends Controller
       $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
 
       $array_rate_amounts = json_decode($item->rates,true);
-      $array_rate_amounts = json_decode($array_rate_amounts,true);
+      //$array_rate_amounts = json_decode($array_rate_amounts,true);
       $array_rate_markups = json_decode($item->markups,true);
 
       $currency = Currency::find($item->currency_id);
@@ -1594,7 +1594,7 @@ class QuoteV2Controller extends Controller
             $currency_rate=$this->ratesCurrency($rate->currency_id,$typeCurrency);
 
             $array_rate_amounts = json_decode($rate->rates,true);
-            $array_rate_amounts = json_decode($array_rate_amounts,true);
+            //$array_rate_amounts = json_decode($array_rate_amounts,true);
             $array_rate_markups = json_decode($rate->markups,true);
 
             $currency = Currency::find($rate->currency_id);

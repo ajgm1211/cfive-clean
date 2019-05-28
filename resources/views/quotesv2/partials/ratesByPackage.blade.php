@@ -146,47 +146,53 @@
                                                           </thead>
                                                           <tbody style="background-color: white;">
                                                             <?php
-                                                            $total_freight=0;
-                                                            $total_origin=0;
-                                                            $total_destination=0;
+                                                              $total_freight=0;
+                                                              $total_origin=0;
+                                                              $total_destination=0;
+                                                              $total_freight_units=0;
+                                                              $total_freight_rates=0;
+                                                              $total_freight_markups=0;
                                                             ?>
                                                             @foreach($rate->charge_lcl_air as $item)
-                                                            @if($item->type_id==3)
-                                                            <?php
-                                                            $rate_id=$item->automatic_rate_id;
-                                                            $total_freight+=$item->total_freight;
-                                                            ?>
-                                                            <tr style="height:40px;">
-                                                              <td class="tds" style="padding-left: 30px">
-                                                                <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                              @if($item->type_id==3)
+                                                              <?php
+                                                                $rate_id=$item->automatic_rate_id;
+                                                                $total_freight+=$item->total_freight;
+                                                                $total_freight_units+=$item->units;
+                                                                $total_freight_rates+=$item->price_per_unit*$item->units;
+                                                                $total_freight_markups+=$item->markup;
+                                                              ?>
+                                                              <tr style="height:40px;">
+                                                                <td class="tds" style="padding-left: 30px">
+                                                                  <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                {{($item->units*$item->price_per_unit)+$item->markup}}
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
-                                                                &nbsp;
-                                                                <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                </a>
-                                                              </td>
-                                                            </tr>
-                                                            @endif
+                                                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                                </td>
+                                                                <td class="tds">
+                                                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                                </td>
+                                                                <td class="tds">
+                                                                  <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                                </td>
+                                                                <td class="tds">
+                                                                  <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                                </td>
+                                                                <td class="tds">
+                                                                  <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                                </td>
+                                                                <td class="tds">
+                                                                  {{($item->units*$item->price_per_unit)+$item->markup}}
+                                                                </td>
+                                                                <td class="tds">
+                                                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                                  &nbsp;
+                                                                  <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                  </a>
+                                                                </td>
+                                                              </tr>
+                                                              @endif
                                                             @endforeach
 
                                                             <!-- Hide Freight -->
@@ -274,55 +280,56 @@
                                                           </thead>
                                                           <tbody style="background-color: white;">
                                                             @php
-                                                            $a=0;
-                                                            $sum_origin_20=0;
-                                                            $sum_origin_40=0;
-                                                            $sum_origin_40hc=0;
-                                                            $sum_origin_40nor=0;
-                                                            $sum_origin_45=0;
+                                                              $a=0;
+                                                              $total_origin_units=0;
+                                                              $total_origin_rates=0;
+                                                              $total_origin_markups=0;
                                                             @endphp
                                                             @foreach($rate->charge_lcl_air as $item)
-                                                            @if($item->type_id==1)
-                                                            <?php
+                                                              @if($item->type_id==1)
+                                                                <?php
 
-                                                            $rate_id=$item->automatic_rate_id;
-                                                            $total_origin+=$item->total_origin;
+                                                                  $rate_id=$item->automatic_rate_id;
+                                                                  $total_origin+=$item->total_origin;
+                                                                  $total_origin_units+=$item->units;
+                                                                  $total_origin_rates+=$item->price_per_unit*$item->units;
+                                                                  $total_origin_markups+=$item->markup;
 
-                                                            ?>
-                                                            <tr style="height:40px;">
-                                                              <td class="tds" style="padding-left: 30px">
-                                                                <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                                ?>
+                                                                <tr style="height:40px;">
+                                                                  <td class="tds" style="padding-left: 30px">
+                                                                    <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                {{($item->units*$item->price_per_unit)+$item->markup}}
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
-                                                                &nbsp;
-                                                                <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                </a>
-                                                              </td>
-                                                            </tr>
-                                                            @php
-                                                            $a++;
-                                                            @endphp
-                                                            @endif
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    {{($item->units*$item->price_per_unit)+$item->markup}}
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                                    &nbsp;
+                                                                    <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                                      <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                    </a>
+                                                                  </td>
+                                                                </tr>
+                                                                @php
+                                                                  $a++;
+                                                                @endphp
+                                                              @endif
                                                             @endforeach
 
                                                             <!-- Hide origin charges-->
@@ -410,55 +417,56 @@
                                                           </thead>
                                                           <tbody style="background-color: white;">
                                                             @php
-                                                            $a=0;
-                                                            $sum_destination_20=0;
-                                                            $sum_destination_40=0;
-                                                            $sum_destination_40hc=0;
-                                                            $sum_destination_40nor=0;
-                                                            $sum_destination_45=0;
+                                                              $a=0;
+                                                              $total_destination_units=0;
+                                                              $total_destination_rates=0;
+                                                              $total_destination_markups=0;
                                                             @endphp
 
                                                             @foreach($rate->charge_lcl_air as $item)
-                                                            @if($item->type_id==2)
-                                                            <?php
-                                                            $rate_id=$item->automatic_rate_id;
-                                                            $total_destination+=$item->total_destination;
-                                                            ?>                                                   
+                                                              @if($item->type_id==2)
+                                                                <?php
+                                                                  $rate_id=$item->automatic_rate_id;
+                                                                  $total_destination+=$item->total_destination;
+                                                                  $total_destination_units+=$item->units;
+                                                                  $total_destination_rates+=$item->price_per_unit*$item->units;
+                                                                  $total_destination_markups+=$item->markup;
+                                                                ?>                                                   
 
-                                                            <tr style="height:40px;">
-                                                              <td class="tds" style="padding-left: 30px">
-                                                                <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                                                <tr style="height:40px;">
+                                                                  <td class="tds" style="padding-left: 30px">
+                                                                    <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                                              </td>
-                                                              <td class="tds">
-                                                                {{($item->units*$item->price_per_unit)+$item->markup}}
-                                                              </td>
-                                                              <td class="tds">
-                                                                <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
-                                                                &nbsp;
-                                                                <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                                                  <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                </a>
-                                                              </td>
-                                                            </tr>
-                                                            @php
-                                                            $a++;
-                                                            @endphp
-                                                            @endif
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    {{($item->units*$item->price_per_unit)+$item->markup}}
+                                                                  </td>
+                                                                  <td class="tds">
+                                                                    <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                                                    &nbsp;
+                                                                    <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                                                      <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                    </a>
+                                                                  </td>
+                                                                </tr>
+                                                                @php
+                                                                  $a++;
+                                                                @endphp
+                                                              @endif
                                                             @endforeach
 
                                                             <!-- Hide destination charges -->
@@ -524,6 +532,47 @@
                                                   </div>
                                                 </div>
                                                 <br>
+                                                <!-- Total -->
+                                                @if($rate->id == @$rate_id )
+                                                <div class="row no-mg-row">
+                                                    <div class="col-md-12 header-charges">
+                                                        <h5 class="title-quote size-12px">Totals</h5>
+                                                    </div>
+                                                    <div class="col-md-12 thead">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                                <thead class="title-quote text-center header-table">
+                                                                    <tr style="height:40px;">
+                                                                        <td class="tds" style="padding-left: 30px"></td>
+                                                                        <td class="tds">Units * Rate</td>
+                                                                        <td class="tds">Markups</td>
+                                                                        <td class="tds">Total</td>
+                                                                        <td class="tds">Currency</td>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody style="background-color: white;">
+                                                                    <?php
+                                                                      $total_units=number_format($total_freight_units+$total_origin_units+$total_destination_units, 2, '.', '');
+                                                                      $total_rates=number_format($total_freight_rates+$total_origin_rates+$total_destination_rates, 2, '.', '');
+                                                                      $total_markups=number_format($total_freight_markups+$total_origin_markups+$total_destination_markups, 2, '.', '');
+                                                                    ?>
+                                                                    <tr style="height:40px;">
+                                                                        <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
+                                                                        
+                                                                        <td class="tds"><span class="bg-rates td-a">{{$total_rates}}</td>
+                                                                        <td class="tds"><span class="bg-rates td-a">{{$total_markups}}</td>
+                                                                        <td class="tds"><span class="bg-rates td-a">{{$total_freight+$total_origin+$total_destination}}</td>
+                                                                        <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <br>
+                                                            <br>
+                                                            <br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
                                                 <!-- Inlands -->
                                                 @if(!$rate->inland->isEmpty())
                                                 <div class="row" >
