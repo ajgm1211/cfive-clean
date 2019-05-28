@@ -785,10 +785,9 @@
                                         <br>
                                         <!-- Total -->
                                         @if($rate->id == @$rate_id )
-                                        <br>
                                         <div class="row no-mg-row">
                                             <div class="col-md-12 header-charges">
-                                                <h5 class="title-quote size-12px">Total</h5>
+                                                <h5 class="title-quote size-12px">Totals</h5>
                                             </div>
                                             <div class="col-md-12 thead">
                                                 <div class="table-responsive">
