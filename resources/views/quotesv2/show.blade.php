@@ -180,6 +180,7 @@
 
     </div>
     @include('quotesv2.partials.sendQuoteModal')
+    @include('quotesv2.partials.createRateModal')
 @endsection
 
 @section('js')
