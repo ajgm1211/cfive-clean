@@ -1486,14 +1486,16 @@ $('.btn-input__select').on('click', function(){
   $('.labelDest'+idRate).toggleClass('visible__select-add');
   if($cantidadDestino == 1){
     $('.labelDest'+idRate).addClass('style__select-add');
-
+    $('#inputID-select1-'+idRate).attr('checked',true);
 
     calcularInlands('destino',idRate);
 
   }
+
   if($cantidadOrigen == 1){
+
     $('.labelOrig'+idRate).addClass('style__select-add');
-    $('.inputIO-select1-'+idRate).prop("checked", true);
+    $('#inputIO-select1-'+idRate).attr('checked',true);
     calcularInlands('origen',idRate);
   }
 
