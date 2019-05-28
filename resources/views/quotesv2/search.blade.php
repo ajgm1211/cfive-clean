@@ -139,6 +139,9 @@
     border-color: #0072fc;
     background-color: #0072fc;
   }
+  .add-click {
+    color: #cecece !important;
+  }
   .input-select[type="checkbox"]:checked + .btn-input__select span {
     display :none;
   }
@@ -146,6 +149,15 @@
     width: 60px !important;
     left: 60px;
     visibility: hidden;
+  }
+  .btn-input__select-gen {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
+
+  .hidden-general{
+    display:none !important;
   }
   .visible__select-add {
     visibility: visible;
@@ -351,9 +363,14 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-1">
                 <label>Incoterm</label>
                 {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
+
+              </div>
+              <div class="col-lg-1">
+                <label>Type</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import','3'=>'All'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
 
               </div>
             </div><br>
@@ -647,7 +664,7 @@
     <div class="row card__quote-manual justify-content-between">
       <div class="col-lg-2" class="" id="carrier_label"> 
         <label>Carrier Manual</label>
-        {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['class'=>'m-select2-general form-control','id'=>'carrieManual','required' => 'true']) }}
+        {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual']) }}
       </div>
       <div class="col-lg-2" id="airline_label" style="display:none;">
         <br>
@@ -817,7 +834,7 @@
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Detailed Cots</span>  
+                              <span class="workblue">Details Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
@@ -1078,17 +1095,18 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}<span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }}</span><i class="la la-caret-right"></i><b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
+                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }} {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ @$inlandDestiny['inlandDetails']['i20']['montoInlandT'] }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' >{{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}</span> 
-                          <i class="la la-caret-right"></i><b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b>
+                          {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
+                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandDestiny['inlandDetails']['i40']['montoInlandT']  }} </span> 
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i> <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b>
+                          {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
+                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandDestiny['inlandDetails']['i40HC']['montoInlandT'] }}  </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
@@ -1097,6 +1115,10 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
+
+
+                      <label  tabindex="0" role="button" data-toggle="m-tooltip" data-trigger="focus" title="You have to select the Rate in order to choose an Inland." data-content="You have to select the Rate in order to choose an Inland."  data-inland="{{$loop->iteration}}"  data-rate="{{$arr->id}}" class="btn-input__select-add d-flex  labelSelectDest{{$arr->id}}  justify-content-center align-items-center visible__select-add add-click" style="background-color:transparent !important; color: #cecece !important;">Add</label>
+
                       <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check " name="inlandD{{$arr->id}}[]" value="{{ json_encode($inlandDestiny) }} ">
 
                       <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex labelDest{{$arr->id}} labelI labelI{{$arr->id}}-{{$loop->iteration}} justify-content-center align-items-center"  >Add</label>
@@ -1120,18 +1142,18 @@
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
-                          <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  
+                          {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} 
+                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{ @$inlandOrigin['inlandDetails']['i20']['montoInlandT'] }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b>
+                          {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} 
+                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandOrigin['inlandDetails']['i40']['montoInlandT'] }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          <span class="bg-rates" id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}'>{{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </span>
-                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b>
+                          {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }}
+                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandOrigin['inlandDetails']['i40HC']['montoInlandT'] }} </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
@@ -1140,6 +1162,8 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
+                      <label  tabindex="0" role="button" data-toggle="m-tooltip" data-trigger="focus" title="You have to select the Rate in order to choose an Inland." data-content="You have to select the Rate in order to choose an Inland."  data-inland="{{$loop->iteration}}"  data-rate="{{$arr->id}}" class="btn-input__select-add d-flex  labelSelectDest{{$arr->id}}  justify-content-center align-items-center visible__select-add add-click" style="background-color:transparent !important; color: #cecece !important;">Add</label>
+
                       <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO{{$arr->id}}[]" value="{{ json_encode($inlandOrigin) }}">
 
                       <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select-add d-flex labelOrig{{$arr->id}} labelO labelO{{$arr->id}}-{{$loop->iteration}} justify-content-center align-items-center"  >Add</label>
@@ -1204,97 +1228,97 @@
 
   {!! Form::close() !!}
 </div>
-  @endif
-  @endif
+@endif
+@endif
 
-  @endsection
-
-
-  @section('js')
-  @parent
+@endsection
 
 
-  <script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
-  @if(empty($arreglo))
-  <script>
-
-    $('select[name="contact_id"]').prop("disabled",true);
-    $("select[name='company_id_quote']").val('');
-    $('#select2-m_select2_2_modal-container').text('Please an option');
-  </script>
-  @else
-
-  <script>
-    precargar()
-  </script>
+@section('js')
+@parent
 
 
-  @endif
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
-  <script>
+<script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
+@if(empty($arreglo))
+<script>
+
+  $('select[name="contact_id"]').prop("disabled",true);
+  $("select[name='company_id_quote']").val('');
+  $('#select2-m_select2_2_modal-container').text('Please an option');
+</script>
+@else
+
+<script>
+  precargar()
+</script>
+
+
+@endif
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
 
 
 
-    /*** GOOGLE MAPS API ***/
+  /*** GOOGLE MAPS API ***/
 
-    var autocomplete;
-    function initAutocomplete() {
-      var geocoder = new google.maps.Geocoder();
-      var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
-      var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
-      //autocomplete.addListener('place_changed', fillInAddress);
+  var autocomplete;
+  function initAutocomplete() {
+    var geocoder = new google.maps.Geocoder();
+    var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+    var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+    //autocomplete.addListener('place_changed', fillInAddress);
+  }
+
+  function codeAddress(address) {
+    var geocoder;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == 'OK') {
+        alert(results[0].geometry.location);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  $valor =   $('#date_hidden').val();
+
+  if($valor != 0){
+    $('#m_datepicker_2').val($valor);
+  }
+  function setdateinput(){
+    var date = $('#m_datepicker_2').val();
+    $('#date_hidden').val(date);
+  }
+
+
+  $('.m-select3-general').select2();
+
+  $('.select2-selection__arrow').remove();
+
+
+
+  function AbrirModal(action,id){
+
+    if(action == "add"){
+      var url = '{{ route("companies.addM") }}';
+      $('#modal-body').load(url,function(){
+        $('#companyModal').modal({show:true});
+      });
     }
-
-    function codeAddress(address) {
-      var geocoder;
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == 'OK') {
-          alert(results[0].geometry.location);
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
+    if(action == "addContact"){
+      var url = '{{ route("contacts.addCM") }}';
+      $('.modal-body').load(url,function(){
+        $('#contactModal').modal({show:true});
       });
     }
 
-    $valor =   $('#date_hidden').val();
+  }
 
-    if($valor != 0){
-      $('#m_datepicker_2').val($valor);
-    }
-    function setdateinput(){
-      var date = $('#m_datepicker_2').val();
-      $('#date_hidden').val(date);
-    }
+</script>
 
-
-    $('.m-select3-general').select2();
-
-    $('.select2-selection__arrow').remove();
-
-
-
-    function AbrirModal(action,id){
-
-      if(action == "add"){
-        var url = '{{ route("companies.addM") }}';
-        $('#modal-body').load(url,function(){
-          $('#companyModal').modal({show:true});
-        });
-      }
-      if(action == "addContact"){
-        var url = '{{ route("contacts.addCM") }}';
-        $('.modal-body').load(url,function(){
-          $('#contactModal').modal({show:true});
-        });
-      }
-
-    }
-
-  </script>
-
-  @stop
+@stop
