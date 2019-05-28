@@ -454,15 +454,14 @@ class QuoteV2Controller extends Controller
 
     //Adding country codes to rates collection
 
+    
     foreach ($rates as $item) {
-
       $rates->map(function ($item) {
         if($item->origin_port_id!='' ){
           $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
         }else{
           $item['origin_country_code'] = strtolower($item->origin_airport->code);
         }
-
         if($item->destination_port_id!='' ){
           $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
         }else{
@@ -472,7 +471,6 @@ class QuoteV2Controller extends Controller
         return $item;
       }); 
     }
-
     $emaildimanicdata = json_encode([
       'quote_bool'   => 'true',
       'company_id'   => '',
@@ -3585,10 +3583,8 @@ class QuoteV2Controller extends Controller
 
 
     }
-
     $arreglo  =  $arreglo->sortBy('total20');
     //dd($arreglo);
-
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines'));
 
   }
