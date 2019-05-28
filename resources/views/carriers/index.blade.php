@@ -63,6 +63,14 @@
                                     </span>
                                 </button>
                             </a>
+                            <a href="{{route('synchronous.carrier')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                <span>
+                                    <span>
+                                        Synchronous &nbsp; &nbsp;
+                                    </span>
+                                    <i class="la la-refresh"></i>
+                                </span>
+                            </a>
                         </div>
 
                         <br />
@@ -99,63 +107,110 @@
             </div>
             <div id="modal-body" class="modal-body">
 
-            
 
+
+            </div>
         </div>
     </div>
-</div>
 
-@endsection
+    @endsection
 
-@section('js')
-@parent
+    @section('js')
+    @parent
 
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script>
 
-    function showModal(id,operation){
+        function showModal(id,operation){
 
-        if(operation == 1){
-            var url = '{{ route("managercarriers.edit", ":id") }}';
-            url = url.replace(':id', id);
-            $('#modal-body').load(url,function(){
-                $('#modaleditCarrier').modal();
-            });
-        } else if(operation == 2){
-            var url = '{{route("managercarriers.show",":id")}}';
-            url = url.replace(':id', id);
-            $('#modal-body').load(url,function(){
-                $('#modaleditCarrier').modal();
-            });
+            if(operation == 1){
+                var url = '{{ route("managercarriers.edit", ":id") }}';
+                url = url.replace(':id', id);
+                $('#modal-body').load(url,function(){
+                    $('#modaleditCarrier').modal();
+                });
+            } else if(operation == 2){
+                var url = '{{route("managercarriers.show",":id")}}';
+                url = url.replace(':id', id);
+                $('#modal-body').load(url,function(){
+                    $('#modaleditCarrier').modal();
+                });
+            }
         }
-    }
 
-    $(function() {
-        $('#carriertable').DataTable({
-            processing: true,
-            //serverSide: true,
-            ajax: '{!! route("managercarriers.create")!!}',
-            columns: [
-                { data: 'id', name: 'id' },
-                { data: 'name', name: 'name' },
-                { data: 'image', name: 'image' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
-            ],
-            "order": [[0, 'asc']],
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "width": true,
-            "info": true,
-            "deferLoading": 57,
-            "autoWidth": false,
-            "processing": true,
-            "dom": 'Bfrtip',
-            "paging": true
+        $(function() {
+            $('#carriertable').DataTable({
+                processing: true,
+                //serverSide: true,
+                ajax: '{!! route("managercarriers.create")!!}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'image', name: 'image' },
+                    { data: 'action', name: 'action', orderable: false, searchable: false },
+                ],
+                "order": [[0, 'asc']],
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "width": true,
+                "info": true,
+                "deferLoading": 57,
+                "autoWidth": false,
+                "processing": true,
+                "dom": 'Bfrtip',
+                "paging": true
+            });
+
         });
 
-    });
+        $(document).on('click','.delete-carrier',function(){
+            var id = $(this).attr('data-id-carrier');
+            var elemento = $(this);
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then(function(result){
+                if (result.value) {
+                    var token = $("meta[name='csrf-token']").attr("content");
+                    url='{!! route("managercarriers.destroy",":id") !!}';
+                    url = url.replace(':id', id);
+                    // $(this).closest('tr').remove();
+                    $.ajax({
+                        url:url,
+                        method:'DELETE',
+                        data:{"id":id,
+                              "_token":token},
+                        success: function(data){
+                            if(data.success == 1){
+                                swal(
+                                    'Deleted!',
+                                    'Your Carrier has been deleted.',
+                                    'success'
+                                )
+                                //$(elemento).closest('tr').remove();
+                                $('#carriertable').DataTable().ajax.reload();
+                            }else if(data == 2){
+                                swal("Error!", "an internal error occurred!", "error");
+                            }
+                            //alert(data.success);
+                        }
+                    });
+                } else if (result.dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'Your Carrier is safe :)',
+                        'error'
+                    )
+                }
+            });
+        });
 
-</script>
+    </script>
 
-@stop
+    @stop

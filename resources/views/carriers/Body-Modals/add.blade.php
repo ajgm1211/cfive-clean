@@ -36,7 +36,7 @@
 <div id="modal-body" class="modal-footer">
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions m-form__actions">
-            {!! Form::submit('Update', ['class'=> 'btn btn-primary','onclick' => 'fileempty()']) !!}
+            {!! Form::submit('Add', ['class'=> 'btn btn-primary','onclick' => 'fileempty()']) !!}
             <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">Cancel</span>
             </button>

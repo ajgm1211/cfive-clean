@@ -5,25 +5,18 @@ namespace App\Http\Controllers;
 use App\Carrier;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use App\Jobs\ProcessContractFile;
+use App\Jobs\SynchronImgCarrierJob;
 use Illuminate\Support\Facades\Storage;
 
 class CarriersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('carriers.index');   
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $carriers = Carrier::all();
@@ -41,22 +34,15 @@ class CarriersController extends Controller
                 <a href="#" title="Edit Carrier" onclick="showModal('.$carriers->id.',1)">
                     <samp class="la la-edit" style="font-size:20px; color:#031B4E"></samp>
                 </a>
-                <!--
                 &nbsp;&nbsp;
-                <a href="#" class="eliminarrequest" data-id-request="'.$carriers->id.'" data-info="id:'.$carriers->id.' Number Contract: '.$carriers->name.'"  title="Delete" >
+                <a href="#" class="delete-carrier" data-id-carrier="'.$carriers->id.'" data-info="id:'.$carriers->id.' Number Carrier: '.$carriers->name.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                </a>-->';
+                </a>';
             })
 
             ->make();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $file       = $request->file('file');
@@ -66,29 +52,18 @@ class CarriersController extends Controller
             $carrier->name  = $request->name;
             $carrier->image = $request->image;
             $carrier->save();
+            ProcessContractFile::dispatch($carrier->id,$request->image,'n/a','carrier');
         }
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your carrier was created');
         return redirect()->route('managercarriers.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return view('carriers.Body-Modals.add');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $carrier = Carrier::find($id);
@@ -97,13 +72,6 @@ class CarriersController extends Controller
         return view('carriers.Body-Modals.edit',compact('carrier','image'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //dd($request->all());
@@ -112,7 +80,9 @@ class CarriersController extends Controller
         if($request->DatImag){
             Storage::disk('carriers')->delete($carrier->image);
             $file   = $request->file('file');
-            Storage::disk('carriers')->put($request->image,\File::get($file));
+            $fillbool = Storage::disk('carriers')->put($request->image,\File::get($file));
+            if($fillbool)
+                ProcessContractFile::dispatch($id,$request->image,'n/a','carrier');
         }
         $carrier->image = $request->image;
         $carrier->save();
@@ -122,14 +92,21 @@ class CarriersController extends Controller
         return redirect()->route('managercarriers.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        try{
+            $carrier = Carrier::find($id);
+            Storage::disk('carriers')->delete($carrier->image);
+            $carrier->delete();
+            return response()->json(['success' => '1']);
+        } catch(\Exception $e){
+            return response()->json(['success' => '2']);            
+        }
+
+    }
+
+    public function synchronous(){
+        SynchronImgCarrierJob::dispatch();
+        return redirect()->route('managercarriers.index');
     }
 }
