@@ -313,7 +313,7 @@
 @section('content')
 <br>
 
-<div class="row padding">
+<div class="padding">
   {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 
   <div class="col-lg-12">
@@ -455,7 +455,7 @@
                           <div class="input-group">
                             <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <select class="form-control" id="type_cargo" name="type_cargo">
+                              <select class="form-control" id="type_cargo" name="cargo_type">
                                 <option value="1">Pallets</option>
                                 <option value="2">Packages</option>
                               </select>

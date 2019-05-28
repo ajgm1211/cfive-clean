@@ -382,7 +382,7 @@ class ApiController extends Controller
         $collection = Collection::make($charges);
         $collection->transform(function ($charge) {
             $charge->id=$charge->globalcharge->id;
-            $charge->charge=$charge->globalcharge->surcharge['name'];===
+            $charge->charge=$charge->globalcharge->surcharge['name'];
             $charge->origin_country=$charge->countryOrig->name;
             $charge->destination_country=$charge->countryDest->name;
             $charge->charge_type=$charge->globalcharge->typedestiny['description'];
