@@ -1312,6 +1312,7 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
+
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").show();
@@ -1346,6 +1347,7 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
+
     $("#origin_harbor").prop( "disabled", false );
     $("#destination_harbor").prop( "disabled", false );
     $("#equipment_id").hide();
@@ -1426,6 +1428,8 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
+
+
     $("#origin_harbor").prop( "disabled", true );
     $("#destination_harbor").prop( "disabled", true );
     $("#equipment_id").hide();
@@ -1635,11 +1639,17 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
+  $("#carrieManual").prop( "required", false );
   $('#FormQuote').attr('action', '/v2/quotes/processSearch');
   $(".quote_search").attr("type","submit");
 
 });
+
+
+
 $(".quote_man").on("click", function() {
+
+  $("#carrieManual").attr( "required", true );
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
 
@@ -1660,13 +1670,86 @@ $(".quote_man").on("click", function() {
   $(".quote_man").attr("type","submit");
 });
 
+function calcularInlands(tipo,idRate){
+
+
+  if(tipo == 'destino'){
+    var  i20= $("#valor-d201-"+idRate).html();
+    var  i40= $("#valor-d401-"+idRate).html();
+    var  i40h= $("#valor-d40h1-"+idRate).html();
+
+
+  }else{
+
+    var  i20= $("#valor-o201-"+idRate).html();
+    var  i40= $("#valor-o401-"+idRate).html();
+    var  i40h= $("#valor-o40h1-"+idRate).html();
+  }
+
+  var  sub20d= $("#sub_inland_20_d"+idRate);
+  var  sub40d= $("#sub_inland_40_d"+idRate);
+  var  sub40hd= $("#sub_inland_40h_d"+idRate);
+
+  var  sub20o= $("#sub_inland_20_o"+idRate);
+  var  sub40o= $("#sub_inland_40_o"+idRate);
+  var  sub40ho= $("#sub_inland_40h_o"+idRate);
+
+  var  sub20= $("#sub_inland_20"+idRate).html();
+  var  sub40= $("#sub_inland_40"+idRate).html();
+  var  sub40h= $("#sub_inland_40h"+idRate).html();
+
+  if(tipo == 'destino'){
+
+    sub20d.val(parseFloat(i20));
+    sub40d.val(parseFloat(i40));
+    sub40hd.val(parseFloat(i40h));
+
+  }else{
+
+    sub20o.val(parseFloat(i20));
+    sub40o.val(parseFloat(i40));
+    sub40ho.val(parseFloat(i40h));
+
+  }
+
+  sub20 = parseFloat(sub20o.val()) +  parseFloat(sub20d.val());
+  sub40 = parseFloat(sub40o.val()) + parseFloat(sub40d.val());
+  sub40h = parseFloat(sub40ho.val()) + parseFloat(sub40hd.val());
+
+
+
+  $("#sub_inland_20"+idRate).html(sub20);
+  $("#sub_inland_40"+idRate).html(sub40);
+  $("#sub_inland_40h"+idRate).html(sub40h);
+
+
+}
 
 $('.btn-input__select').on('click', function(){
 
-  var idRate = $(this).attr('rate-id');
+  var idRate = $(this).attr('rate-id');  
+  $cantidadDestino = $('.labelDest'+idRate).length;
+  $cantidadOrigen = $('.labelOrig'+idRate).length;
 
+
+  $('.labelSelectDest'+idRate).toggleClass('hidden-general');
   $('.labelOrig'+idRate).toggleClass('visible__select-add');
   $('.labelDest'+idRate).toggleClass('visible__select-add');
+  if($cantidadDestino == 1){
+    $('.labelDest'+idRate).addClass('style__select-add');
+    $('#inputID-select1-'+idRate).attr('checked',true);
+
+    calcularInlands('destino',idRate);
+
+  }
+
+  if($cantidadOrigen == 1){
+
+    $('.labelOrig'+idRate).addClass('style__select-add');
+    $('#inputIO-select1-'+idRate).attr('checked',true);
+    calcularInlands('origen',idRate);
+  }
+
 });
 $('.btn-input__select-add').on('click', function(){
   $(this).toggleClass('style__select-add');
@@ -1838,6 +1921,8 @@ $('.inlandsO').on('click', function(){
   $("#sub_inland_40h"+idRate).html(sub40h);
 
 });
+
+
 
 
 //Calcular el volumen individual
