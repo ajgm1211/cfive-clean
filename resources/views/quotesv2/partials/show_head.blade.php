@@ -14,7 +14,7 @@
                         </button>
                     </li>
                     <li class="nav-item m-tabs__item" >
-                        <a class="btn btn-primary-v2" href="#">
+                        <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
                             PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
                         </a>
                     </li>
@@ -55,7 +55,7 @@
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->quote_id}}" class="form-control" hidden >
-                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL','AIR'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
+                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL','AIR'=>'AIR'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
                                     <span class="type_span">{{$quote->type}}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -180,7 +180,7 @@
                                     <br>
                                     <label class="title-quote"><b>Commodity:&nbsp;&nbsp;</b></label>
                                     <span class="commodity_span">{{$quote->commodity}}</span>
-                                    {!! Form::textarea('commodity', $quote->commodity, ['placeholder' => 'Commodity','class' => 'form-control m-input commodity','hidden']) !!}
+                                    {!! Form::text('commodity', $quote->commodity, ['placeholder' => 'Commodity','class' => 'form-control m-input commodity','hidden']) !!}
                                 </div>
                             </div>
                             <div class="row">
@@ -201,6 +201,87 @@
                 </div>
             </div>
         </div>
+         @if($quote->type!='FCL')
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="m-portlet custom-portlet no-border">
+                        <div class="m-portlet__body ">
+                            @if(!empty($package_loads) && count($package_loads)>0)
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                <thead class="title-quote text-center header-table">
+                                                    <tr style="height: 40px;">
+                                                      <td class="td-table" style="padding-left: 30px">Cargo type</td>
+                                                      <td class="td-table">Quantity</td>
+                                                      <td class="td-table">Height</td>
+                                                      <td class="td-table">Width</td>
+                                                      <td class="td-table">Large</td>
+                                                      <td class="td-table">Weight</td>
+                                                      <td class="td-table">Total weight</td>
+                                                      <td class="td-table">Volume</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="background-color: white;">
+                                                    @foreach($package_loads as $package_load)
+                                                    <tr class="text-center">
+                                                      <td class="tds">{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
+                                                      <td class="tds">{{$package_load->quantity}}</td>
+                                                      <td class="tds">{{$package_load->height}} cm</td>
+                                                      <td class="tds">{{$package_load->width}} cm</td>
+                                                      <td class="tds">{{$package_load->large}} cm</td>
+                                                      <td class="tds">{{$package_load->weight}} kg</td>
+                                                      <td class="tds">{{$package_load->total_weight}} kg</td>
+                                                      <td class="tds">{{$package_load->volume}} m<sup>3</sup></td>
+                                                  </tr>
+                                                  @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row ">
+                                    @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                                        <div class="col-md-6 ">
+                                            <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                                        </div>
+                                    @else
+                                        <div class="col-md-6 "></div>
+                                    @endif
+                                    <div class="col-md-6 ">
+                                        <span class="pull-right">
+                                            <b>Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                                        </span>
+                                    </div>
+                                </div>
+                            @else
+                                @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                          <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                                      </div>
+                                      <div class="col-md-2">
+                                          <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
+                                      </div>
+                                      <div class="col-md-2">
+                                          <div id="cargo_details_total_weight_p"><b>Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</div>
+                                      </div>
+                                      <div class="col-md-2">
+                                          <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</p>
+                                      </div>
+                                      <div class="col-md-2">
+                                          <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b> {!!$quote->chargeable_weight != '' ? $quote->chargeable_weight.' kg' : ''!!}</p>
+                                      </div>
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <button class="btn btn-primary-v2 btn-edit pull-right" data-toggle="modal" data-target="#createRateModal">
