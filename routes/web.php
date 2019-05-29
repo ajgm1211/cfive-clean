@@ -436,6 +436,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('/show/{id}', 'QuoteV2Controller@show')->name('quotes-v2.show');
   Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
   Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
+  Route::post('rate/charges/update', 'QuoteV2Controller@updateRateCharges')->name('quotes-v2.update.rate.charges');
   Route::post('lcl/charges/update', 'QuoteV2Controller@updateQuoteChargesLcl')->name('quotes-v2.update.charges.lcl');
   Route::post('/update/payments/{id}', 'QuoteV2Controller@updatePaymentConditions')->name('quotes-v2.update.payments');
   Route::post('/update/terms/{id}', 'QuoteV2Controller@updateTerms')->name('quotes-v2.update.terms');
@@ -454,6 +455,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
   Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
   Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
+  Route::post('rates/store', 'QuoteV2Controller@storeRates')->name('quotes-v2.rates.store');
 });
 
 //Settings

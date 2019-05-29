@@ -484,6 +484,192 @@ $(document).ready(function() {
     }
   });
 
+  //Inline rates charges
+  $('.editable-rate-amount-20').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
+      $(this).closest('tr').find('.total_20').html(total);
+      //$(this).closest('tr').find('.total_freight_20').html('here');
+      $('.editable-amount-20').children().css( "background-color", "red" );
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-markup-20').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
+      $(this).closest('tr').find('.total_20').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-amount-40').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
+      $(this).closest('tr').find('.total_40').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-markup-40').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
+      $(this).closest('tr').find('.total_40').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-amount-40hc').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+      $(this).closest('tr').find('.total_40hc').html(total);
+
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-markup-40hc').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
+      $(this).closest('tr').find('.total_40hc').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-amount-40nor').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
+      $(this).closest('tr').find('.total_40nor').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-markup-40nor').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
+      $(this).closest('tr').find('.total_40nor').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-amount-45').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
+      $(this).closest('tr').find('.total_45').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+  $('.editable-rate-markup-45').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,    
+    success: function(response, newValue) {
+
+      total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
+      $(this).closest('tr').find('.total_45').html(total);
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
+
+
   $('#created_at').editable({
     format: 'yyyy-mm-dd',
     viewformat: 'dd/mm/yyyy',
