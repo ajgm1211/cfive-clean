@@ -39,7 +39,7 @@
                      <div class="form-group m-form__group row align-items-center">
                         <div class="col-md-4">
                            <div class="m-input-icon m-input-icon--left">
-                              <a href="{{route('quotes.download')}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                              <a href="#" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                  <span>
                                     <span>
                                        Export to excel
