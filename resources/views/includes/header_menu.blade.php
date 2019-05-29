@@ -303,6 +303,14 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Manager GlobalChargers
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('Countries.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-globe"></i>
                                     <span class="m-menu__link-text">
