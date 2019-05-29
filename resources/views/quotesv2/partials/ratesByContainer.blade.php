@@ -49,6 +49,7 @@
                                                         </thead>
                                                         <tbody style="background-color: white;">
                                                         @php
+
                                                             $i=0;
                                                             $sum20=0;
                                                             $sum40=0;
@@ -64,8 +65,7 @@
 
                                                             $rate_amounts = json_decode($rate->rates,true);
                                                             $rate_markups = json_decode($rate->markups,true);
-                                                            //$rate_amounts = json_decode($rate_amounts,true);
-                                                            
+
                                                         @endphp
                                                         <tr style="height:40px;">
                                                           <td class="tds" style="padding-left: 30px">
@@ -76,39 +76,39 @@
                                                                Per Container
                                                             </td>
                                                             <td {{ @$equipmentHides['20'] }} class="tds">
-                                                                <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$rate_amounts['c20']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="rates->c20" data-value="{{@$rate_amounts['c20']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-20 markup_20 bg-rates td-a"data-type="text" data-name="markups->c20" data-value="{{@$rate_markups['m20']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-markup-20 markup_20 bg-rates td-a"data-type="text" data-name="markups->m20" data-value="{{@$rate_markups['m20']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_20">{{@$rate_amounts['c20']+@$rate_markups['m20']}}</span>
                                                             </td>
                                                             <td {{ @$equipmentHides['40'] }} class="tds">
-                                                                <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$rate_amounts['c40']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="rates->c40" data-value="{{@$rate_amounts['c40']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="{{@$rate_markups['m40']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$rate_markups['m40']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40">{{@$rate_amounts['c40']+@$rate_markups['m40']}}</span>
                                                             </td>
                                                             <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                                <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$rate_amounts['c40hc']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="rates->c40hc" data-value="{{@$rate_amounts['c40hc']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="{{@$rate_markups['m40hc']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$rate_markups['m40hc']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40hc">{{@$rate_amounts['c40hc']+@$rate_markups['m40hc']}}</span>
                                                             </td>
                                                             <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                                <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$rate_amounts['c40nor']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="rates->c40nor" data-value="{{@$rate_amounts['c40nor']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="{{@$rate_markups['m40nor']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$rate_markups['m40nor']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_40nor">{{@$rate_amounts['c40nor']+@$rate_markups['m40nor']}}</span>
                                                             </td>
                                                             <td {{ @$equipmentHides['45'] }} class="tds">
-                                                                <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$rate_amounts['c45']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="rates->c45" data-value="{{@$rate_amounts['c45']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
                                                                 +
-                                                                <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="{{@$rate_markups['m45']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
+                                                                <a href="#" class="editable-rate-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$rate_markups['m45']}}" data-pk="{{$rate->id}}" data-title="Total"></a>
 
                                                                 <i class="la la-caret-right arrow-down"></i> 
                                                                 <span class="total_45">{{@$rate_amounts['c45']+@$rate_markups['m45']}}</span>
@@ -783,7 +783,7 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <!-- Total -->
+                                        <!-- Totals -->
                                         @if($rate->id == @$rate_id )
                                         <div class="row no-mg-row">
                                             <div class="col-md-12 header-charges">
@@ -805,24 +805,79 @@
                                                         </thead>
                                                         <tbody style="background-color: white;">
                                                             <?php
+                                                                $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20+$rate->total_rate_a20, 2, '.', '');
+                                                                $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40+$rate->total_rate_a40, 2, '.', '');
+                                                                $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc+$rate->total_rate_a40hc, 2, '.', '');
+                                                                $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor+$rate->total_rate_a40nor, 2, '.', '');
+                                                                $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45+$rate->total_rate_a45, 2, '.', '');
 
-                                                            $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20+$rate->total_rate20, 2, '.', '');
-                                                            $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40+$rate->total_rate40, 2, '.', '');
-                                                            $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc+$rate->total_rate40hc, 2, '.', '');
-                                                            $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor+$rate->total_rate40nor, 2, '.', '');
-                                                            $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45+$rate->total_rate45, 2, '.', '');
+                                                                $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20+$rate->total_rate_m20, 2, '.', '');
+                                                                $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40+$rate->total_rate_m40, 2, '.', '');
+                                                                $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc+$rate->total_rate_m40hc, 2, '.', '');
+                                                                $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor+$rate->total_rate_m40nor, 2, '.', '');
+                                                                $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45+$rate->total_rate_m45, 2, '.', '');
 
-                                                            $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20, 2, '.', '');
-                                                            $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40, 2, '.', '');
-                                                            $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc, 2, '.', '');
-                                                            $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
-                                                            $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
+                                                                $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
+                                                                $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
+                                                                $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
+                                                                $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
+                                                                $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
+                                                            ?>
+                                                            <tr style="height:40px;">
+                                                                <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
+                                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="bg-rates td-a">{{$amount_20}}</span> + <span class="bg-rates td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="bg-rates td-a">{{$amount_40}}</span> + <span class="bg-rates td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="bg-rates td-a">{{$amount_40hc}}</span> + <span class="bg-rates td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="bg-rates td-a">{{$amount_40nor}}</span> + <span class="bg-rates td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
+                                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="bg-rates td-a">{{$amount_45}}</span> + <span class="bg-rates td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
+                                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @else
+                                            <div class="row no-mg-row">
+                                            <div class="col-md-12 header-charges">
+                                                <h5 class="title-quote size-12px">Totals</h5>
+                                            </div>
+                                            <div class="col-md-12 thead">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                        <thead class="title-quote text-center header-table">
+                                                            <tr style="height:40px;">
+                                                                <td class="tds" style="padding-left: 30px"></td>
+                                                                <td {{ @$equipmentHides['20'] }} class="tds">20'</td>
+                                                                <td {{ @$equipmentHides['40'] }} class="tds">40'</td>
+                                                                <td {{ @$equipmentHides['40hc'] }} class="tds">40HC'</td>
+                                                                <td {{ @$equipmentHides['40nor'] }} class="tds">40NOR'</td>
+                                                                <td {{ @$equipmentHides['45'] }} class="tds">45'</td>
+                                                                <td class="tds">Currency</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="background-color: white;">
+                                                            <?php
+                                                                $amount_20=number_format(@$sum20+@$sum_origin_20+@$sum_destination_20+$rate->total_rate_a20, 2, '.', '');
+                                                                $amount_40=number_format(@$sum40+@$sum_origin_40+@$sum_destination_40+$rate->total_rate_a40, 2, '.', '');
+                                                                $amount_40hc=number_format(@$sum40hc+@$sum_origin_40hc+@$sum_destination_40hc+$rate->total_rate_a40hc, 2, '.', '');
+                                                                $amount_40nor=number_format(@$sum40nor+@$sum_origin_40nor+@$sum_destination_40nor+$rate->total_rate_a40nor, 2, '.', '');
+                                                                $amount_45=number_format(@$sum45+@$sum_origin_45+@$sum_destination_45+$rate->total_rate_a45, 2, '.', '');
 
-                                                            $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
-                                                            $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
-                                                            $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
-                                                            $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
-                                                            $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
+                                                                $markup_20=number_format(@$sum_m20+@$sum_origin_m20+@$sum_destination_m20+$rate->total_rate_m20, 2, '.', '');
+                                                                $markup_40=number_format(@$sum_m40+@$sum_origin_m40+@$sum_destination_m40+$rate->total_rate_m40, 2, '.', '');
+                                                                $markup_40hc=number_format(@$sum_m40hc+@$sum_origin_m40hc+@$sum_destination_m40hc+$rate->total_rate_m40hc, 2, '.', '');
+                                                                $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor+$rate->total_rate_m40nor, 2, '.', '');
+                                                                $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45+$rate->total_rate_m45, 2, '.', '');
+
+                                                                $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
+                                                                $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
+                                                                $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
+                                                                $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
+                                                                $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
                                                             ?>
                                                             <tr style="height:40px;">
                                                                 <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
