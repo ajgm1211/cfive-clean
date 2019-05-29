@@ -212,7 +212,7 @@ class ReprocessRatesJob implements ShouldQueue
                             'fortyfive'         => $fortyfiveVal,
                             'currency_id'       => $currencyVal,
                             'schedule_type_id'  => $scheduleTVal,
-                            'transit_time'      => $scheduleTVal,
+                            'transit_time'      => (int)$failrate['transit_time'],
                             'via'               => $failrate['via']
                         ]);
                         $failrate->forceDelete();

@@ -142,6 +142,15 @@ Export Contract
                                         <th title="Field #7">
                                             Currency
                                         </th>
+                                        <th style="width:13%">
+                                            Schedule
+                                        </th>
+                                        <th style="width:7%">
+                                            Transit Time
+                                        </th>
+                                        <th style="width:10%">
+                                            Via
+                                        </th>
                                         <th title="Field #7">
                                             Options
                                         </th>
@@ -634,6 +643,9 @@ Load
                 {data: 'uom', name: 'uom'},
                 {data: 'minimum', name: 'minimum'},
                 {data: 'currency', name: 'currency'},
+                {data: 'schedule_type', name: 'schedule_type'},
+                {data: 'transit_time', name: 'transit_time'},
+                {data: 'via', name: 'via'},
                 {data: 'options', name: 'options'}
             ],
 

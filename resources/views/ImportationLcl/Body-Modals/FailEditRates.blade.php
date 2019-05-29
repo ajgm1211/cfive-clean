@@ -38,8 +38,6 @@
                 {!! Form::text('minimum', $failrates['minimum'], ['id' => 'minimum','placeholder' => 'Please enter the minimum','class' => 'form-control m-input','required' ]) !!} 
 
             </div>
-        </div>
-        <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 {!! Form::label('currency', 'Currency',['style' => $failrates['classcurrency']]) !!}
 
@@ -55,6 +53,24 @@
             </div>
 
 
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                {!! Form::label('scheduleT','Schedule Type',['style' => $failrates['classscheduleT']]) !!}
+                {{ Form::select('scheduleT',$schedulesT,$failrates['schedueleT'],['id' => 'schedulesT','class'=>'m-select2-general form-control']) }}
+            </div>
+            <div class="col-lg-4">
+
+                {!! Form::label('Transit Time', 'Transit Time',['style' => $failrates['classtransittime']]) !!}
+                {!! Form::number('transit_time',$failrates['transit_time'], ['id' => 'transit_time','placeholder' => 'Transit Time','class' => 'form-control ','required']) !!}
+
+            </div>
+            <div class="col-lg-4">
+
+                {!! Form::label('via', 'Via',['style' => $failrates['classvia']]) !!}
+                {!! Form::text('via',$failrates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ','required']) !!}
+
+            </div>
         </div>
     </div>  
 
