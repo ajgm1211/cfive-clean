@@ -2786,11 +2786,11 @@ class QuoteV2Controller extends Controller
     $arreglo = $arreglo->get();
 
     $formulario = $request;
-    $array20 = array('2','4','5','6','9','10'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
-    $array40 =  array('1','4','5','6','9','10'); // id  calculation type 2 = per 40 
-    $array40Hc= array('3','4','5','6','9','10'); // id  calculation type 3 = per 40HC 
-    $array40Nor = array('7','4','5','6','9','10');  // id  calculation type 7 = per 40NOR
-    $array45 = array('8','4','5','6','9','10');  // id  calculation type 8 = per 45
+    $array20 = array('2','4','5','6','9','10','11'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
+    $array40 =  array('1','4','5','6','9','10','11'); // id  calculation type 2 = per 40 
+    $array40Hc= array('3','4','5','6','9','10','11'); // id  calculation type 3 = per 40HC 
+    $array40Nor = array('7','4','5','6','9','10','11');  // id  calculation type 7 = per 40NOR
+    $array45 = array('8','4','5','6','9','10','11');  // id  calculation type 8 = per 45
 
     $arrayContainers =  array('1','2','3','4','7','8'); 
 
