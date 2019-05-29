@@ -84,14 +84,24 @@ Route::middleware(['auth'])->prefix('surcharges')->group(function () {
 });
 Route::resource('surcharges', 'SurchargesController')->middleware('auth');
 
-Route::middleware(['auth'])->prefix('globalcharges')->group(function () {
-    Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add');
-    Route::post('destroyArr', 'GlobalChargesController@destroyArr')->name('globalcharges.destroyArr');
-    Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge']);
-    Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge']);
-    Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge']);
-    Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge']);
-    Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge']);
+Route::prefix('globalcharges')->group(function () {
+    Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add')->middleware(['auth']);
+    Route::post('destroyArr', 'GlobalChargesController@destroyArr')->name('globalcharges.destroyArr')->middleware(['auth']);
+    Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge'])->middleware(['auth']);
+    Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge'])->middleware(['auth']);
+    Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge'])->middleware(['auth']);
+    Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge'])->middleware(['auth']);
+    Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge'])->middleware(['auth']);
+    
+    // CRUD Administrator -------------------------------------------------------------------------------------------------
+
+    Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator']);
+    Route::get('createAdm','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator']);
+    Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator']);
+    Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator']);
+    Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator']);
+    Route::get('ShowAdm/{id}','GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth','role:administrator']);
+    
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
