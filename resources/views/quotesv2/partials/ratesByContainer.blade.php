@@ -114,7 +114,7 @@
                                                                 <span class="total_45">{{@$rate_amounts['c45']+@$rate_markups['m45']}}</span>
                                                             </td>
                                                             <td class="tds">
-                                                                <a href="#" class="editable td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$rate->currency_id}}" data-pk="{{$rate->id}}" data-title="Select currency"></a>
+                                                                <a href="#" class="editable-rate td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$rate->currency_id}}" data-pk="{{$rate->id}}" data-title="Select currency"></a>
                                                                 &nbsp;
                                                                 <a class="delete-charge" style="cursor: pointer;" title="Delete">
                                                                     <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
@@ -289,7 +289,7 @@
                                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a">{{number_format(@$sum40hc+@$sum_m40hc+@$rate->total_rate40hc, 2, '.', '')}}</span></td>
                                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a">{{number_format(@$sum40nor+@$sum_m40nor+@$rate->total_rate40nor, 2, '.', '')}}</span></td>
                                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a">{{number_format(@$sum45+@$sum_m45+@$rate->total_rate45, 2, '.', '')}}</span></td>
-                                                                <td class="tds"><span class="td-a">{{$rate->currency->alphacode}}</span></td>
+                                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                             </tr>
                                                         @else
                                                             <tr>
@@ -300,7 +300,7 @@
                                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a">{{number_format(@$rate->total_rate40hc, 2, '.', '')}}</span></td>
                                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a">{{number_format(@$rate->total_rate40nor, 2, '.', '')}}</span></td>
                                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a">{{number_format(@$rate->total_rate45, 2, '.', '')}}</span></td>
-                                                                <td class="tds"><span class="td-a">{{$rate->currency->alphacode}}</span></td>
+                                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                             </tr>
                                                         @endif
 
