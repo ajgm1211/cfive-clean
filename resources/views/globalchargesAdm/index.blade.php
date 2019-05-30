@@ -60,6 +60,14 @@
                                             <i class="la la-trash"></i>
                                         </span>
                                     </button>
+                                    <button type="button" name="bulk_delete" id="bulk_duplicate" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <span>
+                                            <span>
+                                                Duplicate Selected &nbsp;
+                                            </span>
+                                            <i class="la la-bars"></i>
+                                        </span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -117,34 +125,28 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 <script>
+
     function AbrirModal(action,id){
-
-
         if(action == "editGlobalCharge"){
             var url = '{{ route("gcadm.show", ":id") }}';
             url = url.replace(':id', id);
             $('#global-body').load(url,function(){
                 $('#global-modal').modal({show:true});
             });
-
         }
         if(action == "addGlobalCharge"){
             var url = '{{ route("gcadm.add")}}';
-
             $('#global-body').load(url,function(){
                 $('#global-modal').modal({show:true});
             });
-
         }
         if(action == "duplicateGlobalCharge"){
-
-            var url = '{{ route("duplicate-global-charge", ":id") }}';
+            var url = '{{ route("gcadm.dupicate", ":id") }}';
             url = url.replace(':id', id);
             $('#global-body').load(url,function(){
                 $('#global-modal').modal({show:true});
             });
         }
-
     }
 
     $(function() {
@@ -182,7 +184,7 @@
 
     });
 
- /*   $(document).on('click', '#bulk_delete', function(){
+    $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
             title: 'Are you sure?',
@@ -234,7 +236,48 @@
                 )
             }
         });
-    });*/
+    });
+
+    $(document).on('click', '#bulk_duplicate', function(){
+        var id = [];
+
+        $('.checkbox_global:checked').each(function(){
+            id.push($(this).val());
+        });
+
+        if(id.length > 0)
+        {
+            url='{!! route("gcadm.dupicate.Array",":id") !!}';
+            url = url.replace(':id', id);
+            var token = $("meta[name='csrf-token']").attr("content");
+            /*$.ajax({
+                        url:url,
+                        method:"post",
+                        data:{id:id,_token:token},
+                        success:function(data)
+                        {
+                            if(data.success == 1){
+                                swal(
+                                    'Deleted!',
+                                    'Your GloblaChargers has been deleted.',
+                                    'success'
+                                );
+                                $('#requesttable').DataTable().ajax.reload();
+                            }else if(data == 2){
+                                swal("Error!", "an internal error occurred!", "error");
+                            }
+                        }
+                    });*/
+            url = url.replace(':id', id);
+            $('#global-body').load(url,{id:id,_token:token},function(){
+                $('#global-modal').modal({show:true});
+            });
+        }
+        else
+        {
+            swal("Error!", "Please select atleast one checkbox", "error");
+        }
+    });
 
 </script>
 <script src="/js/globalcharges.js"></script>
