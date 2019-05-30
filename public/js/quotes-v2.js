@@ -721,7 +721,7 @@ $(document).on('click', '.store_charge_lcl', function () {
           'Done!',
           'Charge saved successfully',
           'success'
-          )
+        )
       }
       setTimeout(location.reload.bind(location), 3000);
     }
@@ -772,7 +772,7 @@ $(document).on('click', '.store_charge', function () {
           'Done!',
           'Charge saved successfully',
           'success'
-          )
+        )
       }
       setTimeout(location.reload.bind(location), 3000);
     }
@@ -800,7 +800,7 @@ $(document).on('click', '.delete-rate', function () {
               'Updated!',
               'The rete has been deleted.',
               'success'
-              )
+            )
             $(theElement).closest('.row').find('.tab-content').remove();
             //setTimeout(location.reload.bind(location), 3000);
           }
@@ -831,7 +831,7 @@ $(document).on('click', '.delete-charge', function () {
               'Updated!',
               'The charge has been deleted.',
               'success'
-              )
+            )
           }
           $(theElement).closest('tr').remove();
           //setTimeout(location.reload.bind(location), 3000);
@@ -861,7 +861,7 @@ $(document).on('click', '.delete-charge-lcl', function () {
               'Updated!',
               'The charge has been deleted.',
               'success'
-              )
+            )
           }
           $(theElement).closest('tr').remove();
           //setTimeout(location.reload.bind(location), 3000);
@@ -899,7 +899,7 @@ $(document).on('click', '#update-payments', function () {
           'Updated!',
           'The payment conditions has been updated.',
           'success'
-          )
+        )
 
         $(".payment_conditions_span").html(data.quote['payment_conditions']);
         $(".payment_conditions_span").removeAttr('hidden');
@@ -938,7 +938,7 @@ $(document).on('click', '#update-terms', function () {
           'Updated!',
           'The terms and conditions has been updated.',
           'success'
-          )
+        )
 
         $(".terms_and_conditions_span").html(data.quote['terms_and_conditions']);
         $(".terms_and_conditions_span").removeAttr('hidden');
@@ -977,7 +977,7 @@ function update_remark($id,$content,$v){
           'Updated!',
           'The remarks has been updated.',
           'success'
-          )
+        )
 
         $(".remarks_span_"+$v).html(data.rate['remarks']);
         $(".remarks_span_"+$v).removeAttr('hidden');
@@ -1118,7 +1118,7 @@ $(document).on('click', '#update', function () {
           'Updated!',
           'Your quote has been updated.',
           'success'
-          )
+        )
         var incoterm = data.quote['incoterm_id'];
         var delivery_type = data.quote['delivery_type'];
 
@@ -1256,7 +1256,7 @@ $('.select2-destination').select2();
 
 function addFreightCharge($value){
   var $template = $('#freight_charges_'+$value),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -1268,7 +1268,7 @@ function addFreightCharge($value){
 
 function addOriginCharge($value){
   var $template = $('#origin_charges_'+$value),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -1280,7 +1280,7 @@ function addOriginCharge($value){
 
 function addDestinationCharge($value){
   var $template = $('#destination_charges_'+$value),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
@@ -1335,13 +1335,13 @@ $(document).on('click', '#send-pdf-quotev2', function () {
             'Done!',
             'Your message has been sent.',
             'success'
-            )
+          )
         }else{
           swal(
             'Error!',
             'Your message has not been sent.',
             'error'
-            )
+          )
         }
       }
     });
@@ -1350,7 +1350,7 @@ $(document).on('click', '#send-pdf-quotev2', function () {
       '',
       'Please complete all fields',
       'error'
-      )
+    )
   }
 });
 
@@ -1418,14 +1418,14 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
               var quantity = $(self).closest('tr').find('.units').val();
               markup = $(self).closest('tr').find('.markup').val();
               var sub_total = amount * quantity;
-              
+
               /*if(currency_cfg+json.alphacode == json.api_code){
                 total = sub_total / json.rates;
               }else{
                 total = sub_total / json.rates_eur;
               }*/
               total = sub_total.toFixed(2);
-              
+
               if(markup > 0){
                 var total_amount_m = Number(total)+ Number(markup);
                 $(self).closest('tr').find('.total_2').val(total_amount_m.toFixed(2));
@@ -1848,6 +1848,7 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
+  $("#airline_id").attr( "required", false );
   $("#carrieManual").prop( "required", false );
   $('#FormQuote').attr('action', '/v2/quotes/processSearch');
   $(".quote_search").attr("type","submit");
@@ -1858,11 +1859,12 @@ $(".quote_search").on("click", function() {
 
 $(".quote_man").on("click", function() {
 
-  $("#carrieManual").attr( "required", true );
+
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
 
   if($('#quoteType').val()==2){
+    $("#carrieManual").attr( "required", true );
     if($("#total_quantity_pkg_input").val()>0){
       $("#total_quantity").val($("#total_quantity_pkg_input").val());
     }
@@ -1872,6 +1874,12 @@ $(".quote_man").on("click", function() {
     if($("#total_volume_pkg_input").val()>0){
       $("#total_volume").val($("#total_volume_pkg_input").val());
     }
+
+  }
+
+  if($('#quoteType').val()==3){
+    $("#airline_id").attr( "required", true );
+
 
   }
 
@@ -2414,7 +2422,7 @@ $('#destination_airport').select2({
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
   var $template = $('#lcl_air_load_template'),
-  $clone = $template
+      $clone = $template
   .clone()
   .removeClass('hide')
   .removeAttr('id')
