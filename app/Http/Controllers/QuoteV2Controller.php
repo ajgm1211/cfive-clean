@@ -160,7 +160,7 @@ class QuoteV2Controller extends Controller
     }
     return DataTables::of($colletions)
 
-      ->addColumn('type', function ($colletion) use($quote) {
+      ->addColumn('type', function ($colletion) {
         return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
       })->addColumn('action',function($colletion){
       return
