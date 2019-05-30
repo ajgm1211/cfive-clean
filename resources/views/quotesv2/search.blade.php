@@ -358,7 +358,7 @@
                   </span>
                 </div>
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-1">
                 <label>Price level</label>
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
@@ -834,7 +834,7 @@
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Details Cost</span>  
+                              <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
