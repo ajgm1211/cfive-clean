@@ -416,19 +416,17 @@ class GlobalChargesController extends Controller
                 return $globalcharges->valid_from.'/'.$globalcharges->valid_until;
             })
             ->addColumn('action', function ( $globalcharges) {
-                return '
-                    <a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+                return '<a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                     <i class="la la-edit"></i>
                     </a>
 
-                    <a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
+                    <!--<a  id="remove_l{{$loop->index}}"  class="m_sweetalert_demo_8 m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="delete" >
 											<i id="rm_l'.$globalcharges->id.'" class="la la-times-circle"></i>
-										</a>
+										</a>-->
 
                     <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges->id.')">
 											<i class="la la-plus"></i>
-										</a>
-                    ';
+				   </a>';
             })
             ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
             ->rawColumns(['checkbox','action'])
@@ -549,9 +547,8 @@ class GlobalChargesController extends Controller
         $globalcharges->setAttribute('validation_expire',$validation_expire);
         return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
     }
-    
-    public function updateAdm(Request $request, $id)
-    {
+
+    public function updateAdm(Request $request, $id){
 
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
@@ -620,10 +617,38 @@ class GlobalChargesController extends Controller
         }
 
         $global->update();
-        
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully updated this contract.');
         return redirect()->route('gcadm.index');
+    }
+
+    public function dupicateAdm($id){
+
+        $globalcharges      = GlobalCharge::find($id);
+        $harbor             = Harbor::pluck('display_name','id');
+        $carrier            = Carrier::pluck('name','id');
+        $currency           = Currency::pluck('alphacode','id');
+        $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
+        $countries          = Country::pluck('name','id');
+        $typedestiny        = TypeDestiny::pluck('description','id');
+        $calculationT       = CalculationType::pluck('name','id');
+        $company_users      = CompanyUser::pluck('name','id');
+        $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+
+        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries'));
+    }
+
+    public function dupicateArrAdm(Request $request){
+        $company_users      = CompanyUser::pluck('name','id');
+        $globals_id_array   = $request->input('id');
+        $global             = GlobalCharge::whereIn('id', $globals_id_array)
+            ->with('currency','calculationtype','surcharge','globalcharcarrier.carrier','typedestiny','globalcharport.portOrig','globalcharport.portDest','globalcharcountry.countryOrig','globalcharcountry.countryDest')
+            ->get();
+        //$global             = $global->toArray();
+        //dd($global);
+        return view('globalchargesAdm.duplicateArray',compact('global','company_users','globals_id_array'));
     }
 }
