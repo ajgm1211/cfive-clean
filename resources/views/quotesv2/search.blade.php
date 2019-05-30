@@ -358,21 +358,12 @@
                   </span>
                 </div>
               </div>
-              <div class="col-lg-1">
+              <div class="col-lg-2">
                 <label>Price level</label>
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-              <div class="col-lg-1">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
 
-              </div>
-              <div class="col-lg-1">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-
-              </div>
             </div><br>
             <div class="row">
               <div class="col-lg-2" >
@@ -427,6 +418,16 @@
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
 
+            </div><br>
+            <div class="row">
+              <div class="col-lg-2">
+                <label>Incoterm</label>
+                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
+              </div>
+              <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
             </div>
 
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
