@@ -511,6 +511,15 @@
 <script>
 
 
+  $('#m_datepicker_2').daterangepicker({
+    singleDatePicker: true,
+
+    buttonClasses: 'm-btn btn',
+    applyClass: 'btn-primary',
+    cancelClass: 'btn-secondary'
+  });
+
+
 
   /*** GOOGLE MAPS API ***/
 
