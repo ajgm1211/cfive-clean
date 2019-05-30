@@ -90,6 +90,21 @@ $(document).ready(function() {
     }
   });
 
+  $('.editable-rate').editable({
+    url:'/v2/quotes/rate/charges/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
   $('.editable-lcl-air').editable({
     url:'/v2/quotes/lcl/charges/update',
     emptytext:0,
@@ -1185,7 +1200,7 @@ $(document).on('click', '#update', function () {
             $(".equipment_span").append(value + ', ');
           }
         });
-
+        
         $(".contact_id").val(data.quote['contact_id']);
         $(".contact_id_span").html(data.contact_name);
         $(".user_id").val(data.quote['user_id']);
@@ -1193,7 +1208,7 @@ $(document).on('click', '#update', function () {
         $(".date_issued").val(data.quote['date_issued']);
         $(".date_issued_span").html(data.quote['date_issued']);
         $(".price_id").val(data.quote['price_id']);
-        $(".price_level_span").val(data.quote['price_id']);
+        $(".price_level_span").html(data['price_name']);
         $(".validity").val(data.quote['validity_start']+'/'+data.quote['validity_end']);
         $(".validity_span").html(data.quote['validity_start']+'/'+data.quote['validity_end']);
 

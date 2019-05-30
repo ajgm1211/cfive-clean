@@ -6,7 +6,7 @@
  * Time: 05:45 PM
  */
 ?>
-<div class="modal fade" id="createRateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="createRateModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" >
         <div class="modal-content" style="min-width: 900px; right: 200px;">
             <div class="modal-header">
@@ -21,31 +21,31 @@
                 {!! Form::open(['route' => 'quotes-v2.rates.store', 'class' => 'form-group m-form__group dfw']) !!}
                 <div class="row">
                     <input  type="hidden" name="quote_id" value="{{$quote->id}}" class="btn btn-sm btn-default btn-bold btn-upper formu">
-                    <div class="col-md-4" {{$quote->type=='AIR' ? 'hidden':''}}>
-                        <div id="origin_harbor_label">
+                    <div class="col-md-4" >
+                        <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
                           <label>Origin port</label>
-                          {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+                          {{ Form::select('originport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor',$quote->type!='AIR' ? 'required':'']) }}
                         </div>
                         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                           <label>Origin airport</label>
-                          <select id="origin_airport" name="origin_airport_id" class="form-control"></select>
+                          <select id="origin_airport" name="origin_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div  id="destination_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
                           <label>Destination port</label>
-                          {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+                          {{ Form::select('destinyport[]',$harbors,null,['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor',$quote->type!='AIR' ? 'required':'']) }}
                         </div>
                         <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                           <label>Destination airport</label>
-                          <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
+                          <select id="destination_airport" name="destination_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
                         </div>
                     </div>
-                    <div class="col-md-4" id="delivery_type_label">
+                    <div class="col-md-4" id="delivery_type_label" {{$quote->type=='AIR' ? 'hidden':''}}>
                         <label>Delivery type</label>
                         {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
                     </div>
-                    <div class="col-md-4" id="delivery_type_air_label" style="display: none;">
+                    <div class="col-md-4" id="delivery_type_air_label"C{{$quote->type!='AIR' ? 'hidden':''}}>
                         <label>Delivery type</label>
                         {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
                     </div>                 
@@ -75,15 +75,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4" class="" id="carrier_label"> 
-                        <label>Carrier Manual</label>
-                        {{ Form::select('carrieManual',$carrierMan,null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual']) }}
+                    <div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
+                        <label>Carrier</label>
+                        {{ Form::select('carrieManual',$carrierMan,null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual',$quote->type!='AIR' ? 'required':'']) }}
                     </div>
-                    <div class="col-md-4" id="airline_label" style="display:none;">
-                        <br>
+                    <div class="col-md-4" id="airline_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                         <label>Airline</label>
                         <div class="form-group">
-                          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
+                          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option',$quote->type=='AIR' ? 'required':'']) }}
                       </div>
                     </div>
                 </div>
