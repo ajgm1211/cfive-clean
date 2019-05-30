@@ -64,6 +64,17 @@
             </div>
         </div>
         <br>
+        @if($quote->kind_of_cargo!='')
+            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}}</p>
+            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
+            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
+        @endif
+        @if($quote->commodity!='')
+            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Commodity:</span> {{$quote->commodity}}</p>
+            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Mercancía:</span> {{$quote->commodity}}</p>
+            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Mercadoria:</span> {{$quote->commodity}}</p>
+        @endif
+        <br>
         @if($quote->pdf_option->show_type=='total in')
             <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total estimated costs</p>
@@ -293,7 +304,6 @@
                 <?php
                     $rate_amounts = json_decode($rate->rates,true);
                     $rate_markups = json_decode($rate->markups,true);
-                    $rate_amounts = json_decode($rate_amounts,true);
                 ?>
                 @foreach($rates as $rate)
                     <!--<tr class="text-center color-table">
@@ -873,17 +883,6 @@
                     </table>
                 @endforeach
             @endforeach
-        @endif
-        <br>
-        @if($quote->kind_of_cargo!='')
-            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Kind of cargo: {{$quote->kind_of_cargo}}</p>
-            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Tipo de carga: {{$quote->kind_of_cargo}}</p>
-            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Tipo de carga: {{$quote->kind_of_cargo}}</p>
-        @endif
-        @if($quote->commodity!='')
-            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Commodity: {{$quote->commodity}}</p>
-            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Mercancía: {{$quote->commodity}}</p>
-            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Mercadoria: {{$quote->commodity}}</p>
         @endif
         <br>
         @if($quote->payment_conditions!='')

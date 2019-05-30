@@ -120,6 +120,9 @@
                                         <th>W/M</th>
                                         <th>Minimum</th>
                                         <th>Currency</th>
+                                        <th>Schedule Type</th>
+                                        <th>Transit time</th>
+                                        <th>Via</th>
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -167,6 +170,9 @@
                                             <th>W/M</th>
                                             <th>Minimum</th>
                                             <th>Currency</th>
+                                            <th>Schedule Type</th>
+                                            <th>Transit time</th>
+                                            <th>Via</th>
                                             <th>Option</th>
                                         </tr>
                                     </thead>
@@ -232,6 +238,9 @@
                         { data: 'w/m', name: 'w/m' },
                         { data: 'minimum', name: "minimum" },
                         { data: 'currency_id', name: 'currency_id' },
+                        { data: 'schedule_type', name: 'schedule_type' },
+                        { data: 'transit_time', name: 'transit_time' },
+                        { data: 'via', name: 'via' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     //"scrollX": true,
@@ -258,6 +267,9 @@
                         { data: 'w/m', name: 'w/m' },
                         { data: 'minimum', name: "minimum" },
                         { data: 'currency_id', name: 'currency_id' },
+                        { data: 'schedule_type_id', name: 'schedule_type_id' },
+                        { data: 'transit_time', name: 'transit_time' },
+                        { data: 'via', name: 'via' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
