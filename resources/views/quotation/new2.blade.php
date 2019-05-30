@@ -391,7 +391,7 @@
                                 <div class="col-md-3">
                                   <label>Pick up date</label>
                                   <div class="input-group date">
-                                    {!! Form::text('date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                                    {!! Form::text('date', null, ['id' => 'picker' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
                                     {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
 
                                     <div class="input-group-append">
@@ -511,7 +511,7 @@
 <script>
 
 
-  $('#m_datepicker_2').daterangepicker({
+  $('#picker').daterangepicker({
     singleDatePicker: true,
 
     buttonClasses: 'm-btn btn',
@@ -545,10 +545,10 @@
   $valor =   $('#date_hidden').val();
 
   if($valor != 0){
-    $('#m_datepicker_2').val($valor);
+    $('#picker').val($valor);
   }
   function setdateinput(){
-    var date = $('#m_datepicker_2').val();
+    var date = $('#picker').val();
     $('#date_hidden').val(date);
   }
 

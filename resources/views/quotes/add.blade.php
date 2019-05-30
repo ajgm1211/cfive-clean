@@ -482,7 +482,7 @@
                             <div class="col-md-3">
                               <label>Pick up date</label>
                               <div class="input-group date">
-                                {!! Form::text('pick_up_date', null, ['id' => 'm_datepicker_2' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true','autocomplete'=>'off']) !!}
+                                {!! Form::text('pick_up_date', null, ['id' => 'picker' ,'placeholder' => 'Select a date','class' => 'form-control m-input pick_up_date','required'=>'true','autocomplete'=>'off']) !!}
                                 <div class="input-group-append">
                                   <span class="input-group-text">
                                     <i class="la la-calendar-check-o"></i>
@@ -1216,7 +1216,7 @@
 <script>
 
 
-  $('#m_datepicker_2').daterangepicker({
+  $('#picker').daterangepicker({
     singleDatePicker: true,
 
     buttonClasses: 'm-btn btn',
