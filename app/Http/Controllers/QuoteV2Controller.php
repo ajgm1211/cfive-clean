@@ -2160,11 +2160,11 @@ class QuoteV2Controller extends Controller
         }
 
 
-
+        /*
         $terms = new TermsAndCondition();
         $terms->quote_id= $quote->id;
         $terms->content =$info_D->terms;
-        $terms->save();
+        $terms->save();*/
 
       }  
     }
