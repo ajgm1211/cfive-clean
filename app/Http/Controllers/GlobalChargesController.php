@@ -549,4 +549,81 @@ class GlobalChargesController extends Controller
         $globalcharges->setAttribute('validation_expire',$validation_expire);
         return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
     }
+    
+    public function updateAdm(Request $request, $id)
+    {
+
+        $harbor         = Harbor::pluck('display_name','id');
+        $carrier        = Carrier::pluck('name','id');
+        $currency       = Currency::pluck('alphacode','id');
+        $calculationT   = CalculationType::pluck('name','id');
+        $typedestiny    = TypeDestiny::pluck('description','id');
+
+        $global                     = GlobalCharge::find($id);
+        $validation                 = explode('/',$request->validation_expire);
+        $global->validity           = $validation[0];
+        $global->expire             = $validation[1];
+        $global->surcharge_id       = $request->input('surcharge_id');
+        $global->typedestiny_id     = $request->input('changetype');
+        $global->calculationtype_id = $request->input('calculationtype_id');
+        $global->ammount            = $request->input('ammount');
+        $global->currency_id        = $request->input('currency_id');
+        $global->company_user_id    = $request->input('company_user_id');
+
+        $carrier        = $request->input('carrier_id');
+        $deleteCarrier  = GlobalCharCarrier::where("globalcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort     = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort->delete();
+        $deleteCountry  = GlobalCharCountry::where("globalcharge_id",$id);
+        $deleteCountry->delete();
+
+        $typerate =  $request->input('typeroute');
+        if($typerate == 'port'){
+            $port_orig = $request->input('port_orig');
+            $port_dest = $request->input('port_dest');
+            foreach($port_orig as  $orig => $valueorig)
+            {
+                foreach($port_dest as $dest => $valuedest)
+                {
+                    $detailport = new GlobalCharPort();
+                    $detailport->port_orig       = $valueorig;
+                    $detailport->port_dest       = $valuedest;
+                    $detailport->typedestiny_id  = $request->input('changetype');
+                    $detailport->globalcharge_id = $id;
+                    $detailport->save();
+                }
+            }
+        } elseif($typerate == 'country'){
+
+            $detailCountrytOrig = $request->input('country_orig');
+            $detailCountryDest  = $request->input('country_dest');
+            foreach($detailCountrytOrig as $p => $valueC)
+            {
+                foreach($detailCountryDest as $dest => $valuedestC)
+                {
+                    $detailcountry = new GlobalCharCountry();
+                    $detailcountry->country_orig = $valueC;
+                    $detailcountry->country_dest =  $valuedestC;
+                    $detailcountry->globalcharge()->associate($global);
+                    $detailcountry->save();
+                }
+            }
+        }
+
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new GlobalCharCarrier();
+            $detailcarrier->carrier_id      = $key;
+            $detailcarrier->globalcharge_id = $id;
+            $detailcarrier->save();
+        }
+
+        $global->update();
+        
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully updated this contract.');
+        return redirect()->route('gcadm.index');
+    }
 }
