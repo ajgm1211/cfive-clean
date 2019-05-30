@@ -127,7 +127,11 @@ class ContractsController extends Controller
         $harbor     = $objharbor->all()->pluck('display_name','id');
         $country    = $objcountry->all()->pluck('name','id');
         $carrier    = $objcarrier->all()->pluck('name','id');
-        $scheduleT  = ScheduleType::pluck('name','id');
+        $scheduleT   = ['null'=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $scheduleT[$d['id']]=$d->name;
+        }
         $direction  = [null=>'Please Select'];
         $direction2 = Direction::all();
         foreach($direction2 as $d){
@@ -235,6 +239,10 @@ class ContractsController extends Controller
             {
                 foreach($rateDest as $Rdest => $Destvalue)
                 {
+                    $sch = null;
+                    if($request->input('scheduleT.'.$key) != 'null'){
+                        $sch = $request->input('scheduleT.'.$key);
+                    }
                     $rates = new Rate();
                     $rates->origin_port         = $request->input('origin_id'.$contadorRate.'.'.$Rorig);
                     $rates->destiny_port        = $request->input('destiny_id'.$contadorRate.'.'.$Rdest);
@@ -245,7 +253,7 @@ class ContractsController extends Controller
                     $rates->fortynor            = $request->input('fortynor.'.$key);
                     $rates->fortyfive           = $request->input('fortyfive.'.$key);
                     $rates->currency_id         = $request->input('currency_id.'.$key);
-                    $rates->schedule_type_id    = $request->input('scheduleT.'.$key);
+                    $rates->schedule_type_id    = $sch;
                     $rates->transit_time        = $request->input('transitTi.'.$key);
                     $rates->via                 = $request->input('via.'.$key);
                     $rates->contract()->associate($contract);
@@ -761,8 +769,13 @@ class ContractsController extends Controller
         $currency = $objcurrency->all()->pluck('alphacode','id');
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);
+        $scheduleT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $scheduleT[$d['id']]=$d->name;
+        } 
 
-        return view('contracts.addRates', compact('harbor','carrier','currency','id','currency_cfg'));
+        return view('contracts.addRates', compact('harbor','carrier','currency','id','currency_cfg','scheduleT'));
     }
     public function storeRates(Request $request,$id){
 
@@ -799,7 +812,11 @@ class ContractsController extends Controller
         $harbor         = $objharbor->all()->pluck('display_name','id');
         $carrier        = $objcarrier->all()->pluck('name','id');
         $currency       = $objcurrency->all()->pluck('alphacode','id');
-        $schedulesT     = ScheduleType::pluck('name','id');
+        $schedulesT   = [null=>'Please Select'];
+        $scheduleTo  = ScheduleType::all();
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
         $rates          = Rate::find($id);
         $rates->load('scheduletype');
         //dd($rates);

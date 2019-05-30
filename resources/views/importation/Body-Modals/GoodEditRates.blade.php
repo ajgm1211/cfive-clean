@@ -85,13 +85,13 @@
             <div class="col-lg-4">
 
                 {!! Form::label('Transit Time', 'Transit Time') !!}
-                {!! Form::number('transit_time',$rates['transit_time'], ['id' => 'transit_time','placeholder' => 'Transit Time','class' => 'form-control ','required']) !!}
+                {!! Form::number('transit_time',$rates['transit_time'], ['id' => 'transit_time','placeholder' => 'Transit Time','class' => 'form-control ']) !!}
 
             </div>
             <div class="col-lg-4">
 
                 {!! Form::label('via', 'Via') !!}
-                {!! Form::text('via',$rates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ','required']) !!}
+                {!! Form::text('via',$rates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ']) !!}
 
             </div>
         </div>  
