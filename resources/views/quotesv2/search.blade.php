@@ -89,7 +89,7 @@
   }
   .btn-detail__quotes:hover {
     border-color: #0072fc;
-    background-color: #0072fc;		
+    background-color: #0072fc;    
   }
   .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
     color: #fff;
@@ -341,7 +341,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
                     </span>
                   </span>
                 </div>
@@ -353,7 +353,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
                     </span>
                   </span>
                 </div>
@@ -369,8 +369,8 @@
 
               </div>
               <div class="col-lg-1">
-                <label>Type</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import','3'=>'All'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
 
               </div>
             </div><br>
