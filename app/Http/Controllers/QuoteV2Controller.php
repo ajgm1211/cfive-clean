@@ -3752,7 +3752,7 @@ class QuoteV2Controller extends Controller
 
       $markup =$inlandAmmount;
       $markup = number_format($markup, 2, '.', '');
-      $monto += $inlandMarkup;
+      $monto += number_format($inlandMarkup, 2, '.', '');
       $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ) ;
 
     }
