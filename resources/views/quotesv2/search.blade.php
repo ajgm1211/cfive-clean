@@ -363,16 +363,7 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-              <div class="col-lg-1">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
 
-              </div>
-              <div class="col-lg-1">
-                <label>Type</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import','3'=>'All'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-
-              </div>
             </div><br>
             <div class="row">
               <div class="col-lg-2" >
@@ -427,6 +418,16 @@
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
 
+            </div><br>
+            <div class="row">
+              <div class="col-lg-2">
+                <label>Incoterm</label>
+                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
+              </div>
+              <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
             </div>
 
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
@@ -834,7 +835,7 @@
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Details Cost</span>  
+                              <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
@@ -1096,17 +1097,17 @@
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }} {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
-                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ @$inlandDestiny['inlandDetails']['i20']['montoInlandT'] }}  </span>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['i20']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
                           {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
-                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandDestiny['inlandDetails']['i40']['montoInlandT']  }} </span> 
+                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ number_format(@$inlandDestiny['inlandDetails']['i40']['montoInlandT'] , 2, '.', '')   }} </span> 
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
                           {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
-                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandDestiny['inlandDetails']['i40HC']['montoInlandT'] }}  </span>
+                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{  number_format(@$inlandDestiny['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }}  </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
@@ -1143,17 +1144,17 @@
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
                           {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} 
-                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{ @$inlandOrigin['inlandDetails']['i20']['montoInlandT'] }} </span>
+                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{  number_format(@$inlandOrigin['inlandDetails']['i20']['montoInlandT'], 2, '.', '') }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
                           {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} 
-                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandOrigin['inlandDetails']['i40']['montoInlandT'] }} </span>
+                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
                           {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }}
-                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ @$inlandOrigin['inlandDetails']['i40HC']['montoInlandT'] }} </span>
+                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
