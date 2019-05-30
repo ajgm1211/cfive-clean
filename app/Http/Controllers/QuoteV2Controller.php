@@ -160,9 +160,9 @@ class QuoteV2Controller extends Controller
     }
     return DataTables::of($colletions)
 
-    ->addColumn('type', function ($colletion) use($quote) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-    })->addColumn('action',function($colletion){
+      ->addColumn('type', function ($colletion) use($quote) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      })->addColumn('action',function($colletion){
       return
       '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
@@ -1938,7 +1938,7 @@ class QuoteV2Controller extends Controller
       if(isset($form->price_id )){
         $priceId = $form->price_id;
       }
-      
+
       $payments = $this->getCompanyPayments($form->company_id_quote);
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
@@ -1990,9 +1990,9 @@ class QuoteV2Controller extends Controller
         $delivery_type = $request->input('delivery_type_air') ;
 
       }
-      
+
       $payments = $this->getCompanyPayments($request->input('company_id_quote'));
-      
+
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ]);
       $quote= QuoteV2::create($request->all());
 
@@ -2272,11 +2272,13 @@ class QuoteV2Controller extends Controller
         }
 
 
-
+        /*
         $terms = new TermsAndCondition();
         $terms->quote_id= $quote->id;
         $terms->content =$info_D->terms;
-        $terms->save();
+
+        $terms->save();*/
+
       }  
     }
 
@@ -2297,7 +2299,7 @@ class QuoteV2Controller extends Controller
     $dateQ = explode('/',$request->input('date'));
     $since = $dateQ[0];
     $until = $dateQ[1];
-    
+
     // FCL & LCL
     if($quote->type == 'FCL' || $quote->type == 'LCL'){
       foreach($request->input('originport') as $origP){
@@ -2601,7 +2603,7 @@ class QuoteV2Controller extends Controller
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' &&  in_array( '20',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_20 =  $details->ammount / $rateI;
+                      $sub_20 = number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto += number_format($sub_20, 2, '.', ''); 
                       $amount_inland = number_format($details->ammount, 2, '.', ''); 
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2617,7 +2619,7 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'forty' &&  in_array( '40',$equipment) ){
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_40 = $details->ammount / $rateI;
+                      $sub_40 = number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto +=  number_format($sub_40, 2, '.', ''); 
                       $amount_inland = $details->ammount;
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2632,13 +2634,14 @@ class QuoteV2Controller extends Controller
                   }
                   if($details->type == 'fortyhc' &&   in_array( '40HC',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_40hc =  $details->ammount / $rateI;
+                      $sub_40hc =  number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto +=  number_format($sub_40hc, 2, '.', ''); 
                       $price_per_unit = number_format($details->ammount / $distancia, 2, '.', '');
-                      $amount_inland =  $details->ammount;
+                      $amount_inland =  number_format($details->ammount , 2, '.', ''); 
                       $km40hc = false;
+
                       // CALCULO MARKUPS 
-                      $markupI40hc=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_40hc,$typeCurrency,$type);
+                      $markupI40hc=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_40hc,$typeCurrency,$markupInlandCurre);
                       // FIN CALCULO MARKUPS 
                       $arrayInland40hc = array("cant_cont" => $request->input('fortyhc') , "sub_in" => $sub_40hc, "des_in" => $texto40hc,'amount' => $amount_inland,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i40HC' ) ;
                       $arrayInland40hc = array_merge($markupI40hc,$arrayInland40hc);
@@ -2778,7 +2781,7 @@ class QuoteV2Controller extends Controller
                   $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
                   if($details->type == 'twuenty' &&  in_array( '20',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_20 =  $details->ammount / $rateI;
+                      $sub_20 =  number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto += $sub_20;
                       $amount_inland = $details->ammount;
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2794,7 +2797,7 @@ class QuoteV2Controller extends Controller
                   if($details->type == 'forty' &&  in_array( '40',$equipment) ){
 
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_40 = $details->ammount / $rateI;
+                      $sub_40 =  number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto += $sub_40;
                       $amount_inland = $details->ammount;
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
@@ -2809,7 +2812,7 @@ class QuoteV2Controller extends Controller
                   }
                   if($details->type == 'fortyhc' &&   in_array( '40HC',$equipment) ){
                     if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                      $sub_40hc =  $details->ammount / $rateI;
+                      $sub_40hc =   number_format( $details->ammount / $rateI, 2, '.', ''); 
                       $monto += $sub_40hc;
                       $price_per_unit = number_format($details->ammount / $distancia, 2, '.', '');
                       $amount_inland =  $details->ammount;
@@ -3758,12 +3761,13 @@ class QuoteV2Controller extends Controller
       $markup = ( $monto *  $inlandPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
+      $monto = number_format($monto, 2, '.', '');
       $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)",'montoInlandT' => $monto ) ;
     }else{
 
       $markup =$inlandAmmount;
       $markup = number_format($markup, 2, '.', '');
-      $monto += $inlandMarkup;
+      $monto += number_format($inlandMarkup, 2, '.', '');
       $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ) ;
 
     }
