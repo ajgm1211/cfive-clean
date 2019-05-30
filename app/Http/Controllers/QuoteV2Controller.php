@@ -160,11 +160,11 @@ class QuoteV2Controller extends Controller
     }
     return DataTables::of($colletions)
 
-      ->addColumn('type', function ($colletion) use($quote) {
+      ->addColumn('type', function ($colletion) {
         return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
       })->addColumn('action',function($colletion){
       return
-        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -191,7 +191,7 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-      ->editColumn('id', '{{$id}}')->make(true);
+    ->editColumn('id', '{{$id}}')->make(true);
   }
 
   public function show($id)
@@ -279,49 +279,52 @@ class QuoteV2Controller extends Controller
       //$array_rate_amounts = json_decode($array_rate_amounts,true);
       $array_rate_markups = json_decode($item->markups,true);
 
-      if(isset($array_rate_amounts['c20']) && isset($array_rate_markups['m20'])){
-        //Values rate
+      if(isset($array_rate_amounts['c20'])){
         $amount_rate20=$array_rate_amounts['c20'];
-        $markup_rate20=$array_rate_markups['m20'];
-        //Total rates
         $total_rate20=$amount_rate20/$currency_rate;
+      }
+      if(isset($array_rate_markups['m20'])){
+        $markup_rate20=$array_rate_markups['m20'];
         $total_rate_markup20=$markup_rate20/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40']) && isset($array_rate_markups['m40'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40'])){
         $amount_rate40=$array_rate_amounts['c40'];
-        $markup_rate40=$array_rate_markups['m40'];
-        //Total rates
         $total_rate40=$amount_rate40/$currency_rate;
+      }
+
+      if(isset($array_rate_markups['m40'])){
+        $markup_rate40=$array_rate_markups['m40'];    
         $total_rate_markup40=$markup_rate40/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40hc']) && isset($array_rate_markups['m40hc'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40hc'])){
         $amount_rate40hc=$array_rate_amounts['c40hc'];
-        $markup_rate40hc=$array_rate_markups['m40hc'];
-        //Total rates
         $total_rate40hc=$amount_rate40hc/$currency_rate;
+      }
+
+      if(isset($array_rate_markups['m40hc'])){
+        $markup_rate40hc=$array_rate_markups['m40hc'];
         $total_rate_markup40hc=$markup_rate40hc/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40nor']) && isset($array_rate_markups['m40nor'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40nor'])){
         $amount_rate40nor=$array_rate_amounts['c40nor'];
-        $markup_rate40nor=$array_rate_markups['m40nor'];
-        //Total rates
         $total_rate40nor=$amount_rate40nor/$currency_rate;
-        $total_rate_markup40nor=$markup_rate40nor/$currency_rate;
-
       }
 
-      if(isset($array_rate_amounts['c45']) && isset($array_rate_markups['m45'])){
-        //Values rate
+      if(isset($array_rate_markups['m40nor'])){
+        $markup_rate40nor=$array_rate_markups['m40nor'];
+        $total_rate_markup40nor=$markup_rate40nor/$currency_rate;
+      }
+
+      if(isset($array_rate_amounts['c45'])){
         $amount_rate45=$array_rate_amounts['c45'];
+        $total_rate45=$amount_rate45/$currency_rate;        
+      }
+
+      if(isset($array_rate_markups['m45'])){
         $markup_rate45=$array_rate_markups['m45'];
-        //Total rates
-        $total_rate45=$amount_rate45/$currency_rate;
         $total_rate_markup45=$markup_rate45/$currency_rate;
       }      
 
@@ -332,55 +335,60 @@ class QuoteV2Controller extends Controller
 
         $array_amounts = json_decode($value->amount,true);
         $array_markups = json_decode($value->markups,true);
-        if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
-          //Values charges
-          $amount20=$array_amounts['c20'];
-          $markup20=$array_markups['c20'];
-          //Total charges
-          $total20=$amount20/$currency_rate;
-          $total_markup20=$markup20/$currency_rate;
 
+        if(isset($array_amounts['c20'])){
+          $amount20=$array_amounts['c20'];
+          $total20=$amount20/$currency_rate;
           $sum20 = number_format($total20, 2, '.', '');
         }
-        if(isset($array_amounts['c40']) && isset($array_markups['c40'])){
-          //Values charges
-          $amount40=$array_amounts['c40'];
-          $markup40=$array_markups['c40'];
-          //Total charges
-          $total40=$amount40/$currency_rate;
-          $total_markup40=$markup40/$currency_rate;
 
+        if(isset($array_markups['c20'])){
+          $markup20=$array_markups['c20'];
+          $total_markup20=$markup20/$currency_rate;
+        }
+
+        if(isset($array_amounts['c40'])){
+          $amount40=$array_amounts['c40'];
+          $total40=$amount40/$currency_rate;          
           $sum40 = number_format($total40, 2, '.', '');
         }
-        if(isset($array_amounts['c40hc']) && isset($array_markups['c40hc'])){
-          //Values charges
-          $amount40hc=$array_amounts['c40hc'];
-          $markup40hc=$array_markups['c40hc'];
-          //Total charges
-          $total40hc=$amount40hc/$currency_rate;
-          $total_markup40hc=$markup40hc/$currency_rate;
 
+        if(isset($array_markups['c40'])){
+          $markup40=$array_markups['c40'];
+          $total_markup40=$markup40/$currency_rate;
+        }
+
+        if(isset($array_amounts['c40hc'])){
+          $amount40hc=$array_amounts['c40hc'];
+          $total40hc=$amount40hc/$currency_rate;          
           $sum40hc = number_format($total40hc, 2, '.', '');
         }
-        if(isset($array_amounts['c40nor']) && isset($array_markups['c40nor'])){
-          //Values charges
-          $amount40nor=$array_amounts['c40nor'];
-          $markup40nor=$array_markups['c40nor'];
-          //Total charges
-          $total40nor=$amount40nor/$currency_rate;
-          $total_markup40nor=$markup40nor/$currency_rate;
 
+        if(isset($array_markups['c40hc'])){
+          $markup40hc=$array_markups['c40hc'];
+          $total_markup40hc=$markup40hc/$currency_rate;
+        }
+
+        if(isset($array_amounts['c40nor'])){
+          $amount40nor=$array_amounts['c40nor'];
+          $total40nor=$amount40nor/$currency_rate;
           $sum40nor = number_format($total40nor, 2, '.', '');
         }
-        if(isset($array_amounts['c45']) && isset($array_markups['c45'])){
-          //Values charges          
-          $amount45=$array_amounts['c45'];
-          $markup45=$array_markups['c45'];
-          //Total charges
-          $total45=($amount45+$markup45)/$currency_rate;
-          $total_markup45=$markup45/$currency_rate;
 
+        if(isset($array_markups['c40nor'])){
+          $markup40nor=$array_markups['c40nor'];
+          $total_markup40nor=$markup40nor/$currency_rate;
+        }
+
+        if(isset($array_amounts['c45'])){
+          $amount45=$array_amounts['c45'];
+          $total45=($amount45+$markup45)/$currency_rate;
           $sum45 = number_format($total45, 2, '.', '');
+        }
+
+        if(isset($array_markups['c45'])){
+          $markup45=$array_markups['c45'];
+          $total_markup45=$markup45/$currency_rate;
         }
 
         $value->total_20=number_format($sum20, 2, '.', '');
@@ -388,7 +396,7 @@ class QuoteV2Controller extends Controller
         $value->total_40hc=number_format($sum40hc, 2, '.', '');
         $value->total_40nor=number_format($sum40nor, 2, '.', '');
         $value->total_45=number_format($sum45, 2, '.', '');
-
+        
         $value->total_markup20=number_format($total_markup20, 2, '.', '');
         $value->total_markup40=number_format($total_markup40, 2, '.', '');
         $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
@@ -420,7 +428,7 @@ class QuoteV2Controller extends Controller
         $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
         $array_amounts = json_decode($inland->rate,true);
         $array_markups = json_decode($inland->markup,true);
-        if(isset($array_amounts['c20']) && isset($array_markups['c20'])){
+        if(isset($array_amounts['c20'])){
           $amount20=$array_amounts['c20'];
           $markup20=$array_markups['c20'];
           $total20=($amount20+$markup20)/$currency_rate;
@@ -466,7 +474,7 @@ class QuoteV2Controller extends Controller
       $item->total_rate40hc=number_format($total_rate40hc+$total_rate_markup40hc, 2, '.', '');
       $item->total_rate40nor=number_format($total_rate40nor+$total_rate_markup40nor, 2, '.', '');
       $item->total_rate45=number_format($total_rate45+$total_rate_markup45, 2, '.', '');
-
+      //dd($total_rate20);
       $item->total_rate_a20=number_format($total_rate20, 2, '.', '');
       $item->total_rate_a40=number_format($total_rate40, 2, '.', '');
       $item->total_rate_a40hc=number_format($total_rate40hc, 2, '.', '');
@@ -622,6 +630,7 @@ class QuoteV2Controller extends Controller
     }
     $quote->validity_start=$validity_start;
     $quote->validity_end=$validity_end;
+    $quote->price_id=$request->price_id;
     $quote->user_id=$request->user_id;
     $quote->kind_of_cargo=$request->kind_of_cargo;
     $quote->commodity=$request->commodity;
@@ -630,8 +639,9 @@ class QuoteV2Controller extends Controller
 
     $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
     $owner=$quote->user->name.' '.$quote->user->lastname;
+    $price_name=$quote->price->name;
 
-    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner]);
+    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name]);
   }
 
   //Actualiza condiciones de pago
@@ -982,48 +992,52 @@ class QuoteV2Controller extends Controller
       $item->currency_usd = $currency->rates;
       $item->currency_eur = $currency->rates_eur;      
 
-      if(isset($array_rate_amounts['c20']) && isset($array_rate_markups['m20'])){
-        //Values rate
+      if(isset($array_rate_amounts['c20'])){
         $amount_rate20=$array_rate_amounts['c20'];
-        $markup_rate20=$array_rate_markups['m20'];
-        //Total rates
         $total_rate20=$amount_rate20/$currency_rate;
+      }
+
+      if(isset($array_rate_markups['m20'])){
+        $markup_rate20=$array_rate_markups['m20'];
         $total_rate_markup20=$markup_rate20/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40']) && isset($array_rate_markups['m40'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40'])){
         $amount_rate40=$array_rate_amounts['c40'];
         $markup_rate40=$array_rate_markups['m40'];
-        //Total rates
+      }
+
+      if(isset($array_rate_markups['m40'])){
         $total_rate40=$amount_rate40/$currency_rate;
         $total_rate_markup40=$markup_rate40/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40hc']) && isset($array_rate_markups['m40hc'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40hc'])){
         $amount_rate40hc=$array_rate_amounts['c40hc'];
-        $markup_rate40hc=$array_rate_markups['m40hc'];
-        //Total rates
         $total_rate40hc=$amount_rate40hc/$currency_rate;
+      }
+      if(isset($array_rate_markups['m40hc'])){
+        $markup_rate40hc=$array_rate_markups['m40hc'];
         $total_rate_markup40hc=$markup_rate40hc/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c40nor']) && isset($array_rate_markups['m40nor'])){
-        //Values rate
+      if(isset($array_rate_amounts['c40nor'])){
         $amount_rate40nor=$array_rate_amounts['c40nor'];
-        $markup_rate40nor=$array_rate_markups['m40nor'];
-        //Total rates
         $total_rate40nor=$amount_rate40nor/$currency_rate;
+      }
+
+      if(isset($array_rate_markups['m40nor'])){
+        $markup_rate40nor=$array_rate_markups['m40nor'];
         $total_rate_markup40nor=$markup_rate40nor/$currency_rate;
       }
 
-      if(isset($array_rate_amounts['c45']) && isset($array_rate_markups['m45'])){
-        //Values rate
+      if(isset($array_rate_amounts['c45'])){
         $amount_rate45=$array_rate_amounts['c45'];
-        $markup_rate45=$array_rate_markups['m45'];
-        //Total rates
         $total_rate45=$amount_rate45/$currency_rate;
+      }
+
+      if(isset($array_rate_markups['m45'])){
+        $markup_rate45=$array_rate_markups['m45'];        
         $total_rate_markup45=$markup_rate45/$currency_rate;
       } 
 
@@ -2571,12 +2585,12 @@ class QuoteV2Controller extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
-              ])->get();
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2748,12 +2762,12 @@ class QuoteV2Controller extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-              ->setParam([
-                'origin'          => $origin,
-                'destination'     => $destination,
-                'mode' => 'driving' ,
-                'language' => 'es',
-              ])->get();
+            ->setParam([
+              'origin'          => $origin,
+              'destination'     => $destination,
+              'mode' => 'driving' ,
+              'language' => 'es',
+            ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -2909,16 +2923,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-                 {
-                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
-                     $b->where('company_id', '=',$company_id);
-                   })->orDoesntHave('contract_company_restriction');
-                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-    });
-    $arreglo = $arreglo->get();
+    {
+     $q->whereHas('contract_company_restriction', function($b) use($company_id){
+       $b->where('company_id', '=',$company_id);
+     })->orDoesntHave('contract_company_restriction');
+   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+  });
+   $arreglo = $arreglo->get();
 
-    $formulario = $request;
+   $formulario = $request;
     $array20 = array('2','4','5','6','9','10','11'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10','11'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10','11'); // id  calculation type 3 = per 40HC 
