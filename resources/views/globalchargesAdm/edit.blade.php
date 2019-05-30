@@ -19,7 +19,7 @@ $portRadio = false;
 
 <div class="m-portlet">
 
-    {{ Form::model($globalcharges, array('route' => array('update-global-charge', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
+    {{ Form::model($globalcharges, array('route' => array('gcadm.update', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
     <div class="m-portlet__body">
         <div class="form-group m-form__group row">
             <div class="col-lg-12">
@@ -171,7 +171,23 @@ $portRadio = false;
     $('.m-select2-general').select2({
         placeholder: "Select an option"
     });
-
+    $('#company_user_id').change(function(event){
+        url = '{{route("gcadm.typeCharge",":id")}}';
+        url = url.replace(':id', event.target.value);
+        $.get(url,function(response,status){
+            //console.log(response);
+            if(response.length >= 1){
+                $('#type').removeAttr('disabled','disabled');
+            } else {
+                $('#type').attr('disabled','disabled');
+            }
+            $('#type').empty();
+            $('#type').append("<option value=''>Selecciona</option>");
+            for(i=0;i < response.length; i++){
+                $('#type').append("<option value='"+response[i].id+"'>"+response[i].name+"</option>");
+            }
+        })
+    });
 
 </script>
 
