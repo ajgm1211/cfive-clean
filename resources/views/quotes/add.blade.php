@@ -1221,7 +1221,10 @@
 
     buttonClasses: 'm-btn btn',
     applyClass: 'btn-primary',
-    cancelClass: 'btn-secondary'
+    cancelClass: 'btn-secondary',
+    locale: {
+      format: 'YYYY-MM-DD'
+    }
   });
 
 
