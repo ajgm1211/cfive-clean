@@ -682,7 +682,7 @@
         @endif
       </div><!-- aqui -->
       <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-        <button type="button" class="btn m-btn--pill btn-manual__quotes btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+        <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
         </button>
       </div>
     </div>
@@ -892,7 +892,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span></div>
 
                   </div><br>
                   @endforeach
@@ -973,7 +973,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1 colorphacode">{{ $arr->typeCurrency }}</div>
+                    <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  ) }}</div>
                   </div><br>
                   @endforeach
 
@@ -1039,7 +1039,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span></div>
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach

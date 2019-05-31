@@ -2045,7 +2045,12 @@ class QuoteV2Controller extends Controller
             $package_load->large = $large[$key];
             $package_load->weight = $weight[$key];
             $package_load->total_weight = $weight[$key]*$quantity[$key];
-            $package_load->volume = $volume[$key];
+            if(!empty($volume)){
+              $package_load->volume = $volume[$key];
+            }else{
+              $package_load->volume = 0.01;
+            }
+
             $package_load->save();
           }
         }

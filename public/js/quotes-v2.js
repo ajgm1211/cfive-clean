@@ -1200,7 +1200,7 @@ $(document).on('click', '#update', function () {
             $(".equipment_span").append(value + ', ');
           }
         });
-        
+
         $(".contact_id").val(data.quote['contact_id']);
         $(".contact_id_span").html(data.contact_name);
         $(".user_id").val(data.quote['user_id']);
@@ -1877,7 +1877,9 @@ $(".quote_man").on("click", function() {
 
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
-
+  if($('#quoteType').val()==1){
+    $("#carrieManual").attr( "required", true );
+  }
   if($('#quoteType').val()==2){
     $("#carrieManual").attr( "required", true );
     if($("#total_quantity_pkg_input").val()>0){
@@ -1894,7 +1896,7 @@ $(".quote_man").on("click", function() {
 
   if($('#quoteType').val()==3){
     $("#airline_id").attr( "required", true );
-
+    $("#carrieManual").prop( "required", false );
 
   }
 
