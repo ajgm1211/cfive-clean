@@ -1701,48 +1701,50 @@ class QuoteV2Controller extends Controller
             $item->currency_usd = $currency->rates;
             $item->currency_eur = $currency->rates_eur;      
 
-            if(isset($array_rate_amounts['c20']) && isset($array_rate_markups['m20'])){
-              //Values rate
+            if(isset($array_rate_amounts['c20'])){
               $amount_rate20=$array_rate_amounts['c20'];
-              $markup_rate20=$array_rate_markups['m20'];
-              //Total rates
               $total_rate20=$amount_rate20/$currency_rate;
+            }
+
+            if(isset($array_rate_markups['m20'])){
+              $markup_rate20=$array_rate_markups['m20'];
               $total_rate_markup20=$markup_rate20/$currency_rate;
             }
 
-            if(isset($array_rate_amounts['c40']) && isset($array_rate_markups['m40'])){
-              //Values rate
+            if(isset($array_rate_amounts['c40'])){
               $amount_rate40=$array_rate_amounts['c40'];
-              $markup_rate40=$array_rate_markups['m40'];
-              //Total rates
               $total_rate40=$amount_rate40/$currency_rate;
+            }
+
+            if(isset($array_rate_markups['m40'])){
+              $markup_rate40=$array_rate_markups['m40'];
               $total_rate_markup40=$markup_rate40/$currency_rate;
             }
 
-            if(isset($array_rate_amounts['c40hc']) && isset($array_rate_markups['m40hc'])){
-              //Values rate
+            if(isset($array_rate_amounts['c40hc'])){
               $amount_rate40hc=$array_rate_amounts['c40hc'];
-              $markup_rate40hc=$array_rate_markups['m40hc'];
-              //Total rates
               $total_rate40hc=$amount_rate40hc/$currency_rate;
+            }
+            if(isset($array_rate_markups['m40hc'])){
+              $markup_rate40hc=$array_rate_markups['m40hc'];
               $total_rate_markup40hc=$markup_rate40hc/$currency_rate;
             }
 
-            if(isset($array_rate_amounts['c40nor']) && isset($array_rate_markups['m40nor'])){
-              //Values rate
+            if(isset($array_rate_amounts['c40nor'])){
               $amount_rate40nor=$array_rate_amounts['c40nor'];
-              $markup_rate40nor=$array_rate_markups['m40nor'];
-              //Total rates
               $total_rate40nor=$amount_rate40nor/$currency_rate;
+            }
+            if(isset($array_rate_markups['m40nor'])){
+              $markup_rate40nor=$array_rate_markups['m40nor'];
               $total_rate_markup40nor=$markup_rate40nor/$currency_rate;
             }
 
-            if(isset($array_rate_amounts['c45']) && isset($array_rate_markups['m45'])){
-              //Values rate
+            if(isset($array_rate_amounts['c45'])){
               $amount_rate45=$array_rate_amounts['c45'];
-              $markup_rate45=$array_rate_markups['m45'];
-              //Total rates
               $total_rate45=$amount_rate45/$currency_rate;
+            }
+            if(isset($array_rate_markups['m45'])){
+              $markup_rate45=$array_rate_markups['m45'];
               $total_rate_markup45=$markup_rate45/$currency_rate;
             } 
 

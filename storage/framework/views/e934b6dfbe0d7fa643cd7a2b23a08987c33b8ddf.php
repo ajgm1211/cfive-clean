@@ -40,7 +40,7 @@
                 <p <?php echo e($quote->pdf_option->language=='Spanish' ? '':'hidden'); ?>><b>De:</b></p>
                 <p <?php echo e($quote->pdf_option->language=='Portuguese' ? '':'hidden'); ?>><b>A partir de:</b></p>
                 <span id="destination_input" style="line-height: 0.5">
-                    <p><?php echo e($user->name); ?> <?php echo e($user->lastname); ?></p>
+                    <p><?php echo e($quote->user->name); ?> <?php echo e($quote->user->lastname); ?></p>
                     <p><span style="color: #031B4E"><b><?php echo e($user->companyUser->name); ?></b></span></p>
                     <p><?php echo e($user->companyUser->address); ?></p>
                     <p><?php echo e($user->phone); ?></p>
@@ -308,37 +308,43 @@
                     $rate_markups = json_decode($rate->markups,true);
                 ?>
                 <?php $__currentLoopData = $rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <!--<tr class="text-center color-table">
-                        <td >
-                            <?php if($rate->origin_port_id!=''): ?> 
+                    <?php if($freight_charges_grouped->count() == 0): ?>
+                        <tr class="text-center color-table">
+                            <td >
+                                <?php if($rate->origin_port_id!=''): ?> 
                                 <?php echo e($rate->origin_port->name); ?>, <?php echo e($rate->origin_port->code); ?> 
-                            <?php elseif($rate->origin_address!=''): ?> 
+                                <?php elseif($rate->origin_address!=''): ?> 
                                 <?php echo e($rate->origin_address); ?> 
-                            <?php else: ?> 
+                                <?php else: ?> 
                                 <?php echo e($rate->origin_airport->name); ?>, <?php echo e($rate->origin_airport->code); ?>
 
-                            <?php endif; ?>
-                        </td>
-                        <td >
-                            <?php if($rate->destination_port_id!=''): ?> 
+                                <?php endif; ?>
+                            </td>
+                            <td >
+                                <?php if($rate->destination_port_id!=''): ?> 
                                 <?php echo e($rate->destination_port->name); ?>, <?php echo e($rate->destination_port->code); ?> 
-                            <?php elseif($rate->destination_address!=''): ?> 
+                                <?php elseif($rate->destination_address!=''): ?> 
                                 <?php echo e($rate->destination_address); ?> 
-                            <?php else: ?> 
+                                <?php else: ?> 
                                 <?php echo e($rate->destination_airport->name); ?>, <?php echo e($rate->destination_airport->code); ?>
 
+                                <?php endif; ?>
+                            </td>                            
+                            <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($rate->total_rate20); ?></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($rate->total_rate40); ?></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($rate->total_rate40hc); ?></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($rate->total_rate40nor); ?></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($rate->total_rate45); ?></td>
+                            <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
+                                <td ><?php echo e($quote->pdf_option->freight_charges_currency); ?></td>
+                            <?php else: ?>
+                                <td ><?php echo e($currency_cfg->alphacode); ?></td>
                             <?php endif; ?>
-                        </td>                            
-                        <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                        <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$rate_amounts['c20']+@$rate_markups['m20']); ?></td>
-                        <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$rate_amounts['c40']+@$rate_markups['m40']); ?></td>
-                        <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$rate_amounts['c40hc']+@$rate_markups['m40hc']); ?></td>
-                        <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$rate_amounts['c40nor']+@$rate_markups['m40nor']); ?></td>
-                        <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$rate_amounts['c45']+@$rate_markups['m45']); ?></td>
-                        <td ><?php echo e($rate->currency->alphacode); ?></td>
-                    </tr>-->
+                        </tr>
+                    <?php endif; ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                <?php $__currentLoopData = $freight_charges_grouped; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $origin=>$freight): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__empty_1 = true; $__currentLoopData = $freight_charges_grouped; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $origin=>$freight): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <?php $__currentLoopData = $freight; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $destination=>$detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <?php $__currentLoopData = $detail; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php $__currentLoopData = $item; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -363,43 +369,83 @@
                                         $sum_freight_45+=$value->total_45;                                
                                     ?>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <tr class="text-center color-table">
+                                <td >
+                                    <?php if($rate->origin_port_id!=''): ?> 
+                                        <?php echo e($rate->origin_port->name); ?>, <?php echo e($rate->origin_port->code); ?> 
+                                    <?php elseif($rate->origin_address!=''): ?> 
+                                        <?php echo e($rate->origin_address); ?> 
+                                    <?php else: ?> 
+                                        <?php echo e($rate->origin_airport->name); ?>, <?php echo e($rate->origin_airport->code); ?>
+
+                                    <?php endif; ?>
+                                </td>
+                                <td >
+                                    <?php if($rate->destination_port_id!=''): ?> 
+                                        <?php echo e($rate->destination_port->name); ?>, <?php echo e($rate->destination_port->code); ?> 
+                                    <?php elseif($rate->destination_address!=''): ?> 
+                                        <?php echo e($rate->destination_address); ?> 
+                                    <?php else: ?> 
+                                        <?php echo e($rate->destination_airport->name); ?>, <?php echo e($rate->destination_airport->code); ?>
+
+                                    <?php endif; ?>
+                                </td>                            
+                                <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
+                                <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$sum_freight_20+$rate->total_rate20); ?></td>
+                                <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$sum_freight_40+$rate->total_rate40); ?></td>
+                                <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$sum_freight_40hc+$rate->total_rate40hc); ?></td>
+                                <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$sum_freight_40nor+$rate->total_rate40nor); ?></td>
+                                <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$sum_freight_45+$rate->total_rate45); ?></td>
+                                <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
+                                    <td ><?php echo e($quote->pdf_option->freight_charges_currency); ?></td>
+                                <?php else: ?>
+                                    <td ><?php echo e($currency_cfg->alphacode); ?></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                adhalda
+                                    <?php $__currentLoopData = $rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    
+                        <tr class="text-center color-table">
                             <td >
                                 <?php if($rate->origin_port_id!=''): ?> 
-                                    <?php echo e($rate->origin_port->name); ?>, <?php echo e($rate->origin_port->code); ?> 
+                                <?php echo e($rate->origin_port->name); ?>, <?php echo e($rate->origin_port->code); ?> 
                                 <?php elseif($rate->origin_address!=''): ?> 
-                                    <?php echo e($rate->origin_address); ?> 
+                                <?php echo e($rate->origin_address); ?> 
                                 <?php else: ?> 
-                                    <?php echo e($rate->origin_airport->name); ?>, <?php echo e($rate->origin_airport->code); ?>
+                                <?php echo e($rate->origin_airport->name); ?>, <?php echo e($rate->origin_airport->code); ?>
 
                                 <?php endif; ?>
                             </td>
                             <td >
                                 <?php if($rate->destination_port_id!=''): ?> 
-                                    <?php echo e($rate->destination_port->name); ?>, <?php echo e($rate->destination_port->code); ?> 
+                                <?php echo e($rate->destination_port->name); ?>, <?php echo e($rate->destination_port->code); ?> 
                                 <?php elseif($rate->destination_address!=''): ?> 
-                                    <?php echo e($rate->destination_address); ?> 
+                                <?php echo e($rate->destination_address); ?> 
                                 <?php else: ?> 
-                                    <?php echo e($rate->destination_airport->name); ?>, <?php echo e($rate->destination_airport->code); ?>
+                                <?php echo e($rate->destination_airport->name); ?>, <?php echo e($rate->destination_airport->code); ?>
 
                                 <?php endif; ?>
                             </td>                            
                             <td <?php echo e($quote->pdf_option->show_carrier==1 ? '':'hidden'); ?>><?php echo e($rate->carrier->name); ?></td>
-                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e(@$sum_freight_20+$rate->total_rate20); ?></td>
-                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e(@$sum_freight_40+$rate->total_rate40); ?></td>
-                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e(@$sum_freight_40hc+$rate->total_rate40hc); ?></td>
-                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e(@$sum_freight_40nor+$rate->total_rate40nor); ?></td>
-                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e(@$sum_freight_45+$rate->total_rate45); ?></td>
+                            <td <?php echo e(@$equipmentHides['20']); ?>><?php echo e($rate->total_rate20); ?></td>
+                            <td <?php echo e(@$equipmentHides['40']); ?>><?php echo e($rate->total_rate40); ?></td>
+                            <td <?php echo e(@$equipmentHides['40hc']); ?>><?php echo e($rate->total_rate40hc); ?></td>
+                            <td <?php echo e(@$equipmentHides['40nor']); ?>><?php echo e($rate->total_rate40nor); ?></td>
+                            <td <?php echo e(@$equipmentHides['45']); ?>><?php echo e($rate->total_rate45); ?></td>
                             <?php if($quote->pdf_option->grouped_freight_charges==1): ?>
                                 <td ><?php echo e($quote->pdf_option->freight_charges_currency); ?></td>
                             <?php else: ?>
                                 <td ><?php echo e($currency_cfg->alphacode); ?></td>
                             <?php endif; ?>
-                            </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tr>
+                    
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
             </tbody>
         </table>
         <?php endif; ?>
