@@ -2243,6 +2243,9 @@ class QuoteV2Controller extends Controller
       $pdf_option->show_type='total in';
       $pdf_option->grouped_total_currency=0;
       $pdf_option->total_in_currency=$currency->alphacode;
+      $pdf_option->freight_charges_currency=$currency->alphacode;
+      $pdf_option->origin_charges_currency=$currency->alphacode;
+      $pdf_option->destination_charges_currency=$currency->alphacode;
       $pdf_option->language='English';
       $pdf_option->save();
 
@@ -2347,6 +2350,9 @@ class QuoteV2Controller extends Controller
       $pdf_option->show_type='total in';
       $pdf_option->grouped_total_currency=0;
       $pdf_option->total_in_currency=$currency->alphacode;
+      $pdf_option->freight_charges_currency=$currency->alphacode;
+      $pdf_option->origin_charges_currency=$currency->alphacode;
+      $pdf_option->destination_charges_currency=$currency->alphacode;
       $pdf_option->language='English';
       $pdf_option->save();
       // MANUAL RATE
