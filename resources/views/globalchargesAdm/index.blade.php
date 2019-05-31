@@ -108,7 +108,9 @@
                         </span>
                     </button>
                 </div>
-                <div id="global-body">
+                <div class="modal-body" id="global-body">
+                    <div class="m-scrollable"  data-scrollbar-shown="true" data-scrollable="true" data-max-height="200">
+                    </div>
                 </div>
             </div>
         </div>
@@ -172,6 +174,7 @@
             "lengthChange": false,
             "searching": true,
             "ordering": true,
+            "select": true,
             "width": true,
             "info": true,
             "deferLoading": 57,
@@ -196,7 +199,8 @@
             reverseButtons: true
         }).then(function(result){
             if (result.value) {
-                $('.checkbox_global:checked').each(function(){
+                var oTableT = $("#requesttable").dataTable();
+                $('.checkbox_global:checked', oTableT.fnGetNodes()).each(function(){
                     id.push($(this).val());
                 });
 
@@ -240,11 +244,10 @@
 
     $(document).on('click', '#bulk_duplicate', function(){
         var id = [];
-
-        $('.checkbox_global:checked').each(function(){
+        var oTable = $("#requesttable").dataTable(); 
+        $('.checkbox_global:checked', oTable.fnGetNodes()).each(function(){
             id.push($(this).val());
         });
-
         if(id.length > 0)
         {
             url='{!! route("gcadm.dupicate.Array",":id") !!}';

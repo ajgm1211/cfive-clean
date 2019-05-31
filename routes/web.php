@@ -104,6 +104,7 @@ Route::prefix('globalcharges')->group(function () {
     Route::PUT('UpdateAdm/{id}','GlobalChargesController@updateAdm')->name('gcadm.update')->middleware(['auth','role:administrator']);
     Route::get('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator']);
     Route::POST('ArrDupicateAdm/','GlobalChargesController@dupicateArrAdm')->name('gcadm.dupicate.Array')->middleware(['auth','role:administrator']);
+    Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator']);
     
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
