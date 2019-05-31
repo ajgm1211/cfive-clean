@@ -1069,8 +1069,8 @@ $(document).on('click', '#cancel', function () {
   $(".status").attr('hidden','true');
   $(".delivery_type").attr('hidden','true');
   $(".incoterm_id").attr('hidden','true');
-  $(".commodity_span").attr('hidden','true');
-  $(".kind_of_cargo_span").attr('hidden','true');
+  $(".commodity").attr('hidden','true');
+  $(".kind_of_cargo").attr('hidden','true');
   $(".contact_id").attr('hidden','true');
   $(".validity").attr('hidden','true');
   $(".user_id").attr('hidden','true');
