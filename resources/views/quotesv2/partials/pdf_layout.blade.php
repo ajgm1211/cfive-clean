@@ -8,9 +8,9 @@
           <div class="m-portlet__head-tools">
             <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
               <li class="nav-item m-tabs__item" id="edit_li">
-                <a class="btn btn-primary-v2 btn-edit" id="edit-quote" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-target="#SendQuoteModal">
                   Send &nbsp;&nbsp;<i class="fa fa-envelope"></i>
-                </a>
+                </button>
               </li>
               <li class="nav-item m-tabs__item" id="edit_li">
                 @if($quote->type=='FCL')
