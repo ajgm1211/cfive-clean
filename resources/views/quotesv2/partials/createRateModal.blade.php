@@ -45,7 +45,7 @@
                         <label>Delivery type</label>
                         {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
                     </div>
-                    <div class="col-md-4" id="delivery_type_air_label"C{{$quote->type!='AIR' ? 'hidden':''}}>
+                    <div class="col-md-4" id="delivery_type_air_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                         <label>Delivery type</label>
                         {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
                     </div>                 

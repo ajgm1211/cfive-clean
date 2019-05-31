@@ -38,7 +38,7 @@
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>De:</b></p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>A partir de:</b></p>
                 <span id="destination_input" style="line-height: 0.5">
-                    <p>{{$user->name}} {{$user->lastname}}</p>
+                    <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
                     <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
                     <p>{{$user->companyUser->address}}</p>
                     <p>{{$user->phone}}</p>
@@ -306,35 +306,41 @@
                     $rate_markups = json_decode($rate->markups,true);
                 ?>
                 @foreach($rates as $rate)
-                    <!--<tr class="text-center color-table">
-                        <td >
-                            @if($rate->origin_port_id!='') 
+                    @if($freight_charges_grouped->count() == 0)
+                        <tr class="text-center color-table">
+                            <td >
+                                @if($rate->origin_port_id!='') 
                                 {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                            @elseif($rate->origin_address!='') 
+                                @elseif($rate->origin_address!='') 
                                 {{$rate->origin_address}} 
-                            @else 
+                                @else 
                                 {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
-                            @endif
-                        </td>
-                        <td >
-                            @if($rate->destination_port_id!='') 
+                                @endif
+                            </td>
+                            <td >
+                                @if($rate->destination_port_id!='') 
                                 {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                            @elseif($rate->destination_address!='') 
+                                @elseif($rate->destination_address!='') 
                                 {{$rate->destination_address}} 
-                            @else 
+                                @else 
                                 {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                @endif
+                            </td>                            
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                            <td {{ @$equipmentHides['20'] }}>{{$rate->total_rate20}}</td>
+                            <td {{ @$equipmentHides['40'] }}>{{$rate->total_rate40}}</td>
+                            <td {{ @$equipmentHides['40hc'] }}>{{$rate->total_rate40hc}}</td>
+                            <td {{ @$equipmentHides['40nor'] }}>{{$rate->total_rate40nor}}</td>
+                            <td {{ @$equipmentHides['45'] }}>{{$rate->total_rate45}}</td>
+                            @if($quote->pdf_option->grouped_freight_charges==1)
+                                <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                            @else
+                                <td >{{$currency_cfg->alphacode}}</td>
                             @endif
-                        </td>                            
-                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                        <td {{ @$equipmentHides['20'] }}>{{@$rate_amounts['c20']+@$rate_markups['m20']}}</td>
-                        <td {{ @$equipmentHides['40'] }}>{{@$rate_amounts['c40']+@$rate_markups['m40']}}</td>
-                        <td {{ @$equipmentHides['40hc'] }}>{{@$rate_amounts['c40hc']+@$rate_markups['m40hc']}}</td>
-                        <td {{ @$equipmentHides['40nor'] }}>{{@$rate_amounts['c40nor']+@$rate_markups['m40nor']}}</td>
-                        <td {{ @$equipmentHides['45'] }}>{{@$rate_amounts['c45']+@$rate_markups['m45']}}</td>
-                        <td >{{$rate->currency->alphacode}}</td>
-                    </tr>-->
+                        </tr>
+                    @endif
                 @endforeach
-                @foreach($freight_charges_grouped as $origin=>$freight)
+                @forelse($freight_charges_grouped as $origin=>$freight)
                     @foreach($freight as $destination=>$detail)
                         @foreach($detail as $item)
                             @foreach($item as $rate)
@@ -359,37 +365,38 @@
                                         $sum_freight_45+=$value->total_45;                                
                                     ?>
                                 @endforeach
+
                             @endforeach
                             <tr class="text-center color-table">
-                            <td >
-                                @if($rate->origin_port_id!='') 
-                                    {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                @elseif($rate->origin_address!='') 
-                                    {{$rate->origin_address}} 
-                                @else 
-                                    {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                <td >
+                                    @if($rate->origin_port_id!='') 
+                                        {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                                    @elseif($rate->origin_address!='') 
+                                        {{$rate->origin_address}} 
+                                    @else 
+                                        {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                    @endif
+                                </td>
+                                <td >
+                                    @if($rate->destination_port_id!='') 
+                                        {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                                    @elseif($rate->destination_address!='') 
+                                        {{$rate->destination_address}} 
+                                    @else 
+                                        {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                    @endif
+                                </td>                            
+                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                                <td {{ @$equipmentHides['20'] }}>{{@$sum_freight_20+$rate->total_rate20}}</td>
+                                <td {{ @$equipmentHides['40'] }}>{{@$sum_freight_40+$rate->total_rate40}}</td>
+                                <td {{ @$equipmentHides['40hc'] }}>{{@$sum_freight_40hc+$rate->total_rate40hc}}</td>
+                                <td {{ @$equipmentHides['40nor'] }}>{{@$sum_freight_40nor+$rate->total_rate40nor}}</td>
+                                <td {{ @$equipmentHides['45'] }}>{{@$sum_freight_45+$rate->total_rate45}}</td>
+                                @if($quote->pdf_option->grouped_freight_charges==1)
+                                    <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                @else
+                                    <td >{{$currency_cfg->alphacode}}</td>
                                 @endif
-                            </td>
-                            <td >
-                                @if($rate->destination_port_id!='') 
-                                    {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                @elseif($rate->destination_address!='') 
-                                    {{$rate->destination_address}} 
-                                @else 
-                                    {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                @endif
-                            </td>                            
-                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                            <td {{ @$equipmentHides['20'] }}>{{@$sum_freight_20+$rate->total_rate20}}</td>
-                            <td {{ @$equipmentHides['40'] }}>{{@$sum_freight_40+$rate->total_rate40}}</td>
-                            <td {{ @$equipmentHides['40hc'] }}>{{@$sum_freight_40hc+$rate->total_rate40hc}}</td>
-                            <td {{ @$equipmentHides['40nor'] }}>{{@$sum_freight_40nor+$rate->total_rate40nor}}</td>
-                            <td {{ @$equipmentHides['45'] }}>{{@$sum_freight_45+$rate->total_rate45}}</td>
-                            @if($quote->pdf_option->grouped_freight_charges==1)
-                                <td >{{$quote->pdf_option->freight_charges_currency}}</td>
-                            @else
-                                <td >{{$currency_cfg->alphacode}}</td>
-                            @endif
                             </tr>
                         @endforeach
                     @endforeach
