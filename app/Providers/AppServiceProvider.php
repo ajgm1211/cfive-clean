@@ -23,16 +23,18 @@ class AppServiceProvider extends ServiceProvider
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
 
-    /*if(env('APP_ENV') !== 'local') {
+    if(env('APP_ENV') !== 'local') {
       $url->forceScheme('https');
-    }*/
+    }
+
+
   }
 
   public function register(){
     // Dusk, if env is appropiate
     /*if ($this->app->environment('local', 'testing')) {
                 $this->app->register(DuskServiceProvider::class);
-            }*/
+              }*/
   }
 
 }
