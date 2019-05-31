@@ -644,11 +644,111 @@ class GlobalChargesController extends Controller
     public function dupicateArrAdm(Request $request){
         $company_users      = CompanyUser::pluck('name','id');
         $globals_id_array   = $request->input('id');
-        $global             = GlobalCharge::whereIn('id', $globals_id_array)
+        $globals             = GlobalCharge::whereIn('id', $globals_id_array)
             ->with('currency','calculationtype','surcharge','globalcharcarrier.carrier','typedestiny','globalcharport.portOrig','globalcharport.portDest','globalcharcountry.countryOrig','globalcharcountry.countryDest')
             ->get();
+        $global = collect([]);
+        foreach($globals as $gb){
+            $orig = null;
+            $dest = null;
+            if(count($gb->globalcharport) >= 1 ){
+                $orig = str_replace(['[',']','"'],'',$gb->globalcharport->pluck('portOrig')->pluck('code')->unique());
+                $dest = str_replace(['[',']','"'],'',$gb->globalcharport->pluck('portDest')->pluck('code')->unique());
+            } else if(count($gb->globalcharcountry) >= 1 ){
+                $orig = str_replace(['[',']','"'],'',$gb->globalcharcountry->pluck('countryOrig')->pluck('name'));
+                $dest = str_replace(['[',']','"'],'',$gb->globalcharcountry->pluck('countryDest')->pluck('name'));
+            }
+            $array = [
+                //'' => ,
+                'origin'            => $orig,
+                'destination'       => $dest,
+                'ammount'           => $gb->ammount,
+                'surcharge'         => $gb->surcharge->name,
+                'typedestiny'       => $gb->typedestiny->description,
+                'calculationtype'   => $gb->calculationtype->name,
+                'currency'          => $gb->currency->alphacode,
+                'carrier'           => str_replace(['[',']','"'],'',$gb['globalcharcarrier']->pluck('carrier')->pluck('name'))
+            ];
+
+            $global->push($array);
+        }
         //$global             = $global->toArray();
-        //dd($global);
+        //dd($globals_id_array);
         return view('globalchargesAdm.duplicateArray',compact('global','company_users','globals_id_array'));
+    }
+
+    public function storeArrayAdm(Request $request){
+        //dd($request->all());
+        $company_user = $request->company_user_id;
+        foreach($request->idArray as $gb){
+
+            $globalOfAr = GlobalCharge::find($gb);
+            $globalOfAr->load('surcharge','globalcharcarrier','globalcharport.portOrig','globalcharport.portDest','globalcharcountry.countryOrig','globalcharcountry.countryDest');
+            $surchName  =  $globalOfAr->surcharge->name;
+            $surcharger = Surcharge::where('name',$surchName)->where('company_user_id',$company_user)->first();
+            if(count($surcharger) >= 1){
+                $surcharger = $surcharger->id;
+            } else {
+                $surcharger =  Surcharge::create([
+                    'name'              => $surchName, 
+                    'description'       => $surchName,
+                    'company_user_id'   => $company_user
+                ]);
+                $surcharger = $surcharger->id;
+            }
+            $global = GlobalCharge::create([
+                'validity'          => $globalOfAr->validity, 
+                'expire'            => $globalOfAr->expire, 
+                'surcharge_id'      => $surcharger, 
+                'calculationtype_id'=> $globalOfAr->calculationtype_id, 
+                'typedestiny_id'    => $globalOfAr->typedestiny_id, 
+                'ammount'           => $globalOfAr->ammount, 
+                'currency_id'       => $globalOfAr->currency_id, 
+                'company_user_id'   => $company_user, 
+            ]);            
+            $global = $global->id;
+            
+            foreach($globalOfAr->globalcharcarrier->pluck('carrier_id') as $c )
+            {
+                $detailcarrier = new GlobalCharCarrier();
+                $detailcarrier->carrier_id      = $c;
+                $detailcarrier->globalcharge_id = $global;
+                $detailcarrier->save();
+            }
+            if(count($globalOfAr->globalcharport) >= 1){
+                $detailport     = $globalOfAr->globalcharport->pluck('portOrig')->pluck('id');
+                $detailportDest = $globalOfAr->globalcharport->pluck('portDest')->pluck('id');
+                foreach($detailport as $p => $value)
+                {
+                    foreach($detailportDest as $dest => $valuedest)
+                    {
+                        $ports                  = new GlobalCharPort();
+                        $ports->port_orig       = $value;
+                        $ports->port_dest       = $valuedest;
+                        $ports->typedestiny_id  = $globalOfAr->typedestiny_id;
+                        $ports->globalcharge_id = $global;
+                        $ports->save();
+                    }
+                }
+            }elseif(count($globalOfAr->globalcharcountry) >= 1){
+                $detailCountrytOrig = $globalOfAr->globalcharcountry->pluck('countryOrig')->pluck('id');
+                $detailCountryDest  = $globalOfAr->globalcharcountry->pluck('countryDest')->pluck('id');
+                foreach($detailCountrytOrig as $p => $valueC)
+                {
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig    = $valueC;
+                        $detailcountry->country_dest    = $valuedestC;
+                        $detailcountry->globalcharge_id = $global;
+                        $detailcountry->save();
+                    }
+                }
+            }
+        }
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+        return redirect()->route('gcadm.index');
     }
 }
