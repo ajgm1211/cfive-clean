@@ -340,7 +340,10 @@
                         </tr>
                     @endif
                 @endforeach
-                @forelse($freight_charges_grouped as $origin=>$freight)
+                @php
+                    //dd($freight_charges_grouped);
+                @endphp
+                @foreach($freight_charges_grouped as $origin=>$freight)
                     @foreach($freight as $destination=>$detail)
                         @foreach($detail as $item)
                             @foreach($item as $rate)
@@ -365,7 +368,6 @@
                                         $sum_freight_45+=$value->total_45;                                
                                     ?>
                                 @endforeach
-
                             @endforeach
                             <tr class="text-center color-table">
                                 <td >
