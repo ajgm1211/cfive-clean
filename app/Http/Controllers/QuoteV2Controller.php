@@ -2299,15 +2299,41 @@ class QuoteV2Controller extends Controller
         }
         foreach($origin_port as $orig){
           foreach($destiny_port as $dest){
-            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
             $rate = AutomaticRate::create($request->all());
+
+            $oceanFreight = new Charge();
+            $oceanFreight->automatic_rate_id= $rate->id;
+            $oceanFreight->type_id = '3' ;
+            $oceanFreight->surcharge_id = null ;
+            $oceanFreight->calculation_type_id = '5' ;
+            $oceanFreight->amount = $arregloNull;
+            $oceanFreight->markups = $arregloNull;
+            $oceanFreight->currency_id = $idCurrency;
+            $oceanFreight->total =  $arregloNull;
+            $oceanFreight->save();
+
           }
         }
       }
       if($typeText == 'AIR' ){
 
-        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
+        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id') ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
+
+
+        $oceanFreight = new Charge();
+        $oceanFreight->automatic_rate_id= $rate->id;
+        $oceanFreight->type_id = '3' ;
+        $oceanFreight->surcharge_id = null ;
+        $oceanFreight->calculation_type_id = '5' ;
+        $oceanFreight->amount = $arregloNull;
+        $oceanFreight->markups = $arregloNull;
+        $oceanFreight->currency_id = $idCurrency;
+        $oceanFreight->total =  $arregloNull;
+        $oceanFreight->save();
+
+
 
       }
       //LCL        $input = Input::all();
@@ -2368,9 +2394,23 @@ class QuoteV2Controller extends Controller
 
           $rates =   json_encode($rateO->rate);
           $markups =   json_encode($rateO->markups);
+          $arregloNull = array();
 
-          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'rates'=> $rates,'markups'=> $markups ,'currency_id'=>  $info_D->currency->id ,'total' => $rates,'quote_id'=>$quote->id]);
+          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id]);
+
           $rate = AutomaticRate::create($request->all());
+
+
+          $oceanFreight = new Charge();
+          $oceanFreight->automatic_rate_id= $rate->id;
+          $oceanFreight->type_id = '3' ;
+          $oceanFreight->surcharge_id = null ;
+          $oceanFreight->calculation_type_id = '5' ;
+          $oceanFreight->amount = $rates;
+          $oceanFreight->markups = $markups;
+          $oceanFreight->currency_id = $info_D->currency->id;
+          $oceanFreight->total =  $rates;
+          $oceanFreight->save();
 
           $inlandD =  $request->input('inlandD'.$rateO->rate_id);
           $inlandO =  $request->input('inlandO'.$rateO->rate_id);
@@ -2476,7 +2516,7 @@ class QuoteV2Controller extends Controller
               if($local->type != '99'){
                 $arregloMontoO = array('c'.$local->type => $local->monto);
                 $montoO = array_merge($arregloMontoO,$montoO);
-                $arregloMarkupsO = array('c'.$local->type => $local->markup);
+                $arregloMarkupsO = array('m'.$local->type => $local->markup);
                 $markupO = array_merge($arregloMarkupsO,$markupO);
               }
               if($local->type == '99'){
@@ -2512,7 +2552,7 @@ class QuoteV2Controller extends Controller
 
                 $arregloMontoD = array('c'.$local->type => $local->monto);
                 $montoD = array_merge($arregloMontoD,$montoD);
-                $arregloMarkupsD = array('c'.$local->type => $local->markup);
+                $arregloMarkupsD = array('m'.$local->type => $local->markup);
                 $markupD = array_merge($arregloMarkupsD,$markupD);
               }
               if($local->type == '99'){
@@ -2547,7 +2587,7 @@ class QuoteV2Controller extends Controller
               if($local->type != '99'){
                 $arregloMontoF = array('c'.$local->type => $local->monto);
                 $montoF = array_merge($arregloMontoF,$montoF);
-                $arregloMarkupsF = array('c'.$local->type => $local->markup);
+                $arregloMarkupsF = array('m'.$local->type => $local->markup);
                 $markupF = array_merge($arregloMarkupsF,$markupF);
               }
               if($local->type == '99'){
