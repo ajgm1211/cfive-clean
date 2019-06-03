@@ -134,12 +134,17 @@ class ImportationLclController extends Controller
 
                     //----------------- Currency -----------------------------------------------------------
 
-                    $scheduleT = ScheduleType::where('name','=',$scheduleTArr[0])->first();
-
-                    if(empty($scheduleT->id) != true){
+                    if(empty($scheduleT->id) != true || $scheduleTArr[0] == null){
                         $scheduleTBol = true;
-                        $scheduleTVal =  $scheduleT->id;
+                        if($scheduleTArr[0] != null){
+                            $scheduleTVal =  $scheduleT->id;
+                        } else {
+                            $scheduleTVal = null;
+                        }
                     }
+
+                    //dd($array);
+
 
                     // Validacion de los datos en buen estado ----------------------------------------------
                     if($originB == true && $destinyB == true &&
