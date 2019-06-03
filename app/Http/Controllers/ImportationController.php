@@ -195,10 +195,29 @@ class ImportationController extends Controller
 
                     $scheduleT = ScheduleType::where('name','=',$scheduleTArr[0])->first();
 
-                    if(empty($scheduleT->id) != true){
+                    if(empty($scheduleT->id) != true || $scheduleTArr[0] == null){
                         $scheduleTBol = true;
-                        $scheduleTVal =  $scheduleT->id;
+                        if($scheduleTArr[0] != null){
+                            $scheduleTVal =  $scheduleT->id;
+                        } else {
+                            $scheduleTVal = null;
+                        }
                     }
+
+                    $array = [
+                        'ori' => $originB,
+                        'des' => $destinyB,
+                        '20' => $twentyExiBol,
+                        '40' => $fortyExiBol,
+                        '40h' => $fortyhcExiBol,
+                        '40n' => $fortynorExiBol,
+                        '45' => $fortyfiveExiBol,
+                        'val' => $values,
+                        'sch' => $scheduleTBol,
+                        'car' => $carriExitBol,
+                        'curr' => $curreExitBol
+                    ];
+                    //dd($array);
 
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
