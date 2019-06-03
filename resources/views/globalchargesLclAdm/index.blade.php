@@ -72,11 +72,12 @@
                             <thead>
                                 <tr>
                                     <th>Select</th>
+                                    <th>Company</th>
                                     <th>Type</th>
-                                    <th>Origin Port</th>
-                                    <th>Destination Port</th>
-                                    <th>Charge Type</th>
-                                    <th>Calculation type</th>
+                                    <th>Origin</th>
+                                    <th>Destination</th>
+                                    <th>Charge T.</th>
+                                    <th>Calculation T.</th>
                                     <th>Currency</th>
                                     <th>Carrier</th>
                                     <th>Amount</th>
@@ -153,7 +154,7 @@
 
 
         if(action == "editGlobalCharge"){
-            var url = '{{ route("edit-global-charge-lcl", ":id") }}';
+            var url = '{{ route("gclcladm.show", ":id") }}';
             url = url.replace(':id', id);
             $('.modal-body').load(url,function(){
                 $('#modalGlobalcharge').modal({show:true});
@@ -161,7 +162,7 @@
 
         }
         if(action == "addGlobalCharge"){
-            var url = '{{ route("add-global-charge-lcl")}}';
+            var url = '{{ route("gclcladm.add")}}';
 
             $('.modal-body-add').load(url,function(){
                 $('#modalGlobalchargeAdd').modal({show:true});
@@ -182,9 +183,10 @@
         $('#requesttable').DataTable({
             processing: true,
             //serverSide: true,
-            ajax: '{!! route("globalchargeslcl.show",$company_userid) !!}',
+            ajax: '{{route("gclcladm.create")}}',
             columns: [
                 { data: 'checkbox', orderable:false, searchable:false},
+                { data: 'company_user', name: 'company_user' },
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
                 { data: 'destiny_portLb', name: 'destiny_portLb' },
@@ -213,7 +215,7 @@
 
     });
 
-    $(document).on('click', '#bulk_delete', function(){
+   /* $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
             title: 'Are you sure?',
@@ -265,7 +267,7 @@
                 )
             }
         });
-    });
+    });*/
 </script>
 <script src="/js/globalchargeslcl.js"></script>
 @if(session('globalchar'))
