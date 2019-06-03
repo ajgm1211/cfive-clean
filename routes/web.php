@@ -92,7 +92,7 @@ Route::prefix('globalcharges')->group(function () {
     Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge'])->middleware(['auth']);
     Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge'])->middleware(['auth']);
     Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge'])->middleware(['auth']);
-    
+
     // CRUD Administrator FCL -------------------------------------------------------------------------------------------------
 
     Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator']);
@@ -105,11 +105,6 @@ Route::prefix('globalcharges')->group(function () {
     Route::get('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator']);
     Route::POST('ArrDupicateAdm/','GlobalChargesController@dupicateArrAdm')->name('gcadm.dupicate.Array')->middleware(['auth','role:administrator']);
     Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator']);
-    
-    // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
-    
-    Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator']);
-    
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
@@ -152,12 +147,12 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 Route::prefix('Requests')->group(function () {
     //New Request Importation
-    
+
     Route::get('SimilarContracts/{id}','NewContractRequestsController@similarcontracts')->name('Similar.Contracts.Request')
-      ->middleware(['auth','role:administrator|company|subuser']);
-    
+        ->middleware(['auth','role:administrator|company|subuser']);
+
     Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
-    
+
     Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
         ->middleware(['auth','role:administrator|company|subuser']);
 
@@ -284,10 +279,10 @@ Route::prefix('Importation')->group(function () {
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
-    
+
     Route::get('SimilarContractsLcl/{id}','NewContractRequestLclController@similarcontracts')->name('Similar.Contracts.Request.Lcl')
-      ->middleware(['auth','role:administrator|company|subuser']);
-    
+        ->middleware(['auth','role:administrator|company|subuser']);
+
     Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
         ->middleware(['auth','role:administrator|company|subuser']);
 
@@ -530,7 +525,7 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
     Route::get('RequestsGlobalchargersFcl/listClient/{id}','NewGlobalchargeRequestControllerFcl@listClient')->name('RequestsGlobalchargersFcl.listClient')
         ->middleware(['auth','role:administrator|company|subuser']);
-    
+
     Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
         ->middleware(['auth','role:administrator']);    
 
@@ -593,13 +588,24 @@ Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalcharg
 
 });
 // GLOBAL CHARGES LCL 
-Route::middleware(['auth'])->prefix('globalchargeslcl')->group(function () {
-    Route::post('destroyArr', 'GlobalChargesLclController@destroyArr')->name('globalchargeslcl.destroyArr');
-    Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl']);
-    Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl']);
-    Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl']);
-    Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl']);
-    Route::get('duplicateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge-lcl']);
+Route::prefix('globalchargeslcl')->group(function () {
+    
+    Route::post('destroyArr', 'GlobalChargesLclController@destroyArr')->name('globalchargeslcl.destroyArr')->middleware(['auth']);
+    Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl'])->middleware(['auth']);
+    Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl'])->middleware(['auth']);
+    Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl'])->middleware(['auth']);
+    Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl'])->middleware(['auth']);
+    Route::get('duplicateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge-lcl'])->middleware(['auth']);
+    
+     // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
+
+    Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator']);
+    Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator']);
+    Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator']);
+    Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator']);
+    Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator']);
+    Route::get('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator']);
+    Route::PUT('UpdateLclAdm/{id}','GlobalChargesLclController@updateAdm')->name('gclcladm.update')->middleware(['auth','role:administrator']);
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 
