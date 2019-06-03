@@ -1464,6 +1464,40 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
   });
 });
 
+$( document ).ready(function() {
+  $( "select[name='company_id']" ).on('change', function() {
+    var company_id = $(this).val();
+    if(company_id) {
+      $('select[name="contact_id"]').empty();
+      $.ajax({
+        url: "/quotes/company/contact/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="client"]').empty();
+          $('select[name="contact_id"]').append('<option value="">Select an option</option>');
+          $.each(data, function(key, value) {
+            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+        }
+      });
+      $.ajax({
+        url: "/quotes/company/price/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="price_id"]').empty();
+          $('select[name="price_id"]').append('<option value="">Select an option</option>');
+          $.each(data, function(key, value) {
+            $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+        }
+      });
+    }else{
+      $('select[name="contact_id"]').empty();
+      $('select[name="price_id"]').empty();
+    }
+  });
+});
+
 //Custom functions
 
 function show_hide_element($element,$button){
@@ -1516,15 +1550,11 @@ function precargar(){
           }else{
             selected_price = '';
           }
-          $('select[name="price_id"]').append('<option '+selected_price+' value="0">Select at option</option>');
+          $('select[name="price_id"]').append('<option '+selected_price+' value="0">Select an option</option>');
           $('select[name="price_id"]').append('<option '+selected_price+' value="'+ key +'">'+ value +'</option>');
         });
       }
     });
-
-
-
-
   }
 }
 // SEARCH 
@@ -1784,7 +1814,7 @@ $( document ).ready(function() {
         dataType: 'json',
         success: function(data) {
           $('select[name="price_id"]').empty();
-          $('select[name="price_id"]').append('<option value="0">Select at option</option>');
+          $('select[name="price_id"]').append('<option value="0">Select an option</option>');
           $.each(data, function(key, value) {
             $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
