@@ -499,41 +499,6 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($rates as $rate)
-                    @if($freight_charges_grouped->count() == 0)
-                        <!--<tr class="text-center color-table">
-                            <td >
-                                @if($rate->origin_port_id!='') 
-                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                @elseif($rate->origin_address!='') 
-                                {{$rate->origin_address}} 
-                                @else 
-                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
-                                @endif
-                            </td>
-                            <td >
-                                @if($rate->destination_port_id!='') 
-                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                @elseif($rate->destination_address!='') 
-                                {{$rate->destination_address}} 
-                                @else 
-                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                @endif
-                            </td>                            
-                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                            <td {{ @$equipmentHides['20'] }}>{{$rate->total_rate20}}</td>
-                            <td {{ @$equipmentHides['40'] }}>{{$rate->total_rate40}}</td>
-                            <td {{ @$equipmentHides['40hc'] }}>{{$rate->total_rate40hc}}</td>
-                            <td {{ @$equipmentHides['40nor'] }}>{{$rate->total_rate40nor}}</td>
-                            <td {{ @$equipmentHides['45'] }}>{{$rate->total_rate45}}</td>
-                            @if($quote->pdf_option->grouped_freight_charges==1)
-                                <td >{{$quote->pdf_option->freight_charges_currency}}</td>
-                            @else
-                                <td >{{$currency_cfg->alphacode}}</td>
-                            @endif
-                        </tr>-->
-                    @endif
-                @endforeach
                 @php
                     //dd($freight_charges_grouped);
                 @endphp

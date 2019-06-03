@@ -117,14 +117,14 @@
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
                                                             <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
                                                             <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
@@ -132,14 +132,14 @@
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                             <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                             <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
@@ -147,7 +147,7 @@
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
                                                             <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
@@ -358,14 +358,14 @@
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
                                                             <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$origin_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="{{@$origin_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$origin_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$origin_amounts['c20']+@$origin_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
                                                             <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$origin_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="{{@$origin_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$origin_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$origin_amounts['c40']+@$origin_markups['m40']}}</span>
@@ -373,14 +373,14 @@
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                             <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$origin_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="{{@$origin_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$origin_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$origin_amounts['c40hc']+@$origin_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                             <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$origin_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="{{@$origin_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$origin_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$origin_amounts['c40nor']+@$origin_markups['m40nor']}}</span>
@@ -388,7 +388,7 @@
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
                                                             <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$origin_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="{{@$origin_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$origin_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$origin_amounts['c45']+@$origin_markups['m45']}}</span>
@@ -602,14 +602,14 @@
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
                                                             <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$destination_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->c20" data-value="{{@$destination_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$destination_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$destination_amounts['c20']+@$destination_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
                                                             <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$destination_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->c40" data-value="{{@$destination_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$destination_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$destination_amounts['c40']+@$destination_markups['m40']}}</span>
@@ -617,14 +617,14 @@
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                             <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$destination_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->c40hc" data-value="{{@$destination_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$destination_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$destination_amounts['c40hc']+@$destination_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                             <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$destination_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->c40nor" data-value="{{@$destination_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$destination_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$destination_amounts['c40nor']+@$destination_markups['m40nor']}}</span>
@@ -632,7 +632,7 @@
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
                                                             <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$destination_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->c45" data-value="{{@$destination_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$destination_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$destination_amounts['c45']+@$destination_markups['m45']}}</span>
