@@ -219,6 +219,7 @@
                                     </span>
                                 </a>
                             </li>
+
                             @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('settings.index') }}" class="m-menu__link ">
@@ -270,70 +271,134 @@
                                 </a>
                             </li>
                             @role('administrator')
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
+
+                            <!-- Sub- Menus --------------------------------------------------------------- -->
+                            
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a  href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
-                                        Request Importation FCL
-                                    </span>
+                                        Manage Requests
+                                    </span>                                    
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                                 </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                                <span class="m-menu__link-text">
+                                                    Request Importation FCL
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                                <span class="m-menu__link-text">
+                                                    Request Importation LCL
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                                <span class="m-menu__link-text">
+                                                    Request Importation G.C-FCL
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
+
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a  href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
-                                        Request Importation LCL
-                                    </span>
+                                        Manage G.C.
+                                    </span>                                    
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                                 </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                    <ul class="m-menu__subnav">
+
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-globe"></i>
+                                                <span class="m-menu__link-text">
+                                                    Administrator FCL
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('gclcladm.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-globe"></i>
+                                                <span class="m-menu__link-text">
+                                                    Administrator LCL
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
+
+
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a  href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
-                                        Request Importation G.C-FCL
-                                    </span>
+                                        Places And Carriers
+                                    </span>                                    
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
                                 </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-business"></i>
+                                                <span class="m-menu__link-text">
+                                                    Harbors
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('Countries.index')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-globe"></i>
+                                                <span class="m-menu__link-text">
+                                                    Countries
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('Region.index')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-globe"></i>
+                                                <span class="m-menu__link-text">
+                                                    Regions
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-ship"></i>
+                                                <span class="m-menu__link-text">
+                                                    Manage Carriers
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-business"></i>
-                                    <span class="m-menu__link-text">
-                                        Manage Harbors
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-globe"></i>
-                                    <span class="m-menu__link-text">
-                                        Manager GlobalChargers
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('Countries.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-globe"></i>
-                                    <span class="m-menu__link-text">
-                                        Manage Countries
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('Region.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-globe"></i>
-                                    <span class="m-menu__link-text">
-                                        Manage Regions
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-ship"></i>
-                                    <span class="m-menu__link-text">
-                                        Manage Carriers
-                                    </span>
-                                </a>
-                            </li>
+
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-user-settings"></i>

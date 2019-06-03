@@ -3,9 +3,16 @@
     <div class="m-stack__item m-brand  m-brand--skin-dark ">
         <div class="m-stack m-stack--ver m-stack--general">
             <div class="m-stack__item m-stack__item--middle m-brand__logo">
+                @if(empty(\Auth::user()->company_user_id) != true)
                 <a href="/" class="m-brand__logo-wrapper">
                     <img alt="" src="/logo.png"/>
                 </a>
+                @else
+                <a href="/settings" class="m-brand__logo-wrapper">
+                    <img alt="" src="/logo.png"/>
+                </a>
+
+                @endif
             </div>
             <div class="m-stack__item m-stack__item--middle m-brand__tools">
                 <!-- BEGIN: Left Aside Minimize Toggle 1 -->
@@ -40,10 +47,12 @@
         </button>
         <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+
+                @if(empty(\Auth::user()->company_user_id) != true)
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                         <span class="m-menu__link-text">
-                            Quotes
+                            <b>Quotes</b>
                         </span>
                     </a>
                 </li>
@@ -52,7 +61,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Clients
+                                    <b>Clients</b>
                                 </span>
                             </span>
                         </span>
@@ -88,7 +97,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Contracts
+                                    <b>Contracts</b>
                                 </span>
                             </span>
                         </span>
@@ -103,6 +112,14 @@
                                     <i class="m-menu__link-icon flaticon-file"></i>
                                     <span class="m-menu__link-text">
                                         Sea Freight FCL
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('contractslcl.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-file"></i>
+                                    <span class="m-menu__link-text">
+                                        Sea Freight LCL
                                     </span>
                                 </a>
                             </li>
@@ -124,7 +141,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Global Charges
+                                    <b>Global Charges</b>
                                 </span>
                             </span>
                         </span>
@@ -142,6 +159,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('globalchargeslcl.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Sea Freight LCL
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -150,7 +175,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Inland
+                                    <b>Inland</b>
                                 </span>
                             </span>
                         </span>
@@ -176,7 +201,7 @@
                         <span class="m-menu__link-title">
                             <span class="m-menu__link-wrap">
                                 <span class="m-menu__link-text">
-                                    Settings
+                                    <b>Settings</b>
                                 </span>
                             </span>
                         </span>
@@ -211,6 +236,14 @@
                                     </span>
                                 </a>
                             </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-share"></i>
+                                    <span class="m-menu__link-text">
+                                        API tokens
+                                    </span>
+                                </a>
+                            </li>
                             @endif
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('templates.index') }}" class="m-menu__link ">
@@ -241,7 +274,23 @@
                                 <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-folder-3"></i>
                                     <span class="m-menu__link-text">
-                                        Request Importation
+                                        Request Importation FCL
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                    <span class="m-menu__link-text">
+                                        Request Importation LCL
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                    <span class="m-menu__link-text">
+                                        Request Importation G.C-FCL
                                     </span>
                                 </a>
                             </li>
@@ -254,6 +303,14 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Manager GlobalChargers
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('Countries.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-globe"></i>
                                     <span class="m-menu__link-text">
@@ -262,10 +319,34 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('Region.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Manage Regions
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-ship"></i>
+                                    <span class="m-menu__link-text">
+                                        Manage Carriers
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-business"></i>
+                                    <i class="m-menu__link-icon flaticon-user-settings"></i>
                                     <span class="m-menu__link-text">
                                         User companies
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('search.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-search"></i>
+                                    <span class="m-menu__link-text">
+                                        Search History
                                     </span>
                                 </a>
                             </li>
@@ -283,6 +364,41 @@
                         </ul>
                     </div>
                 </li>
+                @endif
+
+                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                    <a  href="#" class="m-menu__link m-menu__toggle">
+                        <span class="m-menu__link-title">
+                            <span class="m-menu__link-wrap">
+                                <span class="m-menu__link-text">
+                                    <b>{{\Auth::user()->name}} {{\Auth::user()->lastname}}</b>
+                                </span>
+                            </span>
+                        </span>
+                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                        <i class="m-menu__ver-arrow la la-angle-right"></i>
+                    </a>
+                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                        <ul class="m-menu__subnav">
+
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <span class="m-menu__link-text">
+                                        <span class="la la-sign-out" style="font-size:23px;"></span> 
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout </b>
+                                    </span>
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+
                 <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
                     <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
                         <div class='row'>
@@ -364,17 +480,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                    <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <span class="m-menu__link-text">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout ( {{\Auth::user()->name}} {{\Auth::user()->lastname}} ) </b>
-                        </span>
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        {{ csrf_field() }}
-                    </form>
-                </li>
-
+                <!-- /////////////////////////////////////////////////////////////////// -->
             </ul>
         </div>
     </div>

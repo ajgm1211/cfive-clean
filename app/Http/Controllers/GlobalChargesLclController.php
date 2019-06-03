@@ -30,19 +30,6 @@ class GlobalChargesLclController extends Controller
      */
     public function index()
     {
-
-        /* $global =  GlobalChargeLcl::whereHas('companyUser', function($q) {
-            $q->where('company_user_id', '=', Auth::user()->company_user_id);
-        })->with('globalcharportlcl.portOrig','globalcharportlcl.portDest','globalcharcarrierslcl.carrier','typedestiny','globalcharcountrylcl.countryOrig','globalcharcountrylcl.countryDest')->get();
-
-        $harbor = Harbor::all()->pluck('display_name','id');
-        $carrier = Carrier::all()->pluck('name','id');
-        $currency = Currency::all()->pluck('alphacode','id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name','id');
-        $typedestiny = TypeDestiny::all()->pluck('description','id');
-        $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        return view('globalchargeslcl/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
-
         $company_userid = \Auth::user()->company_user_id;
         return view('globalchargeslcl.indexTw', compact('company_userid'));
     }
@@ -300,9 +287,15 @@ class GlobalChargesLclController extends Controller
         $global = GlobalChargeLcl::whereIn('id', $globals_id_array);
         if($global->delete())
         {
-             return response()->json(['success' => '1']);
+            return response()->json(['success' => '1']);
         } else {
-             return response()->json(['success' => '2']);
+            return response()->json(['success' => '2']);
         }
+    }
+    
+    // CRUD Administarator -----------------------------------------------------------------------------------------------------
+    
+    public function indexAdm(){
+        return view('globalchargesLclAdm.index');
     }
 }

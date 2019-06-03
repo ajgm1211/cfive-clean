@@ -93,7 +93,7 @@ Route::prefix('globalcharges')->group(function () {
     Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge'])->middleware(['auth']);
     Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge'])->middleware(['auth']);
     
-    // CRUD Administrator -------------------------------------------------------------------------------------------------
+    // CRUD Administrator FCL -------------------------------------------------------------------------------------------------
 
     Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator']);
     Route::get('createAdm','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator']);
@@ -105,6 +105,10 @@ Route::prefix('globalcharges')->group(function () {
     Route::get('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator']);
     Route::POST('ArrDupicateAdm/','GlobalChargesController@dupicateArrAdm')->name('gcadm.dupicate.Array')->middleware(['auth','role:administrator']);
     Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator']);
+    
+    // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
+    
+    Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator']);
     
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
