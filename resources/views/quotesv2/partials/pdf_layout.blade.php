@@ -13,15 +13,9 @@
                 </button>
               </li>
               <li class="nav-item m-tabs__item" id="edit_li">
-                @if($quote->type=='FCL')
-                  <a class="btn btn-primary-v2 btn-edit" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                  </a>
-                @else
-                  <a class="btn btn-primary-v2 btn-edit" href="#" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                  </a>
-                @endif
+                <a class="btn btn-primary-v2 btn-edit" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
+                  PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                </a>
               </li>
             </ul>
           </div>
