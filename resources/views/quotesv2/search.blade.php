@@ -341,7 +341,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle" style="color:blue; font-size: 18px;" ></i> </a>
                     </span>
                   </span>
                 </div>
@@ -353,7 +353,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i></a>
                     </span>
                   </span>
                 </div>
@@ -1231,6 +1231,10 @@
 </div>
 @endif
 @endif
+
+
+@include('contacts.partials.contactsModal')
+@include('companies.partials.companiesModal')
 
 @endsection
 
