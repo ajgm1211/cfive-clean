@@ -2209,6 +2209,52 @@ class QuoteV2Controller extends Controller
     return $payments->payment_conditions;
   }
 
+
+  public function termsandconditions($origin_port,$destiny_port,$carrier,$mode){
+
+    // TERMS AND CONDITIONS 
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $term_port_orig = array($origin_port->id);
+    $term_port_dest = array($destiny_port->id);
+    $term_carrier_id[] = $carrier->id;
+    array_push($term_carrier_id,$carrier_all);
+
+    /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();*/
+    $terms_origin = TermsPort::wherein('port_id',$term_port_orig)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();
+
+    $terms_destination = TermsPort::wherein('port_id',$term_port_dest)->with('term')->whereHas('term', function($q)  use($term_carrier_id) {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();
+
+    $termsO='';
+    $termsD='';
+    $terms ='';
+
+    foreach($terms_origin as $termOrig){
+      $terms .="<br>";
+      $termsO = $origin_port->name." / ".$carrier->name;
+      $termsO .=  "<br>".$termOrig->term->export."<br>";
+    }
+    foreach($terms_destination as $termDest){
+      $terms .="<br>";
+      $termsD = $destiny_port->name." / ".$carrier->name;
+      $termsD .=  "<br>".$termDest->term->export."<br>";
+    }
+    $terms = $termsO." ".$termsD ; 
+    return $terms;
+  }
+
   public function store(Request $request){
 
 
@@ -2220,6 +2266,7 @@ class QuoteV2Controller extends Controller
       $since = $dateQ[0];
       $until = $dateQ[1];
       $priceId = null;
+      $mode =   $form->mode;
       if(isset($form->price_id )){
         $priceId = $form->price_id;
         if($priceId=="0"){
@@ -2386,6 +2433,7 @@ class QuoteV2Controller extends Controller
 
     //AUTOMATIC QUOTE
     if(!empty($info)){
+      $terms = '';
       foreach($info as $infoA){
         $info_D = json_decode($infoA);
 
@@ -2399,7 +2447,6 @@ class QuoteV2Controller extends Controller
           $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id]);
 
           $rate = AutomaticRate::create($request->all());
-
 
           $oceanFreight = new Charge();
           $oceanFreight->automatic_rate_id= $rate->id;
@@ -2503,6 +2550,8 @@ class QuoteV2Controller extends Controller
           }
 
 
+
+          $terms .= $this->termsandconditions($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
         }
         //CHARGES ORIGIN
@@ -2610,7 +2659,6 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
-
         /*
         $terms = new TermsAndCondition();
         $terms->quote_id= $quote->id;
@@ -2619,12 +2667,18 @@ class QuoteV2Controller extends Controller
         $terms->save();*/
 
       }  
+
+
+      $quoteEdit = QuoteV2::find($quote->id);
+      $quoteEdit->terms_and_conditions = $terms;
+      $quoteEdit->update();
     }
 
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
+
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
@@ -3985,7 +4039,7 @@ class QuoteV2Controller extends Controller
       $array =  array_merge($array,$arregloRateSave);
       $collectionRate->push($array);
 
-
+      /*
       // TERMS AND CONDITIONS 
       $port_all = harbor::where('name','ALL')->first();
       $term_port_orig = array($data->origin_port);
@@ -4032,12 +4086,9 @@ class QuoteV2Controller extends Controller
         }
       }
       $terms = $termsO." ".$termsD ; 
+    //TERMS 
+      $data->setAttribute('terms',$terms);*/
 
-
-
-      //TERMS 
-
-      $data->setAttribute('terms',$terms);
       // Valores
       $data->setAttribute('rates',$collectionRate);
       $data->setAttribute('localfreight',$collectionFreight);
