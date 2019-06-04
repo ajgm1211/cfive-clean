@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="col-md-12 thead">
                                     <div class="table-responsive">
-                                        <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                        <table class="table table-sm table-bordered table-hover table color-blue text-center freight-table">
                                             <thead class="title-quote text-center header-table">
                                             <tr style="height: 40px;">
                                                 <td class="td-table" style="padding-left: 30px">Charge</td>
@@ -105,49 +105,58 @@
                                                         $sum_m45+=@$item->total_markup45;
                                                     }
                                                     ?>
-                                                    <tr style="height:40px;">
+                                                    <tr class="tr-freight" style="height:40px;">
                                                         <td class="tds" style="padding-left: 30px">
                                                             <input name="charge_id" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
-
-                                                            <a href="#" class="editable td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                            @if($item->surcharge_id!='')
+                                                                <input name="type" value="1" class="form-control type" type="hidden" />
+                                                                <a href="#" class="editable td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                            @else
+                                                                <input name="type" value="2" class="form-control type" type="hidden" />
+                                                                Ocean freight
+                                                            @endif
                                                         </td>
                                                         <td class="tds">
-                                                            <a href="#" class="editable td-a" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
+                                                             @if($item->surcharge_id!='')
+                                                                <a href="#" class="editable td-a" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
+                                                            @else
+                                                                Per Container
+                                                            @endif
                                                         </td>
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
-                                                            <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-20 amount_20  td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
-                                                            <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
@@ -180,6 +189,7 @@
                                                 <td {{ @$equipmentHides['20'] }}>
                                                     <div class="row ">
                                                         <div class="col-6">
+                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -190,6 +200,7 @@
                                                 <td {{ @$equipmentHides['40'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                             <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -200,6 +211,7 @@
                                                 <td {{ @$equipmentHides['40hc'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                             <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
                                                         </div>
                                                         <div class="col-6">
@@ -210,6 +222,7 @@
                                                 <td {{ @$equipmentHides['40nor'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                             <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
                                                         </div>
                                                         <div class="col-6">
@@ -220,6 +233,7 @@
                                                 <td {{ @$equipmentHides['45'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                             <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
                                                         </div>
                                                         <div class="col-6">
@@ -245,7 +259,7 @@
                                             </tr>
 
                                             @if($rate->id == @$rate_id )
-                                                <tr>
+                                                <tr class="total_freight">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
                                                     <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum20+@$sum_m20, 2, '.', '')}}</span></td>
@@ -348,6 +362,7 @@
                                                     ?>
                                                     <tr style="height:40px;">
                                                         <td class="tds" style="padding-left: 30px">
+                                                            <input name="type" value="1" class="form-control type" type="hidden" />
                                                             <input name="charge_id td-a" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
 
                                                             <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
@@ -356,39 +371,39 @@
                                                             <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
                                                         </td>
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
-                                                            <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$origin_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-20 amount_20  td-a" data-type="text" data-name="amount->c20" data-value="{{@$origin_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$origin_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$origin_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$origin_amounts['c20']+@$origin_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$origin_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$origin_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$origin_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$origin_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$origin_amounts['c40']+@$origin_markups['m40']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$origin_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$origin_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$origin_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$origin_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$origin_amounts['c40hc']+@$origin_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$origin_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$origin_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$origin_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$origin_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$origin_amounts['c40nor']+@$origin_markups['m40nor']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
-                                                            <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$origin_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$origin_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$origin_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$origin_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$origin_amounts['c45']+@$origin_markups['m45']}}</span>
@@ -421,6 +436,7 @@
                                                 <td {{ @$equipmentHides['20'] }}>
                                                     <div class="row ">
                                                         <div class="col-6">
+                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -431,6 +447,7 @@
                                                 <td {{ @$equipmentHides['40'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -441,6 +458,7 @@
                                                 <td {{ @$equipmentHides['40hc'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -451,6 +469,7 @@
                                                 <td {{ @$equipmentHides['40nor'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -461,6 +480,7 @@
                                                 <td {{ @$equipmentHides['45'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -485,7 +505,7 @@
                                                 </td>
                                             </tr>
                                             @if($rate->id == @$rate_id )
-                                                <tr>
+                                                <tr class="total_origin">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
                                                     <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')}}</span></td>
@@ -592,6 +612,7 @@
 
                                                     <tr style="height:40px;">
                                                         <td class="tds" style="padding-left: 30px">
+                                                            <input name="type" value="1" class="form-control type" type="hidden" />
                                                             <input name="charge_id" value="{{$item->id}}" class="form-control charge_id td-a" type="hidden" />
 
                                                             <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
@@ -600,39 +621,39 @@
                                                             <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
                                                         </td>
                                                         <td {{ @$equipmentHides['20'] }} class="tds">
-                                                            <a href="#" class="editable-amount-20 amount_20 bg-rates td-a" data-type="text" data-name="amount->c20" data-value="{{@$destination_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-20 amount_20  td-a" data-type="text" data-name="amount->c20" data-value="{{@$destination_amounts['c20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-20 markup_20 bg-rates td-a" data-type="text" data-name="markups->m20" data-value="{{@$destination_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$destination_markups['m20']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_20">{{@$destination_amounts['c20']+@$destination_markups['m20']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40 amount_40 bg-rates td-a" data-type="text" data-name="amount->c40" data-value="{{@$destination_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$destination_amounts['c40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40 markup_40 bg-rates td-a" data-type="text" data-name="markups->m40" data-value="{{@$destination_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$destination_markups['m40']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40">{{@$destination_amounts['c40']+@$destination_markups['m40']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40hc amount_40hc bg-rates td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$destination_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$destination_amounts['c40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc bg-rates td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$destination_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$destination_markups['m40hc']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40hc">{{@$destination_amounts['c40hc']+@$destination_markups['m40hc']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40nor amount_40nor bg-rates td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$destination_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$destination_amounts['c40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor bg-rates td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$destination_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$destination_markups['m40nor']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_40nor">{{@$destination_amounts['c40nor']+@$destination_markups['m40nor']}}</span>
                                                         </td>
                                                         <td {{ @$equipmentHides['45'] }} class="tds">
-                                                            <a href="#" class="editable-amount-45 amount_45 bg-rates td-a" data-type="text" data-name="amount->c45" data-value="{{@$destination_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$destination_amounts['c45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
                                                             +
-                                                            <a href="#" class="editable-markup-45 markup_45 bg-rates td-a" data-type="text" data-name="markups->m45" data-value="{{@$destination_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
+                                                            <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$destination_markups['m45']}}" data-pk="{{$item->id}}" data-title="Total"></a>
 
                                                             <i class="la la-caret-right arrow-down"></i>
                                                             <span class="total_45">{{@$destination_amounts['c45']+@$destination_markups['m45']}}</span>
@@ -665,6 +686,7 @@
                                                 <td {{ @$equipmentHides['20'] }}>
                                                     <div class="row ">
                                                         <div class="col-6">
+                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -675,6 +697,7 @@
                                                 <td {{ @$equipmentHides['40'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -685,6 +708,7 @@
                                                 <td {{ @$equipmentHides['40hc'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -695,6 +719,7 @@
                                                 <td {{ @$equipmentHides['40nor'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
                                                         </div>
                                                         <div class="col-6">
@@ -705,6 +730,7 @@
                                                 <td {{ @$equipmentHides['45'] }}>
                                                     <div class="row">
                                                         <div class="col-6">
+                                                            <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                             <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001"/>
                                                         </div>
                                                         <div class="col-6">
@@ -729,7 +755,7 @@
                                                 </td>
                                             </tr>
                                             @if($rate->id == @$rate_id )
-                                                <tr>
+                                                <tr class="total_destination">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
                                                     <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')}}</span></td>
@@ -798,11 +824,11 @@
                                                 ?>
                                                 <tr style="height:40px;">
                                                     <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="bg-rates td-a">{{$amount_20}}</span> + <span class="bg-rates td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="bg-rates td-a">{{$amount_40}}</span> + <span class="bg-rates td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="bg-rates td-a">{{$amount_40hc}}</span> + <span class="bg-rates td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="bg-rates td-a">{{$amount_40nor}}</span> + <span class="bg-rates td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="bg-rates td-a">{{$amount_45}}</span> + <span class="bg-rates td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a">{{$amount_20}}</span> + <span class=" td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class=" td-a">{{$amount_40}}</span> + <span class=" td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
+                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a">{{$amount_40hc}}</span> + <span class=" td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
+                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a">{{$amount_40nor}}</span> + <span class=" td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
+                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class=" td-a">{{$amount_45}}</span> + <span class=" td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
                                                     <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 </tr>
                                                 </tbody>
@@ -854,11 +880,11 @@
                                                 ?>
                                                 <tr style="height:40px;">
                                                     <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="bg-rates td-a">{{$amount_20}}</span> + <span class="bg-rates td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="bg-rates td-a">{{$amount_40}}</span> + <span class="bg-rates td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="bg-rates td-a">{{$amount_40hc}}</span> + <span class="bg-rates td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="bg-rates td-a">{{$amount_40nor}}</span> + <span class="bg-rates td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="bg-rates td-a">{{$amount_45}}</span> + <span class="bg-rates td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a">{{$amount_20}}</span> + <span class=" td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class=" td-a">{{$amount_40}}</span> + <span class=" td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
+                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a">{{$amount_40hc}}</span> + <span class=" td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
+                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a">{{$amount_40nor}}</span> + <span class=" td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
+                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class=" td-a">{{$amount_45}}</span> + <span class=" td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_45}}</td>
                                                     <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 </tr>
                                                 </tbody>
