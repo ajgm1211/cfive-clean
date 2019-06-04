@@ -456,6 +456,9 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
   Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
   Route::post('rates/store', 'QuoteV2Controller@storeRates')->name('quotes-v2.rates.store');
+  Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
+  Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
+  Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
 });
 
 //Settings
