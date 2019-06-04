@@ -5,8 +5,17 @@
     <title>Quote #{{$quote->quote_id}}</title>
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" media="all" />
     <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
-</head>
-<body style="background-color: white; font-size: 11px;">
+    <style>
+      @font-face {
+        font-family: "Sailec";
+        src: url(public/fonts/sailec.otf);
+      }
+      p, span {
+        font-family: "Sailec", sans-serif;
+      }
+    </style>
+  </head>
+  <body style="background-color: white; font-size: 11px;">
     <header class="clearfix">
         <div id="logo">
             @if($user->companyUser->logo!='')
@@ -39,7 +48,7 @@
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>A partir de:</b></p>
                 <span id="destination_input" style="line-height: 0.5">
                     <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
-                    <p><span style="color: #031B4E"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
                     <p>{{$user->companyUser->address}}</p>
                     <p>{{$user->phone}}</p>
                     <p>{{$quote->user->email}}</p>
@@ -51,17 +60,83 @@
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
                 <span id="destination_input" style="line-height: 0.5">
                     @if($quote->pdf_option->show_logo==1)
-                    @if($quote->company->logo!='')
-                    <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
-                    @endif
+                      @if($quote->company->logo!='')
+                      <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
+                      @endif
                     @endif
                     <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
-                    <p><span style="color: #031B4E"><b>{{$quote->company->business_name}}</b></span></p>
+                    <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
                     <p>{{$quote->company->address}}</p>
                     <p>{{$quote->contact->phone}}</p>
                     <p>{{$quote->contact->email}}</p>
                 </span>
             </div>
+        </div>
+        <br>
+        <div class="company" style="color: #1D3A6E;">
+            <p class="title"><b>Cargo details</b></p>
+            <hr style="margin-bottom:5px;margin-top:1px;border:1px solid #f1f1f1">
+
+            @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                <div class="row">
+                    <div class="col-md-3">
+                        <div id="cargo_details_cargo_type_p"><b class="title">Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div id="cargo_details_total_quantity_p"><b class="title">Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div id="cargo_details_total_weight_p"><b class="title">Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.'Kg' : ''}}</div>
+                    </div>
+                    <div class="col-md-3">
+                        <p id="cargo_details_total_volume_p"><b class="title">Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.'m<sup>3</sup>' : ''!!}</p>
+                    </div>
+                </div>
+                <br>
+            @endif
+            @if(!empty($package_loads) && count($package_loads)>0)
+                <table class="table table-bordered color-blue">
+                    <thead class="title-quote text-center header-table title">
+                    <tr>
+                        <th class="unit"><b>Cargo type</b></th>
+                        <th class="unit"><b>Quantity</b></th>
+                        <th class="unit"><b>Height</b></th>
+                        <th class="unit"><b>Width</b></th>
+                        <th class="unit"><b>Large</b></th>
+                        <th class="unit"><b>Weight</b></th>
+                        <th class="unit"><b>Total weight</b></th>
+                        <th class="unit"><b>Volume</b></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($package_loads as $package_load)
+                        <tr class="text-center">
+                            <td>{{$package_load->type_cargo==1 ? 'Pallets':'Packages'}}</td>
+                            <td>{{$package_load->quantity}}</td>
+                            <td>{{$package_load->height}} cm</td>
+                            <td>{{$package_load->width}} cm</td>
+                            <td>{{$package_load->large}} cm</td>
+                            <td>{{$package_load->weight}} kg</td>
+                            <td>{{$package_load->total_weight}} kg</td>
+                            <td>{{$package_load->volume}} m<sup>3</sup></td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <div class="col-md-12 pull-right">
+                        <b class="title">Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
+                    </div>
+                </div>
+            @endif
+            @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                    </div>
+                </div>
+            @endif
         </div>
         <br>
         @if($quote->kind_of_cargo!='')

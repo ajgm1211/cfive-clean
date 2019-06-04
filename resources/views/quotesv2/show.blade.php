@@ -103,6 +103,12 @@
   }
   .select_forms {
     background-color: transparent;
+    margin-left: 5px;
+    bottom: 2px;
+    position: relative;
+  }
+  .input_form {
+    line-height: 28px;
   }
   .input_form:before {
     content: '';
@@ -116,7 +122,8 @@
     top: 5px;
     left: 0;
     text-align: center;
-    z-index: 1
+    z-index: 1;
+    line-height: 16px;
   }
   .check {
     position: relative;
