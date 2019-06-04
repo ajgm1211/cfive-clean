@@ -19,7 +19,7 @@ $portRadio = false;
 
 <div class="m-portlet">
 
-    {{ Form::model($globalcharges, array('route' => array('gclcladm.update', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges')) }}
+    {{ Form::model($globalcharges, array('route' => array('gclcladm.store', $globalcharges->id), 'id' => 'frmGlobalChargesLcl')) }}
     <div class="m-portlet__body">
         <div class="form-group m-form__group row">
             <div class="col-lg-12">
@@ -53,13 +53,13 @@ $portRadio = false;
                 <label>
                     {!! Form::label('type', 'Type') !!}
                 </label>
-                {{ Form::select('surcharge_id', $surcharge,$globalcharges->surcharge_id,['id' => 'type','class'=>'m-select2-general form-control ']) }}
+                {{ Form::select('type', $surcharge,$globalcharges->surcharge_id,['id' => 'type','class'=>'m-select2-general form-control ']) }}
             </div>
             <div class="col-lg-4">
                 <div class="divport" >
                     {!! Form::label('orig', 'Origin Port') !!}
                     {{ Form::select('port_orig[]', $harbor,
-                    $globalcharges->globalcharportlcl->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true']) }}
+                    $globalcharges->globalcharportlcl->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
                 </div>
                 <div class="divcountry" hidden="true">
 
@@ -74,7 +74,7 @@ $portRadio = false;
                     {!! Form::label('dest', 'Destination Port') !!}
                     <div class="m-input-icon m-input-icon--right">
                         {{ Form::select('port_dest[]', $harbor,
-                        $globalcharges->globalcharportlcl->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true']) }}
+                        $globalcharges->globalcharportlcl->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
                         <span class="m-input-icon__icon m-input-icon__icon--right">
                             <span>
                                 <i class="la la-info-circle"></i>
@@ -91,7 +91,7 @@ $portRadio = false;
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 {!! Form::label('typed', 'Destination type') !!}
-                {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control', 'required' =>'true']) }}
+                {{ Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control']) }}
             </div>
             <div class="col-lg-4">
                 {!! Form::label('validation_expire', 'Validation') !!}
@@ -102,7 +102,7 @@ $portRadio = false;
             <div class="col-lg-4">
                 {!! Form::label('calculationt', 'Calculation Type') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtypelcl_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ' , 'required' =>'true']) }}
+                    {{ Form::select('calculationtype[]', $calculationT,$globalcharges->calculationtypelcl_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','multiple' => 'multiple']) }}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-map-marker"></i>
@@ -116,7 +116,7 @@ $portRadio = false;
             <div class="col-lg-4">
                 {!! Form::label('carrierL', 'Carrier') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('carrier_id[]', $carrier,$globalcharges->globalcharcarrierslcl->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple','required' => 'true']) }}
+                    {{ Form::select('localcarrier[]', $carrier,$globalcharges->globalcharcarrierslcl->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple']) }}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-info-circle"></i>
@@ -126,9 +126,9 @@ $portRadio = false;
             </div>
 
             <div class="col-lg-4">
-                {!! Form::label('ammountL', 'Ammount') !!}
+                {!! Form::label('ammountL', 'Amount') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {!! Form::number('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','required','class' => 'form-control m-input','min' => '0','step'=>'0.01', 'required' =>'true']) !!}
+                    {!! Form::text('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','required','class' => 'form-control m-input']) !!}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-bookmark-o"></i>
@@ -141,7 +141,7 @@ $portRadio = false;
             <div class="col-lg-4">
                 {!! Form::label('minimum', 'Minimum') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {!! Form::text('minimum', $globalcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the Minimum','class' => 'form-control m-input' , 'required' =>'true']) !!}
+                    {!! Form::text('minimum', $globalcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the Minimum','class' => 'form-control m-input']) !!}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-bookmark-o"></i>
@@ -155,7 +155,7 @@ $portRadio = false;
             <div class="col-lg-4">
                 {!! Form::label('currencyl', 'Currency') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' , 'required' =>'true' ]) }}
+                    {{ Form::select('localcurrency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' ]) }}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-bookmark-o"></i>
@@ -170,7 +170,7 @@ $portRadio = false;
     <hr>
     <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions m-form__actions">
-            {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+            {!! Form::submit('Duplicate', ['class'=> 'btn btn-primary']) !!}
             <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">Cancel</span>
             </button>
@@ -186,7 +186,7 @@ $portRadio = false;
     $('.m-select2-general').select2({
         placeholder: "Select an option"
     });
-
+    
     $('#company_user_id').change(function(event){
         url = '{{route("gclcladm.typeCharge",":id")}}';
         url = url.replace(':id', event.target.value);
@@ -204,5 +204,6 @@ $portRadio = false;
             }
         })
     });
+
 </script>
 

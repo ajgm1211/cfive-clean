@@ -379,7 +379,7 @@ class GlobalChargesLclController extends Controller
             return response()->json($surcharges);
         }
     }
-    
+
     public function storeAdm(Request $request){
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
@@ -449,23 +449,23 @@ class GlobalChargesLclController extends Controller
         $request->session()->flash('message.content', 'You successfully add this contract.');
         return redirect()->action('GlobalChargesLclController@indexAdm');
     }
-    
+
     public function showAdm($id){
 
+        $globalcharges  = GlobalChargeLcl::find($id);
         $countries      = Country::pluck('name','id');
         $calculationT   = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        $surcharge      = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $surcharge      = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
         $harbor         = Harbor::all()->pluck('display_name','id');
         $carrier        = Carrier::all()->pluck('name','id');
         $currency       = Currency::all()->pluck('alphacode','id');
-        $globalcharges  = GlobalChargeLcl::find($id);
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
         $company_users   = CompanyUser::pluck('name','id');
         return view('globalchargesLclAdm.edit', compact('globalcharges','harbor','carrier','currency','calculationT','company_users','typedestiny','surcharge','countries'));
     }
-    
+
     public function updateAdm(Request $request, $id){
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
@@ -473,7 +473,7 @@ class GlobalChargesLclController extends Controller
         $calculationT   = CalculationTypeLcl::pluck('name','id');
         $typedestiny    = TypeDestiny::pluck('description','id');
         $global         = GlobalChargeLcl::find($id);
-        
+
         $validation             = explode('/',$request->validation_expire);
         $global->validity       = $validation[0];
         $global->expire         = $validation[1];
@@ -485,7 +485,7 @@ class GlobalChargesLclController extends Controller
         $global->currency_id    = $request->input('currency_id');
         $global->company_user_id = $request->input('company_user_id');
         $carrier                = $request->input('carrier_id');
-        
+
         $deleteCarrier  = GlobalCharCarrierLcl::where("globalchargelcl_id",$id);
         $deleteCarrier->delete();
         $deletePort     = GlobalCharPortLcl::where("globalchargelcl_id",$id);
@@ -531,6 +531,131 @@ class GlobalChargesLclController extends Controller
             $detailcarrier->save();
         }
         $global->update();
+        return redirect()->route('gclcladm.index');
+    }
+
+    public function duplicateAdm($id){
+
+        $countries          = Country::pluck('name','id');
+        $calculationT       = CalculationTypeLcl::all()->pluck('name','id');
+        $typedestiny        = TypeDestiny::all()->pluck('description','id');
+        $surcharge          = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor             = Harbor::all()->pluck('display_name','id');
+        $carrier            = Carrier::all()->pluck('name','id');
+        $currency           = Currency::all()->pluck('alphacode','id');
+        $globalcharges      = GlobalChargeLcl::find($id);
+        $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $company_users      = CompanyUser::pluck('name','id');
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+        return view('globalchargesLclAdm.duplicate', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
+    }
+
+    public function duplicateArrAdm(Request $request){
+        $company_users      = CompanyUser::pluck('name','id');
+        $globals_id_array   = $request->input('id');
+        $globals            = GlobalChargeLcl::whereIn('id', $globals_id_array)
+            ->with('currency','calculationtypelcl','surcharge','globalcharcarrierslcl.carrier','typedestiny','globalcharportlcl.portOrig','globalcharportlcl.portDest','globalcharcountrylcl.countryOrig','globalcharcountrylcl.countryDest')
+            ->get();
+
+        //dd($globals);
+            $global = collect([]);
+        foreach($globals as $gb){
+            $orig = null;
+            $dest = null;
+            if(count($gb->globalcharportlcl) >= 1 ){
+                $orig = str_replace(['[',']','"'],'',$gb->globalcharportlcl->pluck('portOrig')->pluck('code')->unique());
+                $dest = str_replace(['[',']','"'],'',$gb->globalcharportlcl->pluck('portDest')->pluck('code')->unique());
+            } else if(count($gb->globalcharcountrylcl) >= 1 ){
+                $orig = str_replace(['[',']','"'],'',$gb->globalcharcountrylcl->pluck('countryOrig')->pluck('name'));
+                $dest = str_replace(['[',']','"'],'',$gb->globalcharcountrylcl->pluck('countryDest')->pluck('name'));
+            }
+            $array = [
+                //'' => ,
+                'origin'            => $orig,
+                'destination'       => $dest,
+                'ammount'           => $gb->ammount,
+                'minimum'           => $gb->minimum,
+                'surcharge'         => $gb->surcharge->name,
+                'typedestiny'       => $gb->typedestiny->description,
+                'calculationtype'   => $gb->calculationtypelcl->name,
+                'currency'          => $gb->currency->alphacode,
+                'carrier'           => str_replace(['[',']','"'],'',$gb['globalcharcarrierslcl']->pluck('carrier')->pluck('name'))
+            ];
+
+            $global->push($array);
+        }
+        //$global             = $global->toArray();
+        //dd($globals_id_array);
+        return view('globalchargesLclAdm.duplicateArray',compact('global','company_users','globals_id_array'));
+    }
+    
+    public function storeArrayAdm(Request $request){
+        //dd($request->all());
+        $company_user = $request->company_user_id;
+        foreach($request->idArray as $gb){
+
+            $globalOfAr = GlobalChargeLcl::find($gb);
+            $globalOfAr->load('surcharge','globalcharcarrierslcl','globalcharportlcl.portOrig','globalcharportlcl.portDest','globalcharcountrylcl.countryOrig','globalcharcountrylcl.countryDest');
+            $surchName  =  $globalOfAr->surcharge->name;
+            $surcharger = Surcharge::where('name',$surchName)->where('company_user_id',$company_user)->first();
+            if(count($surcharger) >= 1){
+                $surcharger = $surcharger->id;
+            } else {
+                $surcharger =  Surcharge::create([
+                    'name'              => $surchName, 
+                    'description'       => $surchName,
+                    'company_user_id'   => $company_user
+                ]);
+                $surcharger = $surcharger->id;
+            }
+            $global = GlobalChargeLcl::create([
+                'validity'              => $globalOfAr->validity, 
+                'expire'                => $globalOfAr->expire, 
+                'surcharge_id'          => $surcharger, 
+                'calculationtypelcl_id' => $globalOfAr->calculationtypelcl_id, 
+                'typedestiny_id'        => $globalOfAr->typedestiny_id, 
+                'ammount'               => $globalOfAr->ammount, 
+                'minimum'               => $globalOfAr->minimum, 
+                'currency_id'           => $globalOfAr->currency_id, 
+                'company_user_id'       => $company_user 
+            ]);            
+            $global = $global->id;
+            
+            foreach($globalOfAr->globalcharcarrierslcl->pluck('carrier_id') as $c ){
+                $detailcarrier = new GlobalCharCarrierLcl();
+                $detailcarrier->carrier_id          = $c;
+                $detailcarrier->globalchargelcl_id  = $global;
+                $detailcarrier->save();
+            }
+            if(count($globalOfAr->globalcharportlcl) >= 1){
+                $detailport     = $globalOfAr->globalcharportlcl->pluck('portOrig')->pluck('id');
+                $detailportDest = $globalOfAr->globalcharportlcl->pluck('portDest')->pluck('id');
+                foreach($detailport as $p => $value){
+                    foreach($detailportDest as $dest => $valuedest){
+                        $ports                      = new GlobalCharPortLcl();
+                        $ports->port_orig           = $value;
+                        $ports->port_dest           = $valuedest;
+                        $ports->globalchargelcl_id  = $global;
+                        $ports->save();
+                    }
+                }
+            }elseif(count($globalOfAr->globalcharcountrylcl) >= 1){
+                $detailCountrytOrig = $globalOfAr->globalcharcountrylcl->pluck('countryOrig')->pluck('id');
+                $detailCountryDest  = $globalOfAr->globalcharcountrylcl->pluck('countryDest')->pluck('id');
+                foreach($detailCountrytOrig as $p => $valueC){
+                    foreach($detailCountryDest as $dest => $valuedestC){
+                        $detailcountry = new GlobalCharCountryLcl();
+                        $detailcountry->country_orig        = $valueC;
+                        $detailcountry->country_dest        = $valuedestC;
+                        $detailcountry->globalchargelcl_id  = $global;
+                        $detailcountry->save();
+                    }
+                }
+            }
+        }
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
         return redirect()->route('gclcladm.index');
     }
 }
