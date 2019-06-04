@@ -64,6 +64,14 @@
                                             <i class="la la-trash"></i>
                                         </span>
                                     </button>
+                                    <button type="button" name="bulk_delete" id="bulk_duplicate" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <span>
+                                            <span>
+                                                Duplicate Selected &nbsp;
+                                            </span>
+                                            <i class="la la-bars"></i>
+                                        </span>
+                                    </button>
                                 </div>
 
                             </div>
@@ -170,8 +178,7 @@
 
         }
         if(action == "duplicateGlobalCharge"){
-
-            var url = '{{ route("duplicate-global-charge-lcl", ":id") }}';
+            var url = '{{ route("gclcladm.duplicate", ":id") }}';
             url = url.replace(':id', id);
             $('.modal-body-add').load(url,function(){
                 $('#modalGlobalchargeAdd').modal({show:true});
@@ -215,7 +222,7 @@
 
     });
 
-   /* $(document).on('click', '#bulk_delete', function(){
+    $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
             title: 'Are you sure?',
@@ -227,7 +234,8 @@
             reverseButtons: true
         }).then(function(result){
             if (result.value) {
-                $('.checkbox_global:checked').each(function(){
+                var oTableT = $("#requesttable").dataTable();
+                $('.checkbox_global:checked',oTableT.fnGetNodes()).each(function(){
                     id.push($(this).val());
                 });
 
@@ -267,7 +275,27 @@
                 )
             }
         });
-    });*/
+    });
+
+    $(document).on('click', '#bulk_duplicate', function(){
+        //alert();
+        var id = [];
+        var oTable = $("#requesttable").dataTable(); 
+        $('.checkbox_global:checked', oTable.fnGetNodes()).each(function(){
+            id.push($(this).val());
+        });
+        if(id.length > 0){
+            url='{!! route("gclcladm.duplicate.Array",":id") !!}';
+            url = url.replace(':id', id);
+            var token = $("meta[name='csrf-token']").attr("content");
+            url = url.replace(':id', id);
+            $('.modal-body').load(url,{id:id,_token:token},function(){
+                $('#modalGlobalcharge').modal({show:true});
+            });
+        } else {
+            swal("Error!", "Please select atleast one checkbox", "error");
+        }
+    });
 </script>
 <script src="/js/globalchargeslcl.js"></script>
 @if(session('globalchar'))
