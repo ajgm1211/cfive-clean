@@ -23,7 +23,7 @@ class AutomaticRate extends Model
     ];
 
 
-    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id'];
+    protected $fillable = ['quote_id','contract','validity_start','validity_end','origin_port_id','destination_port_id','carrier_id','rates','markups','currency_id','total','amount','markups','origin_airport_id','destination_airport_id','airline_id','remarks','schedule_type','transit_time','via'];
 
     public function quote()
     {
