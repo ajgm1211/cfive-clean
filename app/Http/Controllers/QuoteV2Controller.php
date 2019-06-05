@@ -2963,13 +2963,14 @@ class QuoteV2Controller extends Controller
 
 
       $inlands = $inlands->get();
-
+      $dataDest = array();
       // se agregan los aditional km
       foreach($inlands as $inlandsValue){
         $km20 = true;
         $km40 = true;
         $km40hc = true;
         $inlandDetails = array();
+
 
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
@@ -3110,15 +3111,15 @@ class QuoteV2Controller extends Controller
                     return $minimoDetails;
                   });
 
-                  $data[] =$arregloInland;
+                  $dataDest[] =$arregloInland;
                 }
               }
             }
           } // if ports
         }// foreach ports
       }//foreach inlands
-      if(!empty($data)){
-        $inlandDestiny = Collection::make($data);
+      if(!empty($dataDest)){
+        $inlandDestiny = Collection::make($dataDest);
         //dd($collection); //  completo
         /* $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
@@ -3142,7 +3143,7 @@ class QuoteV2Controller extends Controller
       });
 
       $inlands = $inlands->get();
-
+      $dataOrig = array();
       foreach($inlands as $inlandsValue){
         $km20 = true;
         $km40 = true;
