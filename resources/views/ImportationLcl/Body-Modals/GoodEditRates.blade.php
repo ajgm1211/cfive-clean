@@ -68,7 +68,7 @@
             <div class="col-lg-4">
 
                 {!! Form::label('via', 'Via') !!}
-                {!! Form::text('via',$rates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ','required']) !!}
+                {!! Form::text('via',$rates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ']) !!}
 
             </div>
         </div>
