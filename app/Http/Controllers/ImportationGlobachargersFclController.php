@@ -539,8 +539,8 @@ class ImportationGlobachargersFclController extends Controller
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('GCImport')->url($NameFile);
 
-        /*FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
-        GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();*/
+        FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
+        GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();
 
         Excel::selectSheetsByIndex(0)
             ->Load($path,function($reader) use($requestobj,$errors,$NameFile,$companyUserIdVal) {
@@ -1660,7 +1660,7 @@ class ImportationGlobachargersFclController extends Controller
                                                         ->where('currency_id',$currencyValfor)
                                                         ->first();
 
-                                                    if(count($globalChargeTWArreG) == 0){
+                                                    if(count($globalChargeFORArreG) == 0){
                                                         $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
                                                             'typedestiny_id'     						=> $typedestinyVal,
@@ -1769,7 +1769,7 @@ class ImportationGlobachargersFclController extends Controller
                                                         ->where('currency_id',$currencyValforHC)
                                                         ->first();
 
-                                                    if(count($globalChargeTWArreG) == 0){
+                                                    if(count($globalChargeFORHCArreG) == 0){
 
                                                         $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
                                                             'surcharge_id'       						=> $surchargeVal,
@@ -1787,7 +1787,6 @@ class ImportationGlobachargersFclController extends Controller
                                                     $exitGCCPC = null;
                                                     $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
                                                         ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
-                                                    dd(count($exitGCCPC).'Cah');
                                                     if(count($exitGCCPC) == 0){
                                                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                                                             'carrier_id'      => $carrierVal,
@@ -1869,22 +1868,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 // --------------------- CARGA 40'NOR -------------------------------------------------
 
                                                 if($fortynorVal != 0 || $fortynorVal != 0.0){
-                                                    $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 7,
-                                                        'ammount'            						=> $fortynorVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyValfornor
-                                                    ]);
+                                                    $globalChargeFORNORArreG = null;
+                                                    $globalChargeFORNORArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',7)
+                                                        ->where('ammount',$fortynorVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyValfornor)
+                                                        ->first();
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                    ]);
+                                                    if(count($globalChargeFORNORArreG) == 0){
+                                                        $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 7,
+                                                            'ammount'            						=> $fortynorVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyValfornor
+                                                        ]);
+                                                    }
+
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -1896,39 +1913,62 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
-
                                                     //echo $i;
                                                     //dd($globalChargeFORNORArreG);
                                                 }
@@ -1936,23 +1976,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 // --------------------- CARGA 45' ----------------------------------------------------
 
                                                 if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
+                                                    $globalChargeFORfiveArreG = null;
+                                                    $globalChargeFORfiveArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',8)
+                                                        ->where('ammount',$fortyfiveVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyValforfive)
+                                                        ->first();
 
-                                                    $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 8,
-                                                        'ammount'            						=> $fortyfiveVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyValforfive
-                                                    ]);
+                                                    if(count($globalChargeFORfiveArreG) == 0){
+                                                        $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 8,
+                                                            'ammount'            						=> $fortyfiveVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyValforfive
+                                                        ]);
+                                                    }
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                    ]);
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -1964,36 +2021,60 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
 
@@ -2009,22 +2090,41 @@ class ImportationGlobachargersFclController extends Controller
                                                 // ----------------------- CARGA 20' -------------------------------------------
 
                                                 if($twentyVal != 0 || $twentyVal != 0.0){
-                                                    $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 2,
-                                                        'ammount'            						=> $twentyVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyVal
-                                                    ]);
+                                                    $globalChargeTWArreG = null;
+                                                    $globalChargeTWArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',2)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyVal)
+                                                        ->first();
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeTWArreG->id
-                                                    ]);
+                                                    if(count($globalChargeTWArreG) == 0){
+                                                        $globalChargeTWArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 2,
+                                                            'ammount'            						=> $twentyVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyVal
+                                                        ]);
+                                                    }
+
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeTWArreG->id)->first();
+
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeTWArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -2036,36 +2136,61 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeTWArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeTWArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeTWArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeTWArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeTWArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeTWArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeTWArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeTWArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeTWArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeTWArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeTWArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2073,22 +2198,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 //---------------------- CARGA 40' -----------------------------------------------
 
                                                 if($fortyVal != 0 || $fortyVal != 0.0){
-                                                    $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 1,
-                                                        'ammount'            						=> $fortyVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyVal
-                                                    ]);
+                                                    $globalChargeFORArreG = null;
+                                                    $globalChargeFORArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',1)
+                                                        ->where('ammount',$fortyVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyVal)
+                                                        ->first();
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORArreG->id
-                                                    ]);
+                                                    if(count($globalChargeFORArreG) == 0){
+                                                        $globalChargeFORArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 1,
+                                                            'ammount'            						=> $fortyVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyVal
+                                                        ]);
+                                                    }
+
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -2100,36 +2243,62 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)
+                                                                    ->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -2137,23 +2306,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 // --------------------- CARGA 40'HC ---------------------------------------------
 
                                                 if($fortyhcVal != 0 || $fortyhcVal != 0.0){
+                                                    $globalChargeFORHCArreG = null;
+                                                    $globalChargeFORHCArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',3)
+                                                        ->where('ammount',$fortyhcVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyVal)
+                                                        ->first();
 
-                                                    $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 3,
-                                                        'ammount'            						=> $fortyhcVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyVal
-                                                    ]);
+                                                    if(count($globalChargeFORHCArreG) == 0){
+                                                        $globalChargeFORHCArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 3,
+                                                            'ammount'            						=> $fortyhcVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyVal
+                                                        ]);
+                                                    }
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORHCArreG->id
-                                                    ]);
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORHCArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -2165,36 +2351,60 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORHCArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORHCArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORHCArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORHCArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORHCArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORHCArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
                                                     //echo $i;
@@ -2204,22 +2414,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 // --------------------- CARGA 40'NOR --------------------------------------------
 
                                                 if($fortynorVal != 0 || $fortynorVal != 0.0){
-                                                    $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 7,
-                                                        'ammount'            						=> $fortynorVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyVal
-                                                    ]);
+                                                    $globalChargeFORNORArreG = null;
+                                                    $globalChargeFORNORArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',7)
+                                                        ->where('ammount',$fortynorVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyVal)
+                                                        ->first();
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORNORArreG->id
-                                                    ]);
+                                                    if(count($globalChargeFORNORArreG) == 0){
+                                                        $globalChargeFORNORArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 7,
+                                                            'ammount'            						=> $fortynorVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyVal
+                                                        ]);
+                                                    }
+
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORNORArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -2231,36 +2459,60 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORNORArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORNORArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORNORArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
                                                     //echo $i;
@@ -2270,22 +2522,40 @@ class ImportationGlobachargersFclController extends Controller
                                                 // --------------------- CARGA 45' -----------------------------------------------
 
                                                 if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                                    $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                        'surcharge_id'       						=> $surchargeVal,
-                                                        'typedestiny_id'     						=> $typedestinyVal,
-                                                        'account_importation_globalcharge_id'  => $account_idVal,
-                                                        'company_user_id'    						=> $companyUserIdVal,
-                                                        'calculationtype_id' 						=> 8,
-                                                        'ammount'            						=> $fortyfiveVal,
-                                                        'validity' 										=> $validityfromVal,
-                                                        'expire'					 						=> $validitytoVal,
-                                                        'currency_id'        						=> $currencyVal
-                                                    ]);
+                                                    $globalChargeFORfiveArreG = null;
+                                                    $globalChargeFORfiveArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('calculationtype_id',8)
+                                                        ->where('ammount',$fortyfiveVal)
+                                                        ->where('validity',$validityfromVal)
+                                                        ->where('expire',$validitytoVal)
+                                                        ->where('currency_id',$currencyVal)
+                                                        ->first();
 
-                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                        'carrier_id'      => $carrierVal,
-                                                        'globalcharge_id' => $globalChargeFORfiveArreG->id
-                                                    ]);
+                                                    if(count($globalChargeFORfiveArreG) == 0){
+                                                        $globalChargeFORfiveArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                            'surcharge_id'       						=> $surchargeVal,
+                                                            'typedestiny_id'     						=> $typedestinyVal,
+                                                            'account_importation_globalcharge_id'       => $account_idVal,
+                                                            'company_user_id'    						=> $companyUserIdVal,
+                                                            'calculationtype_id' 						=> 8,
+                                                            'ammount'            						=> $fortyfiveVal,
+                                                            'validity' 									=> $validityfromVal,
+                                                            'expire'					 				=> $validitytoVal,
+                                                            'currency_id'        						=> $currencyVal
+                                                        ]);
+                                                    }
+
+                                                    $exitGCCPC = null;
+                                                    $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                        ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                    if(count($exitGCCPC) == 0){
+                                                        GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                            'carrier_id'      => $carrierVal,
+                                                            'globalcharge_id' => $globalChargeFORfiveArreG->id
+                                                        ]);
+                                                    }
 
                                                     if($originBol == true || $destinyBol == true){
                                                         foreach($randons as  $rando){
@@ -2297,36 +2567,60 @@ class ImportationGlobachargersFclController extends Controller
                                                             }
 
                                                             if($differentiatorBol == false){
-                                                                GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                    'port_orig'      	=> $originVal,
-                                                                    'port_dest'      	=> $destinyVal,
-                                                                    'typedestiny_id' 	=> $typedestinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                                ]);
+                                                                $exgcpt = null;
+                                                                $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                                if(count($exgcpt) == 0){
+                                                                    GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                        'port_orig'      	=> $originVal,
+                                                                        'port_dest'      	=> $destinyVal,
+                                                                        'typedestiny_id' 	=> $typedestinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                    ]);
+                                                                }
                                                             } else {
-                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                    'country_orig'      => $originVal,
-                                                                    'country_dest'      => $destinyVal,
-                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                                ]);
+                                                                $exgcct = null;
+                                                                $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                    ->where('country_dest',$destinyVal)
+                                                                    ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                                if(count($exgcct) == 0){
+                                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                        'country_orig'      => $originVal,
+                                                                        'country_dest'      => $destinyVal,
+                                                                        'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                    ]);
+                                                                }
                                                             }
                                                         } 
 
                                                     } else {
                                                         // fila por puerto, sin expecificar origen ni destino manualmente
                                                         if($differentiatorBol == false){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                            ]);
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                ]);
+                                                            }
                                                         } else {
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeFORfiveArreG->id
-                                                            ]);
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargeFORfiveArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargeFORfiveArreG->id
+                                                                ]);
+                                                            }
                                                         }
                                                     }
                                                     //echo $i;
@@ -2378,23 +2672,40 @@ class ImportationGlobachargersFclController extends Controller
 
 
                                         if($ammount != 0 || $ammount != 0.0){
+                                            $globalChargePERArreG = null;
+                                            $globalChargePERArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                ->where('typedestiny_id',$typedestinyVal)
+                                                ->where('company_user_id',$companyUserIdVal)
+                                                ->where('calculationtype_id',$calculationtypeVal)
+                                                ->where('ammount',$ammount)
+                                                ->where('validity',$validityfromVal)
+                                                ->where('expire',$validitytoVal)
+                                                ->where('currency_id',$currencyVal)
+                                                ->first();
 
-                                            $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                'surcharge_id'       						=> $surchargeVal,
-                                                'typedestiny_id'     						=> $typedestinyVal,
-                                                'account_importation_globalcharge_id'  => $account_idVal,
-                                                'company_user_id'    						=> $companyUserIdVal,
-                                                'calculationtype_id' 						=> $calculationtypeVal,
-                                                'ammount'            						=> $ammount,
-                                                'validity' 										=> $validityfromVal,
-                                                'expire'					 						=> $validitytoVal,
-                                                'currency_id'        						=> $currencyVal
-                                            ]);
+                                            if(count($globalChargePERArreG) == 0){
+                                                $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                    'surcharge_id'       						=> $surchargeVal,
+                                                    'typedestiny_id'     						=> $typedestinyVal,
+                                                    'account_importation_globalcharge_id'       => $account_idVal,
+                                                    'company_user_id'    						=> $companyUserIdVal,
+                                                    'calculationtype_id' 						=> $calculationtypeVal,
+                                                    'ammount'            						=> $ammount,
+                                                    'validity' 									=> $validityfromVal,
+                                                    'expire'					 				=> $validitytoVal,
+                                                    'currency_id'        						=> $currencyVal
+                                                ]);
+                                            }
 
-                                            GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                'carrier_id'      => $carrierVal,
-                                                'globalcharge_id' => $globalChargePERArreG->id
-                                            ]);
+                                            $exitGCCPC = null;
+                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                if(count($exitGCCPC) == 0){
+                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                        'carrier_id'      => $carrierVal,
+                                                        'globalcharge_id' => $globalChargePERArreG->id
+                                                    ]);
+                                                }
 
                                             if($originBol == true || $destinyBol == true){
                                                 foreach($randons as  $rando){
@@ -2406,36 +2717,60 @@ class ImportationGlobachargersFclController extends Controller
                                                     }
 
                                                     if($differentiatorBol == false){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargePERArreG->id
-                                                        ]);
+                                                        $exgcpt = null;
+                                                        $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                            ->where('typedestiny_id',$typedestinyVal)
+                                                            ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                        if(count($exgcpt) == 0){
+                                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                'port_orig'      	=> $originVal,
+                                                                'port_dest'      	=> $destinyVal,
+                                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                                'globalcharge_id'   => $globalChargePERArreG->id
+                                                            ]);
+                                                        }
                                                     } else {
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargePERArreG->id
-                                                        ]);
+                                                        $exgcct = null;
+                                                        $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                            ->where('country_dest',$destinyVal)
+                                                            ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                        if(count($exgcct) == 0){
+                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'globalcharge_id'   => $globalChargePERArreG->id
+                                                            ]);
+                                                        }
                                                     }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
                                                 if($differentiatorBol == false){
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id'   => $globalChargePERArreG->id
-                                                    ]);
+                                                    $exgcpt = null;
+                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                    if(count($exgcpt) == 0){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargePERArreG->id
+                                                        ]);
+                                                    }
                                                 } else {
-                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                        'country_orig'      => $originVal,
-                                                        'country_dest'      => $destinyVal,
-                                                        'globalcharge_id'   => $globalChargePERArreG->id
-                                                    ]);
+                                                    $exgcct = null;
+                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                        ->where('country_dest',$destinyVal)
+                                                        ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                    if(count($exgcct) == 0){
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargePERArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
                                         }
@@ -2482,23 +2817,40 @@ class ImportationGlobachargersFclController extends Controller
 
 
                                         if($ammount != 0 || $ammount != 0.0){
+                                            $globalChargeBLArreG = null;
+                                            $globalChargeBLArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                ->where('typedestiny_id',$typedestinyVal)
+                                                ->where('company_user_id',$companyUserIdVal)
+                                                ->where('calculationtype_id',$calculationtypeVal)
+                                                ->where('ammount',$ammount)
+                                                ->where('validity',$validityfromVal)
+                                                ->where('expire',$validitytoVal)
+                                                ->where('currency_id',$currencyVal)
+                                                ->first();
 
-                                            $globalChargeBLArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                'surcharge_id'       						=> $surchargeVal,
-                                                'typedestiny_id'     						=> $typedestinyVal,
-                                                'account_importation_globalcharge_id'  => $account_idVal,
-                                                'company_user_id'    						=> $companyUserIdVal,
-                                                'calculationtype_id' 						=> $calculationtypeVal,
-                                                'ammount'            						=> $ammount,
-                                                'validity' 										=> $validityfromVal,
-                                                'expire'					 						=> $validitytoVal,
-                                                'currency_id'        						=> $currencyVal
-                                            ]);
+                                            if(count($globalChargeBLArreG) == 0){
+                                                $globalChargeBLArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                    'surcharge_id'       						=> $surchargeVal,
+                                                    'typedestiny_id'     						=> $typedestinyVal,
+                                                    'account_importation_globalcharge_id'       => $account_idVal,
+                                                    'company_user_id'    						=> $companyUserIdVal,
+                                                    'calculationtype_id' 						=> $calculationtypeVal,
+                                                    'ammount'            						=> $ammount,
+                                                    'validity' 									=> $validityfromVal,
+                                                    'expire'					 				=> $validitytoVal,
+                                                    'currency_id'        						=> $currencyVal
+                                                ]);
+                                            }
 
-                                            GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                'carrier_id'      => $carrierVal,
-                                                'globalcharge_id' => $globalChargeBLArreG->id
-                                            ]);
+                                            $exitGCCPC = null;
+                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
+                                            if(count($exitGCCPC) == 0){
+                                                GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                    'carrier_id'      => $carrierVal,
+                                                    'globalcharge_id' => $globalChargeBLArreG->id
+                                                ]);
+                                            }
 
                                             if($originBol == true || $destinyBol == true){
                                                 foreach($randons as  $rando){
@@ -2510,36 +2862,60 @@ class ImportationGlobachargersFclController extends Controller
                                                     }
 
                                                     if($differentiatorBol == false){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargeBLArreG->id
-                                                        ]);
+                                                        $exgcpt = null;
+                                                        $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                            ->where('typedestiny_id',$typedestinyVal)
+                                                            ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
+                                                        if(count($exgcpt) == 0){
+                                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                'port_orig'      	=> $originVal,
+                                                                'port_dest'      	=> $destinyVal,
+                                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                                'globalcharge_id'   => $globalChargeBLArreG->id
+                                                            ]);
+                                                        }
                                                     } else {
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargeBLArreG->id
-                                                        ]);
+                                                        $exgcct = null;
+                                                        $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                            ->where('country_dest',$destinyVal)
+                                                            ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
+                                                        if(count($exgcct) == 0){
+                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'globalcharge_id'   => $globalChargeBLArreG->id
+                                                            ]);
+                                                        }
                                                     }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
                                                 if($differentiatorBol == false){
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id'   => $globalChargeBLArreG->id
-                                                    ]);
+                                                    $exgcpt = null;
+                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
+                                                    if(count($exgcpt) == 0){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeBLArreG->id
+                                                        ]);
+                                                    }
                                                 } else {
-                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                        'country_orig'      => $originVal,
-                                                        'country_dest'      => $destinyVal,
-                                                        'globalcharge_id'   => $globalChargeBLArreG->id
-                                                    ]);
+                                                    $exgcct = null;
+                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                        ->where('country_dest',$destinyVal)
+                                                        ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
+                                                    if(count($exgcct) == 0){
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeBLArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
                                         }
@@ -2586,22 +2962,39 @@ class ImportationGlobachargersFclController extends Controller
 
 
                                         if($ammount != 0 || $ammount != 0.0){
-                                            $globalChargeTONArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                'surcharge_id'       						=> $surchargeVal,
-                                                'typedestiny_id'     						=> $typedestinyVal,
-                                                'account_importation_globalcharge_id'  => $account_idVal,
-                                                'company_user_id'    						=> $companyUserIdVal,
-                                                'calculationtype_id' 						=> $calculationtypeVal,
-                                                'ammount'            						=> $ammount,
-                                                'validity' 										=> $validityfromVal,
-                                                'expire'					 						=> $validitytoVal,
-                                                'currency_id'        						=> $currencyVal
-                                            ]);
+                                            $globalChargeTONArreG = null;
+                                            $globalChargeTONArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                ->where('typedestiny_id',$typedestinyVal)
+                                                ->where('company_user_id',$companyUserIdVal)
+                                                ->where('calculationtype_id',$calculationtypeVal)
+                                                ->where('ammount',$ammount)
+                                                ->where('validity',$validityfromVal)
+                                                ->where('expire',$validitytoVal)
+                                                ->where('currency_id',$currencyVal)
+                                                ->first();
 
-                                            GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                'carrier_id'      => $carrierVal,
-                                                'globalcharge_id' => $globalChargeTONArreG->id
-                                            ]);
+                                            if(count($globalChargeTONArreG) == 0){
+                                                $globalChargeTONArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                    'surcharge_id'       						=> $surchargeVal,
+                                                    'typedestiny_id'     						=> $typedestinyVal,
+                                                    'account_importation_globalcharge_id'       => $account_idVal,
+                                                    'company_user_id'    						=> $companyUserIdVal,
+                                                    'calculationtype_id' 						=> $calculationtypeVal,
+                                                    'ammount'            						=> $ammount,
+                                                    'validity' 									=> $validityfromVal,
+                                                    'expire'					 				=> $validitytoVal,
+                                                    'currency_id'        						=> $currencyVal
+                                                ]);
+                                            }
+                                            $exitGCCPC = null;
+                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
+                                            if(count($exitGCCPC) == 0){
+                                                GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                    'carrier_id'      => $carrierVal,
+                                                    'globalcharge_id' => $globalChargeTONArreG->id
+                                                ]);
+                                            }
 
                                             if($originBol == true || $destinyBol == true){
                                                 foreach($randons as  $rando){
@@ -2613,36 +3006,60 @@ class ImportationGlobachargersFclController extends Controller
                                                     }
 
                                                     if($differentiatorBol == false){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargeTONArreG->id
-                                                        ]);
+                                                        $exgcpt = null;
+                                                        $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                            ->where('typedestiny_id',$typedestinyVal)
+                                                            ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
+                                                        if(count($exgcpt) == 0){
+                                                            GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                'port_orig'      	=> $originVal,
+                                                                'port_dest'      	=> $destinyVal,
+                                                                'typedestiny_id' 	=> $typedestinyVal,
+                                                                'globalcharge_id'   => $globalChargeTONArreG->id
+                                                            ]);
+                                                        }
                                                     } else {
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargeTONArreG->id
-                                                        ]);
+                                                        $exgcct = null;
+                                                        $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                            ->where('country_dest',$destinyVal)
+                                                            ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
+                                                        if(count($exgcct) == 0){
+                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                'country_orig'      => $originVal,
+                                                                'country_dest'      => $destinyVal,
+                                                                'globalcharge_id'   => $globalChargeTONArreG->id
+                                                            ]);
+                                                        }
                                                     }
                                                 } 
 
                                             } else {
                                                 // fila por puerto, sin expecificar origen ni destino manualmente
                                                 if($differentiatorBol == false){
-                                                    GlobalCharPort::create([ // tabla GlobalCharPort
-                                                        'port_orig'      	=> $originVal,
-                                                        'port_dest'      	=> $destinyVal,
-                                                        'typedestiny_id' 	=> $typedestinyVal,
-                                                        'globalcharge_id'   => $globalChargeTONArreG->id
-                                                    ]);
+                                                    $exgcpt = null;
+                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                        ->where('typedestiny_id',$typedestinyVal)
+                                                        ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
+                                                    if(count($exgcpt) == 0){
+                                                        GlobalCharPort::create([ // tabla GlobalCharPort
+                                                            'port_orig'      	=> $originVal,
+                                                            'port_dest'      	=> $destinyVal,
+                                                            'typedestiny_id' 	=> $typedestinyVal,
+                                                            'globalcharge_id'   => $globalChargeTONArreG->id
+                                                        ]);
+                                                    }
                                                 } else {
-                                                    GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                        'country_orig'      => $originVal,
-                                                        'country_dest'      => $destinyVal,
-                                                        'globalcharge_id'   => $globalChargeTONArreG->id
-                                                    ]);
+                                                    $exgcct = null;
+                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                        ->where('country_dest',$destinyVal)
+                                                        ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
+                                                    if(count($exgcct) == 0){
+                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                            'country_orig'      => $originVal,
+                                                            'country_dest'      => $destinyVal,
+                                                            'globalcharge_id'   => $globalChargeTONArreG->id
+                                                        ]);
+                                                    }
                                                 }
                                             }
                                         }
