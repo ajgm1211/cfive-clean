@@ -172,6 +172,26 @@ new registration
                                 <input type="hidden" name="contract_id" value="{{$contract['id']}}">
                                 <input type="hidden" name="request_id" value="{{$request_id}}">
                             </div>
+                            <div class="form-group m-form__group row"  id="divvaluesschedules">
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                <input name="DatShe" id="schedulechk" checked type="checkbox">
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Info Schedules Not Included
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
                             @endif
                             <input type="hidden" name="selector" value="{{$selector}}">
                             <hr>                        
