@@ -746,18 +746,24 @@ $(document).on('click', '.store_charge_lcl', function () {
 //Add rates
 $(document).on('click', '.store_charge', function () {
   var id = $(this).closest("tr").find(".automatic_rate_id").val();
+  var theElement = $(this);
   var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
   var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
+  var hide_20 = $(this).closest("tr").find(".hide_20").val();
   var amount_c20 = $(this).closest("tr").find(".amount_c20").val();
-  var markup_c20 = $(this).closest("tr").find(".markup_c20").val();
+  var markup_m20 = $(this).closest("tr").find(".markup_m20").val();
+  var hide_40 = $(this).closest("tr").find(".hide_40").val();
   var amount_c40 = $(this).closest("tr").find(".amount_c40").val();
-  var markup_c40 = $(this).closest("tr").find(".markup_c40").val();
+  var markup_m40 = $(this).closest("tr").find(".markup_m40").val();
+  var hide_40hc = $(this).closest("tr").find(".hide_40hc").val();
   var amount_c40hc = $(this).closest("tr").find(".amount_c40hc").val();
-  var markup_c40hc = $(this).closest("tr").find(".markup_c40hc").val();
+  var markup_m40hc = $(this).closest("tr").find(".markup_m40hc").val();
+  var hide_40nor = $(this).closest("tr").find(".hide_40nor").val();
   var amount_c40nor = $(this).closest("tr").find(".amount_c40nor").val();
-  var markup_c40nor = $(this).closest("tr").find(".markup_c40nor").val();
+  var markup_m40nor = $(this).closest("tr").find(".markup_m40nor").val();
+  var hide_45 = $(this).closest("tr").find(".hide_45").val();
   var amount_c45 = $(this).closest("tr").find(".amount_c45").val();
-  var markup_c45 = $(this).closest("tr").find(".markup_c45").val();
+  var markup_m45 = $(this).closest("tr").find(".markup_m45").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
 
@@ -769,27 +775,65 @@ $(document).on('click', '.store_charge', function () {
       "surcharge_id":surcharge_id,
       "calculation_type_id":calculation_type_id,
       "amount_c20":amount_c20,
-      "markup_c20":markup_c20,
+      "markup_m20":markup_m20,
       "amount_c40":amount_c40,
-      "markup_c40":markup_c40,
+      "markup_m40":markup_m40,
       "amount_c40hc":amount_c40hc,
-      "markup_c40hc":markup_c40hc,
+      "markup_m40hc":markup_m40hc,
       "amount_c40nor":amount_c40nor,
-      "markup_c40nor":markup_c40nor,
+      "markup_m40nor":markup_m40nor,
       "amount_c45":amount_c45,
-      "markup_c45":markup_c45,
+      "markup_m45":markup_m45,
       "type_id":type_id,
       "currency_id":currency_id
     },
     success: function(data) {
       if(data.message=='Ok'){
+        //alert(data.total_20);
         swal(
           'Done!',
           'Charge saved successfully',
           'success'
         )
       }
-      setTimeout(location.reload.bind(location), 3000);
+      $(theElement).closest('tr').remove();
+      if(type_id==3){
+        $('<tr style="height:40px;">'+
+          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+          '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
+          '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
+          '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
+          '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
+          '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
+          '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+          '</tr>').insertBefore('.total_freight');
+      }
+      if(type_id==2){
+        $('<tr style="height:40px;">'+
+          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+          '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
+          '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
+          '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
+          '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
+          '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
+          '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+          '</tr>').insertBefore('.total_destination');
+      }
+      if(type_id==1){
+        $('<tr style="height:40px;">'+
+          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+          '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
+          '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
+          '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
+          '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
+          '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
+          '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+          '</tr>').insertBefore('.total_origin');
+      }            
+      //setTimeout(location.reload.bind(location), 3000);
     }
   });
 });
@@ -828,6 +872,7 @@ $(document).on('click', '.delete-rate', function () {
 //Delete charges
 $(document).on('click', '.delete-charge', function () {
   var id=$(this).closest('tr').find('.charge_id').val();
+  var type=$(this).closest('tr').find('.type').val();
   var theElement = $(this);
   swal({
     title: 'Are you sure?',
@@ -839,6 +884,9 @@ $(document).on('click', '.delete-charge', function () {
     if (result.value) {
       $.ajax({
         type: 'GET',
+        data: {
+          'type': type,
+        },
         url: '/v2/quotes/delete/charge/'+id,
         success: function(data) {
           if(data.message=='Ok'){
@@ -848,8 +896,11 @@ $(document).on('click', '.delete-charge', function () {
               'success'
             )
           }
-          $(theElement).closest('tr').remove();
-          //setTimeout(location.reload.bind(location), 3000);
+          if(data.type==1){
+            $(theElement).closest('tr').remove();
+          }else{
+            setTimeout(location.reload.bind(location), 3000); 
+          }
         }
       });
     }
@@ -1464,6 +1515,40 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
   });
 });
 
+$( document ).ready(function() {
+  $( "select[name='company_id']" ).on('change', function() {
+    var company_id = $(this).val();
+    if(company_id) {
+      $('select[name="contact_id"]').empty();
+      $.ajax({
+        url: "/quotes/company/contact/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="client"]').empty();
+          $('select[name="contact_id"]').append('<option value="">Select an option</option>');
+          $.each(data, function(key, value) {
+            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+        }
+      });
+      $.ajax({
+        url: "/quotes/company/price/id/"+company_id,
+        dataType: 'json',
+        success: function(data) {
+          $('select[name="price_id"]').empty();
+          $('select[name="price_id"]').append('<option value="">Select an option</option>');
+          $.each(data, function(key, value) {
+            $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+        }
+      });
+    }else{
+      $('select[name="contact_id"]').empty();
+      $('select[name="price_id"]').empty();
+    }
+  });
+});
+
 //Custom functions
 
 function show_hide_element($element,$button){
@@ -1516,15 +1601,11 @@ function precargar(){
           }else{
             selected_price = '';
           }
-          $('select[name="price_id"]').append('<option '+selected_price+' value="0">Select at option</option>');
+          $('select[name="price_id"]').append('<option '+selected_price+' value="0">Select an option</option>');
           $('select[name="price_id"]').append('<option '+selected_price+' value="'+ key +'">'+ value +'</option>');
         });
       }
     });
-
-
-
-
   }
 }
 // SEARCH 
@@ -1784,7 +1865,7 @@ $( document ).ready(function() {
         dataType: 'json',
         success: function(data) {
           $('select[name="price_id"]').empty();
-          $('select[name="price_id"]').append('<option value="0">Select at option</option>');
+          $('select[name="price_id"]').append('<option value="0">Select an option</option>');
           $.each(data, function(key, value) {
             $('select[name="price_id"]').append('<option value="'+ key +'">'+ value +'</option>');
           });
