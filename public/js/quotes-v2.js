@@ -2595,6 +2595,99 @@ $(document).on('click', '#add_load_lcl_air', function (e) {
   .insertBefore($template);
 });
 
+$(document).on('click', '#savecompany', function () {
+
+  var $element = $('#addContactModal');
+  $.ajax({
+    type: 'POST',
+    url: '/companies',
+    data: {
+      'business_name' : $('.business_name_input').val(),
+      'phone' : $('.phone_input').val(),
+      'address' : $('.address_input').val(),
+      'email' : $('.email_input').val(),
+
+    },
+    success: function(data) {
+      $.ajax({
+        url: "company/companies",
+        dataType: 'json',
+        success: function(dataC) {
+          $('select[name="company_id_quote"]').empty();
+          $.each(dataC, function(key, value) {
+            $('select[name="company_id_quote"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+          $('select[name="company_id"]').empty();
+          $.each(dataC, function(key, value) {
+            $('select[name="company_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+          $('#companyModal').modal('hide');
+          $("select[name='company_id_quote']").val('');
+          $("select[name='company_id']").val('');
+          $('#select2-m_select2_2_modal-container').text('Please an option');
+
+          swal(
+            'Done!',
+            'Register completed',
+            'success'
+          )
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+    },
+    error: function (request, status, error) {
+      alert(request.responseText);
+    }
+  });
+});
+
+$(document).on('click', '#savecontact', function () {
+
+  var $element = $('#contactModal');
+
+  $.ajax({
+    type: 'POST',
+    url: '/contacts',
+    data: {
+      'first_name' : $('.first_namec_input').val(),
+      'last_name' : $('.last_namec_input').val(),
+      'email' : $('.emailc_input').val(),
+      'phone' : $('.phonec_input').val(),
+      'company_id' : $('.companyc_input').val(),
+
+    },
+    success: function(data) {
+      var company_id = $("select[name='company_id_quote']").val();
+      $.ajax({
+        url: "contacts/contact/"+company_id,
+        dataType: 'json',
+        success: function(dataC) {
+          $('select[name="contact_id"]').empty();
+          $.each(dataC, function(key, value) {
+            $('select[name="contact_id"]').append('<option value="'+ key +'">'+ value +'</option>');
+          });
+          $('#contactModal').modal('hide');
+
+          swal(
+            'Done!',
+            'Register completed',
+            'success'
+          )
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+    },
+    error: function (request, status, error) {
+      alert(request.responseText);
+    }
+
+  });
+});
+
 $(document).on('click', '.remove_lcl_air_load', function (e) {
   var $row = $(this).closest('.template').remove();
   $row.remove();
