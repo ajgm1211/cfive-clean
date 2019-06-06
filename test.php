@@ -1,1019 +1,629 @@
-@extends('layouts.app')
-@section('css')
-@parent
-<link href="/css/quote.css" rel="stylesheet" type="text/css" />
-
-<link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
-<style>
-  .btn-search__quotes {
-    top: 50px;
-    font-size: 18px; 
-    position: relative; 
-    padding: 13px 30px; 
-    border-radius: 50px !important;
-  }
-  .q-one, .q-two, .q-three {
-    display: flex;
-    flex-flow: wrap;
-    justify-content: space-between;
-  }
-  .q-two {
-    justify-content: flex-start;
-  }
-  .q-one div:nth-child(1), 
-  .q-one div:nth-child(2), 
-  .q-one div:nth-child(3), 
-  .q-one div:nth-child(4) {
-    overflow: hidden;
-  }
-  .q-one div:nth-child(1), 
-  .q-one div:nth-child(2), 
-  .q-one div:nth-child(3) {
-    width: 18% !important;
-  }
-  .q-one div:nth-child(4) {
-    width: 38% !important;
-  }
-  .q-one div:nth-child(5), .q-two div:nth-child(3) {
-    width: 100%;
-  }
-  .q-one div:nth-child(1) label {
-    white-space: nowrap;
-  }
-  .q-two div:nth-child(1) {
-    width: 66%;
-    margin-right: 10px;
-  }
-  .q-three div:nth-child(3) {
-    width: 100%;
-  }
-  .q-three div:nth-child(1) {
-    width: 50%;
-  }
-  .dfw {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  .no-shadow{
-    box-shadow: none;
-  }
-  .filter-table__quotes, .card-p__quotes {
-    padding: 25px;
-    box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
-  }
-  .no-padding {
-    padding: 0px !important;
-  }
-  .card-p__quotes {
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    margin: 0px;
-    border-radius: 5px;
-    border: 2px solid transparent;
-    transition: all 300ms linear;
-  }
-  .card-p__quotes:hover {
-    border-color: #0072fc;
-  }
-  .btn-detail__quotes {
-    width: 140px;
-    height: 30px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #ececec;
-    transition: all 300ms ease;
-  }
-  .btn-detail__quotes:hover {
-    border-color: #0072fc;
-    background-color: #0072fc;		
-  }
-  .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
-    color: #fff;
-  }
-  .btn-detail__quotes span {
-    font-size: 12px;
-    color: #0072fc;
-  }
-  .btn-detail__quotes a {
-    height: 0px !important;
-  }
-  .btn-detail__quotes a i {
-    color: #a4a2bb;
-  }
-  .btn-input__select {
-    display: flex;
-    color: #cecece;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 3px 24px;
-    border-radius: 5px;
-    border: 3px solid #cecece;
-    transition: all 300ms ease;
-    justify-content: space-between;
-  }
-  .btn-input__select:hover {
-    border-color: #0072fc; 
-  }
-
-  .input-select[type="checkbox"]{
-    display: none; 
-  }
-  .input-select[type="checkbox"]:checked + .btn-input__select {
-    color: #fff;
-    display: flex;
-    padding: 5px 38px;
-    border-color: #0072fc;
-    justify-content: center;
-    background-color: #0072fc;
-  }
-  .input-select[type="checkbox"]:checked + .btn-input__select span {
-    display :none;
-  }
-  .input-select[type="checkbox"]:checked + .tab-content .card-p__quotes {
-    border-color: #0072fc !important;
-
-  }
-  .col-txt {
-    font-weight: 600;
-    color: #0072fc;
-    font-size: 18px;
-  }
-  .btn-d {
-    width: 130px;
-  }
-  .padding {
-    padding: 0 25px;
-  }
-  .padding-v2 {
-    padding: 25px;
-  }
-  .no-margin {
-    margin: 0 !important;
-  }
-  .freight__quotes {
-    border-top: none !important;
-    border: 3px solid #0072fc; 
-    border-radius: 0px 0px 3px 3px;
-  }
-  .add-class__card-p {
-    box-shadow: none;
-    border: 3px solid #0072fc; 
-    border-bottom: 1px solid #ececec !important;
-    border-radius: 3px 3px 0px 0px !important;
-  }
-  .bg-light {
-    padding: 5px 25px;
-    border-radius: 3px;
-    background-color: #f4f3f8 !important;
-  }
-  .portalphacode {
-    color: #1d3b6e !important;
-  }
-  .colorphacode {
-    color: #7c83b3;
-  }
-  .bg-rates {
-    padding: 2px 5px;
-    border-radius: 3px;
-    text-align: center;
-    background-color: #ececec;
-  }
-  .width {
-    width: 22%;
-  }
-  .table-r__quotes {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-  .table-r__quotes div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .b-top {
-    border-top: 1px solid #ececec;
-  }
-  .padding-min {
-    padding: 10px !important;
-  }
-  .b-left {
-    border-left: 1px solid #ececec;
-  }
-  .padding-min-col {
-    padding: 45px 10px !important;
-  }
-  .pos-btn {
-    position: relative;
-    right: 40px;
-  }
-  .padding-right-table {
-    padding-right: 50px !important;
-  }
-  .btn-date {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-  }
-  .data-rates {
-    padding: 5px 25px;
-  }
-  .arrow-down {
-    top: 4px;
-    position: relative;
-  }
-  .monto-down {
-    top: 2px;
-    position: relative;
-  }
-  .min-width-filter span {
-    min-width: 50px !important;
-  }
-  .min-width-filter .select2-search--dropdown {
-    padding: 0px !important;
-  }
-  .margin-card {
-    margin-top: 50px !important;
-    margin-bottom: 50px !important;
-  }
-  .no-check {
-    display: none !important;
-  }
-  .border-card-p {
-    border-color: #0072fc;
-
-  }
-  /* estilos */
-</style>
-@endsection
-
-@section('title', 'Quotes')
-@section('content')
-<br>
-
-<div class="row">
-
-  <div class="col-lg-1"></div>
-  <div class="col-lg-10">
-    {!! Form::open(['route' => 'quotes-v2.processSearch','class' => 'form-group m-form__group']) !!}
-    <div class="m-portlet">
-      <div class="m-portlet__body">
-        <div class="tab-content">
-          <div>
-            <div class="row">
-              <div class="col-lg-2">
-                <label>Quote Type</label>
-                {{ Form::select('type',['1' => 'FCL','2' => 'LCL'],null,['class'=>'m-select2-general form-control']) }}
-              </div>
-              <div class="col-lg-2">
-                <label>Equipment</label>
-                {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2">
-                <label>Company</label>
-
-                <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
-                  <span class="m-input-icon__icon m-input-icon__icon--right">
-                    <span>
-                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
-                    </span>
-                  </span>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <label>Contact</label>
-                <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control','required'=>'true']) }}
-                  {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
-                  <span class="m-input-icon__icon m-input-icon__icon--right">
-                    <span>
-                      <i class="la 	la-plus-circle" style="color:blue; font-size: 18px;"></i>
-                    </span>
-                  </span>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <label>Price level</label>
-                {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control']) }}
-                {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
-              </div>
-            </div><br>
-            <div class="row">
-              <div class="col-lg-2" id="origin_harbor_label">
-                <label>Origin port</label>
-                {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2" id="destination_harbor_label">
-                <label>Destination port</label>
-                {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2">
-                <label>Date</label>
-                <div class="input-group date">
-                  {!! Form::text('date', @$form['date'], ['id' => 'm_daterangepicker_1' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
-                  {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
-
-                  <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="la la-calendar-check-o"></i>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-2">
-                <label>Delivery type</label>
-                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
-              </div>
-              <div class="col-lg-2 hide" id="origin_address_label">
-                <label>Origin address</label>
-                {!! Form::text('origin_address', '', ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>
-              <div class="col-lg-2 hide" id="destination_address_label">
-                <label>Destination address</label>
-                {!! Form::text('destination_address', '', ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
-              </div>
-
-            </div>
-            <br>
-            <div class ="row">  <div class="col-lg-12"> <center><button type="submit" class="btn m-btn--pill    btn-info">Search</button></center> </div>  </div>
-          </div>
-        </div>      
-      </div>
-    </div>
-
-    {!! Form::close() !!}
-  </div>
-  <div class="col-lg-1"></div>
-
-
-</div>
-
-<div class="row padding">
-  <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
-</div>
-@if(!empty($arreglo))
-<div class="row padding" ><!-- Tabla de muestreo de las cotizaciones -->
-  {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group dfw']) !!}
-  <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper">
-  <div class="col-lg-12">
-    <div class="m-portlet no-shadow">
-      <div class="m-portlet__body no-padding">
-        <div class="tab-content">
-          <div>
-            <!-- Empieza el card de filtro -->
-            <div class="filter-table__quotes">
-              <div class="row">
-                <div class="col-lg-6">
-                  <!--<label>Sort By</label>-->
-                  <div class="input-group m-input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="la la-filter"></i></span>
-                    </div>
-                    <div >
-                      <select class="form-control m-select2-general ">
-                        <option value="AK">Asc</option>
-                        <option value="AK">Desc</option>
-                        <option value="AK">Minnor Price</option>
-                        <option value="AK">Mayor Price</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-6" align='right'> <button type="submit" class="btn m-btn--pill    btn-info">Quote</button></div>
-              </div>
-
-              <div class="row">
-                <div class="col-lg-12"><hr></div>
-              </div>
-              <!-- Empieza columna titulos de la tabla -->
-
-              <div class="row" >
-                <div class="col-lg-2" >  <span class="portcss"> Carrier</span></div>
-                <div class="col-lg-10">
-                  <div class="row">
-                    <div class="col-lg-5">
-                      <div class="row">
-                        <div class="col-lg-8" style="padding-left: 30px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-3" ><span class="portcss">Destination</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-6 padding-right-table" style="padding-left: 0;">
-                      <div style="display:flex; justify-content:space-between">
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['20'] }} ><span class="portcss">20'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40'] }} ><span class="portcss">40</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40hc'] }} ><span class="portcss">40HC'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['40nor'] }} ><span class="portcss">40NOR'</span></div>
-                        <div class="width" style="display:flex; justify-content:center;" {{ $equipmentHides['45'] }} ><span class="portcss">45'</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ></div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <!-- Termina el card de filtro -->
-            <div class="row">
-              <div class="col-lg-12"><br><br></div>
-            </div>
-            @foreach($arreglo as $arr)
-            <!-- Empieza tarjeta de cotifzacion -->
-            <!-- aqui -->
-            <div class="card-p__quotes" style="margin-bottom: 50px;">
-              <div class="row" id='principal{{$loop->iteration}}' >
-                <div class="col-lg-2 d-flex align-items-center">            
-                  <div class="m-widget5">
-                    <div class="m-widget5__item no-padding no-margin">
-                      <div class="m-widget5__pic"> 
-                        <img src="{{ url('imgcarrier/'.$arr->carrier->image) }}" alt="" title="" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-10 b-left">
-                  <div class="row">
-                    <div class="col-lg-5 no-padding padding-min-col d-flex justify-content-center">
-                      <div class="row">
-                        <div class="col-lg-4">
-                          <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
-                          <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
-                        </div>
-                        <div class="col-lg-4 d-flex flex-column justify-content-center">
-                          <div class="progress m-progress--sm">
-                            <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                          Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
-                        </div>
-                        <div class="col-lg-4 d-flex align-items-center">
-                          <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
-                          <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
-                        </div>
-                      </div>
-                      <br>
-                      <!--<span class="workblue">Detail Cost</span>  <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Cancel" >
-<i  class="la la-angle-down blue"></i>
-</a>-->
-                    </div>
-
-                    <div class="col-lg-6" style="padding-right: 35px;">
-                      <div class="table-r__quotes">
-
-                        <div class="width " {{ $equipmentHides['20'] }}><span class="darkblue validate">{{$arr->total20  }} </span><span class="currency"> $USD</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="darkblue validate">{{$arr->total40  }} </span><span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">$USD </span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">$USD </span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check" rate-id ='{{$arr->id }}' name="info[]" value="{{ json_encode($arr) }}">
-
-                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
-
-                    </div>
-                    <div class="col-lg-12 b-top no-padding padding-min">
-                      <div class="row justify-content-between">
-                        <div class="col-lg-2">
-                          <div class="btn-detail__quotes">
-                            <span class="workblue">Salling Schedule</span>  
-                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
-                            <!-- m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pil -->
-                          </div>
-                        </div>
-                        <div class="col-lg-8 d-flex align-items-center">
-                          <span class="portcss">Validity: {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
-                        </div>
-                        <div class="col-lg-2 no-padding d-flex justify-content-end">
-                          <div class="btn-detail__quotes btn-d">
-                            <span class="workblue">Detailetd cost</span>  
-                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
-                            <!-- m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pil -->
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Termina tarjeta de cotifzacion -->
-
-              <!-- Gastos Origen-->
-              @if(!$arr->localorigin->isEmpty())
-              <div class="row no-margin margin-card" id='origin{{$loop->iteration}}' hidden='true' >
-                <div class="col-lg-12">
-                  <div class="row">
-                    <span class="darkblue cabezeras">Origin</span><br><br>
-                  </div>
-                  <div class="row bg-light">
-                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
-                  @foreach($arr->localorigin as $localorigin)
-
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="width">
-                          {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }} + {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}          
-                        </div>      
-                        <div class="width">
-                          {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}                  
-                        </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}>  
-                          {{ isset($localorigin['40hc']) ?  str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40hc']) ?   str_replace(["[","]","\""], ' ', $localorigin['40hc']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}>  
-                          {{ isset($localorigin['40nor']) ?  str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['40nor']) ?   str_replace(["[","]","\""], ' ', $localorigin['40nor']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                        <div class="width" {{ $equipmentHides['45'] }}>     
-                          {{ isset($localorigin['45']) ?  str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('monto')) :'0.00' }} + {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localorigin['45']) ?   str_replace(["[","]","\""], ' ', $localorigin['45']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
-
-                  </div><br>
-                  @endforeach
-                  <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20O  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40O  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcO  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norO  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
-                  </div>
-                </div>
-              </div>
-              @endif
-              <!-- Gastos Freight-->
-              <div class="row no-margin margin-card" id='freight{{$loop->iteration}}'  hidden='true' >
-                <div class="col-lg-12">
-                  <div class="row">
-                    <span class="darkblue cabezeras">Freight</span><br><br>
-                  </div>
-                  <div class="row bg-light">
-                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
-                  @foreach($arr->rates as $rates)
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{ $rates['type'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ @$rates['markup20'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ @$rates['markup40'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{ @$rates['markup40hc'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40hc'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> <span class="bg-rates">+{{ @$rates['markup40nor'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40nor'] }}</b>  </div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> <span class="bg-rates">+{{ @$rates['markup45'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto45'] }}</b></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1 colorphacode" >{{$rates['currency_rate']}}</div>
-                  </div>
-
-                  @endforeach
-                  @foreach($arr->localfreight as $localfreight)
-
-                  <div class="row">
-                    <div class="col-lg-2">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-1">
-                      {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}  + {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }}          
-                    </div>      
-                    <div class="col-lg-1">
-                      {{ isset($localfreight['40']) ?  str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('monto')) :'0.00' }} + {{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('montoMarkup')) : '0.00' }}                  
-                    </div>
-                    <div class="col-lg-1" {{ $equipmentHides['40hc'] }}>  
-                      {{ isset($localfreight['40hc']) ?  str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localfreight['40hc']) ?   str_replace(["[","]","\""], ' ', $localfreight['40hc']->pluck('montoMarkup')) : '0.00' }}     
-                    </div>
-                    <div class="col-lg-1" {{ $equipmentHides['40nor'] }}>  
-                      {{ isset($localfreight['40nor']) ?  str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localfreight['40nor']) ?   str_replace(["[","]","\""], ' ', $localfreight['40nor']->pluck('montoMarkup')) : '0.00' }}     
-                    </div>
-                    <div class="col-lg-1" {{ $equipmentHides['45'] }}>     
-                      {{ isset($localfreight['45']) ?  str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('monto')) :'0.00' }} + {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localfreight['45']) ?   str_replace(["[","]","\""], ' ', $localfreight['45']->pluck('montoMarkup')) : '0.00' }}     
-                    </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1" ></div>
-                  </div><br>
-                  @endforeach
-                  <br>
-
-                  <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
-                  </div>
-
-                </div>
-              </div>
-
-              <!-- Gastos Destino-->
-              @if(!$arr->localdestiny->isEmpty())
-              <div class="row no-margin margin-card" id='destiny{{$loop->iteration}}'  hidden='true' >
-                <div class="col-lg-12">
-                  <div class="row">
-                    <span class="darkblue cabezeras">Destination</span><br><br>
-                  </div>
-                  <div class="row bg-light">
-                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
-                  @foreach($arr->localdestiny as $localdestiny)
-
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="width">
-                          {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }}  + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }}  <i class="la la-caret-right"></i>    {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}          
-                        </div>      
-                        <div class="width">
-                          {{ isset($localdestiny['40']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('montoMarkup')) : '0.00' }}                  
-                        </div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}>  
-                          {{ isset($localdestiny['40hc']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40hc']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40hc']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}>  
-                          {{ isset($localdestiny['40nor']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['40nor']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40nor']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                        <div class="width" {{ $equipmentHides['45'] }}>     
-                          {{ isset($localdestiny['45']) ?  str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('monto')) :'0.00' }} + {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('markup')) : '0.00' }}     <i class="la la-caret-right"></i>      {{ isset($localdestiny['45']) ?   str_replace(["[","]","\""], ' ', $localdestiny['45']->pluck('montoMarkup')) : '0.00' }}     
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1" ></div>
-                  </div>
-                  @endforeach
-                  <br>
-
-                  <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
-                    <div class="col-lg-7">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
-                  </div>
-                </div>
-              </div>
-              @endif
-              <!-- Gastos Inlands-->
-              @if(!$arr->inlandDestiny->isEmpty() || !$arr->inlandOrigin->isEmpty() )
-              <div class="row no-margin margin-card" id='inland{{$loop->iteration}}'  hidden='true' >
-                <div class="col-lg-12">
-                  <div class="row">
-                    <span class="darkblue cabezeras">Inlands</span><br><br>
-                  </div>
-                  <div class="row bg-light">
-                    <div class="col-lg-2"><span class="portalphacode">Provider</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Distance</span></div>
-                    <div class="col-lg-6">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode">40HC'</span></div>
-                        <div class="width"  {{ $equipmentHides['40nor'] }}><span class="portalphacode">40NOR'</span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode">45'</span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
-                  </div><br>
-                  @if(!$arr->inlandDestiny->isEmpty())
-                  <div class="row data-rates">
-                    <div class="col-lg-12"> <span class="darkblue">Destiny</span><br><br></div>
-
-                  </div>
-                  @endif
-                  @foreach($arr->inlandDestiny as $inlandDestiny)
-
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode" >{{ $inlandDestiny['providerName']  }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
-                    <div class="col-lg-6 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-d20{{$loop->iteration}}-{{$arr->id}}' >
-                          {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i>      {{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}       </div>
-
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
-                          <div class="montoI40" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }}</div>
-
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
-                          <div id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i>         {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}     </div>
-
-                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
-                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlands no-check" name="inlandD[]" value="{{ json_encode($inlandDestiny) }}">
-                      <label for="inputID-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
-                    </div>
-
-                  </div><br>
-                  @endforeach
-                  @if(!$arr->inlandOrigin->isEmpty())
-                  <div class="row data-rates">
-                    <div class="col-lg-12"> <span class="darkblue">Origin</span><br><br></div>
-
-                  </div>
-                  @endif
-                  @foreach($arr->inlandOrigin as $inlandOrigin)
-
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['providerName']  }}</div>
-                    <div class="col-lg-2 colorphacode" >{{ $inlandOrigin['km']  }} KM</div>
-
-                    <div class="col-lg-6 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}><div id ='valor-o20{{$loop->iteration}}-{{$arr->id}}' >
-                          {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i>      {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}       </div>
-
-                        <div class="width" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}>
-                          <div class="montoI40" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'  >  {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i> {{ @$inlandOrigin['inlandDetails']['i40']['markup']  }}</div>
-
-                        <div class="width" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}>
-                          <div id = 'valor-o40h{{$loop->iteration}}-{{$arr->id}}' > {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }} </div>
-                          <i class="la la-caret-right"></i>         {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}     </div>
-
-                        <div class="width"  {{ $equipmentHides['40nor'] }}>N/A</div>
-                        <div class="width" {{ $equipmentHides['45'] }}>N/A</div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="">USD</span></div>
-                    <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'   class="input-select inlandsO no-check" name="inlandO[]" value="{{ json_encode($arr) }}">
-                      <label for="inputIO-select{{$loop->iteration}}-{{$arr->id}}" data-inland="{{$loop->iteration}}" data-rate='{{$arr->id}}'  class="btn-input__select" >Select <span class="la la-arrow-right"></span></label>
-                    </div>
-                  </div><br>
-                  @endforeach
-                  <br>
-
-                  <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Inlands Charges</span></div>
-                    <div class="col-lg-6">
-                      <div class="d-flex justify-content-between">
-                        <div class="width" {{ $equipmentHides['20'] }}><span class="portalphacode"><div id='sub_inland_20{{ $arr->id }}'>0.00</div> </span></div>
-                        <div class="width" {{ $equipmentHides['40'] }}><span class="portalphacode"><div id='sub_inland_40{{ $arr->id }}'>0.00</div></span></div>
-                        <div class="width" {{ $equipmentHides['40hc'] }}><span class="portalphacode"><div id='sub_inland_40h{{ $arr->id }}'>0.00</div></span></div>
-                        <div class="width" {{ $equipmentHides['40nor'] }}><span class="portalphacode"><div  >N/A</div></span></div>
-                        <div class="width" {{ $equipmentHides['45'] }}><span class="portalphacode"><div>N/A</div></span></div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="portalphacode">USD</span></div>
-                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
-                  </div>
-                  <br><br>
-                  <div class="row"><div class="col-lg-12"><hr></div></div>
-                  <br><br>
-                </div>
-              </div>
-              @endif
-
-
-            </div>
-            @endforeach
-          </div>      
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  {!! Form::close() !!}
-  @endif
-
-  @endsection
-
-
-  @section('js')
-  @parent
-
-
-  <script src="{{asset('js/quotes.js')}}" type="text/javascript"></script>
-  @if(empty($arreglo))
-  <script>
-
-    $('select[name="contact_id"]').prop("disabled",true);
-    $("select[name='company_id_quote']").val('');
-    $('#select2-m_select2_2_modal-container').text('Please an option');
-  </script>
-  @else
-
-  <script>
-    precargar()
-  </script>
-
-
-  @endif
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
-  <script>
-
-
-
-    /*** GOOGLE MAPS API ***/
-
-    var autocomplete;
-    function initAutocomplete() {
-      var geocoder = new google.maps.Geocoder();
-      var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
-      var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
-      //autocomplete.addListener('place_changed', fillInAddress);
-    }
-
-    function codeAddress(address) {
-      var geocoder;
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == 'OK') {
-          alert(results[0].geometry.location);
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
-      });
-    }
-
-    $valor =   $('#date_hidden').val();
-
-    if($valor != 0){
-      $('#m_datepicker_2').val($valor);
-    }
-    function setdateinput(){
-      var date = $('#m_datepicker_2').val();
-      $('#date_hidden').val(date);
-    }
-
-
-    $('.m-select3-general').select2();
-
-    $('.select2-selection__arrow').remove();
-
-
-
-    function AbrirModal(action,id){
-
-      if(action == "add"){
-        var url = '{{ route("companies.addM") }}';
-        $('#modal-body').load(url,function(){
-          $('#companyModal').modal({show:true});
-        });
-      }
-      if(action == "addContact"){
-        var url = '{{ route("contacts.addCM") }}';
-        $('.modal-body').load(url,function(){
-          $('#contactModal').modal({show:true});
-        });
-      }
-
-    }
-  </script>
-  <script>
-    $('.btnrate').on('click', function(){
-      $('.card-p__quotes').toggleClass('border-card-p');
-      /*      var rate = $(this).attr('rate-id');
-
-      var theElement = $(this);
-      if(theElement.prop('checked')){
-
-      }else{
-
-
-        }*/
-
-    });
-
-
-
-    $('.inlands').on('click', function(){
-      $('.card-p__quotes').toggleClass('border-card-p');
-      var id = $(this).attr('data-inland');
-      var idRate = $(this).attr('data-rate');
-
-      var theElement = $(this);
-      var  i20= $("#valor-d20"+id+"-"+idRate).html();
-      var  i40= $("#valor-d40"+id+"-"+idRate).html();
-      var  i40h= $("#valor-d40h"+id+"-"+idRate).html();
-
-      var  sub20= $("#sub_inland_20"+idRate).html();
-      var  sub40= $("#sub_inland_40"+idRate).html();
-      var  sub40h= $("#sub_inland_40h"+idRate).html();
-      if(theElement.prop('checked')){
-
-        sub20 = parseFloat(sub20) +  parseFloat(i20);
-        sub40 = parseFloat(sub40) +  parseFloat(i40);
-        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
-
-      }else{
-
-        sub20 = parseFloat(sub20) -  parseFloat(i20);
-        sub40 = parseFloat(sub40) -  parseFloat(i40);
-        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
-      }
-      $("#sub_inland_20"+idRate).html(sub20);
-      $("#sub_inland_40"+idRate).html(sub40);
-      $("#sub_inland_40h"+idRate).html(sub40h);
-
-    });
-
-    $('.inlandsO').on('click', function(){
-      $('.card-p__quotes').toggleClass('border-card-p');
-      var id = $(this).attr('data-inland');
-      var idRate = $(this).attr('data-rate');
-
-      var theElement = $(this);
-      var  i20= $("#valor-o20"+id+"-"+idRate).html();
-      var  i40= $("#valor-o40"+id+"-"+idRate).html();
-      var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
-
-      var  sub20= $("#sub_inland_20"+idRate).html();
-      var  sub40= $("#sub_inland_40"+idRate).html();
-      var  sub40h= $("#sub_inland_40h"+idRate).html();
-      if(theElement.prop('checked')){
-
-        sub20 = parseFloat(sub20) +  parseFloat(i20);
-        sub40 = parseFloat(sub40) +  parseFloat(i40);
-        sub40h = parseFloat(sub40h) +  parseFloat(i40h);
-
-      }else{
-
-        sub20 = parseFloat(sub20) -  parseFloat(i20);
-        sub40 = parseFloat(sub40) -  parseFloat(i40);
-        sub40h = parseFloat(sub40h) -  parseFloat(i40h);
-      }
-      $("#sub_inland_20"+idRate).html(sub20);
-      $("#sub_inland_40"+idRate).html(sub40);
-      $("#sub_inland_40h"+idRate).html(sub40h);
-
-    });
-
-
-
-
-  </script>
-  @stop
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+  return redirect('dashboard');
+});
+
+Route::get('/home', function () {
+  return redirect('dashboard');
+});
+
+Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
+
+Route::middleware(['auth'])->prefix('oauth')->group(function () {
+  Route::get('list', 'ApiController@index')->name('oauth.tokens');
+  Route::get('create/token/{user_id}', 'ApiController@createToken')->name('create.token');
+  Route::get('delete/token/{id}', 'ApiController@deleteToken')->name('delete.token');
+  Route::get('create-passport-client', 'ApiController@createAccessToken')->name('create.passport.client');
+});
+// Grupo de rutas para administrar Usuarios  Admin / Empresas
+Route::middleware(['auth'])->prefix('users')->group(function () {
+  Route::resource('users', 'UsersController'); 
+  Route::get('home', 'UsersController@datahtml')->name('users.home');
+  Route::get('add', 'UsersController@add')->name('users.add');
+  Route::get('msg/{user_id}', 'UsersController@destroymsg')->name('users.msg');
+  Route::get('msgreset/{user_id}', 'UsersController@resetmsg')->name('users.msgreset');
+  Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
+  Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
+  Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+  Route::get('notifications', 'UsersController@notifications');
+  Route::get('notifications_read', 'UsersController@notifications_read');
+  Route::get('updatenot', 'UsersController@updateNotifications');
+});
+
+Route::group(['prefix' => 'terms', 'middleware' => ['auth']], function () {
+
+  Route::resource('terms', 'TermsAndConditionsController');
+  Route::get('list', 'TermsAndConditionsController@index')->name('terms.list');
+  Route::get('add', 'TermsAndConditionsController@add')->name('terms.add');
+  Route::get('edit/{id}', 'TermsAndConditionsController@edit')->name('terms.edit');
+  Route::get('delete/{id}', 'TermsAndConditionsController@destroy')->name('terms.delete');
+  Route::get('msg/{id}', 'TermsAndConditionsController@destroymsg')->name('terms.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
+Route::group(['prefix' => 'templates', 'middleware' => ['auth']], function () {
+  Route::get('edit/{id}', 'EmailsTemplateController@edit')->name('emails-template.edit');
+  Route::get('add', 'EmailsTemplateController@add')->name('emails-template.add');
+  Route::get('preview', 'EmailsTemplateController@preview')->name('emails-template.preview');
+  Route::get('msg/{id}', 'EmailsTemplateController@destroymsg')->name('emails-template.msg');
+  Route::get('show/{id}', 'EmailsTemplateController@show')->name('emails-template.show');
+  Route::get('update/{id}', 'EmailsTemplateController@update')->name('emails-template.update');
+  Route::put('delete-emails-template/{id}', ['uses' => 'EmailsTemplateController@destroyTemplate', 'as' => 'delete-emails-template']);
+
+});
+Route::resource('templates', 'EmailsTemplateController')->middleware('auth');
+
+Route::group(['prefix' => 'preferences', 'middleware' => ['auth']], function(){
+  Route::resource('preferences', 'CompanyBrandingController');
+  Route::get('config', 'CompanyBrandingController@edit')->name('company-brands.edit');
+});
+
+Route::group(['prefix' => 'mail', 'middleware' => ['auth']], function(){
+  Route::resource('mail', 'MailSendController');
+  Route::get('list', 'MailSendController@index')->name('mail.list');
+  Route::get('send{id}', 'MailSendController@send')->name('mail.send');
+});
+
+Route::middleware(['auth'])->prefix('surcharges')->group(function () {
+  Route::get('add', 'SurchargesController@add')->name('surcharges.add');
+  Route::get('msg/{surcharge_id}', 'SurchargesController@destroymsg')->name('surcharges.msg');
+  Route::get('delete/{surcharge_id}', ['uses' => 'SurchargesController@destroy', 'as' => 'delete-surcharges']);
+});
+Route::resource('surcharges', 'SurchargesController')->middleware('auth');
+
+Route::prefix('globalcharges')->group(function () {
+  Route::get('add', 'GlobalChargesController@add')->name('globalcharges.add')->middleware(['auth']);
+  Route::post('destroyArr', 'GlobalChargesController@destroyArr')->name('globalcharges.destroyArr')->middleware(['auth']);
+  Route::put('updateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@updateGlobalChar', 'as' => 'update-global-charge'])->middleware(['auth']);
+  Route::get('deleteGlobalCharge/{id}', ['uses' => 'GlobalChargesController@destroyGlobalCharges', 'as' => 'delete-global-charge'])->middleware(['auth']);
+  Route::get('editGlobalCharge/{id}', ['uses' => 'GlobalChargesController@editGlobalChar', 'as' => 'edit-global-charge'])->middleware(['auth']);
+  Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge'])->middleware(['auth']);
+  Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge'])->middleware(['auth']);
+
+  // CRUD Administrator FCL -------------------------------------------------------------------------------------------------
+
+  Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator']);
+  Route::get('createAdm','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator']);
+  Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator']);
+  Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator']);
+  Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator']);
+  Route::get('ShowAdm/{id}','GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth','role:administrator']);
+  Route::PUT('UpdateAdm/{id}','GlobalChargesController@updateAdm')->name('gcadm.update')->middleware(['auth','role:administrator']);
+  Route::get('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator']);
+  Route::POST('ArrDupicateAdm/','GlobalChargesController@dupicateArrAdm')->name('gcadm.dupicate.Array')->middleware(['auth','role:administrator']);
+  Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator']);
+});
+Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('contracts')->group(function () {
+
+
+  //Route::get('add', 'ContractsController@add')->name('contracts.add');
+  Route::get('addT', 'ContractsController@add')->name('contracts.add');
+  Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
+  Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
+
+  Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
+  Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
+  Route::get('addRate/{id}', ['uses' => 'ContractsController@addRates', 'as' => 'add-rates']);
+  Route::post('storeRate/{id}', ['uses' => 'ContractsController@storeRates', 'as' => 'contracts.storeRate']);
+  Route::get('editRate/{id}', ['uses' => 'ContractsController@editRates', 'as' => 'edit-rates']);
+  Route::put('updateRate/{id}', ['uses' => 'ContractsController@updateRates', 'as' => 'update-rates']);
+  Route::get('duplicateRate/{id}', ['uses' => 'ContractsController@duplicateRates', 'as' => 'duplicate-rates']);
+  Route::get('addLocalCharge/{id}', ['uses' => 'ContractsController@addLocalChar', 'as' => 'add-LocalCharge']);
+  Route::post('storeLocalCharge/{id}', ['uses' => 'ContractsController@storeLocalChar', 'as' => 'contracts.storeLocalCharge']);
+  Route::get('deleteLocalCharge/{id}', ['uses' => 'ContractsController@destroyLocalCharges', 'as' => 'delete-local-charge']);
+  Route::get('duplicateLocalCharge/{id}', ['uses' => 'ContractsController@duplicateLocalChar', 'as' => 'duplicate-local-charge']);
+  Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
+  Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+
+
+  //----- developer
+
+  Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
+
+  // DATATABLES
+
+  Route::get('eloquent/object-data/{id}', 'ContractsController@data')->name('localchar.table');
+  Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
+  Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
+  Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
+
+
+});
+
+Route::prefix('Requests')->group(function () {
+  //New Request Importation
+
+  Route::get('SimilarContracts/{id}','NewContractRequestsController@similarcontracts')->name('Similar.Contracts.Request')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
+
+  Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestImportation/listClient/{id}','NewContractRequestsController@listClient')->name('RequestImportation.listClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+  Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator']);
+
+  Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
+    ->middleware(['auth','role:administrator|company|subuser']);
+  Route::get('StatusRquestFCL/{id}','NewContractRequestsController@showStatus')->name('show.status.Request')
+    ->middleware(['auth','role:administrator']);
+  Route::POST('RequestImportation/two','NewContractRequestsController@store2')->name('RequestImportation.store2')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
+    ->middleware(['auth','role:administrator']);
+  Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
+    ->middleware(['auth','role:administrator']);
+});
+
+
+Route::prefix('Importation')->group(function () {
+
+  //Importar desde request
+  Route::get('RequestProccessFCL/{id}/{selector}/{idrqex}','ImportationController@requestProccess')->name('process.request.fcl')
+    ->middleware(['auth','role:administrator']);
+
+  // Importar Contracto
+  Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl')
+    ->middleware(['auth','role:administrator']);
+  Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch')
+    ->middleware(['auth','role:administrator']);
+  Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information')
+    ->middleware(['auth','role:administrator']);
+  Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl')
+    ->middleware(['auth','role:administrator']);
+  Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import')
+    ->middleware(['auth','role:administrator']);
+
+  // Account FCL
+  Route::get('AccountCFCL/','ImportationController@indexAccount')->name('index.Account.import.fcl')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DestroyAccountcfcl/{id}','ImportationController@DestroyAccount')->name('Destroy.account.cfcl')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DownloadAccountcfcl/{id}','ImportationController@Download')->name('Download.Account.cfcl')
+    ->middleware(['auth','role:administrator']);
+
+  // Rates
+  Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('EditRatesGoodForContracts/{id}','ImportationController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('EditRatesFailForContracts/{id}','ImportationController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::PUT('CreateRatesFailForContracts/{id}','ImportationController@CreateRates')->name('create.Rates.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('UpdateRatesFailForContracts/{id}','ImportationController@UpdateRatesD')->name('Update.RatesD.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DestroyRatesFailForContracts/{id}','ImportationController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DestroyRatesGForContracts/{id}','ImportationController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+
+  // Surcharge
+  Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('fcl/surcharge/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D')
+    ->middleware(['auth','role:administrator']);
+  Route::get('EditSurchargersGoodForContracts/{id}','ImportationController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('EditSurchargersFailForContracts/{id}','ImportationController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::PUT('CreateSurchargersFailForContracts/{id}','ImportationController@CreateSurchargers')->name('create.Surchargers.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('UpdateSurchargersForContracts/{id}','ImportationController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DestroySurchargersFForContracts/{id}','ImportationController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('DestroySurchargersGForContracts/{id}','ImportationController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+
+  // Reprocesar
+  Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates')
+    ->middleware(['auth','role:administrator']);
+  Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers')
+    ->middleware(['auth','role:administrator']);
+
+  // Datatable Rates Y Surchargers
+  Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
+    ->middleware(['auth','role:administrator']);
+  Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
+    ->middleware(['auth','role:administrator']);
+
+  // DownLoad Files
+  Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files')->middleware(['auth']);
+
+  // Companies
+  Route::Post('/UploadCompany','ImportationController@UploadCompanies')->name('Upload.Company')->middleware(['auth']);
+  Route::get('/ViewFCompany','ImportationController@FailedCompnaiesView')->name('view.fail.company')->middleware(['auth']);
+  Route::get('/ListFCompany/{id}','ImportationController@FailedCompnaieslist')->name('list.fail.company')->middleware(['auth']);
+  Route::get('/DeleteFCompany/{id}','ImportationController@DeleteFailedCompany')->name('delete.fail.company')->middleware(['auth']);
+  Route::get('/ShowFCompany/{id}','ImportationController@ShowFailCompany')->name('show.fail.company')->middleware(['auth']);
+  Route::get('/UpdateFCompany/{id}','ImportationController@UpdateFailedCompany')->name('update.fail.company')->middleware(['auth']);
+
+  // Contacts
+  Route::Post('/UploadContacts','ImportationController@UploadContacts')->name('Upload.Contacts')->middleware(['auth']);
+  Route::get('/ViewFContact','ImportationController@FailedContactView')->name('view.fail.contact')->middleware(['auth']);
+  Route::get('/ListFContact/{id}','ImportationController@FailedContactlist')->name('list.fail.contact')->middleware(['auth']);
+  Route::get('/DeleteFContact/{id}','ImportationController@DeleteFailedContact')->name('delete.fail.contact')->middleware(['auth']);
+  Route::get('/ShowFContact/{id}','ImportationController@ShowFailContact')->name('show.fail.contact')->middleware(['auth']);
+  Route::get('/UpdateFContact/{id}','ImportationController@UpdateFailedContact')->name('update.fail.contact')->middleware(['auth']);
+
+  // Srucharge for contract
+  Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge')
+    ->middleware(['auth','role:administrator']);
+
+  // Test
+  Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator']);
+
+});
+//New Request Importation Lcl
+Route::prefix('RequestsLcl')->group(function () {
+
+  Route::get('SimilarContractsLcl/{id}','NewContractRequestLclController@similarcontracts')->name('Similar.Contracts.Request.Lcl')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestImportationLcl/listClient/{id}','NewContractRequestLclController@listClient')->name('RequestImportationLcl.listClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::resource('RequestImportationLcl','NewContractRequestLclController')->middleware(['auth','role:administrator']);
+
+  Route::get('StatusRquestLCL/{id}','NewContractRequestLclController@showStatus')->name('show.status.Request.lcl')
+    ->middleware(['auth','role:administrator']);    
+  Route::POST('RequestImportationLcl/two','NewContractRequestLclController@store2')->name('RequestImportationLcl.store2')
+    ->middleware(['auth','role:administrator|company|subuser']);
+  Route::get('Requestimporlcl','NewContractRequestLclController@LoadViewRequestImporContractLcl')->name('Request.importaion.lcl')
+    ->middleware(['auth','role:administrator|company|subuser']);
+  Route::get('RequestLclStatus','NewContractRequestLclController@UpdateStatusRequest')->name('RequestLcl.status')
+    ->middleware(['auth','role:administrator']);
+  Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl')
+    ->middleware(['auth','role:administrator']);
+});
+
+
+// Importation LCL 
+Route::middleware(['auth','role:administrator'])->prefix('ImportationLCL')->group(function () {
+
+  //Importar desde request
+  Route::get('RequestProccessLCL/{id}/{selector}/{idrqex}','ImportationLclController@indexRequest')->name('process.request.lcl')
+    ->middleware(['auth','role:administrator']);
+
+  Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
+
+  // Account FCL
+  Route::get('AccountCLCL/','ImportationLclController@indexAccount')->name('index.Account.import.lcl');
+  Route::get('DestroyAccountclcl/{id}','ImportationLclController@DestroyAccount')->name('Destroy.account.clcl');
+  Route::get('DownloadAccountclcl/{id}','ImportationLclController@Download')->name('Download.Account.clcl');
+
+  //Rates 
+  Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
+  Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
+  Route::get('DestroyRatesFailLcl/{id}','ImportationLclController@DestroyRatesF')->name('Destroy.RatesF.Lcl');
+  Route::get('EditRatesGoodLcl/{id}','ImportationLclController@EditRatesGood')->name('Edit.RatesG.Lcl');
+  Route::get('UpdateRatesFailLcl/{id}','ImportationLclController@UpdateRatesD')->name('Update.RatesG.Lcl');
+  Route::get('DestroyRatesGLcl/{id}','ImportationLclController@DestroyRatesG')->name('Destroy.RatesG.Lcl');
+  Route::get('lcl/rates/{id}/{bo}','ImportationLclController@FailedRatesView')->name('Failed.Rates.lcl.view');
+  Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
+  Route::resource('ImportationLCL','ImportationLclController');
+  Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
+
+});
+
+Route::middleware(['auth'])->prefix('Exportation')->group(function () {
+  Route::resource('Exportation','ExportationController');
+});
+
+Route::middleware(['auth'])->prefix('Harbors')->group(function () {
+  Route::resource('UploadFile','FileHarborsPortsController');
+  Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
+  Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+});
+
+Route::middleware(['auth'])->prefix('Countries')->group(function () {
+  Route::resource('Countries','CountryController');
+  Route::get('/loadViewAdd','CountryController@loadviewAdd')->name('load.View.Add.country');
+  Route::get('/destroyharbor/{id}','CountryController@destroycountrie')->name('destroy.countrie');
+});
+
+Route::resource('contracts', 'ContractsController')->middleware('auth');
+
+//Companies
+Route::middleware(['auth'])->prefix('companies')->group(function () {
+
+
+  Route::get('add', 'CompanyController@add')->name('companies.add');
+  Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
+  Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
+  Route::post('store/owner', 'CompanyController@storeOwner')->name('companies.store.owner');
+  Route::get('show/{company_id}', 'PriceController@show')->name('companies.show');
+  Route::get('delete/{company_id}', 'CompanyController@delete')->name('companies.delete');
+  Route::get('destroy/{company_id}', 'CompanyController@destroy')->name('companies.destroy');
+  Route::get('owner/delete/{user_id}', 'CompanyController@deleteOwner')->name('companies.delete.owner');
+  Route::post('payments/conditions/update', 'CompanyController@updatePaymentConditions')->name('companies.update.payments');
+  Route::get('update/details/name/{company_id}', 'CompanyController@updateName')->name('companies.update.name');
+  Route::get('update/details/phone/{company_id}', 'CompanyController@updatePhone')->name('companies.update.phone');
+  Route::get('update/details/address/{company_id}', 'CompanyController@updateAddress')->name('companies.update.address');
+  Route::get('update/details/email/{company_id}', 'CompanyController@updateEmail')->name('companies.update.email');
+  Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
+  Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
+  Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
+
+
+});
+Route::resource('companies', 'CompanyController')->middleware('auth');
+
+//Pricees
+Route::middleware(['auth'])->prefix('prices')->group(function () {
+  Route::get('add', 'PriceController@add')->name('prices.add');
+  Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
+  Route::get('destroy/{price_id}', 'PriceController@destroy')->name('prices.destroy');
+});
+Route::resource('prices', 'PriceController')->middleware('auth');
+
+//Contacts
+Route::middleware(['auth'])->prefix('contacts')->group(function () {
+  Route::get('add', 'ContactController@add')->name('contacts.add');
+  Route::get('addCM', 'ContactController@addWithModal')->name('contacts.addCM'); // with modal
+  Route::get('addCMC/{company_id}', 'ContactController@addWithModalCompanies')->name('contacts.addCMC'); // with modal
+  Route::get('addCMMQ', 'ContactController@addWithModalManualQuote')->name('contacts.addCMMQ'); // with modal in manual quote
+  Route::get('delete/{contact_id}', 'ContactController@destroy')->name('contacts.delete');
+});
+Route::resource('contacts', 'ContactController')->middleware('auth');
+
+//Inlands
+Route::middleware(['auth'])->prefix('inlands')->group(function () {
+  Route::get('add', 'InlandsController@add')->name('inlands.add');
+  Route::get('updateDetails/{id}', ['uses' => 'InlandsController@updateDetails', 'as' => 'updateDetails']);
+  Route::get('deleteDetails/{id}', ['uses' => 'InlandsController@deleteDetails', 'as' => 'delete-inland']);
+  Route::get('deleteInland/{id}', ['uses' => 'InlandsController@deleteInland', 'as' => 'delete-inland']);
+});
+Route::resource('inlands', 'InlandsController')->middleware('auth');
+
+//Quotes
+Route::middleware(['auth'])->prefix('quotes')->group(function () {
+
+
+  Route::get('delete/{contact_id}', 'QuoteController@destroy')->name('quotes.destroy');
+  Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+  Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
+  Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
+  Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
+  Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
+  Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
+  Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
+  Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
+  Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
+  Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+  Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
+  Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
+  Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+  Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+  Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
+  Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+  Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
+  Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
+  Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
+  Route::get('quoteSchedules/{carrier?}/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
+  Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
+  Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
+  Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
+  Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
+  Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
+  Route::get('IndexDt', 'QuoteController@LoadDatatableIndex')->name('quotes.index.datatable');
+  Route::get('contact/email/{contact_id}', 'QuoteController@getContactEmail')->name('quotes.index.contact.email');
+  Route::post('carrier/visibility', ['uses' => 'QuoteController@updateCarrierVisibility', 'as' => 'quotes.carrier.visibility']);
+  Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
+  // LCL
+  Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
+
+});
+Route::resource('quotes', 'QuoteController')->middleware('auth');
+
+//Settings
+Route::middleware(['auth'])->prefix('settings')->group(function () {
+
+  Route::post('store/profile/company', ['uses' => 'SettingController@store', 'as' => 'settings.store']);
+  Route::post('update/pdf/language', ['uses' => 'SettingController@update_pdf_language', 'as' => 'settings.update_pdf_language']);
+  Route::post('update/pdf/type', ['uses' => 'SettingController@update_pdf_type', 'as' => 'settings.update_pdf_type']);
+  Route::post('update/pdf/ammounts', ['uses' => 'SettingController@update_pdf_ammount', 'as' => 'settings.update_pdf_ammount']);
+  Route::get('companies', 'SettingController@list_companies')->name('settings.companies');
+  Route::get('delete/company/{company_user_id}', 'SettingController@delete_company_user')->name('settings.delete.companies');
+  Route::post('duplicate', 'SettingController@duplicate')->name('settings.duplicate');
+
+});
+Route::resource('settings', 'SettingController')->middleware('auth');
+
+//SaleTerms
+Route::middleware(['auth'])->prefix('saleterms')->group(function () {
+  Route::get('create', 'SaleTermController@create')->name('saleterms.create');
+  Route::get('msg/{sale_term_id}', 'SaleTermController@destroymsg')->name('saleterms.msg');
+  Route::get('delete/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.delete']);
+  Route::get('edit/{sale_term_id}', ['uses' => 'SaleTermController@destroy', 'as' => 'saleterms.edit']);
+});
+
+Route::resource('saleterms', 'SaleTermController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+  Route::get('filter', 'DashboardController@filter')->name('dashboard.filter');
+});
+
+Route::resource('dashboard', 'DashboardController')->middleware('auth');
+
+Route::prefix('impersonation')->group(function ($router) {
+  # Revert route...
+  $router->get('revert', 'ImpersonateController@revert')->name('impersonate.revert');
+  # Impersonate route...
+  $router->get('{user}', 'ImpersonateController@impersonate')->name('impersonate.impersonate');
+});
+//Contracts LCL
+
+Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
+
+  //Contract LCL 
+  Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
+  Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
+  Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+
+
+  //Rates 
+  Route::get('addRatelcl/{id}', ['uses' => 'ContractsLclController@addRates', 'as' => 'add-rates-lcl']);
+  Route::post('storeRatelcl/{id}', ['uses' => 'ContractsLclController@storeRates', 'as' => 'contractslcl.storeRate']);
+  Route::get('editRatelcl/{id}', ['uses' => 'ContractsLclController@editRates', 'as' => 'edit-rates-lcl']);
+  Route::put('updateRatelcl/{id}', ['uses' => 'ContractsLclController@updateRates', 'as' => 'update-rates-lcl']);
+  Route::get('deleteRateslcl/{rate_id}', ['uses' => 'ContractsLclController@deleteRates', 'as' => 'delete-rates-lcl']);
+  Route::get('duplicateRatelcl/{id}', ['uses' => 'ContractsLclController@duplicateRates', 'as' => 'duplicate-rates-lcl']);
+
+  // LocalCharges
+  Route::get('addLocalChargelcl/{id}', ['uses' => 'ContractsLclController@addLocalChar', 'as' => 'add-LocalCharge-lcl']);
+  Route::post('storeLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@storeLocalChar', 'as' => 'contracts.storeLocalChargeLcl']);
+  Route::get('editLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@editLocalChar', 'as' => 'edit-local-charge-lcl']);
+  Route::put('updateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@updateLocalChar', 'as' => 'update-local-charge-lcl']);
+  Route::get('deleteLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@deleteLocalCharges', 'as' => 'delete-local-charge-lcl']);
+  Route::get('duplicateLocalChargeLcl/{id}', ['uses' => 'ContractsLclController@duplicateLocalCharges', 'as' => 'duplicate-local-charge-lcl']);
+
+  // DATATABLES LCL
+  Route::get('eloquent/object-contractlclG', 'ContractsLclController@contractlclTable')->name('contractlcl.tableG');
+  Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
+  Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
+  Route::get('eloquent/object-datalcl/{id}', 'ContractsLclController@dataLcl')->name('localcharlcl.table');
+
+
+});
+
+Route::resource('contractslcl', 'ContractsLclController')->middleware('auth');
+
+// REQUEST IMPORTATION GLOBALCHARGE FCL
+Route::prefix('RequestsGlobalchargers')->group(function () {
+
+  //Route::resource('RequestsGlobalchargersFcl','NewGlobalchargeRequestControllerFcl')->middleware(['auth','role:administrator']);
+
+  Route::get('RequestsGlobalchargersFcl/indexListClient','NewGlobalchargeRequestControllerFcl@indexListClient')->name('RequestsGlobalchargersFcl.indexListClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestsGlobalchargersFcl/listClient/{id}','NewGlobalchargeRequestControllerFcl@listClient')->name('RequestsGlobalchargersFcl.listClient')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
+    ->middleware(['auth','role:administrator']);    
+
+  Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
+    ->middleware(['auth','role:administrator|company|subuser']);
+
+  Route::get('RequestsGlobalchargersFcl/create2/','NewGlobalchargeRequestControllerFcl@create2')->name('RequestsGlobalchargersFcl.create2')
+    ->middleware(['auth','role:administrator']);
+
+  Route::POST('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@store')->name('RequestsGlobalchargersFcl.store')
+    ->middleware(['auth','role:administrator|company|subuser']);
+  Route::GET('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@index')->name('RequestsGlobalchargersFcl.index')
+    ->middleware(['auth','role:administrator']);
+  Route::GET('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@show')->name('RequestsGlobalchargersFcl.show')
+    ->middleware(['auth','role:administrator']);
+  Route::PUT('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@update')->name('RequestsGlobalchargersFcl.update')
+    ->middleware(['auth','role:administrator']);
+  Route::DELETE('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@destroy')->name('RequestsGlobalchargersFcl.destroy')
+    ->middleware(['auth','role:administrator']);
+  Route::GET('RequestsGlobalchargersFcl/{id}/edit','NewGlobalchargeRequestControllerFcl@edit')->name('RequestsGlobalchargersFcl.edit')
+    ->middleware(['auth','role:administrator']);
+
+  Route::get('RGlobalCDestroy/{id}','NewGlobalchargeRequestControllerFcl@destroyRequest')->name('destroy.GlobalC')
+    ->middleware(['auth','role:administrator']);
+  Route::get('RequestGCStatus','NewGlobalchargeRequestControllerFcl@UpdateStatusRequest')->name('Request.GlobalC.status')
+    ->middleware(['auth','role:administrator']);
+});
+
+// IMPORTATION GLOBALCHARGE FCL
+Route::middleware(['auth','role:administrator'])->prefix('ImportationGlobalchargesFcl')->group(function () {
+
+  Route::get('AccountGC/','ImportationGlobachargersFclController@indexAccount')->name('index.Account.import.gc');
+  //Importar desde request
+  Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
+    ->middleware(['auth','role:administrator']);
+
+  Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
+  Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
+  Route::get('indexTwo','ImportationGlobachargersFclController@indexTwo')->name('indextwo.globalcharge.fcl');
+  Route::get('FailedGlobalchargers/{id}/{tab}','ImportationGlobachargersFclController@showviewfailedandgood')->name('showview.globalcharge.fcl');
+  Route::resource('ImportationGlobalchargeFcl','ImportationGlobachargersFclController');
+
+  //Account
+
+  Route::get('DownloadAccountgcfcl/{id}','ImportationGlobachargersFclController@Download')->name('Download.Account.gcfcl');
+
+  //failed and good
+  Route::get('/FailglobalchargeLoad/{id}/{selector}','ImportationGlobachargersFclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.fcl');
+  Route::get('DestroyglobalchargeGoodFcl/{id}','ImportationGlobachargersFclController@DestroyGlobalchargeG')->name('Destroy.globalcharge.good.fcl');
+  Route::get('DestroyglobalchargeFailFcl/{id}','ImportationGlobachargersFclController@DestroyGlobalchargeF')->name('Destroy.globalcharge.Fail.fcl');
+
+  Route::get('editGlobalChargeMDFCL/{id}','ImportationGlobachargersFclController@editGlobalChar')->name('edit.globalcharge.modal.fcl');
+  Route::put('updateGlobalChargeMDFCL/{id}','ImportationGlobachargersFclController@updateGlobalChar')->name('update.globalcharge.modal.fcl');
+  Route::get('saveTofailToGoddGCFCL/{id}','ImportationGlobachargersFclController@saveFailToGood')->name('save.fail.good.globalcharge.fcl');
+
+  // Reprocesar
+  Route::get('/ReprocesarGlobalchargers/{id}','ImportationGlobachargersFclController@ReprocesarGlobalchargers')->name('Reprocesar.globalcharge.fcl');
+
+  Route::get('/testExcelImportation','ImportationGlobachargersFclController@testExcelImportation')->name('testExcelImportation.GC')->middleware(['auth','role:administrator']);
+
+});
+// GLOBAL CHARGES LCL 
+Route::prefix('globalchargeslcl')->group(function () {
+
+  Route::post('destroyArr', 'GlobalChargesLclController@destroyArr')->name('globalchargeslcl.destroyArr')->middleware(['auth']);
+  Route::put('updateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@updateGlobalChar', 'as' => 'update-global-charge-lcl'])->middleware(['auth']);
+  Route::get('deleteGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@destroyGlobalCharges', 'as' => 'delete-global-charge-lcl'])->middleware(['auth']);
+  Route::get('editGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@editGlobalChar', 'as' => 'edit-global-charge-lcl'])->middleware(['auth']);
+  Route::get('addGlobalChargeLcl', ['uses' => 'GlobalChargesLclController@addGlobalChar', 'as' => 'add-global-charge-lcl'])->middleware(['auth']);
+  Route::get('duplicateGlobalChargeLcl/{id}', ['uses' => 'GlobalChargesLclController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge-lcl'])->middleware(['auth']);
+
+  // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
+
+  Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator']);
+  Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator']);
+  Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator']);
+  Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator']);
+  Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator']);
+  Route::get('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator']);
+  Route::PUT('UpdateLclAdm/{id}','GlobalChargesLclController@updateAdm')->name('gclcladm.update')->middleware(['auth','role:administrator']);
+  Route::get('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator']);
+  Route::POST('ArrLclDuplicateAdm/','GlobalChargesLclController@duplicateArrAdm')->name('gclcladm.duplicate.Array')->middleware(['auth','role:administrator']);
+  Route::POST('StoreLclArrayDupicateAdm/','GlobalChargesLclController@storeArrayAdm')->name('gclcladm.store.array')->middleware(['auth','role:administrator']);
+});
+Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
+
+Route::middleware(['auth'])->prefix('Region')->group(function () {
+  Route::resource('Region','RegionController');
+  Route::get('/LoadViewRegion','RegionController@LoadViewAdd')->name('load.View.add.region');
+});
+
+//Manager Carriers
+
+Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->group(function(){
+  Route::resource('managercarriers', 'CarriersController');
+  Route::get('synchronousCarrier','CarriersController@synchronous')->name('synchronous.carrier');
+});
+
+Route::resource('search', 'SearchController')->middleware('auth');
+Auth::routes();
+

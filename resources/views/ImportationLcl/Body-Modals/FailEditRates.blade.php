@@ -68,7 +68,7 @@
             <div class="col-lg-4">
 
                 {!! Form::label('via', 'Via',['style' => $failrates['classvia']]) !!}
-                {!! Form::text('via',$failrates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ','required']) !!}
+                {!! Form::text('via',$failrates['via'], ['id' => 'via','placeholder' => 'via','class' => 'form-control ']) !!}
 
             </div>
         </div>
