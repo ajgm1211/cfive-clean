@@ -145,6 +145,13 @@ return [
             'url' => 'public',
             'visibility' => 'public',
         ],
+        
+        'carriers' => [
+            'driver' => 'local',
+            'root' => public_path('imgcarrier'),
+            'url' => '/imgcarrier/',
+            'visibility' => 'public',
+        ],
 
         'logos' => [
             'driver' => 'local',

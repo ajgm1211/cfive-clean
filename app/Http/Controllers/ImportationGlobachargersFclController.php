@@ -532,16 +532,15 @@ class ImportationGlobachargersFclController extends Controller
         $companyUserId = $request->CompanyUserId;
         $UserId =\Auth::user()->id;
         //dd($request->all());
-        /*
+
         $requestobj = $request;
         $companyUserIdVal = $companyUserId;
         $errors = 0;
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('GCImport')->url($NameFile);
 
-        FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
+        /*FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
         GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();*/
-
 
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];

@@ -12,7 +12,7 @@ class AirlinesTableSeeder extends Seeder
      */
     public function run()
     {
-
+        
 
         \DB::table('airlines')->delete();
         
@@ -21,17 +21,116 @@ class AirlinesTableSeeder extends Seeder
             array (
                 'id' => 1,
                 'name' => 'American Airlines',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             1 => 
             array (
                 'id' => 2,
                 'name' => 'Copa Airlines',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             2 => 
             array (
                 'id' => 3,
                 'name' => 'United Airlines',
-            )
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            3 => 
+            array (
+                'id' => 4,
+                'name' => 'TAP Portugal',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            4 => 
+            array (
+                'id' => 5,
+                'name' => 'Turkish Airlines',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            5 => 
+            array (
+                'id' => 6,
+                'name' => 'Emirates',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            6 => 
+            array (
+                'id' => 7,
+                'name' => 'Vueling Airlines',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            7 => 
+            array (
+                'id' => 8,
+                'name' => 'British Airways',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            8 => 
+            array (
+                'id' => 9,
+                'name' => 'Iberia',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            9 => 
+            array (
+                'id' => 10,
+                'name' => 'Air France',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            10 => 
+            array (
+                'id' => 11,
+                'name' => 'KLM',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            11 => 
+            array (
+                'id' => 12,
+                'name' => 'Avianca',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            12 => 
+            array (
+                'id' => 13,
+                'name' => 'LATAM',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
+            13 => 
+            array (
+                'id' => 14,
+                'name' => 'Lufthansa',
+                'image' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
         ));
+        
+        
     }
 }
