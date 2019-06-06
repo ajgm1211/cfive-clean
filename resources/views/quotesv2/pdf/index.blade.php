@@ -75,10 +75,9 @@
         <br>
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
-            <hr style="margin-bottom:5px;margin-top:1px;border:1px solid #f1f1f1">
-
+            <br>
             @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                <div class="row">
+                <!--<div class="row">
                     <div class="col-md-3">
                         <div id="cargo_details_cargo_type_p"><b class="title">Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
                     </div>
@@ -91,12 +90,31 @@
                     <div class="col-md-3">
                         <p id="cargo_details_total_volume_p"><b class="title">Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.'m<sup>3</sup>' : ''!!}</p>
                     </div>
-                </div>
-                <br>
+                </div>-->
+                <table border="0" cellspacing="1" cellpadding="1">
+                  <thead class="title-quote text-center header-table">
+                    <tr>
+                      <th class="unit"><b>Cargo type</b></th>
+                      <th class="unit"><b>Total quantity</b></th>
+                      <th class="unit"><b>Total weight</b></th>
+                      <th class="unit"><b>Total volume</b></th>
+                      <th class="unit"><b>Chargeable weight</b></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>{{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</td>
+                      <td>{{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</td>
+                      <td>{{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</td>
+                      <td>{!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</td>
+                      <td>{{$quote->chargeable_weight}} kg</td>
+                    </tr>
+                  </tbody>
+                </table>
             @endif
             @if(!empty($package_loads) && count($package_loads)>0)
-                <table class="table table-bordered color-blue">
-                    <thead class="title-quote text-center header-table title">
+                <table border="0" cellspacing="1" cellpadding="1">
+                  <thead class="title-quote text-center header-table">
                     <tr>
                         <th class="unit"><b>Cargo type</b></th>
                         <th class="unit"><b>Quantity</b></th>
@@ -129,13 +147,13 @@
                         <b class="title">Total:</b> {{$package_loads->sum('quantity')}} un {{$package_loads->sum('volume')}} m<sup>3</sup> {{$package_loads->sum('total_weight')}} kg
                     </div>
                 </div>
-            @endif
-            @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
-                <div class="row">
-                    <div class="col-md-12 ">
-                        <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} kg
-                    </div>
-                </div>
+                @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
+                  <div class="row">
+                      <div class="col-md-12 ">
+                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                      </div>
+                  </div>
+                @endif
             @endif
         </div>
         <br>
