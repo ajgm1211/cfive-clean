@@ -829,9 +829,29 @@
                           </div>
                         </div>
                         @endif
-                        <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portcss">Validity: {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}</span>
+
+                        @if(isset($arr->sheduleType))
+                        <div class="col-lg-3 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                         </div>
+                        @else
+                        <div class="col-lg-6 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                        
+                        </div>
+                        @endif
+
+                        @if(isset($arr->sheduleType))
+                        <div class="col-lg-2 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:5px;">Schedule Type: </span> {{ $arr->sheduleType  }}
+                        </div>
+                        <div class="col-lg-1 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> <i class="la la-truck"></i> Time:  </span>  {{ $arr->transit_time   }}
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
+                        </div>
+                        @endif
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >

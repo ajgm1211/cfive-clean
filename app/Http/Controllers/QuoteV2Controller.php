@@ -4392,14 +4392,16 @@ class QuoteV2Controller extends Controller
           } // if ports
         }// foreach ports
       }//foreach inlands
+    
       if(!empty($dataOrig)){
-        $collectionOrig = Collection::make($dataOrig);
+        $inlandOrigin = Collection::make($dataOrig);
+        
         //dd($collectionOrig); //  completo
-        $inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
+        /*$inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
 
           return $test;
-        });
+        });*/
         //dd($inlandOrigin); // filtraor por el minimo
       }
     }// Fin del calculo de los inlands

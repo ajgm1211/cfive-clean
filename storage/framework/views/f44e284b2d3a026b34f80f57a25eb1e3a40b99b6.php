@@ -850,9 +850,34 @@
                           </div>
                         </div>
                         <?php endif; ?>
-                        <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portcss">Validity: <?php echo e(\Carbon\Carbon::parse($arr->contract->validity)->format('d M Y')); ?> - <?php echo e(\Carbon\Carbon::parse($arr->contract->expire)->format('d M Y')); ?></span>
+
+                        <?php if(isset($arr->sheduleType)): ?>
+                        <div class="col-lg-3 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;">Validity: </span> <?php echo e(\Carbon\Carbon::parse($arr->contract->validity)->format('d M Y')); ?> - <?php echo e(\Carbon\Carbon::parse($arr->contract->expire)->format('d M Y')); ?>
+
                         </div>
+                        <?php else: ?>
+                        <div class="col-lg-6 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  <?php echo e(\Carbon\Carbon::parse($arr->contract->validity)->format('d M Y')); ?> - <?php echo e(\Carbon\Carbon::parse($arr->contract->expire)->format('d M Y')); ?>
+
+                        
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if(isset($arr->sheduleType)): ?>
+                        <div class="col-lg-2 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:5px;">Schedule Type: </span> <?php echo e($arr->sheduleType); ?>
+
+                        </div>
+                        <div class="col-lg-1 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> <i class="la la-truck"></i> Time:  </span>  <?php echo e($arr->transit_time); ?>
+
+                        </div>
+                        <div class="col-lg-2 d-flex align-items-center">
+                          <span class="portalphacode" style="margin-right:15px;"> Via: </span> <?php echo e($arr->via); ?>
+
+                        </div>
+                        <?php endif; ?>
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l<?php echo e($loop->iteration); ?>' onclick="display(<?php echo e($loop->iteration); ?>)" class="l detailed-cost"  title="Cancel" >
