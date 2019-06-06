@@ -245,7 +245,8 @@ New \ Status Import  &nbsp;
             reverseButtons: true
         }).then(function(result){
             if (result.value) {
-                $('.checkbox_global:checked').each(function(){
+                var oTableT = $("#requesttable").dataTable();
+                $('.checkbox_global:checked', oTableT.fnGetNodes()).each(function(){
                     id.push($(this).val());
                 });
 
