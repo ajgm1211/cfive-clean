@@ -4086,7 +4086,8 @@ class QuoteV2Controller extends Controller
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-                $distancia = intval($km[0]);
+                $distancia = str_replace ( ".", "", $km[0]);
+                $distancia = floatval($distancia);
                 if($distancia < 1){
                   $distancia = 1;
                 }
@@ -4265,7 +4266,9 @@ class QuoteV2Controller extends Controller
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-                $distancia = intval($km[0]);
+                $distancia = str_replace ( ".", "", $km[0]);
+                $distancia = floatval($distancia);
+
                 if($distancia < 1){
                   $distancia = 1;
                 }
