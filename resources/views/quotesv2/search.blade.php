@@ -846,7 +846,7 @@
                           <span class="portalphacode" style="margin-right:5px;">Schedule Type: </span> {{ $arr->sheduleType  }}
                         </div>
                         <div class="col-lg-1 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap"> <i class="la la-truck"></i> Time:  </span>  {{ $arr->transit_time   }}
+                          <span class="portalphacode" style="margin-right:15px; white-space:nowrap">  TT:  </span>  {{ $arr->transit_time   }}
                         </div>
                         <div class="col-lg-2 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
