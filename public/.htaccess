@@ -39,4 +39,3 @@
         #Header set Cache-Control "max-age=2628000, public"
     </filesMatch>
 </IfModule>
-
