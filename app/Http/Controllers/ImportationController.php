@@ -768,8 +768,8 @@ class ImportationController extends Controller
         $requestobj = $request->all();
         /*Rate::where('contract_id',$request->Contract_id)->forceDelete();
         FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
+        $errors = 0;
         ImportationRatesFclJob::dispatch($requestobj);
-
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
     }
     public function FailedRatesDeveloper($id,$tab){
@@ -1340,7 +1340,7 @@ class ImportationController extends Controller
     }
 
     // Surcharge ------------------------------------------------------------------------
-
+    // Revisar  para eliminacion de este method
     public function UploadFileSubchargeForContract(Request $request){
         //dd($request->all());
         $contractId       = $request->contract_id;
@@ -1466,7 +1466,7 @@ class ImportationController extends Controller
                                                                'statustypecurren',
                                                                'targetsArr'));
     }   
-
+    // Revisar  para eliminacion de este method
     public function ProcessSurchargeForContract(Request $request){
 
         // dd($request->all());
