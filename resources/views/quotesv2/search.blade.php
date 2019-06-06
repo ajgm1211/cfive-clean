@@ -341,7 +341,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle" style="color:blue; font-size: 18px;" ></i> </a>
                     </span>
                   </span>
                 </div>
@@ -353,7 +353,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i></a>
                     </span>
                   </span>
                 </div>
@@ -938,11 +938,11 @@
                     <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ @$rates['markup20'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
-                        <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ @$rates['markup40'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
-                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{ @$rates['markup40'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40HC'] }}</b>  </div>
-                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ @$rates['markup40NOR'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40NOR'] }}</b>  </div>
-                        <div class="wth" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> <span class="bg-rates">+{{ @$rates['markup45'] }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto45'] }}</b></div>
+                        <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup20'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{  number_format(@$rates['markup40'], 2, '.', '')  }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40HC'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40NOR'] , 2, '.', '')}}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40NOR'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="bg-rates">{{ @$rates['price45'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup45'], 2, '.', '')  }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto45'] }}</b></div>
                       </div>
                     </div>
                     <div class="col-lg-1 colorphacode" >{{$rates['currency_rate']}}</div>
@@ -1231,6 +1231,10 @@
 </div>
 @endif
 @endif
+
+
+@include('contacts.partials.contactsModal')
+@include('companies.partials.companiesModal')
 
 @endsection
 

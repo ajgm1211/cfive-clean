@@ -52,6 +52,8 @@ use App\PackageLoadV2;
 use App\Airline;
 use App\TermsPort;
 use App\TermsAndCondition;
+use App\ScheduleType;
+
 class QuoteV2Controller extends Controller
 {
   public function index(Request $request){
@@ -329,7 +331,7 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_amounts['c45'])){
           $amount45=$array_amounts['c45'];
-          $total45=($amount45+$markup45)/$currency_rate;
+          $total45=$amount45/$currency_rate;
           $sum45 = number_format($total45, 2, '.', '');
         }
 
@@ -3303,6 +3305,52 @@ class QuoteV2Controller extends Controller
     return $payments->payment_conditions;
   }
 
+
+  public function termsandconditions($origin_port,$destiny_port,$carrier,$mode){
+
+    // TERMS AND CONDITIONS 
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $term_port_orig = array($origin_port->id);
+    $term_port_dest = array($destiny_port->id);
+    $term_carrier_id[] = $carrier->id;
+    array_push($term_carrier_id,$carrier_all);
+
+    /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();*/
+    $terms_origin = TermsPort::wherein('port_id',$term_port_orig)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();
+
+    $terms_destination = TermsPort::wherein('port_id',$term_port_dest)->with('term')->whereHas('term', function($q)  use($term_carrier_id) {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();
+
+    $termsO='';
+    $termsD='';
+    $terms ='';
+
+    foreach($terms_origin as $termOrig){
+      $terms .="<br>";
+      $termsO = $origin_port->name." / ".$carrier->name;
+      $termsO .=  "<br>".$termOrig->term->export."<br>";
+    }
+    foreach($terms_destination as $termDest){
+      $terms .="<br>";
+      $termsD = $destiny_port->name." / ".$carrier->name;
+      $termsD .=  "<br>".$termDest->term->export."<br>";
+    }
+    $terms = $termsO." ".$termsD ; 
+    return $terms;
+  }
+
   public function store(Request $request){
 
 
@@ -3314,6 +3362,7 @@ class QuoteV2Controller extends Controller
       $since = $dateQ[0];
       $until = $dateQ[1];
       $priceId = null;
+      $mode =   $form->mode;
       if(isset($form->price_id )){
         $priceId = $form->price_id;
         if($priceId=="0"){
@@ -3480,20 +3529,21 @@ class QuoteV2Controller extends Controller
 
     //AUTOMATIC QUOTE
     if(!empty($info)){
+      $terms = '';
       foreach($info as $infoA){
         $info_D = json_decode($infoA);
 
         // Rates
+
         foreach($info_D->rates as $rateO){
 
           $rates =   json_encode($rateO->rate);
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
-          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id]);
+          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$info_D->remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
-
 
           $oceanFreight = new Charge();
           $oceanFreight->automatic_rate_id= $rate->id;
@@ -3597,6 +3647,8 @@ class QuoteV2Controller extends Controller
           }
 
 
+
+          $terms .= $this->termsandconditions($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
         }
         //CHARGES ORIGIN
@@ -3704,7 +3756,6 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
-
         /*
         $terms = new TermsAndCondition();
         $terms->quote_id= $quote->id;
@@ -3713,12 +3764,18 @@ class QuoteV2Controller extends Controller
         $terms->save();*/
 
       }  
+
+
+      $quoteEdit = QuoteV2::find($quote->id);
+      $quoteEdit->terms_and_conditions = $terms;
+      $quoteEdit->update();
     }
 
     //$request->session()->flash('message.nivel', 'success');
     //$request->session()->flash('message.title', 'Well done!');
     //$request->session()->flash('message.content', 'Register completed successfully!');
     //return redirect()->route('quotes.index');
+
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
@@ -4003,13 +4060,14 @@ class QuoteV2Controller extends Controller
 
 
       $inlands = $inlands->get();
-
+      $dataDest = array();
       // se agregan los aditional km
       foreach($inlands as $inlandsValue){
         $km20 = true;
         $km40 = true;
         $km40hc = true;
         $inlandDetails = array();
+
 
         foreach($inlandsValue->inlandports as $ports){
           $monto = 0;
@@ -4150,15 +4208,15 @@ class QuoteV2Controller extends Controller
                     return $minimoDetails;
                   });
 
-                  $data[] =$arregloInland;
+                  $dataDest[] =$arregloInland;
                 }
               }
             }
           } // if ports
         }// foreach ports
       }//foreach inlands
-      if(!empty($data)){
-        $inlandDestiny = Collection::make($data);
+      if(!empty($dataDest)){
+        $inlandDestiny = Collection::make($dataDest);
         //dd($collection); //  completo
         /* $inlandDestiny = $collection->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
@@ -4182,7 +4240,7 @@ class QuoteV2Controller extends Controller
       });
 
       $inlands = $inlands->get();
-
+      $dataOrig = array();
       foreach($inlands as $inlandsValue){
         $km20 = true;
         $km40 = true;
@@ -5079,59 +5137,17 @@ class QuoteV2Controller extends Controller
       $array =  array_merge($array,$arregloRateSave);
       $collectionRate->push($array);
 
-
-      // TERMS AND CONDITIONS 
-      $port_all = harbor::where('name','ALL')->first();
-      $term_port_orig = array($data->origin_port);
-      $term_port_dest = array($data->destiny_port);
-      $term_carrier_id[] = $data->carrier_id;
-      array_push($term_carrier_id,$carrier_all);
-
-      $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
-          $b->wherein('carrier_id',$term_carrier_id);
-        });
-      })->get();
-      $terms_origin = TermsPort::wherein('port_id',$term_port_orig)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
-          $b->wherein('carrier_id',$term_carrier_id);
-        });
-      })->get();
-
-      $terms_destination = TermsPort::wherein('port_id',$term_port_dest)->with('term')->whereHas('term', function($q)  use($term_carrier_id) {
-        $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
-          $b->wherein('carrier_id',$term_carrier_id);
-        });
-      })->get();
-
-      $termsO='';
-      $termsD='';
-      $terms ='';
-      if($mode=='1'){
-        $termsO= 'Export:';
-        foreach($terms_origin as $termOrig){
-          $termsO .=  "<br>".$termOrig->term->export;
-        }
-        foreach($terms_destination as $termDest){
-          $termsD .=  "<br>".$termDest->term->export;
-        }
-
-      }else if($mode=='2' ){
-        $termsO= 'Import:';
-        foreach($terms_origin as $termOrig){
-          $termsO .=  "<br>".$termOrig->term->import;
-        }
-        foreach($terms_destination as $termDest){
-          $termsD .=  "<br>".$termDest->term->import;
-        }
+      // SCHEDULE TYPE 
+      if($data->schedule_type_id != null){
+        $sheduleType = ScheduleType::find($data->schedule_type_id);
+        $data->setAttribute('sheduleType',$sheduleType->name);
+      }else{
+        $data->setAttribute('sheduleType',null);
       }
-      $terms = $termsO." ".$termsD ; 
+      //remarks
+      $data->setAttribute('remarks',$data->contract->remarks);
 
 
-
-      //TERMS 
-
-      $data->setAttribute('terms',$terms);
       // Valores
       $data->setAttribute('rates',$collectionRate);
       $data->setAttribute('localfreight',$collectionFreight);
@@ -5173,7 +5189,7 @@ class QuoteV2Controller extends Controller
 
     }
     $arreglo  =  $arreglo->sortBy('total20');
-    //dd($arreglo);
+
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines'));
 
   }
