@@ -14,9 +14,15 @@
                         </button>
                     </li>
                     <li class="nav-item m-tabs__item" >
-                        <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
+                        @if($quote->type=='FCL')
+                          <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
                             PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                        </a>
+                          </a>
+                        @else
+                          <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
+                            PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                          </a>
+                        @endif
                     </li>
                     <li class="nav-item m-tabs__item" >
                         <a class="btn btn-primary-v2" href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}">
