@@ -178,6 +178,7 @@
                                             <!-- Hide Freight -->
 
                                             <tr class="hide" id="freight_charges_{{$v}}">
+                                                <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="type_id" value="3" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <td>
@@ -257,20 +258,18 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                             @if($rate->id == @$rate_id )
-                                                <tr class="total_freight">
+                                                <tr class="total_freight_{{$v}}">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum20+@$sum_m20, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a">{{number_format(@$sum40+@$sum_m40, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a">{{number_format(@$sum40hc+@$sum_m40hc, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_freight_20">{{number_format(@$sum20+@$sum_m20, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_freight_40">{{number_format(@$sum40+@$sum_m40, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_freight_40hc">{{number_format(@$sum40hc+@$sum_m40hc, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
                                                     <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 </tr>
                                             @endif
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -425,6 +424,7 @@
                                             <!-- Hide origin charges-->
 
                                             <tr class="hide" id="origin_charges_{{$v}}">
+                                                 <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="type_id" value="1" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <td>
@@ -505,14 +505,14 @@
                                                 </td>
                                             </tr>
                                             @if($rate->id == @$rate_id )
-                                                <tr class="total_origin">
+                                                <tr class="total_origin_{{$v}}">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_origin_20">{{number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_origin_40">{{number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_origin_40hc">{{number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_origin_40nor">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_origin_45">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</span></td>
                                                     <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 </tr>
                                             @endif
@@ -675,6 +675,7 @@
                                             <!-- Hide destination charges -->
 
                                             <tr class="hide" id="destination_charges_{{$v}}">
+                                                 <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="type_id" value="2" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                                 <td>
@@ -755,14 +756,14 @@
                                                 </td>
                                             </tr>
                                             @if($rate->id == @$rate_id )
-                                                <tr class="total_destination">
+                                                <tr class="total_destination_{{$v}}">
                                                     <td></td>
                                                     <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</span></td>
-                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_destination_20">{{number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_destination_40">{{number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_destination_40hc">{{number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_destination_40nor">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</span></td>
+                                                    <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_destination_45">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</span></td>
                                                     <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 </tr>
                                             @endif
