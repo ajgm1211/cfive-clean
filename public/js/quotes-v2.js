@@ -1531,6 +1531,7 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
   var sum = 0;
   var total_amount = 0;
   var sum_total = 0;
+  var sum_total_2 = 0;
   var total_2 = 0;
   var markup = 0;
   var total=0;
@@ -1554,7 +1555,12 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
               markup = $(self).closest('tr').find('.markup').val();
               var sub_total = amount * quantity;
 
-              total = sub_total.toFixed(2);
+              if(currency_cfg+json.alphacode == json.api_code){
+                total = sub_total / json.rates;
+              }else{
+                total = sub_total / json.rates_eur;
+              }
+              total = total.toFixed(2);
 
               if(markup > 0){
                 var total_amount_m = Number(total)+ Number(markup);
@@ -1564,10 +1570,6 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
                 $(self).closest('tr').find('.total_2').val(total);
                 $(self).closest('tr').find('.total_2').change();
               }
-              total_2= $(self).closest('tr').find('.total_2').val();
-              sum_total= $(self).closest('div').find('.sum_total').val();
-              $(self).closest('div').find('.td_sum_total').html('');
-              $(self).closest('div').find('.td_sum_total').html(Number(sum_total)+Number(total_2));
             }
           });
         }
@@ -1581,6 +1583,19 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
       }
     });
   });
+});
+
+$(document).on("change keyup keydown", ".total_2", function() {
+  var sum = 0;
+  var value = 0;
+  $(".total_2").each(function(){
+    value = Number($(this).closest('tr').find('.total_2').val());
+    sum += value;
+  });
+  sum_total= Number($(this).closest('div').find('.sum_total').val())+Number(sum);
+  $(this).closest('div').find('.td_sum_total').html('');
+  $(this).closest('div').find('.td_sum_total').html(sum_total);
+  console.log(sum_total);
 });
 
 $( document ).ready(function() {
