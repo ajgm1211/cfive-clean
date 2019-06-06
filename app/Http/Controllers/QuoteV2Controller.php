@@ -3073,6 +3073,7 @@ class QuoteV2Controller extends Controller
       $charge->markups=null;
       $charge->update();
     }
+
     return response()->json(['message' => 'Ok','type'=>$request->type]);
   }
 
@@ -3153,47 +3154,52 @@ class QuoteV2Controller extends Controller
       $query->where('type_id', $request->type_id);
     })->where('id',$request->automatic_rate_id)->get();
 
-    foreach ($rates as $item) {
-      $sum20=0;
-      $sum40=0;
-      $sum40hc=0;
-      $sum40nor=0;
-      $sum45=0;
+    $charges = Charge::where('automatic_rate_id',$request->automatic_rate_id)->where('type_id', $request->type_id)->get();
 
-      $total_20=0;
-      $total_40=0;
-      $total_40hc=0;
-      $total_40nor=0;
-      $total_45=0;
+    //foreach ($rates as $item) {
 
-      $total_markup20=0;
-      $total_markup40=0;
-      $total_markup40hc=0;
-      $total_markup40nor=0;
-      $total_markup45=0;
-
-      $amount20=0;
-      $amount40=0;
-      $amount40hc=0;
-      $amount40nor=0;
-      $amount45=0;
-
-      $markup20=0;
-      $markup40=0;
-      $markup40hc=0;
-      $markup40nor=0;
-      $markup45=0;
-
-      $currency = Currency::find($item->currency_id);
-      $item->currency_usd = $currency->rates;
-      $item->currency_eur = $currency->rates_eur;
-
-      $typeCurrency =  $currency_cfg->alphacode;
-
-      $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+      $sum_total_20=0;
+      $sum_total_40=0;
+      $sum_total_40hc=0;
+      $sum_total_40nor=0;
+      $sum_total_45=0;
 
       //Charges
-      foreach ($item->charge as $value) {
+      foreach ($charges as $value) {
+
+        $typeCurrency =  $currency_cfg->alphacode;
+
+        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+        $sum20=0;
+        $sum40=0;
+        $sum40hc=0;
+        $sum40nor=0;
+        $sum45=0;
+
+        $amount20=0;
+        $amount40=0;
+        $amount40hc=0;
+        $amount40nor=0;
+        $amount45=0;
+
+        $markup20=0;
+        $markup40=0;
+        $markup40hc=0;
+        $markup40nor=0;
+        $markup45=0;
+
+        $total_20=0;
+        $total_40=0;
+        $total_40hc=0;
+        $total_40nor=0;
+        $total_45=0;
+
+        $total_markup20=0;
+        $total_markup40=0;
+        $total_markup40hc=0;
+        $total_markup40nor=0;
+        $total_markup45=0;
 
         $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
 
@@ -3208,7 +3214,7 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_markups['m20'])){
           $markup20=$array_markups['m20'];
-          $total_markup20=$markup20/$currency_rate;
+          $total_markup20=number_format($markup20/$currency_rate, 2, '.', '');
         }
 
         if(isset($array_amounts['c40'])){
@@ -3219,7 +3225,7 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_markups['m40'])){
           $markup40=$array_markups['m40'];
-          $total_markup40=$markup40/$currency_rate;
+          $total_markup40=number_format($markup40/$currency_rate, 2, '.', '');
         }
 
         if(isset($array_amounts['c40hc'])){
@@ -3230,7 +3236,7 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_markups['m40hc'])){
           $markup40hc=$array_markups['m40hc'];
-          $total_markup40hc=$markup40hc/$currency_rate;
+          $total_markup40hc=number_format($markup40hc/$currency_rate, 2, '.', '');
         }
 
         if(isset($array_amounts['c40nor'])){
@@ -3241,7 +3247,7 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_markups['m40nor'])){
           $markup40nor=$array_markups['m40nor'];
-          $total_markup40nor=$markup40nor/$currency_rate;
+          $total_markup40nor=number_format($markup40nor/$currency_rate, 2, '.', '');
         }
 
         if(isset($array_amounts['c45'])){
@@ -3252,19 +3258,24 @@ class QuoteV2Controller extends Controller
 
         if(isset($array_markups['m45'])){
           $markup45=$array_markups['m45'];
-          $total_markup45=$markup45/$currency_rate;
+          $total_markup45=number_format($markup45/$currency_rate, 2, '.', '');
         }
 
-        $total_20=number_format($sum20+$total_markup20, 2, '.', '');
-        $total_40=number_format($sum40+$total_markup40, 2, '.', '');
-        $total_40hc=number_format($sum40hc+$total_markup40hc, 2, '.', '');
-        $total_40nor=number_format($sum40nor+$total_markup40nor, 2, '.', '');
-        $total_45=number_format($sum45+$total_markup45, 2, '.', '');
+        $total_20=$sum20+$total_markup20;
+        $total_40=$sum40+$total_markup40;
+        $total_40hc=$sum40hc+$total_markup40hc;
+        $total_40nor=$sum40nor+$total_markup40nor;
+        $total_45=$sum45+$total_markup45;
 
+        $sum_total_20+=number_format($total_20, 2, '.', '');
+        $sum_total_40+=number_format($total_40, 2, '.', '');
+        $sum_total_40hc+=number_format($total_40hc, 2, '.', '');
+        $sum_total_40nor+=number_format($total_40nor, 2, '.', '');
+        $sum_total_45+=number_format($total_45, 2, '.', '');
       }
-    }
+    
 
-    return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode]);
+    return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode,'sum_total_20'=>$sum_total_20,'sum_total_40'=>$sum_total_40,'sum_total_40hc'=>$sum_total_40hc,'sum_total_40nor'=>$sum_total_40nor,'sum_total_45'=>$sum_total_45]);
 
   }
 
@@ -3282,7 +3293,10 @@ class QuoteV2Controller extends Controller
     $charge->currency_id=$request->currency_id;
     $charge->save();
 
-    return response()->json(['message' => 'Ok']);
+    $charge = ChargeLclAir::find($charge->id);
+    $total=($charge->units*$charge->price_per_unit)+$charge->markup;
+
+    return response()->json(['message' => 'Ok','surcharge'=>$charge->surcharge->name,'calculation_type'=>$charge->calculation_type->name,'units'=>$charge->units,'rate'=>$charge->price_per_unit,'markup'=>$charge->markup,'total'=>$total,'currency'=>$charge->currency->alphacode,'type'=>$charge->type_id]);
 
   }
   public function getCompanyPayments($id)

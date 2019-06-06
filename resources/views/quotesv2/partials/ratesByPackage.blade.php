@@ -4,7 +4,7 @@
       <div class=" ">
         <!-- Rates -->
         @php
-        $v=0;
+          $v=0;
         @endphp
         @foreach($rates as $rate)
         <div class="row">
@@ -118,8 +118,9 @@
                               @endforeach
 
                               <!-- Hide Freight -->
-
+                              <div class="add_charge">
                               <tr class="hide" id="freight_charges_{{$v}}">
+                                <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="3" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -158,14 +159,14 @@
                               </tr>
 
                               @if($rate->id == @$rate_id )
-                              <tr>
-                                <td colspan="4" class="tds"></td>
-                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                                <td class="tds"><b><span class="td-a">{{$total_freight}}</span></b></td>
-                                <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
-                              </tr>
+                                <tr class="total_freight_{{$v}}">
+                                  <td colspan="4" class="tds"></td>
+                                  <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                  <td class="tds"><input type="hidden" value="{{$total_freight}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total">{{$total_freight}}</span></b></td>
+                                  <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                                </tr>
                               @endif
-
+                            </div>
                             </tbody>
                           </table>
                         </div>
@@ -257,6 +258,7 @@
                               <!-- Hide origin charges-->
 
                               <tr class="hide" id="origin_charges_{{$v}}">
+                                <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="1" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -294,12 +296,12 @@
                                 </td>
                               </tr>
                               @if($rate->id == @$rate_id )
-                              <tr>
-                                <td colspan="4" class="tds"></td>
-                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                                <td class="tds"><b><span class="td-a">{{$total_origin}}</span></b></td>
-                                <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
-                              </tr>
+                                <tr class="total_origin_{{$v}}">
+                                  <td colspan="4" class="tds"></td>
+                                  <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                  <td class="tds"><input type="hidden" value="{{$total_origin}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total">{{$total_origin}}</span></b></td>
+                                  <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                                </tr>
                               @endif                                              
                             </tbody>
                           </table>
@@ -346,54 +348,55 @@
                               @endphp
 
                               @foreach($rate->charge_lcl_air as $item)
-                              @if($item->type_id==2)
-                              <?php
-                              $rate_id=$item->automatic_rate_id;
-                              $total_destination+=$item->total_destination;
-                              $total_destination_units+=$item->units;
-                              $total_destination_rates+=$item->price_per_unit*$item->units;
-                              $total_destination_markups+=$item->markup;
-                              ?>                                                   
+                                @if($item->type_id==2)
+                                  <?php
+                                  $rate_id=$item->automatic_rate_id;
+                                  $total_destination+=$item->total_destination;
+                                  $total_destination_units+=$item->units;
+                                  $total_destination_rates+=$item->price_per_unit*$item->units;
+                                  $total_destination_markups+=$item->markup;
+                                  ?>                                                   
 
-                              <tr style="height:40px;">
-                                <td class="tds" style="padding-left: 30px">
-                                  <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                  <tr style="height:40px;">
+                                    <td class="tds" style="padding-left: 30px">
+                                      <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
-                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
-                                </td>
-                                <td class="tds">
-                                  {{($item->units*$item->price_per_unit)+$item->markup}}
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
-                                  &nbsp;
-                                  <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                  </a>
-                                </td>
-                              </tr>
-                              @php
-                              $a++;
-                              @endphp
-                              @endif
+                                      <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="{{$item->units}}" data-pk="{{@$item->id}}" data-title="Units"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="{{$item->price_per_unit}}" data-pk="{{@$item->id}}" data-title="Price per unit"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="{{$item->markup}}" data-pk="{{@$item->id}}" data-title="Markup"></a>
+                                    </td>
+                                    <td class="tds">
+                                      {{($item->units*$item->price_per_unit)+$item->markup}}
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{@$item->id}}" data-title="Select currency"></a>
+                                      &nbsp;
+                                      <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                      </a>
+                                    </td>
+                                  </tr>
+                                  @php
+                                    $a++;
+                                  @endphp
+                                @endif
                               @endforeach
 
                               <!-- Hide destination charges -->
-
+                              <div class="add_charge">
                               <tr class="hide" id="destination_charges_{{$v}}">
+                                <input name="number" value="{{$v}}" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="2" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="{{$rate->id}}" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -431,13 +434,14 @@
                               </td>                                                
                             </tr>
                             @if($rate->id == @$rate_id )
-                            <tr>
-                              <td colspan="4" class="tds"></td>
-                              <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                              <td class="tds"><b><span class="td-a">{{$total_destination}}</span></b></td>
-                              <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
-                            </tr>
+                              <tr class="total_destination_{{$v}}">
+                                <td colspan="4" class="tds"></td>
+                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                <td class="tds"><input type="hidden" value="{{$total_destination}}" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total">{{$total_destination}}</span></b></td>
+                                <td class="tds"><b><span class="td-a"> {{$currency_cfg->alphacode}}</span></b></td>
+                              </tr>
                             @endif
+                            </div>
                           </tbody>
                         </table>
                       </div>
