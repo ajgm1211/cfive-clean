@@ -715,6 +715,8 @@ $(document).on('click', '.store_charge_lcl', function () {
   var markup = $(this).closest("tr").find(".markup").val();
   var type_id = $(this).closest("tr").find(".type_id").val();
   var currency_id = $(this).closest("tr").find(".currency_id").val();
+  var number = $(this).closest("tr").find(".number").val();
+  var theElement = $(this);
 
   $.ajax({
     type: 'POST',
@@ -737,8 +739,40 @@ $(document).on('click', '.store_charge_lcl', function () {
           'Charge saved successfully',
           'success'
         )
+        $(theElement).closest('tr').remove();
+        if(data.type==3){
+          $('<tr style="height:40px;">'+
+          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
+          '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+          '</tr>').insertBefore('.total_freight_'+number);
+        }else if(data.type==2){
+          $('<tr style="height:40px;">'+
+            '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+            '</tr>').insertBefore('.total_destination_'+number);
+        }else if(data.type==1){
+          $('<tr style="height:40px;">'+
+            '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+            '</tr>').insertBefore('.total_origin_'+number);
+        }
       }
-      setTimeout(location.reload.bind(location), 3000);
+      //setTimeout(location.reload.bind(location), 3000);
     }
   });
 });
@@ -746,6 +780,7 @@ $(document).on('click', '.store_charge_lcl', function () {
 //Add rates
 $(document).on('click', '.store_charge', function () {
   var id = $(this).closest("tr").find(".automatic_rate_id").val();
+  var number = $(this).closest("tr").find(".number").val();
   var theElement = $(this);
   var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
   var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
@@ -807,7 +842,17 @@ $(document).on('click', '.store_charge', function () {
           '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
           '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
           '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
-          '</tr>').insertBefore('.total_freight');
+          '</tr>').insertBefore('.total_freight_'+number);
+        $('.total_freight_'+number).find('.total_freight_20').html('');
+        $('.total_freight_'+number).find('.total_freight_20').html(data.sum_total_20);
+        $('.total_freight_'+number).find('.total_freight_40').html('');
+        $('.total_freight_'+number).find('.total_freight_40').html(data.sum_total_40);
+        $('.total_freight_'+number).find('.total_freight_40hc').html('');
+        $('.total_freight_'+number).find('.total_freight_40hc').html(data.sum_total_40hc);
+        $('.total_freight_'+number).find('.total_freight_40nor').html('');
+        $('.total_freight_'+number).find('.total_freight_40nor').html(data.sum_total_40nor);
+        $('.total_freight_'+number).find('.total_freight_45').html('');
+        $('.total_freight_'+number).find('.total_freight_45').html(data.sum_total_45);
       }
       if(type_id==2){
         $('<tr style="height:40px;">'+
@@ -819,7 +864,17 @@ $(document).on('click', '.store_charge', function () {
           '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
           '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
           '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
-          '</tr>').insertBefore('.total_destination');
+          '</tr>').insertBefore('.total_destination_'+number);
+        $('.total_destination_'+number).find('.total_destination_20').html('');
+        $('.total_destination_'+number).find('.total_destination_20').html(data.sum_total_20);
+        $('.total_destination_'+number).find('.total_destination_40').html('');
+        $('.total_destination_'+number).find('.total_destination_40').html(data.sum_total_40);
+        $('.total_destination_'+number).find('.total_destination_40hc').html('');
+        $('.total_destination_'+number).find('.total_destination_40hc').html(data.sum_total_40hc);
+        $('.total_destination_'+number).find('.total_destination_40nor').html('');
+        $('.total_destination_'+number).find('.total_destination_40nor').html(data.sum_total_40nor);
+        $('.total_destination_'+number).find('.total_destination_45').html('');
+        $('.total_destination_'+number).find('.total_destination_45').html(data.sum_total_45);
       }
       if(type_id==1){
         $('<tr style="height:40px;">'+
@@ -831,7 +886,17 @@ $(document).on('click', '.store_charge', function () {
           '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
           '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
           '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
-          '</tr>').insertBefore('.total_origin');
+          '</tr>').insertBefore('.total_origin_'+number);
+        $('.total_origin_'+number).find('.total_origin_20').html('');
+        $('.total_origin_'+number).find('.total_origin_20').html(data.sum_total_20);
+        $('.total_origin_'+number).find('.total_origin_40').html('');
+        $('.total_origin_'+number).find('.total_origin_40').html(data.sum_total_40);
+        $('.total_origin_'+number).find('.total_origin_40hc').html('');
+        $('.total_origin_'+number).find('.total_origin_40hc').html(data.sum_total_40hc);
+        $('.total_origin_'+number).find('.total_origin_40nor').html('');
+        $('.total_origin_'+number).find('.total_origin_40nor').html(data.sum_total_40nor);
+        $('.total_origin_'+number).find('.total_origin_45').html('');
+        $('.total_origin_'+number).find('.total_origin_45').html(data.sum_total_45);
       }            
       //setTimeout(location.reload.bind(location), 3000);
     }
@@ -1465,14 +1530,18 @@ $(document).on('change', '.pdf-feature', function () {
 $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", function() {
   var sum = 0;
   var total_amount = 0;
+  var sum_total = 0;
+  var total_2 = 0;
   var markup = 0;
   var total=0;
   var self = this;
+  var data = '';
   var currency_cfg = $("#currency_id").val();
   $(".price_per_unit").each(function(){
     $( this).each(function() {
       var quantity = $(this).closest('tr').find('.units').val();
       var currency_id = $(self).closest('tr').find('.currency_id').val();
+      var number = $(self).closest('tr').find('.number').val();
 
       if(quantity > 0) {
         if ($(self).closest('tr').find('.currency_id').val() != "") {
@@ -1485,11 +1554,6 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
               markup = $(self).closest('tr').find('.markup').val();
               var sub_total = amount * quantity;
 
-              /*if(currency_cfg+json.alphacode == json.api_code){
-                total = sub_total / json.rates;
-              }else{
-                total = sub_total / json.rates_eur;
-              }*/
               total = sub_total.toFixed(2);
 
               if(markup > 0){
@@ -1500,6 +1564,10 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
                 $(self).closest('tr').find('.total_2').val(total);
                 $(self).closest('tr').find('.total_2').change();
               }
+              total_2= $(self).closest('tr').find('.total_2').val();
+              sum_total= $(self).closest('div').find('.sum_total').val();
+              $(self).closest('div').find('.td_sum_total').html('');
+              $(self).closest('div').find('.td_sum_total').html(Number(sum_total)+Number(total_2));
             }
           });
         }
