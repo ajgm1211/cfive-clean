@@ -7,6 +7,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+
+use App\Carrier;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
@@ -109,6 +111,10 @@ class ProcessContractFile implements ShouldQueue
                 $s3->put('Account/LCL/'.$filePath, $file, 'public');
 
             }
+        } elseif(strnatcasecmp($classification,'carrier') == 0){
+            $carrier = Carrier::find($this->id);
+            $contents = Storage::disk('carriers')->get($carrier->image);
+            Storage::disk('s3_upload')->put('imgcarrier/'.$carrier->image, $contents, 'public');
         }
 
     }

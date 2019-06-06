@@ -6,7 +6,7 @@
 
 @section('title','Importation LCL '.$contract['id'].' - '.$contract['number'].' / '.$contract['name'])
 @section('content')
-contract
+
 <div class="m-content">
 
     @if(Session::has('message.nivel'))
