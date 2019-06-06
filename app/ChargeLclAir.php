@@ -30,6 +30,6 @@ class ChargeLclAir extends Model
 
     public function calculation_type()
     {
-        return $this->hasOne('App\CalculationType','id','calculation_type_id');
+        return $this->hasOne('App\CalculationTypeLcl','id','calculation_type_id');
     }    
 }
