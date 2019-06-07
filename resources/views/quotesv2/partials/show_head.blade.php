@@ -61,7 +61,7 @@
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Type:&nbsp;&nbsp;</b></label>
                                     <input type="text" value="{{$quote->quote_id}}" class="form-control" hidden >
-                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL','AIR'=>'AIR'],$quote->type,['class'=>'form-control type select2','hidden','disabled']) }}
+                                    {{ Form::select('type',['FCL'=>'FCL','LCL'=>'LCL','AIR'=>'AIR'],$quote->type,['class'=>'form-control quote-type select2','hidden','disabled']) }}
                                     <span class="type_span">{{$quote->type}}</span>
                                 </div>
                                 <div class="col-md-4">
@@ -113,7 +113,7 @@
                                     <br>
                                     <label class="title-quote"><b>Contact:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'form-control contact_id select2','hidden','id'=>'contact_id']) }}
-                                    <span class="contact_id_span">{{$quote->contact->first_name}} {{$quote->contact->last_name}}</span>
+                                    <span class="contact_id_span">{{@$quote->contact->first_name}} {{@$quote->contact->last_name}}</span>
                                 </div>
                             </div>
                             <div class="row">

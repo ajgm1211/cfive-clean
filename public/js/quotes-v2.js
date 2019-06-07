@@ -1137,7 +1137,7 @@ $(document).on('click', '#edit-quote', function () {
   $(".equipment_span").attr('hidden','true');
   $(".quote_id").removeAttr('hidden');
   $(".company_id").removeAttr('hidden');
-  $(".type").removeAttr('hidden');
+  $(".quote-type ").removeAttr('hidden');
   $(".status").removeAttr('hidden');
   $(".delivery_type").removeAttr('hidden');
   $(".incoterm_id").removeAttr('hidden');
@@ -1152,7 +1152,7 @@ $(document).on('click', '#edit-quote', function () {
   $(".price_id").removeAttr('hidden');
   $("#update_buttons").removeAttr('hidden');
   $("#edit_li").attr('hidden','true');
-  $(".type").select2();
+  $(".quote-type").select2();
   $(".status").select2();
   $(".kind_of_cargo").select2();
   $(".company_id").select2();
@@ -1181,7 +1181,7 @@ $(document).on('click', '#cancel', function () {
   $(".equipment_span").removeAttr('hidden');
   $(".quote_id").attr('hidden','true');
   $(".company_id").attr('hidden','true');
-  $(".type").attr('hidden','true');
+  $(".quote-type ").attr('hidden','true');
   $(".status").attr('hidden','true');
   $(".delivery_type").attr('hidden','true');
   $(".incoterm_id").attr('hidden','true');
@@ -1195,7 +1195,7 @@ $(document).on('click', '#cancel', function () {
   $(".price_id").attr('hidden','true');
   $("#update_buttons").attr('hidden','true');
   $("#edit_li").removeAttr('hidden');
-  $(".type").select2('destroy');
+  $(".quote-type ").select2('destroy');
   $(".kind_of_cargo").select2('destroy');
   $(".status").select2('destroy');
   $(".company_id").select2('destroy');
@@ -1211,7 +1211,7 @@ $(document).on('click', '#update', function () {
   var id=$(".id").val();
   var quote_id=$(".quote_id").val();
   var company_id=$(".company_id").val();
-  var type=$(".type").val();
+  var type=$(".quote-type").val();
   var status=$(".status").val();
   var delivery_type=$(".delivery_type").val();
   var incoterm_id=$(".incoterm_id").val();
@@ -1284,7 +1284,7 @@ $(document).on('click', '#update', function () {
         }else{
           delivery_type='Door to Door'
         }
-        $(".type").val(data.quote['type']);
+        $(".quote-type").val(data.quote['type']);
         $(".type_span").html(data.quote['type']);
         if(data.quote['custom_quote_id']!=''){
           $(".quote_id").val(data.quote['custom_quote_id']);
@@ -1344,7 +1344,7 @@ $(document).on('click', '#update', function () {
         $(".equipment_span").removeAttr('hidden');
         $(".quote_id").attr('hidden','true');
         $(".company_id").attr('hidden','true');
-        $(".type").attr('hidden','true');
+        $(".quote-type").attr('hidden','true');
         $(".status").attr('hidden','true');
         $(".delivery_type").attr('hidden','true');
         $(".incoterm_id").attr('hidden','true');
@@ -1358,7 +1358,7 @@ $(document).on('click', '#update', function () {
         $(".equipment").attr('hidden','true');
         $("#update_buttons").attr('hidden','true');
         $("#edit_li").removeAttr('hidden');
-        $(".type").select2('destroy');
+        $(".quote-type").select2('destroy');
         $(".status").select2('destroy');
         $(".company_id").select2('destroy');
         $(".delivery_type").select2('destroy');

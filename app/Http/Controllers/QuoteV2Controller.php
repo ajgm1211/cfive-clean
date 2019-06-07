@@ -56,11 +56,6 @@ use App\ScheduleType;
 
 class QuoteV2Controller extends Controller
 {
-  /**
-   * Show quote's list
-   * @param Request $request 
-   * @return \Illuminate\Contracts\Support\Renderable
-   */
   public function index(Request $request){
     $company_user='';
     $currency_cfg = '';
@@ -84,11 +79,6 @@ class QuoteV2Controller extends Controller
 
     return view('quotesv2/index', ['companies' => $companies,'quotes'=>$quotes,'countries'=>$countries,'harbors'=>$harbors,'currency_cfg'=>$currency_cfg]);
   }
-
-  /**
-   * Load Datatable
-   * @return void
-   */
 
   public function LoadDatatableIndex(){
 
@@ -172,11 +162,11 @@ class QuoteV2Controller extends Controller
     }
     return DataTables::of($colletions)
 
-    ->addColumn('type', function ($colletion) {
-      return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-    })->addColumn('action',function($colletion){
+      ->addColumn('type', function ($colletion) {
+        return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+      })->addColumn('action',function($colletion){
       return
-      '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Options
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -203,14 +193,8 @@ class QuoteV2Controller extends Controller
       </a>
       </div>';
     })
-    ->editColumn('id', '{{$id}}')->make(true);
+      ->editColumn('id', '{{$id}}')->make(true);
   }
-
-  /**
-   * Show quote's details
-   * @param integer $id 
-   * @return \Illuminate\Contracts\Support\Renderable
-   */
 
   public function show($id)
   {
@@ -478,10 +462,11 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
- 
+      
     }
 
     //Adding country codes to rates collection
+
 
     foreach ($rates as $item) {
       $rates->map(function ($item) {
@@ -509,11 +494,7 @@ class QuoteV2Controller extends Controller
     return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD'));
   }
 
-  /**
-   * Update charges of a rate
-   * @param Request $request 
-   * @return string JSON
-   */
+  //Actualiza cargos de la tabla rate
   public function updateRateCharges(Request $request)
   {
     $charge=AutomaticRate::find($request->pk);
@@ -536,11 +517,7 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update charges of a quote
-   * @param Request $request 
-   * @return string JSON
-   */
+  //Actualiza cargos por rate
   public function updateQuoteCharges(Request $request)
   {
     $charge=Charge::find($request->pk);
@@ -563,11 +540,7 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update charges of an inland
-   * @param Request $request 
-   * @return string JSON
-   */
+  //Actualiza cargos por inlands
   public function updateInlandCharges(Request $request)
   {
     $charge=AutomaticInland::find($request->pk);
@@ -590,11 +563,7 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update charges of a rate LCL/AIR
-   * @param Request $request 
-   * @return string JSON
-   */
+  //Actualiza Cargos por rate en LCL y Aereo
   public function updateQuoteChargesLcl(Request $request)
   {
     $charge=ChargeLclAir::find($request->pk);
@@ -604,11 +573,7 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update pdf options
-   * @param Request $request 
-   * @return string JSON
-   */
+  //Actualiza opciones del PDF
   public function updatePdfFeature(Request $request){
     $name=$request->name;
     $quote = PdfOption::where('quote_id',$request->id)->first();
@@ -617,17 +582,15 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok']);
   }
 
-  /**
-   * Update quotes details
-   * @param Request $request 
-   * @param integer $id 
-   * @return string JSON
-   */
+  //Actualiza la cotización
   public function update(Request $request,$id)
   {
+
     $validation = explode('/',$request->validity);
     $validity_start = $validation[0];
     $validity_end = $validation[1];
+    $contact_name='';
+    $price_name='';
 
     $quote=QuoteV2::find($id);
     if($quote->quote_id!=$request->quote_id){
@@ -653,9 +616,13 @@ class QuoteV2Controller extends Controller
     $quote->status=$request->status;
     $quote->update();
 
-    $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
+    if($request->contact_id!=''){
+      $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
+    }
     $owner=$quote->user->name.' '.$quote->user->lastname;
-    $price_name=$quote->price->name;
+    if($request->price_id!=''){
+      $price_name=$quote->price->name;
+    }
 
     return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name]);
   }
@@ -2005,12 +1972,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
-  /**
-   * Create PDF Doc FCL
-   * @param Request $request 
-   * @param integer $id 
-   * @return \Illuminate\Contracts\Support\Renderable
-   */
   public function pdf(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
@@ -2041,7 +2002,7 @@ class QuoteV2Controller extends Controller
       $ammounts_type=$company_user->pdf_ammounts;
       $currency_cfg = Currency::find($company_user->currency_id);
     }
-//    dd($rates);
+    //    dd($rates);
     foreach ($rates as $item) {
       $sum20=0;
       $sum40=0;
@@ -3225,12 +3186,6 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
 
-  /**
-   * Create PDF Doc LCL/AIR
-   * @param Request $request 
-   * @param integer $id 
-   * @return \Illuminate\Contracts\Support\Renderable
-   */
   public function pdfLclAir(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
@@ -4286,22 +4241,15 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
 
-  /**
-   * Delete Rates
-   * @param intger $id 
-   * @return string JSON
-   */
+  //Delete rates
+
   public function delete($id){
     AutomaticRate::where('id',$id)->delete();
     return response()->json(['message' => 'Ok']);
   }
 
-  /**
-   * Delete Charges
-   * @param Request $request 
-   * @param integer $id 
-   * @return string JSON
-   */
+  //Delete charge
+
   public function deleteCharge(Request $request, $id){
     if($request->type==1){
       Charge::where('id',$id)->delete();
@@ -4402,7 +4350,7 @@ class QuoteV2Controller extends Controller
     $sum_total_40nor=0;
     $sum_total_45=0;
 
-      //Charges
+    //Charges
     foreach ($charges as $value) {
 
       $typeCurrency =  $currency_cfg->alphacode;
@@ -4511,7 +4459,6 @@ class QuoteV2Controller extends Controller
       $sum_total_40nor+=number_format($total_40nor, 2, '.', '');
       $sum_total_45+=number_format($total_45, 2, '.', '');
     }
-    
 
     return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode,'sum_total_20'=>$sum_total_20,'sum_total_40'=>$sum_total_40,'sum_total_40hc'=>$sum_total_40hc,'sum_total_40nor'=>$sum_total_40nor,'sum_total_45'=>$sum_total_45]);
 
@@ -5314,12 +5261,12 @@ class QuoteV2Controller extends Controller
             $origin =  $ports->ports->coordinates;
             $destination = $request->input('destination_address');
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -5491,12 +5438,12 @@ class QuoteV2Controller extends Controller
             $origin = $request->input('origin_address');
             $destination =  $ports->ports->coordinates;
             $response = GoogleMaps::load('directions')
-            ->setParam([
-              'origin'          => $origin,
-              'destination'     => $destination,
-              'mode' => 'driving' ,
-              'language' => 'es',
-            ])->get();
+              ->setParam([
+                'origin'          => $origin,
+                'destination'     => $destination,
+                'mode' => 'driving' ,
+                'language' => 'es',
+              ])->get();
             $var = json_decode($response);
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
@@ -5654,16 +5601,16 @@ class QuoteV2Controller extends Controller
         $a->where('user_id', '=',$user_id);
       })->orDoesntHave('contract_user_restriction');
     })->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
-    {
-     $q->whereHas('contract_company_restriction', function($b) use($company_id){
-       $b->where('company_id', '=',$company_id);
-     })->orDoesntHave('contract_company_restriction');
-   })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-    $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-  });
-   $arreglo = $arreglo->get();
+                 {
+                   $q->whereHas('contract_company_restriction', function($b) use($company_id){
+                     $b->where('company_id', '=',$company_id);
+                   })->orDoesntHave('contract_company_restriction');
+                 })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+    });
+    $arreglo = $arreglo->get();
 
-   $formulario = $request;
+    $formulario = $request;
     $array20 = array('2','4','5','6','9','10','11'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
     $array40 =  array('1','4','5','6','9','10','11'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10','11'); // id  calculation type 3 = per 40HC 
@@ -6567,6 +6514,4 @@ class QuoteV2Controller extends Controller
 
     return $collect;
   }
-
-
 }

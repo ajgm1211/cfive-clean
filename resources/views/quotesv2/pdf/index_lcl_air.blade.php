@@ -73,31 +73,19 @@
             </div>
         </div>
         <br>
+        @if($quote->kind_of_cargo!='')
+            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}}</p>
+            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
+            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
+        @endif
+        @if($quote->commodity!='')
+            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Commodity:</span> {{$quote->commodity}}</p>
+            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Mercancía:</span> {{$quote->commodity}}</p>
+            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Mercadoria:</span> {{$quote->commodity}}</p>
+        @endif        
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
             <br>
-            @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                <table border="0" cellspacing="1" cellpadding="1">
-                  <thead class="title-quote text-center header-table">
-                    <tr>
-                      <th class="unit"><b>Cargo type</b></th>
-                      <th class="unit"><b>Total quantity</b></th>
-                      <th class="unit"><b>Total weight</b></th>
-                      <th class="unit"><b>Total volume</b></th>
-                      <th class="unit"><b>Chargeable weight</b></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="text-center">
-                      <td>{{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</td>
-                      <td>{{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</td>
-                      <td>{{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</td>
-                      <td>{!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</td>
-                      <td>{{$quote->chargeable_weight}} kg</td>
-                    </tr>
-                  </tbody>
-                </table>
-            @endif
             @if(!empty($package_loads) && count($package_loads)>0)
                 <table border="0" cellspacing="1" cellpadding="1">
                   <thead class="title-quote text-center header-table">
@@ -140,19 +128,29 @@
                       </div>
                   </div>
                 @endif
-            @endif
+            @else
+                <table border="0" cellspacing="1" cellpadding="1">
+                  <thead class="title-quote text-center header-table">
+                    <tr>
+                      <th class="unit"><b>Cargo type</b></th>
+                      <th class="unit"><b>Total quantity</b></th>
+                      <th class="unit"><b>Total weight</b></th>
+                      <th class="unit"><b>Total volume</b></th>
+                      <th class="unit"><b>Chargeable weight</b></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>{{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</td>
+                      <td>{{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</td>
+                      <td>{{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</td>
+                      <td>{!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</td>
+                      <td>{{$quote->chargeable_weight}} kg</td>
+                    </tr>
+                  </tbody>
+                </table>
+            @endif 
         </div>
-        <br>
-        @if($quote->kind_of_cargo!='')
-            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}}</p>
-            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
-            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
-        @endif
-        @if($quote->commodity!='')
-            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Commodity:</span> {{$quote->commodity}}</p>
-            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Mercancía:</span> {{$quote->commodity}}</p>
-            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Mercadoria:</span> {{$quote->commodity}}</p>
-        @endif        
         <br>
         @if($quote->payment_conditions!='')
             <br>
