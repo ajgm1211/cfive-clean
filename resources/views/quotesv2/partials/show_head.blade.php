@@ -113,7 +113,7 @@
                                     <br>
                                     <label class="title-quote"><b>Contact:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'form-control contact_id select2','hidden','id'=>'contact_id']) }}
-                                    <span class="contact_id_span">{{$quote->contact->first_name}} {{$quote->contact->last_name}}</span>
+                                    <span class="contact_id_span">{{@$quote->contact->first_name}} {{@$quote->contact->last_name}}</span>
                                 </div>
                             </div>
                             <div class="row">
