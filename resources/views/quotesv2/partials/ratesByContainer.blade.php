@@ -68,42 +68,42 @@
                                             @foreach($rate->charge as $item)
                                                 @if($item->type_id==3)
                                                     <?php
-                                                    $rate_id=$item->automatic_rate_id;
+                                                        $rate_id=$item->automatic_rate_id;
 
-                                                    $freight_amounts = json_decode($item->amount,true);
-                                                    $freight_markups = json_decode($item->markups,true);
+                                                        $freight_amounts = json_decode($item->amount,true);
+                                                        $freight_markups = json_decode($item->markups,true);
 
-                                                    if(isset($freight_amounts['c20'])){
-                                                        $sum20+=$item->total_20;
-                                                    }
-                                                    if(isset($freight_amounts['c40'])){
-                                                        $sum40+=@$item->total_40;
-                                                    }
-                                                    if(isset($freight_amounts['c40hc'])){
-                                                        $sum40hc+=@$item->total_40hc;
-                                                    }
-                                                    if(isset($freight_amounts['c40nor'])){
-                                                        $sum40nor+=@$item->total_40nor;
-                                                    }
-                                                    if(isset($freight_amounts['c45'])){
-                                                        $sum45+=@$item->total_45;
-                                                    }
+                                                        if(isset($freight_amounts['c20'])){
+                                                            $sum20+=$item->total_20;
+                                                        }
+                                                        if(isset($freight_amounts['c40'])){
+                                                            $sum40+=@$item->total_40;
+                                                        }
+                                                        if(isset($freight_amounts['c40hc'])){
+                                                            $sum40hc+=@$item->total_40hc;
+                                                        }
+                                                        if(isset($freight_amounts['c40nor'])){
+                                                            $sum40nor+=@$item->total_40nor;
+                                                        }
+                                                        if(isset($freight_amounts['c45'])){
+                                                            $sum45+=@$item->total_45;
+                                                        }
 
-                                                    if(isset($freight_markups['m20'])){
-                                                        $sum_m20+=$item->total_markup20;
-                                                    }
-                                                    if(isset($freight_markups['m40'])){
-                                                        $sum_m40+=@$item->total_markup40;
-                                                    }
-                                                    if(isset($freight_markups['m40hc'])){
-                                                        $sum_m40hc+=@$item->total_markup40hc;
-                                                    }
-                                                    if(isset($freight_markups['m40nor'])){
-                                                        $sum_m40nor+=@$item->total_markup40nor;
-                                                    }
-                                                    if(isset($freight_markups['m45'])){
-                                                        $sum_m45+=@$item->total_markup45;
-                                                    }
+                                                        if(isset($freight_markups['m20'])){
+                                                            $sum_m20+=$item->total_markup20;
+                                                        }
+                                                        if(isset($freight_markups['m40'])){
+                                                            $sum_m40+=@$item->total_markup40;
+                                                        }
+                                                        if(isset($freight_markups['m40hc'])){
+                                                            $sum_m40hc+=@$item->total_markup40hc;
+                                                        }
+                                                        if(isset($freight_markups['m40nor'])){
+                                                            $sum_m40nor+=@$item->total_markup40nor;
+                                                        }
+                                                        if(isset($freight_markups['m45'])){
+                                                            $sum_m45+=@$item->total_markup45;
+                                                        }
                                                     ?>
                                                     <tr class="tr-freight" style="height:40px;">
                                                         <td class="tds" style="padding-left: 30px">
