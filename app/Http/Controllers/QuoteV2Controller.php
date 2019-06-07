@@ -4402,7 +4402,7 @@ class QuoteV2Controller extends Controller
     $sum_total_40nor=0;
     $sum_total_45=0;
 
-    //Charges
+      //Charges
     foreach ($charges as $value) {
 
       $typeCurrency =  $currency_cfg->alphacode;
@@ -4511,6 +4511,7 @@ class QuoteV2Controller extends Controller
       $sum_total_40nor+=number_format($total_40nor, 2, '.', '');
       $sum_total_45+=number_format($total_45, 2, '.', '');
     }
+    
 
     return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode,'sum_total_20'=>$sum_total_20,'sum_total_40'=>$sum_total_40,'sum_total_40hc'=>$sum_total_40hc,'sum_total_40nor'=>$sum_total_40nor,'sum_total_45'=>$sum_total_45]);
 
@@ -5323,8 +5324,7 @@ class QuoteV2Controller extends Controller
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-                $distancia = str_replace ( ".", "", $km[0]);
-                $distancia = floatval($distancia);
+                $distancia = floatval($km[0]);
                 if($distancia < 1){
                   $distancia = 1;
                 }
@@ -5397,7 +5397,7 @@ class QuoteV2Controller extends Controller
                     // FIN CALCULO MARKUPS 
                     $sub_20 = number_format($sub_20, 2, '.', '');
                     $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
-
+                    $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
                     $arrayInland20 = array_merge($markupI20,$arrayInland20);
                     $inlandDetails[] = $arrayInland20;
                   }
@@ -5442,8 +5442,7 @@ class QuoteV2Controller extends Controller
                   $inlandDetails = Collection::make($inlandDetails);
                   $arregloInland =  array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name,'port_id'=> $ports->ports->id ,'validity_start'=>$inlandsValue->validity,'validity_end'=>$inlandsValue->expire ,"km" => $distancia, "monto" => $monto ,'type' => 'Destination','type_currency' => $inlandsValue->inlandadditionalkms->currency->alphacode ,'idCurrency' => $inlandsValue->currency_id );
                   $arregloInland['inlandDetails'] = $inlandDetails->groupBy('typeContent')->map(function($item){
-                    $minimoD = $item->where('sub_in', '>' ,0);
-                    $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
+                    $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
                     return $minimoDetails;
                   });
 
@@ -5479,7 +5478,6 @@ class QuoteV2Controller extends Controller
       });
 
       $inlands = $inlands->get();
-
       $dataOrig = array();
       foreach($inlands as $inlandsValue){
         $km20 = true;
@@ -5503,9 +5501,7 @@ class QuoteV2Controller extends Controller
             foreach($var->routes as $resp) {
               foreach($resp->legs as $dist) {
                 $km = explode(" ",$dist->distance->text);
-                $distancia = str_replace ( ".", "", $km[0]);
-                $distancia = floatval($distancia);
-
+                $distancia = floatval($km[0]);
                 if($distancia < 1){
                   $distancia = 1;
                 }
@@ -5567,7 +5563,6 @@ class QuoteV2Controller extends Controller
                   $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
                   if($km20 &&  in_array( '20',$equipment) ){
                     $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->km_20) / $rateGeneral;
-
                     $sub_20 = $montoKm;
                     $monto += $sub_20;
                     $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->km_20;
@@ -5576,7 +5571,6 @@ class QuoteV2Controller extends Controller
                     // CALCULO MARKUPS 
                     $markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
                     // FIN CALCULO MARKUPS 
-
                     $sub_20 = number_format($sub_20, 2, '.', '');
                     $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
                     $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i20' ) ;
@@ -5621,14 +5615,11 @@ class QuoteV2Controller extends Controller
                 if($monto > 0){
                   $inlandDetailsOrig = Collection::make($inlandDetailsOrig);
 
-
                   $arregloInlandOrig = array("prov_id" => $inlandsValue->id ,"provider" => "Inland Haulage","providerName" => $inlandsValue->provider ,"port_id" => $ports->ports->id,"port_name" =>  $ports->ports->name ,'validity_start'=>$inlandsValue->validity,'validity_end'=>$inlandsValue->expire ,"km" => $distancia , "monto" => $monto ,'type' => 'Origin','type_currency' => $typeCurrency ,'idCurrency' => $inlandsValue->currency_id  );
 
-
                   $arregloInlandOrig['inlandDetails'] = $inlandDetailsOrig->groupBy('typeContent')->map(function($item){
-                    $minimoD = $item->where('sub_in', '>' ,0);
 
-                    $minimoDetails = $minimoD->where('sub_in', $minimoD->min('sub_in'))->first();
+                    $minimoDetails = $item->where('sub_in', $item->min('sub_in'))->first();
 
                     return $minimoDetails;
                   });
@@ -5642,10 +5633,11 @@ class QuoteV2Controller extends Controller
 
       if(!empty($dataOrig)){
         $inlandOrigin = Collection::make($dataOrig);
-
+        
         //dd($collectionOrig); //  completo
         /*$inlandOrigin= $collectionOrig->groupBy('port_id')->map(function($item){
           $test = $item->where('monto', $item->min('monto'))->first();
+
           return $test;
         });*/
         //dd($inlandOrigin); // filtraor por el minimo
