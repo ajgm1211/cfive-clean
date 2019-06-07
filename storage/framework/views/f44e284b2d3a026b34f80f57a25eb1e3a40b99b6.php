@@ -922,9 +922,10 @@
                     <div class="col-lg-2 colorphacode"><?php echo e(str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  )); ?></div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth"><span class="bg-rates"> <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00'); ?>  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00'); ?>     </b>      
+                        <div class="wth" <?php echo e($equipmentHides['20']); ?>>
+                        <span class="bg-rates"> <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00'); ?>  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00'); ?>     </b>      
                         </div>      
-                        <div class="wth">
+                        <div class="wth" <?php echo e($equipmentHides['40']); ?>>
                           <span class="bg-rates"> <?php echo e(isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00'); ?>     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  <?php echo e(isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00'); ?>            </b>       
                         </div>
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>>  
@@ -1002,10 +1003,10 @@
                     <div class="col-lg-2 colorphacode"><?php echo e(str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  )); ?></div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth">
+                        <div class="wth" <?php echo e($equipmentHides['20']); ?>>
                           <span class="bg-rates"> <?php echo e(isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00'); ?></span><span class="bg-rates">+ <?php echo e(isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00'); ?></span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> <?php echo e(isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00'); ?> </b>         
                         </div>      
-                        <div class="wth">
+                        <div class="wth" <?php echo e($equipmentHides['40']); ?>>
                           <span class="bg-rates"><?php echo e(isset($localfreight['40']) ?  str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('monto')) :'0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('markup')) : '0.00'); ?></span>     <i class="la la-caret-right arrow-down"></i>      <b class="monto-down"><?php echo e(isset($localfreight['40']) ?   str_replace(["[","]","\""], ' ', $localfreight['40']->pluck('montoMarkup')) : '0.00'); ?>                  </b>
                         </div>
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>>  
@@ -1068,10 +1069,10 @@
                     <div class="col-lg-2 colorphacode"><?php echo e(str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  )); ?></div>
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth">
+                        <div class="wth" <?php echo e($equipmentHides['20']); ?>>
                           <span class="bg-rates">   <?php echo e(isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00'); ?> </span><span class="bg-rates"> + <?php echo e(isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00'); ?> </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down"><?php echo e(isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00'); ?>   </b>       
                         </div>      
-                        <div class="wth">
+                        <div class="wth" <?php echo e($equipmentHides['40']); ?>>
                           <span class="bg-rates"> <?php echo e(isset($localdestiny['40']) ?  str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('monto')) :'0.00'); ?></span><span class="bg-rates"> + <?php echo e(isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('markup')) : '0.00'); ?> </span>    <i class="la la-caret-right arrow-down"></i>      <b class="monto-down"><?php echo e(isset($localdestiny['40']) ?   str_replace(["[","]","\""], ' ', $localdestiny['40']->pluck('montoMarkup')) : '0.00'); ?>      </b>            
                         </div>
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>>  
