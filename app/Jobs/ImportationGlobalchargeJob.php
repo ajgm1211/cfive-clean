@@ -2802,23 +2802,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $twentyVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$twentyVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
+
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $twentyVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         //$ratescollection->push($ree);
 
@@ -2834,25 +2853,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$twentyVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
 
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $twentyVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
-
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $twentyVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         // $ratescollection->push($ree);
 
@@ -2865,24 +2901,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $fortyVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$fortyVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
 
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $fortyVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         // $ratescollection->push($ree);
 
@@ -2895,25 +2949,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0){
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$fortyhcVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
 
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $fortyhcVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
-
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $fortyhcVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         //$ratescollection->push($ree);
 
@@ -2926,23 +2997,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($fortynorVal != 0 || $fortynorVal != 0.0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $fortynorVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$fortynorVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
+
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $fortynorVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         //$ratescollection->push($ree);
 
@@ -2955,23 +3045,42 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         }
 
                                                         if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $fortyfiveVal, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$fortyfiveVal)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
+
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $fortyfiveVal, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                            }
                                                         }
                                                         //$ratescollection->push($ree);
 
@@ -3024,24 +3133,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
                                                     if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$twentyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $twentyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                 } else{
@@ -3055,24 +3183,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$twentyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $twentyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
                                                     // -------- 40' ---------------------------------
 
@@ -3083,25 +3230,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        // $ratescollection->push($ree);
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+
+                                                            // $ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                     // -------- 40'HC -------------------------------
@@ -3113,25 +3279,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyhcVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyhcVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        //  $ratescollection->push($ree);
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyhcVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+
+                                                            //  $ratescollection->push($ree);
+                                                        }
                                                     }
                                                     // -------- 40'NOR ------------------------------
 
@@ -3142,25 +3327,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortynorVal != 0 || $fortynorVal != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortynorVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortynorVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        //  $ratescollection->push($ree);
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortynorVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+
+                                                            //  $ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                     // -------- 45' ---------------------------------
@@ -3172,24 +3376,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyfiveVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //  $ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyfiveVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyfiveVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //  $ratescollection->push($ree);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -3269,24 +3492,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($ammount != 0 || $ammount != 0.0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $ammount, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);                    
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$ammount)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $ammount, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);                    
+                                                        }
                                                     }
 
                                                 }
@@ -3317,24 +3559,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValtwen;
                                                 }
                                                 if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $twentyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //  $ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $twentyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //  $ratescollection->push($ree);
+                                                    }
                                                 }
                                             }
 
@@ -3412,25 +3673,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($ammount != 0 || $ammount != 0.0){
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$ammount)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $ammount, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);                    
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $ammount, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);                    
+                                                        }
                                                     }
 
                                                 }
@@ -3461,24 +3740,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValtwen;
                                                 }
                                                 if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $twentyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //  $ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $twentyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //  $ratescollection->push($ree);
+                                                    }
                                                 }
                                             }
 
@@ -3556,19 +3854,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($ammount != 0 || $ammount != 0.0){
-                                                        FailSurCharge::create([
-                                                            'surcharge_id'       => $surchargeVal,
-                                                            'port_orig'          => $originVal,
-                                                            'port_dest'          => $destinyVal,
-                                                            'typedestiny_id'     => $typedestinyVal,
-                                                            'contract_id'        => $contractIdVal,
-                                                            'calculationtype_id' => $calculationtypeValfail,  //////
-                                                            'ammount'            => $ammount, //////
-                                                            'currency_id'        => $currencyVal, //////
-                                                            'carrier_id'         => $carrierVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);                    
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$ammount)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $ammount, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+
+                                                            //$ratescollection->push($ree);                    
+                                                        }
                                                     }
 
                                                 }
@@ -3599,25 +3922,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     $currencyVal = $currencyValtwen;
                                                 }
                                                 if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $twentyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
 
-                                                    //  $ratescollection->push($ree);
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $twentyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+
+                                                        //  $ratescollection->push($ree);
+                                                    }
                                                 }
                                             }
 
@@ -3677,24 +4019,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($twentyArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        // $ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$twentyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $twentyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'    => $differentiatorVal
+                                                            ]);
+                                                            // $ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                 } else{
@@ -3707,24 +4068,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                         $currencyVal = $currencyValtwen;
                                                     }
                                                     if($twentyArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        // $ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$twentyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $twentyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            // $ratescollection->push($ree);
+                                                        }
                                                     }
                                                     // -------- 40' ---------------------------------
 
@@ -3735,24 +4115,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                     // -------- 40'HC -------------------------------
@@ -3764,25 +4163,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyhcArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyhcVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyhcVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        //$ratescollection->push($ree);
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyhcVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                     // -------- 40'NOR ------------------------------
@@ -3794,24 +4212,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyhcArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortynorVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //$ratescollection->push($ree);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortynorVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
+
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortynorVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'   => $differentiatorVal
+                                                            ]);
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
 
                                                     // -------- 45'  -------------------------------
@@ -3823,25 +4260,44 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                     }
 
                                                     if($fortyhcArr[0] != 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $fortyfiveVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
+                                                        $extgc = null;
+                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                            ->where('origin',$originVal)
+                                                            ->where('destiny',$destinyVal)
+                                                            ->where('typedestiny',$typedestinyVal)
+                                                            ->where('calculationtype',$calculationtypeValfail)
+                                                            ->where('ammount',$fortyfiveVal)
+                                                            ->where('currency',$currencyVal)
+                                                            ->where('carrier',$carrierVal)
+                                                            ->where('validityto',$validitytoVal)
+                                                            ->where('validityfrom',$validityfromVal)
+                                                            ->where('port',true)
+                                                            ->where('country',false)
+                                                            ->where('company_user_id',$companyUserIdVal)
+                                                            ->where('differentiator',$differentiatorVal)
+                                                            ->get();
 
-                                                        //$ratescollection->push($ree);
+                                                        if(count($extgc) == 0){
+                                                            FailedGlobalcharge::create([
+                                                                'surcharge'       	=> $surchargeVal,
+                                                                'origin'          	=> $originVal,
+                                                                'destiny'          	=> $destinyVal,
+                                                                'typedestiny'     	=> $typedestinyVal,
+                                                                'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                'ammount'           => $fortyfiveVal, //////
+                                                                'currency'		    => $currencyVal, //////
+                                                                'carrier'	        => $carrierVal,
+                                                                'validityto'	    => $validitytoVal,
+                                                                'validityfrom'      => $validityfromVal,
+                                                                'port'        		=> true,// por defecto
+                                                                'country'        	=> false,// por defecto
+                                                                'company_user_id'   => $companyUserIdVal,
+                                                                'account_id'        => $account_idVal,
+                                                                'differentiator'    => $differentiatorVal
+                                                            ]);
+
+                                                            //$ratescollection->push($ree);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -3894,24 +4350,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $twentyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $twentyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
 
 
@@ -3926,24 +4401,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $twentyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$twentyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $twentyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
 
                                                 // -------- 40' ---------------------------------
@@ -3955,24 +4449,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($fortyArr[0] != 0 || $fortyArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $fortyVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$fortyVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $fortyVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
 
                                                 // -------- 40'HC -------------------------------
@@ -3984,24 +4497,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $fortyhcVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$fortyhcVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $fortyhcVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
 
                                                 // -------- 40'NOR -------------------------------
@@ -4013,24 +4545,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $fortynorVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$fortynorVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $fortynorVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
 
                                                 // -------- 45' ---------------------------------
@@ -4042,24 +4593,43 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                 }
 
                                                 if($fortyhcArr[0] != 0 || $fortyhcArr[0] != 0.0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $fortyfiveVal, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
-                                                    ]);
-                                                    //$ratescollection->push($ree);
+                                                    $extgc = null;
+                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                        ->where('origin',$originVal)
+                                                        ->where('destiny',$destinyVal)
+                                                        ->where('typedestiny',$typedestinyVal)
+                                                        ->where('calculationtype',$calculationtypeValfail)
+                                                        ->where('ammount',$fortyfiveVal)
+                                                        ->where('currency',$currencyVal)
+                                                        ->where('carrier',$carrierVal)
+                                                        ->where('validityto',$validitytoVal)
+                                                        ->where('validityfrom',$validityfromVal)
+                                                        ->where('port',true)
+                                                        ->where('country',false)
+                                                        ->where('company_user_id',$companyUserIdVal)
+                                                        ->where('differentiator',$differentiatorVal)
+                                                        ->get();
+
+                                                    if(count($extgc) == 0){
+                                                        FailedGlobalcharge::create([
+                                                            'surcharge'       	=> $surchargeVal,
+                                                            'origin'          	=> $originVal,
+                                                            'destiny'          	=> $destinyVal,
+                                                            'typedestiny'     	=> $typedestinyVal,
+                                                            'calculationtype'	=> $calculationtypeValfail,  //////
+                                                            'ammount'           => $fortyfiveVal, //////
+                                                            'currency'		    => $currencyVal, //////
+                                                            'carrier'	        => $carrierVal,
+                                                            'validityto'	    => $validitytoVal,
+                                                            'validityfrom'      => $validityfromVal,
+                                                            'port'        		=> true,// por defecto
+                                                            'country'        	=> false,// por defecto
+                                                            'company_user_id'   => $companyUserIdVal,
+                                                            'account_id'        => $account_idVal,
+                                                            'differentiator'   => $differentiatorVal
+                                                        ]);
+                                                        //$ratescollection->push($ree);
+                                                    }
                                                 }
                                             }
                                         }
