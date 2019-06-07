@@ -14,13 +14,16 @@
                 <div class="tab-content">
                   <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
                     <ul >
-                      <li style="max-height: 20px;">                                            
-                        @if(isset($rate->carrier->image) && $rate->carrier->image!='')
-                          <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                      <li style="max-height: 20px;">                                  
+                        @if($quote->type!='AIR')
+                          @if(isset($rate->carrier->image) && $rate->carrier->image!='')
+                            <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                          @endif
+                        @else
+                          @if(isset($rate->airline->image) && $rate->airline->image!='')
+                            <img src=""  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                          @endif
                         @endif
-                        @if(isset($rate->airline->image) && $rate->airline->image!='')
-                          <img src="{{ url('imgcarrier/'.$rate->airline->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
-                        @endif                                        
                       </li>
                       <li class="size-12px">POL: @if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;
                         @if($quote->type!='AIR')
