@@ -121,9 +121,6 @@
                 </tr>
             </thead>
             <tbody>
-              <?php
-
-              ?>
                 @foreach($rates as $rate)
                     <?php 
 

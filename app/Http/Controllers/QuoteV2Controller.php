@@ -478,24 +478,7 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
-
-      $item->total_rate20=number_format($total_rate20+$total_rate_markup20, 2, '.', '');
-      $item->total_rate40=number_format($total_rate40+$total_rate_markup40, 2, '.', '');
-      $item->total_rate40hc=number_format($total_rate40hc+$total_rate_markup40hc, 2, '.', '');
-      $item->total_rate40nor=number_format($total_rate40nor+$total_rate_markup40nor, 2, '.', '');
-      $item->total_rate45=number_format($total_rate45+$total_rate_markup45, 2, '.', '');
-      //dd($total_rate20);
-      $item->total_rate_a20=number_format($total_rate20, 2, '.', '');
-      $item->total_rate_a40=number_format($total_rate40, 2, '.', '');
-      $item->total_rate_a40hc=number_format($total_rate40hc, 2, '.', '');
-      $item->total_rate_a40nor=number_format($total_rate40nor, 2, '.', '');
-      $item->total_rate_a45=number_format($total_rate45, 2, '.', '');
-
-      $item->total_rate_m20=number_format($total_rate_markup20, 2, '.', '');
-      $item->total_rate_m40=number_format($total_rate_markup40, 2, '.', '');
-      $item->total_rate_m40hc=number_format($total_rate_markup40hc, 2, '.', '');
-      $item->total_rate_m40nor=number_format($total_rate_markup40nor, 2, '.', '');
-      $item->total_rate_m45=number_format($total_rate_markup45, 2, '.', '');  
+ 
     }
 
     //Adding country codes to rates collection
@@ -2059,7 +2042,7 @@ class QuoteV2Controller extends Controller
       $currency_cfg = Currency::find($company_user->currency_id);
     }
 //    dd($rates);
-        foreach ($rates as $item) {
+    foreach ($rates as $item) {
       $sum20=0;
       $sum40=0;
       $sum40hc=0;
@@ -2080,13 +2063,14 @@ class QuoteV2Controller extends Controller
       $item->currency_usd = $currency->rates;
       $item->currency_eur = $currency->rates_eur;
 
-      $typeCurrency =  $currency_cfg->alphacode;
-
-      $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
-
       //Charges
       foreach ($item->charge as $value) {
 
+        if($quote->pdf_option->grouped_total_currency==1){
+          $typeCurrency =  $quote->pdf_option->total_in_currency;
+        }else{
+          $typeCurrency =  $currency_cfg->alphacode;
+        }
         $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
 
         $array_amounts = json_decode($value->amount,true);
@@ -2166,84 +2150,69 @@ class QuoteV2Controller extends Controller
 
       //Inland
       foreach ($item->inland as $inland) {
-        $typeCurrency =  $currency_cfg->alphacode;
+        if($quote->pdf_option->grouped_total_currency==1){
+          $typeCurrency =  $quote->pdf_option->total_in_currency;
+        }else{
+          $typeCurrency =  $currency_cfg->alphacode;
+        }
         $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
         $array_amounts = json_decode($inland->rate,true);
         $array_markups = json_decode($inland->markup,true);
-        if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
-          $amount20=$array_amounts['c20'];
-          $markup20=$array_markups['m20'];
-          $total20=($amount20+$markup20)/$currency_rate;
-          $sum20 = number_format($total20, 2, '.', '');
-        }else if(isset($array_amounts['c20']) && !isset($array_markups['m20'])){
+        if(isset($array_amounts['c20'])){
           $amount20=$array_amounts['c20'];
           $total20=$amount20/$currency_rate;
           $sum20 = number_format($total20, 2, '.', '');
-        }else if(!isset($array_amounts['c20']) && isset($array_markups['m20'])){
+        }
+
+        if(isset($array_markups['m20'])){
           $markup20=$array_markups['m20'];
-          $total20=$markup20/$currency_rate;
-          $sum20 = number_format($total20, 2, '.', '');
+          $total_markup20=$markup20/$currency_rate;
         }
 
-        if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
+        if(isset($array_amounts['c40'])){
           $amount40=$array_amounts['c40'];
-          $markup40=$array_markups['m40'];
-          $total40=($amount40+$markup40)/$currency_rate;
-          $sum40 = number_format($total40, 2, '.', '');
-        }else if(isset($array_amounts['c40']) && !isset($array_markups['m40'])){
-          $amount40=$array_amounts['c40'];
-          $total40=$amount40/$currency_rate;
-          $sum40 = number_format($total40, 2, '.', '');
-        }else if(!isset($array_amounts['c40']) && isset($array_markups['m40'])){
-          $markup40=$array_markups['m40'];
-          $total40=$markup40/$currency_rate;
+          $total40=$amount40/$currency_rate;          
           $sum40 = number_format($total40, 2, '.', '');
         }
 
-        if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
+        if(isset($array_markups['m40'])){
+          $markup40=$array_markups['m40'];
+          $total_markup40=$markup40/$currency_rate;
+        }
+
+        if(isset($array_amounts['c40hc'])){
           $amount40hc=$array_amounts['c40hc'];
-          $markup40hc=$array_markups['m40hc'];
-          $total40hc=($amount40hc+$markup40hc)/$currency_rate;
-          $sum40hc = number_format($total40hc, 2, '.', '');
-        }else if(isset($array_amounts['c40hc']) && !isset($array_markups['m40hc'])){
-          $amount40hc=$array_amounts['c40hc'];
-          $total40hc=$amount40hc/$currency_rate;
-          $sum40hc = number_format($total40hc, 2, '.', '');
-        }else if(!isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
-          $markup40hc=$array_markups['m40hc'];
-          $total40hc=$markup40hc/$currency_rate;
+          $total40hc=$amount40hc/$currency_rate;          
           $sum40hc = number_format($total40hc, 2, '.', '');
         }
 
-        if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
-          $amount40nor=$array_amounts['c40nor'];
-          $markup40nor=$array_markups['m40nor'];
-          $total40nor=($amount40nor+$markup40nor)/$currency_rate;
-          $sum40nor = number_format($total40nor, 2, '.', '');
-        }else if(isset($array_amounts['c40nor']) && !isset($array_markups['m40nor'])){
+        if(isset($array_markups['m40hc'])){
+          $markup40hc=$array_markups['m40hc'];
+          $total_markup40hc=$markup40hc/$currency_rate;
+        }
+
+        if(isset($array_amounts['c40nor'])){
           $amount40nor=$array_amounts['c40nor'];
           $total40nor=$amount40nor/$currency_rate;
           $sum40nor = number_format($total40nor, 2, '.', '');
-        }else if(!isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
-          $markup40nor=$array_markups['m40nor'];
-          $total40nor=$markup40nor/$currency_rate;
-          $sum40nor = number_format($total40nor, 2, '.', '');
         }
 
-        if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
-          $amount45=$array_amounts['c45'];
-          $markup45=$array_markups['m45'];
-          $total45=($amount45+$markup45)/$currency_rate;
-          $sum45 = number_format($total45, 2, '.', '');
-        }else if(isset($array_amounts['c45']) && !isset($array_markups['m45'])){
+        if(isset($array_markups['m40nor'])){
+          $markup40nor=$array_markups['m40nor'];
+          $total_markup40nor=$markup40nor/$currency_rate;
+        }
+
+        if(isset($array_amounts['c45'])){
           $amount45=$array_amounts['c45'];
           $total45=$amount45/$currency_rate;
           $sum45 = number_format($total45, 2, '.', '');
-        }else if(!isset($array_amounts['c45']) && isset($array_markups['m45'])){
-          $markup45=$array_markups['m45'];
-          $total45=$markup45/$currency_rate;
-          $sum45 = number_format($total45, 2, '.', '');
         }
+
+        if(isset($array_markups['m45'])){
+          $markup45=$array_markups['m45'];
+          $total_markup45=$markup45/$currency_rate;
+        }
+
 
         $inland->total_20=number_format($sum20, 2, '.', '');
         $inland->total_40=number_format($sum40, 2, '.', '');
@@ -5661,7 +5630,7 @@ class QuoteV2Controller extends Controller
           } // if ports
         }// foreach ports
       }//foreach inlands
-    
+
       if(!empty($dataOrig)){
         $inlandOrigin = Collection::make($dataOrig);
         
