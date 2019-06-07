@@ -1288,7 +1288,22 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
 
+$(document).ready(function() {
+      var divRow = document.getElementsByClassName('data-rates');
+      var numDivRow = divRow.length;
+      var count = 0;
 
+      for(var i = 1; i < numDivRow; i++){
+        if(i%2 == 0){
+          var clase = divRow[i];
+          $(clase).css({
+            'background-color' : '#fafafa'
+          });      
+          //console.log(clase);
+        }
+      }
+
+    });
 
   /*** GOOGLE MAPS API ***/
 
