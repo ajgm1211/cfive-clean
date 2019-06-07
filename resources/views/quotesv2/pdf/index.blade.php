@@ -64,11 +64,11 @@
                       <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
                       @endif
                     @endif
-                    <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
+                    <p>{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
                     <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
                     <p>{{$quote->company->address}}</p>
-                    <p>{{$quote->contact->phone}}</p>
-                    <p>{{$quote->contact->email}}</p>
+                    <p>{{@$quote->contact->phone}}</p>
+                    <p>{{@$quote->contact->email}}</p>
                 </span>
             </div>
         </div>
