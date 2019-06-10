@@ -4622,7 +4622,7 @@ class QuoteV2Controller extends Controller
         }
         foreach($origin_port as $orig){
           foreach($destiny_port as $dest){
-            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
             $rate = AutomaticRate::create($request->all());
 
             $oceanFreight = new Charge();
@@ -4641,7 +4641,7 @@ class QuoteV2Controller extends Controller
       }
       if($typeText == 'AIR' ){
 
-        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id') ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
 
 
@@ -4721,7 +4721,7 @@ class QuoteV2Controller extends Controller
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
-          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$info_D->remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
+          $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$info_D->remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
 
@@ -5724,10 +5724,10 @@ class QuoteV2Controller extends Controller
           $array40hcDetail = array('price40hc' => $data->fortyhc, 'currency40hc' => $data->currency->alphacode ,'idCurrency40hc' => $data->currency_id);
           $tot_40hc_F += $markup40hc['monto40HC'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40hc_save = array('c40HC' => $data->fortyhc);
+          $array_40hc_save = array('c40hc' => $data->fortyhc);
           $arregloRateSave['rate']  = array_merge($array_40hc_save,$arregloRateSave['rate']);
           // Markups
-          $array_40hc_markup =  array('m40HC' => $markup40hc['markup40HC']);
+          $array_40hc_markup =  array('m40hc' => $markup40hc['markup40HC']);
           $arregloRateSave['markups']  = array_merge($array_40hc_markup,$arregloRateSave['markups']);
 
           $array40hcT = array_merge($array40hcDetail,$markup40hc);
@@ -5740,10 +5740,10 @@ class QuoteV2Controller extends Controller
           $array40norDetail = array('price40nor' => $data->fortynor, 'currency40nor' => $data->currency->alphacode ,'idCurrency40nor' => $data->currency_id);
           $tot_40nor_F += $markup40nor['monto40NOR'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40nor_save = array('c40NOR' => $data->fortynor);
+          $array_40nor_save = array('c40nor' => $data->fortynor);
           $arregloRateSave['rate']  = array_merge($array_40nor_save,$arregloRateSave['rate']);
           // Markups
-          $array_40nor_markup =  array('m40NOR' => $markup40nor['markup40NOR']);
+          $array_40nor_markup =  array('m40nor' => $markup40nor['markup40NOR']);
           $arregloRateSave['markups']  =array_merge($array_40nor_markup,$arregloRateSave['markups']);
 
           $array40norT = array_merge($array40norDetail,$markup40nor);
