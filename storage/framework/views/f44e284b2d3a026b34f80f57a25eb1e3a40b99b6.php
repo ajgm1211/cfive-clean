@@ -667,21 +667,21 @@
             <div class="row">
               <div class="col-lg-12 no-padding">
                 <div class="row  justify-content-between">
-                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
+                  <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     <?php if(isset($arreglo)): ?>
                     <?php if($arreglo->isEmpty()): ?>
                     <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                     <?php endif; ?>
                     <?php endif; ?>
                   </div><!-- aqui -->
-                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                  <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
                     <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-lg-12">   
                 <center>
@@ -817,11 +817,12 @@
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>><span class="darkblue validate"><?php echo e($arr->total40hc); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['40nor']); ?>><span class="darkblue validate"><?php echo e($arr->total40nor); ?> </span> <span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
+                        <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?> infocheck' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
-                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate"  rate-id ='<?php echo e($arr->id); ?>'>Select <span class="la la-arrow-right"></span></label>
+                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate"  rate-id ='<?php echo e($arr->id); ?>' Select>Select <span class="la la-arrow-right"></span></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -1312,8 +1313,40 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+  $('.btn-input__select').on('click', function(){
+    var clase = $(this).attr('class');
+    $(this).html('Selected');
+    $(this).addClass('selected');
+    
+    
+  });
+  
+    $('.btn-input__select').on('click', function(){
+      if($('.btn-input__select').hasClass('selected')){
+      $(this).html('Seledasdcted');
+        }
+    });
+      
+    
+  
 
 
+  $(document).ready(function() {
+    var divRow = document.getElementsByClassName('data-rates');
+    var numDivRow = divRow.length;
+    var count = 0;
+
+    for(var i = 1; i < numDivRow; i++){
+      if(i%2 == 0){
+        var clase = divRow[i];
+        $(clase).css({
+          'background-color' : '#fafafa'
+        });      
+        //console.log(clase);
+      }
+    }
+
+  });
 
   /*** GOOGLE MAPS API ***/
 
@@ -1369,6 +1402,8 @@
     }
 
   }
+
+
 
 </script>
 
