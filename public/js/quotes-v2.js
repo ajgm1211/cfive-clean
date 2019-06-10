@@ -742,14 +742,14 @@ $(document).on('click', '.store_charge_lcl', function () {
         $(theElement).closest('tr').remove();
         if(data.type==3){
           $('<tr style="height:40px;">'+
-          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
-          '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
-          '</tr>').insertBefore('.total_freight_'+number);
+            '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
+            '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+            '</tr>').insertBefore('.total_freight_'+number);
         }else if(data.type==2){
           $('<tr style="height:40px;">'+
             '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
@@ -1697,6 +1697,8 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+    $(".infocheck").val('');
+
     $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
@@ -1715,8 +1717,7 @@ $(document).on('change', '#quoteType', function (e) {
     $("#destination_harbor_label").show();
     $("#airline_label").hide();
     $("#carrier_label").show();
-    $("#airline_id").prop( "disabled", true );
-    $("#carrier_id").prop( "disabled", false );
+
     $("#lcl_air_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -1732,6 +1733,7 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+    $(".infocheck").val('');
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
@@ -1749,8 +1751,7 @@ $(document).on('change', '#quoteType', function (e) {
     $("#destination_harbor_label").show();
     $("#airline_label").hide();
     $("#carrier_label").show();
-    $("#airline_id").prop( "disabled", true );
-    $("#carrier_id").prop( "disabled", false );
+
     $("#fcl_load").hide();
     $("#origin_airport_label").hide();
     $("#destination_airport_label").hide();
@@ -1813,6 +1814,7 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+    $(".infocheck").val('');
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
@@ -1831,8 +1833,7 @@ $(document).on('change', '#quoteType', function (e) {
     $("#destination_airport_label").show();
     $("#airline_label").show();
     $("#carrier_label").hide();
-    $("#airline_id").prop( "disabled", false );
-    $("#carrier_id").prop( "disabled", true );
+
     $("#fcl_load").hide();
     $("#origin_harbor_label").hide();
     $("#destination_harbor_label").hide();
@@ -2027,8 +2028,7 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
-  $("#airline_id").attr( "required", false );
-  $("#carrieManual").prop( "required", false );
+
   $('#FormQuote').attr('action', '/v2/quotes/processSearch');
   $(".quote_search").attr("type","submit");
 
@@ -2041,11 +2041,9 @@ $(".quote_man").on("click", function() {
 
 
   $('#FormQuote').attr('action', '/v2/quotes/store');
-  if($('#quoteType').val()==1){
-    $("#carrieManual").attr( "required", true );
-  }
+
   if($('#quoteType').val()==2){
-    $("#carrieManual").attr( "required", true );
+
     if($("#total_quantity_pkg_input").val()>0){
       $("#total_quantity").val($("#total_quantity_pkg_input").val());
     }
@@ -2058,11 +2056,6 @@ $(".quote_man").on("click", function() {
 
   }
 
-  if($('#quoteType').val()==3){
-    $("#airline_id").attr( "required", true );
-    $("#carrieManual").prop( "required", false );
-
-  }
 
 
   $(".quote_man").attr("type","submit");
