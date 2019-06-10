@@ -5724,10 +5724,10 @@ class QuoteV2Controller extends Controller
           $array40hcDetail = array('price40hc' => $data->fortyhc, 'currency40hc' => $data->currency->alphacode ,'idCurrency40hc' => $data->currency_id);
           $tot_40hc_F += $markup40hc['monto40HC'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40hc_save = array('c40HC' => $data->fortyhc);
+          $array_40hc_save = array('c40hc' => $data->fortyhc);
           $arregloRateSave['rate']  = array_merge($array_40hc_save,$arregloRateSave['rate']);
           // Markups
-          $array_40hc_markup =  array('m40HC' => $markup40hc['markup40HC']);
+          $array_40hc_markup =  array('m40hc' => $markup40hc['markup40HC']);
           $arregloRateSave['markups']  = array_merge($array_40hc_markup,$arregloRateSave['markups']);
 
           $array40hcT = array_merge($array40hcDetail,$markup40hc);
@@ -5740,10 +5740,10 @@ class QuoteV2Controller extends Controller
           $array40norDetail = array('price40nor' => $data->fortynor, 'currency40nor' => $data->currency->alphacode ,'idCurrency40nor' => $data->currency_id);
           $tot_40nor_F += $markup40nor['monto40NOR'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40nor_save = array('c40NOR' => $data->fortynor);
+          $array_40nor_save = array('c40nor' => $data->fortynor);
           $arregloRateSave['rate']  = array_merge($array_40nor_save,$arregloRateSave['rate']);
           // Markups
-          $array_40nor_markup =  array('m40NOR' => $markup40nor['markup40NOR']);
+          $array_40nor_markup =  array('m40nor' => $markup40nor['markup40NOR']);
           $arregloRateSave['markups']  =array_merge($array_40nor_markup,$arregloRateSave['markups']);
 
           $array40norT = array_merge($array40norDetail,$markup40nor);
