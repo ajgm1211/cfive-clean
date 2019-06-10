@@ -667,7 +667,7 @@
             <div class="row">
               <div class="col-lg-12 no-padding">
                 <div class="row  justify-content-between">
-                  <div class="col-lg-10 d-flex  align-items-end align-self-end">
+                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
                     <?php if(isset($arreglo)): ?>
                     <?php if($arreglo->isEmpty()): ?>
                     <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
@@ -820,7 +820,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?>' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
+                      <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?> infocheck' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
                       <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate"  rate-id ='<?php echo e($arr->id); ?>'>Select <span class="la la-arrow-right"></span></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">

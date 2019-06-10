@@ -4622,7 +4622,7 @@ class QuoteV2Controller extends Controller
         }
         foreach($origin_port as $orig){
           foreach($destiny_port as $dest){
-            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
             $rate = AutomaticRate::create($request->all());
 
             $oceanFreight = new Charge();
@@ -4641,7 +4641,7 @@ class QuoteV2Controller extends Controller
       }
       if($typeText == 'AIR' ){
 
-        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id') ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
 
 
