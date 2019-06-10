@@ -4,16 +4,6 @@
 
   <div class="m-content">
     <div class="row">
-    <!--<div class="col-md-1">
-<a href="" class="btn btn-primary btn-block">PDF</a>
-</div>
-<div class="col-md-2">
-<button class="btn btn-primary btn-block">Schedules</button>
-</div>
-<div class="col-md-1">
-<button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-info btn-block">Send</button>
-<input type="hidden" id="quote-id" value="{{$quote->id}}"/>
-</div>-->
     </div>
     <br>
     @if(Session::has('message.nivel'))
@@ -1516,8 +1506,8 @@
     </div>
   </div>
 
-  @include('quotes.partials.sendQuoteModal');
-  @include('quotes.partials.schedulesModal');
+  @include('quotes.partials.sendQuoteModal')
+  @include('quotes.partials.schedulesModal')
 
 @endsection
 

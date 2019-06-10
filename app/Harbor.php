@@ -36,6 +36,7 @@ class Harbor extends Model
   public function country(){
     return $this->belongsTo('App\Country');
   }
+
   public function getIdCompleteAttribute()
   {
     return "{$this->id}-{$this->country_id}";

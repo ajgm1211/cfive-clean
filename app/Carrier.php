@@ -13,6 +13,11 @@ class Carrier extends Model
         return $this->hasOne('App\Rate');
     }
 
+    public function automatic_rate()
+    {
+        return $this->hasOne('App\AutomaticRate');
+    }
+
     public function globalcharge()
     {
 
