@@ -4,7 +4,7 @@
       <div class=" ">
         <!-- Rates -->
         <?php
-        $v=0;
+          $v=0;
         ?>
         <?php $__currentLoopData = $rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rate): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <div class="row">
@@ -16,10 +16,10 @@
                     <ul >
                       <li style="max-height: 20px;">                                            
                         <?php if(isset($rate->carrier->image) && $rate->carrier->image!=''): ?>
-                        <img src="<?php echo e(url('imgcarrier/'.$rate->carrier->image)); ?>"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                          <img src="<?php echo e(url('imgcarrier/'.$rate->carrier->image)); ?>"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
                         <?php endif; ?>
                         <?php if(isset($rate->airline->image) && $rate->airline->image!=''): ?>
-                        <img src="<?php echo e(url('imgcarrier/'.$rate->airline->image)); ?>"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
+                          <img src="<?php echo e(url('imgcarrier/'.$rate->airline->image)); ?>"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
                         <?php endif; ?>                                        
                       </li>
                       <li class="size-12px">POL: <?php if($quote->type=='LCL'): ?> <?php echo e($rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code); ?>  <?php else: ?> <?php echo e($rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name); ?> <?php endif; ?> &nbsp;
@@ -64,59 +64,64 @@
                             </thead>
                             <tbody style="background-color: white;">
                               <?php
-                              $total_freight=0;
-                              $total_origin=0;
-                              $total_destination=0;
-                              $total_freight_units=0;
-                              $total_freight_rates=0;
-                              $total_freight_markups=0;
+                                $total_freight=0;
+                                $total_origin=0;
+                                $total_destination=0;
+                                $total_freight_units=0;
+                                $total_freight_rates=0;
+                                $total_freight_markups=0;
                               ?>
                               <?php $__currentLoopData = $rate->charge_lcl_air; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                              <?php if($item->type_id==3): ?>
-                              <?php
-                              $rate_id=$item->automatic_rate_id;
-                              $total_freight+=$item->total_freight;
-                              $total_freight_units+=$item->units;
-                              $total_freight_rates+=$item->price_per_unit*$item->units;
-                              $total_freight_markups+=$item->markup;
-                              ?>
-                              <tr style="height:40px;">
-                                <td class="tds" style="padding-left: 30px">
-                                  <input name="charge_id" value="<?php echo e(@$item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                <?php if($item->type_id==3): ?>
+                                  <?php
+                                    $rate_id=$item->automatic_rate_id;
+                                    $total_freight+=$item->total_freight;
+                                    $total_freight_units+=$item->units;
+                                    $total_freight_rates+=$item->price_per_unit*$item->units;
+                                    $total_freight_markups+=$item->markup;
+                                  ?>
+                                  <tr style="height:40px;">
+                                    <td class="tds" style="padding-left: 30px">
+                                      <input name="charge_id" value="<?php echo e(@$item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                      <?php if($item->surcharge_id!=''): ?>
+                                        <input name="type" value="1" class="form-control type" type="hidden" />
+                                        <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select surcharge"></a>
+                                      <?php else: ?>
+                                        <input name="type" value="2" class="form-control type" type="hidden" />
+                                        Ocean freight
+                                      <?php endif; ?>
+                                    </td>
+                                    <td class="tds">
+                                        <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($calculation_types_lcl_air); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select calculation type"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="<?php echo e($item->units); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Units"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="<?php echo e($item->price_per_unit); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Price per unit"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="<?php echo e($item->markup); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Markup"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <?php echo e(($item->units*$item->price_per_unit)+$item->markup); ?>
 
-
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select surcharge"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($calculation_types_lcl_air); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select calculation type"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="<?php echo e($item->units); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Units"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="<?php echo e($item->price_per_unit); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Price per unit"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="<?php echo e($item->markup); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Markup"></a>
-                                </td>
-                                <td class="tds">
-                                  <?php echo e(($item->units*$item->price_per_unit)+$item->markup); ?>
-
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select currency"></a>
-                                  &nbsp;
-                                  <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                  </a>
-                                </td>
-                              </tr>
-                              <?php endif; ?>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select currency"></a>
+                                      &nbsp;
+                                      <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                      </a>
+                                    </td>
+                                  </tr>
+                                <?php endif; ?>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                               <!-- Hide Freight -->
-
+                              <div class="add_charge">
                               <tr class="hide" id="freight_charges_<?php echo e($v); ?>">
+                                <input name="number" value="<?php echo e($v); ?>" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="3" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="<?php echo e($rate->id); ?>" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -158,14 +163,14 @@
                               </tr>
 
                               <?php if($rate->id == @$rate_id ): ?>
-                              <tr>
-                                <td colspan="4" class="tds"></td>
-                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                                <td class="tds"><b><span class="td-a"><?php echo e($total_freight); ?></span></b></td>
-                                <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
-                              </tr>
+                                <tr class="total_freight_<?php echo e($v); ?>">
+                                  <td colspan="4" class="tds"></td>
+                                  <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                  <td class="tds"><input type="hidden" value="<?php echo e($total_freight); ?>" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total"><?php echo e($total_freight); ?></span></b></td>
+                                  <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
+                                </tr>
                               <?php endif; ?>
-
+                            </div>
                             </tbody>
                           </table>
                         </div>
@@ -258,6 +263,7 @@
                               <!-- Hide origin charges-->
 
                               <tr class="hide" id="origin_charges_<?php echo e($v); ?>">
+                                <input name="number" value="<?php echo e($v); ?>" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="1" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="<?php echo e($rate->id); ?>" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -298,12 +304,12 @@
                                 </td>
                               </tr>
                               <?php if($rate->id == @$rate_id ): ?>
-                              <tr>
-                                <td colspan="4" class="tds"></td>
-                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                                <td class="tds"><b><span class="td-a"><?php echo e($total_origin); ?></span></b></td>
-                                <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
-                              </tr>
+                                <tr class="total_origin_<?php echo e($v); ?>">
+                                  <td colspan="4" class="tds"></td>
+                                  <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                  <td class="tds"><input type="hidden" value="<?php echo e($total_origin); ?>" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total"><?php echo e($total_origin); ?></span></b></td>
+                                  <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
+                                </tr>
                               <?php endif; ?>                                              
                             </tbody>
                           </table>
@@ -350,55 +356,56 @@
                               ?>
 
                               <?php $__currentLoopData = $rate->charge_lcl_air; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                              <?php if($item->type_id==2): ?>
-                              <?php
-                              $rate_id=$item->automatic_rate_id;
-                              $total_destination+=$item->total_destination;
-                              $total_destination_units+=$item->units;
-                              $total_destination_rates+=$item->price_per_unit*$item->units;
-                              $total_destination_markups+=$item->markup;
-                              ?>                                                   
+                                <?php if($item->type_id==2): ?>
+                                  <?php
+                                  $rate_id=$item->automatic_rate_id;
+                                  $total_destination+=$item->total_destination;
+                                  $total_destination_units+=$item->units;
+                                  $total_destination_rates+=$item->price_per_unit*$item->units;
+                                  $total_destination_markups+=$item->markup;
+                                  ?>                                                   
 
-                              <tr style="height:40px;">
-                                <td class="tds" style="padding-left: 30px">
-                                  <input name="charge_id" value="<?php echo e(@$item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
+                                  <tr style="height:40px;">
+                                    <td class="tds" style="padding-left: 30px">
+                                      <input name="charge_id" value="<?php echo e(@$item->id); ?>" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select surcharge"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($calculation_types_lcl_air); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select calculation type"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="<?php echo e($item->units); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Units"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="<?php echo e($item->price_per_unit); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Price per unit"></a>
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="<?php echo e($item->markup); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Markup"></a>
-                                </td>
-                                <td class="tds">
-                                  <?php echo e(($item->units*$item->price_per_unit)+$item->markup); ?>
+                                      <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($surcharges); ?>" data-type="select" data-name="surcharge_id" data-value="<?php echo e($item->surcharge_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select surcharge"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($calculation_types_lcl_air); ?>" data-type="select" data-name="calculation_type_id" data-value="<?php echo e($item->calculation_type_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select calculation type"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air units td-a" data-type="text" data-name="units" data-value="<?php echo e($item->units); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Units"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air price_per_unit td-a" data-type="text" data-name="price_per_unit" data-value="<?php echo e($item->price_per_unit); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Price per unit"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-type="text" data-name="markup" data-value="<?php echo e($item->markup); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Markup"></a>
+                                    </td>
+                                    <td class="tds">
+                                      <?php echo e(($item->units*$item->price_per_unit)+$item->markup); ?>
 
-                                </td>
-                                <td class="tds">
-                                  <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select currency"></a>
-                                  &nbsp;
-                                  <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
-                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                  </a>
-                                </td>
-                              </tr>
-                              <?php
-                              $a++;
-                              ?>
-                              <?php endif; ?>
+                                    </td>
+                                    <td class="tds">
+                                      <a href="#" class="editable-lcl-air td-a" data-source="<?php echo e($currencies); ?>" data-type="select" data-name="currency_id" data-value="<?php echo e($item->currency_id); ?>" data-pk="<?php echo e(@$item->id); ?>" data-title="Select currency"></a>
+                                      &nbsp;
+                                      <a class="delete-charge-lcl" style="cursor: pointer;" title="Delete">
+                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                      </a>
+                                    </td>
+                                  </tr>
+                                  <?php
+                                    $a++;
+                                  ?>
+                                <?php endif; ?>
                               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                               <!-- Hide destination charges -->
-
+                              <div class="add_charge">
                               <tr class="hide" id="destination_charges_<?php echo e($v); ?>">
+                                <input name="number" value="<?php echo e($v); ?>" class="form-control number" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="type_id" value="2" class="form-control type_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <input name="automatic_rate_id" value="<?php echo e($rate->id); ?>" class="form-control automatic_rate_id" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
                                 <td>
@@ -439,13 +446,14 @@
                               </td>                                                
                             </tr>
                             <?php if($rate->id == @$rate_id ): ?>
-                            <tr>
-                              <td colspan="4" class="tds"></td>
-                              <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
-                              <td class="tds"><b><span class="td-a"><?php echo e($total_destination); ?></span></b></td>
-                              <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
-                            </tr>
+                              <tr class="total_destination_<?php echo e($v); ?>">
+                                <td colspan="4" class="tds"></td>
+                                <td class="title-quote size-12px tds" ><span class="td-a">Total</span></td>
+                                <td class="tds"><input type="hidden" value="<?php echo e($total_destination); ?>" name="sum_total" class="sum_total"><b><span class="td-a td_sum_total"><?php echo e($total_destination); ?></span></b></td>
+                                <td class="tds"><b><span class="td-a"> <?php echo e($currency_cfg->alphacode); ?></span></b></td>
+                              </tr>
                             <?php endif; ?>
+                            </div>
                           </tbody>
                         </table>
                       </div>
@@ -671,4 +679,4 @@
           </div>
         </div>
       </div>
-</div>
+    </div>
