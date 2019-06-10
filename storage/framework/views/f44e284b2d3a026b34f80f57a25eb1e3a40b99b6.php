@@ -445,7 +445,6 @@
 
               </div>
             </div>
-
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -663,48 +662,39 @@
                   </div>
                 </div>
               </div>
+            </div><br>
+
+            <div class="row">
+              <div class="col-lg-12 no-padding">
+                <div class="row  justify-content-between">
+                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
+                    <?php if(isset($arreglo)): ?>
+                    <?php if($arreglo->isEmpty()): ?>
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                  </div><!-- aqui -->
+                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
-            <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
+            
+            <div class="row">
+              <div class="col-lg-12">   
+                <center>
+                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                </center>
+              </div>
+            </div>
           </div>
         </div>      
       </div>
     </div>
-
-
   </div>
 
-
-  <div class="col-lg-12 no-padding">
-    <div class="row card__quote-manual justify-content-between">
-      <div class="col-lg-2" class="" id="carrier_label"> 
-        <label>Carrier Manual</label>
-        <?php echo e(Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual'])); ?>
-
-      </div>
-      <div class="col-lg-2" id="airline_label" style="display:none;">
-        <br>
-        <label>Airline</label>
-        <div class="form-group">
-          <?php echo e(Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option'])); ?>
-
-        </div>
-      </div>
-      <div class="col-lg-8 d-flex justify-content-center align-items-end align-self-end">
-        <?php if(isset($arreglo)): ?>
-        <?php if($arreglo->isEmpty()): ?>
-        <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
-        <?php endif; ?>
-        <?php endif; ?>
-      </div><!-- aqui -->
-      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-        <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-        </button>
-      </div>
-    </div>
-  </div>
   <?php echo Form::close(); ?>
 
 
@@ -830,7 +820,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?>' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
+                      <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?> infocheck' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
                       <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate"  rate-id ='<?php echo e($arr->id); ?>'>Select <span class="la la-arrow-right"></span></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
@@ -860,7 +850,7 @@
                         <div class="col-lg-6 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  <?php echo e(\Carbon\Carbon::parse($arr->contract->validity)->format('d M Y')); ?> - <?php echo e(\Carbon\Carbon::parse($arr->contract->expire)->format('d M Y')); ?>
 
-                        
+
                         </div>
                         <?php endif; ?>
 
@@ -923,7 +913,7 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" <?php echo e($equipmentHides['20']); ?>>
-                        <span class="bg-rates"> <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00'); ?>  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00'); ?>     </b>      
+                          <span class="bg-rates"> <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00'); ?>  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  <?php echo e(isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00'); ?>     </b>      
                         </div>      
                         <div class="wth" <?php echo e($equipmentHides['40']); ?>>
                           <span class="bg-rates"> <?php echo e(isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00'); ?></span> <span class="bg-rates">+ <?php echo e(isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00'); ?>     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  <?php echo e(isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00'); ?>            </b>       
