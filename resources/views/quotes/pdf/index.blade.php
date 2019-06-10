@@ -59,18 +59,18 @@
                 <tbody>
                 <tr>
                     <td>
-                                    <span id="origin_input" style="color: #787878;">
-                                        @if($quote->origin_harbor_id!='')
-                                            Port: {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
-                                        @endif
-                                        @if($quote->origin_airport_id!='')
-                                            Airport: {{$quote->origin_airport->name}}
-                                        @endif
-                                        <br>
-                                        @if($quote->origin_address!='')
-                                            Address: {{$quote->origin_address}}
-                                        @endif
-                                    </span>
+                        <span id="origin_input" style="color: #787878;">
+                            @if($quote->origin_harbor_id!='')
+                            Port: {{$quote->origin_harbor->name}}, {{$quote->origin_harbor->code}}
+                            @endif
+                            @if($quote->origin_airport_id!='')
+                            Airport: {{$quote->origin_airport->name}}
+                            @endif
+                            <br>
+                            @if($quote->origin_address!='')
+                            Address: {{$quote->origin_address}}
+                            @endif
+                        </span>
                     </td>
                 </tr>
                 </tbody>
@@ -84,18 +84,18 @@
                 <tbody>
                 <tr>
                     <td>
-                                    <span id="destination_input" style="color: #787878;">
-                                        @if($quote->destination_harbor_id!='')
-                                            Port: {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
-                                        @endif
-                                        @if($quote->destination_airport_id!='')
-                                            Airport: {{$quote->destination_airport->name}}
-                                        @endif
-                                        <br>
-                                        @if($quote->destination_address!='')
-                                            Address: {{$quote->destination_address}}
-                                        @endif
-                                    </span>
+                        <span id="destination_input" style="color: #787878;">
+                            @if($quote->destination_harbor_id!='')
+                            Port: {{$quote->destination_harbor->name}}, {{$quote->destination_harbor->code}}
+                            @endif
+                            @if($quote->destination_airport_id!='')
+                            Airport: {{$quote->destination_airport->name}}
+                            @endif
+                            <br>
+                            @if($quote->destination_address!='')
+                            Address: {{$quote->destination_address}}
+                            @endif
+                        </span>
                     </td>
                 </tr>
                 </tbody>

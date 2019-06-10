@@ -121,6 +121,23 @@ h3.m-subheader__title{
   color:#061D2C !important;
 }
 
+.down {
+  border: solid $primary-color;
+  border-width: 0 5px 5px 0;
+  display: inline-block;
+  padding: 6px;
+  margin-top: -10px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transition: border-width 150ms ease-in-out;
+  cursor: pointer;
+}
+
+.down:hover {
+  border-width: 0 4px 4px 0;
+}
+
+
 //--- Modals ---
 
 .modal .modal-content .modal-body {
@@ -129,12 +146,43 @@ h3.m-subheader__title{
 
 //--- Buttons ---
 
+.btn-group-xs > .btn, .btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
+}
+
 .btn:hover{
   font-weight: 600 !important;
 }
 .btn-primary{
   background-color: $color-dark-blue !important;
   border: 1px solid $color-dark-blue !important;
+}
+
+.btn-primary-v2{
+  background-color: $color-white !important;
+  border: 2px solid $primary-color !important;
+  color: $primary-color !important;
+}
+
+.btn-primary-v2:hover{
+  background-color: $color-dark-blue !important;
+  border: 2px solid $color-dark-blue !important;
+  color: $color-white !important;
+}
+
+.btn-primary-plus{
+  background-color: $primary-color !important;
+  border: 2px solid $primary-color !important;
+  color: $color-white !important;
+}
+
+.btn-primary-plus:hover{
+  background-color: $color-dark-blue !important;
+  border: 2px solid $color-dark-blue !important;
+  color: $color-white !important;
 }
 
 .btn.btn-secondary{
@@ -205,6 +253,7 @@ h3.m-subheader__title{
   width: 100%;
   padding: 0 2.2rem;
   height: 4.1rem;
+  border-radius: 10px !important;
 }
 
 .hide{
@@ -678,4 +727,10 @@ th#options-limit-fcl {
   border: 1px solid #f4f5f8;
   margin-top: -20px;
   padding: 25px;
+}
+
+.custom-portlet{
+  border-radius: 10px !important;
+  background-color: #F6F6F6 !important;
+  border: 1px solid #c5c5c5;
 }

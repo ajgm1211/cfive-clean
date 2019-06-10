@@ -97,6 +97,14 @@ class CalculationtypeTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
+            10 => 
+            array (
+                'id' => 11,
+                'name' => 'Per Invoice',
+                'code' => 'INV',
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
         ));
         
         

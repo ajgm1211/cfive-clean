@@ -165,7 +165,7 @@
                   <div class="panel-heading title-quote size-14px"><b>Destination address</b></div>
                   <div class="panel-body">
               <span id="destination_input" class="color-blue">
-                {{$quote->destination_address}}                                     
+                {{$quote->destination_address}}
               </span>
                   </div>
                 </div>

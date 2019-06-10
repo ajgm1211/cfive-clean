@@ -197,8 +197,6 @@ class ApiController extends Controller
             $q->where('contracts.company_user_id',\Auth::user()->company_user_id);
         })->with('contract')->get();
 
-        //$contracts = DB::table('rates')->join('contracts', 'contracts.id', '=', 'rates.contract_id')->get();
-        $array = new Collection();
         $collection = Collection::make($rates);
         $collection->transform(function ($rate) {
             $rate->origin_port=$rate->port_origin->code;
@@ -237,6 +235,7 @@ class ApiController extends Controller
 
     public function charges(Request $request)
     {
+
         $charges=ViewLocalCharges::whereHas('contract',function ($q) {
             $q->where('company_user_id', \Auth::user()->company_user_id);
         })->get();

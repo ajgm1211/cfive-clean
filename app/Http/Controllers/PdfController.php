@@ -177,7 +177,7 @@ class PdfController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
 
-        return $pdf->stream('quote');
+        return $pdf->stream('quote_'.$quote->id.'.pdf');
     }
 
     public function quote_2($id)
@@ -304,7 +304,7 @@ class PdfController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view);
 
-        return $pdf->stream('quote');
+        return $pdf->stream('quote_'.$quote->id.'.pdf');
     }
 
     public function send_pdf_quote(Request $request)
