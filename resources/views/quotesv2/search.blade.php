@@ -429,7 +429,6 @@
                 {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
             </div>
-
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -647,46 +646,39 @@
                   </div>
                 </div>
               </div>
+            </div><br>
+
+            <div class="row">
+              <div class="col-lg-12 no-padding">
+                <div class="row  justify-content-between">
+                  <div class="col-lg-10 d-flex  align-items-end align-self-end">
+                    @if(isset($arreglo))
+                    @if($arreglo->isEmpty())
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                    @endif
+                    @endif
+                  </div><!-- aqui -->
+                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
-            <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
+            
+            <div class="row">
+              <div class="col-lg-12">   
+                <center>
+                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                </center>
+              </div>
+            </div>
           </div>
         </div>      
       </div>
     </div>
-
-
   </div>
 
-
-  <div class="col-lg-12 no-padding">
-    <div class="row card__quote-manual justify-content-between">
-      <div class="col-lg-2" class="" id="carrier_label"> 
-        <label>Carrier Manual</label>
-        {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual']) }}
-      </div>
-      <div class="col-lg-2" id="airline_label" style="display:none;">
-        <br>
-        <label>Airline</label>
-        <div class="form-group">
-          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
-        </div>
-      </div>
-      <div class="col-lg-8 d-flex justify-content-center align-items-end align-self-end">
-        @if(isset($arreglo))
-        @if($arreglo->isEmpty())
-        <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
-        @endif
-        @endif
-      </div><!-- aqui -->
-      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-        <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-        </button>
-      </div>
-    </div>
-  </div>
   {!! Form::close() !!}
 
 
@@ -837,7 +829,7 @@
                         @else
                         <div class="col-lg-6 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-                        
+
                         </div>
                         @endif
 
@@ -897,7 +889,7 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
-                        <span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
+                          <span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
                         </div>      
                         <div class="wth" {{ $equipmentHides['40'] }}>
                           <span class="bg-rates"> {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}            </b>       
