@@ -4,6 +4,12 @@
   width: auto;
   font-weight: bold;
 }
+.currency {
+  font-size: 10px;
+  color: #55597f;
+  width: auto;
+  font-weight: bold;
+}
 .portalphacode {
   font-size: 12px;
   color: #7a73ad;
