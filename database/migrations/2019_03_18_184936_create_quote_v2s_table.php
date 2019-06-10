@@ -20,7 +20,7 @@ class CreateQuoteV2sTable extends Migration
             $table->enum('type',['LCL','FCL','AIR']);
             $table->string('delivery_type');
             $table->json('equipment')->nullable();
-            $table->integer('cargo_type')->nullable();
+            //$table->integer('cargo_type')->nullable();
             $table->float('chargeable_weight')->nullable();
             $table->integer('company_id')->unsigned();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
