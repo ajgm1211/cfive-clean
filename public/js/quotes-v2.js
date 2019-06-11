@@ -994,8 +994,41 @@ $(document).on('click', '.delete-charge-lcl', function () {
               'success'
             )
           }
-          $(theElement).closest('tr').remove();
-          //setTimeout(location.reload.bind(location), 3000);
+          if(data.type==1){
+            $(theElement).closest('tr').remove();
+          }else{
+            setTimeout(location.reload.bind(location), 3000); 
+          }
+        }
+      });
+    }
+  });
+});
+
+//Delete inland
+$(document).on('click', '.delete-inland', function () {
+  var id=$(this).closest('ul').find('.inland_id').val();
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "Please confirm!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, I am sure!'
+  }).then(function (result) {
+    if (result.value) {
+      $.ajax({
+        type: 'GET',
+        url: '/v2/quotes/delete/inland/'+id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Updated!',
+              'The charge has been deleted.',
+              'success'
+            )
+          }
+          $(theElement).closest('span').find('.tab-content').remove();
         }
       });
     }
@@ -1110,7 +1143,7 @@ function update_remark($id,$content,$v){
           'success'
         )
 
-        $(".remarks_span_"+$v).html(data.rate['remarks']);
+        $(".remarks_box_"+$v).html(data.rate['remarks']);
         $(".remarks_span_"+$v).removeAttr('hidden');
         $(".remarks_textarea_"+$v).attr('hidden','true');
         $(".update_remarks_"+$v).attr('hidden','true');
@@ -1411,6 +1444,18 @@ function addOriginCharge($value){
 
 function addDestinationCharge($value){
   var $template = $('#destination_charges_'+$value),
+      $clone = $template
+  .clone()
+  .removeClass('hide')
+  .removeAttr('id')
+  .insertAfter($template)
+  $clone.find("select").select2({
+    placeholder: "Currency"
+  });
+}
+
+function addInlandCharge($value){
+  var $template = $('#inland_charges_'+$value),
       $clone = $template
   .clone()
   .removeClass('hide')
