@@ -656,5 +656,19 @@ Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->gro
 
 Route::resource('search', 'SearchController')->middleware('auth');
 
+// Nuevos terminos y condiciones 
+
+Route::group(['prefix' => 'termsv2', 'middleware' => ['auth']], function () {
+
+  Route::resource('termsv2', 'TermsAndConditionV2sController');
+  Route::get('list', 'TermsAndConditionV2sController@index')->name('termsv2.list');
+  Route::get('add', 'TermsAndConditionV2sController@add')->name('termsv2.add');
+  Route::get('edit/{id}', 'TermsAndConditionV2sController@edit')->name('termsv2.edit');
+  Route::get('delete/{id}', 'TermsAndConditionV2sController@destroy')->name('termsv2.delete');
+  Route::get('msg/{id}', 'TermsAndConditionV2sController@destroymsg')->name('termsv2.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
 Auth::routes();
 

@@ -817,6 +817,7 @@
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>><span class="darkblue validate"><?php echo e($arr->total40hc); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['40nor']); ?>><span class="darkblue validate"><?php echo e($arr->total40nor); ?> </span> <span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
+                        <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
