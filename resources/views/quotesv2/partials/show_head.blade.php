@@ -211,7 +211,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="m-portlet custom-portlet no-border">
-                        <div class="m-portlet__body ">
+                        <div class="m-portlet__body " style="color: #1d3a6e !important;">
                             @if(!empty($package_loads) && count($package_loads)>0)
                                 <div class="row">
                                     <div class="col-md-12">
