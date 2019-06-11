@@ -918,9 +918,9 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                    && $validitytoExiBol         == true
                                    && $values 					== true ){
 
-                                    if($differentiatorBol == false){ //si es puerto verificamos si exite uno creado con country
+                                    if($differentiatorBol == false){ //si es puerto verificamos si exite uno creado con puerto
                                         $typeplace = 'globalcharport';
-                                    }else {  //si es country verificamos si exite uno creado con puerto
+                                    }else {  //si es country verificamos si exite uno creado con country
                                         $typeplace = 'globalcharcountry';
                                     }
 
