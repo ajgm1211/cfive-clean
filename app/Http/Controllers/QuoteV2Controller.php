@@ -3390,7 +3390,12 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
-  //Delete charge
+  /**
+   * Delete Charges FCL
+   * @param Request $request 
+   * @param integer $id 
+   * @return STRING Json
+   */
 
   public function deleteCharge(Request $request, $id){
     if($request->type==1){
@@ -3405,14 +3410,46 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok','type'=>$request->type]);
   }
 
-  //Delete charge lcl air
+  /**
+   * Delete charges FCL/AIR
+   * @param Request $request 
+   * @param integer $id 
+   * @return STRING Json
+   */
 
-  public function deleteChargeLclAir($id){
-    ChargeLclAir::where('id',$id)->delete();
+  public function deleteChargeLclAir(Request $request, $id){
+    if($request->type==1){
+      ChargeLclAir::where('id',$id)->delete();
+    }else{
+      $charge = ChargeLclAir::findOrFail($id);
+      $charge->units=0;
+      $charge->price_per_unit=0;
+      $charge->markup=0;
+      $charge->total=0;
+      $charge->update();
+    }
+    return response()->json(['message' => 'Ok','type'=>$request->type]);
+  }
+
+  /**
+   * Delete inlands
+   * @param Request $request 
+   * @param integer $id 
+   * @return STRING Json
+   */
+
+  public function deleteInland(Request $request, $id){
+    
+    AutomaticInland::where('id',$id)->delete();
+    
     return response()->json(['message' => 'Ok']);
   }
 
-  // Store
+  /**
+   * Store quotes
+   * @param Request $request 
+   * @return type
+   */
 
   public function storeCharge(Request $request){
 
