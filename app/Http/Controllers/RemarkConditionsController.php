@@ -69,7 +69,7 @@ class RemarkConditionsController extends Controller
         foreach($ports as $i){
           $remarksport = new RemarkHarbor();
           $remarksport->port_id = $i;
-          $remarksport->term()->associate($remark);
+          $remarksport->remark()->associate($remark);
           $remarksport->save();
         }
       }
@@ -167,7 +167,7 @@ class RemarkConditionsController extends Controller
         foreach($ports as $i){
           $remarksport = new RemarkHarbor();
           $remarksport->port_id = $i;
-          $remarksport->term()->associate($remark);
+          $remarksport->remark()->associate($remark);
           $remarksport->save();
         }
       }
