@@ -286,6 +286,14 @@
                                     </span>
                                 </a>
                             </li>
+                                  <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                                    <span class="m-menu__link-text">
+                                       Remarks
+                                    </span>
+                                </a>
+                            </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-share"></i>
