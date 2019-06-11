@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateTermsAndConditionv2sTable extends Migration
+{
+  /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+  public function up()
+  {
+    Schema::create('termsAndConditionV2s', function (Blueprint $table) {
+      $table->increments('id');
+      $table->string('name');
+      $table->integer('user_id')->unsigned();
+      $table->string('import',3000)->nullable();
+      $table->string('export',3000)->nullable();
+      $table->enum('type',['LCL','FCL','AIR']);
+      $table->integer('company_user_id')->unsigned();
+      $table->integer('language_id')->unsigned()->nullable();
+      $table->foreign('language_id')->references('id')->on('languages');
+      $table->foreign('company_user_id')->references('id')->on('company_users');
+      $table->foreign('user_id')->references('id')->on('users');
+      $table->timestamps();
+    });
+  }
+
+  /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+  public function down()
+  {
+    Schema::dropIfExists('terms_and_conditionv2s');
+  }
+}
