@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RemarkCondition extends Model
 {
-  protected $table = "termsAndConditions";
+  protected $table = "remark_conditions";
   protected $fillable = ['id', 
                          'user_id',
                          'name',
@@ -21,11 +21,14 @@ class RemarkCondition extends Model
   }
 
 
+
   public function remarksCarriers(){
-    return $this->HasMany('App\RemarkCarrier','remark_condition_id');
+    
+     return $this->HasManyThrough('App\Carrier','App\RemarkCarrier','remark_condition_id','id','id','carrier_id');
+
   }
-    public function remarksHarbors(){
-    return $this->HasMany('App\RemarkHarbor','remark_condition_id');
+  public function remarksHarbors(){
+    return $this->HasManyThrough('App\Harbor','App\RemarkHarbor','remark_condition_id','id','id','port_id');
   }
 
   public function language(){
