@@ -130,55 +130,6 @@ class NewContractRequestsController extends Controller
             ->make();
     }
 
-    public function indexListClient(){
-        $company_userid = \Auth::user()->company_user_id;
-        return view('Requests.indexClient',compact('company_userid'));
-    }
-
-    public function listClient($id){
-
-        //dd('llega');
-        $Ncontracts = NewContractRequest::where('company_user_id',$id)->orderBy('id', 'desc')->get();
-        //dd($Ncontracts[0]['companyuser']['name']);
-
-        return Datatables::of($Ncontracts)
-            ->addColumn('name', function ($Ncontracts) {
-                return $Ncontracts->namecontract;
-            })
-            ->addColumn('number', function ($Ncontracts) {
-                return $Ncontracts->numbercontract;
-            })
-            ->addColumn('validation', function ($Ncontracts) {
-                return $Ncontracts->validation;
-            })
-            ->addColumn('date', function ($Ncontracts) {
-                return $Ncontracts->created;
-            })
-
-            ->addColumn('status', function ($Ncontracts) {
-                $color='';
-                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
-                    //$color = 'color:#031B4E';
-                    $color = 'color:#f81538';
-                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
-                    $color = 'color:#5527f0';
-                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
-                    $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
-                }
-
-                return '<label style="'.$color.'">'.$Ncontracts->status.'</label>';
-            })
-            ->addColumn('action', function ($Ncontracts) {
-                return ' <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
-                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
-                </a>';
-            })
-
-            ->make();
-    }
-
     public function store(Request $request)
     {
         //dd($request->all());
