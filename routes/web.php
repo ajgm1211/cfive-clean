@@ -153,11 +153,7 @@ Route::prefix('Requests')->group(function () {
 
   Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
 
-  Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
-
-  Route::get('RequestImportation/listClient/{id}','NewContractRequestsController@listClient')->name('RequestImportation.listClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  
   Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator']);
 
   Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')

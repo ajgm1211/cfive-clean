@@ -88,6 +88,8 @@ class NewContractRequestLclController extends Controller
                     $color = 'color:#f81538';
                 } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
                     $color = 'color:#5527f0';
+                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
+                    $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
