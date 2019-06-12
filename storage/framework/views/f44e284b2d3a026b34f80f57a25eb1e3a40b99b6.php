@@ -1254,7 +1254,7 @@
                     <span class="darkblue cabezeras">Remarks</span><br><br>
                   </div>
                   <div class="row">
-                    <div class="col-lg-6"><span class="monto-down"><?php echo e($arr->contract->remarks); ?> </span></div>
+                    <div class="col-lg-6"><span class="monto-down"><?php echo $arr->remarks; ?> </span></div>
 
                   </div>
                 </div>
