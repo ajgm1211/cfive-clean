@@ -1314,17 +1314,16 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
   $('.btn-input__select').on('click', function(){
-    var clase = $(this).attr('class');
+    var clase = $(this).attr('selected');
     $(this).html('Selected');
     $(this).addClass('selected');
-    
     
   });
   
     $('.btn-input__select').on('click', function(){
       if($('.btn-input__select').hasClass('selected')){
       $(this).html('Seledasdcted');
-        }
+        
     });
       
     
