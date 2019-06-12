@@ -56,6 +56,11 @@ use App\ScheduleType;
 
 class QuoteV2Controller extends Controller
 {
+  /**
+   * Show quotes list
+   * @param Request $request 
+   * @return view
+   */
   public function index(Request $request){
     $company_user='';
     $currency_cfg = '';
@@ -102,18 +107,6 @@ class QuoteV2Controller extends Controller
       if(isset($quote->company)){
         $company  = $quote->company->business_name;
       }
-
-      /*if(!$quote->origin_address){
-        $origin = $quote->origin_port->display_name;
-      } else {
-        $origin = $quote->origin_address;
-      }
-
-      if(!$quote->destination_address){
-        $destination = $quote->destination_port->display_name;
-      } else {
-        $destination = $quote->destination_address;
-      }*/
       if($quote->quote_id!=''){
         $id  = $quote->quote_id;
       }else{
@@ -196,6 +189,11 @@ class QuoteV2Controller extends Controller
     ->editColumn('id', '{{$id}}')->make(true);
   }
 
+  /**
+   * Show quote's details
+   * @param integer $id 
+   * @return view
+   */
   public function show($id)
   {
     //Setting id
@@ -4227,6 +4225,12 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
+  /**
+   * Description
+   * @param type $pluck 
+   * @return type
+   */
+
   public function skipPluck($pluck)
   {
     $skips = ["[","]","\""];
@@ -4243,6 +4247,11 @@ class QuoteV2Controller extends Controller
     }
     return $rateC;
   }
+
+  /**
+   * Search amounts by ports
+   * @return type
+   */
   public function search()
   {
     $company_user_id=\Auth::user()->company_user_id;
