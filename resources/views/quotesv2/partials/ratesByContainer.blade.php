@@ -1079,9 +1079,9 @@
                                                 <div class='row'>
                                                     <div class="col-md-12 ">
                                                         <div class="m-portlet__body">
-                                                            <a class="btn btn-primary-v2 btn-edit" onclick="addInlandCharge({{$x}})" >
+                                                            <button class="btn btn-primary-v2 btn-edit pull-right" data-toggle="modal" data-target="#createInlandModal">
                                                                 Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                                            </a>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>

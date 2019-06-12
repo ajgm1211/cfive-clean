@@ -178,7 +178,7 @@
                     <th class="unit"><b>POL</b></th>
                     <th class="unit"><b>POD</b></th>
                     <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
-                    <th ><b>WD</b></th>
+                    <th ><b>W/M</b></th>
                     <th ><b>Total</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>

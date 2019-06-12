@@ -188,6 +188,7 @@
     </div>
     @include('quotesv2.partials.sendQuoteModal')
     @include('quotesv2.partials.createRateModal')
+    @include('quotesv2.partials.createInlandModal')
 @endsection
 
 @section('js')
