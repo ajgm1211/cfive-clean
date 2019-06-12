@@ -53,6 +53,9 @@ use App\Airline;
 use App\TermsPort;
 use App\TermsAndCondition;
 use App\ScheduleType;
+use App\RemarkCondition;
+use App\RemarkHarbor;
+use App\RemarkCarrier;
 
 class QuoteV2Controller extends Controller
 {
@@ -462,7 +465,7 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
-      
+
     }
 
     //Adding country codes to rates collection
@@ -4531,6 +4534,55 @@ class QuoteV2Controller extends Controller
     return $terms;
   }
 
+  public function remarksCondition($origin_port,$destiny_port,$carrier,$mode){
+
+    // TERMS AND CONDITIONS 
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $rem_port_orig = array($origin_port->id);
+    $rem_port_dest = array($destiny_port->id);
+    $rem_carrier_id[] = $carrier->id;
+    array_push($rem_carrier_id,$carrier_all);
+
+    /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();*/
+    
+
+    
+    $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id) {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarkO='';
+    $remarkD='';
+    $rems ='';
+
+    foreach($remarks_origin as $remOrig){
+      $rems .="<br>";
+      $remarkO = $origin_port->name." / ".$carrier->name;
+      $remarkO .=  "<br>".$remOrig->remark->export."<br>";
+    }
+    foreach($remarks_destination as $remDest){
+      $rems .="<br>";
+      $remarkD = $destiny_port->name." / ".$carrier->name;
+      $remarkD .=  "<br>".$remDest->remark->export."<br>";
+    }
+    $rems = $remarkO." ".$remarkD ; 
+    return $rems;
+
+  }
+
   public function store(Request $request){
 
 
@@ -4720,8 +4772,11 @@ class QuoteV2Controller extends Controller
           $rates =   json_encode($rateO->rate);
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
-
-          $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$info_D->remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
+          
+          $remarks = $info_D->remarks."<br>";          
+          $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
+          
+          $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
 
@@ -4826,9 +4881,7 @@ class QuoteV2Controller extends Controller
             }  
           }
 
-
-
-          $terms .= $this->termsandconditions($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
+   
 
         }
         //CHARGES ORIGIN
