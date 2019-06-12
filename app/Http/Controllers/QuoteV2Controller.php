@@ -4549,9 +4549,9 @@ class QuoteV2Controller extends Controller
         $b->wherein('carrier_id',$term_carrier_id);
       });
     })->get();*/
-    
 
-    
+
+
     $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
       $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
         $b->wherein('carrier_id',$rem_carrier_id);
@@ -4772,10 +4772,10 @@ class QuoteV2Controller extends Controller
           $rates =   json_encode($rateO->rate);
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
-          
+
           $remarks = $info_D->remarks."<br>";          
           $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
-          
+
           $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
@@ -4881,7 +4881,7 @@ class QuoteV2Controller extends Controller
             }  
           }
 
-   
+
 
         }
         //CHARGES ORIGIN
@@ -6389,7 +6389,12 @@ class QuoteV2Controller extends Controller
         $data->setAttribute('sheduleType',null);
       }
       //remarks
-      $data->setAttribute('remarks',$data->contract->remarks);
+      $mode = "";
+
+      $remarks = $data->contract->remarks."<br>";
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+
+      $data->setAttribute('remarks',$remarks);
 
 
       // Valores
