@@ -3,11 +3,11 @@
 @section('content')
 <div class="m-portlet">
     <!--begin::Form-->
-    {!! Form::model($term, ['route' => ['terms.update', $term], 'method' => 'PUT']) !!}
+    {!! Form::model($remark, ['route' => ['remarks.update', $remark], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
-                @include('terms.partials.form_terms')
+                @include('remarks.partials.form_terms')
             </div>
         </div>
         <div class="m-portlet__foot m-portlet__foot--fit">

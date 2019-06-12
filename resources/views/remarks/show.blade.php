@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Show term & condition')
+@section('title', 'Show remarks & condition')
 @section('content')
 <div class="m-portlet">
     <!--begin::Form-->
-    {!! Form::model($term, ['route' => ['terms.update', $term], 'method' => 'PUT']) !!}
+    {!! Form::model($remark, ['route' => ['remarks.update', $remark], 'method' => 'PUT']) !!}
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
             <div class="form-group m-form__group">
@@ -27,18 +27,18 @@
                 
                 <div class="form-group m-form__group">
                     {!! Form::label('Language', 'Language') !!}
-                    {!! Form::select('language',$languages,$term['language_id'], 
+                    {!! Form::select('language',$languages,$remark['language_id'], 
                     ['class' => 'm-select2-general form-control','disabled' => 'true']) !!}
                 </div>
 
                 <div class="form-group m-form__group">
                     {!! Form::label('Import', 'Import terms') !!}
-                    <div class="jumbotron">{!! $term->import!!}</div>
+                    <div class="jumbotron">{!! $remark->import!!}</div>
                 </div>
 
                 <div class="form-group m-form__group">
                     {!! Form::label('Export', 'Export terms') !!}
-                    <div class="jumbotron">{!! $term->export!!}</div>
+                    <div class="jumbotron">{!! $remark->export!!}</div>
                 </div>
             </div>
         </div>
