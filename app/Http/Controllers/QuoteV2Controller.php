@@ -211,7 +211,7 @@ class QuoteV2Controller extends Controller
     $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
-    $harbors = Harbor::get()->pluck('display_name','id_complete');
+    $harbors = Harbor::get()->pluck('display_name','id');
     $countries = Country::pluck('name','id');
 
     $prices = Price::pluck('name','id');
@@ -4143,6 +4143,11 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
+  /**
+   * Store new rates
+   * @param Request $request 
+   * @return STRING Json
+   */
   public function storeRates(Request $request){
 
     $arregloNull = array();
@@ -4174,6 +4179,50 @@ class QuoteV2Controller extends Controller
       $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id')  ,'rates'=> $arregloNull ,'markups'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'currency_id'=>  $idCurrency ,'total' => $arregloNull,'quote_id'=>$quote->id]);
       $rate = AutomaticRate::create($request->all());
     }
+
+    if($quote->type == 'FCL'){
+      $charge = new Charge();
+      $charge->automatic_rate_id=$rate->id;
+      $charge->type_id=3;
+      $charge->calculation_type_id=5;
+      $charge->amount=$arregloNull;
+      $charge->markups=$arregloNull;
+      $charge->currency_id=$idCurrency;
+      $charge->save();
+    }else{
+      $charge = new ChargeLclAir();
+      $charge->automatic_rate_id=$rate->id;
+      $charge->type_id=3;
+      $charge->calculation_type_id=5;
+      $charge->units=0;
+      $charge->price_per_unit=0;
+      $charge->markup=0;
+      $charge->total=0;
+      $charge->currency_id=$idCurrency;
+      $charge->save();
+    }
+
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+  }
+
+  /**
+   * Store new inlands
+   * @param Request $request 
+   * @return STRING Json
+   */
+  public function storeInlands(Request $request){
+
+    $arregloNull = array();
+    $arregloNull = json_encode($arregloNull);
+    $quote = QuoteV2::find($request->input('quote_id'));
+    $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+    $idCurrency = $company->companyUser->currency_id;
+    $dateQ = explode('/',$request->input('date'));
+    $since = $dateQ[0];
+    $until = $dateQ[1];
+
+    $request->request->add(['contract' => '','automatic_rate_id'=>41 ,'rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull ,'currency_id'=>  $idCurrency ]);
+    AutomaticInland::create($request->all());
 
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }

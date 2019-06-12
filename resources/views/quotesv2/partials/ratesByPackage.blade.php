@@ -601,7 +601,7 @@
                                           <div class="col-md-12">
                                             <h5 class="title-quote pull-right">
                                               <b>Add inland charge</b>
-                                              <a class="btn" onclick="addInlandCharge({{$i}})" style="vertical-align: middle">
+                                              <a class="btn" onclick="addInlandCharge({{$x}})" style="vertical-align: middle">
                                                 <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
                                               </a>
                                             </h5>
@@ -610,14 +610,17 @@
                                       </div>
                                     </div>
                                     <br>
+                                    @php
+                                      $x++;
+                                    @endphp
                                   @endforeach
                                 @else
                                   <div class='row'>
                                     <div class="col-md-12 ">
                                       <div class="m-portlet__body">
-                                        <a class="btn btn-primary-v2 btn-edit" href="" target="_blank">
+                                        <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-target="#createInlandModal">
                                           Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                        </a>
+                                        </button>
                                       </div>
                                     </div>
                                   </div>

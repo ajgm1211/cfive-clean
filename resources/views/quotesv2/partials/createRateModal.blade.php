@@ -85,7 +85,22 @@
                           {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option',$quote->type=='AIR' ? 'required':'']) }}
                       </div>
                     </div>
+                    <div class="col-md-4" class="" > 
+                        <label>Schedule type</label>
+                        <input type="text" name="schedule_type" value="" class="form-control">
+                    </div>
                 </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Transit time</label>
+                        <input type="number" name="transit_time" value="" class="form-control">
+                    </div>
+                    <div class="col-md-4"> 
+                        <label>Via</label>
+                        <input type="text" name="via" value="" class="form-control">
+                    </div>
+                </div>                
                 <hr>
                 <div class="form-group m-form__group">
                     <button type="submit" class="btn btn-primary">Save</button>
