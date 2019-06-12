@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Terms & Conditions')
+@section('title', 'Remarks & Conditions')
 @section('content')
 
 <div class="m-content">

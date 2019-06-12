@@ -14,7 +14,7 @@ use App\RemarkCarrier;
 
 class RemarkConditionsController extends Controller
 {
-    public function index()
+  public function index()
   {
 
     $companyUser = CompanyUser::All();
@@ -105,12 +105,13 @@ class RemarkConditionsController extends Controller
     $id = obtenerRouteKey($id);
     $remark = RemarkCondition::where('id',$id)->with('remarksHarbors','remarksCarriers','language')->first();
 
+
     $languages = Language::pluck('name','id');
-    $selected_harbors   = collect($remark->harbor);
+    $selected_harbors   = collect($remark->remarksHarbors);
     $selected_harbors   = $selected_harbors->pluck('id','name');
-    $selected_carriers  = collect($remark->TermConditioncarriers);
-    $selected_carriers  = $selected_carriers->pluck('carrier_id');
-    //dd($selected_carriers);
+    $selected_carriers  = collect($remark->remarksCarriers);
+    $selected_carriers  = $selected_carriers->pluck('id','name');
+
     $harbors = harbor::all()->pluck('name','id');
     $carriers = Carrier::pluck('name','id');
 
@@ -128,11 +129,11 @@ class RemarkConditionsController extends Controller
     $id = obtenerRouteKey($id);
     $remark = RemarkCondition::where('id',$id)->with('remarksHarbors','remarksCarriers','language')->first();
     $languages = Language::pluck('name','id');
-    $selected_harbors = collect($remark->harbor);
+    $selected_harbors = collect($remark->remarksHarbors);
     $selected_harbors = $selected_harbors->pluck('id','name');
     $harbors = harbor::all()->pluck('name','id');
-    $selected_carriers  = collect($remark->TermConditioncarriers);
-    $selected_carriers  = $selected_carriers->pluck('carrier_id');
+    $selected_carriers  = collect($remark->remarksCarriers);
+    $selected_carriers  = $selected_carriers->pluck('id','name');
     $carriers = Carrier::pluck('name','id');
     return view('remarks.edit', compact('remark', 'harbors', 'selected_harbors','languages','carriers','selected_carriers'));
   }
@@ -162,7 +163,7 @@ class RemarkConditionsController extends Controller
 
       $ports = $request->ports;
       if(count($ports) >= 1){
-        RemarkHarbor::where('term_id',$id)->delete();
+        RemarkHarbor::where('remark_condition_id',$id)->delete();
 
         foreach($ports as $i){
           $remarksport = new RemarkHarbor();
