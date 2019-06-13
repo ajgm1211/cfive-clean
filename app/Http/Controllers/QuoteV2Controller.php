@@ -59,7 +59,7 @@ class QuoteV2Controller extends Controller
   /**
    * Show quotes list
    * @param Request $request 
-   * @return view
+   * @return Illuminate\View\View
    */
   public function index(Request $request){
     $company_user='';
@@ -192,7 +192,7 @@ class QuoteV2Controller extends Controller
   /**
    * Show quote's details
    * @param integer $id 
-   * @return view
+   * @return Illuminate\View\View
    */
   public function show($id)
   {
@@ -474,7 +474,6 @@ class QuoteV2Controller extends Controller
 
     //Adding country codes to rates collection
 
-
     foreach ($rates as $item) {
       $rates->map(function ($item) {
         if($item->origin_port_id!='' ){
@@ -501,7 +500,11 @@ class QuoteV2Controller extends Controller
     return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD'));
   }
 
-  //Actualiza cargos de la tabla rate
+  /**
+   * Update charges by rate
+   * @param Request $request 
+   * @return array json
+   */
   public function updateRateCharges(Request $request)
   {
     $charge=AutomaticRate::find($request->pk);
@@ -524,7 +527,11 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  //Actualiza cargos por rate
+  /**
+   * Update charges
+   * @param Request $request 
+   * @return array json
+   */
   public function updateQuoteCharges(Request $request)
   {
     $charge=Charge::find($request->pk);
@@ -547,7 +554,11 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  //Actualiza cargos por inlands
+  /**
+   * Update inland's charges
+   * @param Request $request 
+   * @return array json
+   */
   public function updateInlandCharges(Request $request)
   {
     $charge=AutomaticInland::find($request->pk);
@@ -589,7 +600,12 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok']);
   }
 
-  //Actualiza la cotización
+  /**
+   * Update Quote's data
+   * @param Request $request 
+   * @param integer $id 
+   * @return array json
+   */
   public function update(Request $request,$id)
   {
 
@@ -4203,10 +4219,59 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
+/**
+ * Show modal with form to edit rates
+ * @param integer $id 
+ * @return Illuminate\View\View
+ */
+  public function editRates($id){
+    $rate=AutomaticRate::find($id);
+    $quote=QuoteV2::find($rate->quote_id);
+    $harbors=Harbor::pluck('display_name','id');
+    $carriers=Carrier::pluck('name','id');
+    $airlines=Airline::pluck('name','id');
+
+    return view('quotesv2.partials.editRate', compact('rate','quote','harbors','carriers','airlines'));
+  }
+
+/**
+ * Update rates
+ * @param integer $id 
+ * @return Illuminate\View\View
+ */
+  public function updateRates(Request $request,$id){
+
+    $rate=AutomaticRate::find($id);
+    if($request->origin_port_id){
+      $rate->origin_port_id=$request->origin_port_id;
+    }
+    if($request->destination_port_id){
+      $rate->destination_port_id=$request->destination_port_id;
+    }
+    if($request->origin_airport_id){
+      $rate->origin_airport_id=$request->origin_airport_id;
+    }
+    if($request->destination_airport_id){
+      $rate->destination_airport_id=$request->destination_airport_id;
+    }
+    if($request->carrier_id){
+      $rate->carrier_id=$request->carrier_id;
+    }
+    if($request->airline_id){
+      $rate->airline_id=$request->airline_id;
+    }    
+    $rate->transit_time=$request->transit_time;
+    $rate->schedule_type=$request->schedule_type;
+    $rate->via=$request->via;
+    $rate->update();
+
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($rate->quote_id));
+  }
+
   /**
    * Store new inlands
    * @param Request $request 
-   * @return STRING Json
+   * @return Illuminate\View\View
    */
   public function storeInlands(Request $request){
 
@@ -4219,7 +4284,7 @@ class QuoteV2Controller extends Controller
     $since = $dateQ[0];
     $until = $dateQ[1];
 
-    $request->request->add(['contract' => '','automatic_rate_id'=>41 ,'rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull ,'currency_id'=>  $idCurrency ]);
+    $request->request->add(['contract' => '','rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull ,'currency_id'=>  $idCurrency ]);
     AutomaticInland::create($request->all());
 
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
@@ -4249,8 +4314,8 @@ class QuoteV2Controller extends Controller
   }
 
   /**
-   * Search amounts by ports
-   * @return type
+   * Search rates by ports
+   * @return Illuminate\View\View
    */
   public function search()
   {
@@ -4285,8 +4350,12 @@ class QuoteV2Controller extends Controller
 
   }
 
+  /**
+   * Return rates after process search
+   * @param Request $request 
+   * @return Illuminate\View\View
+   */
   public function processSearch(Request $request){
-
 
     //Variables del usuario conectado
     $company_user_id=\Auth::user()->company_user_id;

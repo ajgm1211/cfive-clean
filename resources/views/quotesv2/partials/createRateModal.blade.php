@@ -87,7 +87,7 @@
                     </div>
                     <div class="col-md-4" class="" > 
                         <label>Schedule type</label>
-                        <input type="text" name="schedule_type" value="" class="form-control">
+                        {{ Form::select('schedule_type',['Direct'=>'Direct','Transfer'=>'Transfer'],null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit','id'=>'carrieManual',$quote->type!='AIR' ? 'required':'']) }}
                     </div>
                 </div>
                 <br>

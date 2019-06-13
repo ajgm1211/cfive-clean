@@ -39,11 +39,18 @@
                       <li class="size-12px"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
                       <li class="size-12px"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
                       <li class="size-12px"><b>Via:</b> &nbsp;{{$rate->via}}</li>
-                      <li class="size-12px no-border-left d-flex justify-content-end">
-                        <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
+                      <li class="size-12px">
+                        <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                          <i class="la la-edit"></i>
+                        </button>
                       </li>
                       <li class="size-12px">
-                        <div class="delete-rate" data-rate-id="{{$rate->id}}" style="cursor:pointer;"><i class="fa fa-trash fa-4x"></i></div>
+                        <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                          <i class="la la-trash"></i>
+                        </button>
+                      </li>
+                      <li class="size-12px no-border-left d-flex justify-content-end">
+                        <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                       </li>
                     </ul>
                   </div>
@@ -526,11 +533,11 @@
                                       <div class="flex-list">
                                         <ul >
                                           <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
-                                          <li class="size-12px">From: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->origin_port->code, 0, 2))}}.svg"></li>
-                                          <li class="size-12px">To: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->destination_port->code, 0, 2))}}.svg"></li>
+                                          <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
+                                          <li class="size-12px">Type: {{$inland->type}}</li>
                                           <li class="size-12px">Contract: {{$inland->contract}}</li>
                                           <li class="size-12px no-border-left d-flex justify-content-end">
-                                            <div onclick="show_hide_element('details_inland_{{$v}}')"><i class="fa fa-angle-down"></i></div>
+                                            <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
                                           </li>
                                         </ul>
                                       </div>
@@ -540,11 +547,10 @@
                                             <tr style="height: 40px;">
                                               <td class="td-table" style="padding-left: 30px">Charge</td>
                                               <td class="td-table">Distance</td>
-                                              <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
-                                              <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
-                                              <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
-                                              <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
-                                              <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
+                                              <td class="td-table" >Units</td>
+                                              <td class="td-table" >Rate</td>
+                                              <td class="td-table" >Markup</td>
+                                              <td class="td-table" >Total</td>
                                               <td class="td-table" >Currency</td>
                                             </tr>
                                           </thead>
@@ -556,40 +562,17 @@
                                               <td class="tds">
                                                 <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
                                               </td>
-                                              <td {{ @$equipmentHides['20'] }} class="tds">
-                                                <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
-                                                +
-                                                <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->m20" data-value="{{@$inland_markups['m20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
-                                                <i class="la la-caret-right arrow-down"></i>
-                                                <span class="total_20 td-a">{{@$inland_rates['c20']+@$inland_markups['m20']}}</span>
+                                              <td  class="tds">
+                                                <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland->units}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
                                               </td>
-                                              <td {{ @$equipmentHides['40'] }} class="tds">
-                                                <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                +
-                                                <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->m40" data-value="{{@$inland_markups['m40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                <i class="la la-caret-right arrow-down"></i>
-                                                <span class="total_40 td-a">{{@$inland_rates['c40']+@$inland_markups['m40']}}</span>
+                                              <td class="tds">
+                                                <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland->rate}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                               </td>
-                                              <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                +
-                                                <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->m40hc" data-value="{{@$inland_markups['m40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                <i class="la la-caret-right arrow-down"></i>
-                                                <span class="total_40hc td-a">{{@$inland_amounts['c40hc']+@$inland_markups['m40hc']}}</span>
+                                              <td class="tds">
+                                                <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland->markup}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                               </td>
-                                              <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                +
-                                                <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->m40nor" data-value="{{@$inland_markups['m40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                <i class="la la-caret-right arrow-down"></i>
-                                                <span class="total_40nor td-a">{{@$inland_amounts['c40nor']+@$inland_markups['m40nor']}}</span>
-                                              </td>
-                                              <td {{ @$equipmentHides['45'] }} class="tds">
-                                                <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                +
-                                                <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->m45" data-value="{{@$inland_markups['m45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                <i class="la la-caret-right arrow-down"></i>
-                                                <span class="total_45 td-a">{{@$inland_amounts['c45']+@$inland_markups['m45']}}</span>
+                                              <td class="tds">
+                                                <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland->total}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                               </td>
                                               <td class="tds">
                                                 <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
@@ -597,16 +580,6 @@
                                             </tr>
                                           </tbody>
                                         </table>
-                                        <div class='row'>
-                                          <div class="col-md-12">
-                                            <h5 class="title-quote pull-right">
-                                              <b>Add inland charge</b>
-                                              <a class="btn" onclick="addInlandCharge({{$x}})" style="vertical-align: middle">
-                                                <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                              </a>
-                                            </h5>
-                                          </div>
-                                        </div>
                                       </div>
                                     </div>
                                     <br>
@@ -614,11 +587,20 @@
                                       $x++;
                                     @endphp
                                   @endforeach
+                                  <div class='row'>
+                                    <div class="col-md-12 ">
+                                      <div class="m-portlet__body">
+                                        <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                          Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
                                 @else
                                   <div class='row'>
                                     <div class="col-md-12 ">
                                       <div class="m-portlet__body">
-                                        <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-target="#createInlandModal">
+                                        <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-rate-id="{{$rate->id}}" data-target="#createInlandModal">
                                           Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
                                         </button>
                                       </div>

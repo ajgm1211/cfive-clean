@@ -21,7 +21,7 @@
                 {!! Form::open(['route' => 'quotes-v2.inlands.store', 'class' => 'form-group m-form__group dfw']) !!}
                 <div class="row">
                     <input  type="hidden" name="quote_id" value="{{$quote->id}}" class="btn btn-sm btn-default btn-bold btn-upper formu">
-                    <input  type="hidden" name="automatic_rate_id" value="{{@$rate->id}}" class="btn btn-sm btn-default btn-bold btn-upper formu">
+                    <input  type="hidden" name="automatic_rate_id" value="" class="btn btn-sm btn-default btn-bold btn-upper automatic_rate_id">
                     <div class="col-md-4" >
                         <div id="origin_harbor_label">
                           <label>Port</label>
