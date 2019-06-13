@@ -24,7 +24,13 @@
                                     <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                                 </li>
                                 <li class="size-12px">
-                                    <div class="delete-rate" data-rate-id="{{$rate->id}}" style="cursor:pointer;"><i class="fa fa-trash fa-4x"></i></div>
+                                    <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                        <i class="la la-edit"></i>
+                                    </button>
+
+                                    <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                        <i class="la la-trash"></i>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -925,16 +931,16 @@
                                                             <ul >
                                                                 <input name="inland_id" value="{{$inland->id}}" class="form-control inland_id" type="hidden" />
                                                                 <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
-                                                                <li class="size-12px">From: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->origin_port->code, 0, 2))}}.svg"></li>
-                                                                <li class="size-12px">To: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->destination_port->code, 0, 2))}}.svg"></li>
+                                                                <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
+                                                                <li class="size-12px">Type: {{$inland->type}}</li>
                                                                 <li class="size-12px">Contract: {{$inland->contract}}</li>
                                                                 <li class="size-12px no-border-left d-flex justify-content-end">
-                                                                    <div onclick="show_hide_element('details_inland_{{$v}}')"><i class="fa fa-angle-down"></i></div>
+                                                                    <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
                                                                 </li>
                                                                 <li>
-                                                                    <a class="delete-inland" style="cursor: pointer;" title="Delete">
-                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                    </a>
+                                                                    <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                                                        <i class="la la-trash"></i>
+                                                                    </button>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -999,9 +1005,9 @@
                                                                         <td class="tds">
                                                                             <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
                                                                             &nbsp;
-                                                                            <a class="delete-inland" style="cursor: pointer;" title="Delete">
+                                                                            <!--<a class="delete-inland" style="cursor: pointer;" title="Delete">
                                                                                 <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                            </a>
+                                                                            </a>-->
                                                                         </td>
                                                                     </tr>
                                                                     <tr style="height:40px;" class="hide" id="inland_charges_{{$x}}">
@@ -1056,17 +1062,6 @@
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-
-                                                            <div class='row'>
-                                                                <div class="col-md-12">
-                                                                    <h5 class="title-quote pull-right">
-                                                                        <b>Add inland charge</b>
-                                                                        <a class="btn" onclick="addInlandCharge({{$x}})" style="vertical-align: middle">
-                                                                            <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                                                        </a>
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     </span>
@@ -1075,11 +1070,20 @@
                                                         $x++;
                                                     @endphp
                                                 @endforeach
+                                                <div class='row'>
+                                                    <div class="col-md-12 ">
+                                                        <div class="m-portlet__body">
+                                                            <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                                                Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @else
                                                 <div class='row'>
                                                     <div class="col-md-12 ">
                                                         <div class="m-portlet__body">
-                                                            <button class="btn btn-primary-v2 btn-edit pull-right" data-toggle="modal" data-target="#createInlandModal">
+                                                            <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
                                                                 Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>
