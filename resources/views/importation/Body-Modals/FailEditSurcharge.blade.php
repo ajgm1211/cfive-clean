@@ -1,3 +1,4 @@
+<script src="/js/Contracts/editcontracts.js"></script>
 @if($differentiator == 1)
 @php
 $portRadio = true; 
@@ -29,11 +30,11 @@ $portRadio = false;
                         </label>
                         <div class="m-radio-inline">
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'port', $portRadio ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }} Port
+                                {{ Form::radio('typeroute', 'port', $portRadio ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')','class' => 'radio-place', 'data'=>'1' ]) }} Port
                                 <span></span>
                             </label>
                             <label class="m-radio">
-                                {{ Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
+                                {{ Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')','class' => 'radio-place', 'data'=>'2' ]) }} Country
                                 <span></span>
                             </label>
                         </div>
@@ -147,11 +148,44 @@ $portRadio = false;
     </div>
     {!! Form::close() !!}
 </div>
-<script src="/js/editcontracts.js"></script>
+
 <script>
 
     $('.m-select2-general').select2({
         placeholder: "Select an option"
+    });
+    
+    $(document).ready(function(){
+        
+    });
+    
+     function radio_place(val){
+        if(val == 1){
+            $('#portOrig').attr('required','required');
+            $('#country_orig').removeAttr('required');
+            $('#portDest').attr('required','required');
+            $('#country_dest').removeAttr('required');
+        }else if(val == 2){
+            $('#country_orig').attr('required','required');
+            $('#portOrig').removeAttr('required');
+            $('#country_dest').attr('required','required');
+            $('#portDest').removeAttr('required');
+        }
+    }
+    $(document).on('click','.radio-place',function(e){
+        var val = $(this).attr('data');
+        
+        if(val == 1){
+            $('#portOrig').attr('required','required');
+            $('#portDest').attr('required','required');
+            $('#country_orig').removeAttr('required');
+            $('#country_dest').removeAttr('required');
+        }else if(val == 2){
+            $('#country_orig').attr('required','required');
+            $('#portOrig').removeAttr('required');
+            $('#country_dest').attr('required','required');
+            $('#portDest').removeAttr('required');
+        }
     });
 
 </script>
