@@ -144,7 +144,7 @@
 
 </style>
 @endsection
-@section('title', 'Quotes')
+@section('title', 'Quotes | Details')
 @section('content')
     <div class="m-content bg-quotes">
         @if(Session::has('message.nivel'))
