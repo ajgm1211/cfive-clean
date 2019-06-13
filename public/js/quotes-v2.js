@@ -8,6 +8,27 @@ $(document).ready(function() {
     }
   });
 
+  $(".open-inland-modal").click(function () {
+    var rate_id = $(this).data('rate-id');
+    $(".modal-body .automatic_rate_id").val(rate_id);
+  });
+
+    $(document).on('click','.edit_rate_modal',function(){
+        var url = "/v2/quotes/rates/edit";
+        var rate_id = $(this).data('rate-id');
+        $.get(url + '/' + rate_id, function (data) {
+            //success data
+            console.log(data.origin_port_id);
+            $('.origin_port_id').val(data.origin_port_id);
+            $('.destination_port_id').val(data.destination_port_id);
+            $('.contract').val(data.contract);
+            $('.type').val(data.type);
+            $('.transit_time').val(data.transit_time);
+            $('.via').val(data.transit_time);
+            $('#editRateModal').modal('show');
+        }) 
+    });
+
   //Hide grouped options in pdf layout
   if($('#show_hide_select').val()=='total in'){
     $(".group_origin_charges").addClass('hide');
@@ -2014,10 +2035,6 @@ $( document ).ready(function() {
   });
 });
 
-$('.m-select2-general').select2({
-  placeholder: "Select an option"
-});
-
 function display(id){
 
   var freight = $("#freight"+id);
@@ -2757,4 +2774,13 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
   $('.width').change();
   $('.large').change();
   $('.weight').change();
+});
+
+/** Select2 **/
+$('.m-select2-general').select2({
+  placeholder: "Select an option"
+});
+
+$('.m-select2-edit').select2({
+  placeholder: "Select an option"
 });
