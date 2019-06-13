@@ -1697,6 +1697,18 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+
+    $("#total_quantity").removeAttr( "required");
+    $("#total_weight").removeAttr( "required");
+    $("#total_volume").removeAttr( "required");
+    $('#quantity').removeAttr('required');
+    $('#height').removeAttr('required');
+    $('#width').removeAttr('required');
+    $('#large').removeAttr('required');
+    $('#weight').removeAttr('required');
+    $('#volume').removeAttr('required');
+
+
     $(".infocheck").val('');
 
     $(".quote_search").show();
@@ -1733,6 +1745,13 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+
+    // Validaciones por defecto 
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+
+
     $(".infocheck").val('');
     $(".quote_search").hide();
     $(".formu").val('');
@@ -1814,6 +1833,12 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+
+    // Validaciones
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+
     $(".infocheck").val('');
     $(".quote_search").hide();
     $(".formu").val('');
@@ -2514,6 +2539,21 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
 
 function change_tab(tab){
   if(tab==2){
+    //Quitar validaciones del primer TAB 
+    $("#total_quantity").removeAttr( "required");
+    $("#total_weight").removeAttr( "required");
+    $("#total_volume").removeAttr( "required");
+
+
+    $(".type_cargo_2").prop( "required",true);
+
+    $(".quantity_2").prop( "required",true);
+    $(".height_2").prop( "required",true);
+    $(".width_2").prop( "required",true);
+    $(".large_2").prop( "required",true);
+    $(".weight_2").prop( "required",true);
+
+
     $("#total_quantity").val('');
     $("#total_weight").val('');
     $("#total_volume").val('');
@@ -2521,12 +2561,23 @@ function change_tab(tab){
     $("#chargeable_weight_total").html('');
 
   }else{
-    $('#lcl_air_load').find('.quantity').val('');
-    $('#lcl_air_load').find('.height').val('');
-    $('#lcl_air_load').find('.width').val('');
-    $('#lcl_air_load').find('.large').val('');
-    $('#lcl_air_load').find('.weight').val('');
-    $('#lcl_air_load').find('.volume').val('');
+    //colocar validaciones al cambiar tab 
+    $("#total_quantity").prop( "required",true)
+    $("#total_weight").prop( "required",true)
+    $("#total_volume").prop( "required", true );
+
+    $('#lcl_air_load').find('.quantity').val('').removeAttr('required');
+    $('#lcl_air_load').find('.height').val('').removeAttr('required');
+    $('#lcl_air_load').find('.width').val('').removeAttr('required');
+    $('#lcl_air_load').find('.large').val('').removeAttr('required');
+    $('#lcl_air_load').find('.weight').val('').removeAttr('required');
+    $('#lcl_air_load').find('.volume').val('').removeAttr('required');
+
+
+
+    $("#total_quantity_pkg_input").val('');
+    $("#total_weight_pkg_input").val('');
+    $("#total_volume_pkg_input").val('');
     $("#chargeable_weight_pkg_input").val('');
     $("#chargeable_weight_pkg").html('');
   }
@@ -2595,12 +2646,20 @@ $('#destination_airport').select2({
 });
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
-  var $template = $('#lcl_air_load_template'),
-      $clone = $template
-  .clone()
-  .removeClass('hide')
-  .removeAttr('id')
-  .insertBefore($template);
+  var $template = $('#lcl_air_load_template');
+  $clone = $template.clone().removeClass('hide').removeAttr('id');
+
+  $clone.find('.type_cargo').prop('required',true);
+  $clone.find('.quantity').prop('required',true);
+  $clone.find('.height').prop('required',true);
+  $clone.find('.width').prop('required',true);
+  $clone.find('.large').prop('required',true);
+  $clone.find('.weight').prop('required',true);
+
+  $clone.insertBefore($template);
+
+
+
 });
 
 $(document).on('click', '#savecompany', function () {
