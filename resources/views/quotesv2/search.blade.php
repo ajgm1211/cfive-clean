@@ -309,7 +309,7 @@
 </style>
 @endsection
 
-@section('title', 'Quotes')
+@section('title', 'Quotes | Search')
 @section('content')
 <br>
 
