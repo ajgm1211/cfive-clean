@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\CalculationType;
@@ -52,6 +52,7 @@ use App\PackageLoadV2;
 use App\Airline;
 use App\TermsPort;
 use App\TermsAndCondition;
+use App\TermAndConditionV2;
 use App\ScheduleType;
 use App\RemarkCondition;
 use App\RemarkHarbor;
@@ -4774,7 +4775,7 @@ class QuoteV2Controller extends Controller
           $arregloNull = array();
 
           $remarks = $info_D->remarks."<br>";          
-          $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
+         // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
           $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
@@ -4989,18 +4990,29 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
-        /*
-        $terms = new TermsAndCondition();
-        $terms->quote_id= $quote->id;
-        $terms->content =$info_D->terms;
 
-        $terms->save();*/
 
       }  
+      
+      // Terminos Automatica
+      $modo  =  $request->input('mode');
+      $companyUser = CompanyUser::All();
+      $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
 
+      $terminos="";
+      //Export
+      foreach($terms as $term){
+        if($modo == '1'){
+          $terminos .=$term->export."<br>";
+        }else{ // import
+
+          $terminos .=$term->import."<br>";
+        }
+      }
 
       $quoteEdit = QuoteV2::find($quote->id);
-      $quoteEdit->terms_and_conditions = $terms;
+      $quoteEdit->terms_and_conditions = $terminos;
       $quoteEdit->update();
     }
 
