@@ -121,7 +121,9 @@ $validation_expire = 'Please enter validity date';
                                         <td  width = '12%'>{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
 
                                         <td  width = '12%'>{!! Form::number('uom[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;']) !!} </td>
+
                                         <td  width = '11%'>{!! Form::number('minimum[]',0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;']) !!} </td>
+                                
                                         <td width = '8%'>{{ Form::select('currency_id[]', $currency,$currency_cfg->id,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                                         <td width = '6%'>{{ Form::select('scheduleT[]',$scheduleT,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
                                         <td  width = '7%'> {!! Form::number('transitTi[]', 0, ['placeholder' => 'Enter Days','class' => 'form-control m-input','required' => 'required','style' => 'width:100%;' ,'min' => '0' ]) !!}</td>
