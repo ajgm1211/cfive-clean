@@ -20,21 +20,13 @@
           <select id="destination_airport" name="destination_airport_id" class="form-control m-select2-edit" {{$quote->type=='AIR' ? 'required':''}}></select>
         </div>
     </div>
-    <div class="col-md-4" id="delivery_type_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-        <label>Delivery type</label>
-        {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-edit delivery_type form-control','disabled'=>'true']) }}
-    </div>
-    <div class="col-md-4" id="delivery_type_air_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-        <label>Delivery type</label>
-        {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-edit form-control','disabled'=>'true']) }}
-    </div>                 
-</div>
-<br>
-<div class="row">
     <div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
         <label>Carrier</label>
         {{ Form::select('carrier_id',$carriers,$rate->carrier_id,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit carrier_id',$quote->type!='AIR' ? 'required':'']) }}
     </div>
+</div>
+<br>
+<div class="row">
     <div class="col-md-4" id="airline_label" {{$quote->type!='AIR' ? 'hidden':''}}>
         <label>Airline</label>
         <div class="form-group">
@@ -49,9 +41,6 @@
         <label>Transit time</label>
         <input type="number" name="transit_time" value="{{$rate->transit_time}}" class="form-control transit_time">
     </div>
-</div>
-<br>
-<div class="row">
     <div class="col-md-4"> 
         <label>Via</label>
         <input type="text" name="via" value="{{$rate->via}}" class="form-control via">

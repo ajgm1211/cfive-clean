@@ -3119,7 +3119,7 @@ class QuoteV2Controller extends Controller
     }
 
     //$origin_charges=$origin_charges->toArray();
-    //dd(json_encode($freight_charges_grouped));
+    //dd($freight_charges_grouped->count());
     $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
 
     $pdf = \App::make('dompdf.wrapper');
@@ -4284,10 +4284,45 @@ class QuoteV2Controller extends Controller
     $since = $dateQ[0];
     $until = $dateQ[1];
 
-    $request->request->add(['contract' => '','rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull ,'currency_id'=>  $idCurrency ]);
+    $request->request->add(['contract' => '','rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull]);
     AutomaticInland::create($request->all());
 
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+  }
+
+  /**
+ * Show modal with form to edit inlands
+ * @param integer $id 
+ * @return Illuminate\View\View
+ */
+  public function editInlands($id){
+    $inland=AutomaticInland::find($id);
+    $quote=QuoteV2::find($inland->quote_id);
+    $harbors=Harbor::pluck('display_name','id');
+    $carriers=Carrier::pluck('name','id');
+    $airlines=Airline::pluck('name','id');
+    $currencies=Currency::pluck('alphacode','id');
+
+    return view('quotesv2.partials.editInland', compact('inland','quote','harbors','carriers','airlines','currencies'));
+  }
+
+  /**
+ * Update inlands
+ * @param integer $id 
+ * @return Illuminate\View\View
+ */
+  public function updateInlands(Request $request,$id){
+
+    $inland=AutomaticInland::find($id);
+    if($request->port_id){
+      $inland->port_id=$request->port_id;
+    }  
+    $inland->type=$request->type;
+    $inland->provider=$request->provider;
+    $inland->currency_id=$request->currency_id;
+    $inland->update();
+
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($inland->quote_id));
   }
 
   /**

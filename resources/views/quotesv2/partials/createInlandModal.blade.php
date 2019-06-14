@@ -25,7 +25,7 @@
                     <div class="col-md-4" >
                         <div id="origin_harbor_label">
                           <label>Port</label>
-                          {{ Form::select('port_id',$harbors,null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                          {{ Form::select('port_id',$harbors,null,['class'=>'m-select2-general form-control','required'=>'true','placeholder' => 'Select at option',]) }}
                         </div>
                         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                           <label>Airport</label>
@@ -35,7 +35,7 @@
                     <div class="col-md-4">
                         <div id="destination_harbor_label" >
                           <label>Type</label>
-                          {{ Form::select('type',['Origin'=>'Origin','Destination'=>'Destination'],null,['class'=>'m-select2-general form-control','required'=>'true']) }}
+                          {{ Form::select('type',['Origin'=>'Origin','Destination'=>'Destination'],null,['class'=>'m-select2-general form-control','required'=>'true','placeholder' => 'Select at option']) }}
                         </div>
                     </div>
                      <div class="col-md-4">
