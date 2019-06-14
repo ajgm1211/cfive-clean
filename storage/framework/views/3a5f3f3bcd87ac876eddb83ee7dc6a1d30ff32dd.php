@@ -1,0 +1,238 @@
+<?php if(!$globalcharges->globalcharportlcl->isEmpty()): ?>
+<?php
+$portRadio = true; 
+$countryRadio = false; 
+?>
+<script>
+    activarCountry('divport');
+</script>
+<?php endif; ?>
+<?php if(!$globalcharges->globalcharcountrylcl->isEmpty()): ?>
+<?php
+$countryRadio = true; 
+$portRadio = false; 
+?>
+<script>
+    activarCountry('divcountry');
+</script>
+<?php endif; ?>
+
+<div class="m-portlet">
+
+    <?php echo e(Form::model($globalcharges, array('route' => array('gclcladm.update', $globalcharges->id), 'method' => 'PUT', 'id' => 'frmSurcharges'))); ?>
+
+    <div class="m-portlet__body">
+        <div class="form-group m-form__group row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label>
+                            <?php echo Form::label('Type Route', 'Type Route'); ?>
+
+                        </label>
+                        <div class="m-radio-inline">
+                            <label class="m-radio">
+                                <?php echo e(Form::radio('typeroute', 'port', $portRadio ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ])); ?> Port
+                                <span></span>
+                            </label>
+                            <label class="m-radio">
+                                <?php echo e(Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ])); ?> Country
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <?php echo Form::label('company_user', 'Company User'); ?>
+
+                        <div class="m-input-icon m-input-icon--right">
+                            <?php echo e(Form::select('company_user_id',$company_users,$globalcharges->company_user_id,['id' => 'company_user_id','class'=>'m-select2-general form-control' ,'required' => 'true' ])); ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                <label>
+                    <?php echo Form::label('type', 'Type'); ?>
+
+                </label>
+                <?php echo e(Form::select('surcharge_id', $surcharge,$globalcharges->surcharge_id,['id' => 'type','class'=>'m-select2-general form-control '])); ?>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="divport" >
+                    <?php echo Form::label('orig', 'Origin Port'); ?>
+
+                    <?php echo e(Form::select('port_orig[]', $harbor,
+                    $globalcharges->globalcharportlcl->pluck('portOrig')->unique()->pluck('id'),['id' => 'port_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true'])); ?>
+
+                </div>
+                <div class="divcountry" hidden="true">
+
+                    <?php echo Form::label('origC', 'Origin Country'); ?>
+
+                    <?php echo e(Form::select('country_orig[]', $countries,
+                    $globalcharges->globalcharcountrylcl->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple'])); ?>
+
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="divport" >
+                    <?php echo Form::label('dest', 'Destination Port'); ?>
+
+                    <div class="m-input-icon m-input-icon--right">
+                        <?php echo e(Form::select('port_dest[]', $harbor,
+                        $globalcharges->globalcharportlcl->pluck('portDest')->unique()->pluck('id'),['id' => 'port_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' , 'required' =>'true'])); ?>
+
+                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                            <span>
+                                <i class="la la-info-circle"></i>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="divcountry" hidden="true" >
+                    <?php echo Form::label('destC', 'Destination Country'); ?>
+
+                    <?php echo e(Form::select('country_dest[]',$countries,$globalcharges->globalcharcountrylcl->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ])); ?>
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                <?php echo Form::label('typed', 'Destination type'); ?>
+
+                <?php echo e(Form::select('changetype',$typedestiny, $globalcharges->typedestiny_id,['id' => 'changetype','class'=>'m-select2-general form-control', 'required' =>'true'])); ?>
+
+            </div>
+            <div class="col-lg-4">
+                <?php echo Form::label('validation_expire', 'Validation'); ?>
+
+                <?php echo Form::text('validation_expire', $globalcharges->validation_expire, ['placeholder' => 'Contract Validity','class' => 'form-control m-input','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required']); ?>
+
+            </div>
+
+
+            <div class="col-lg-4">
+                <?php echo Form::label('calculationt', 'Calculation Type'); ?>
+
+                <div class="m-input-icon m-input-icon--right">
+                    <?php echo e(Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtypelcl_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ' , 'required' =>'true'])); ?>
+
+                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                        <span>
+                            <i class="la la-map-marker"></i>
+                        </span>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                <?php echo Form::label('carrierL', 'Carrier'); ?>
+
+                <div class="m-input-icon m-input-icon--right">
+                    <?php echo e(Form::select('carrier_id[]', $carrier,$globalcharges->globalcharcarrierslcl->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple','required' => 'true'])); ?>
+
+                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                        <span>
+                            <i class="la la-info-circle"></i>
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <?php echo Form::label('ammountL', 'Ammount'); ?>
+
+                <div class="m-input-icon m-input-icon--right">
+                    <?php echo Form::number('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please enter the 40HC','required','class' => 'form-control m-input','min' => '0','step'=>'0.01', 'required' =>'true']); ?>
+
+                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                        <span>
+                            <i class="la la-bookmark-o"></i>
+                        </span>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <?php echo Form::label('minimum', 'Minimum'); ?>
+
+                <div class="m-input-icon m-input-icon--right">
+                    <?php echo Form::text('minimum', $globalcharges->minimum, ['id' => 'minimum','placeholder' => 'Please enter the Minimum','class' => 'form-control m-input' , 'required' =>'true']); ?>
+
+                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                        <span>
+                            <i class="la la-bookmark-o"></i>
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group m-form__group row">
+            <div class="col-lg-4">
+                <?php echo Form::label('currencyl', 'Currency'); ?>
+
+                <div class="m-input-icon m-input-icon--right">
+                    <?php echo e(Form::select('currency_id', $currency,$globalcharges->currency_id,['id' => 'localcurrency','class'=>'m-select2-general form-control' , 'required' =>'true' ])); ?>
+
+                    <span class="m-input-icon__icon m-input-icon__icon--right">
+                        <span>
+                            <i class="la la-bookmark-o"></i>
+                        </span>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>  
+    <br>
+    <hr>
+    <div class="m-portlet__foot m-portlet__foot--fit">
+        <div class="m-form__actions m-form__actions">
+            <?php echo Form::submit('Update', ['class'=> 'btn btn-primary']); ?>
+
+            <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">Cancel</span>
+            </button>
+        </div>
+    </div>
+    <?php echo Form::close(); ?>
+
+</div>
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
+<script src="/js/globalchargeslcl.js"></script>
+<script>
+
+
+    $('.m-select2-general').select2({
+        placeholder: "Select an option"
+    });
+
+    $('#company_user_id').change(function(event){
+        url = '<?php echo e(route("gcadm.typeCharge",":id")); ?>';
+        url = url.replace(':id', event.target.value);
+        $.get(url,function(response,status){
+            //console.log(response);
+            if(response.length >= 1){
+                $('#type').removeAttr('disabled','disabled');
+            } else {
+                $('#type').attr('disabled','disabled');
+            }
+            $('#type').empty();
+            $('#type').append("<option value=''>Selecciona</option>");
+            for(i=0;i < response.length; i++){
+                $('#type').append("<option value='"+response[i].id+"'>"+response[i].name+"</option>");
+            }
+        })
+    });
+</script>
+
