@@ -55,7 +55,7 @@ $portRadio = false;
                     {{ Form::select('port_origlocal[]', $harbor,$failsurchargeArre['origin_port'],['id' => 'portOrig','class'=>'m-select2-general  form-control ','multiple' => 'multiple' ,'style' => 'width:100%;']) }}
                 </div>
                 <div class="divcountry" hidden="true">
-                    {!! Form::label('origC', 'Origin Country') !!}
+                    {!! Form::label('origC', 'Origin Country',['style' => $failsurchargeArre['classorigin']]) !!}
                     {{ Form::select('country_orig[]', $countries,
                     $failsurchargeArre['origin_port'],['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
                 </div>
@@ -74,7 +74,7 @@ $portRadio = false;
                     </div>
                 </div>
                 <div class="divcountry" hidden="true">
-                    {!! Form::label('destC', 'Destination Country') !!}
+                    {!! Form::label('destC', 'Destination Country',['style' => $failsurchargeArre['classdestiny']]) !!}
                     {{ Form::select('country_dest[]',$countries,$failsurchargeArre['destiny_port'],[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
                 </div>
             </div>
