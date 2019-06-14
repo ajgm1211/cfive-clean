@@ -3737,13 +3737,13 @@ class ImportationController extends Controller
         $countries          = Country::pluck('name','id');
 
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-        $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
         $harbor                = $objharbor->all()->pluck('display_name','id');
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
         $goodsurcharges  = LocalCharge::with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest','localcharcountries.countryOrig','localcharcountries.countryDest')->find($id);
+        $surchargeSelect       = $objsurcharge->where('company_user_id','=', $goodsurcharges->contract->company_user_id)->pluck('name','id');
         //dd($goodsurcharges);
         return view('importation.Body-Modals.GoodEditSurcharge', compact('harbor',
                                                                          'currency',
@@ -3764,13 +3764,15 @@ class ImportationController extends Controller
 
         $countries              = Country::pluck('name','id');
         $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-        $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
         $carrierSelect         = $objcarrier->all()->pluck('name','id');
         $harbor                = $objharbor->all()->pluck('display_name','id');
         $currency              = $objcurrency->all()->pluck('alphacode','id');
         $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
 
         $failsurcharge  = FailSurCharge::find($id);
+        $failsurcharge->load('contract');
+        $surchargeSelect       = $objsurcharge->where('company_user_id','=', $failsurcharge->contract->company_user_id)->pluck('name','id');
+        //dd($failsurcharge->contract->company_user_id);
         $differentiator = $failsurcharge->differentiator;
 
         $classdorigin           =  'color:green';
