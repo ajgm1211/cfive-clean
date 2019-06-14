@@ -28,7 +28,7 @@
                                         <i class="la la-edit"></i>
                                     </button>
 
-                                    <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                    <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$rate->id}}">
                                         <i class="la la-trash"></i>
                                     </button>
                                 </li>
@@ -443,58 +443,58 @@
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }}>
+                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
                                                     <div class="row ">
-                                                        <div class="col-6">
-                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }}>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40hc'] }}>
+                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40nor'] }}>
+                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['45'] }}>
+                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001"  />
+                                                    </div>
+                                                </td>
+                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001"  placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -694,58 +694,56 @@
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }}>
+                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
                                                     <div class="row ">
-                                                        <div class="col-6">
-                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }}>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40hc'] }}>
+                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40nor'] }}>
+                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['45'] }}>
+                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
+                                                    <div class="row">
+                                                        <div class="col-12">
                                                             <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001"/>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" />
+                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" placeholder="Markup" />
                                                         </div>
                                                     </div>
                                                 </td>
@@ -933,12 +931,16 @@
                                                                 <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
                                                                 <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
                                                                 <li class="size-12px">Type: {{$inland->type}}</li>
-                                                                <li class="size-12px">Contract: {{$inland->contract}}</li>
+                                                                <li class="size-12px">Contract: {{$rate->contract}}</li>
                                                                 <li class="size-12px no-border-left d-flex justify-content-end">
                                                                     <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
                                                                 </li>
                                                                 <li>
-                                                                    <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                                                    <button onclick="AbrirModal('editInland',{{$inland->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                                                        <i class="la la-edit"></i>
+                                                                    </button>
+
+                                                                    <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete">
                                                                         <i class="la la-trash"></i>
                                                                     </button>
                                                                 </li>
