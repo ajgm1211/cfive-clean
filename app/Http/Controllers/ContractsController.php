@@ -379,8 +379,6 @@ class ContractsController extends Controller
         //
     }
 
-
-
     // FUNCIONES PARA EL DATATABLE
     public function data($id){
 
