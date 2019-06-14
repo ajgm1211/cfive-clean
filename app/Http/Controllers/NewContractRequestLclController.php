@@ -88,6 +88,8 @@ class NewContractRequestLclController extends Controller
                     $color = 'color:#f81538';
                 } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
                     $color = 'color:#5527f0';
+                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
+                    $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
@@ -166,6 +168,8 @@ class NewContractRequestLclController extends Controller
                     $color = 'color:#f81538';
                 } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
                     $color = 'color:#5527f0';
+                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
+                    $color = 'color:#e07000';
                 } else {
                     $color = 'color:#04950f';
                 }
@@ -383,8 +387,9 @@ class NewContractRequestLclController extends Controller
             $Ncontract = NewContractRequestLcl::find($id);
             $Ncontract->status        = $status;
             $Ncontract->updated       = $now2;
-            $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
-
+            if($Ncontract->username_load == 'Not assigned'){
+                $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
+            }
 
             if($Ncontract->status == 'Processing'){
                 if($Ncontract->time_star_one == false){
@@ -392,15 +397,19 @@ class NewContractRequestLclController extends Controller
                     $Ncontract->time_star_one   = true;
                 }
 
+            } elseif($Ncontract->status == 'Review'){
+                if($Ncontract->time_total == null){
+                    $fechaEnd = Carbon::parse($now2);
+                    if(empty($Ncontract->time_star) == true){
+                        $Ncontract->time_total = 'It did not go through the processing state';
+                    } else{
+                        $fechaStar = Carbon::parse($Ncontract->time_star);
+                        $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                    }
+                }
+
             } elseif($Ncontract->status == 'Done'){
 
-                $fechaEnd = Carbon::parse($now2);
-                if(empty($Ncontract->time_star) == true){
-                    $Ncontract->time_total = 'It did not go through the processing state';
-                } else{
-                    $fechaStar = Carbon::parse($Ncontract->time_star);
-                    $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
-                }
                 if($Ncontract->sentemail == false){
                     $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
                     $message = 'The request was processed N°: ' . $Ncontract->id;

@@ -1,3 +1,4 @@
+<script src="/js/globalcharges.js"></script>
 @if($failglobal['differentiator'] == 1)
   @php
   $portRadio = true; 
@@ -155,7 +156,6 @@
   {!! Form::close() !!}
 </div>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="/js/globalcharges.js"></script>
 <script>
 
 
