@@ -23,4 +23,8 @@ class FailSurCharge extends Model
         'carrier_id',
         'differentiator'
     ];
+    
+    public function contract(){
+        return $this->belongsTo('App\Contract','contract_id');
+    }
 }

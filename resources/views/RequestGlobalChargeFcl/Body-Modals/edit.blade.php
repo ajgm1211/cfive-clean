@@ -37,6 +37,6 @@
 
     <div class="col-lg-12">
         {!! Form::label('Status', 'Status',["class"=>"form-control-label"]) !!}
-        {{ Form::select('status',['Pending'=>'Pending','Processing'=>'Processing','Done'=>'Done'],$requests->status,['id' => 'statusSelectMD','class'=>'m-select2-general  form-control ','style' => 'width:100%;']) }}
+        {{ Form::select('status',['Pending'=>'Pending','Processing'=>'Processing','Review'=>'Review','Done'=>'Done'],$requests->status,['id' => 'statusSelectMD','class'=>'m-select2-general  form-control ','style' => 'width:100%;']) }}
     </div>
 </div>
