@@ -218,17 +218,37 @@ class ImportationGlobachargersFclController extends Controller
                        && $validityfromBol  == true && $validitytoBol   == true
                        && $carrierB         == true){
 
-                        $globalChargeArreG = GlobalCharge::create([ // tabla GlobalCharge
-                            'surcharge_id'       						=> $surchargerV,
-                            'typedestiny_id'     						=> $typedestunyV,
-                            'account_importation_globalcharge_id'       => $account_idVal,
-                            'company_user_id'    						=> $company_user_id,
-                            'calculationtype_id' 						=> $calculationtypeV,
-                            'ammount'            						=> $amountV,
-                            'validity' 									=> $validityfromV,
-                            'expire'					 				=> $validitytoV,
-                            'currency_id'        						=> $currencyV
-                        ]);
+                        if($failglobalcharger->differentiator  == 1){ //si es puerto verificamos si exite uno creado con country
+                            $typeplace = 'globalcharport';
+                        } elseif($failglobalcharger->differentiator  == 2){  //si es country verificamos si exite uno creado con puerto
+                            $typeplace = 'globalcharcountry';
+                        }
+
+                        $globalChargeArreG = GlobalCharge::where('surcharge_id',$surchargerV)
+                            ->where('typedestiny_id',$typedestunyV)
+                            ->where('company_user_id',$company_user_id)
+                            ->where('calculationtype_id',$calculationtypeV)
+                            ->where('ammount',$amountV)
+                            ->where('validity',$validityfromV)
+                            ->where('expire',$validitytoV)
+                            ->where('currency_id',$currencyV)
+                            ->has($typeplace)
+                            ->first();
+
+                        if(count($globalChargeArreG) == 0){
+
+                            $globalChargeArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                'surcharge_id'       						=> $surchargerV,
+                                'typedestiny_id'     						=> $typedestunyV,
+                                'account_importation_globalcharge_id'       => $account_idVal,
+                                'company_user_id'    						=> $company_user_id,
+                                'calculationtype_id' 						=> $calculationtypeV,
+                                'ammount'            						=> $amountV,
+                                'validity' 									=> $validityfromV,
+                                'expire'					 				=> $validitytoV,
+                                'currency_id'        						=> $currencyV
+                            ]);
+                        }
 
                         GlobalCharCarrier::create([ // tabla GlobalCharCarrier
                             'carrier_id'      => $carrierV,
@@ -243,7 +263,7 @@ class ImportationGlobachargersFclController extends Controller
                                 'globalcharge_id'   => $globalChargeArreG->id
                             ]);
                         } else if($failglobalcharger->differentiator  == 2){
-                            GlobalCharCountry::create([ // tabla GlobalCharPort
+                            GlobalCharCountry::create([ // tabla GlobalCharCountry
                                 'country_orig'      => $originV,
                                 'country_dest'      => $destinationV,
                                 'globalcharge_id'   => $globalChargeArreG->id                                                   
@@ -539,8 +559,8 @@ class ImportationGlobachargersFclController extends Controller
         $NameFile = $requestobj['FileName'];
         $path = \Storage::disk('GCImport')->url($NameFile);
 
-        /*FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
-        GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();*/
+        //FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
+        //GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();
 
         ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];
@@ -703,7 +723,7 @@ class ImportationGlobachargersFclController extends Controller
         // -------------- VALIDITYTO -----------------------------------------------------
 
         if(count($validitytoA) <= 1){
-            $validitytoLB = $validitytoA[0];
+            $validitytoLB = trim($validitytoA[0]);
         }
         else{
             $validitytoLB = '';
@@ -713,14 +733,14 @@ class ImportationGlobachargersFclController extends Controller
         // -------------- VALIDITYFROM -----------------------------------------------------
 
         if(count($validityfromA) <= 1){
-            $validityfromLB = $validityfromA[0];
+            $validityfromLB = trim($validityfromA[0]);
         }
         else{
             $validityfromLB      = '';
             $classvalidity   = 'color:red';
         }
 
-        $validation_expire = $validitytoLB.' / '.$validityfromLB;
+        $validation_expire = $validityfromLB.' / '.$validitytoLB;
 
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -836,10 +856,10 @@ class ImportationGlobachargersFclController extends Controller
                     $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
                         ->first();
                 }
-
+                
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
-                if($originC <= 1){
+                if($originC <= 1 && count($originAIn) == 1){
                     $originA = $originOb['name'];
                 } else{
                     $originA = $originA[0].' (error)';
@@ -858,7 +878,7 @@ class ImportationGlobachargersFclController extends Controller
 
                 $destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
-                if($destinationC <= 1){
+                if($destinationC <= 1 && count($destinationAIn) == 1){
                     $destinationA = $destinationOb['name'];
                 } else{
                     $destinationA = $destinationA[0].' (error)';
@@ -1048,24 +1068,50 @@ class ImportationGlobachargersFclController extends Controller
     public function saveFailToGood(Request $request,$idFail){
 
         $failglobal                 = FailedGlobalcharge::find($idFail);
-
-        $global                     = new GlobalCharge();
+        $typerate                   =  $request->input('typeroute');
         $validation                 = explode('/',$request->validation_expire);
-        $global->validity           = $validation[0];
-        $global->expire             = $validation[1];
-        $global->surcharge_id       = $request->input('surcharge_id');
-        $global->typedestiny_id     = $request->input('changetype');
-        $global->calculationtype_id = $request->input('calculationtype_id');
-        $global->ammount            = $request->input('ammount');
-        $global->currency_id        = $request->input('currency_id');
-        $carrier                    = $request->input('carrier_id');
-        $global->company_user_id    = $failglobal['company_user_id'];
-        $global->account_importation_globalcharge_id    = $failglobal['account_id'];
-        $global->save();
+
+        if($typerate == 'port'){ //si es puerto verificamos si exite uno creado con country
+            $typeplace = 'globalcharport';
+        }elseif($typerate == 'country'){  //si es country verificamos si exite uno creado con puerto
+            $typeplace = 'globalcharcountry';
+        }
+
+        $amountV             = $request->input('ammount');
+        $surchargerV         = $request->input('surcharge_id');
+        $typedestinyV        = $request->input('changetype');
+        $calculationtypeV    = $request->input('calculationtype_id');
+        $currencyV           = $request->input('currency_id');
+        $company_userV       = $failglobal['company_user_id'];
+        $carrier             = $request->input('carrier_id');
+
+        $global = GlobalCharge::where('surcharge_id',$surchargerV)
+            ->where('typedestiny_id',$typedestinyV)
+            ->where('company_user_id',$company_userV)
+            ->where('calculationtype_id',$calculationtypeV)
+            ->where('ammount',$amountV)
+            ->where('validity',$validation[0])
+            ->where('expire',$validation[1])
+            ->where('currency_id',$currencyV)
+            ->has($typeplace)
+            ->first();
+
+        if(count($global) == 0){
+            $global                     = new GlobalCharge();
+            $global->validity           = $validation[0];
+            $global->expire             = $validation[1];
+            $global->surcharge_id       = $surchargerV;
+            $global->typedestiny_id     = $typedestinyV;
+            $global->calculationtype_id = $calculationtypeV;
+            $global->ammount            = $amountV;
+            $global->currency_id        = $currencyV;
+            $global->company_user_id    = $company_userV;
+            $global->account_importation_globalcharge_id    = $failglobal['account_id'];
+            $global->save();
+        }
 
         $id = $global->id;
 
-        $typerate =  $request->input('typeroute');
         if($typerate == 'port'){
 
             $port_orig = $request->input('port_orig');
@@ -1240,18 +1286,22 @@ class ImportationGlobachargersFclController extends Controller
     }
 
     public function deleteAccounts($id,$select){
-        $account = AccountImportationGlobalcharge::with('FileTmp')->find($id);
-        if(count($account)>0){
-            if(count($account->FileTmp)>0){
-                Storage::disk('UpLoadFile')->delete($account->FileTmp->name_file);
+        try{
+            $account = AccountImportationGlobalcharge::with('FileTmp')->find($id);
+            if(count($account)>0){
+                if(count($account->FileTmp)>0){
+                    Storage::disk('UpLoadFile')->delete($account->FileTmp->name_file);
+                }
+                $account->delete();
             }
-            $account->delete();
-        }
 
-        if($select == 1){
-            return redirect()->route('ImportationGlobalchargeFcl.index');
-        } elseif($select == 2){
-            return redirect()->route('indextwo.globalcharge.fcl');			
+            if($select == 1){
+                return redirect()->route('ImportationGlobalchargeFcl.index');
+            } elseif($select == 2){
+                return response()->json(['success' => '1']);			
+            }
+        } catch(\Exception $e){
+            return response()->json(['success' => '2']);			
         }
 
     }
@@ -1304,7 +1354,7 @@ class ImportationGlobachargersFclController extends Controller
                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
                         </a>
                         &nbsp; &nbsp; 
-                        <a href="/ImportationGlobalchargesFcl/DeleteAccountsGlobalchargesFcl/'.$account->id.'/2" class="eliminarrequest"  title="Delete" >
+                        <a href="#" class="eliminaracount" data-id-acount="'.$account->id.'"  title="Delete" >
                             <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                         </a>';
             })
