@@ -259,14 +259,20 @@
 
       });
 
-   function AbrirModal(action,id){
-      if(action == "edit"){
-         var url = '{{ route("quotes-v2.rates.edit", ":id") }}';
-         url = url.replace(':id', id);
-         $('.modal-body').load(url,function(){
-            $('#editRateModal').modal({show:true});
-         });
-      }
-   }
+  function AbrirModal(action,id){
+    if(action == "edit"){
+      var url = '{{ route("quotes-v2.rates.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
+    }else if(action == "editInland"){
+      var url = '{{ route("quotes-v2.inlands.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
+    }
+  }
 </script>
 @stop

@@ -539,6 +539,15 @@
                                           <li class="size-12px no-border-left d-flex justify-content-end">
                                             <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
                                           </li>
+                                          <li>
+                                            <button onclick="AbrirModal('editInland',{{$inland->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                              <i class="la la-edit"></i>
+                                            </button>
+
+                                            <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$rate->id}}">
+                                              <i class="la la-trash"></i>
+                                            </button>
+                                          </li>
                                         </ul>
                                       </div>
                                       <div class="details_inland_{{$x}} hide">
