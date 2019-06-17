@@ -287,6 +287,7 @@ $(document).on('click', '#delete-contract-lcl', function () {
   });
 });
 
+/*
 function activarCountry(act){
   var divCountry = $( ".divcountry");
   var divport = $( ".divport");
@@ -297,4 +298,7 @@ function activarCountry(act){
     divCountry.attr('hidden','true');
     divport.removeAttr('hidden');
   }
-}
+}*/
+
+
+
