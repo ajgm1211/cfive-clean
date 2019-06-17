@@ -28,7 +28,7 @@
                         </div>
                         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                           <label>Origin airport</label>
-                          <select id="origin_airport" name="origin_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
+                          <select id="origin_airport_create" name="origin_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -38,7 +38,7 @@
                         </div>
                         <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                           <label>Destination airport</label>
-                          <select id="destination_airport" name="destination_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
+                          <select id="destination_airport_create" name="destination_airport_id" class="form-control" {{$quote->type=='AIR' ? 'required':''}}></select>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -63,7 +63,7 @@
                     <div class="col-md-4" id="airline_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                         <label>Airline</label>
                         <div class="form-group">
-                          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option',$quote->type=='AIR' ? 'required':'']) }}
+                          {{ Form::select('airline_id',$airlines,null,['class'=>'m-select2-general form-control','id' => 'airline_id','placeholder'=>'Choose an option',$quote->type=='AIR' ? 'required':'']) }}
                       </div>
                     </div>
                     <div class="col-md-4" class="" > 
