@@ -6668,7 +6668,7 @@ class QuoteV2Controller extends Controller
     $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-    $equipmentHides = $this->hideContainer($equipment,'');
+
 
     //Markups
 
@@ -6784,19 +6784,17 @@ class QuoteV2Controller extends Controller
     $collectionRate = new Collection();
 
     // Rates LCL
-    $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince
-$dateUntil)
+    $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
         {
           $q->whereHas('contract_user_restriction', function($a) use($user_id){
             $a->where('user_id', '=',$user_id);
           })->orDoesntHave('contract_user_restriction');
-        })->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince
-$dateUntil)
+        })->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
                      {
                        $q->whereHas('contract_company_restriction', function($b) use($company_id){
                          $b->where('company_id', '=',$company_id);
                        })->orDoesntHave('contract_company_restriction');
-                     })->whereHas('contract', function($q) use($date,$company_user_id){
+                     })->whereHas('contract', function($q) use($company_user_id,$dateSince,$dateUntil){
 
       $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
     })->get();
@@ -7402,7 +7400,7 @@ $dateUntil)
 
       //############ Global Charges   ####################
 
-      $globalChar = GlobalChargeLcl::where('validity', '<=',$date)->where('expire', '>=', $date)->whereHas('globalcharcarrierslcl', function($q) use($carrier) {
+      $globalChar = GlobalChargeLcl::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrierslcl', function($q) use($carrier) {
         $q->whereIn('carrier_id', $carrier);
       })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
         $query->whereHas('globalcharportlcl', function($q) use($orig_port,$dest_port) {
@@ -8012,13 +8010,17 @@ $dateUntil)
       $data->setAttribute('schedulesFin',"");
 
     }
+
+    $hideO = 'hide';
+    $hideD = 'hide';
+
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
 
 
 
-   // return view('quotation/lcl', compact('harbor','formulario','arreglo','form'));
+    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm'));
 
 
   }
