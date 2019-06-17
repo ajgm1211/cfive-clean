@@ -1753,7 +1753,7 @@ $(document).on('change', '#quoteType', function (e) {
 
 
     $(".infocheck").val('');
-    $(".quote_search").hide();
+    $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
 
@@ -2053,8 +2053,16 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
+  
+  //FCL
+  if($('#quoteType').val()==1){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  }
 
-  $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  // LCL
+  if($('#quoteType').val()==2){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearchLCL');
+  }
   $(".quote_search").attr("type","submit");
 
 });
