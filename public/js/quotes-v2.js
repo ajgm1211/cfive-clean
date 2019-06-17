@@ -2836,3 +2836,43 @@ $('.m-select2-general').select2({
 $('.m-select2-edit').select2({
   placeholder: "Select an option"
 });
+
+$('#origin_airport_create').select2({
+      dropdownParent: $('#createRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });
+
+    $('#destination_airport_create').select2({
+      dropdownParent: $('#createRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });

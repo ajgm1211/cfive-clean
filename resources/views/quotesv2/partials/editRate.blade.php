@@ -7,7 +7,7 @@
         </div>
         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
           <label>Origin airport</label>
-          <select id="origin_airport" name="origin_airport_id" class="form-control m-select2-edit" {{$quote->type=='AIR' ? 'required':''}}></select>
+          {{ Form::select('origin_airport_id',[@$rate->origin_airport_id=>@$rate->origin_airport->display_name],@$rate->origin_airport_id,['class'=>'form-control','id'=>'origin_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
         </div>
     </div>
     <div class="col-md-4">
@@ -17,22 +17,22 @@
         </div>
         <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
           <label>Destination airport</label>
-          <select id="destination_airport" name="destination_airport_id" class="form-control m-select2-edit" {{$quote->type=='AIR' ? 'required':''}}></select>
+          {{ Form::select('destination_airport_id',[@$rate->destination_airport_id=>@$rate->destination_airport->display_name],@$rate->destination_airport_id,['class'=>'form-control','id'=>'destination_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
         </div>
     </div>
     <div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
         <label>Carrier</label>
         {{ Form::select('carrier_id',$carriers,$rate->carrier_id,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit carrier_id',$quote->type!='AIR' ? 'required':'']) }}
     </div>
-</div>
-<br>
-<div class="row">
     <div class="col-md-4" id="airline_label" {{$quote->type!='AIR' ? 'hidden':''}}>
         <label>Airline</label>
         <div class="form-group">
           {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control m-select2-edit ','id' => 'airline_id','placeholder'=>'Choose an option',$quote->type=='AIR' ? 'required':'']) }}
         </div>
     </div>
+</div>
+<br>
+<div class="row">
     <div class="col-md-4" class="" > 
         <label>Schedule type</label>
         {{ Form::select('schedule_type',['Direct'=>'Direct','Transfer'=>'Transfer'],$rate->schedule_type,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit schedule_type',$quote->type!='AIR' ? 'required':'']) }}
@@ -53,7 +53,47 @@
 <br>
 {!! Form::close() !!}
 <script type="text/javascript">
+    $('#origin_airport_edit').select2({
+      dropdownParent: $('#editRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });
+
+    $('#destination_airport_edit').select2({
+      dropdownParent: $('#editRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });
+
     $('.m-select2-edit').select2({
-      placeholder: "Select an option"
-  });
+        placeholder: "Select an option"
+    }); 
 </script>
