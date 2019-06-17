@@ -658,5 +658,33 @@ Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->gro
 
 Route::resource('search', 'SearchController')->middleware('auth');
 
+// Nuevos terminos y condiciones 
+
+Route::group(['prefix' => 'termsv2', 'middleware' => ['auth']], function () {
+
+  Route::resource('termsv2', 'TermsAndConditionV2sController');
+  Route::get('list', 'TermsAndConditionV2sController@index')->name('termsv2.list');
+  Route::get('add', 'TermsAndConditionV2sController@add')->name('termsv2.add');
+  Route::get('edit/{id}', 'TermsAndConditionV2sController@edit')->name('termsv2.edit');
+  Route::get('delete/{id}', 'TermsAndConditionV2sController@destroy')->name('termsv2.delete');
+  Route::get('msg/{id}', 'TermsAndConditionV2sController@destroymsg')->name('termsv2.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
+// Remarks Harbors
+
+Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
+
+  Route::resource('remarks', 'RemarkConditionsController');
+  Route::get('list', 'RemarkConditionsController@index')->name('remarks.list');
+  Route::get('add', 'RemarkConditionsController@add')->name('remarks.add');
+  Route::get('edit/{id}', 'RemarkConditionsController@edit')->name('remarks.edit');
+  Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
+  Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
 Auth::routes();
 
