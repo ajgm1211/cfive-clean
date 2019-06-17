@@ -287,4 +287,17 @@ $(document).on('click', '#delete-contract-lcl', function () {
   });
 });
 
+/*
+function activarCountry(act){
+  var divCountry = $( ".divcountry");
+  var divport = $( ".divport");
+  if(act == 'divcountry'){
+    divport.attr('hidden','true');
+    divCountry.removeAttr('hidden');
+  }else if(act == 'divport'){
+    divCountry.attr('hidden','true');
+    divport.removeAttr('hidden');
+  }
+}*/
+
 

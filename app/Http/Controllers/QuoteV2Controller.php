@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\CalculationType;
@@ -52,7 +52,11 @@ use App\PackageLoadV2;
 use App\Airline;
 use App\TermsPort;
 use App\TermsAndCondition;
+use App\TermAndConditionV2;
 use App\ScheduleType;
+use App\RemarkCondition;
+use App\RemarkHarbor;
+use App\RemarkCarrier;
 
 class QuoteV2Controller extends Controller
 {
@@ -469,7 +473,7 @@ class QuoteV2Controller extends Controller
         $inland->currency_usd = $currency_charge->rates;
         $inland->currency_eur = $currency_charge->rates_eur;
       }
-      
+
     }
 
     //Adding country codes to rates collection
@@ -3729,6 +3733,55 @@ class QuoteV2Controller extends Controller
     return $terms;
   }
 
+  public function remarksCondition($origin_port,$destiny_port,$carrier,$mode){
+
+    // TERMS AND CONDITIONS 
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $rem_port_orig = array($origin_port->id);
+    $rem_port_dest = array($destiny_port->id);
+    $rem_carrier_id[] = $carrier->id;
+    array_push($rem_carrier_id,$carrier_all);
+
+    /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
+      $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
+        $b->wherein('carrier_id',$term_carrier_id);
+      });
+    })->get();*/
+
+
+
+    $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id) {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarkO='';
+    $remarkD='';
+    $rems ='';
+
+    foreach($remarks_origin as $remOrig){
+      $rems .="<br>";
+      $remarkO = $origin_port->name." / ".$carrier->name;
+      $remarkO .=  "<br>".$remOrig->remark->export."<br>";
+    }
+    foreach($remarks_destination as $remDest){
+      $rems .="<br>";
+      $remarkD = $destiny_port->name." / ".$carrier->name;
+      $remarkD .=  "<br>".$remDest->remark->export."<br>";
+    }
+    $rems = $remarkO." ".$remarkD ; 
+    return $rems;
+
+  }
+
   public function store(Request $request){
 
 
@@ -3820,7 +3873,7 @@ class QuoteV2Controller extends Controller
         }
         foreach($origin_port as $orig){
           foreach($destiny_port as $dest){
-            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest,'carrier_id'=>$request->input('carrieManual')  ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
             $rate = AutomaticRate::create($request->all());
 
             $oceanFreight = new Charge();
@@ -3839,7 +3892,7 @@ class QuoteV2Controller extends Controller
       }
       if($typeText == 'AIR' ){
 
-        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'airline_id'=>$request->input('airline_id') ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+        $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
 
 
@@ -3919,7 +3972,10 @@ class QuoteV2Controller extends Controller
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
-          $request->request->add(['contract' => $info_D->contract->id ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$info_D->remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
+          $remarks = $info_D->remarks."<br>";          
+         // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
+
+          $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
 
@@ -4025,8 +4081,6 @@ class QuoteV2Controller extends Controller
           }
 
 
-
-          $terms .= $this->termsandconditions($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
         }
         //CHARGES ORIGIN
@@ -4134,18 +4188,29 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
-        /*
-        $terms = new TermsAndCondition();
-        $terms->quote_id= $quote->id;
-        $terms->content =$info_D->terms;
 
-        $terms->save();*/
 
       }  
+      
+      // Terminos Automatica
+      $modo  =  $request->input('mode');
+      $companyUser = CompanyUser::All();
+      $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
 
+      $terminos="";
+      //Export
+      foreach($terms as $term){
+        if($modo == '1'){
+          $terminos .=$term->export."<br>";
+        }else{ // import
+
+          $terminos .=$term->import."<br>";
+        }
+      }
 
       $quoteEdit = QuoteV2::find($quote->id);
-      $quoteEdit->terms_and_conditions = $terms;
+      $quoteEdit->terms_and_conditions = $terminos;
       $quoteEdit->update();
     }
 
@@ -5061,10 +5126,10 @@ class QuoteV2Controller extends Controller
           $array40hcDetail = array('price40hc' => $data->fortyhc, 'currency40hc' => $data->currency->alphacode ,'idCurrency40hc' => $data->currency_id);
           $tot_40hc_F += $markup40hc['monto40HC'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40hc_save = array('c40HC' => $data->fortyhc);
+          $array_40hc_save = array('c40hc' => $data->fortyhc);
           $arregloRateSave['rate']  = array_merge($array_40hc_save,$arregloRateSave['rate']);
           // Markups
-          $array_40hc_markup =  array('m40HC' => $markup40hc['markup40HC']);
+          $array_40hc_markup =  array('m40hc' => $markup40hc['markup40HC']);
           $arregloRateSave['markups']  = array_merge($array_40hc_markup,$arregloRateSave['markups']);
 
           $array40hcT = array_merge($array40hcDetail,$markup40hc);
@@ -5077,10 +5142,10 @@ class QuoteV2Controller extends Controller
           $array40norDetail = array('price40nor' => $data->fortynor, 'currency40nor' => $data->currency->alphacode ,'idCurrency40nor' => $data->currency_id);
           $tot_40nor_F += $markup40nor['monto40NOR'] / $rateC;
           // Arreglos para guardar los rates
-          $array_40nor_save = array('c40NOR' => $data->fortynor);
+          $array_40nor_save = array('c40nor' => $data->fortynor);
           $arregloRateSave['rate']  = array_merge($array_40nor_save,$arregloRateSave['rate']);
           // Markups
-          $array_40nor_markup =  array('m40NOR' => $markup40nor['markup40NOR']);
+          $array_40nor_markup =  array('m40nor' => $markup40nor['markup40NOR']);
           $arregloRateSave['markups']  =array_merge($array_40nor_markup,$arregloRateSave['markups']);
 
           $array40norT = array_merge($array40norDetail,$markup40nor);
@@ -5673,7 +5738,12 @@ class QuoteV2Controller extends Controller
         $data->setAttribute('sheduleType',null);
       }
       //remarks
-      $data->setAttribute('remarks',$data->contract->remarks);
+      $mode = "";
+
+      $remarks = $data->contract->remarks."<br>";
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+
+      $data->setAttribute('remarks',$remarks);
 
 
       // Valores

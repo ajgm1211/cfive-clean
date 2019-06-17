@@ -429,7 +429,6 @@
                 {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
             </div>
-
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -506,7 +505,7 @@
                     <div class="template">
                       <div class="row">
                         <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
@@ -515,18 +514,18 @@
                           <input type="hidden" id="total_packages" name="total_packages"/>
                         </div>
                         <div class="col-md-2">
-                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
+                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
                         </div>
                         <div class="col-md-5" >
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
                             <div class="btn-group" role="group">
-                              <input class="height form-control size-12px" min="0" name="height[]" id="height" type="number" placeholder="H"/>
+                              <input class="height form-control size-12px height_2" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="width form-control size-12px" min="0" name="width[]" id="width" type="number" placeholder="W"/>
+                              <input class="width form-control size-12px width_2" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="large form-control size-12px" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L"/>
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
@@ -544,7 +543,7 @@
                         </div>
                         <div class="col-md-2">
                           <div class="input-group">
-                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
                           </div><!-- /input-group -->
                         </div>
                         <div class="col-md-1">
@@ -647,46 +646,39 @@
                   </div>
                 </div>
               </div>
+            </div><br>
+
+            <div class="row">
+              <div class="col-lg-12 no-padding">
+                <div class="row  justify-content-between">
+                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
+                    @if(isset($arreglo))
+                    @if($arreglo->isEmpty())
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                    @endif
+                    @endif
+                  </div><!-- aqui -->
+                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
-            <div class ="row">  <div class="col-lg-12"> <center><button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button></center> </div>  </div>
+            
+            <div class="row">
+              <div class="col-lg-12">   
+                <center>
+                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                </center>
+              </div>
+            </div>
           </div>
         </div>      
       </div>
     </div>
-
-
   </div>
 
-
-  <div class="col-lg-12 no-padding">
-    <div class="row card__quote-manual justify-content-between">
-      <div class="col-lg-2" class="" id="carrier_label"> 
-        <label>Carrier Manual</label>
-        {{ Form::select('carrieManual',$carrierMan,@$form['carrieManual'],['placeholder' => 'Select at option', 'class'=>'form-control m-select2-general','id'=>'carrieManual']) }}
-      </div>
-      <div class="col-lg-2" id="airline_label" style="display:none;">
-        <br>
-        <label>Airline</label>
-        <div class="form-group">
-          {{ Form::select('airline_id',$airlines,null,['class'=>'custom-select form-control','id' => 'airline_id','placeholder'=>'Choose an option']) }}
-        </div>
-      </div>
-      <div class="col-lg-8 d-flex justify-content-center align-items-end align-self-end">
-        @if(isset($arreglo))
-        @if($arreglo->isEmpty())
-        <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
-        @endif
-        @endif
-      </div><!-- aqui -->
-      <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-        <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-        </button>
-      </div>
-    </div>
-  </div>
   {!! Form::close() !!}
 
 
@@ -806,10 +798,11 @@
                         <div class="wth" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+                        <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }}' name="info[]" value="{{ json_encode($arr) }}">
+                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
@@ -837,7 +830,7 @@
                         @else
                         <div class="col-lg-6 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
-                        
+
                         </div>
                         @endif
 
@@ -897,7 +890,7 @@
                     <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
-                        <span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
+                          <span class="bg-rates"> {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('monto')) : '0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('markup')) : '0.00' }}  </span><i class="la la-caret-right arrow-down"></i>  <b class="monto-down">  {{ isset($localorigin['20']) ?   str_replace(["[","]","\""], ' ', $localorigin['20']->pluck('montoMarkup')) : '0.00' }}     </b>      
                         </div>      
                         <div class="wth" {{ $equipmentHides['40'] }}>
                           <span class="bg-rates"> {{ isset($localorigin['40']) ?  str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('monto')) :'0.00' }}</span> <span class="bg-rates">+ {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('markup')) : '0.00' }}     </span><i class="la la-caret-right arrow-down"></i>    <b class="monto-down">  {{ isset($localorigin['40']) ?   str_replace(["[","]","\""], ' ', $localorigin['40']->pluck('montoMarkup')) : '0.00' }}            </b>       
@@ -1229,7 +1222,7 @@
                     <span class="darkblue cabezeras">Remarks</span><br><br>
                   </div>
                   <div class="row">
-                    <div class="col-lg-6"><span class="monto-down">{{ $arr->contract->remarks }} </span></div>
+                    <div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} </span></div>
 
                   </div>
                 </div>
