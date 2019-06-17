@@ -471,6 +471,9 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
   Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
+  //LCL 
+  Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
+  
 });
 
 //Settings
