@@ -39,19 +39,18 @@
                       <li class="size-12px"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
                       <li class="size-12px"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
                       <li class="size-12px"><b>Via:</b> &nbsp;{{$rate->via}}</li>
+                      <li class="size-12px no-border-left d-flex justify-content-end">
+                        <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
+                      </li>
                       <li class="size-12px">
                         <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
                           <i class="la la-edit"></i>
                         </button>
-                      </li>
-                      <li class="size-12px">
+                        
                         <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
                           <i class="la la-trash"></i>
                         </button>
-                      </li>
-                      <li class="size-12px no-border-left d-flex justify-content-end">
-                        <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
-                      </li>
+                      </li>                      
                     </ul>
                   </div>
                   <br>
@@ -513,113 +512,115 @@
                         </div>
                         @endif
                         <!-- Inlands -->
-                        <div class="row no-mg-row">
-                          <div class="col-md-12 header-charges">
-                            <h5 class="title-quote size-12px">Inlands</h5>
-                          </div>
-                          <div class="col-md-12 thead">
-                            <div class="">
+                        @if($quote->type!='AIR')
+                          <div class="row no-mg-row">
+                            <div class="col-md-12 header-charges">
+                              <h5 class="title-quote size-12px">Inlands</h5>
+                            </div>
+                            <div class="col-md-12 thead">
                               <div class="">
-                                @php
-                                  $x=0;
-                                @endphp
-                                @if(!$rate->inland->isEmpty())
-                                  @foreach($rate->inland as $inland)
-                                    <?php
-                                      $inland_rates = json_decode($inland->rate,true);
-                                      $inland_markups = json_decode($inland->markup,true);
-                                    ?>
-                                    <div class="tab-content">
-                                      <div class="flex-list">
-                                        <ul >
-                                          <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
-                                          <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
-                                          <li class="size-12px">Type: {{$inland->type}}</li>
-                                          <li class="size-12px">Contract: {{$inland->contract}}</li>
-                                          <li class="size-12px no-border-left d-flex justify-content-end">
-                                            <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
-                                          </li>
-                                          <li>
-                                            <button onclick="AbrirModal('editInland',{{$inland->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
-                                              <i class="la la-edit"></i>
-                                            </button>
+                                <div class="">
+                                  @php
+                                    $x=0;
+                                  @endphp
+                                  @if(!$rate->inland->isEmpty())
+                                    @foreach($rate->inland as $inland)
+                                      <?php
+                                        $inland_rates = json_decode($inland->rate,true);
+                                        $inland_markups = json_decode($inland->markup,true);
+                                      ?>
+                                      <div class="tab-content">
+                                        <div class="flex-list">
+                                          <ul >
+                                            <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
+                                            <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
+                                            <li class="size-12px">Type: {{$inland->type}}</li>
+                                            <li class="size-12px">Contract: {{$inland->contract}}</li>
+                                            <li class="size-12px no-border-left d-flex justify-content-end">
+                                              <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
+                                            </li>
+                                            <li>
+                                              <button onclick="AbrirModal('editInland',{{$inland->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                                <i class="la la-edit"></i>
+                                              </button>
 
-                                            <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$rate->id}}">
-                                              <i class="la la-trash"></i>
-                                            </button>
-                                          </li>
-                                        </ul>
+                                              <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$rate->id}}">
+                                                <i class="la la-trash"></i>
+                                              </button>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div class="details_inland_{{$x}} hide">
+                                          <table class="table table-sm table-bordered color-blue text-center">
+                                            <thead class="title-quote text-center header-table">
+                                              <tr style="height: 40px;">
+                                                <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                <td class="td-table">Distance</td>
+                                                <td class="td-table" >Units</td>
+                                                <td class="td-table" >Rate</td>
+                                                <td class="td-table" >Markup</td>
+                                                <td class="td-table" >Total</td>
+                                                <td class="td-table" >Currency</td>
+                                              </tr>
+                                            </thead>
+                                            <tbody style="background-color: white;">
+                                              <tr style="height:40px;">
+                                                <td class="tds" style="padding-left: 30px">
+                                                  <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
+                                                </td>
+                                                <td class="tds">
+                                                  <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
+                                                </td>
+                                                <td  class="tds">
+                                                  <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland->units}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
+                                                </td>
+                                                <td class="tds">
+                                                  <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland->rate}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                </td>
+                                                <td class="tds">
+                                                  <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland->markup}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                </td>
+                                                <td class="tds">
+                                                  <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland->total}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                </td>
+                                                <td class="tds">
+                                                  <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
                                       </div>
-                                      <div class="details_inland_{{$x}} hide">
-                                        <table class="table table-sm table-bordered color-blue text-center">
-                                          <thead class="title-quote text-center header-table">
-                                            <tr style="height: 40px;">
-                                              <td class="td-table" style="padding-left: 30px">Charge</td>
-                                              <td class="td-table">Distance</td>
-                                              <td class="td-table" >Units</td>
-                                              <td class="td-table" >Rate</td>
-                                              <td class="td-table" >Markup</td>
-                                              <td class="td-table" >Total</td>
-                                              <td class="td-table" >Currency</td>
-                                            </tr>
-                                          </thead>
-                                          <tbody style="background-color: white;">
-                                            <tr style="height:40px;">
-                                              <td class="tds" style="padding-left: 30px">
-                                                <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
-                                              </td>
-                                              <td class="tds">
-                                                <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
-                                              </td>
-                                              <td  class="tds">
-                                                <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland->units}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
-                                              </td>
-                                              <td class="tds">
-                                                <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland->rate}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                              </td>
-                                              <td class="tds">
-                                                <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland->markup}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                              </td>
-                                              <td class="tds">
-                                                <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland->total}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                              </td>
-                                              <td class="tds">
-                                                <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
-                                              </td>
-                                            </tr>
-                                          </tbody>
-                                        </table>
-                                      </div>
-                                    </div>
-                                    <br>
-                                    @php
-                                      $x++;
-                                    @endphp
-                                  @endforeach
-                                  <div class='row'>
-                                    <div class="col-md-12 ">
-                                      <div class="m-portlet__body">
-                                        <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
-                                          Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                @else
-                                  <div class='row'>
-                                    <div class="col-md-12 ">
-                                      <div class="m-portlet__body">
-                                        <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-rate-id="{{$rate->id}}" data-target="#createInlandModal">
-                                          Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                        </button>
+                                      <br>
+                                      @php
+                                        $x++;
+                                      @endphp
+                                    @endforeach
+                                    <div class='row'>
+                                      <div class="col-md-12 ">
+                                        <div class="m-portlet__body">
+                                          <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                            Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                @endif
+                                  @else
+                                    <div class='row'>
+                                      <div class="col-md-12 ">
+                                        <div class="m-portlet__body">
+                                          <button class="btn btn-primary-v2 btn-edit" data-toggle="modal" data-rate-id="{{$rate->id}}" data-target="#createInlandModal">
+                                            Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  @endif
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        @endif
                         <br>
 
                         <!-- Remarks -->

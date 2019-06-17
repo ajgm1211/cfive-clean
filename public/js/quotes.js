@@ -779,6 +779,7 @@ $('.select2-company_id').select2({
   placeholder: "Select an option"
 });
 
+
 /** SCHEDULES **/
 
 $(document).on('click', '#select-schedule', function () {
