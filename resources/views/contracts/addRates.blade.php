@@ -28,19 +28,19 @@
         </div>
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
-                {!! Form::label('twuenty', '20 \' ') !!}
+                <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('twuenty', 'Rates 20 \' ') !!}
                 {!! Form::number('twuenty',0, ['id' => 'twuenty','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input' ,'required'=>'true' ]) !!}
             </div>
 
 
             <div class="col-lg-4">
-                {!! Form::label('forty', '40  \' ') !!}
+                <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('forty', 'Rates 40  \' ') !!}
                 {!! Form::number('forty', 0, ['id' => 'forty','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input','required'=>'true' ]) !!}
 
             </div>
             <div class="col-lg-4">
 
-                {!! Form::label('fortyhc', '40 HC \' ') !!}
+               <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortyhc', 'Rates 40 HC \' ') !!}
                 {!! Form::number('fortyhc', 0, ['id' => 'fortyhc','placeholder' => 'Default value zero','min' => '0','class' => 'form-control ' , 'required'=>'true']) !!}
 
             </div>
@@ -48,13 +48,13 @@
         </div>
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
-                {!! Form::label('fortynor', '40 NOR \' ') !!}
+                <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortynor', 'Rates 40 NOR \' ') !!}
                 {!! Form::number('fortynor', 0, ['id' => 'fortynor','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input' , 'required'=>'true' ]) !!}
 
             </div>
             <div class="col-lg-4">
 
-                {!! Form::label('fortyfive', '45 \' ') !!}
+                <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortyfive', 'Rates 45 \' ') !!}
                 {!! Form::number('fortyfive',0, ['id' => 'fortyfive','placeholder' => 'Default value zero','min' => '0','class' => 'form-control ' , 'required'=>'true']) !!}
 
             </div>
