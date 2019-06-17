@@ -392,7 +392,6 @@
                                         </tr>
                                     @endif
                                 @endforeach
-                                
                             @endforeach
                         @endforeach
                         <tr>

@@ -56,6 +56,14 @@
                 </div>
               </div>
 
+               <div class="col-md-2 show_logo">
+                <div class="form-check">
+                  <input class="form-check-input pdf-feature check" type="checkbox" name="show_schedules" value="1" id="show_schedules" data-quote-id="{{$quote->id}}" data-name="show_schedules" data-type="checkbox" {{$quote->pdf_option->show_schedules==1 ? 'checked':''}}>
+                  <label class="form-check-label title-quote input_form" for="show_schedules">
+                    Show schedule's info
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div class="row" style="padding-top: 10px;">
