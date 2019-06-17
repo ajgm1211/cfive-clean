@@ -594,9 +594,9 @@ class QuoteV2Controller extends Controller
   //Actualiza opciones del PDF
   public function updatePdfFeature(Request $request){
     $name=$request->name;
-    $quote = PdfOption::where('quote_id',$request->id)->first();
-    $quote->$name=$request->value;
-    $quote->update();
+    $pdf = PdfOption::where('quote_id',$request->id)->first();
+    $pdf->$name=$request->value;
+    $pdf->update();
     return response()->json(['message'=>'Ok']);
   }
 
