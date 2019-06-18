@@ -111,22 +111,22 @@
                         <table class="table tableData" id="tableContracts" width="100%">
                             <thead width="100%">
                                 <tr >
-                                    <th title="Field #1">
+                                    <th  width="27%" title="Field #1">
                                         Reference
                                     </th>
-                                    <th title="Field #2">
+                                    <th width="12%" title="Field #2">
                                         Carriers
                                     </th>
-                                    <th title="Field #3">
+                                    <th width="12%" title="Field #3">
                                         Direction
                                     </th>
-                                    <th title="Field #9">
+                                    <th width="13%" title="Field #9">
                                         Validity
                                     </th>
-                                    <th title="Field #9">
+                                    <th width="13%" title="Field #9">
                                         Expire
                                     </th>
-                                    <th title="Field #11">
+                                    <th width="10%" title="Field #11">
                                         Status
                                     </th>
                                     <th title="Field #12">
@@ -238,7 +238,7 @@
                         <table class="table tableData" id="tableRates" class="tableRates" width="100%">
                             <thead width="100%" class="tableRatesTH">
                                 <tr>
-                                    <th style="width:15%;" title="Field #1">
+                                    <th style="width:25%;" title="Field #1">
                                         Reference
                                     </th>
                                     <th style="width:20%" title="Field #3">
