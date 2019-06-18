@@ -1,12 +1,12 @@
 {!! Form::open(['route'=>'managercarriers.store','method'=>'POST','id'=>'frmCarrier','files'=>true])!!}
 <div class="form-group row">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <label for="NameMD" class="form-control-label">
             Name:
         </label>
         <input type="text" name="name" value="" required="required" class="form-control"  id="NameMD">
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <label for="number" class="form-control-label">
             Name of the Image:
         </label>
@@ -21,6 +21,10 @@
         <input type="file" class="form-control imagIn" required name="file" onchange='cambiar()' id="file"  style='display: none;'>
         <div id="info" style="color:red"></div>
     </div>
+    <div class="col-lg-2">
+        <label><br></label>
+        <a href="#" class="btn btn-primary form-control" onclick="agregarcampo()"><span class="la la-plus"></span></a>
+    </div>
 </div>
 <div class="form-group row">
     <div class="col-lg-12">
@@ -31,6 +35,15 @@
             <br>
             <img id="blah" src="#" class="blah" alt="your image" width="175" height="150"/>
         </center>
+    </div>
+</div>
+<hr>
+<div class="form-group row" id="variatiogroup">
+    <div class="col-lg-4" >
+        <label for="DispNamMD" class="form-control-label">
+            Variation:
+        </label>
+        <input type="text" name="variation[]" class="form-control">
     </div>
 </div>
 <div id="modal-body" class="modal-footer">

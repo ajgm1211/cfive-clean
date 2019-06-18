@@ -33,6 +33,7 @@
 
     </div>
 </div>
+
 <div class="form-group row">
     <div class="col-lg-5">
         <label for="number" class="form-control-label">
@@ -41,7 +42,7 @@
         <br>
         <img id="blah" src="{{$image}}" alt="your image" width="175" height="150"/>
     </div>
-    <div class="col-lg-6 " id="imagDiv">
+    <div class="col-lg-4 " id="imagDiv">
         <label><br></label>
         <br>
         <label for="file" class="btn btn-primary form-control-label form-control imagIn" >
@@ -50,6 +51,25 @@
         <input type="file" class="form-control imagIn" name="file" onchange='cambiar()' id="file"  style='display: none;'>
         <div id="info" style="color:red"></div>
     </div>
+    <div class="col-lg-2">
+        <label><br></label>
+        <a href="#" class="btn btn-primary form-control" onclick="agregarcampo()"><span class="la la-plus"></span></a>
+    </div>
+</div>
+<hr>
+<div class="form-group row" id="variatiogroup">
+    @foreach($decodejosn as $nameVaration)
+
+    @if($nameVaration != '')
+    <div class="col-lg-4" >
+        <label for="DispNamMD" class="form-control-label">
+            Variation:
+        </label>
+        <input type="text" name="variation[]" value="{{$nameVaration}}" class="form-control">
+        <a href="#" class="borrarInput"><samp class="la la-remove"></samp></a>
+    </div>
+    @endif
+    @endforeach
 </div>
 <div id="modal-body" class="modal-footer">
     <div class="m-portlet__foot m-portlet__foot--fit">
@@ -62,8 +82,15 @@
     </div>
     {{ Form::close()}}
 
-
     <script>
+        $('.m-select2-general').select2({
+
+        });
+
+        $(document).on('click','.borrarInput',function(e){
+            $(this).closest('div').remove();
+        });
+    
         $(document).ready(function(){
             $('#imagDiv').attr('hidden','hidden');
         });
