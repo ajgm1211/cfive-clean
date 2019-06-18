@@ -35,6 +35,11 @@ class AutomaticRate extends Model
         return $this->hasMany('App\AutomaticInland','automatic_rate_id');
     }
 
+    public function automaticInlandLclAir()
+    {
+        return $this->hasMany('App\AutomaticInlandLclAir','automatic_rate_id');
+    }
+
     public function currency()
     {
         return $this->hasOne('App\Currency','id','currency_id');
@@ -47,7 +52,7 @@ class AutomaticRate extends Model
 
     public function airline()
     {
-        return $this->hasOne('App\Carrier','id','airline_id');
+        return $this->hasOne('App\Airline','id','airline_id');
     }    
 
     public function origin_port()

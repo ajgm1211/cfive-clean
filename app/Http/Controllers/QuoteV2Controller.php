@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AutomaticRate;
 use App\AutomaticInland;
+use App\AutomaticInlandLclAir;
 use App\CalculationType;
 use App\CalculationTypeLcl;
 use App\Charge;
@@ -208,7 +209,7 @@ class QuoteV2Controller extends Controller
     $quote = QuoteV2::findOrFail($id);
     $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
     $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
-    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir')->get();
     $harbors = Harbor::get()->pluck('display_name','id');
     $countries = Country::pluck('name','id');
 
@@ -471,7 +472,7 @@ class QuoteV2Controller extends Controller
       }
       
     }
-
+    //dd($rates);
     //Adding country codes to rates collection
 
     foreach ($rates as $item) {
@@ -577,6 +578,21 @@ class QuoteV2Controller extends Controller
       $name = $request->name;
       $charge->$name=$request->value;
     }
+    $charge->update();
+    return response()->json(['success'=>'Ok']);
+  }
+
+  /**
+   * Update inland's charges LCL/AIR
+   * @param Request $request 
+   * @return array json
+   */
+  public function updateInlandChargeLcl(Request $request)
+  {
+    $charge=AutomaticInlandLclAir::find($request->pk);
+    $name = $request->name;
+    $charge->$name=$request->value;
+    
     $charge->update();
     return response()->json(['success'=>'Ok']);
   }
@@ -3378,6 +3394,7 @@ class QuoteV2Controller extends Controller
                 
                 //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
                 //$value->markup=number_format(($value->markup/$currency_rate), 2, '.', '');
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
                 $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 
               }
@@ -3388,7 +3405,7 @@ class QuoteV2Controller extends Controller
     }
 
     //$origin_charges=$origin_charges->toArray();
-    //dd(json_encode($origin_charges_detailed));
+    //dd(json_encode($destination_charges_grouped));
     $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
 
     $pdf = \App::make('dompdf.wrapper');
@@ -4275,8 +4292,6 @@ class QuoteV2Controller extends Controller
    */
   public function storeInlands(Request $request){
 
-    $arregloNull = array();
-    $arregloNull = json_encode($arregloNull);
     $quote = QuoteV2::find($request->input('quote_id'));
     $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
     $idCurrency = $company->companyUser->currency_id;
@@ -4284,8 +4299,15 @@ class QuoteV2Controller extends Controller
     $since = $dateQ[0];
     $until = $dateQ[1];
 
-    $request->request->add(['contract' => '','rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull]);
-    AutomaticInland::create($request->all());
+    if($request->quote_type=='FCL'){
+      $arregloNull = array();
+      $arregloNull = json_encode($arregloNull);
+      $request->request->add(['contract' => '','rate'=> $arregloNull ,'validity_start'=>$since,'validity_end'=>$until,'markup'=> $arregloNull]);
+      AutomaticInland::create($request->all());
+    }else{
+      $request->request->add(['contract' => '','validity_start'=>$since,'validity_end'=>$until]);
+      AutomaticInlandLclAir::create($request->all());
+    }
 
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
@@ -4306,6 +4328,22 @@ class QuoteV2Controller extends Controller
     return view('quotesv2.partials.editInland', compact('inland','quote','harbors','carriers','airlines','currencies'));
   }
 
+/**
+ * Show modal with form to edit inlands lcl air
+ * @param integer $id 
+ * @return Illuminate\View\View
+ */
+  public function editInlandsLcl($id){
+    $inland=AutomaticInlandLclAir::find($id);
+    $quote=QuoteV2::find($inland->quote_id);
+    $harbors=Harbor::pluck('display_name','id');
+    $carriers=Carrier::pluck('name','id');
+    $airlines=Airline::pluck('name','id');
+    $currencies=Currency::pluck('alphacode','id');
+
+    return view('quotesv2.partials.editInland', compact('inland','quote','harbors','carriers','airlines','currencies'));
+  }
+
   /**
  * Update inlands
  * @param integer $id 
@@ -4313,7 +4351,11 @@ class QuoteV2Controller extends Controller
  */
   public function updateInlands(Request $request,$id){
 
-    $inland=AutomaticInland::find($id);
+    if($request->quote_type=='FCL'){
+      $inland=AutomaticInland::find($id);
+    }else{
+      $inland=AutomaticInlandLclAir::find($id);
+    }
     if($request->port_id){
       $inland->port_id=$request->port_id;
     }  

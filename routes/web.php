@@ -463,11 +463,13 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');
   Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
   Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
+  Route::post('lcl/inland/charge/update', 'QuoteV2Controller@updateInlandChargeLcl')->name('quotes-v2.update.inland.charge.lcl');
   Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
   Route::post('rates/store', 'QuoteV2Controller@storeRates')->name('quotes-v2.rates.store');
   Route::get('rates/edit/{id}', 'QuoteV2Controller@editRates')->name('quotes-v2.rates.edit');
   Route::post('rates/update/{id}', 'QuoteV2Controller@updateRates')->name('quotes-v2.rates.update');
   Route::get('inlands/edit/{id}', 'QuoteV2Controller@editInlands')->name('quotes-v2.inlands.edit');
+  Route::get('lcl/inlands/edit/{id}', 'QuoteV2Controller@editInlandsLcl')->name('quotes-v2.inlands.lcl.edit');
   Route::post('inlands/update/{id}', 'QuoteV2Controller@updateInlands')->name('quotes-v2.inlands.update');
   Route::post('inlands/store', 'QuoteV2Controller@storeInlands')->name('quotes-v2.inlands.store');
   Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
