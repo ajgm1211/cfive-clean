@@ -7,6 +7,7 @@ use App\User;
 use PrvHarbor;
 use App\Harbor;
 use App\Region;
+use PrvCarrier;
 use App\Carrier;
 use App\Country;
 use App\Currency;
@@ -418,14 +419,9 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
                                 } else {
                                     $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                                    $carrierResul = str_replace($caracteres,'',$carrierVal);
-                                    $carrier = Carrier::where('name','=',$carrierResul)->first();
-                                    if(empty($carrier->id) != true){
-                                        $carriExitBol = true;
-                                        $carrierVal = $carrier->id;
-                                    }else{
-                                        $carrierVal = $carrierVal.'_E_E';
-                                    }
+                                    $carrierArr      = PrvCarrier::get_carrier($carrierVal);
+                                    $carriExitBol    = $carrierArr['boolean'];
+                                    $carrierVal      = $carrierArr['carrier'];
                                 }
 
                                 //---------------- CURRENCY VALUES ------------------------------------------------------
