@@ -122,7 +122,7 @@
     border-color: #0072fc; 
   }
 
-  .input-select[type="checkbox"]{
+  .input-select[type="checkbox"] {
     display: none; 
   }
   .input-select[type="checkbox"]:checked + .btn-input__select {
@@ -303,6 +303,14 @@
   }
   .btn-remarks {
     width: 95px;
+  }
+  .select-class::before {
+    content:'Select ->';
+    font-size: 13px;
+  }
+  .selected-class:before {
+    content: 'Selected';
+    font-size: 13px;
   }
   /* estilos */
 </style>
@@ -673,7 +681,7 @@
                     <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                     <?php endif; ?>
                     <?php endif; ?>
-                  </div><!-- aqui -->
+                  </div>
                   <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
                     <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
                     </button>
@@ -822,7 +830,7 @@
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?> infocheck' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
-                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate"  rate-id ='<?php echo e($arr->id); ?>' Select>Select <span class="la la-arrow-right"></span></label>
+                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate select-class selected"  rate-id ='<?php echo e($arr->id); ?>' Select></label><!--aqui-->
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -1313,23 +1321,10 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
-  $('.btn-input__select').on('click', function(){
-    var clase = $(this).attr('selected');
-    $(this).html('Selected');
-    $(this).addClass('selected');
-    
+  $('.selected').on('click', function(){
+    $(this).toggleClass('selected-class'); 
   });
-  
-    $('.btn-input__select').on('click', function(){
-      if($('.btn-input__select').hasClass('selected')){
-      $(this).html('Seledasdcted');
-        
-    });
       
-    
-  
-
-
   $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
