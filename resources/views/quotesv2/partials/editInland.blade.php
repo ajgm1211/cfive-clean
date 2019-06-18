@@ -1,6 +1,7 @@
             {{ Form::model($inland, array('route' => array('quotes-v2.inlands.update', $inland->id), 'method' => 'POST')) }}
                 <div class="row">
                     <input  type="hidden" name="quote_id" value="{{$quote->id}}" class="btn btn-sm btn-default btn-bold btn-upper formu">
+                    <input  type="hidden" name="quote_type" value="{{$quote->type}}" class="btn btn-sm btn-default btn-bold btn-upper formu">
                     <input  type="hidden" name="automatic_rate_id" value="{{$inland->automatic_rate_id}}" class="btn btn-sm btn-default btn-bold btn-upper automatic_rate_id">
                     <div class="col-md-4" >
                         <div id="origin_harbor_label">
