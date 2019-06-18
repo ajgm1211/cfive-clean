@@ -935,12 +935,12 @@
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{ $rates['type'] }}</div>
                     <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>                  
-                    <div class="col-lg-1 colorphacode" >{{$rates['detail']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $rates['cantidad'] }}</div>
+                    <div class="col-lg-2 colorphacode">{{ $rates['price'] }}</div>
+                    <div class="col-lg-2 colorphacode">{{ $rates['subtotal'] }}</div>
+                    <div class="col-lg-1 colorphacode">{{ $rates['markup'] }}</div>
+                    <div class="col-lg-1 colorphacode">{{ $rates['total'] }}</div>                  
+                    
                   </div>
 
                   @endforeach
