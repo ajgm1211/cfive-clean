@@ -3398,7 +3398,9 @@ class QuoteV2Controller extends Controller
                 
                 //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
                 //$value->markup=number_format(($value->markup/$currency_rate), 2, '.', '');
-                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                if($value->units>0){
+                  $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                }
                 $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 
               }
