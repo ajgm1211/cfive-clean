@@ -224,9 +224,9 @@
                         <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 2, '.', '')}}</td>
                         <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination, 2, '.', '')}}</td>
                         @if($quote->pdf_option->show_schedules==1)
-                            <td>{{$rate->schedule_type}}</td>
-                            <td>{{$rate->transit_time}}</td>
-                            <td>{{$rate->via}}</td>
+                            <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                            <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
+                            <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                         @endif
                         <td >{{$quote->pdf_option->grouped_total_currency==0 ?$currency_cfg->alphacode:$quote->pdf_option->total_in_currency}}</td>
                     </tr>
