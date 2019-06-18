@@ -136,12 +136,9 @@ class ImportationController extends Controller
 
                     //---------------- Carrier ------------------------------------------------------------------
 
-                    $carrierResul = str_replace($caracteres,'',$carrierArr[0]);
-                    $carrier = Carrier::where('name','=',$carrierResul)->first();
-                    if(empty($carrier->id) != true){
-                        $carriExitBol = true;
-                        $carrierVal = $carrier->id;
-                    }
+                    $carrierArr      = PrvCarrier::get_carrier($carrierArr[0]);
+                    $carriExitBol    = $carrierArr['boolean'];
+                    $carrierVal      = $carrierArr['carrier'];
 
                     //---------------- 20' ------------------------------------------------------------------
 
@@ -337,9 +334,7 @@ class ImportationController extends Controller
 
                 if(count($surchargerEX) <= 1     && count($typedestinyEX) <= 1
                    && count($typedestinyEX) <= 1 && count($calculationtypeEX) <= 1
-                   && count($ammountEX) <= 1     && count($currencyEX) <= 1
-                   && count($carrierEX) <= 1){
-
+                   && count($ammountEX) <= 1     && count($currencyEX) <= 1){
 
                     // Origen Y Destino ------------------------------------------------------------------------
 
@@ -386,10 +381,10 @@ class ImportationController extends Controller
                     $calculationtypeV = CalculationType::where('code','=',$calculationtypeEX[0])->orWhere('name','=',$calculationtypeEX[0])->first();
 
                     if(count($calculationtypeV) == 1){
-                        $calculationtypeB = true;
                         $calculationtypeV = $calculationtypeV['id'];
                     }
 
+                        $calculationtypeB = true;
                     //  Amount ---------------------------------------------------------------------------------
 
                     $amountV = floatval($ammountEX[0]);
@@ -403,12 +398,9 @@ class ImportationController extends Controller
                     }
 
                     //  Carrier -------------------------------------------------------------------------------
-
-                    $carrierV = Carrier::where('name','=',$carrierEX[0])->first();
-                    if(count($carrierV) == 1){
-                        $carrierB = true;
-                        $carrierV = $carrierV['id'];
-                    }
+                    $carrierArr      = PrvCarrier::get_carrier($carrierEX[0]);
+                    $carrierB        = $carrierArr['boolean'];
+                    $carrierV        = $carrierArr['carrier'];
 
                     /*$colleccion = collect([]);
                     $colleccion = [
@@ -419,7 +411,8 @@ class ImportationController extends Controller
                         'calculationtypeV'  =>  $calculationtypeV,
                         'amountV'           =>  $amountV,
                         'currencyV'         =>  $currencyV,
-                        'carrierV'          =>  $carrierV
+                        'carrierV'          =>  $carrierV,
+                        'relation'          =>  $carrierArr['relation'],
                     ];
 
                     dd($colleccion);*/
@@ -4447,8 +4440,7 @@ class ImportationController extends Controller
                 $surchargeC = count($surchargeA);
                 if($surchargeC <= 1){
                     $surchargeA = $surchargeA[0];
-                }
-                else{
+                }else{
                     $surchargeA         = $surchargeA[0].' (error)';
                     $classsurcharger    = 'color:red';
                 }
@@ -4459,8 +4451,7 @@ class ImportationController extends Controller
                 $carrierC = count($carrierA);
                 if($carrierC <= 1){
                     $carrierA = $carrierA[0];
-                }
-                else{
+                }else{
                     $carrierA       = $carrierA[0].' (error)';
                     $classcarrier   ='color:red';
                 }
@@ -4471,8 +4462,7 @@ class ImportationController extends Controller
                 $calculationtypeC   = count($calculationtypeA);
                 if($calculationtypeC <= 1){
                     $calculationtypeA = $calculationtypeA[0];
-                }
-                else{
+                }else{
                     $calculationtypeA       = $calculationtypeA[0].' (error)';
                     $classcalculationtype   = 'color:red';
                 }
@@ -4481,8 +4471,7 @@ class ImportationController extends Controller
                 $ammountC = count($ammountA);
                 if($ammountC <= 1){
                     $ammountA = $failsurcharge->ammount;
-                }
-                else{
+                }else{
                     $ammountA       = $ammountA[0].' (error)';
                     $classammount   = 'color:red';
                 }
@@ -4493,8 +4482,7 @@ class ImportationController extends Controller
                 $currencyC    = count($currencyA);
                 if($currencyC <= 1){
                     $currencyA = $currencyA[0];
-                }
-                else{
+                }else{
                     $currencyA      = $currencyA[0].' (error)';
                     $classcurrency  = 'color:red';
                 }
@@ -4503,8 +4491,7 @@ class ImportationController extends Controller
                 $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
                 if(count($typedestinyA) <= 1){
                     $typedestinyLB = $typedestinyobj['description'];
-                }
-                else{
+                }else{
                     $typedestinyLB      = $typedestinyA[0].' (error)';
                     $classcurrency  = 'color:red';
                 }
@@ -5333,6 +5320,7 @@ class ImportationController extends Controller
             $carrier->varation  = $json;
             $carrier->save();
         }*/
+        //dd(PrvHarbor::get_harbor('chile'));
         dd(PrvCarrier::get_carrier('cosco'));
     }
 
