@@ -14,6 +14,7 @@ use App\User;
 use PrvHarbor;
 use App\Region;
 use App\Harbor;
+use PrvCarrier;
 use App\Company;
 use App\Contact;
 use App\Country;
@@ -47,7 +48,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $request,$companyUserId,$UserId;
-    
+
     public function __construct($request,$companyUserId,$UserId)
     {
         $this->request          = $request;
@@ -55,7 +56,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $this->UserId           = $UserId;
 
     }
-    
+
     public function handle()
     {
         $requestobj = $this->request;
@@ -303,14 +304,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                     $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
                                 } else {
                                     $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                                    $carrierResul = str_replace($caracteres,'',$carrierVal);
-                                    $carrier = Carrier::where('name','=',$carrierResul)->first();
-                                    if(empty($carrier->id) != true){
-                                        $carriExitBol = true;
-                                        $carrierVal = $carrier->id;
-                                    }else{
-                                        $carrierVal = $carrierVal.'_E_E';
-                                    }
+                                    $carrierArr      = PrvCarrier::get_carrier($carrierVal);
+                                    $carriExitBol    = $carrierArr['boolean'];
+                                    $carrierVal      = $carrierArr['carrier'];
                                 }
 
                                 //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
