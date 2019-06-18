@@ -1085,7 +1085,7 @@
                                                 <div class='row'>
                                                     <div class="col-md-12 ">
                                                         <div class="m-portlet__body">
-                                                            <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                                            <button class="btn btn-primary-v2 btn-edit open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
                                                                 Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
                                                             </button>
                                                         </div>

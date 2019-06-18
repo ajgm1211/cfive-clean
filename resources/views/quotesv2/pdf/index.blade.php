@@ -116,6 +116,11 @@
                     <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
                     <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
                     <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
+                    @if($quote->pdf_option->show_schedules==1)
+                        <th ><b>Type</b></th>
+                        <th ><b>TT</b></th>
+                        <th ><b>Via</b></th>
+                    @endif
                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -167,6 +172,11 @@
                         <td {{ @$equipmentHides['40hc'] }}>{{number_format((float)@$sum_total40hc+@$sum_inland40hc, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40nor'] }}>{{number_format((float)@$sum_total40nor+@$sum_inland40nor, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['45'] }}>{{number_format((float)@$sum_total45+@$sum_inland45, 2, '.', '')}}</td>
+                        @if($quote->pdf_option->show_schedules==1)
+                            <td>{{$rate->schedule_type}}</td>
+                            <td>{{$rate->transit_time}}</td>
+                            <td>{{$rate->via}}</td>
+                        @endif
                         <td >{{$quote->pdf_option->grouped_total_currency==0 ?$currency_cfg->alphacode:$quote->pdf_option->total_in_currency}}</td>
                     </tr>
                 @endforeach
