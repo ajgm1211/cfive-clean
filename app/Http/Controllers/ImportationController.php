@@ -7,6 +7,7 @@ use App\User;
 use App\Rate;
 use PrvRates;
 use PrvHarbor;
+use PrvCarrier;
 use App\Harbor;
 use App\Region;
 use App\Carrier;
@@ -5325,9 +5326,14 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $originVal = trim('Asuncion, Paraguay');
-        $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-        dd($resultadoPortOri);
+        /*$carriers = Carrier::all();
+        foreach($carriers as $carrier){
+            $type['type'] = [strtolower($carrier->name)];
+            $json = json_encode($type);
+            $carrier->varation  = $json;
+            $carrier->save();
+        }*/
+        dd(PrvCarrier::get_carrier('cosco'));
     }
 
 }
