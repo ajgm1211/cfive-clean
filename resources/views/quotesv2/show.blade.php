@@ -272,6 +272,12 @@
       $('.modal-body-rate').load(url,function(){
         $('#editRateModal').modal({show:true});
       });
+    }else if(action == "editInlandLcl"){
+      var url = '{{ route("quotes-v2.inlands.lcl.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
     }
   }
 </script>

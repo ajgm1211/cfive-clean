@@ -141,6 +141,21 @@ $(document).ready(function() {
     }
   });
 
+    $('.editable-lcl-air-inland').editable({
+    url:'/v2/quotes/lcl/inland/charge/update',
+    emptytext:0,
+    success: function(response, newValue) {
+
+      if(!response) {
+        return "Unknown error!";
+      }
+
+      if(response.success === false) {
+        return response.msg;
+      }
+    }
+  });
+
   $('.editable-inland').editable({
     url:'/v2/quotes/inland/update',
     emptytext:0,
