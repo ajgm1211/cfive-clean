@@ -221,7 +221,7 @@
                         @else
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                         @endif
-                        <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 2, '.', '')}}</td>
+                        <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 4, '.', '')}}</td>
                         <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination, 2, '.', '')}}</td>
                         @if($quote->pdf_option->show_schedules==1)
                             <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
