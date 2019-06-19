@@ -4666,8 +4666,13 @@ class QuoteV2Controller extends Controller
       }
 
       $payments = $this->getCompanyPayments($request->input('company_id_quote'));
-
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ]);
+      if(isset($request->price_id )){
+        $priceId = $request->price_id;
+        if($priceId=="0"){
+          $priceId = null;
+        }
+      }
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
 
       // FCL
@@ -6784,24 +6789,18 @@ class QuoteV2Controller extends Controller
     // Rates LCL
 
     $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
-
         {
           $q->whereHas('contract_user_restriction', function($a) use($user_id){
             $a->where('user_id', '=',$user_id);
           })->orDoesntHave('contract_user_restriction');
-
         })->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
-
                      {
                        $q->whereHas('contract_company_restriction', function($b) use($company_id){
                          $b->where('company_id', '=',$company_id);
                        })->orDoesntHave('contract_company_restriction');
                      })->whereHas('contract', function($q) use($company_user_id,$dateSince,$dateUntil){
-
       $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
     })->get();
-
-
 
     foreach($arreglo as $data){
       $totalFreight = 0;
@@ -8064,7 +8063,9 @@ class QuoteV2Controller extends Controller
 
   }
 
+
   public function OrdenarCollectionLCL($collection){
+
 
     $collection = $collection->groupBy([
       'surcharge_name',
