@@ -3853,6 +3853,7 @@ class QuoteV2Controller extends Controller
 
     }else{// COTIZACION MANUAL
 
+      $priceId = null;
       $dateQ = explode('/',$request->input('date'));
       $since = $dateQ[0];
       $until = $dateQ[1];

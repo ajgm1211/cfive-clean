@@ -188,7 +188,7 @@
         <!-- DETAILED TABLES -->
 
         <!-- Freights table all in-->
-        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $freight_charges_grouped->count()>1)
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()>1)
             <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
@@ -277,7 +277,7 @@
             </table>
         @endif
 
-        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $freight_charges_grouped->count()==1)
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()==1)
             @foreach($freight_charges_detailed as $origin => $value)
                 @foreach($value as $destination => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
@@ -327,8 +327,16 @@
                                                 $sum_freight_45+=$v->total_45;
                                             ?>
                                             <tr class="text-center color-table">
-                                                <td>{{$v->surcharge->name}}</td>
-                                                <td>{{$v->calculation_type->name}}</td>
+                                                 @if($v->surcharge_id!='')
+                                                    <td>{{$v->surcharge->name}}</td>
+                                                @else
+                                                    <td>Ocean freight</td>
+                                                @endif
+                                                @if($v->surcharge_id!='')
+                                                    <td>{{$v->calculation_type->name}}</td>
+                                                @else
+                                                    <td>Per container</td>
+                                                @endif
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{number_format($v->total_20, 2, '.', '')}}</td>
                                                 <td {{ @$equipmentHides['40'] }}>{{number_format($v->total_40, 2, '.', '')}}</td>
@@ -365,7 +373,7 @@
                 @endforeach
             @endforeach
         @endif
-
+        <br>
         <!-- ORIGINS -->
 
         <!-- ALL in origin table -->
@@ -571,7 +579,7 @@
                 @endforeach
             @endforeach
         @endif
-
+        <br>
         <!-- DESTINATIONS -->
 
         <!-- ALL in destination table -->
