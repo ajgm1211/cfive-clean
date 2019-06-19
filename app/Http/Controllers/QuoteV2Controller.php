@@ -6782,12 +6782,16 @@ class QuoteV2Controller extends Controller
     $collectionRate = new Collection();
 
     // Rates LCL
+
     $arreglo = RateLcl::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
+
         {
           $q->whereHas('contract_user_restriction', function($a) use($user_id){
             $a->where('user_id', '=',$user_id);
           })->orDoesntHave('contract_user_restriction');
+
         })->whereHas('contract', function($q) use($user_id,$company_user_id,$company_id,$dateSince,$dateUntil)
+
                      {
                        $q->whereHas('contract_company_restriction', function($b) use($company_id){
                          $b->where('company_id', '=',$company_id);

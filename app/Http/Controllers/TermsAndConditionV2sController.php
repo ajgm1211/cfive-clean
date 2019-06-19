@@ -57,6 +57,7 @@ class TermsAndConditionV2sController extends Controller
       $company           = Auth::user()->company_user_id;
       $term                   = new TermAndConditionV2();
       $term->name             = $request->name;
+      $term->type           =$request->type;
       $term->user_id          = Auth::user()->id;
       $term->import           = $request->import;
       $term->export           = $request->export;
@@ -133,6 +134,7 @@ class TermsAndConditionV2sController extends Controller
     $selected_carriers  = collect($term->TermConditioncarriers);
     $selected_carriers  = $selected_carriers->pluck('carrier_id');
     $carriers = Carrier::pluck('name','id');*/
+    
     return view('termsv2.edit', compact('term', 'languages'));
   }
 
