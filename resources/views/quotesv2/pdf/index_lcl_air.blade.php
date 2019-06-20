@@ -236,7 +236,7 @@
         </table>
         <br>
         <!-- Freight charges all in -->
-        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $freight_charges_grouped->count()>1)
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()>1)
             <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
@@ -316,7 +316,7 @@
         @endif
 
         <!-- Freigth charges detailed -->
-        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $freight_charges_grouped->count()==1)
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()==1)
             @foreach($freight_charges_grouped as $origin => $value)
                 @foreach($value as $destination => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
