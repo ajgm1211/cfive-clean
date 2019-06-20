@@ -50,7 +50,6 @@ class ImportationController extends Controller
 
 
     public function ReprocesarRates(Request $request, $id){
-
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
         if($countfailrates <= 150){
             $failrates = FailRate::where('contract_id','=',$id)->get();
@@ -107,7 +106,6 @@ class ImportationController extends Controller
                 $currencyArr    = explode('_',$failrate->currency_id);
                 $scheduleTArr   = explode('_',$failrate->schedule_type);
 
-
                 $carrierEX     = count($carrierArr);
                 $twuentyEX     = count($twentyArr);
                 $fortyEX       = count($fortyArr);
@@ -115,8 +113,7 @@ class ImportationController extends Controller
                 $currencyEX    = count($currencyArr);
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
-
-                if($carrierEX   <= 1 &&  $twuentyEX   <= 1 &&
+                if( $twuentyEX   <= 1 &&
                    $fortyEX     <= 1 &&  $fortyhcEX   <= 1 &&
                    $currencyEX  <= 1 ){
 
@@ -223,8 +220,7 @@ class ImportationController extends Controller
                        $twentyExiBol   == true && $fortyExiBol    == true &&
                        $fortyhcExiBol  == true && $fortynorExiBol == true &&
                        $fortyfiveExiBol == true && $values        == true &&
-                       $scheduleTBol == true && $carriExitBol   == true && 
-                       $curreExitBol   == true){
+                       $scheduleTBol == true && $curreExitBol   == true && $carriExitBol == true){
                         $collecciont = '';
                         $exists = null;
                         $exists = Rate::where('origin_port',$originV)
@@ -432,7 +428,7 @@ class ImportationController extends Controller
                             ->first();
 
                         if(count($LocalchargeId) == 0){
-                            $Localchargeobj = LocalCharge::create([
+                            $LocalchargeId = LocalCharge::create([
                                 'surcharge_id'          => $surchargerV,
                                 'typedestiny_id'        => $typedestunyV,
                                 'contract_id'           => $id,
@@ -442,7 +438,7 @@ class ImportationController extends Controller
                             ]);
                         }
 
-                        $LocalchargeId = $Localchargeobj->id;
+                        $LocalchargeId = $LocalchargeId->id;
 
                         $existCa = null;
                         $existCa = LocalCharCarrier::where('carrier_id',$carrierV)
@@ -5313,13 +5309,13 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        /*$carriers = Carrier::all();
+        $carriers = Carrier::all();
         foreach($carriers as $carrier){
             $type['type'] = [strtolower($carrier->name)];
             $json = json_encode($type);
             $carrier->varation  = $json;
             $carrier->save();
-        }*/
+        }
         //dd(PrvHarbor::get_harbor('chile'));
         dd(PrvCarrier::get_carrier('cosco'));
     }
