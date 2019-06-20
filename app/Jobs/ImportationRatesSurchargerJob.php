@@ -2690,8 +2690,15 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                             $carrier = Carrier::find($requestobj['carrier']); 
                                             $carrierVal = $carrier['name'];  
                                         }else{
-                                            $carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
-                                            $carrierVal = $carrier['name']; 
+                                            $carriExitBol2   = false;
+                                            $carrierArr      = PrvCarrier::get_carrier($read[$requestobj['Carrier']]);
+                                            $carrierVal      = $carrierArr['carrier'];
+                                            $carriExitBol2   = $carrierArr['boolean'];
+                                            if($carriExitBol2 == true){
+                                                $carrierVal = Carrier::find($carrierVal);
+                                                $carrierVal = $carrierVal->name;
+                                            }
+
                                         }
                                     }
 
