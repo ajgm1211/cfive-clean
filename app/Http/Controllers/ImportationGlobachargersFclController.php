@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Excel;
 use App\User;
 use PrvHarbor;
+use PrvCarrier;
 use App\Harbor;
 use App\Region;
 use App\Carrier;
@@ -95,8 +96,7 @@ class ImportationGlobachargersFclController extends Controller
 
                 if(count($surchargerEX) == 1     && count($typedestinyEX) == 1
                    && count($typedestinyEX) == 1 && count($calculationtypeEX) == 1
-                   && count($ammountEX) == 1     && count($currencyEX) == 1
-                   && count($carrierEX) == 1){
+                   && count($ammountEX) == 1     && count($currencyEX) == 1){
 
                     // Origen Y Destino ------------------------------------------------------------------------
                     if($failglobalcharger->differentiator  == 1){
@@ -160,11 +160,9 @@ class ImportationGlobachargersFclController extends Controller
 
                     //  Carrier -------------------------------------------------------------------------------
 
-                    $carrierV = Carrier::where('name','=',$carrierEX[0])->first();
-                    if(count($carrierV) == 1){
-                        $carrierB = true;
-                        $carrierV = $carrierV['id'];
-                    }
+                    $carrierArr = PrvCarrier::get_carrier($carrierEX[0]);
+                    $carrierV   = $carrierArr['carrier'];
+                    $carrierB   = $carrierArr['boolean'];
 
                     //------------------ VALIDITY FROM ------------------------------------------------------
 
@@ -856,7 +854,7 @@ class ImportationGlobachargersFclController extends Controller
                     $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
                         ->first();
                 }
-                
+
                 $originAIn = $originOb['id'];
                 $originC   = count($originA);
                 if($originC <= 1 && count($originAIn) == 1){
