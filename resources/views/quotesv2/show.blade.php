@@ -5,6 +5,9 @@
 
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 <style>
+  .pac-container {
+    z-index: 10000 !important;
+  }
   .bg-quotes {
     background-color: #e3e8ee !important;
   }
