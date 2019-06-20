@@ -19,7 +19,7 @@ class AddColumnsLoadsQuoteV2 extends Migration
       $table->integer('total_quantity')->nullable()->after('equipment');
       $table->float('total_weight')->nullable()->after('total_quantity');
       $table->float('total_volume')->nullable()->after('total_weight');
-      $table->float('chargeable_weight')->nullable()->after('total_volume');
+      //$table->float('chargeable_weight')->nullable()->after('total_volume');
       
       
 

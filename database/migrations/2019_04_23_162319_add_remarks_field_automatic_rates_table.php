@@ -14,7 +14,7 @@ class AddRemarksFieldAutomaticRatesTable extends Migration
     public function up()
     {
         Schema::table('automatic_rates', function (Blueprint $table) {
-            $table->string('remarks',5000)->nullable()->after('markups');
+            //$table->string('remarks',5000)->nullable()->after('markups');
         });
     }
 

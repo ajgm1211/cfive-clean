@@ -780,8 +780,6 @@ $('.select2-company_id').select2({
 });
 
 
-
-
 /** SCHEDULES **/
 
 $(document).on('click', '#select-schedule', function () {

@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Excel;
 use App\User;
 use PrvHarbor;
+use PrvCarrier;
 use App\Harbor;
 use PrvRatesLcl;
 use App\RateLcl;
@@ -93,7 +94,7 @@ class ReprocesarRatesLclJob implements ShouldQueue
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
-                if($carrierEX   <= 1 &&  $wmEX        <= 1 &&
+                if($wmEX        <= 1 &&
                    $minimunEX   <= 1 &&  $currencyEX  <= 1 ){
 
                     $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
@@ -110,13 +111,10 @@ class ReprocesarRatesLclJob implements ShouldQueue
 
 
                     //---------------- Carrier ------------------------------------------------------------------
-
-                    $carrierResul = str_replace($caracteres,'',$carrierArr[0]);
-                    $carrier = Carrier::where('name','=',$carrierResul)->first();
-                    if(empty($carrier->id) != true){
-                        $carriExitBol = true;
-                        $carrierVal = $carrier->id;
-                    }
+                    
+                    $carrierArr      = PrvCarrier::get_carrier($carrierArr[0]);
+                    $carriExitBol    = $carrierArr['boolean'];
+                    $carrierVal      = $carrierArr['carrier'];
 
                     //---------------- W/M ------------------------------------------------------------------
 
@@ -146,8 +144,6 @@ class ReprocesarRatesLclJob implements ShouldQueue
 
                     //----------------- Currency -----------------------------------------------------------
 
-                    $scheduleT = ScheduleType::where('name','=',$scheduleTArr[0])->first();
-
                     if(empty($scheduleT->id) != true || $scheduleTArr[0] == null){
                         $scheduleTBol = true;
                         if($scheduleTArr[0] != null){
@@ -156,6 +152,9 @@ class ReprocesarRatesLclJob implements ShouldQueue
                             $scheduleTVal = null;
                         }
                     }
+
+                    //dd($array);
+
 
                     // Validacion de los datos en buen estado ----------------------------------------------
                     if($originB == true && $destinyB == true &&

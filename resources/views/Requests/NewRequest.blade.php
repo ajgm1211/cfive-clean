@@ -508,7 +508,6 @@ new registration
                 } else{
                     window.location.href = "{{route('contracts.index')}}";
                 }
-                //window.location.href = "{{route('RequestImportation.indexListClient')}}";
             },
 
         });
