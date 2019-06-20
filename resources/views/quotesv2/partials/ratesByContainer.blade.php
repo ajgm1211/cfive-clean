@@ -14,14 +14,23 @@
                                         <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="45" height="auto" style="margin-top: 15px;" />
                                     @endif
                                 </li>
-                                <li class="size-12px">POL: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
-                                <li class="size-12px">POD: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
-                                <li class="size-12px">Contract: {{$rate->contract}}</li>
+                                <li class="size-12px"><b>POL:</b> &nbsp;{{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
+                                <li class="size-12px"><b>POD:</b> &nbsp;{{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
+                                <li class="size-12px"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
+                                <li class="size-12px"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
+                                <li class="size-12px"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
+                                <li class="size-12px"><b>Via:</b> &nbsp;{{$rate->via}}</li>
                                 <li class="size-12px no-border-left d-flex justify-content-end">
                                     <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                                 </li>
                                 <li class="size-12px">
-                                    <div class="delete-rate" data-rate-id="{{$rate->id}}" style="cursor:pointer;"><i class="fa fa-trash fa-4x"></i></div>
+                                    <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                        <i class="la la-edit"></i>
+                                    </button>
+
+                                    <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$rate->id}}">
+                                        <i class="la la-trash"></i>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -187,58 +196,59 @@
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }}>
+                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
                                                     <div class="row ">
-                                                        <div class="col-6">
-                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" />
+                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
+
+                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup"/>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40'] }}>
+                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                             <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                           <div class="input-group">
+                                                               <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001"/>
+                                                               <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                               <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                           </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40hc'] }}>
+                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                             <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                               <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style=""/>
+                                                               <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate"/>
+                                                               <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup"/>
+                                                           </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40nor'] }}>
+                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                             <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                               <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                               <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                               <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                           </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['45'] }}>
+                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
                                                     <div class="row">
                                                         <div class="col-6">
                                                              <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" style="max-width: 100px;"/>
+                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
                                                         </div>
                                                         <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" style="max-width: 100px;" />
+                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" placeholder="Markup" />
                                                         </div>
                                                     </div>
                                                 </td>
@@ -433,58 +443,58 @@
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }}>
+                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
                                                     <div class="row ">
-                                                        <div class="col-6">
-                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }}>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40hc'] }}>
+                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40nor'] }}>
+                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['45'] }}>
+                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001"  />
+                                                    </div>
+                                                </td>
+                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001"  placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -684,58 +694,56 @@
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }}>
+                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
                                                     <div class="row ">
-                                                        <div class="col-6">
-                                                            <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }}>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40hc'] }}>
+                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['40nor'] }}>
+                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" />
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td {{ @$equipmentHides['45'] }}>
+                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-12">
+                                                            <div class="input-group">
+                                                                <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
+                                                                <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                                <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
+                                                    <div class="row">
+                                                        <div class="col-12">
                                                             <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001"/>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" />
+                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
+                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" placeholder="Markup" />
                                                         </div>
                                                     </div>
                                                 </td>
@@ -897,140 +905,217 @@
                                     </div>
                                 </div>
                             @endif
-                        <!-- Inlands -->
-                            @if(!$rate->inland->isEmpty())
-                                <div class="row no-mg-row">
-                                    <div class="col-md-12 header-charges">
-                                        <h5 class="title-quote size-12px">Inlands</h5>
-                                    </div>
-                                    <div class="col-md-12 thead">
+                            
+                            <!-- Inlands -->
+                            <div class="row no-mg-row">
+                                <div class="col-md-12 header-charges">
+                                    <h5 class="title-quote size-12px">Inlands</h5>
+                                </div>
+                                <div class="col-md-12 thead">
+                                    <div class="">
                                         <div class="">
-                                            <div class="">
-                                                @php
-                                                    $x=0;
-                                                @endphp
+                                            @php
+                                                $x=0;
+                                            @endphp
+                                            @if(!$rate->inland->isEmpty())
                                                 @foreach($rate->inland as $inland)
                                                     <?php
-                                                    $inland_rates = json_decode($inland->rate,true);
-                                                    $inland_markups = json_decode($inland->markup,true);
+                                                        $inland_rates = json_decode($inland->rate,true);
+                                                        $inland_markups = json_decode($inland->markup,true);
                                                     ?>
+                                                    <span >
                                                     <div class="tab-content">
                                                         <div class="flex-list">
                                                             <ul >
+                                                                <input name="inland_id" value="{{$inland->id}}" class="form-control inland_id" type="hidden" />
                                                                 <li ><i class="fa fa-truck" style="font-size: 2rem"></i></li>
-                                                                <li class="size-12px">From: {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->origin_port->code, 0, 2))}}.svg"></li>
-                                                                <li class="size-12px">To: {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($rate->destination_port->code, 0, 2))}}.svg"></li>
-                                                                <li class="size-12px">Contract: {{$inland->contract}}</li>
+                                                                <li class="size-12px">{{$inland->port->name}}, {{$inland->port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{strtolower(substr($inland->port->code, 0, 2))}}.svg"></li>
+                                                                <li class="size-12px">Type: {{$inland->type}}</li>
+                                                                <li class="size-12px">Contract: {{$rate->contract}}</li>
                                                                 <li class="size-12px no-border-left d-flex justify-content-end">
-                                                                    <div onclick="show_hide_element('details_inland_{{$v}}')"><i class="fa fa-angle-down"></i></div>
+                                                                    <div onclick="show_hide_element('details_inland_{{$x}}')"><i class="fa fa-angle-down"></i></div>
+                                                                </li>
+                                                                <li>
+                                                                    <button onclick="AbrirModal('editInland',{{$inland->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
+                                                                        <i class="la la-edit"></i>
+                                                                    </button>
+
+                                                                    <button class="delete-inland m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete">
+                                                                        <i class="la la-trash"></i>
+                                                                    </button>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="details_inland_{{$x}} hide">
                                                             <table class="table table-sm table-bordered color-blue text-center">
                                                                 <thead class="title-quote text-center header-table">
-                                                                <tr style="height: 40px;">
-                                                                    <td class="td-table" style="padding-left: 30px">Charge</td>
-                                                                    <td class="td-table">Distance</td>
-                                                                    <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
-                                                                    <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
-                                                                    <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
-                                                                    <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
-                                                                    <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
-                                                                    <td class="td-table" >Currency</td>
-                                                                </tr>
+                                                                    <tr style="height: 40px;">
+                                                                        <td class="td-table" style="padding-left: 30px">Charge</td>
+                                                                        <td class="td-table">Distance</td>
+                                                                        <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
+                                                                        <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
+                                                                        <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
+                                                                        <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
+                                                                        <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
+                                                                        <td class="td-table" >Currency</td>
+                                                                    </tr>
                                                                 </thead>
                                                                 <tbody style="background-color: white;">
-                                                                <tr style="height:40px;">
-                                                                    <td class="tds" style="padding-left: 30px">
-                                                                        <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
-                                                                    </td>
-                                                                    <td class="tds">
-                                                                        <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
-                                                                    </td>
-                                                                    <td {{ @$equipmentHides['20'] }} class="tds">
-                                                                        <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
-                                                                        +
-                                                                        <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->m20" data-value="{{@$inland_markups['m20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
-                                                                        <i class="la la-caret-right arrow-down"></i>
-                                                                        <span class="total_20 td-a">{{@$inland_rates['c20']+@$inland_markups['m20']}}</span>
-                                                                    </td>
-                                                                    <td {{ @$equipmentHides['40'] }} class="tds">
-                                                                        <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        +
-                                                                        <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->m40" data-value="{{@$inland_markups['m40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        <i class="la la-caret-right arrow-down"></i>
-                                                                        <span class="total_40 td-a">{{@$inland_rates['c40']+@$inland_markups['m40']}}</span>
-                                                                    </td>
-                                                                    <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                                        <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        +
-                                                                        <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->m40hc" data-value="{{@$inland_markups['m40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        <i class="la la-caret-right arrow-down"></i>
-                                                                        <span class="total_40hc td-a">{{@$inland_amounts['c40hc']+@$inland_markups['m40hc']}}</span>
-                                                                    </td>
-                                                                    <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                                        <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        +
-                                                                        <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->m40nor" data-value="{{@$inland_markups['m40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        <i class="la la-caret-right arrow-down"></i>
-                                                                        <span class="total_40nor td-a">{{@$inland_amounts['c40nor']+@$inland_markups['m40nor']}}</span>
-                                                                    </td>
-                                                                    <td {{ @$equipmentHides['45'] }} class="tds">
-                                                                        <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        +
-                                                                        <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->m45" data-value="{{@$inland_markups['m45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                        <i class="la la-caret-right arrow-down"></i>
-                                                                        <span class="total_45 td-a">{{@$inland_amounts['c45']+@$inland_markups['m45']}}</span>
-                                                                    </td>
-                                                                    <td class="tds">
-                                                                        <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
-                                                                    </td>
-                                                                </tr>
+                                                                    <tr style="height:40px;">
+                                                                        <td class="tds" style="padding-left: 30px">
+                                                                            <input name="inland_id" value="{{$inland->id}}" class="form-control inland_id" type="hidden" />
+                                                                            <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
+                                                                        </td>
+                                                                        <td class="tds">
+                                                                            <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['20'] }} class="tds">
+                                                                            <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
+                                                                            +
+                                                                            <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->m20" data-value="{{@$inland_markups['m20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
+                                                                            <i class="la la-caret-right arrow-down"></i>
+                                                                            <span class="total_20 td-a">{{@$inland_rates['c20']+@$inland_markups['m20']}}</span>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40'] }} class="tds">
+                                                                            <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            +
+                                                                            <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->m40" data-value="{{@$inland_markups['m40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            <i class="la la-caret-right arrow-down"></i>
+                                                                            <span class="total_40 td-a">{{@$inland_rates['c40']+@$inland_markups['m40']}}</span>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40hc'] }} class="tds">
+                                                                            <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_amounts['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            +
+                                                                            <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->m40hc" data-value="{{@$inland_markups['m40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            <i class="la la-caret-right arrow-down"></i>
+                                                                            <span class="total_40hc td-a">{{@$inland_amounts['c40hc']+@$inland_markups['m40hc']}}</span>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40nor'] }} class="tds">
+                                                                            <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_amounts['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            +
+                                                                            <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->m40nor" data-value="{{@$inland_markups['m40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            <i class="la la-caret-right arrow-down"></i>
+                                                                            <span class="total_40nor td-a">{{@$inland_amounts['c40nor']+@$inland_markups['m40nor']}}</span>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['45'] }} class="tds">
+                                                                            <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_amounts['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            +
+                                                                            <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->m45" data-value="{{@$inland_markups['m45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
+                                                                            <i class="la la-caret-right arrow-down"></i>
+                                                                            <span class="total_45 td-a">{{@$inland_amounts['c45']+@$inland_markups['m45']}}</span>
+                                                                        </td>
+                                                                        <td class="tds">
+                                                                            <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
+                                                                            &nbsp;
+                                                                            <!--<a class="delete-inland" style="cursor: pointer;" title="Delete">
+                                                                                <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                            </a>-->
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr style="height:40px;" class="hide" id="inland_charges_{{$x}}">
+                                                                        <td class="tds" style="padding-left: 30px">
+                                                                            <input class="provider form-control" type="text" value="" name="provider" title="Provider" placeholder="Charge">
+                                                                        </td>
+                                                                        <td class="tds">
+                                                                            <input class="distance form-control" type="text" name="distance" value="" title="Distance" placeholder="Distance">
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['20'] }} class="tds">
+                                                                            <div class="input-group">
+                                                                                <input class="amount_20 form-control" type="text" name="amount_20" value="" title="Distance" placeholder="Rate">
+                                                                                <input class="markup_20 form-control" type="text" name="markup_20" value="" title="Distance" placeholder="Markup">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40'] }} class="tds">
+                                                                            <div class="input-group">
+                                                                                <input class="amount_40 form-control" type="text" name="amount_40" value="" title="Distance" placeholder="Rate">
+                                                                                <input class="markup_40 form-control" type="text" name="markup_40" value="" title="Distance" placeholder="Markup">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40hc'] }} class="tds">
+                                                                            <div class="input-group">
+                                                                                <input class="amount_40hc form-control" type="text" name="amount_40hc" value="" title="Distance" placeholder="Rate">
+                                                                                <input class="markup_40hc form-control" type="text" name="markup_40hc" value="" title="Distance" placeholder="Markup">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['40nor'] }} class="tds">
+                                                                            <div class="input-group">
+                                                                                <input class="amount_40nor form-control" type="text" name="amount_40nor" value="" title="Distance" placeholder="Rate">
+                                                                                <input class="markup_40nor form-control" type="text" name="markup_40nor" value="" title="Distance" placeholder="Markup">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td {{ @$equipmentHides['45'] }} class="tds">
+                                                                           <div class="input-group">
+                                                                                <input class="amount_45 form-control" type="text" name="amount_45" value="" title="Distance" placeholder="Rate">
+                                                                                <input class="markup_45 form-control" type="text" name="markup_45" value="" title="Distance" placeholder="Markup">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="tds">
+                                                                            <div class="btn-group">
+                                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                            </div>
+                                                                            <br>
+                                                                            <a class="btn btn-xs btn-primary-plus store_charge">
+                                                                                <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
+                                                                            </a>
+                                                                            <a class="btn btn-xs btn-primary-plus removeOriginCharge">
+                                                                                <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
                                                                 </tbody>
                                                             </table>
-
-                                                            <div class='row'>
-                                                                <div class="col-md-12">
-                                                                    <h5 class="title-quote pull-right">
-                                                                        <b>Add inland charge</b>
-                                                                        <a class="btn" onclick="addInlandCharge({{$i}})" style="vertical-align: middle">
-                                                                            <button class="btn-xs btn-primary-plus"><span class="fa fa-plus"></span></button>
-                                                                        </a>
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
+                                                    </span>
                                                     <br>
+                                                    @php
+                                                        $x++;
+                                                    @endphp
                                                 @endforeach
-                                            </div>
+                                                <div class='row'>
+                                                    <div class="col-md-12 ">
+                                                        <div class="m-portlet__body">
+                                                            <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                                                Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class='row'>
+                                                    <div class="col-md-12 ">
+                                                        <div class="m-portlet__body">
+                                                            <button class="btn btn-primary-v2 btn-edit open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
+                                                                Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
-                        @endif
+                            </div>
+                            <br>
 
-                        <!-- Remarks -->
+                            <!-- Remarks -->
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="m-portlet custom-portlet" style="box-shadow: none; background-color: #fff !important; border:none;">
-                                        <div class="m-portlet__head">
-                                            <div class="row" style="padding-top: 20px;">
+                                <div class="col-md-12 ">
+                                    <div class="">
+                                        <div class="header-charges" >
+                                            <div class="row " style="padding-left: 20px;">
                                                 <h5 class="title-quote size-12px">Remarks</h5>
-                                            </div>
-                                            <div class="m-portlet__head-tools">
-                                                <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
-                                                    <li class="nav-item m-tabs__item" id="edit_li">
-                                                        <button class="btn btn-primary-v2 edit-remarks btn-edit" onclick="edit_remark('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')">
-                                                            Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                                        </button>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                         <div class="m-portlet__body">
-                                            <div class="card card-body bg-light remarks_span_{{$v}}">
-                                                <span>{!! $rate->remarks !!}</span>
+                                            <div class="remarks_span_{{$v}}">
+                                                <button class="btn btn-primary-v2 edit-remarks btn-edit" onclick="edit_remark('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')" style="margin-bottom: 12px;">
+                                                    Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
+                                                </button>
+                                                <div class="card card-body bg-light remarks_box_{{$v}}">
+                                                    <span>{!! $rate->remarks !!}</span>
+                                                    <br>
+                                                </div>
                                             </div>
                                             <div class="remarks_textarea_{{$v}}" hidden>
                                                 <textarea name="remarks_{{$v}}" class="form-control remarks_{{$v}} editor">{!!$rate->remarks!!}</textarea>

@@ -307,6 +307,49 @@
             });
 
         });
+        $(document).on('click','.eliminaracount',function(e){
+            var id = $(this).attr('data-id-acount');
+            var elemento = $(this);
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this! ",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then(function(result){
+                if (result.value) {
+                    url='{!! route("delete.Accounts.Globalcharges.Fcl",[":id",2]) !!}';
+                    url = url.replace(':id', id);
+                    // $(this).closest('tr').remove();
+                    $.ajax({
+                        url:url,
+                        method:'get',
+                        success: function(data){
+                            if(data.success == 1){
+                                swal(
+                                    'Deleted!',
+                                    'The Request has been deleted.',
+                                    'success'
+                                )
+                                //$(elemento).closest('tr').remove();
+                                $('#myatest').DataTable().ajax.reload();
+                            }else if(data.success == 2){
+                                swal("Error!", "an internal error occurred!", "error");
+                            }
+                        }
+                    });
+                } else if (result.dismiss === 'cancel') {
+                    swal(
+                        'Cancelled',
+                        'Your rate is safe :)',
+                        'error'
+                    )
+                }
+            });
+
+        });
     </script>
 
     @stop

@@ -9,6 +9,7 @@ use PrvRates;
 use PrvHarbor;
 use App\Harbor;
 use App\Region;
+use PrvCarrier;
 use App\Carrier;
 use App\Country;
 use App\FileTmp;
@@ -193,14 +194,9 @@ class ImportationRatesFclJob implements ShouldQueue
                                            $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
                                        } else {
                                            $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                                           $carrierResul = str_replace($caracteres,'',$carrierVal);
-                                           $carrier = Carrier::where('name','=',$carrierResul)->first();
-                                           if(empty($carrier->id) != true){
-                                               $carriExitBol = true;
-                                               $carrierVal = $carrier->id;
-                                           }else{
-                                               $carrierVal = $carrierVal.'_E_E';
-                                           }
+                                           $carrierArr      = PrvCarrier::get_carrier($carrierVal);
+                                           $carriExitBol    = $carrierArr['boolean'];
+                                           $carrierVal      = $carrierArr['carrier'];
                                        }
                                        //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
                                        if($requestobj['existorigin'] == true){
@@ -385,6 +381,57 @@ class ImportationRatesFclJob implements ShouldQueue
                                                        $destinyVal = $rando;
                                                    }
 
+                                                   $exRate = null;
+                                                   $exRate = Rate::where('origin_port',$originVal)
+                                                       ->where('destiny_port',$destinyVal)
+                                                       ->where('carrier_id',$carrierVal)
+                                                       ->where('contract_id',$requestobj['Contract_id'])
+                                                       ->where('twuenty',$twentyVal)
+                                                       ->where('forty',$fortyVal)
+                                                       ->where('fortyhc',$fortyhcVal)
+                                                       ->where('fortynor',$fortynorVal)
+                                                       ->where('fortyfive',$fortyfiveVal)
+                                                       ->where('currency_id',$currencyVal)
+                                                       ->where('schedule_type_id',$scheduleTResul)
+                                                       ->where('transit_time',$transittimeResul)
+                                                       ->where('via',$viaResul)
+                                                       ->get();
+                                                   if(count($exRate) == 0){
+                                                       Rate::create([
+                                                           'origin_port'        => $originVal,
+                                                           'destiny_port'       => $destinyVal,
+                                                           'carrier_id'         => $carrierVal,
+                                                           'contract_id'        => $requestobj['Contract_id'],
+                                                           'twuenty'            => $twentyVal,
+                                                           'forty'              => $fortyVal,
+                                                           'fortyhc'            => $fortyhcVal,
+                                                           'fortynor'           => $fortynorVal,
+                                                           'fortyfive'          => $fortyfiveVal,
+                                                           'currency_id'        => $currencyVal,
+                                                           'schedule_type_id'   => $scheduleTResul,
+                                                           'transit_time'       => $transittimeResul,
+                                                           'via'                => $viaResul
+                                                       ]);
+                                                   }
+                                               }
+                                           }else {
+                                               // fila por puerto, sin expecificar origen ni destino manualmente
+                                               $exRate = null;
+                                               $exRate = Rate::where('origin_port',$originVal)
+                                                   ->where('destiny_port',$destinyVal)
+                                                   ->where('carrier_id',$carrierVal)
+                                                   ->where('contract_id',$requestobj['Contract_id'])
+                                                   ->where('twuenty',$twentyVal)
+                                                   ->where('forty',$fortyVal)
+                                                   ->where('fortyhc',$fortyhcVal)
+                                                   ->where('fortynor',$fortynorVal)
+                                                   ->where('fortyfive',$fortyfiveVal)
+                                                   ->where('currency_id',$currencyVal)
+                                                   ->where('schedule_type_id',$scheduleTResul)
+                                                   ->where('transit_time',$transittimeResul)
+                                                   ->where('via',$viaResul)
+                                                   ->get();
+                                               if(count($exRate) == 0){
                                                    Rate::create([
                                                        'origin_port'        => $originVal,
                                                        'destiny_port'       => $destinyVal,
@@ -401,23 +448,6 @@ class ImportationRatesFclJob implements ShouldQueue
                                                        'via'                => $viaResul
                                                    ]);
                                                }
-                                           }else {
-                                               // fila por puerto, sin expecificar origen ni destino manualmente
-                                               Rate::create([
-                                                   'origin_port'        => $originVal,
-                                                   'destiny_port'       => $destinyVal,
-                                                   'carrier_id'         => $carrierVal,
-                                                   'contract_id'        => $requestobj['Contract_id'],
-                                                   'twuenty'            => $twentyVal,
-                                                   'forty'              => $fortyVal,
-                                                   'fortyhc'            => $fortyhcVal,
-                                                   'fortynor'           => $fortynorVal,
-                                                   'fortyfive'          => $fortyfiveVal,
-                                                   'currency_id'        => $currencyVal,
-                                                   'schedule_type_id'   => $scheduleTResul,
-                                                   'transit_time'       => $transittimeResul,
-                                                   'via'                => $viaResul
-                                               ]);
                                            }
                                        } else {
                                            // fail rates
@@ -432,8 +462,14 @@ class ImportationRatesFclJob implements ShouldQueue
                                                    $carrier = Carrier::find($requestobj['carrier']); 
                                                    $carrierVal = $carrier['name'];  
                                                }else{
-                                                   $carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
-                                                   $carrierVal = $carrier['name']; 
+                                                   $carriExitBol2   = false;
+                                                   $carrierArr      = PrvCarrier::get_carrier($read[$requestobj['Carrier']]);
+                                                   $carrierVal      = $carrierArr['carrier'];
+                                                   $carriExitBol2   = $carrierArr['boolean'];
+                                                   if($carriExitBol2 == true){
+                                                       $carrierVal = Carrier::find($carrierVal);
+                                                       $carrierVal = $carrierVal->name;
+                                                   }
                                                }
                                            }
                                            /* if($curreExiBol == true){
@@ -518,6 +554,66 @@ class ImportationRatesFclJob implements ShouldQueue
                                                                $originVal = $read[$requestobj[$originExc]];                                      
                                                            }
                                                        }
+
+                                                       $exRate = null;
+                                                       $exRate = FailRate::where('origin_port',$originVal)
+                                                           ->where('destiny_port',$destinyVal)
+                                                           ->where('carrier_id',$carrierVal)
+                                                           ->where('contract_id',$requestobj['Contract_id'])
+                                                           ->where('twuenty',$twentyVal)
+                                                           ->where('forty',$fortyVal)
+                                                           ->where('fortyhc',$fortyhcVal)
+                                                           ->where('fortynor',$fortynorVal)
+                                                           ->where('fortyfive',$fortyfiveVal)
+                                                           ->where('currency_id',$currencyVal)
+                                                           ->where('schedule_type',$scheduleTResul)
+                                                           ->where('transit_time',$transittimeResul)
+                                                           ->where('via',$viaResul)
+                                                           ->get();
+                                                       if(count($exRate) == 0){
+
+                                                           FailRate::create([
+                                                               'origin_port'        => $originVal,
+                                                               'destiny_port'       => $destinyVal,
+                                                               'carrier_id'         => $carrierVal,
+                                                               'contract_id'        => $requestobj['Contract_id'],
+                                                               'twuenty'            => $twentyVal,
+                                                               'forty'              => $fortyVal,
+                                                               'fortyhc'            => $fortyhcVal,
+                                                               'fortynor'           => $fortynorVal,
+                                                               'fortyfive'          => $fortyfiveVal,
+                                                               'currency_id'        => $currencyVal,
+                                                               'schedule_type'      => $scheduleTResul,
+                                                               'transit_time'       => $transittimeResul,
+                                                               'via'                => $viaResul
+                                                           ]);
+                                                       }
+                                                   }
+                                               } else {
+                                                   if($origExiBol == true){
+                                                       $originExits = Harbor::find($originVal);
+                                                       $originVal = $originExits->name;                                       
+                                                   }
+                                                   if($destiExitBol == true){  
+                                                       $destinyExits = Harbor::find($destinyVal);
+                                                       $destinyVal = $destinyExits->name;
+                                                   }
+                                                   $exRate = null;
+                                                   $exRate = FailRate::where('origin_port',$originVal)
+                                                       ->where('destiny_port',$destinyVal)
+                                                       ->where('carrier_id',$carrierVal)
+                                                       ->where('contract_id',$requestobj['Contract_id'])
+                                                       ->where('twuenty',$twentyVal)
+                                                       ->where('forty',$fortyVal)
+                                                       ->where('fortyhc',$fortyhcVal)
+                                                       ->where('fortynor',$fortynorVal)
+                                                       ->where('fortyfive',$fortyfiveVal)
+                                                       ->where('currency_id',$currencyVal)
+                                                       ->where('schedule_type',$scheduleTResul)
+                                                       ->where('transit_time',$transittimeResul)
+                                                       ->where('via',$viaResul)
+                                                       ->get();
+                                                   if(count($exRate) == 0){
                                                        FailRate::create([
                                                            'origin_port'        => $originVal,
                                                            'destiny_port'       => $destinyVal,
@@ -532,33 +628,9 @@ class ImportationRatesFclJob implements ShouldQueue
                                                            'schedule_type'      => $scheduleTResul,
                                                            'transit_time'       => $transittimeResul,
                                                            'via'                => $viaResul
-                                                       ]);
+                                                       ]); //*/
+                                                       $errors++;
                                                    }
-                                               } else {
-                                                   if($origExiBol == true){
-                                                       $originExits = Harbor::find($originVal);
-                                                       $originVal = $originExits->name;                                       
-                                                   }
-                                                   if($destiExitBol == true){  
-                                                       $destinyExits = Harbor::find($destinyVal);
-                                                       $destinyVal = $destinyExits->name;
-                                                   }
-                                                   FailRate::create([
-                                                       'origin_port'        => $originVal,
-                                                       'destiny_port'       => $destinyVal,
-                                                       'carrier_id'         => $carrierVal,
-                                                       'contract_id'        => $requestobj['Contract_id'],
-                                                       'twuenty'            => $twentyVal,
-                                                       'forty'              => $fortyVal,
-                                                       'fortyhc'            => $fortyhcVal,
-                                                       'fortynor'           => $fortynorVal,
-                                                       'fortyfive'          => $fortyfiveVal,
-                                                       'currency_id'        => $currencyVal,
-                                                       'schedule_type'      => $scheduleTResul,
-                                                       'transit_time'       => $transittimeResul,
-                                                       'via'                => $viaResul
-                                                   ]); //*/
-                                                   $errors++;
                                                }
                                            }
                                            //*/

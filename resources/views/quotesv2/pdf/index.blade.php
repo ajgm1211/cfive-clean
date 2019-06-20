@@ -64,11 +64,11 @@
                       <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
                       @endif
                     @endif
-                    <p>{{$quote->contact->first_name.' '.$quote->contact->last_name}}</p>
+                    <p>{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
                     <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
                     <p>{{$quote->company->address}}</p>
-                    <p>{{$quote->contact->phone}}</p>
-                    <p>{{$quote->contact->email}}</p>
+                    <p>{{@$quote->contact->phone}}</p>
+                    <p>{{@$quote->contact->email}}</p>
                 </span>
             </div>
         </div>
@@ -83,6 +83,7 @@
             <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Mercancía:</span> {{$quote->commodity}}</p>
             <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Mercadoria:</span> {{$quote->commodity}}</p>
         @endif
+        <br>
         <br>
         @if($quote->pdf_option->show_type=='total in')
             <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
@@ -115,6 +116,11 @@
                     <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
                     <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
                     <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
+                    @if($quote->pdf_option->show_schedules==1)
+                        <th ><b>Type</b></th>
+                        <th ><b>TT</b></th>
+                        <th ><b>Via</b></th>
+                    @endif
                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -158,14 +164,35 @@
                       @endforeach
                     @endif
                     <tr class="text-center color-table">
-                        <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
-                        <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
+                       <td >
+                            @if($rate->origin_address=='' && $rate->origin_port_id!='') 
+                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                            @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
+                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @else 
+                                {{$rate->origin_address}} 
+                            @endif
+                        </td>
+                        <td >
+                            @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                            @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                            @else 
+                                {{$rate->destination_address}} 
+                            @endif
+                        </td>
                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
                         <td {{ @$equipmentHides['20'] }}>{{number_format((float)@$sum_total20+@$sum_inland20, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40'] }}>{{number_format((float)@$sum_total40+@$sum_inland40, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40hc'] }}>{{number_format((float)@$sum_total40hc+@$sum_inland40hc, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40nor'] }}>{{number_format((float)@$sum_total40nor+@$sum_inland40nor, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['45'] }}>{{number_format((float)@$sum_total45+@$sum_inland45, 2, '.', '')}}</td>
+                        @if($quote->pdf_option->show_schedules==1)
+                            <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                            <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
+                            <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
+                        @endif
                         <td >{{$quote->pdf_option->grouped_total_currency==0 ?$currency_cfg->alphacode:$quote->pdf_option->total_in_currency}}</td>
                     </tr>
                 @endforeach
@@ -177,98 +204,192 @@
         <!-- DETAILED TABLES -->
 
         <!-- Freights table all in-->
-        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' )
-        <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-            <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
-            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
-            <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete</p>
-            <br>
-        </div>
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()>1)
+            <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
+                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
+                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete</p>
+                <br>
+            </div>
 
-        <table border="0" cellspacing="1" cellpadding="1" >
-            <thead class="title-quote text-center header-table">
-                <tr >
-                    <th class="unit"><b>POL</b></th>
-                    <th class="unit"><b>POD</b></th>
-                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
-                    <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
-                    <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
-                    <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
-                    <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
-                    <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
-                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    //dd($freight_charges_grouped);
-                @endphp
-                @foreach($freight_charges_grouped as $origin=>$freight)
-                    @foreach($freight as $destination=>$detail)
-                        @foreach($detail as $item)
-                          <?php
-                            $sum_freight_20= 0;
-                            $sum_freight_40= 0;
-                            $sum_freight_40hc= 0;
-                            $sum_freight_40nor= 0;
-                            $sum_freight_45= 0;
-                            $inland_freight_20= 0;
-                            $inland_freight_40= 0;
-                            $inland_freight_40hc= 0;
-                            $inland_freight_40nor= 0;
-                            $inland_freight_45= 0;
-                          ?>  
-                            @foreach($item as $rate)
-                                @foreach($rate->charge as $value)
-                                    <?php
-                                        $sum_freight_20+=$value->total_20;
-                                        $sum_freight_40+=$value->total_40;
-                                        $sum_freight_40hc+=$value->total_40hc;
-                                        $sum_freight_40nor+=$value->total_40nor;
-                                        $sum_freight_45+=$value->total_45;                                
-                                    ?>
+            <table border="0" cellspacing="1" cellpadding="1" >
+                <thead class="title-quote text-center header-table">
+                    <tr >
+                        <th class="unit"><b>POL</b></th>
+                        <th class="unit"><b>POD</b></th>
+                        <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                        <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
+                        <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
+                        <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
+                        <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                        <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($freight_charges_grouped as $origin=>$freight)
+                        @foreach($freight as $destination=>$detail)
+                            @foreach($detail as $item)
+                              <?php
+                                $sum_freight_20= 0;
+                                $sum_freight_40= 0;
+                                $sum_freight_40hc= 0;
+                                $sum_freight_40nor= 0;
+                                $sum_freight_45= 0;
+                                $inland_freight_20= 0;
+                                $inland_freight_40= 0;
+                                $inland_freight_40hc= 0;
+                                $inland_freight_40nor= 0;
+                                $inland_freight_45= 0;
+                              ?>  
+                                @foreach($item as $rate)
+                                    @foreach($rate->charge as $value)
+                                        <?php
+                                            $sum_freight_20+=$value->total_20;
+                                            $sum_freight_40+=$value->total_40;
+                                            $sum_freight_40hc+=$value->total_40hc;
+                                            $sum_freight_40nor+=$value->total_40nor;
+                                            $sum_freight_45+=$value->total_45;                                
+                                        ?>
+                                    @endforeach
                                 @endforeach
+                                <tr class="text-center color-table">
+                                     <td >
+                                        @if($rate->origin_address=='' && $rate->origin_port_id!='') 
+                                            {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                                        @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
+                                            {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                        @else 
+                                            {{$rate->origin_address}} 
+                                        @endif
+                                    </td>
+                                    <td >
+                                        @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                            {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                                        @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                            {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                        @else 
+                                            {{$rate->destination_address}} 
+                                        @endif
+                                    </td>                           
+                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                                    <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_freight_20, 2, '.', '')}}</td>
+                                    <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_freight_40, 2, '.', '')}}</td>
+                                    <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</td>
+                                    <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</td>
+                                    <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_freight_45, 2, '.', '')}}</td>
+                                    @if($quote->pdf_option->grouped_freight_charges==1)
+                                        <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                    @else
+                                        <td >{{$currency_cfg->alphacode}}</td>
+                                    @endif
+                                </tr>
                             @endforeach
-                            <tr class="text-center color-table">
-                                <td >
-                                    @if($rate->origin_port_id!='') 
-                                        {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                    @elseif($rate->origin_address!='') 
-                                        {{$rate->origin_address}} 
-                                    @else 
-                                        {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
-                                    @endif
-                                </td>
-                                <td >
-                                    @if($rate->destination_port_id!='') 
-                                        {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                    @elseif($rate->destination_address!='') 
-                                        {{$rate->destination_address}} 
-                                    @else 
-                                        {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                    @endif
-                                </td>                            
-                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
-                                <td {{ @$equipmentHides['20'] }}>{{@$sum_freight_20}}</td>
-                                <td {{ @$equipmentHides['40'] }}>{{@$sum_freight_40}}</td>
-                                <td {{ @$equipmentHides['40hc'] }}>{{@$sum_freight_40hc}}</td>
-                                <td {{ @$equipmentHides['40nor'] }}>{{@$sum_freight_40nor}}</td>
-                                <td {{ @$equipmentHides['45'] }}>{{@$sum_freight_45}}</td>
-                                @if($quote->pdf_option->grouped_freight_charges==1)
-                                    <td >{{$quote->pdf_option->freight_charges_currency}}</td>
-                                @else
-                                    <td >{{$currency_cfg->alphacode}}</td>
-                                @endif
-                            </tr>
                         @endforeach
                     @endforeach
-                @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         @endif
 
+        @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()==1)
+            @foreach($freight_charges_detailed as $origin => $value)
+                @foreach($value as $destination => $item)
+                    <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}} | {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete - {{$origin}} | {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de frete - {{$origin}} | {{$destination}}</p>
+                        <br>
+                    </div>
+                    <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <thead class="title-quote text-center header-table">
+                            <tr >
+                                <th class="unit"><b>Charge</b></th>
+                                <th class="unit"><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
+                                <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
+                                <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
+                                <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
+                                <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($item as $rate)
+                                <?php
+                                    $sum_freight_20= 0;
+                                    $sum_freight_40= 0;
+                                    $sum_freight_40hc= 0;
+                                    $sum_freight_40nor= 0;
+                                    $sum_freight_45= 0;
+                                ?>
+                                @foreach($rate as $r)
+                                    @foreach($r->charge as $v)
+                                        @if($v->type_id==3)
+                                            <?php
+                                                $total_freight_20= 0;
+                                                $total_freight_40= 0;
+                                                $total_freight_40hc= 0;
+                                                $total_freight_40nor= 0;
+                                                $total_freight_45= 0;
+                                                $sum_freight_20+=$v->total_20;
+                                                $sum_freight_40+=$v->total_40;
+                                                $sum_freight_40hc+=$v->total_40hc;
+                                                $sum_freight_40nor+=$v->total_40nor;
+                                                $sum_freight_45+=$v->total_45;
+                                            ?>
+                                            <tr class="text-center color-table">
+                                                 @if($v->surcharge_id!='')
+                                                    <td>{{$v->surcharge->name}}</td>
+                                                @else
+                                                    <td>Ocean freight</td>
+                                                @endif
+                                                @if($v->surcharge_id!='')
+                                                    <td>{{$v->calculation_type->name}}</td>
+                                                @else
+                                                    <td>Per container</td>
+                                                @endif
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{ @$equipmentHides['20'] }}>{{number_format($v->total_20, 2, '.', '')}}</td>
+                                                <td {{ @$equipmentHides['40'] }}>{{number_format($v->total_40, 2, '.', '')}}</td>
+                                                <td {{ @$equipmentHides['40hc'] }}>{{number_format($v->total_40hc, 2, '.', '')}}</td>
+                                                <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
+                                                <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
+                                                @if($quote->pdf_option->grouped_freight_charges==1)
+                                                    <td>{{$quote->pdf_option->freight_charges_currency}}</td>
+                                                @else
+                                                    <td>{{$currency_cfg->alphacode}}</td>
+                                                @endif
+                                            </tr>
+                                        @endif
+                                    @endforeach                                
+                                @endforeach
+                            @endforeach
+                            <tr>
+                                <td><b>Total local charges</b></td>
+                                <td></td>
+                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+                                <td {{ @$equipmentHides['20'] }}><b>{{number_format(@$sum_freight_20, 2, '.', '')}}</b></td>
+                                <td {{ @$equipmentHides['40'] }}><b>{{number_format(@$sum_freight_40, 2, '.', '')}}</b></td>
+                                <td {{ @$equipmentHides['40hc'] }}><b>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</b></td>
+                                <td {{ @$equipmentHides['40nor'] }}><b>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</b></td>
+                                <td {{ @$equipmentHides['45'] }}><b>{{number_format(@$sum_freight_45, 2, '.', '')}}</b></td>
+                                @if($quote->pdf_option->grouped_freight_charges==1)
+                                    <td><b>{{$quote->pdf_option->freight_charges_currency}}</b></td>
+                                @else
+                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                @endif     
+                            </tr>
+                        </tbody>
+                    </table>
+                @endforeach
+            @endforeach
+        @endif
+        <br>
         <!-- ORIGINS -->
 
         <!-- ALL in origin table -->
@@ -474,7 +595,7 @@
                 @endforeach
             @endforeach
         @endif
-
+        <br>
         <!-- DESTINATIONS -->
 
         <!-- ALL in destination table -->

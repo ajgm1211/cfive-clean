@@ -29,19 +29,19 @@
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 {!! Form::label('twuenty', '20 \' ') !!}
-                {!! Form::number('twuenty',0, ['id' => 'twuenty','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input' ,'required'=>'true' ]) !!}
+                {!! Form::number('twuenty',0, ['id' => 'twuenty','placeholder' => 'Default value zero','class' => 'form-control m-input' ,'required'=>'true' ]) !!}
             </div>
 
 
             <div class="col-lg-4">
                 {!! Form::label('forty', '40  \' ') !!}
-                {!! Form::number('forty', 0, ['id' => 'forty','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input','required'=>'true' ]) !!}
+                {!! Form::number('forty', 0, ['id' => 'forty','placeholder' => 'Default value zero','class' => 'form-control m-input','required'=>'true' ]) !!}
 
             </div>
             <div class="col-lg-4">
 
                 {!! Form::label('fortyhc', '40 HC \' ') !!}
-                {!! Form::number('fortyhc', 0, ['id' => 'fortyhc','placeholder' => 'Default value zero','min' => '0','class' => 'form-control ' , 'required'=>'true']) !!}
+                {!! Form::number('fortyhc', 0, ['id' => 'fortyhc','placeholder' => 'Default value zero','class' => 'form-control ' , 'required'=>'true']) !!}
 
             </div>
 
@@ -49,13 +49,13 @@
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 {!! Form::label('fortynor', '40 NOR \' ') !!}
-                {!! Form::number('fortynor', 0, ['id' => 'fortynor','placeholder' => 'Default value zero','min' => '0','class' => 'form-control m-input' , 'required'=>'true' ]) !!}
+                {!! Form::number('fortynor', 0, ['id' => 'fortynor','placeholder' => 'Default value zero','class' => 'form-control m-input' , 'required'=>'true' ]) !!}
 
             </div>
             <div class="col-lg-4">
 
                 {!! Form::label('fortyfive', '45 \' ') !!}
-                {!! Form::number('fortyfive',0, ['id' => 'fortyfive','placeholder' => 'Default value zero','min' => '0','class' => 'form-control ' , 'required'=>'true']) !!}
+                {!! Form::number('fortyfive',0, ['id' => 'fortyfive','placeholder' => 'Default value zero','class' => 'form-control ' , 'required'=>'true']) !!}
 
             </div>
             <div class="col-lg-4">

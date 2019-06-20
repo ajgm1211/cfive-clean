@@ -153,11 +153,7 @@ Route::prefix('Requests')->group(function () {
 
   Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
 
-  Route::get('RequestImportation/indexListClient','NewContractRequestsController@indexListClient')->name('RequestImportation.indexListClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
-
-  Route::get('RequestImportation/listClient/{id}','NewContractRequestsController@listClient')->name('RequestImportation.listClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  
   Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator']);
 
   Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
@@ -464,10 +460,18 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
   Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
   Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
+  Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');
   Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
   Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
+  Route::post('lcl/inland/charge/update', 'QuoteV2Controller@updateInlandChargeLcl')->name('quotes-v2.update.inland.charge.lcl');
   Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
   Route::post('rates/store', 'QuoteV2Controller@storeRates')->name('quotes-v2.rates.store');
+  Route::get('rates/edit/{id}', 'QuoteV2Controller@editRates')->name('quotes-v2.rates.edit');
+  Route::post('rates/update/{id}', 'QuoteV2Controller@updateRates')->name('quotes-v2.rates.update');
+  Route::get('inlands/edit/{id}', 'QuoteV2Controller@editInlands')->name('quotes-v2.inlands.edit');
+  Route::get('lcl/inlands/edit/{id}', 'QuoteV2Controller@editInlandsLcl')->name('quotes-v2.inlands.lcl.edit');
+  Route::post('inlands/update/{id}', 'QuoteV2Controller@updateInlands')->name('quotes-v2.inlands.update');
+  Route::post('inlands/store', 'QuoteV2Controller@storeInlands')->name('quotes-v2.inlands.store');
   Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
   Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
@@ -655,6 +659,34 @@ Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->gro
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
+
+// Nuevos terminos y condiciones 
+
+Route::group(['prefix' => 'termsv2', 'middleware' => ['auth']], function () {
+
+  Route::resource('termsv2', 'TermsAndConditionV2sController');
+  Route::get('list', 'TermsAndConditionV2sController@index')->name('termsv2.list');
+  Route::get('add', 'TermsAndConditionV2sController@add')->name('termsv2.add');
+  Route::get('edit/{id}', 'TermsAndConditionV2sController@edit')->name('termsv2.edit');
+  Route::get('delete/{id}', 'TermsAndConditionV2sController@destroy')->name('termsv2.delete');
+  Route::get('msg/{id}', 'TermsAndConditionV2sController@destroymsg')->name('termsv2.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
+// Remarks Harbors
+
+Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
+
+  Route::resource('remarks', 'RemarkConditionsController');
+  Route::get('list', 'RemarkConditionsController@index')->name('remarks.list');
+  Route::get('add', 'RemarkConditionsController@add')->name('remarks.add');
+  Route::get('edit/{id}', 'RemarkConditionsController@edit')->name('remarks.edit');
+  Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
+  Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
 
 Auth::routes();
 
