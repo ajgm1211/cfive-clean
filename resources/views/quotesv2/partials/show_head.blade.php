@@ -113,7 +113,7 @@
                                     <br>
                                     <label class="title-quote"><b>Contact:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'form-control contact_id select2','hidden','id'=>'contact_id']) }}
-                                    <span class="contact_id_span">{{$quote->contact->first_name}} {{$quote->contact->last_name}}</span>
+                                    <span class="contact_id_span">{{@$quote->contact->first_name}} {{@$quote->contact->last_name}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -211,7 +211,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="m-portlet custom-portlet no-border">
-                        <div class="m-portlet__body ">
+                        <div class="m-portlet__body " style="color: #1d3a6e !important;">
                             @if(!empty($package_loads) && count($package_loads)>0)
                                 <div class="row">
                                     <div class="col-md-12">
