@@ -7519,33 +7519,36 @@ class QuoteV2Controller extends Controller
 
               }
 
-              /* if($global->typedestiny_id == '2'){
+              if($global->typedestiny_id == '2'){
 
                 $subtotal_global =  $global->ammount;
                 $totalAmmount =  $global->ammount  / $rateMountG;
-
-
                 // MARKUP
-                if($localPercentage != 0){
-                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $markup ;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
-                }else{
-                  $markup =$localAmmount;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $localMarkup;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
-                }
+                $markupBL = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
                 $totalDestiny += $totalAmmount;
                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
-                $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => '-' , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'20\' Global ', 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
-                $arregloDest = array_merge($arregloDest,$arraymarkupT);
-                $destGlo["destiny"] = $arregloDest;
-                $collectionGloDest->push($destGlo);
-              }
+                $totalAmmount =  number_format($totalAmmount, 2, '.', '');   
+                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => '-' , 'monto' => $global->ammount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency  , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'destination', 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                $arregloDest = array_merge($arregloDest,$markupBL);
 
+                $collectionDest->push($arregloDest);
+
+                // ARREGLO GENERAL 99 
+
+                if(in_array($global->calculationtypelcl_id,$arrayBlHblShip)){
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }else{
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }
+                $collectionDest->push($arregloDest);
+
+
+
+              }
+              /*
               if($global->typedestiny_id == '3'){
                 $subtotal_global =  $global->ammount;
                 $totalAmmount =  $global->ammount  / $rateMountG;
@@ -7617,7 +7620,7 @@ class QuoteV2Controller extends Controller
 
               }
 
-              /*  if($global->typedestiny_id == '2'){
+              if($global->typedestiny_id == '2'){
 
                 $subtotal_global =  $weight * $global->ammount;
                 $totalAmmount =  ( $weight * $global->ammount)  / $rateMountG;
@@ -7630,27 +7633,29 @@ class QuoteV2Controller extends Controller
                 }
 
                 // MARKUP
-                if($localPercentage != 0){
-                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $markup ;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
-                }else{
-                  $markup =$localAmmount;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $localMarkup;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
-                }
+                $markupTonM3 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
                 $totalDestiny += $totalAmmount;
                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $cantidadT , 'monto' => $mont, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'Ship/Hbl/Bl'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
-                $arregloDest = array_merge($arregloDest,$arraymarkupT);
-                $destGlo["destiny"] = $arregloDest;
-                $collectionGloDest->push($destGlo);
+                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $cantidadT , 'monto' => $mont, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $cantidadT , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                $arregloDest = array_merge($arregloDest,$markupTonM3);
+
+                $collectionDest->push($arregloDest);
+
+                // ARREGLO GENERAL 99 
+
+                if(in_array($global->calculationtypelcl_id,$arraytonM3)){
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }else{
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }
+                $collectionDest->push($arregloDest);
+
               }
 
-              if($global->typedestiny_id == '3'){
+              /*  if($global->typedestiny_id == '3'){
                 $subtotal_global =  $weight * $global->ammount;
                 $totalAmmount =  ( $weight * $global->ammount)  / $rateMountG;
                 $mont = $global->ammount;
@@ -7729,7 +7734,7 @@ class QuoteV2Controller extends Controller
 
               }
 
-              /* if($global->typedestiny_id == '2'){
+              if($global->typedestiny_id == '2'){
 
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
@@ -7743,27 +7748,27 @@ class QuoteV2Controller extends Controller
 
                 }
                 // MARKUP
-                if($localPercentage != 0){
-                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $markup ;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
-                }else{
-                  $markup =$localAmmount;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $localMarkup;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
-                }
+                $markupTON = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
                 $totalDestiny += $totalAmmount;
                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $mont, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'Per Ton'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
-                $arregloDest = array_merge($arregloDest,$arraymarkupT);
-                $destGlo["destiny"] = $arregloDest;
-                $collectionGloDest->push($destGlo);
+                $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $mont, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                $arregloDest = array_merge($arregloDest,$markupTON);
+                $collectionDest->push($arregloDest);
+                // ARREGLO GENERAL 99 
+
+                if(in_array($global->calculationtypelcl_id,$arrayPerTon)){
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }else{
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }
+                $collectionDest->push($arregloDest);
               }
 
-              if($global->typedestiny_id == '3'){
+              /* if($global->typedestiny_id == '3'){
 
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
@@ -7857,7 +7862,7 @@ class QuoteV2Controller extends Controller
                 $collectionOrig->push($arregloOrigin);
               }
 
-              /*    if($global->typedestiny_id == '2'){
+              if($global->typedestiny_id == '2'){
 
                 if($global->calculationtypelcl_id == '7'){
                   $subtotal_global =  $totalV * $global->ammount;
@@ -7885,26 +7890,28 @@ class QuoteV2Controller extends Controller
                   }
                 }
                 // MARKUP
-                if($localPercentage != 0){
-                  $markup = ( $totalAmmount *  $localPercentage ) / 100 ;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $markup ;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)") ;
-                }else{
-                  $markup =$localAmmount;
-                  $markup = number_format($markup, 2, '.', '');
-                  $totalAmmount += $localMarkup;
-                  $arraymarkupT = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre) ;
-                }
+                $markupTONM3 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
 
                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                 $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                 $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $mont, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'Per Ton'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
-                $arregloDest = array_merge($arregloDest,$arraymarkupT);
+                $arregloDest = array_merge($arregloDest,$markupTONM3);
                 $dataGDest[] = $arregloDest;
+
+                // ARREGLO GENERAL 99 
+
+                if(in_array($global->calculationtypelcl_id,$arraytonCompli)){
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }else{
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency );
+
+                }
+                $collectionDest->push($arregloDest);
+
               }
 
-              if($global->typedestiny_id == '3'){
+              /*if($global->typedestiny_id == '3'){
 
                 if($global->calculationtypelcl_id == '7'){
                   $subtotal_global =  $totalV * $global->ammount;
@@ -7958,23 +7965,23 @@ class QuoteV2Controller extends Controller
 
       }
 
-        //############ Fin Global Charges ##################
+      //############ Fin Global Charges ##################
 
-        // Locales 
-        if(!empty($dataOrig)){
-          $collectOrig = Collection::make($dataOrig);
+      // Locales 
+      if(!empty($dataOrig)){
+        $collectOrig = Collection::make($dataOrig);
 
-          $m3tonOrig= $collectOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin,$data,$carrier_all){
-            $carrArreglo = array($data->carrier_id,$carrier_all);
-            $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
-            if(!empty($test)){
-              $totalA = explode(' ',$test['totalAmmount']);
-              $totalOrigin += $totalA[0];  
-              $collectionOrig->push($test);
-              return $test;
-            }
-          });
-        }
+        $m3tonOrig= $collectOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin,$data,$carrier_all){
+          $carrArreglo = array($data->carrier_id,$carrier_all);
+          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          if(!empty($test)){
+            $totalA = explode(' ',$test['totalAmmount']);
+            $totalOrigin += $totalA[0];  
+            $collectionOrig->push($test);
+            return $test;
+          }
+        });
+      }
 
       if(!empty($dataDest)){
         $collectDest = Collection::make($dataDest);
