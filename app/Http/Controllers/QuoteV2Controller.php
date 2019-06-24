@@ -184,14 +184,14 @@ class QuoteV2Controller extends Controller
       Show
       </span>
       </a>
-      <a href="/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+      <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
       <span>
       <i class="la la-plus"></i>
       &nbsp;
       Duplicate
       </span>
       </a>
-      <a href="#" class="dropdown-item" id="delete-quote" data-quote-id="'.$colletion['id'].'" >
+      <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="'.$colletion['idSet'].'" >
       <span>
       <i class="la la-eraser"></i>
       &nbsp;
@@ -791,6 +791,10 @@ class QuoteV2Controller extends Controller
       $rate_duplicate->validity_end=$rate->validity_end;
       $rate_duplicate->origin_port_id=$rate->origin_port_id;
       $rate_duplicate->destination_port_id=$rate->destination_port_id;
+      $rate_duplicate->origin_airport_id=$rate->origin_airport_id;
+      $rate_duplicate->destination_airport_id=$rate->destination_airport_id;
+      $rate_duplicate->origin_address=$rate->origin_address;
+      $rate_duplicate->destination_address=$rate->destination_address;
       $rate_duplicate->carrier_id=$rate->carrier_id;
       $rate_duplicate->rates=$rate->rates;
       $rate_duplicate->markups=$rate->markups;
@@ -799,19 +803,36 @@ class QuoteV2Controller extends Controller
       $rate_duplicate->save();
 
       $charges=Charge::where('automatic_rate_id',$rate->id)->get();
+      if($charges->count()>0){
+        foreach ($charges as $charge){
+          $charge_duplicate = new Charge();
+          $charge_duplicate->automatic_rate_id=$rate_duplicate->id;
+          $charge_duplicate->type_id=$charge->type_id;
+          $charge_duplicate->surcharge_id=$charge->surcharge_id;
+          $charge_duplicate->calculation_type_id=$charge->calculation_type_id;
+          $charge_duplicate->amount=$charge->amount;
+          $charge_duplicate->markups=$charge->markups;
+          $charge_duplicate->total=$charge->total;
+          $charge_duplicate->currency_id=$charge->currency_id;
+          $charge_duplicate->save();
+        }
+      }
 
-
-      foreach ($charges as $charge){
-        $charge_duplicate = new Charge();
-        $charge_duplicate->automatic_rate_id=$rate_duplicate->id;
-        $charge_duplicate->type_id=$charge->type_id;
-        $charge_duplicate->surcharge_id=$charge->surcharge_id;
-        $charge_duplicate->calculation_type_id=$charge->calculation_type_id;
-        $charge_duplicate->amount=$charge->amount;
-        $charge_duplicate->markups=$charge->markups;
-        $charge_duplicate->total=$charge->total;
-        $charge_duplicate->currency_id=$charge->currency_id;
-        $charge_duplicate->save();
+      $chargesLcl=ChargeLclAir::where('automatic_rate_id',$rate->id)->get();
+      if($chargesLcl->count()>0){
+        foreach ($chargesLcl as $charge){
+          $charge_duplicate = new ChargeLclAir();
+          $charge_duplicate->automatic_rate_id=$rate_duplicate->id;
+          $charge_duplicate->type_id=$charge->type_id;
+          $charge_duplicate->surcharge_id=$charge->surcharge_id;
+          $charge_duplicate->calculation_type_id=$charge->calculation_type_id;
+          $charge_duplicate->units=$charge->units;
+          $charge_duplicate->price_per_unit=$charge->price_per_unit;
+          $charge_duplicate->markup=$charge->markup;
+          $charge_duplicate->total=$charge->total;
+          $charge_duplicate->currency_id=$charge->currency_id;
+          $charge_duplicate->save();
+        }
       }
     }
 
@@ -3429,6 +3450,17 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
 
+  /**
+   * Delete quotes v2 (Soft Delete)
+   * @param integer $id 
+   * @return type
+   */
+  public function destroy($id){
+    $quote_id = obtenerRouteKey($id);
+    QuoteV2::where('id',$quote_id)->delete();
+    return response()->json(['message' => 'Ok']);
+  }
+
   //Delete rates
 
   public function delete($id){
@@ -3440,7 +3472,7 @@ class QuoteV2Controller extends Controller
    * Delete Charges FCL
    * @param Request $request 
    * @param integer $id 
-   * @return STRING Json
+   * @return Array Json
    */
 
   public function deleteCharge(Request $request, $id){
@@ -3460,7 +3492,7 @@ class QuoteV2Controller extends Controller
    * Delete charges FCL/AIR
    * @param Request $request 
    * @param integer $id 
-   * @return STRING Json
+   * @return Array Json
    */
 
   public function deleteChargeLclAir(Request $request, $id){
@@ -3481,7 +3513,7 @@ class QuoteV2Controller extends Controller
    * Delete inlands
    * @param Request $request 
    * @param integer $id 
-   * @return STRING Json
+   * @return Array Json
    */
 
   public function deleteInland(Request $request, $id){
@@ -3834,15 +3866,13 @@ class QuoteV2Controller extends Controller
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
       $quote= QuoteV2::create($request->all());
 
-
-
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $currency_id = $company->companyUser->currency_id;
       $currency = Currency::find($currency_id);
 
       $pdf_option = new PdfOption();
       $pdf_option->quote_id=$quote->id;
-      $pdf_option->show_type='total in';
+      $pdf_option->show_type='detailed';
       $pdf_option->grouped_total_currency=0;
       $pdf_option->total_in_currency=$currency->alphacode;
       $pdf_option->freight_charges_currency=$currency->alphacode;
