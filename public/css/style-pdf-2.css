@@ -11,6 +11,7 @@ a {
 
 body {
   position: relative;
+  width: 21cm;  
   height: 29.7cm; 
   margin: 0 auto; 
   color: #001028;
@@ -26,6 +27,7 @@ header {
 }
 
 #logo {
+  text-align: center;
   margin-bottom: 10px;
 }
 
@@ -59,7 +61,7 @@ h1 {
 }
 
 #company {
-  float: center;
+  float: right;
   text-align: right;
 }
 
