@@ -164,8 +164,24 @@
                       @endforeach
                     @endif
                     <tr class="text-center color-table">
-                        <td >{{$rate->origin_port->name}}, {{$rate->origin_port->code}}</td>
-                        <td >{{$rate->destination_port->name}}, {{$rate->destination_port->code}}</td>
+                       <td >
+                            @if($rate->origin_address=='' && $rate->origin_port_id!='') 
+                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                            @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
+                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @else 
+                                {{$rate->origin_address}} 
+                            @endif
+                        </td>
+                        <td >
+                            @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                            @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                            @else 
+                                {{$rate->destination_address}} 
+                            @endif
+                        </td>
                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
                         <td {{ @$equipmentHides['20'] }}>{{number_format((float)@$sum_total20+@$sum_inland20, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40'] }}>{{number_format((float)@$sum_total40+@$sum_inland40, 2, '.', '')}}</td>
@@ -240,24 +256,24 @@
                                     @endforeach
                                 @endforeach
                                 <tr class="text-center color-table">
-                                    <td >
-                                        @if($rate->origin_port_id!='') 
+                                     <td >
+                                        @if($rate->origin_address=='' && $rate->origin_port_id!='') 
                                             {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                        @elseif($rate->origin_address!='') 
-                                            {{$rate->origin_address}} 
-                                        @else 
+                                        @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
                                             {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                        @else 
+                                            {{$rate->origin_address}} 
                                         @endif
                                     </td>
                                     <td >
-                                        @if($rate->destination_port_id!='') 
+                                        @if($rate->destination_address=='' && $rate->destination_port_id!='') 
                                             {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                        @elseif($rate->destination_address!='') 
-                                            {{$rate->destination_address}} 
-                                        @else 
+                                        @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
                                             {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                        @else 
+                                            {{$rate->destination_address}} 
                                         @endif
-                                    </td>                            
+                                    </td>                           
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
                                     <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_freight_20, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_freight_40, 2, '.', '')}}</td>

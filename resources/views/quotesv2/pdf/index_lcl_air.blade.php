@@ -208,20 +208,31 @@
                           $total_destination+=$value->total_destination;
                         ?>
                     @endforeach
-                    <tr class="text-center color-table">
-                        @if($quote->type=='LCL')
-                            <td >{{@$rate->origin_port->name}}, {{@$rate->origin_port->code}}</td>
-                            <td >{{@$rate->destination_port->name}}, {{@$rate->destination_port->code}}</td>
-                        @else
-                            <td >{{@$rate->origin_airport->name}}, {{@$rate->origin_airport->code}}</td>
-                            <td >{{@$rate->destination_airport->name}}, {{@$rate->destination_airport->code}}</td>
-                        @endif
+                    <tr class="text-center color-table"> 
+                        <td >
+                            @if($rate->origin_address=='' && $rate->origin_port_id!='') 
+                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                            @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
+                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @else 
+                                {{$rate->origin_address}} 
+                            @endif
+                        </td>
+                        <td >
+                            @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                            @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                            @else 
+                                {{$rate->destination_address}} 
+                            @endif
+                        </td> 
                         @if($quote->type=='LCL')
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                         @else
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                         @endif
-                        <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 2, '.', '')}}</td>
+                        <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 4, '.', '')}}</td>
                         <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination, 2, '.', '')}}</td>
                         @if($quote->pdf_option->show_schedules==1)
                             <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
@@ -283,23 +294,23 @@
                                 @endforeach
                                 <tr class="text-center color-table">
                                     <td >
-                                        @if($rate->origin_port_id!='') 
+                                        @if($rate->origin_address=='' && $rate->origin_port_id!='') 
                                             {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                        @elseif($rate->origin_address!='') 
-                                            {{$rate->origin_address}} 
-                                        @else 
+                                        @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
                                             {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                        @else 
+                                            {{$rate->origin_address}} 
                                         @endif
                                     </td>
                                     <td >
-                                        @if($rate->destination_port_id!='') 
+                                        @if($rate->destination_address=='' && $rate->destination_port_id!='') 
                                             {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                        @elseif($rate->destination_address!='') 
-                                            {{$rate->destination_address}} 
-                                        @else 
+                                        @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
                                             {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                        @else 
+                                            {{$rate->destination_address}} 
                                         @endif
-                                    </td>
+                                    </td> 
                                     @if($quote->type=='LCL')
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     @else
