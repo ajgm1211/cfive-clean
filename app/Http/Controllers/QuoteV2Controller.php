@@ -8125,7 +8125,7 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-
+    //dd($form);
     return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm'));
 
   }
