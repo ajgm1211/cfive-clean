@@ -25,6 +25,7 @@ use App\PackageLoad;
 use App\Mail\SendQuotePdf;
 use App\TermsPort;
 use EventIntercom;
+use Api2Pdf\Api2Pdf;
 
 class PdfController extends Controller
 {
@@ -492,5 +493,19 @@ class PdfController extends Controller
             }else{
                 return response()->json(['message' => 'Error']);
             }*/
+        }
+
+        public function test(){
+            $apiClient = new Api2Pdf('8a8fd7ad-0bca-4130-949c-5b4f22003fba');
+            $apiClient->setInline(true);
+            $apiClient->setFilename('test.pdf');
+            $apiClient->setOptions(
+                [
+                    'orientation' => 'landscape', 
+                    'pageSize'=> 'A4'
+                ]
+            );
+            $result = $apiClient->headlessChromeFromHtml('<p>Hello, World</p>');
+
+        }
     }
-}

@@ -8,18 +8,18 @@
     <style>
       @font-face {
         font-family: "Sailec";
-        src: url(public/fonts/sailec.otf);
+        src: url(/fonts/sailec.otf);
       }
       p, span {
         font-family: "Sailec", sans-serif;
       }
     </style>
   </head>
-  <body style="background-color: white; font-size: 11px;">
+  <body style="background-color: white; font-size: 11px; font-family: 'courier';">
     <header class="clearfix">
         <div id="logo">
             @if($user->companyUser->logo!='')
-            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
+            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:25px">
             @endif
         </div>
         <div id="company">
@@ -32,14 +32,12 @@
             </div>
             @if($quote->validity_start!=''&&$quote->validity_end!='')
             <div>
-                <span class="color-title">
-                    <b>@if($quote->pdf_option->language=='English')Validity:@elseif($quote->pdf_option->language=='Spanish') Validez: @else Validade: @endif </b>
-                </span> 
-                {{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} -  {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}
+                <span class="color-title"><b>@if($quote->pdf_option->language=='English')Validity:@elseif($quote->pdf_option->language=='Spanish') Validez: @else Validade:@endif </b></span>{{\Carbon\Carbon::parse( $quote->validity_start)->format('d M Y') }} - {{\Carbon\Carbon::parse( $quote->validity_end)->format('d M Y') }}
             </div>
             @endif
         </div>
     </header>
+    <hr>
     <main>
         <div id="details" class="clearfix details">
             <div class="client">
