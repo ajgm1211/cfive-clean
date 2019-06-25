@@ -2054,6 +2054,8 @@ function display_r(id){
 
 $(".quote_search").on("click", function() {
   
+
+
   //FCL
   if($('#quoteType').val()==1){
     $('#FormQuote').attr('action', '/v2/quotes/processSearch');
@@ -2773,3 +2775,94 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
   $('.large').change();
   $('.weight').change();
 });
+
+function precargarLCL(){
+
+
+  // Validaciones por defecto 
+  $("#total_quantity").prop( "required", true );
+  $("#total_weight").prop( "required", true );
+  $("#total_volume").prop( "required", true );
+
+
+  $(".infocheck").val('');
+  $(".quote_search").show();
+  $(".formu").val('');
+
+
+  $("#origin_harbor").prop( "disabled", false );
+  $("#destination_harbor").prop( "disabled", false );
+  $("#equipment_id").hide();
+  $("#equipment").prop( "disabled", true );
+  $("#delivery_type").prop( "disabled", false );
+  $("#delivery_type_air").prop( "disabled", true );
+  $("#delivery_type_label").show();
+  $("#delivery_type_air_label").hide();
+  $("#lcl_air_load").show();
+  $("#origin_harbor_label").show();
+  $("#destination_harbor_label").show();
+  $("#airline_label").hide();
+  $("#carrier_label").show();
+
+  $("#fcl_load").hide();
+  $("#origin_airport_label").hide();
+  $("#destination_airport_label").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  $("input[name=qty_45_hc]").val('');
+  /*
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+      total_volume=$('#total_volume').val();
+      weight=$('#total_weight').val();
+
+      if($('#quoteType').val()==2){
+
+
+        total_weight=weight/1000;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      }else if($('#quoteType').val()==3){
+        total_volume=total_volume*166;
+        if(total_volume>weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+      }
+
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+      if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+        sum_vol = $('#total_volume_pkg_input').val();
+        weight = $('#total_weight_pkg_input').val()/1000;
+
+        total_vol_chargeable = sum_vol;
+        if (total_vol_chargeable > weight) {
+          chargeable_weight = total_vol_chargeable;
+        } else {
+          chargeable_weight = weight;
+        }
+
+      }
+
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
+*/
+
+}

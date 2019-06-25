@@ -326,7 +326,7 @@
             <div class="row">
               <div class="col-lg-2">
                 <label>Quote Type</label>
-                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
+                {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],@$form['type'],['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
 
               <div class="col-lg-2" id="equipment_id">
@@ -453,7 +453,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_quantity" value="{{ @$form['total_quantity'] }}" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <select class="form-control" id="type_cargo" name="cargo_type">
                                 <option value="1">Pallets</option>
@@ -469,7 +469,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_weight" value="{{ @$form['total_weight'] }}" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
@@ -484,7 +484,7 @@
                         </label>
                         <div class="m-bootstrap-touchspin-brand">
                           <div class="input-group">
-                            <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
+                            <input type="number" id="total_volume" value="{{ @$form['total_volume'] }}" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
                               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
@@ -497,7 +497,7 @@
                         <br>
                         <br>
                         <b>Chargeable weight:</b>
-                        <span id="chargeable_weight_total"></span>
+                        <span id="chargeable_weight_total"> {{ @$form['chargeable_weight'] }} m<sup>3</sup></span>
                       </div>
                     </div>
                   </div>
@@ -627,7 +627,7 @@
                       <div class="col-md-12">
                         <b>Chargeable weight:</b>
                         <span id="chargeable_weight_pkg"></span>
-                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
+                        <input type="hidden" id="chargeable_weight_pkg_input" value="{{ @$form['chargeable_weight'] }}" name="chargeable_weight"/>
                       </div>
                     </div>
                     <div class="row">
@@ -1123,7 +1123,8 @@
 @else
 
 <script>
-  precargar()
+  precargar();
+  precargarLCL();
 </script>
 
 
