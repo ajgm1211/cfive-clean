@@ -658,7 +658,7 @@
                     @endif
                     @endif
                   </div><!-- aqui -->
-                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                  <div class="col-lg-2 d-flex justify-content-star align-items-end" style="right: 35px;"> 
                     <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
                     </button>
                   </div>
@@ -1281,8 +1281,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
 
-
-
   /*** GOOGLE MAPS API ***/
 
   var autocomplete;
@@ -1314,12 +1312,9 @@
     $('#date_hidden').val(date);
   }
 
-
   $('.m-select3-general').select2();
 
   $('.select2-selection__arrow').remove();
-
-
 
   function AbrirModal(action,id){
 

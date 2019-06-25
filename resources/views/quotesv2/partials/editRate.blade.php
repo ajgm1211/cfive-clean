@@ -1,24 +1,34 @@
 {{ Form::model($rate, array('route' => array('quotes-v2.rates.update', $rate->id), 'method' => 'POST')) }}
 <div class="row">
     <div class="col-md-4" >
-        <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-          <label>Origin port</label>
-          {{ Form::select('origin_port_id',$harbors,$rate->origin_port_id,['class'=>'m-select2-edit form-control origin_port_id',$quote->type!='AIR' ? 'required':'']) }}
-        </div>
-        <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-          <label>Origin airport</label>
-          {{ Form::select('origin_airport_id',[@$rate->origin_airport_id=>@$rate->origin_airport->display_name],@$rate->origin_airport_id,['class'=>'form-control','id'=>'origin_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
-        </div>
+        @if($rate->origin_address=='')
+          <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
+              <label>Origin port</label>
+              {{ Form::select('origin_port_id',$harbors,$rate->origin_port_id,['class'=>'m-select2-edit form-control origin_port_id',$quote->type!='AIR' ? 'required':'']) }}
+          </div>
+          <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
+              <label>Origin airport</label>
+              {{ Form::select('origin_airport_id',[@$rate->origin_airport_id=>@$rate->origin_airport->display_name],@$rate->origin_airport_id,['class'=>'form-control','id'=>'origin_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
+          </div>
+        @else
+            <label>Origin address</label>
+            {!! Form::text('origin_address',@$rate->origin_address, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+        @endif
     </div>
     <div class="col-md-4">
+      @if($rate->destination_address=='')
         <div  id="destination_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-          <label>Destination port</label>
-          {{ Form::select('destination_port_id',$harbors,$rate->destination_port_id,['class'=>'m-select2-edit form-control destination_port_id',$quote->type!='AIR' ? 'required':'']) }}
+            <label>Destination port</label>
+            {{ Form::select('destination_port_id',$harbors,$rate->destination_port_id,['class'=>'m-select2-edit form-control destination_port_id',$quote->type!='AIR' ? 'required':'']) }}
         </div>
         <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-          <label>Destination airport</label>
-          {{ Form::select('destination_airport_id',[@$rate->destination_airport_id=>@$rate->destination_airport->display_name],@$rate->destination_airport_id,['class'=>'form-control','id'=>'destination_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
+            <label>Destination airport</label>
+            {{ Form::select('destination_airport_id',[@$rate->destination_airport_id=>@$rate->destination_airport->display_name],@$rate->destination_airport_id,['class'=>'form-control','id'=>'destination_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
         </div>
+      @else
+        <label>Destination address</label>
+        {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+      @endif
     </div>
     <div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
         <label>Carrier</label>
@@ -35,7 +45,7 @@
 <div class="row">
     <div class="col-md-4" class="" > 
         <label>Schedule type</label>
-        {{ Form::select('schedule_type',['Direct'=>'Direct','Transfer'=>'Transfer'],$rate->schedule_type,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit schedule_type',$quote->type!='AIR' ? 'required':'']) }}
+        {{ Form::select('schedule_type',[' '=>'Select an option','Direct'=>'Direct','Transfer'=>'Transfer'],$rate->schedule_type,['class'=>'form-control m-select2-edit schedule_type']) }}
     </div>
     <div class="col-md-4">
         <label>Transit time</label>
@@ -52,7 +62,30 @@
 </div>
 <br>
 {!! Form::close() !!}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script type="text/javascript">
+
+    /*** GOOGLE MAPS API ***/
+
+      var autocomplete;
+      function initAutocomplete() {
+        var geocoder = new google.maps.Geocoder();
+        var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+        var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+        //autocomplete.addListener('place_changed', fillInAddress);
+      }
+
+      function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == 'OK') {
+            alert(results[0].geometry.location);
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+
     $('#origin_airport_edit').select2({
       dropdownParent: $('#editRateModal'),
       placeholder: "Select an option",

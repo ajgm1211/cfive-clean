@@ -4353,6 +4353,12 @@ class QuoteV2Controller extends Controller
     if($request->destination_airport_id){
       $rate->destination_airport_id=$request->destination_airport_id;
     }
+    if($request->origin_address){
+      $rate->origin_address=$request->origin_address;
+    }
+    if($request->destination_address){
+      $rate->destination_address=$request->destination_address;
+    }
     if($request->carrier_id){
       $rate->carrier_id=$request->carrier_id;
     }
