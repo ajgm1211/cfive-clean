@@ -643,6 +643,7 @@ class QuoteV2Controller extends Controller
     $validity_end = $validation[1];
     $contact_name='';
     $price_name='';
+    $gdp='No';
 
     $quote=QuoteV2::find($id);
     if($quote->quote_id!=$request->quote_id){
@@ -666,17 +667,22 @@ class QuoteV2Controller extends Controller
     $quote->kind_of_cargo=$request->kind_of_cargo;
     $quote->commodity=$request->commodity;
     $quote->status=$request->status;
+    $quote->gdp=$request->gdp;
+    $quote->risk_level=$request->risk_level;
     $quote->update();
 
     if($request->contact_id!=''){
       $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
     }
     $owner=$quote->user->name.' '.$quote->user->lastname;
+    if($quote->gdp==1){
+      $gdp='Yes';
+    }
     if($request->price_id!=''){
       $price_name=$quote->price->name;
     }
 
-    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name]);
+    return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name,'gdp'=>$gdp]);
   }
 
   //Actualiza condiciones de pago
