@@ -6829,6 +6829,8 @@ class QuoteV2Controller extends Controller
 
       if($request->input('total_weight') != null ) {
 
+        $simple = 'show active';
+        $paquete = '';
         $subtotalT = $weight *  $data->uom;
         $totalT = ( $weight *  $data->uom) / $rateC ;
         $priceRate =   $data->uom;
@@ -6866,6 +6868,9 @@ class QuoteV2Controller extends Controller
       }
       // POR PAQUETE
       if($request->input('total_weight_pkg') != null ) {
+
+        $simple = '';
+        $paquete = 'show active';
         $subtotalT = $weight *  $data->uom;
         $totalT = ( $weight *  $data->uom) / $rateC ;
         $priceRate =   $data->uom;
@@ -7940,7 +7945,7 @@ class QuoteV2Controller extends Controller
                   }
                 }
                 // MARKUP
-                     
+
                 $markupTONM3 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
 
                 $subtotal_global =  number_format($subtotal_global, 2, '.', '');
@@ -8126,7 +8131,7 @@ class QuoteV2Controller extends Controller
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
     //dd($form);
-    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm'));
+    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete'));
 
   }
 
