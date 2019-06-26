@@ -6606,7 +6606,6 @@ class QuoteV2Controller extends Controller
   public function processSearchLCL(Request $request)
   {
 
-
     //Variables del usuario conectado
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
@@ -8130,10 +8129,11 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-    //dd($form);
+
     return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete'));
 
   }
+
 
 
   public function OrdenarCollectionLCL($collection){
@@ -8196,6 +8196,354 @@ class QuoteV2Controller extends Controller
     ], $preserveKeys = true);
 
     return $collect;
+  }
+
+
+  // Store  LCL AUTOMATIC
+
+
+  public function storeLCL(Request $request){
+
+    if(!empty($request->input('form'))){
+      $form =  json_decode($request->input('form'));
+
+      $info = $request->input('info');
+      $dateQ = explode('/',$form->date);
+      $since = $dateQ[0];
+      $until = $dateQ[1];
+      $priceId = null;
+      $mode =   $form->mode;
+      if(isset($form->price_id )){
+        $priceId = $form->price_id;
+        if($priceId=="0"){
+          $priceId = null;
+        }
+      }
+
+
+      $typeText = "LCL";
+      $arregloNull = array();
+      $arregloNull = json_encode($arregloNull);
+      $equipment =  $arregloNull;
+      $delivery_type = $request->input('delivery_type') ;
+      $payments = $this->getCompanyPayments($form->company_id_quote);
+
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'LCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'total_quantity' => $form->total_quantity , 'total_weight' => $form->total_weight , 'total_volume' => $form->total_volume , 'chargeable_weight' => $form->chargeable_weight]);
+      $quote= QuoteV2::create($request->all());
+
+      $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+      $currency_id = $company->companyUser->currency_id;
+      $currency = Currency::find($currency_id);
+      $quantity = array_values( array_filter($form->quantity) );
+      //dd($input);
+      $type_cargo = array_values( array_filter($form->type_load_cargo) );
+      $height = array_values( array_filter($form->height) );
+      $width = array_values( array_filter($form->width) );
+      $large = array_values( array_filter($form->large) );
+      $weight = array_values( array_filter($form->weight) );
+      $volume = array_values( array_filter($form->volume) );
+
+
+      if(count($quantity)>0){
+        foreach($type_cargo as $key=>$item){
+
+          $package_load = new PackageLoadV2();
+          $package_load->quote_id = $quote->id;
+          $package_load->type_cargo = $type_cargo[$key];
+          $package_load->quantity = $quantity[$key];
+          $package_load->height = $height[$key];
+          $package_load->width = $width[$key];
+          $package_load->large = $large[$key];
+          $package_load->weight = $weight[$key];
+          $package_load->total_weight = $weight[$key]*$quantity[$key];
+          if(!empty($volume)){
+            $package_load->volume = $volume[$key];
+          }else{
+            $package_load->volume = 0.01;
+          }
+
+          $package_load->save();
+        }
+      }
+
+
+      $pdf_option = new PdfOption();
+      $pdf_option->quote_id=$quote->id;
+      $pdf_option->show_type='total in';
+      $pdf_option->grouped_total_currency=0;
+      $pdf_option->total_in_currency=$currency->alphacode;
+      $pdf_option->freight_charges_currency=$currency->alphacode;
+      $pdf_option->origin_charges_currency=$currency->alphacode;
+      $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->language='English';
+      $pdf_option->save();
+
+    }
+
+    //AUTOMATIC QUOTE
+    if(!empty($info)){
+      $terms = '';
+      foreach($info as $infoA){
+        $info_D = json_decode($infoA);
+
+        // Rates
+
+        /* foreach($info_D->rates as $rateO){
+
+          $rates =   json_encode($rateO->rate);
+          $markups =   json_encode($rateO->markups);
+          $arregloNull = array();
+
+          $remarks = $info_D->remarks."<br>";          
+          // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
+
+          $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
+
+          $rate = AutomaticRate::create($request->all());
+
+          $oceanFreight = new Charge();
+          $oceanFreight->automatic_rate_id= $rate->id;
+          $oceanFreight->type_id = '3' ;
+          $oceanFreight->surcharge_id = null ;
+          $oceanFreight->calculation_type_id = '5' ;
+          $oceanFreight->amount = $rates;
+          $oceanFreight->markups = $markups;
+          $oceanFreight->currency_id = $info_D->currency->id;
+          $oceanFreight->total =  $rates;
+          $oceanFreight->save();
+
+          //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
+          //  $inlandO =  $request->input('inlandO'.$rateO->rate_id);
+
+          //INLAND DESTINO
+          if(!empty($inlandD)){
+
+            foreach( $inlandD as $inlandDestiny){
+
+              $inlandDestiny = json_decode($inlandDestiny);
+
+              $arregloMontoInDest = array();
+              $arregloMarkupsInDest = array();
+              $montoInDest = array();
+              $markupInDest = array();
+              foreach($inlandDestiny->inlandDetails as $key => $inlandDetails){
+
+                if($inlandDetails->amount != 0){
+                  $arregloMontoInDest = array($key => $inlandDetails->amount);
+                  $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
+                }
+                if($inlandDetails->markup != 0){
+                  $arregloMarkupsInDest = array($key => $inlandDetails->markup);
+                  $markupInDest = array_merge($arregloMarkupsInDest,$markupInDest);
+                }
+
+              }
+
+              $arregloMontoInDest =  json_encode($montoInDest);
+              $arregloMarkupsInDest =  json_encode($markupInDest);
+              $inlandDest = new AutomaticInland();
+              $inlandDest->quote_id= $quote->id;
+              $inlandDest->automatic_rate_id = $rate->id;
+              $inlandDest->provider =  $inlandDestiny->providerName;
+              $inlandDest->distance =  $inlandDestiny->km;
+              $inlandDest->contract = $info_D->contract->id;
+              $inlandDest->port_id = $inlandDestiny->port_id;
+              $inlandDest->type = $inlandDestiny->type;
+              $inlandDest->rate = $arregloMontoInDest;
+              $inlandDest->markup = $arregloMarkupsInDest;
+              $inlandDest->validity_start =$inlandDestiny->validity_start ;
+              $inlandDest->validity_end=$inlandDestiny->validity_end ;
+              $inlandDest->currency_id =  $info_D->currency->id;
+              $inlandDest->save();
+
+            }  
+          }
+          //INLAND ORIGEN 
+
+          if(!empty($inlandO)){
+
+            foreach( $inlandO as $inlandOrigin){
+
+              $inlandOrigin = json_decode($inlandOrigin);
+
+              $arregloMontoInOrig = array();
+              $arregloMarkupsInOrig = array();
+              $montoInOrig = array();
+              $markupInOrig = array();
+              foreach($inlandOrigin->inlandDetails as $key => $inlandDetails){
+
+                if($inlandDetails->amount != 0){
+                  $arregloMontoInOrig = array($key => $inlandDetails->amount);
+                  $montoInOrig = array_merge($arregloMontoInOrig,$montoInOrig);  
+                }
+                if($inlandDetails->markup != 0){
+                  $arregloMarkupsInOrig = array($key => $inlandDetails->markup);
+                  $markupInOrig = array_merge($arregloMarkupsInOrig,$markupInOrig);
+                }
+
+              }
+
+              $arregloMontoInOrig =  json_encode($montoInOrig);
+              $arregloMarkupsInOrig =  json_encode($markupInOrig);
+              $inlandOrig = new AutomaticInland();
+              $inlandOrig->quote_id= $quote->id;
+              $inlandOrig->automatic_rate_id = $rate->id;
+              $inlandOrig->provider =  $inlandOrigin->providerName;
+              $inlandOrig->distance =  $inlandOrigin->km;
+              $inlandOrig->contract = $info_D->contract->id;
+              $inlandOrig->port_id = $inlandOrigin->port_id;
+              $inlandOrig->type = $inlandOrigin->type;
+              $inlandOrig->rate = $arregloMontoInOrig;
+              $inlandOrig->markup = $arregloMarkupsInOrig;
+              $inlandOrig->validity_start =$inlandOrigin->validity_start ;
+              $inlandOrig->validity_end=$inlandOrigin->validity_end ;
+              $inlandOrig->currency_id =  $info_D->currency->id;
+              $inlandOrig->save();
+
+            }  
+          }
+
+
+
+        }*/
+
+        //CHARGES ORIGIN
+        /*  foreach($info_D->localorigin as $localorigin){
+          $arregloMontoO = array();
+          $arregloMarkupsO = array();
+          $montoO = array();
+          $markupO = array();
+          foreach($localorigin as $localO){
+            foreach($localO as $local){
+              if($local->type != '99'){
+                $arregloMontoO = array('c'.$local->type => $local->monto);
+                $montoO = array_merge($arregloMontoO,$montoO);
+                $arregloMarkupsO = array('m'.$local->type => $local->markup);
+                $markupO = array_merge($arregloMarkupsO,$markupO);
+              }
+              if($local->type == '99'){
+                $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id);
+              }
+            }
+          }
+
+          $arregloMontoO =  json_encode($montoO);
+          $arregloMarkupsO =  json_encode($markupO);
+
+          $chargeOrigin = new Charge();
+          $chargeOrigin->automatic_rate_id= $rate->id;
+          $chargeOrigin->type_id = $arregloO['type_id'] ;
+          $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
+          $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
+          $chargeOrigin->amount =  $arregloMontoO  ;
+          $chargeOrigin->markups = $arregloMarkupsO  ;
+          $chargeOrigin->currency_id = $arregloO['currency_id']  ;
+          $chargeOrigin->total =  $arregloMarkupsO ;
+          $chargeOrigin->save();
+        }
+
+        // CHARGES DESTINY 
+        foreach($info_D->localdestiny as $localdestiny){
+          $arregloMontoD = array();
+          $arregloMarkupsD = array();
+          $montoD = array();
+          $markupD = array();
+          foreach($localdestiny as $localD){
+            foreach($localD as $local){
+              if($local->type != '99'){
+
+                $arregloMontoD = array('c'.$local->type => $local->monto);
+                $montoD = array_merge($arregloMontoD,$montoD);
+                $arregloMarkupsD = array('m'.$local->type => $local->markup);
+                $markupD = array_merge($arregloMarkupsD,$markupD);
+              }
+              if($local->type == '99'){
+                $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id );
+              }
+            }
+          }
+
+          $arregloMontoD =  json_encode($montoD);
+          $arregloMarkupsD =  json_encode($markupD);
+
+          $chargeDestiny = new Charge();
+          $chargeDestiny->automatic_rate_id= $rate->id;
+          $chargeDestiny->type_id = $arregloD['type_id'] ;
+          $chargeDestiny->surcharge_id = $arregloD['surcharge_id']  ;
+          $chargeDestiny->calculation_type_id = $arregloD['calculation_type_id']  ;
+          $chargeDestiny->amount =  $arregloMontoD;
+          $chargeDestiny->markups = $arregloMarkupsD;
+          $chargeDestiny->currency_id = $arregloD['currency_id']  ;
+          $chargeDestiny->total =  $arregloMarkupsD;
+          $chargeDestiny->save();
+        }
+
+        // CHARGES FREIGHT 
+        foreach($info_D->localfreight as $localfreight){
+          $arregloMontoF = array();
+          $arregloMarkupsF = array();
+          $montoF = array();
+          $markupF = array();
+          foreach($localfreight as $localF){
+            foreach($localF as $local){
+              if($local->type != '99'){
+                $arregloMontoF = array('c'.$local->type => $local->monto);
+                $montoF = array_merge($arregloMontoF,$montoF);
+                $arregloMarkupsF = array('m'.$local->type => $local->markup);
+                $markupF = array_merge($arregloMarkupsF,$markupF);
+              }
+              if($local->type == '99'){
+                $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id , 'currency_id' => $local->currency_id );
+              }
+            }
+          }
+          $arregloMontoF =  json_encode($montoF);
+          $arregloMarkupsF =  json_encode($markupF);
+
+          $chargeFreight = new Charge();
+          $chargeFreight->automatic_rate_id= $rate->id;
+          $chargeFreight->type_id = $arregloF['type_id'] ;
+          $chargeFreight->surcharge_id = $arregloF['surcharge_id']  ;
+          $chargeFreight->calculation_type_id = $arregloF['calculation_type_id']  ;
+          $chargeFreight->amount =  $arregloMontoF;
+          $chargeFreight->markups = $arregloMarkupsF;
+          $chargeFreight->currency_id = $arregloF['currency_id']  ;
+          $chargeFreight->total =  $arregloMarkupsF;
+          $chargeFreight->save();
+        }*/
+
+
+
+      }  
+
+      // Terminos Automatica
+      /*   $modo  =  $request->input('mode');
+      $companyUser = CompanyUser::All();
+      $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
+
+      $terminos="";
+      //Export
+      foreach($terms as $term){
+        if($modo == '1'){
+          $terminos .=$term->export."<br>";
+        }else{ // import
+
+          $terminos .=$term->import."<br>";
+        }
+      }*/
+
+      /*  $quoteEdit = QuoteV2::find($quote->id);
+      $quoteEdit->terms_and_conditions = $terminos;
+      $quoteEdit->update();*/
+    }
+
+    //$request->session()->flash('message.nivel', 'success');
+    //$request->session()->flash('message.title', 'Well done!');
+    //$request->session()->flash('message.content', 'Register completed successfully!');
+    //return redirect()->route('quotes.index');
+
+    return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
 }

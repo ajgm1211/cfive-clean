@@ -688,7 +688,6 @@
 </div>
 
 
-
 @if(isset($arreglo))
 @if(!$arreglo->isEmpty())
 <div class="row padding search">
@@ -696,7 +695,8 @@
 </div>
 <div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
 
-  {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group']) !!}
+  {!! Form::open(['route' => 'quotes-v2.storeLCL','class' => 'form-group m-form__group']) !!}
+    <input  type="hidden" name="forma" value="aaaaaa" >
   <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
     <div class="m-portlet no-shadow">
