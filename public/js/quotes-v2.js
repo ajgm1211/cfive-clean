@@ -1668,6 +1668,7 @@ $(document).on('change', '.gdp', function () {
 $(document).on('change', '.kind_of_cargo', function () {
   if($(this).val() == 'Pharma'){
     $(".gdp").removeAttr('hidden');
+    $(".gdp_span").attr('hidden','true');
     $(".div_gdp").removeAttr('hidden');
     if($(".gdp").val()==1){
       $(".div_risk_level").removeAttr('hidden');  
