@@ -6943,6 +6943,7 @@ class QuoteV2Controller extends Controller
 
 
 
+
       foreach($localChar as $local){
 
         $rateMount = $this->ratesCurrency($local->currency->id,$typeCurrency);
@@ -8092,10 +8093,22 @@ class QuoteV2Controller extends Controller
         $collectionFreight = $this->OrdenarCollectionLCL($collectionFreight);
 
 
+      // SCHEDULE TYPE 
+      if($data->schedule_type_id != null){
+        $sheduleType = ScheduleType::find($data->schedule_type_id);
+        $data->setAttribute('sheduleType',$sheduleType->name);
+      }else{
+        $data->setAttribute('sheduleType',null);
+      }
+      //remarks
+      $mode = "";
 
-      $data->setAttribute('globalOrig',$collectionGloOrig);
-      $data->setAttribute('globalDest',$collectionGloDest);
-      $data->setAttribute('globalFreight',$collectionGloFreight);
+      $remarks = $data->contract->remarks."<br>";
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+
+      $data->setAttribute('remarks',$remarks);
+
+
       $data->setAttribute('localOrig',$collectionOrig);
       $data->setAttribute('localDest',$collectionDest);
       $data->setAttribute('localFreight',$collectionFreight);
@@ -8129,7 +8142,7 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-
+    //  dd($arreglo);
     return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete'));
 
   }
@@ -8288,35 +8301,31 @@ class QuoteV2Controller extends Controller
 
         // Rates
 
-        /* foreach($info_D->rates as $rateO){
+        foreach($info_D->rates as $rateO){
 
-          $rates =   json_encode($rateO->rate);
-          $markups =   json_encode($rateO->markups);
-          $arregloNull = array();
-
+          $arregloNull = array();    
           $remarks = $info_D->remarks."<br>";          
-          // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
-
           $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
 
           $rate = AutomaticRate::create($request->all());
 
-          $oceanFreight = new Charge();
+          $oceanFreight = new ChargeLclAir();
           $oceanFreight->automatic_rate_id= $rate->id;
           $oceanFreight->type_id = '3' ;
           $oceanFreight->surcharge_id = null ;
           $oceanFreight->calculation_type_id = '5' ;
-          $oceanFreight->amount = $rates;
-          $oceanFreight->markups = $markups;
-          $oceanFreight->currency_id = $info_D->currency->id;
-          $oceanFreight->total =  $rates;
+          $oceanFreight->units = $rateO->cantidad;
+          $oceanFreight->price_per_unit =  $rateO->price;
+          $oceanFreight->total = $rateO->subtotal;
+          $oceanFreight->markup =  $rateO->markup;
+          $oceanFreight->currency_id =  $rateO->idCurrency; 
           $oceanFreight->save();
 
           //    $inlandD =  $request->input('inlandD'.$rateO->rate_id);
           //  $inlandO =  $request->input('inlandO'.$rateO->rate_id);
 
           //INLAND DESTINO
-          if(!empty($inlandD)){
+          /*if(!empty($inlandD)){
 
             foreach( $inlandD as $inlandDestiny){
 
@@ -8357,10 +8366,10 @@ class QuoteV2Controller extends Controller
               $inlandDest->save();
 
             }  
-          }
+          }*/
           //INLAND ORIGEN 
 
-          if(!empty($inlandO)){
+          /* if(!empty($inlandO)){
 
             foreach( $inlandO as $inlandOrigin){
 
@@ -8401,85 +8410,86 @@ class QuoteV2Controller extends Controller
               $inlandOrig->save();
 
             }  
-          }
+          } */
 
-
-
-        }*/
+        }
 
         //CHARGES ORIGIN
-        /*  foreach($info_D->localorigin as $localorigin){
-          $arregloMontoO = array();
-          $arregloMarkupsO = array();
-          $montoO = array();
-          $markupO = array();
+        foreach($info_D->localOrig as $localorigin){
+
           foreach($localorigin as $localO){
             foreach($localO as $local){
               if($local->type != '99'){
-                $arregloMontoO = array('c'.$local->type => $local->monto);
-                $montoO = array_merge($arregloMontoO,$montoO);
-                $arregloMarkupsO = array('m'.$local->type => $local->markup);
-                $markupO = array_merge($arregloMarkupsO,$markupO);
+                if($local->cantidad == '-'){
+                  $units = 0;
+                  $price_per_unit = $local->monto;
+                }else{
+                  $units = $local->cantidad;
+                  $price_per_unit =  $local->monto / $local->cantidad;
+                }
+
+                $totalOrig =  $local->montoMarkup;
+                $markup =  $local->markup;
               }
               if($local->type == '99'){
                 $arregloO = array('type_id' => '1' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id);
               }
             }
           }
-
-          $arregloMontoO =  json_encode($montoO);
-          $arregloMarkupsO =  json_encode($markupO);
-
-          $chargeOrigin = new Charge();
+          $chargeOrigin = new ChargeLclAir();
           $chargeOrigin->automatic_rate_id= $rate->id;
           $chargeOrigin->type_id = $arregloO['type_id'] ;
-          $chargeOrigin->surcharge_id = $arregloO['surcharge_id']  ;
+          $chargeOrigin->surcharge_id =$arregloO['type_id'] ;
           $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
-          $chargeOrigin->amount =  $arregloMontoO  ;
-          $chargeOrigin->markups = $arregloMarkupsO  ;
-          $chargeOrigin->currency_id = $arregloO['currency_id']  ;
-          $chargeOrigin->total =  $arregloMarkupsO ;
+          $chargeOrigin->units = $units;
+          $chargeOrigin->price_per_unit = $price_per_unit;
+          $chargeOrigin->total =$totalOrig ;
+          $chargeOrigin->markup =  $markup;
+          $chargeOrigin->currency_id =  $arregloO['currency_id'];
           $chargeOrigin->save();
+
         }
 
         // CHARGES DESTINY 
-        foreach($info_D->localdestiny as $localdestiny){
-          $arregloMontoD = array();
-          $arregloMarkupsD = array();
-          $montoD = array();
-          $markupD = array();
+        foreach($info_D->localDest as $localdestiny){
           foreach($localdestiny as $localD){
             foreach($localD as $local){
               if($local->type != '99'){
+                if($local->cantidad == '-'){
+                  $units = 0;
+                  $price_per_unit = $local->monto;
+                }else{
+                  $units = $local->cantidad;
+                  $price_per_unit =  $local->monto / $local->cantidad;
+                }
 
-                $arregloMontoD = array('c'.$local->type => $local->monto);
-                $montoD = array_merge($arregloMontoD,$montoD);
-                $arregloMarkupsD = array('m'.$local->type => $local->markup);
-                $markupD = array_merge($arregloMarkupsD,$markupD);
+                $totalDest =  $local->montoMarkup;
+                $markup =  $local->markup;
               }
               if($local->type == '99'){
-                $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id );
+                $arregloD = array('type_id' => '2' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id);
               }
             }
           }
 
-          $arregloMontoD =  json_encode($montoD);
-          $arregloMarkupsD =  json_encode($markupD);
-
-          $chargeDestiny = new Charge();
+          $chargeDestiny = new ChargeLclAir();
           $chargeDestiny->automatic_rate_id= $rate->id;
           $chargeDestiny->type_id = $arregloD['type_id'] ;
-          $chargeDestiny->surcharge_id = $arregloD['surcharge_id']  ;
+          $chargeDestiny->surcharge_id =$arregloD['type_id'] ;
           $chargeDestiny->calculation_type_id = $arregloD['calculation_type_id']  ;
-          $chargeDestiny->amount =  $arregloMontoD;
-          $chargeDestiny->markups = $arregloMarkupsD;
-          $chargeDestiny->currency_id = $arregloD['currency_id']  ;
-          $chargeDestiny->total =  $arregloMarkupsD;
+          $chargeDestiny->units = $units;
+          $chargeDestiny->price_per_unit = $price_per_unit;
+          $chargeDestiny->total =$totalDest ;
+          $chargeDestiny->markup =  $markup;
+          $chargeDestiny->currency_id =  $arregloD['currency_id'];
           $chargeDestiny->save();
+
+
+
         }
 
         // CHARGES FREIGHT 
-        foreach($info_D->localfreight as $localfreight){
+        /*     foreach($info_D->localfreight as $localfreight){
           $arregloMontoF = array();
           $arregloMarkupsF = array();
           $montoF = array();
