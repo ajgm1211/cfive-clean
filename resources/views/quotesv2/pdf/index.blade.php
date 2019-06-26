@@ -833,7 +833,7 @@
         @endif
         <br>
         @if($quote->payment_conditions!='')
-            <br>
+            <!--<br>
             <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
@@ -851,7 +851,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>-->
         @endif
         @if($quote->terms_and_conditions!='')
             <br>
@@ -866,14 +866,19 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding:20px;">
-                                <span class="text-justify">{!! $quote->terms_and_conditions!!}</span>
+                            <td style="padding:15px;">
+                                @foreach($rates as $rate)
+                                    @if($rate->remarks != '')
+                                        <span class="text-justify">{!! $rate->remarks !!}</span>
+                                    @endif
+                                @endforeach
+                                <span class="text-justify">{!! $quote->terms_and_conditions !!}</span>
                             </td>
-                        </tr>
+                        </tr>                        
                     </tbody>
                 </table>
             </div>
         @endif 
-</main>
+    </main>
 </body>
 </html>
