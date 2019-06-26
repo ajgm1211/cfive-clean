@@ -688,5 +688,11 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
 
 });
 
+// User Configuration 
+
+Route::group(['prefix' => 'UserConfiguration'], function (){
+   Route::resource('UserConfiguration','UserConfigurationsController');
+});
+
 Auth::routes();
 
