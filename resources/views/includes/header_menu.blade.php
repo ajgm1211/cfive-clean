@@ -50,19 +50,19 @@
 
                 @if(empty(\Auth::user()->company_user_id) != true)
                 <!--<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="{{route('quotes.index')}}" class="m-menu__link ">
-                        <span class="m-menu__link-text">
-                            <b>Quotes</b>
-                        </span>
-                    </a>
-                </li>
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-                        <span class="m-menu__link-text">
-                            <b>Quotes</b>
-                        </span>
-                    </a>
-                </li>-->
+<a  href="{{route('quotes.index')}}" class="m-menu__link ">
+<span class="m-menu__link-text">
+<b>Quotes</b>
+</span>
+</a>
+</li>
+<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+<a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+<span class="m-menu__link-text">
+<b>Quotes</b>
+</span>
+</a>
+</li>-->
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -88,7 +88,7 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                 <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                                <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                                     <span class="m-menu__link-text">
                                         <b>Quotes V2 (Beta)</b>
                                     </span>
@@ -278,7 +278,7 @@
                                     </span>
                                 </a>
                             </li>
-                                  <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('termsv2.list') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-warning-sign"></i>
                                     <span class="m-menu__link-text">
@@ -286,11 +286,11 @@
                                     </span>
                                 </a>
                             </li>
-                                  <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-warning-sign"></i>
                                     <span class="m-menu__link-text">
-                                       Remarks
+                                        Remarks
                                     </span>
                                 </a>
                             </li>
@@ -330,7 +330,7 @@
                             @role('administrator')
 
                             <!-- Sub- Menus --------------------------------------------------------------- -->
-                            
+
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a  href="#" class="m-menu__link m-menu__toggle">
                                     <i class="m-menu__link-icon la la-truck"></i>
@@ -549,9 +549,23 @@
                         <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
                         <div class="m-dropdown__inner">
                             <div class="m-dropdown__header m--align-center" style="background: url(../../assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
-                                <span class="m-dropdown__header-subtitle">
-                                    Notifications
-                                </span>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <span class="m-dropdown__header-subtitle" style="font-size: 15px;">
+                                            <strong>Notifications</strong>
+                                        </span>
+                                    </div>
+                                    <style>
+                                        .setting:hover {
+                                            background-color: gray;
+                                        }
+                                    </style>
+                                    <div class="col-md-6" title="Notification settings">
+                                        <a href="{{route('UserConfiguration.index')}}" >
+                                            <i  class="la la-cog pull-right setting" style="font-weight: bold; color:white; font-size: 23px;"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="m-dropdown__body">
                                 <div class="m-dropdown__content">
