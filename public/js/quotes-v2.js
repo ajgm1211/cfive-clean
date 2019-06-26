@@ -2787,7 +2787,7 @@ function precargarLCL(){
 
   $(".infocheck").val('');
   $(".quote_search").show();
-  $(".formu").val('');
+  
 
 
   $("#origin_harbor").prop( "disabled", false );
