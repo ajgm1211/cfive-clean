@@ -15,10 +15,10 @@ class HelperUserConfiguracion {
             'request-importation-gcfcl' => true
         ];
 
-        $json['colors'] = [
+        /*$json['colors'] = [
             'color-graper'  => true,
             'color-nav'     => true
-        ];
+        ];*/
 
         $json = json_encode($json);
         return $json;
@@ -80,7 +80,7 @@ class HelperUserConfiguracion {
             }
 
         }
-        return json_encode($userConf->paramerters);
+        return $userConf->paramerters;
     }
 
 }
