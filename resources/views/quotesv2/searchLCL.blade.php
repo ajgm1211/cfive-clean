@@ -445,7 +445,7 @@
                   </li>
                 </ul>
                 <div class="tab-content">
-                 <!-- Simple -->
+                  <!-- Simple -->
                   <div class="tab-pane fade  {{ $simple }}"   id="tab_1_1"  >
                     <div class="row">
                       <div class="col-md-4">
@@ -502,7 +502,7 @@
                       </div>
                     </div>
                   </div>
-                    <!-- By packing -->
+                  <!-- By packing -->
                   <div class="tab-pane fade {{ $paquete }} " id="tab_1_2"  >
                     <div class="template">
                       <div class="row">
@@ -646,7 +646,7 @@
                       </div>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
             </div><br>
@@ -696,7 +696,7 @@
 <div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
 
   {!! Form::open(['route' => 'quotes-v2.storeLCL','class' => 'form-group m-form__group']) !!}
-    <input  type="hidden" name="forma" value="aaaaaa" >
+  <input  type="hidden" name="forma" value="aaaaaa" >
   <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
     <div class="m-portlet no-shadow">
@@ -874,31 +874,35 @@
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div><br>
-                  @foreach($arr->localOrig as $localorigin)
+                  
+                  @foreach($arr->localOrig as $localO)   
+                    @foreach($localO as $localorig)
+                     @foreach($localorig as $localorigin)
+                       <div class="row data-rates">
+                        <div class="col-lg-2 colorphacode">{{ $localorigin['surcharge_name']}}</div>
+                        <div class="col-lg-2 colorphacode">{{ $localorigin['calculation_name']}}</div>
+                        <div class="col-lg-7 colorphacode">
+                          <div class="d-flex justify-content-between">
+                            <div class="wth" >
+                              <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
+                            </div>
+                            <div class="wth" >
+                              <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
+                            </div>
 
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localorigin['origin']) ?   str_replace(["[","]","\""], ' ', $localorigin['origin']->pluck('cantidad')) : '0' }}</span> 
+                            <div class="wth" >  
+                              <span class="bg-rates">{{ $localorigin['markup']}} </span>
+                            </div>
+                            <div class="wth" >     
+                              <span class="bg-rates"> {{ $localorigin['montoMarkup']}} </span>
+                            </div>
+                          </div>
                         </div>
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localorigin['origin']) ?  str_replace(["[","]","\""], ' ', $localorigin['origin']->pluck('monto')) :'0.00' }}</span> 
-                        </div>
+                        <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['currency']}}</span></div>
 
-                        <div class="wth" >  
-                          <span class="bg-rates"> {{ isset($localorigin['origin']) ?  str_replace(["[","]","\""], ' ', $localorigin['origin']->pluck('markup')) :'0.00' }}</span>
-                        </div>
-                        <div class="wth" >     
-                          <span class="bg-rates"> {{ isset($localorigin['origin']) ?  str_replace(["[","]","\""], ' ', $localorigin['origin']->pluck('montoMarkup')) :'0.00' }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span></div>
-
-                  </div><br>
+                      </div><br>
+                    @endforeach
+                   @endforeach
                   @endforeach
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
@@ -963,32 +967,34 @@
                   @endforeach
 
                   @if(!$arr->localFreight->isEmpty())
-                  @foreach($arr->localFreight as $localfreight)
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localfreight['freight']) ?   str_replace(["[","]","\""], ' ', $localfreight['freight']->pluck('cantidad')) : '0' }}</span> 
-                        </div>
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localfreight['freight']) ?  str_replace(["[","]","\""], ' ', $localfreight['freight']->pluck('monto')) :'0.00' }}</span> 
-                        </div>
+                    @foreach($arr->localFreight as $localF)   
+                      @foreach($localF as $localfre)
+                       @foreach($localfre as $localfreight)
+                         <div class="row data-rates">
+                          <div class="col-lg-2 colorphacode">{{ $localfreight['surcharge_name']}}</div>
+                          <div class="col-lg-2 colorphacode">{{ $localfreight['calculation_name']}}</div>
+                          <div class="col-lg-7 colorphacode">
+                            <div class="d-flex justify-content-between">
+                              <div class="wth" >
+                                <span class="bg-rates"> {{ $localfreight['cantidad']}} </span> 
+                              </div>
+                              <div class="wth" >
+                                <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
+                              </div>
 
-                        <div class="wth" >  
-                          <span class="bg-rates"> {{ isset($localfreight['freight']) ?  str_replace(["[","]","\""], ' ', $localfreight['freight']->pluck('markup')) :'0.00' }}</span>
-                        </div>
-                        <div class="wth" >     
-                          <span class="bg-rates"> {{ isset($localfreight['freight']) ?  str_replace(["[","]","\""], ' ', $localfreight['freight']->pluck('montoMarkup')) :'0.00' }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  ) }}</span></div>
-
-                  </div><br>
-
-                  @endforeach
+                              <div class="wth" >  
+                                <span class="bg-rates">{{ $localfreight['markup']}} </span>
+                              </div>
+                              <div class="wth" >     
+                                <span class="bg-rates"> {{ $localfreight['montoMarkup']}} </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['currency']}}</span></div>
+                        </div><br>
+                      @endforeach
+                     @endforeach
+                    @endforeach
                   @endif
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
@@ -1027,31 +1033,34 @@
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div><br>
-                  @foreach($arr->localDest as $localdestiny)
+                  @foreach($arr->localDest as $local)   
+                    @foreach($local as $localA)
+                     @foreach($localA as $localdestiny)
+                       <div class="row data-rates">
+                        <div class="col-lg-2 colorphacode">{{ $localdestiny['surcharge_name']}}</div>
+                        <div class="col-lg-2 colorphacode">{{ $localdestiny['calculation_name']}}</div>
+                        <div class="col-lg-7 colorphacode">
+                          <div class="d-flex justify-content-between">
+                            <div class="wth" >
+                              <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
+                            </div>
+                            <div class="wth" >
+                              <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
+                            </div>
 
-                  <div class="row data-rates">
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
-                      <div class="d-flex justify-content-between">
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localdestiny['destination']) ?   str_replace(["[","]","\""], ' ', $localdestiny['destination']->pluck('cantidad')) : '0' }}</span> 
+                            <div class="wth" >  
+                              <span class="bg-rates">{{ $localdestiny['markup']}} </span>
+                            </div>
+                            <div class="wth" >     
+                              <span class="bg-rates"> {{ $localdestiny['montoMarkup']}} </span>
+                            </div>
+                          </div>
                         </div>
-                        <div class="wth" >
-                          <span class="bg-rates"> {{ isset($localdestiny['destination']) ?  str_replace(["[","]","\""], ' ', $localdestiny['destination']->pluck('monto')) :'0.00' }}</span> 
-                        </div>
+                        <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['currency']}}</span></div>
 
-                        <div class="wth" >  
-                          <span class="bg-rates"> {{ isset($localdestiny['destination']) ?  str_replace(["[","]","\""], ' ', $localdestiny['destination']->pluck('markup')) :'0.00' }}</span>
-                        </div>
-                        <div class="wth" >     
-                          <span class="bg-rates"> {{ isset($localdestiny['destination']) ?  str_replace(["[","]","\""], ' ', $localdestiny['destination']->pluck('montoMarkup')) :'0.00' }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('currency')  ) }}</span></div>
-
-                  </div><br>
+                      </div><br>
+                    @endforeach
+                   @endforeach
                   @endforeach
                   <br>
 
