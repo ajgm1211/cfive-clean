@@ -8439,7 +8439,7 @@ class QuoteV2Controller extends Controller
           $chargeOrigin = new ChargeLclAir();
           $chargeOrigin->automatic_rate_id= $rate->id;
           $chargeOrigin->type_id = $arregloO['type_id'] ;
-          $chargeOrigin->surcharge_id =$arregloO['type_id'] ;
+          $chargeOrigin->surcharge_id =$arregloO['surcharge_id'] ;
           $chargeOrigin->calculation_type_id = $arregloO['calculation_type_id']  ;
           $chargeOrigin->units = $units;
           $chargeOrigin->price_per_unit = $price_per_unit;
@@ -8452,6 +8452,7 @@ class QuoteV2Controller extends Controller
 
         // CHARGES DESTINY 
         foreach($info_D->localDest as $localdestiny){
+
           foreach($localdestiny as $localD){
             foreach($localD as $local){
               if($local->type != '99'){
@@ -8475,7 +8476,7 @@ class QuoteV2Controller extends Controller
           $chargeDestiny = new ChargeLclAir();
           $chargeDestiny->automatic_rate_id= $rate->id;
           $chargeDestiny->type_id = $arregloD['type_id'] ;
-          $chargeDestiny->surcharge_id =$arregloD['type_id'] ;
+          $chargeDestiny->surcharge_id =$arregloD['surcharge_id'] ;
           $chargeDestiny->calculation_type_id = $arregloD['calculation_type_id']  ;
           $chargeDestiny->units = $units;
           $chargeDestiny->price_per_unit = $price_per_unit;
@@ -8489,38 +8490,45 @@ class QuoteV2Controller extends Controller
         }
 
         // CHARGES FREIGHT 
-        /*     foreach($info_D->localfreight as $localfreight){
-          $arregloMontoF = array();
-          $arregloMarkupsF = array();
-          $montoF = array();
-          $markupF = array();
+        foreach($info_D->localFreight as $localfreight){
+
+
+
+          // --------------------
           foreach($localfreight as $localF){
             foreach($localF as $local){
               if($local->type != '99'){
-                $arregloMontoF = array('c'.$local->type => $local->monto);
-                $montoF = array_merge($arregloMontoF,$montoF);
-                $arregloMarkupsF = array('m'.$local->type => $local->markup);
-                $markupF = array_merge($arregloMarkupsF,$markupF);
+                if($local->cantidad == '-'){
+                  $units = 0;
+                  $price_per_unit = $local->monto;
+                }else{
+                  $units = $local->cantidad;
+                  $price_per_unit =  $local->monto / $local->cantidad;
+                }
+
+                $totalDest =  $local->montoMarkup;
+                $markup =  $local->markup;
               }
               if($local->type == '99'){
-                $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id , 'currency_id' => $local->currency_id );
+                $arregloF = array('type_id' => '3' , 'surcharge_id' => $local->surcharge_id , 'calculation_type_id' => $local->calculation_id, 'currency_id' => $local->currency_id);
               }
             }
           }
-          $arregloMontoF =  json_encode($montoF);
-          $arregloMarkupsF =  json_encode($markupF);
 
-          $chargeFreight = new Charge();
+          $chargeFreight = new ChargeLclAir();
           $chargeFreight->automatic_rate_id= $rate->id;
           $chargeFreight->type_id = $arregloF['type_id'] ;
-          $chargeFreight->surcharge_id = $arregloF['surcharge_id']  ;
+          $chargeFreight->surcharge_id =$arregloF['surcharge_id'] ;
           $chargeFreight->calculation_type_id = $arregloF['calculation_type_id']  ;
-          $chargeFreight->amount =  $arregloMontoF;
-          $chargeFreight->markups = $arregloMarkupsF;
-          $chargeFreight->currency_id = $arregloF['currency_id']  ;
-          $chargeFreight->total =  $arregloMarkupsF;
+          $chargeFreight->units = $units;
+          $chargeFreight->price_per_unit = $price_per_unit;
+          $chargeFreight->total =$totalDest ;
+          $chargeFreight->markup =  $markup;
+          $chargeFreight->currency_id =  $arregloF['currency_id'];
           $chargeFreight->save();
-        }*/
+
+    
+        }
 
 
 
