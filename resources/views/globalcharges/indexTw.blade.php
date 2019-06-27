@@ -201,7 +201,7 @@ New \ Status Import  &nbsp;
 
     $(function() {
         $('#requesttable').DataTable({
-            processing: true,
+
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
@@ -222,12 +222,10 @@ New \ Status Import  &nbsp;
             "searching": true,
             "ordering": true,
             "width": true,
-            "info": true,
-            "deferLoading": 57,
             "autoWidth": false,
             "stateSave": true,
             "processing": true,
-            "dom": 'Bfrtip',
+            "serverSide": true,
             "paging": true
         });
 
