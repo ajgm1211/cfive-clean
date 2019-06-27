@@ -16,11 +16,11 @@ class UserConfigurationsController extends Controller
      */
     public function index()
     {
-    
-        $json = PrvUserConfigurations::allData(\Auth::user()->id);
-        dd($json);
+        $user = \Auth::user()->id;
+        $json = PrvUserConfigurations::allData($user);
+        //dd($json['colors']);
         
-        return view('configuration.index',compact('user'));
+        return view('configuration.index',compact('json','user'));
     }
 
     /**
@@ -75,7 +75,7 @@ class UserConfigurationsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request);
     }
 
     /**
