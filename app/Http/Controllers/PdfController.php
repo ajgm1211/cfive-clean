@@ -505,7 +505,7 @@ class PdfController extends Controller
                     'pageSize'=> 'A4'
                 ]
             );
-            $result = $apiClient->headlessChromeFromHtml('<p>Hello, World</p>');
-
+            $result = $apiClient->wkHtmlToPdfFromUrl('https://app.cargofive.com/v2/quotes/show/oW');
+            dd($result);
         }
     }
