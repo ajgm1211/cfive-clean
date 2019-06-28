@@ -1,4 +1,4 @@
-@font-face{
+/*@font-face{
     font-family: "JosefinSans-Bold";
     src: url("/fonts/JosefinSans-Bold.ttf") format("truetype");
 }
@@ -8,10 +8,68 @@
     src: url("/fonts/JosefinSans-Light.ttf") format("truetype");
 }
 
-@font-face {
-    font-family: "Sailec";
-    src: url(public/fonts/sailec.otf);
+
+@font-face{
+    font-family: "JosefinSans-Bold";
+    src: url("/fonts/JosefinSans-Bold.ttf") format("truetype");
+    font-style:'bold';
 }
+
+@font-face{
+    font-family: "Raleway-Regular";
+    src: url("/fonts/Raleway-Regular.ttf") format("truetype");
+    font-style:'normal';
+}
+
+@font-face{
+    font-family: "Cuprum-Regular";
+    src: url("/fonts/Cuprum-Regular.ttf") format("truetype");
+    font-style:'normal';
+}
+
+@font-face{
+    font-family: "Cuprum-Bold";
+    src: url("/fonts/Cuprum-Regular.ttf") format("truetype");
+    font-style:'bold';
+}
+
+@font-face{
+    font-family: "Roboto-Regular";
+    src: url("/fonts/Roboto-Regular.ttf") format("truetype");
+    font-style:'normal';
+} 
+
+
+
+@font-face{
+    font-family: "Rubik";
+    src: url("/fonts/Rubik-Bold.ttf") format("truetype");
+    font-style:'bold';
+} 
+
+@font-face{
+    font-family: "Signika";
+    src: url("/fonts/Signika-Regular.ttf") format("truetype");
+    font-style:'normal';
+}
+
+@font-face{
+    font-family: "Signika";
+    src: url("/fonts/Signika-Bold.ttf") format("truetype");
+    font-style:'bold';
+}  
+
+@font-face{
+    font-family: "Signika";
+    src: url("/fonts/Signika-SemiBold.ttf") format("truetype");
+    font-style:'semi_bold';
+    }*/
+
+
+    @font-face{
+        font-family: "sailec";
+        src: url("/fonts/sailec.otf") format("opentype");
+    }
 
 
 .clearfix:after {
@@ -45,7 +103,7 @@ body {
     color: #787878;
     background: #FFFFFF;
     font-size: 12px !important;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.9px;
 }
 
 header {

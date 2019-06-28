@@ -7,65 +7,9 @@
     <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
     <style>
 
-        @font-face{
-            font-family: "JosefinSans-Bold";
-            src: url("/fonts/JosefinSans-Bold.ttf") format("truetype");
-            font-style:'bold';
-        }
-
-        @font-face{
-            font-family: "Raleway-Regular";
-            src: url("/fonts/Raleway-Regular.ttf") format("truetype");
-            font-style:'normal';
-        }
-
-        @font-face{
-            font-family: "Cuprum-Regular";
-            src: url("/fonts/Cuprum-Regular.ttf") format("truetype");
-            font-style:'normal';
-        }
-
-        @font-face{
-            font-family: "Cuprum-Bold";
-            src: url("/fonts/Cuprum-Regular.ttf") format("truetype");
-            font-style:'bold';
-        }
-
-        @font-face{
-            font-family: "Roboto-Regular";
-            src: url("/fonts/Roboto-Regular.ttf") format("truetype");
-            font-style:'normal';
-        } 
-
-    
-
-        @font-face{
-            font-family: "Rubik";
-            src: url("/fonts/Rubik-Bold.ttf") format("truetype");
-            font-style:'bold';
-        } 
-
-        @font-face{
-            font-family: "Signika";
-            src: url("/fonts/Signika-Regular.ttf") format("truetype");
-            font-style:'normal';
-        }
-
-        @font-face{
-            font-family: "Signika";
-            src: url("/fonts/Signika-Bold.ttf") format("truetype");
-            font-style:'bold';
-        }  
-
-        @font-face{
-            font-family: "Signika";
-            src: url("/fonts/Signika-SemiBold.ttf") format("truetype");
-            font-style:'semi_bold';
-        }
-
     </style>
   </head>
-  <body style="background-color: white; font-size: 11px; font-family: 'courier';">
+  <body style="background-color: white; font-size: 11px; font-family: 'dejavu sans';">
     <header class="clearfix">
         <div id="logo">
             @if($user->companyUser->logo!='')
@@ -173,6 +117,12 @@
                 @foreach($rates as $rate)
                     <?php 
 
+                        $total_20 = 0;
+                        $total_40 = 0;
+                        $total_40hc = 0;
+                        $total_40nor = 0;
+                        $total_45 = 0;
+
                         $sum_total20= 0;
                         $sum_total40= 0;
                         $sum_total40hc= 0;
@@ -187,11 +137,17 @@
                     ?>
                     @foreach($rate->charge as $value)
                         <?php
-                          $sum_total20+=$value->total_20;
-                          $sum_total40+=$value->total_40;
-                          $sum_total40hc+=$value->total_40hc;
-                          $sum_total40nor+=$value->total_40nor;
-                          $sum_total45+=$value->total_45;
+                        
+                          $total_20=$value->total_20+$value->total_markup20;
+                          $sum_total20+=$total_20;
+                          $total_40=$value->total_40+$value->total_markup40;
+                          $sum_total40+=$total_40;
+                          $total_40hc=$value->total_40hc+$value->total_markup40hc;
+                          $sum_total40hc+=$total_40hc;
+                          $total_40nor=$value->total_40nor+$value->total_markup40nor;
+                          $sum_total40nor+=$total_40nor;
+                          $total_45=$value->total_45+$value->total_markup45;
+                          $sum_total45+=$total_45;
                         ?>
 
                     @endforeach
@@ -225,7 +181,7 @@
                                 {{$rate->destination_address}} 
                             @endif
                         </td>
-                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                         <td {{ @$equipmentHides['20'] }}>{{number_format((float)@$sum_total20+@$sum_inland20, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40'] }}>{{number_format((float)@$sum_total40+@$sum_inland40, 2, '.', '')}}</td>
                         <td {{ @$equipmentHides['40hc'] }}>{{number_format((float)@$sum_total40hc+@$sum_inland40hc, 2, '.', '')}}</td>
@@ -317,7 +273,7 @@
                                             {{$rate->destination_address}} 
                                         @endif
                                     </td>                           
-                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_freight_20, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_freight_40, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</td>
@@ -337,7 +293,7 @@
         @endif
 
         @if($quote->pdf_option->grouped_freight_charges==1 && $quote->pdf_option->show_type=='detailed' && $rates->count()==1)
-            @foreach($freight_charges_detailed as $origin => $value)
+            @foreach($freight_charges_grouped as $origin => $value)
                 @foreach($value as $destination => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges - {{$origin}} | {{$destination}}</p>
@@ -372,6 +328,7 @@
                                 ?>
                                 @foreach($rate as $r)
                                     @foreach($r->charge as $v)
+
                                         @if($v->type_id==3)
                                             <?php
                                                 $total_freight_20= 0;
@@ -498,7 +455,7 @@
                         @endforeach
                         <tr class="text-center color-table">
                             <td colspan="2">Total Origin Charges</td>
-                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                             <td {{ @$equipmentHides['20'] }}>{{@$sum_origin_20+@$inland_origin_20}}</td>
                             <td {{ @$equipmentHides['40'] }}>{{@$sum_origin_40+@$inland_origin_40}}</td>
                             <td {{ @$equipmentHides['40hc'] }}>{{@$sum_origin_40hc+@$inland_origin_40hc}}</td>
@@ -689,7 +646,7 @@
                         @endforeach
                         <tr class="text-center color-table">
                             <td colspan="2">Total Destination Charges</td>
-                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier->name}}</td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                             <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20}}</td>
                             <td {{ @$equipmentHides['40'] }}>{{@$sum_destination_40}}</td>
                             <td {{ @$equipmentHides['40hc'] }}>{{@$sum_destionation_40hc}}</td>
