@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\User;
+use PrvUserConfigurations;
 use App\NewContractRequest;
 use App\Mail\RequestToUserMail;
 use App\Mail\NewRequestToAdminMail;
@@ -43,12 +44,18 @@ class SendEmailRequestFclJob implements ShouldQueue
             $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
             foreach ($usersCompa as $userCmp) {
                 if($userCmp->id != $Ncontract->user_id){
-                    \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
-                                                                           $Ncontract->toArray()));
+                    $json = PrvUserConfigurations::allData($userCmp->id);
+                    if($json['notifications']['request-importation-fcl']){
+                        \Mail::to($userCmp->email)->send(new RequestToUserMail($userCmp->toArray(),
+                                                                               $Ncontract->toArray()));
+                    }
                 }
             }
-            \Mail::to($usercreador['email'])->send(new RequestToUserMail($usercreador,
-                                                                       $Ncontract->toArray()));
+            $json = PrvUserConfigurations::allData($usercreador['id']);
+            if($json['notifications']['request-importation-fcl']){
+                \Mail::to($usercreador['email'])->send(new RequestToUserMail($usercreador,
+                                                                             $Ncontract->toArray()));
+            }
             $Ncontract->sentemail = true;
         }
         $Ncontract->save();
