@@ -475,6 +475,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
   Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
+  Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
   Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
 });
 
