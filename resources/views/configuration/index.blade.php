@@ -7,6 +7,23 @@
 @section('content')
 
 <div class="m-content">
+    @if(Session::has('message.nivel'))
+
+    <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+        <div class="m-alert__icon">
+            <i class="la la-warning"></i>
+        </div>
+        <div class="m-alert__text">
+            <strong>
+                {{ session('message.title') }}
+            </strong>
+            {{ session('message.content') }}
+        </div>
+        <div class="m-alert__close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    @endif
     {!! Form::open(['route' => ['UserConfiguration.update',$user],'method' => 'put'])!!}
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
@@ -43,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                
+
                             </div>
                         </div>
 
@@ -58,15 +75,15 @@
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-fcl'])
-                                        <input type="checkbox" checked="checked" name="request-importation-fcl">
+                                        <input type="checkbox" checked="checked" name="notifications-request-importation-fcl">
                                         @else
-                                        <input type="checkbox" name="request-importation-fcl">
+                                        <input type="checkbox" name="notifications-request-importation-fcl">
                                         @endif
                                         <span></span>
                                     </label>
                                 </span>
                             </div>
-                              <div class="col-2">
+                            <div class="col-2">
                                 <label class=" col-form-label">
                                     Import Contract LCL
                                 </label>
@@ -75,15 +92,15 @@
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-lcl'])
-                                        <input type="checkbox" checked="checked" name="request-importation-lcl">
+                                        <input type="checkbox" checked="checked" name="notifications-request-importation-lcl">
                                         @else
-                                        <input type="checkbox" name="request-importation-lcl">
+                                        <input type="checkbox" name="notifications-request-importation-lcl">
                                         @endif
                                         <span></span>
                                     </label>
                                 </span>
                             </div>
-                              <div class="col-2">
+                            <div class="col-2">
                                 <label class=" col-form-label">
                                     Import GlobalCharge FCL
                                 </label>
@@ -92,16 +109,16 @@
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-gcfcl'])
-                                        <input type="checkbox" checked="checked" name="request-importation-gcfcl">
+                                        <input type="checkbox" checked="checked" name="notifications-request-importation-gcfcl">
                                         @else
-                                        <input type="checkbox" name="request-importation-gcfcl">
+                                        <input type="checkbox" name="notifications-request-importation-gcfcl">
                                         @endif
                                         <span></span>
                                     </label>
                                 </span>
                             </div>
                         </div>
-                        
+
 
                     </div>
                 </div>
@@ -110,22 +127,22 @@
     </div>
     <div class="m-portlet m-portlet--mobile">
 
-        
-            <div class="m-portlet__body">
-                
-                    <div class="form-group row">
-                            <div class="col-xl-12 order-1 order-xl-2 m--align-center">
-                                    <a  id="newmodal" class="">
-                                        <button id="new" type="submit"   class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-                                            Save &nbsp;
-                                            <i class="fa fa-save"></i>
-                                        </button>
-                                        
-                                    </a>
-                                </div>
-                        </div>
-                
-            
+
+        <div class="m-portlet__body">
+
+            <div class="form-group row">
+                <div class="col-xl-12 order-1 order-xl-2 m--align-center">
+                    <a  id="newmodal" class="">
+                        <button id="new" type="submit"   class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                            Save &nbsp;
+                            <i class="fa fa-save"></i>
+                        </button>
+
+                    </a>
+                </div>
+            </div>
+
+
         </div>
     </div>
     {!! Form::close()!!}
