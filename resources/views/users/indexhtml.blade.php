@@ -7,7 +7,7 @@
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
                         <h3 class="m-portlet__head-text">
-                            List  Users
+                            List of users
                         </h3>
                     </div>
                 </div>
@@ -132,8 +132,10 @@
                                     1
                                 @elseif($arr->type == "company")
                                     2
-                                @else
+                                @elseif($arr->type == "subuser")
                                     3
+                                @else
+                                    4
                                 @endif
                             </td>
                             <td>@if($arr->companyUser){{ $arr->companyUser->name }}@endif</td>

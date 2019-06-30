@@ -188,6 +188,36 @@
                                     <span class="commodity_span">{{$quote->commodity}}</span>
                                     {!! Form::text('commodity', $quote->commodity, ['placeholder' => 'Commodity','class' => 'form-control m-input commodity','hidden']) !!}
                                 </div>
+                                <div class="col-md-4 div_gdp" {{$quote->kind_of_cargo=='Pharma' ? '':'hidden'}}>
+                                    <br>
+                                    <label class="title-quote" ><b>GDP:&nbsp;&nbsp;</b></label>
+                                    <span class="gdp_span">{{$quote->gdp==1 ? 'Yes':'No'}}</span>
+                                    {{ Form::select('gdp',['1'=>'Yes','2'=>'No'],$quote->gdp,['class'=>'form-control gdp select2','hidden','placeholder'=>'Select an option']) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 div_risk_level" {{$quote->gdp==1 ? '':'hidden'}}>
+                                    <br>
+                                    <label class="title-quote"><b>Risk level:&nbsp;&nbsp;</b></label>
+                                    <span class="risk_level_span">{{$quote->risk_level}}</span>
+                                    {!! Form::text('risk_level', $quote->risk_level, ['placeholder' => 'Risk Level','class' => 'form-control m-input risk_level','hidden']) !!}
+                                </div>
+                                @if($quote->delivery_type==3 || $quote->delivery_type==4)
+                                    <div class="col-md-4">
+                                        <br>
+                                        <label class="title-quote">Origin address:</label>
+                                        <span class="origin_address_span">{{$quote->origin_address}}</span>
+                                        {!! Form::text('origin_address',$quote->origin_address, ['placeholder' => 'Please enter a origin address','class' =>    'form-control m-input origin_address','id'=>'origin_address','hidden']) !!}
+                                    </div>
+                                @endif
+                                @if($quote->delivery_type==2 || $quote->delivery_type==4)
+                                    <div class="col-md-4">
+                                        <br>
+                                        <label class="title-quote">Destination address:</label>
+                                        <span class="destination_address_span">{{$quote->destination_address}}</span>
+                                        {!! Form::text('destination_address',$quote->destination_address , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input destination_address','id'=>'destination_address','hidden']) !!}
+                                    </div>
+                                @endif
                             </div>
                             <div class="row">
                                 <div class="col-md-12 text-center" id="update_buttons" hidden>
@@ -296,3 +326,4 @@
             </div>
         </div>
         <br>
+        

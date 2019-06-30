@@ -252,6 +252,7 @@
                     <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
+                            @role('company|subuser|administrator')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('prices.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-sellsy"></i>
@@ -268,8 +269,8 @@
                                     </span>
                                 </a>
                             </li>
-
-                            @if( Auth::user()->type == 'company' ||  Auth::user()->type == 'admin')
+                            @endrole
+                            @role('company|administrator')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-profile"></i>
@@ -296,7 +297,7 @@
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                                    <i class="m-menu__link-icon flaticon-book"></i>
                                     <span class="m-menu__link-text">
                                         Remarks
                                     </span>
@@ -310,7 +311,8 @@
                                     </span>
                                 </a>
                             </li>
-                            @endif
+                            @endrole
+                            @role('company|subuser|administrator')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('templates.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon fa fa-envelope-square"></i>
@@ -319,6 +321,7 @@
                                     </span>
                                 </a>
                             </li>
+                            @endrole
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('users.home') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-users"></i>
@@ -327,6 +330,7 @@
                                     </span>
                                 </a>
                             </li>
+                            @role('company|subuser|administrator')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-graph"></i>
@@ -335,13 +339,14 @@
                                     </span>
                                 </a>
                             </li>
-                            @role('administrator')
+                            @endrole
+                            @role('administrator|data_entry')
 
                             <!-- Sub- Menus --------------------------------------------------------------- -->
 
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a  href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    <i class="m-menu__link-icon la la-arrow-circle-o-up"></i>
                                     &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
                                         Manage Requests
@@ -382,7 +387,7 @@
 
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a  href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    <i class="m-menu__link-icon la la-ship"></i>
                                     &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
                                         Manage G.C.
@@ -416,7 +421,7 @@
 
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a  href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon la la-truck"></i>
+                                    <i class="m-menu__link-icon la la-map-marker"></i>
                                     &nbsp;&nbsp;&nbsp;
                                     <span class="m-menu__link-text">
                                         Places And Carriers

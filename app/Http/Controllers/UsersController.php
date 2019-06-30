@@ -50,7 +50,7 @@ class UsersController extends Controller
   public function store(Request $request)
   {
 
-    if($request->type == "subuser"){
+    if($request->type == "subuser" || $request->type == "data_entry"){
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
     }
@@ -71,6 +71,9 @@ class UsersController extends Controller
     if($request->type == "admin"){
       $user->assignRole('administrator');
     }
+    if($request->type == "data_entry"){
+      $user->assignRole('data_entry');
+    }
     $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
     $user->notify(new SlackNotification($message));
 
@@ -79,7 +82,7 @@ class UsersController extends Controller
       'token' => str_random(40)
     ]);
 
-    \Mail::to($user->email)->send(new VerifyMail($user));
+//    \Mail::to($user->email)->send(new VerifyMail($user));
 
     // INTERCOM CLIENTE
 
@@ -223,7 +226,7 @@ class UsersController extends Controller
       $data = User::all();
     }
 
-    if(Auth::user()->type == 'company' || Auth::user()->type == 'subuser' ){
+    if(Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' ){
       $data =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->get();
     }
 
