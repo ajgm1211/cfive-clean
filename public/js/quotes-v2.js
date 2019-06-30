@@ -1260,6 +1260,14 @@ $(document).on('click', '#edit-quote', function () {
     $(".risk_level").removeAttr('hidden');
     $(".risk_level_span").attr('hidden','true');
   }
+  if($(".delivery_type").val()==3 || $(".delivery_type").val()==4){
+    $(".origin_address_span").attr('hidden','true');
+    $(".origin_address").removeAttr('hidden');
+  }
+  if($(".delivery_type").val()==2 || $(".delivery_type").val()==4){
+    $(".destination_address_span").attr('hidden','true');
+    $(".destination_address").removeAttr('hidden');
+  }
   $(".quote-type").select2();
   $(".status").select2();
   $(".kind_of_cargo").select2();
@@ -1312,6 +1320,14 @@ $(document).on('click', '#cancel', function () {
     $(".risk_level").attr('hidden','true');
     $(".risk_level_span").removeAttr('hidden');
   }
+  if($(".delivery_type").val()==3 || $(".delivery_type").val()==4){
+    $(".origin_address").attr('hidden','true');
+    $(".origin_address_span").removeAttr('hidden');
+  }
+  if($(".delivery_type").val()==2 || $(".delivery_type").val()==4){
+    $(".destination_address").attr('hidden','true');
+    $(".destination_address_span").removeAttr('hidden');
+  }
   $(".quote-type ").select2('destroy');
   $(".kind_of_cargo").select2('destroy');
   $(".status").select2('destroy');
@@ -1341,6 +1357,8 @@ $(document).on('click', '#update', function () {
   var price_id=$(".price_id").val();
   var commodity=$(".commodity").val();
   var kind_of_cargo=$(".kind_of_cargo").val();
+  var origin_address=$(".origin_address").val();
+  var destination_address=$(".destination_address").val();
   var gdp=0;
   var risk_level='';
   if(kind_of_cargo=='Pharma'){
@@ -1368,6 +1386,8 @@ $(document).on('click', '#update', function () {
       'kind_of_cargo': kind_of_cargo,
       'gdp': gdp,
       'risk_level': risk_level,
+      'origin_address': origin_address,
+      'destination_address': destination_address,
     },
     success: function(data) {
       if(data.message=='Ok'){
@@ -1435,7 +1455,9 @@ $(document).on('click', '#update', function () {
         $(".risk_level").val(data.quote['risk_level']);
         $(".risk_level_span").html(data.quote['risk_level']);
         $(".kind_of_cargo").val(data.quote['kind_of_cargo']);
-        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);        
+        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);
+        $(".origin_address_span").html(data.quote['origin_address']);
+        $(".destination_address_span").html(data.quote['destination_address']);     
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
         var length = $.parseJSON(data.quote['equipment']).length;
@@ -1496,6 +1518,14 @@ $(document).on('click', '#update', function () {
           $(".risk_level").attr('hidden','true');
           $(".risk_level_span").removeAttr('hidden');
         }
+        //if($(".origin_address").val()!=''){
+          $(".origin_address").attr('hidden','true');
+          $(".origin_address_span").removeAttr('hidden');
+        //}
+        //if($(".destination_address").val()!=''){
+          $(".destination_address").attr('hidden','true');
+          $(".destination_address_span").removeAttr('hidden');
+        //}
         $(".quote-type").select2('destroy');
         $(".status").select2('destroy');
         $(".company_id").select2('destroy');

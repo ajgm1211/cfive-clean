@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-md-4" class="" > 
                         <label>Schedule type</label>
-                        {{ Form::select('schedule_type',['Direct'=>'Direct','Transfer'=>'Transfer'],null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit',$quote->type!='AIR' ? 'required':'']) }}
+                        {{ Form::select('schedule_type',['Direct'=>'Direct','Transfer'=>'Transfer'],null,['placeholder' => 'Select at option', 'class'=>'form-control m-select2-edit']) }}
                     </div>
                     <div class="col-md-4">
                         <label>Transit time</label>

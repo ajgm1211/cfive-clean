@@ -669,6 +669,8 @@ class QuoteV2Controller extends Controller
     $quote->status=$request->status;
     $quote->gdp=$request->gdp;
     $quote->risk_level=$request->risk_level;
+    $quote->origin_address=$request->origin_address;
+    $quote->destination_address=$request->destination_address;
     $quote->update();
 
     if($request->contact_id!=''){
