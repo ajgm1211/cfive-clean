@@ -114,6 +114,38 @@
             "time": "2018-01-09T18:23:57+00:00"
         },
         {
+            "name": "api2pdf/api2pdf.php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Api2Pdf/api2pdf.php.git",
+                "reference": "0c7f8730395a805ea19c605b31ec0b085d500ba1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Api2Pdf/api2pdf.php/zipball/0c7f8730395a805ea19c605b31ec0b085d500ba1",
+                "reference": "0c7f8730395a805ea19c605b31ec0b085d500ba1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Api2Pdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A client library for API2PDF service to convert HTML to PDF",
+            "homepage": "https://www.api2pdf.com",
+            "time": "2019-02-24T17:47:25+00:00"
+        },
+        {
             "name": "aws/aws-sdk-php",
             "version": "3.100.6",
             "source": {
@@ -8894,6 +8926,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "api2pdf/api2pdf.php": 20,
         "orangehill/iseed": 20
     },
     "prefer-stable": true,

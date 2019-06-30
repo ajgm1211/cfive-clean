@@ -1,34 +1,24 @@
 {{ Form::model($rate, array('route' => array('quotes-v2.rates.update', $rate->id), 'method' => 'POST')) }}
 <div class="row">
     <div class="col-md-4" >
-        @if($rate->origin_address=='')
-          <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-              <label>Origin port</label>
-              {{ Form::select('origin_port_id',$harbors,$rate->origin_port_id,['class'=>'m-select2-edit form-control origin_port_id',$quote->type!='AIR' ? 'required':'']) }}
-          </div>
-          <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-              <label>Origin airport</label>
-              {{ Form::select('origin_airport_id',[@$rate->origin_airport_id=>@$rate->origin_airport->display_name],@$rate->origin_airport_id,['class'=>'form-control','id'=>'origin_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
-          </div>
-        @else
-            <label>Origin address</label>
-            {!! Form::text('origin_address',@$rate->origin_address, ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-        @endif
+      <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
+        <label>Origin port</label>
+        {{ Form::select('origin_port_id',$harbors,$rate->origin_port_id,['class'=>'m-select2-edit form-control origin_port_id',$quote->type!='AIR' ? 'required':'']) }}
+      </div>
+      <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
+        <label>Origin airport</label>
+        {{ Form::select('origin_airport_id',[@$rate->origin_airport_id=>@$rate->origin_airport->display_name],@$rate->origin_airport_id,['class'=>'form-control','id'=>'origin_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
+      </div>
     </div>
     <div class="col-md-4">
-      @if($rate->destination_address=='')
-        <div  id="destination_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-            <label>Destination port</label>
-            {{ Form::select('destination_port_id',$harbors,$rate->destination_port_id,['class'=>'m-select2-edit form-control destination_port_id',$quote->type!='AIR' ? 'required':'']) }}
-        </div>
-        <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-            <label>Destination airport</label>
-            {{ Form::select('destination_airport_id',[@$rate->destination_airport_id=>@$rate->destination_airport->display_name],@$rate->destination_airport_id,['class'=>'form-control','id'=>'destination_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
-        </div>
-      @else
-        <label>Destination address</label>
-        {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
-      @endif
+      <div  id="destination_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
+        <label>Destination port</label>
+        {{ Form::select('destination_port_id',$harbors,$rate->destination_port_id,['class'=>'m-select2-edit form-control destination_port_id',$quote->type!='AIR' ? 'required':'']) }}
+      </div>
+      <div id="destination_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
+        <label>Destination airport</label>
+        {{ Form::select('destination_airport_id',[@$rate->destination_airport_id=>@$rate->destination_airport->display_name],@$rate->destination_airport_id,['class'=>'form-control','id'=>'destination_airport_edit',$quote->type=='AIR' ? 'required':'']) }}
+      </div>
     </div>
     <div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
         <label>Carrier</label>

@@ -205,7 +205,29 @@
     <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
     <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
     <script type="text/javascript">
+
+        /*** GOOGLE MAPS API ***/
+
+      var autocomplete;
+      function initAutocomplete() {
+        var geocoder = new google.maps.Geocoder();
+        var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+        var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+        //autocomplete.addListener('place_changed', fillInAddress);
+      }
+
+      function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == 'OK') {
+            alert(results[0].geometry.location);
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
 
       var editor_config = {
         path_absolute : "/",
