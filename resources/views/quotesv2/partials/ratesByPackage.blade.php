@@ -25,12 +25,12 @@
                           @endif
                         @endif
                       </li>
-                      <li class="size-12px"><b>POL:</b> &nbsp;@if($quote->type=='LCL') {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_address != '' ? $rate->origin_address:$rate->origin_airport->display_name}} @endif &nbsp;
+                      <li class="size-12px"><b>POL:</b> &nbsp;@if($quote->type=='LCL') {{$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_airport->display_name}} @endif &nbsp;
                         @if($quote->type!='AIR')
                         <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/>
                         @endif
                       </li>
-                      <li class="size-12px"><b>POD:</b> &nbsp;@if($quote->type=='LCL') {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_address != '' ? $rate->destination_address:$rate->destination_airport->display_name}} @endif &nbsp;
+                      <li class="size-12px"><b>POD:</b> &nbsp;@if($quote->type=='LCL') {{$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_airport->display_name}} @endif &nbsp;
                         @if($quote->type!='AIR')
                         <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/>
                         @endif
