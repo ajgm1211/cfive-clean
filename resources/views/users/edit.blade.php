@@ -36,7 +36,7 @@ $valorSelect = '';
 </div>
 
 <div class="m-form__actions m-form__actions">
-    {!! Form::submit('Save', ['class'=> 'btn btn-success']) !!}
+    {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
 </div>
 <br>
 
