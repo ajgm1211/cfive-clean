@@ -305,6 +305,27 @@
   .btn-remarks {
     width: 95px;
   }
+  .full-width {
+    width: 100% !important;
+  }
+  .create-manual {
+    background-color: transparent !important;
+    color: #36a3f7 !important;
+    border-width: 2px;
+    border-color: #36a3f7 !important;
+  }
+  .create-manual:hover {
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+  }
+  .select-class::before {
+    content:'Select ->';
+    font-size: 13px;
+  }
+  .selected-class:before {
+    content: 'Selected';
+    font-size: 13px;
+  }
   /* estilos */
 </style>
 @endsection
@@ -662,8 +683,8 @@
                     @endif
                   </div><!-- aqui -->
                   <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-                    </button>
+                    <!--  <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+</button> -->
                   </div>
                 </div>
               </div>
@@ -673,16 +694,17 @@
               <div class="col-lg-12">   
                 <center>
                   <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                  <button type="button" class="btn m-btn--pill  btn-search__quotes btn-info quote_man create-manual">Create Manual</span></button>
                 </center>
-              </div>
             </div>
           </div>
-        </div>      
-      </div>
+        </div>
+      </div>      
     </div>
   </div>
+</div>
 
-  {!! Form::close() !!}
+{!! Form::close() !!}
 
 
 </div>
@@ -771,7 +793,7 @@
                 </div>
                 <div class="col-lg-10 b-left info-bottom-border">
                   <div class="row">
-                    <div class="col-lg-8 no-padding padding-min-col d-flex justify-content-center">
+                    <div class="col-lg-8 no-padding padding-min-col d-flex justify-content-start">
                       <div class="row">
                         <div class="col-lg-4">
                           <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
@@ -798,7 +820,7 @@
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
-                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
+                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -873,7 +895,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
 
                   @foreach($arr->localOrig as $localO)   
                   @foreach($localO as $localorig)
@@ -900,7 +922,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['currency']}}</span></div>
 
-                  </div><br>
+                  </div>
                   @endforeach
                   @endforeach
                   @endforeach
@@ -936,7 +958,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   @foreach($arr->rates as $rates)
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{ $rates['type'] }}  </div>
@@ -960,7 +982,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode"> {{ $rates['currency'] }}</span></div>
 
-                  </div><br>
+                  </div>
                   @endforeach
 
                   @if(!$arr->localFreight->isEmpty())
@@ -988,7 +1010,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['currency']}}</span></div>
-                  </div><br>
+                  </div>
                   @endforeach
                   @endforeach
                   @endforeach
@@ -1025,7 +1047,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   @foreach($arr->localDest as $local)   
                   @foreach($local as $localA)
                   @foreach($localA as $localdestiny)
@@ -1051,11 +1073,11 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['currency']}}</span></div>
 
-                  </div><br>
+                  </div>
                   @endforeach
                   @endforeach
                   @endforeach
-                  <br>
+                  
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges: </span> {{ $arr->totalDestiny  }} {{ $arr->quoteCurrency }}</div>
@@ -1138,7 +1160,28 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+  $('.selected').on('click', function(){
+    $(this).toggleClass('selected-class'); 
+  });
+  
+   $(document).ready(function() {
+    var divRow = document.getElementsByClassName('data-rates');
+    var numDivRow = divRow.length;
+    var count = 0;
+    //console.log(numDivRow);
 
+    for(var i = 1; i < numDivRow; i++){
+      if(i%2 == 1){
+        var clase = divRow[i];
+        //console.log(clase);
+        $(clase).css({
+          'background-color' : '#fafafa'
+        });      
+        //console.log(clase);
+      }
+    }
+
+  });
 
 
   /*** GOOGLE MAPS API ***/
