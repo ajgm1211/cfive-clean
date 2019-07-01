@@ -757,9 +757,9 @@
                 <div class="col-lg-10">
                   <div class="row">
                     <div class="col-lg-8">
-                      <div class="row">
-                        <div class="col-lg-5" style="padding-left: 2px;"><span class="portcss">Origin</span></div>
-                        <div class="col-lg-5" ><span class="portcss">Destination</span></div>
+                      <div class="row col-lg-12">
+                        <div class="col-lg-8" style="padding-left: 2px;"><span class="portcss">Origin</span></div>
+                        <div class="col-lg-4" ><span class="portcss">Destination</span></div>
                       </div>
                     </div>
                     <div class="col-lg-3 padding-right-table" style="padding-left: 0;">
@@ -794,7 +794,7 @@
                 <div class="col-lg-10 b-left info-bottom-border">
                   <div class="row">
                     <div class="col-lg-8 no-padding padding-min-col d-flex justify-content-start">
-                      <div class="row">
+                      <div class="row col-lg-12">
                         <div class="col-lg-4">
                           <span class="portcss"> {{$arr->port_origin->name  }}</span><br>
                           <span class="portalphacode"> {{$arr->port_origin->code  }}</span>
@@ -815,7 +815,7 @@
 
                     <div class="col-lg-3" style="padding-right: 35px;">
                       <div class="table-r__quotes">
-                        <div class="wth " ><span class="darkblue validate">{{$arr->port_destiny->code  }}</span><span class="currency"> {{$arr->port_destiny->code  }}</span></div>
+                        <div class="wth " ><span class="darkblue validate">{{$arr->totalQuote  }}  {{ $arr->quoteCurrency }}</span> </div>
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
@@ -853,11 +853,19 @@
                         <div class="col-lg-1 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px; white-space:nowrap">  TT:  </span>  {{ $arr->transit_time   }}
                         </div>
-                        <div class="col-lg-2 d-flex align-items-center">
+                        <div class="col-lg-1 d-flex align-items-center">
                           <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
                         </div>
                         @endif
-                        <div class="col-lg-2 no-padding d-flex justify-content-end">
+                        <div class="col-lg-3 no-padding d-flex justify-content-end">
+                         @if($arr->excelRequest !="")
+                          <div class="btn-detail__quotes btn-d">
+                            <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workblue">Donw Excel</span>  
+                              
+                              <i  class="la la-angle-down blue"></i></a>
+                          </div>
+                          @endif
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
                               <span class="workblue">Detailed Cost</span>  
@@ -927,7 +935,7 @@
                   @endforeach
                   @endforeach
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges: </span> {{ $arr->totalOrigin  }} {{ $arr->typeCurrency }}</div>
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges: </span> {{ $arr->totalOrigin  }} {{ $arr->quoteCurrency }}</div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
                         <div class="wth" ><span class="portalphacode"> </span></div>
@@ -1077,7 +1085,7 @@
                   @endforeach
                   @endforeach
                   @endforeach
-                  
+
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges: </span> {{ $arr->totalDestiny  }} {{ $arr->quoteCurrency }}</div>
@@ -1163,8 +1171,8 @@
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class'); 
   });
-  
-   $(document).ready(function() {
+
+  $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
     var count = 0;
