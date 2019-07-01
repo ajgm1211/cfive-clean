@@ -1,6 +1,18 @@
 <?php $__env->startSection('css'); ?>
 ##parent-placeholder-2f84417a9e73cead4d5c99e05daff2a534b30132##
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<style>
+  .btn-save__modal {
+    padding: 15px 35px !important;
+    border-radius: 50px;
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+    font-size: 18px;
+  }
+  .icon__modal {
+    margin-right: 10px;
+  }
+</style>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('title', 'Contracts'); ?>
