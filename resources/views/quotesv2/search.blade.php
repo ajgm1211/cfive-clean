@@ -326,6 +326,23 @@
     background-color: #36a3f7 !important;
     border-color: #36a3f7 !important;
   }
+  .workgreen {
+    color: #6ee99e !important;
+    font-size: 12px;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    color: #6ee99e !important;
+  }
   /* estilos */
 </style>
 @endsection
@@ -825,7 +842,7 @@
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
-                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label><!--aqui-->
+                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -836,7 +853,7 @@
 </div>
 </div>-->
                         @if(isset($arr->contract->remarks))
-                        <div class="col-lg-2">
+                        <div class="col-lg-1">
                           <div class="btn-detail__quotes btn-remarks">
                             <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" >
                               <span class="workblue">Remarks</span>  
@@ -846,7 +863,7 @@
                         @endif
 
                         @if(isset($arr->sheduleType))
-                        <div class="col-lg-3 d-flex align-items-center">
+                        <div class="col-lg-3 d-flex align-items-center" style="padding-left: 40px;">
                           <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                         </div>
                         @else
@@ -867,13 +884,14 @@
                           <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
                         </div>
                         @endif
-                        <div class="col-lg-2 no-padding d-flex justify-content-end">
+                        <div class="col-lg-3 no-padding d-flex justify-content-end">
                           @if($arr->excelRequest !="")
-                          <div class="btn-detail__quotes btn-d">
-                            <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Donw Excel</span>  
+                          <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
+                            <a  id='excel_l{{$loop->iteration}}' href="/Requests/RequestImportation/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workgreen">Download Excel</span>  <!--  aqui -->
 
-                              <i  class="la la-angle-down blue"></i></a>
+                              <i class="la la-file-excel-o"></i>
+                            </a>
                           </div>
                           @endif
                           <div class="btn-detail__quotes btn-d">
