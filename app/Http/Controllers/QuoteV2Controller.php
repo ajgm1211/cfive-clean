@@ -66,6 +66,7 @@ use App\LocalCharPortLcl;
 use App\GlobalChargeLcl;
 use App\GlobalCharCarrierLcl;
 use App\GlobalCharPortLcl;
+use App\NewContractRequestLcl;
 
 class QuoteV2Controller extends Controller
 {
@@ -7166,7 +7167,8 @@ class QuoteV2Controller extends Controller
                 $subtotal_local =  $totalW * $local->ammount;
                 $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                 $mont = $local->ammount;
-                $unidades = $totalW;
+                $unidades = $this->unidadesTON($totalW);
+                
                 if($subtotal_local < $local->minimum){
                   $subtotal_local = $local->minimum;
                   $totalAmmount =    $subtotal_local / $rateMount ;
@@ -7201,7 +7203,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_local =  $totalW * $local->ammount;
                 $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                 $mont = $local->ammount;
-                $unidades = $totalW;
+                $unidades = $this->unidadesTON($totalW);
                 if($subtotal_local < $local->minimum){
                   $subtotal_local = $local->minimum;
                   $totalAmmount =    $subtotal_local / $rateMount ;
@@ -7235,7 +7237,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_local =  $totalW * $local->ammount;
                 $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                 $mont = $local->ammount;
-                $unidades = $totalW;
+                 $unidades = $this->unidadesTON($totalW);
                 if($subtotal_local < $local->minimum){
                   $subtotal_local = $local->minimum;
                   $totalAmmount =    $subtotal_local / $rateMount ;
@@ -7655,7 +7657,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                 $mont = $global->ammount;
-                $unidades = $totalW;
+                $unidades = $this->unidadesTON($totalW);
                 if($subtotal_global < $global->minimum){
                   $subtotal_global = $global->minimum;
                   $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -7690,7 +7692,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                 $mont = $global->ammount;
-                $unidades = $totalW;
+                 $unidades = $this->unidadesTON($totalW);
                 if($subtotal_global < $global->minimum){
                   $subtotal_global = $global->minimum;
                   $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -7721,7 +7723,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                 $mont = $global->ammount;
-                $unidades = $totalW;
+                $unidades = $this->unidadesTON($totalW);
                 if($subtotal_global < $global->minimum){
                   $subtotal_global = $global->minimum;
                   $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -8031,12 +8033,22 @@ class QuoteV2Controller extends Controller
       $mode = "";
       $remarks = $data->contract->comments."<br>";
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+
+      // EXCEL REQUEST 
       
- 
-
+      $excelRequest = NewContractRequestLcl::where('contract_id',$data->id)->first();
+      if(!empty($excelRequest)){
+        $excelRequestId = $excelRequest->id;
+      }else{
+        $excelRequestId = "";
+      }
+      
+      
+      
+      
+      
       $data->setAttribute('remarks',$remarks);
-
-
+      $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('localOrig',$collectionOrig);
       $data->setAttribute('localDest',$collectionDest);
       $data->setAttribute('localFreight',$collectionFreight);
@@ -8073,7 +8085,7 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-      
+
     return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete'));
 
   }
@@ -8454,6 +8466,16 @@ class QuoteV2Controller extends Controller
     //return redirect()->route('quotes.index');
 
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
+  }
+
+  public function unidadesTON($unidades){
+
+    if($unidades < 1 ){
+      return 1;
+    }else{
+      return $unidades;
+    }
+
   }
 
 }
