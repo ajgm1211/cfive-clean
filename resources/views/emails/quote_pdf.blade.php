@@ -201,18 +201,8 @@ font-family: sans-serif !important;
             </div>
             <!-- Preview Text Spacing Hack : END -->
 
-            <!-- Email Header : BEGIN
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
-                <tr>
-                    <td style="padding: 20px 0; text-align: center;">
-                        <img src="{{ $message->embed(public_path().'/logo.png')}}" alt="alt_text" border="0" style="height: auto; background: #001728; font-family: sans-serif; font-size: 15px; line-height: 140%; max-width: 200px; margin-top: 50px">
-                    </td>
-                </tr>
-            </table>
-            <!-- Email Header : END -->
-
             <!-- Email Body : BEGIN -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="" style="margin: auto;" class="email-container">
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         {!!$text!!}

@@ -9,7 +9,7 @@
 
     </style>
   </head>
-  <body style="background-color: white; font-size: 11px; font-family: 'helvetica';">
+  <body style="background-color: white; font-size: 11px;">
     <header class="clearfix">
         <div id="logo">
             @if($user->companyUser->logo!='')
