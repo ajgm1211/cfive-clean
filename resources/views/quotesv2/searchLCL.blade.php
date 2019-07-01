@@ -874,48 +874,45 @@
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div><br>
-                  
+
                   @foreach($arr->localOrig as $localO)   
-                    @foreach($localO as $localorig)
-                     @foreach($localorig as $localorigin)
-                       <div class="row data-rates">
-                        <div class="col-lg-2 colorphacode">{{ $localorigin['surcharge_name']}}</div>
-                        <div class="col-lg-2 colorphacode">{{ $localorigin['calculation_name']}}</div>
-                        <div class="col-lg-7 colorphacode">
-                          <div class="d-flex justify-content-between">
-                            <div class="wth" >
-                              <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
-                            </div>
-                            <div class="wth" >
-                              <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
-                            </div>
-
-                            <div class="wth" >  
-                              <span class="bg-rates">{{ $localorigin['markup']}} </span>
-                            </div>
-                            <div class="wth" >     
-                              <span class="bg-rates"> {{ $localorigin['montoMarkup']}} </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['currency']}}</span></div>
-
-                      </div><br>
-                    @endforeach
-                   @endforeach
-                  @endforeach
-                  <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
-                    <div class="col-lg-7">
+                  @foreach($localO as $localorig)
+                  @foreach($localorig as $localorigin)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localorigin['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localorigin['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ @$equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20O  }} </span></div>
-                        <div class="wth" {{ @$equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40O  }}</span></div>
-                        <div class="wth" {{ @$equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcO  }}</span></div>
-                        <div class="wth" {{ @$equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norO  }}</span></div>
-                        <div class="wth" {{ @$equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45O  }}</span></div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
+                        </div>
+
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localorigin['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localorigin['montoMarkup']}} </span>
+                        </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['currency']}}</span></div>
+
+                  </div><br>
+                  @endforeach
+                  @endforeach
+                  @endforeach
+                  <div class="row bg-light">
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges: </span> {{ $arr->totalOrigin  }} {{ $arr->typeCurrency }}</div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode"> </span></div>
+
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
                 </div>
               </div>
@@ -967,44 +964,40 @@
                   @endforeach
 
                   @if(!$arr->localFreight->isEmpty())
-                    @foreach($arr->localFreight as $localF)   
-                      @foreach($localF as $localfre)
-                       @foreach($localfre as $localfreight)
-                         <div class="row data-rates">
-                          <div class="col-lg-2 colorphacode">{{ $localfreight['surcharge_name']}}</div>
-                          <div class="col-lg-2 colorphacode">{{ $localfreight['calculation_name']}}</div>
-                          <div class="col-lg-7 colorphacode">
-                            <div class="d-flex justify-content-between">
-                              <div class="wth" >
-                                <span class="bg-rates"> {{ $localfreight['cantidad']}} </span> 
-                              </div>
-                              <div class="wth" >
-                                <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
-                              </div>
+                  @foreach($arr->localFreight as $localF)   
+                  @foreach($localF as $localfre)
+                  @foreach($localfre as $localfreight)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localfreight['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localfreight['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localfreight['cantidad']}} </span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
+                        </div>
 
-                              <div class="wth" >  
-                                <span class="bg-rates">{{ $localfreight['markup']}} </span>
-                              </div>
-                              <div class="wth" >     
-                                <span class="bg-rates"> {{ $localfreight['montoMarkup']}} </span>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['currency']}}</span></div>
-                        </div><br>
-                      @endforeach
-                     @endforeach
-                    @endforeach
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localfreight['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localfreight['montoMarkup']}} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['currency']}}</span></div>
+                  </div><br>
+                  @endforeach
+                  @endforeach
+                  @endforeach
                   @endif
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges :  </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ @@$equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
-                        <div class="wth" {{ @@$equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcF  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norF  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45F  }}</span></div>
+                        <div class="wth" ><span class="portalphacode"></span></div>
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
@@ -1034,48 +1027,45 @@
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div><br>
                   @foreach($arr->localDest as $local)   
-                    @foreach($local as $localA)
-                     @foreach($localA as $localdestiny)
-                       <div class="row data-rates">
-                        <div class="col-lg-2 colorphacode">{{ $localdestiny['surcharge_name']}}</div>
-                        <div class="col-lg-2 colorphacode">{{ $localdestiny['calculation_name']}}</div>
-                        <div class="col-lg-7 colorphacode">
-                          <div class="d-flex justify-content-between">
-                            <div class="wth" >
-                              <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
-                            </div>
-                            <div class="wth" >
-                              <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
-                            </div>
-
-                            <div class="wth" >  
-                              <span class="bg-rates">{{ $localdestiny['markup']}} </span>
-                            </div>
-                            <div class="wth" >     
-                              <span class="bg-rates"> {{ $localdestiny['montoMarkup']}} </span>
-                            </div>
-                          </div>
+                  @foreach($local as $localA)
+                  @foreach($localA as $localdestiny)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localdestiny['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localdestiny['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
                         </div>
-                        <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['currency']}}</span></div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
+                        </div>
 
-                      </div><br>
-                    @endforeach
-                   @endforeach
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localdestiny['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localdestiny['montoMarkup']}} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['currency']}}</span></div>
+
+                  </div><br>
+                  @endforeach
+                  @endforeach
                   @endforeach
                   <br>
 
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges: </span> {{ $arr->totalDestiny  }} {{ $arr->quoteCurrency }}</div>
                     <div class="col-lg-7">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ @@$equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
-                        <div class="wth" {{ @@$equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['40hc'] }}><span class="portalphacode">{{ $arr->tot40hcD  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['40nor'] }}><span class="portalphacode">{{ $arr->tot40norD  }}</span></div>
-                        <div class="wth" {{ @@$equipmentHides['45'] }}><span class="portalphacode">{{ $arr->tot45D  }}</span></div>
+                        <div class="wth" ><span class="portalphacode"> </span></div>
+
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
                   </div>
                 </div>
               </div>

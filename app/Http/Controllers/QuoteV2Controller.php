@@ -7944,8 +7944,8 @@ class QuoteV2Controller extends Controller
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalFreight += $totalA[0];  
-            $arre['freight'] = $test;
-            $collectionFreight->push($arre);
+            //$arre['freight'] = $test;
+            $collectionFreight->push($test);
             return $test;
           }
         });
@@ -7962,8 +7962,8 @@ class QuoteV2Controller extends Controller
             $totalA = explode(' ',$test['totalAmmount']);
             $totalOrigin += $totalA[0];  
 
-            $arre['origin'] = $test;
-            $collectionGloOrig->push($arre);
+            //$arre['origin'] = $test;
+            $collectionGloOrig->push($test);
             return $test;
           }
         });
@@ -7977,8 +7977,8 @@ class QuoteV2Controller extends Controller
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalDestiny += $totalA[0];  
-            $arre['destiny'] = $test;
-            $collectionGloDest->push($arre);
+            // $arre['destiny'] = $test;
+            $collectionGloDest->push($test);
             return $test;
           }
         });
@@ -7993,8 +7993,8 @@ class QuoteV2Controller extends Controller
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalFreight += $totalA[0];  
-            $arre['freight'] = $test;
-            $collectionGloFreight->push($arre);
+            //$arre['freight'] = $test;
+            $collectionGloFreight->push($test);
             return $test;
           }
         });
@@ -8038,11 +8038,14 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('localOrig',$collectionOrig);
       $data->setAttribute('localDest',$collectionDest);
       $data->setAttribute('localFreight',$collectionFreight);
-      $data->setAttribute('totalFreight',$totalFreight);
+
+
       $data->setAttribute('freightCharges',$FreightCharges);
+      $data->setAttribute('totalFreight',$totalFreight);
       $data->setAttribute('totalrates',$totalRates);
       $data->setAttribute('totalOrigin',$totalOrigin);
       $data->setAttribute('totalDestiny',$totalDestiny);
+
       $data->setAttribute('totalQuote',$totalQuote);
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
