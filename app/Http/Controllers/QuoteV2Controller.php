@@ -2082,6 +2082,317 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
+    /**
+   * Enviar cotizaciones vía email
+   * @param Request $request 
+   * @return Json
+   */
+  public function send_pdf_quote_lcl_air(Request $request)
+  {
+    $quote = QuoteV2::findOrFail($request->id);
+    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 1);
+    })->where('quote_id',$quote->id)->get();
+    $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 3);
+    })->where('quote_id',$quote->id)->get();
+    $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 2);
+    })->where('quote_id',$quote->id)->get();
+    $contact_email = Contact::find($quote->contact_id);
+    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
+    if($quote->equipment!=''){
+      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    }
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $type=$company_user->type_pdf;
+      $ammounts_type=$company_user->pdf_ammounts;
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+    foreach ($rates_lcl_air as $item) {
+
+      if($quote->pdf_option->grouped_total_currency==1){
+        $typeCurrency = $quote->pdf_option->total_in_currency;
+      }else{
+        $typeCurrency =  $currency_cfg->alphacode;
+      }
+
+      $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+
+      foreach ($item->charge_lcl_air as $value) {
+
+        $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+        if($value->type_id==3){
+          $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');          
+        }elseif($value->type_id==1){
+          $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+        }else{
+          $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+        }
+      }
+      foreach ($item->inland as $inland) {
+        $currency_charge = Currency::find($inland->currency_id);
+        $inland->currency_usd = $currency_charge->rates;
+        $inland->currency_eur = $currency_charge->rates_eur;
+      }
+    }
+
+    $origin_charges_grouped = collect($origin_charges);
+
+    $origin_charges_grouped = $origin_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },      
+      function ($item) {
+        return $item['destination_port']['name'];
+      },
+    ], $preserveKeys = true);
+    foreach($origin_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==1){
+                if($quote->pdf_option->grouped_origin_charges==1){
+                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /*** DESTINATION CHARGES ***/
+
+    $destination_charges_grouped = collect($destination_charges);
+
+    $destination_charges_grouped = $destination_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },
+      function ($item) {
+        return $item['origin_port']['name'];
+      },
+
+    ], $preserveKeys = true);
+    foreach($destination_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==2){
+
+                if($quote->pdf_option->grouped_destination_charges==1){
+                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+              }
+            } 
+          }
+        }
+      }
+    }    
+
+
+    /** FREIGHT CHARGES **/
+
+    $freight_charges_detailed = collect($freight_charges);
+
+    $freight_charges_detailed = $freight_charges_detailed->groupBy([   
+      function ($item) {
+        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },      
+    ], $preserveKeys = true);
+
+    foreach($freight_charges_detailed as $origin=>$item){
+      foreach($item as $destination=>$items){
+        foreach($items as $carrier=>$itemsDetail){
+          foreach ($itemsDetail as $value) {     
+            foreach ($value->charge as $amounts) {
+              if($amounts->type_id==3){
+                $sum_freight_20=0;
+                $sum_freight_40=0;
+                $sum_freight_40hc=0;
+                $sum_freight_40nor=0;
+                $sum_freight_45=0;
+                $total_freight_40=0;
+                $total_freight_20=0;
+                $total_freight_40hc=0;
+                $total_freight_40nor=0;
+                $total_freight_45=0;
+                //dd($quote->pdf_option->destination_charges_currency);
+                if($quote->pdf_option->grouped_freight_charges==1){
+                  $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
+                $array_amounts = json_decode($amounts->amount,true);
+                $array_markups = json_decode($amounts->markups,true);
+                if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
+                  $sum_freight_20=$array_amounts['c20']+$array_markups['m20'];
+                  $total_freight_20=$sum_freight_20/$currency_rate;
+                }
+                if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
+                  $sum_freight_40=$array_amounts['c40']+$array_markups['m40'];
+                  $total_freight_40=$sum_freight_40/$currency_rate;
+                }
+                if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
+                  $sum_freight_40hc=$array_amounts['c40hc']+$array_markups['m40hc'];
+                  $total_freight_40hc=$sum_freight_40hc/$currency_rate;
+                }
+                if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
+                  $sum_freight_40nor=$array_amounts['c40nor']+$array_markups['m40nor'];
+                  $total_freight_40nor=$sum_freight_40nor/$currency_rate;
+                }
+                if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
+                  $sum_freight_45=$array_amounts['c45']+$array_markups['m45'];
+                  $total_freight_45=$sum_freight_45/$currency_rate;
+                }            
+
+                $amounts->total_20 = number_format($total_freight_20, 2, '.', '');
+                $amounts->total_40 = number_format($total_freight_40, 2, '.', '');
+                $amounts->total_40hc = number_format($total_freight_40hc, 2, '.', '');
+                $amounts->total_40nor = number_format($total_freight_40nor, 2, '.', '');
+                $amounts->total_45 = number_format($total_freight_45, 2, '.', '');
+              }
+            }
+          }
+        } 
+      }
+    }
+
+    $freight_charges_grouped = collect($freight_charges);
+
+    $freight_charges_grouped = $freight_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
+      },
+      function ($item) {
+        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+      },
+      function ($item) {
+        return $item['carrier']['name'];
+      },
+
+    ], $preserveKeys = true);
+
+    foreach($freight_charges_grouped as $freight){
+      foreach($freight as $detail){
+        foreach($detail as $item){
+          foreach($item as $rate){
+            foreach ($rate->charge_lcl_air as $value) {
+              if($value->type_id==3){
+
+                $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                
+                //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
+                //$value->markup=number_format(($value->markup/$currency_rate), 2, '.', '');
+                if($value->units>0){
+                  $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                }
+                $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                
+              }
+            }
+          }
+        }
+      }
+    }
+
+    $contact_email = Contact::find($quote->contact_id);
+    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $type=$company_user->type_pdf;
+      $ammounts_type=$company_user->pdf_ammounts;
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+    $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
+
+    // EVENTO INTERCOM 
+    $event = new  EventIntercom();
+    $event->event_quoteEmail();
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+    $subject = $request->subject;
+    $body = $request->body;
+    $to = $request->to;
+
+    if($to!=''){
+      $explode=explode(';',$to);
+      foreach($explode as $item) {
+        $send_quote = new SendQuote();
+        $send_quote->to = trim($item);
+        $send_quote->from = \Auth::user()->email;
+        $send_quote->subject = $subject;
+        $send_quote->body = $body;
+        $send_quote->quote_id = $quote->id;
+        $send_quote->status = 0;
+        $send_quote->save();
+      }
+    }else{
+      $send_quote = new SendQuote();
+      $send_quote->to = $contact_email->email;
+      $send_quote->from = \Auth::user()->email;
+      $send_quote->subject = $subject;
+      $send_quote->body = $body;
+      $send_quote->quote_id = $quote->id;
+      $send_quote->status = 0;
+      $send_quote->save();
+    }
+    //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+
+    $quote->status='Sent';
+    $quote->update();
+    return response()->json(['message' => 'Ok']);
+  }
+
   /**
    * Generate PDF FCL
    * @param Request $request 
@@ -3482,8 +3793,6 @@ class QuoteV2Controller extends Controller
       }
     }
 
-    //$origin_charges=$origin_charges->toArray();
-    //dd(json_encode($destination_charges_grouped));
     $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
 
     $pdf = \App::make('dompdf.wrapper');
@@ -5046,6 +5355,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_schedules=1;
       $pdf_option->language='English';
       $pdf_option->save();
 
