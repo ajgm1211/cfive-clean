@@ -8029,8 +8029,10 @@ class QuoteV2Controller extends Controller
       }
       //remarks
       $mode = "";
-      $remarks = $data->contract->remarks."<br>";
+      $remarks = $data->contract->comments."<br>";
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      
+ 
 
       $data->setAttribute('remarks',$remarks);
 
@@ -8071,7 +8073,7 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
-    //  dd($arreglo);
+      
     return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete'));
 
   }
