@@ -323,8 +323,8 @@
     border-color: #36a3f7 !important;
   }
   .create-manual:hover {
-     background-color: #36a3f7 !important;
-     border-color: #36a3f7 !important;
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
   }
   /* estilos */
 </style>
@@ -681,7 +681,7 @@
                   </div>
                   <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
                     <!-- <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-                    </button> -->
+</button> -->
                   </div>
                 </div>
               </div>
@@ -693,15 +693,15 @@
                   <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
                   <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
                 </center>
-              </div>
             </div>
           </div>
-        </div>      
-      </div>
+        </div>
+      </div>      
     </div>
   </div>
+</div>
 
-  {!! Form::close() !!}
+{!! Form::close() !!}
 
 
 </div>
@@ -820,7 +820,7 @@
                         <div class="wth" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
-                        <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
@@ -868,11 +868,20 @@
                         </div>
                         @endif
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
+                          @if($arr->excelRequest !="")
+                          <div class="btn-detail__quotes btn-d">
+                            <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workblue">Donw Excel</span>  
+
+                              <i  class="la la-angle-down blue"></i></a>
+                          </div>
+                          @endif
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
                               <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -1079,7 +1088,7 @@
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
-                  
+
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
@@ -1305,7 +1314,7 @@
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class'); 
   });
-      
+
   $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
