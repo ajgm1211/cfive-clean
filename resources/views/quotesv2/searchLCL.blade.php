@@ -803,7 +803,7 @@
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
 
-                        @if(isset($arr->contract->remarks))
+                        @if(isset($arr->contract->comments))
                         <div class="col-lg-2">
                           <div class="btn-detail__quotes btn-remarks">
                             <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" >
@@ -1072,7 +1072,7 @@
               @endif
 
 
-              @if(isset($arr->contract->remarks))
+              @if(isset($arr->contract->comments))
               <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
                 <div class="col-lg-12">
                   <div class="row">
