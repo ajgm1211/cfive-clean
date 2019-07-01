@@ -2,6 +2,11 @@
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<style>
+  #tableRates_wrapper {
+    overflow: auto;
+  }
+</style>
 @endsection
 
 @section('title', 'Contracts')
