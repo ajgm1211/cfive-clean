@@ -1,4 +1,8 @@
 
+$(document).ready(function(){
+        checkedCarrier();
+    });
+
 $('.m-select2-general').select2({
     placeholder: "Select an option"
 });
@@ -49,14 +53,25 @@ $('#destinychk').on('click',function(){
 });
 
 $('#carrierchk').on('click',function(){
-    if($('#carrierchk').prop('checked')){
+    /*if($('#carrierchk').prop('checked')){
+        $('#carrierinp').removeAttr('hidden');
+        $('#carrier').attr('required','required');
+    } else{
+        $('#carrierinp').attr('hidden','hidden');
+        $('#carrier').removeAttr('required');
+    }*/
+    checkedCarrier();
+});
+
+function checkedCarrier(){
+     if($('#carrierchk').prop('checked')){
         $('#carrierinp').removeAttr('hidden');
         $('#carrier').attr('required','required');
     } else{
         $('#carrierinp').attr('hidden','hidden');
         $('#carrier').removeAttr('required');
     }
-});
+}
 
 $('#typedestinychk').on('click',function(){
     if($('#typedestinychk').prop('checked')){
