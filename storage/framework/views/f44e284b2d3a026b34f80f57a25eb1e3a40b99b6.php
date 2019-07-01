@@ -322,8 +322,8 @@
     border-color: #36a3f7 !important;
   }
   .create-manual:hover {
-     background-color: #36a3f7 !important;
-     border-color: #36a3f7 !important;
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
   }
   /* estilos */
 </style>
@@ -697,7 +697,7 @@
                   </div>
                   <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
                     <!-- <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-                    </button> -->
+</button> -->
                   </div>
                 </div>
               </div>
@@ -709,15 +709,15 @@
                   <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
                   <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
                 </center>
-              </div>
             </div>
           </div>
-        </div>      
-      </div>
+        </div>
+      </div>      
     </div>
   </div>
+</div>
 
-  <?php echo Form::close(); ?>
+<?php echo Form::close(); ?>
 
 
 
@@ -839,7 +839,7 @@
                         <div class="wth" <?php echo e($equipmentHides['40hc']); ?>><span class="darkblue validate"><?php echo e($arr->total40hc); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['40nor']); ?>><span class="darkblue validate"><?php echo e($arr->total40nor); ?> </span> <span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
                         <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
-                        <div class="wth" <?php echo e($equipmentHides['45']); ?>><span class="darkblue validate"><?php echo e($arr->total45); ?> </span><span class="currency"><?php echo e($arr->typeCurrency); ?> </span></div>
+
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
@@ -892,11 +892,20 @@
                         </div>
                         <?php endif; ?>
                         <div class="col-lg-2 no-padding d-flex justify-content-end">
+                          <?php if($arr->excelRequest !=""): ?>
+                          <div class="btn-detail__quotes btn-d">
+                            <a  id='excel_l<?php echo e($loop->iteration); ?>' href="/RequestsLcl/RequestImportationLcl/<?php echo e($arr->excelRequest); ?>"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workblue">Donw Excel</span>  
+
+                              <i  class="la la-angle-down blue"></i></a>
+                          </div>
+                          <?php endif; ?>
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l<?php echo e($loop->iteration); ?>' onclick="display(<?php echo e($loop->iteration); ?>)" class="l detailed-cost"  title="Cancel" >
                               <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -1103,7 +1112,7 @@
                     <div class="col-lg-1" ></div>
                   </div>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                  
+
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
@@ -1338,7 +1347,7 @@
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class'); 
   });
-      
+
   $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;

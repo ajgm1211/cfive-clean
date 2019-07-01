@@ -57,6 +57,7 @@ use App\ScheduleType;
 use App\RemarkCondition;
 use App\RemarkHarbor;
 use App\RemarkCarrier;
+use App\NewContractRequest;
 //LCL
 use App\ContractLcl;
 use App\RateLcl;
@@ -6421,8 +6422,19 @@ class QuoteV2Controller extends Controller
 
       $data->setAttribute('remarks',$remarks);
 
+      // EXCEL REQUEST 
+
+      $excelRequest = NewContractRequest::where('contract_id',$data->id)->first();
+      if(!empty($excelRequest)){
+        $excelRequestId = $excelRequest->id;
+      }else{
+        $excelRequestId = "";
+      }
+
+
 
       // Valores
+      $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('rates',$collectionRate);
       $data->setAttribute('localfreight',$collectionFreight);
       $data->setAttribute('localdestiny',$collectionDestiny);
@@ -7168,7 +7180,7 @@ class QuoteV2Controller extends Controller
                 $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                 $mont = $local->ammount;
                 $unidades = $this->unidadesTON($totalW);
-                
+
                 if($subtotal_local < $local->minimum){
                   $subtotal_local = $local->minimum;
                   $totalAmmount =    $subtotal_local / $rateMount ;
@@ -7237,7 +7249,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_local =  $totalW * $local->ammount;
                 $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                 $mont = $local->ammount;
-                 $unidades = $this->unidadesTON($totalW);
+                $unidades = $this->unidadesTON($totalW);
                 if($subtotal_local < $local->minimum){
                   $subtotal_local = $local->minimum;
                   $totalAmmount =    $subtotal_local / $rateMount ;
@@ -7692,7 +7704,7 @@ class QuoteV2Controller extends Controller
                 $subtotal_global =  $totalW * $global->ammount;
                 $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                 $mont = $global->ammount;
-                 $unidades = $this->unidadesTON($totalW);
+                $unidades = $this->unidadesTON($totalW);
                 if($subtotal_global < $global->minimum){
                   $subtotal_global = $global->minimum;
                   $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -8035,18 +8047,18 @@ class QuoteV2Controller extends Controller
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
 
       // EXCEL REQUEST 
-      
+
       $excelRequest = NewContractRequestLcl::where('contract_id',$data->id)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
         $excelRequestId = "";
       }
-      
-      
-      
-      
-      
+
+
+
+
+
       $data->setAttribute('remarks',$remarks);
       $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('localOrig',$collectionOrig);
