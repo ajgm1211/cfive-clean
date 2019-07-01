@@ -312,6 +312,19 @@
     content: 'Selected';
     font-size: 13px;
   }
+  .full-width {
+    width: 100% !important;
+  }
+  .create-manual {
+    background-color: transparent !important;
+    color: #36a3f7 !important;
+    border-width: 2px;
+    border-color: #36a3f7 !important;
+  }
+  .create-manual:hover {
+     background-color: #36a3f7 !important;
+     border-color: #36a3f7 !important;
+  }
   /* estilos */
 </style>
 <?php $__env->stopSection(); ?>
@@ -683,8 +696,8 @@
                     <?php endif; ?>
                   </div>
                   <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
-                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-                    </button>
+                    <!-- <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+                    </button> -->
                   </div>
                 </div>
               </div>
@@ -694,6 +707,7 @@
               <div class="col-lg-12">   
                 <center>
                   <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                  <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
                 </center>
               </div>
             </div>
@@ -717,7 +731,7 @@
   <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
 </div>
 <div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
-  <?php echo Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group']); ?>
+  <?php echo Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']); ?>
 
   <input  type="hidden" name="form" value="<?php echo e(json_encode($form)); ?>" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
@@ -913,7 +927,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   <?php $__currentLoopData = $arr->localorigin; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $localorigin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                   <div class="row data-rates">
@@ -940,7 +954,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode"><?php echo e(str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  )); ?></span></div>
 
-                  </div><br>
+                  </div>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
@@ -977,7 +991,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   <?php $__currentLoopData = $arr->rates; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $rates): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode"><?php echo e($rates['type']); ?></div>
@@ -1020,7 +1034,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1 colorphacode"><?php echo e(str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  )); ?></div>
-                  </div><br>
+                  </div>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                   <div class="row bg-light">
@@ -1060,7 +1074,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   <?php $__currentLoopData = $arr->localdestiny; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $localdestiny): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
                   <div class="row data-rates">
@@ -1089,7 +1103,7 @@
                     <div class="col-lg-1" ></div>
                   </div>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                  <br>
+                  
 
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
@@ -1329,10 +1343,12 @@
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
     var count = 0;
+    console.log(numDivRow);
 
     for(var i = 1; i < numDivRow; i++){
-      if(i%2 == 0){
+      if(i%2 == 1){
         var clase = divRow[i];
+        console.log(clase);
         $(clase).css({
           'background-color' : '#fafafa'
         });      
