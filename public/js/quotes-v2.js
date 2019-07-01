@@ -1697,6 +1697,18 @@ $(document).on('change', '#quoteType', function (e) {
 
 
   if($(this).val()==1){
+
+    $("#total_quantity").removeAttr( "required");
+    $("#total_weight").removeAttr( "required");
+    $("#total_volume").removeAttr( "required");
+    $('#quantity').removeAttr('required');
+    $('#height').removeAttr('required');
+    $('#width').removeAttr('required');
+    $('#large').removeAttr('required');
+    $('#weight').removeAttr('required');
+    $('#volume').removeAttr('required');
+
+
     $(".infocheck").val('');
 
     $(".quote_search").show();
@@ -1733,8 +1745,15 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==2){
+
+    // Validaciones por defecto 
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+
+
     $(".infocheck").val('');
-    $(".quote_search").hide();
+    $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
 
@@ -1814,6 +1833,12 @@ $(document).on('change', '#quoteType', function (e) {
   }
 
   if($(this).val()==3){
+
+    // Validaciones
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+
     $(".infocheck").val('');
     $(".quote_search").hide();
     $(".formu").val('');
@@ -2028,8 +2053,18 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
+  
 
-  $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+
+  //FCL
+  if($('#quoteType').val()==1){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  }
+
+  // LCL
+  if($('#quoteType').val()==2){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearchLCL');
+  }
   $(".quote_search").attr("type","submit");
 
 });
@@ -2514,6 +2549,21 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
 
 function change_tab(tab){
   if(tab==2){
+    //Quitar validaciones del primer TAB 
+    $("#total_quantity").removeAttr( "required");
+    $("#total_weight").removeAttr( "required");
+    $("#total_volume").removeAttr( "required");
+
+
+    $(".type_cargo_2").prop( "required",true);
+
+    $(".quantity_2").prop( "required",true);
+    $(".height_2").prop( "required",true);
+    $(".width_2").prop( "required",true);
+    $(".large_2").prop( "required",true);
+    $(".weight_2").prop( "required",true);
+
+
     $("#total_quantity").val('');
     $("#total_weight").val('');
     $("#total_volume").val('');
@@ -2521,12 +2571,23 @@ function change_tab(tab){
     $("#chargeable_weight_total").html('');
 
   }else{
-    $('#lcl_air_load').find('.quantity').val('');
-    $('#lcl_air_load').find('.height').val('');
-    $('#lcl_air_load').find('.width').val('');
-    $('#lcl_air_load').find('.large').val('');
-    $('#lcl_air_load').find('.weight').val('');
-    $('#lcl_air_load').find('.volume').val('');
+    //colocar validaciones al cambiar tab 
+    $("#total_quantity").prop( "required",true)
+    $("#total_weight").prop( "required",true)
+    $("#total_volume").prop( "required", true );
+
+    $('#lcl_air_load').find('.quantity').val('').removeAttr('required');
+    $('#lcl_air_load').find('.height').val('').removeAttr('required');
+    $('#lcl_air_load').find('.width').val('').removeAttr('required');
+    $('#lcl_air_load').find('.large').val('').removeAttr('required');
+    $('#lcl_air_load').find('.weight').val('').removeAttr('required');
+    $('#lcl_air_load').find('.volume').val('').removeAttr('required');
+
+
+
+    $("#total_quantity_pkg_input").val('');
+    $("#total_weight_pkg_input").val('');
+    $("#total_volume_pkg_input").val('');
     $("#chargeable_weight_pkg_input").val('');
     $("#chargeable_weight_pkg").html('');
   }
@@ -2595,12 +2656,20 @@ $('#destination_airport').select2({
 });
 
 $(document).on('click', '#add_load_lcl_air', function (e) {
-  var $template = $('#lcl_air_load_template'),
-      $clone = $template
-  .clone()
-  .removeClass('hide')
-  .removeAttr('id')
-  .insertBefore($template);
+  var $template = $('#lcl_air_load_template');
+  $clone = $template.clone().removeClass('hide').removeAttr('id');
+
+  $clone.find('.type_cargo').prop('required',true);
+  $clone.find('.quantity').prop('required',true);
+  $clone.find('.height').prop('required',true);
+  $clone.find('.width').prop('required',true);
+  $clone.find('.large').prop('required',true);
+  $clone.find('.weight').prop('required',true);
+
+  $clone.insertBefore($template);
+
+
+
 });
 
 $(document).on('click', '#savecompany', function () {
@@ -2706,3 +2775,94 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
   $('.large').change();
   $('.weight').change();
 });
+
+function precargarLCL(){
+
+
+  // Validaciones por defecto 
+  $("#total_quantity").prop( "required", true );
+  $("#total_weight").prop( "required", true );
+  $("#total_volume").prop( "required", true );
+
+
+  $(".infocheck").val('');
+  $(".quote_search").show();
+  
+
+
+  $("#origin_harbor").prop( "disabled", false );
+  $("#destination_harbor").prop( "disabled", false );
+  $("#equipment_id").hide();
+  $("#equipment").prop( "disabled", true );
+  $("#delivery_type").prop( "disabled", false );
+  $("#delivery_type_air").prop( "disabled", true );
+  $("#delivery_type_label").show();
+  $("#delivery_type_air_label").hide();
+  $("#lcl_air_load").show();
+  $("#origin_harbor_label").show();
+  $("#destination_harbor_label").show();
+  $("#airline_label").hide();
+  $("#carrier_label").show();
+
+  $("#fcl_load").hide();
+  $("#origin_airport_label").hide();
+  $("#destination_airport_label").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  $("input[name=qty_45_hc]").val('');
+  /*
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+      total_volume=$('#total_volume').val();
+      weight=$('#total_weight').val();
+
+      if($('#quoteType').val()==2){
+
+
+        total_weight=weight/1000;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      }else if($('#quoteType').val()==3){
+        total_volume=total_volume*166;
+        if(total_volume>weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
+      }
+
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+      if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+        sum_vol = $('#total_volume_pkg_input').val();
+        weight = $('#total_weight_pkg_input').val()/1000;
+
+        total_vol_chargeable = sum_vol;
+        if (total_vol_chargeable > weight) {
+          chargeable_weight = total_vol_chargeable;
+        } else {
+          chargeable_weight = weight;
+        }
+
+      }
+
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
+*/
+
+}
