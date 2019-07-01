@@ -529,7 +529,7 @@
                     <div class="template">
                       <div class="row">
                         <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
@@ -538,18 +538,18 @@
                           <input type="hidden" id="total_packages" name="total_packages"/>
                         </div>
                         <div class="col-md-2">
-                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
+                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
                         </div>
                         <div class="col-md-5" >
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
                             <div class="btn-group" role="group">
-                              <input class="height form-control size-12px" min="0" name="height[]" id="height" type="number" placeholder="H"/>
+                              <input class="height form-control size-12px height_2" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="width form-control size-12px" min="0" name="width[]" id="width" type="number" placeholder="W"/>
+                              <input class="width form-control size-12px width_2" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="large form-control size-12px" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L"/>
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
@@ -567,7 +567,7 @@
                         </div>
                         <div class="col-md-2">
                           <div class="input-group">
-                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                            <input type="number" id="weight" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
                           </div><!-- /input-group -->
                         </div>
                         <div class="col-md-1">
@@ -1262,7 +1262,7 @@
                     <span class="darkblue cabezeras">Remarks</span><br><br>
                   </div>
                   <div class="row">
-                    <div class="col-lg-6"><span class="monto-down"><?php echo e($arr->contract->remarks); ?> </span></div>
+                    <div class="col-lg-6"><span class="monto-down"><?php echo $arr->remarks; ?> </span></div>
 
                   </div>
                 </div>
