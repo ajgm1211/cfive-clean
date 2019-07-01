@@ -325,6 +325,23 @@
     background-color: #36a3f7 !important;
     border-color: #36a3f7 !important;
   }
+  .workgreen {
+    color: #6ee99e !important;
+    font-size: 12px;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    color: #6ee99e !important;
+  }
   /* estilos */
 </style>
 <?php $__env->stopSection(); ?>
@@ -844,7 +861,7 @@
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
                       <input type="checkbox" id="input-select<?php echo e($loop->iteration); ?>" class="input-select no-check btnrate" rate-id ='<?php echo e($arr->id); ?> infocheck' name="info[]" value="<?php echo e(json_encode($arr)); ?>">
-                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate select-class selected"  rate-id ='<?php echo e($arr->id); ?>' Select></label><!--aqui-->
+                      <label for="input-select<?php echo e($loop->iteration); ?>"  class="btn-input__select btnrate select-class selected"  rate-id ='<?php echo e($arr->id); ?>' Select></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -855,7 +872,7 @@
 </div>
 </div>-->
                         <?php if(isset($arr->contract->remarks)): ?>
-                        <div class="col-lg-2">
+                        <div class="col-lg-1">
                           <div class="btn-detail__quotes btn-remarks">
                             <a  id='display_r<?php echo e($loop->iteration); ?>' onclick="display_r(<?php echo e($loop->iteration); ?>)" class="l"  title="Cancel" >
                               <span class="workblue">Remarks</span>  
@@ -865,7 +882,7 @@
                         <?php endif; ?>
 
                         <?php if(isset($arr->sheduleType)): ?>
-                        <div class="col-lg-3 d-flex align-items-center">
+                        <div class="col-lg-3 d-flex align-items-center" style="padding-left: 40px;">
                           <span class="portalphacode" style="margin-right:15px;">Validity: </span> <?php echo e(\Carbon\Carbon::parse($arr->contract->validity)->format('d M Y')); ?> - <?php echo e(\Carbon\Carbon::parse($arr->contract->expire)->format('d M Y')); ?>
 
                         </div>
@@ -891,13 +908,14 @@
 
                         </div>
                         <?php endif; ?>
-                        <div class="col-lg-2 no-padding d-flex justify-content-end">
+                        <div class="col-lg-3 no-padding d-flex justify-content-end">
                           <?php if($arr->excelRequest !=""): ?>
-                          <div class="btn-detail__quotes btn-d">
-                            <a  id='excel_l<?php echo e($loop->iteration); ?>' href="/RequestsLcl/RequestImportationLcl/<?php echo e($arr->excelRequest); ?>"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Donw Excel</span>  
+                          <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
+                            <a  id='excel_l<?php echo e($loop->iteration); ?>' href="/Requests/RequestImportation/<?php echo e($arr->excelRequest); ?>"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workgreen">Download Excel</span>  <!--  aqui -->
 
-                              <i  class="la la-angle-down blue"></i></a>
+                              <i class="la la-file-excel-o"></i>
+                            </a>
                           </div>
                           <?php endif; ?>
                           <div class="btn-detail__quotes btn-d">

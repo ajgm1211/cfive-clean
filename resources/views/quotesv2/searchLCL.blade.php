@@ -326,6 +326,23 @@
     content: 'Selected';
     font-size: 13px;
   }
+    .workgreen {
+    color: #6ee99e !important;
+    font-size: 12px;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    color: #6ee99e !important;
+  }
   /* estilos */
 </style>
 @endsection
@@ -859,11 +876,11 @@
                         @endif
                         <div class="col-lg-3 no-padding d-flex justify-content-end">
                          @if($arr->excelRequest !="")
-                          <div class="btn-detail__quotes btn-d">
+                          <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
                             <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workblue">Donw Excel</span>  
+                              <span class="workgreen">Download Excel</span>  
                               
-                              <i  class="la la-angle-down blue"></i></a>
+                               <i class="la la-file-excel-o"></i>
                           </div>
                           @endif
                           <div class="btn-detail__quotes btn-d">
