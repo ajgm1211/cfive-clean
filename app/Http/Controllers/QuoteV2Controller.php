@@ -6424,7 +6424,7 @@ class QuoteV2Controller extends Controller
 
       // EXCEL REQUEST 
 
-      $excelRequest = NewContractRequest::where('contract_id',$data->id)->first();
+      $excelRequest = NewContractRequest::where('contract_id',3)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
@@ -8048,7 +8048,7 @@ class QuoteV2Controller extends Controller
 
       // EXCEL REQUEST 
 
-      $excelRequest = NewContractRequestLcl::where('contract_id',$data->id)->first();
+      $excelRequest = NewContractRequestLcl::where('contract_id',4)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
