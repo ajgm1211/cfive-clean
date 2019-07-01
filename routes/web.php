@@ -458,6 +458,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
   Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
   Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
+  Route::post('/storeLCL', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
   Route::get('/pdf/{quote_id}', 'QuoteV2Controller@pdf')->name('quotes-v2.pdf');
   Route::get('/lcl/air/pdf/{quote_id}', 'QuoteV2Controller@pdfLclAir')->name('quotes-v2.pdf.lcl.air');
   Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
@@ -471,6 +472,9 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
   Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
+  //LCL 
+  Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
+  
 });
 
 //Settings
@@ -655,6 +659,34 @@ Route::middleware(['auth','role:administrator'])->prefix('ManagerCarriers')->gro
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
+
+// Nuevos terminos y condiciones 
+
+Route::group(['prefix' => 'termsv2', 'middleware' => ['auth']], function () {
+
+  Route::resource('termsv2', 'TermsAndConditionV2sController');
+  Route::get('list', 'TermsAndConditionV2sController@index')->name('termsv2.list');
+  Route::get('add', 'TermsAndConditionV2sController@add')->name('termsv2.add');
+  Route::get('edit/{id}', 'TermsAndConditionV2sController@edit')->name('termsv2.edit');
+  Route::get('delete/{id}', 'TermsAndConditionV2sController@destroy')->name('termsv2.delete');
+  Route::get('msg/{id}', 'TermsAndConditionV2sController@destroymsg')->name('termsv2.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
+
+// Remarks Harbors
+
+Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
+
+  Route::resource('remarks', 'RemarkConditionsController');
+  Route::get('list', 'RemarkConditionsController@index')->name('remarks.list');
+  Route::get('add', 'RemarkConditionsController@add')->name('remarks.add');
+  Route::get('edit/{id}', 'RemarkConditionsController@edit')->name('remarks.edit');
+  Route::get('delete/{id}', 'RemarkConditionsController@destroy')->name('remarks.delete');
+  Route::get('msg/{id}', 'RemarkConditionsController@destroymsg')->name('remarks.msg');
+  Route::put('delete-term/{id}', ['uses' => 'TermsAndConditionsController@destroyTerm', 'as' => 'delete-term']);
+
+});
 
 Auth::routes();
 
