@@ -6,16 +6,10 @@
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" media="all" />
     <link rel="stylesheet" href="{{asset('css/style-pdf.css')}}" media="all" />
     <style>
-      @font-face {
-        font-family: "Sailec";
-        src: url(/fonts/sailec.otf);
-      }
-      p, span {
-        font-family: "Sailec", sans-serif;
-      }
+
     </style>
   </head>
-  <body style="background-color: white; font-size: 11px; font-family: 'courier';">
+  <body style="background-color: white; font-size: 11px;">
     <header class="clearfix">
         <div id="logo">
             @if($user->companyUser->logo!='')
@@ -40,10 +34,10 @@
     <hr>
     <main>
         <div id="details" class="clearfix details">
-            <div class="client">
-                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>From:</b></p>
-                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>De:</b></p>
-                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>A partir de:</b></p>
+            <div class="client" style="line-height: 10px;">
+                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>From:</p>
+                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
+                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
                 <span id="destination_input" style="line-height: 0.5">
                     <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
                     <p><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
@@ -52,10 +46,10 @@
                     <p>{{$quote->user->email}}</p>
                 </span>
             </div>
-            <div class="company text-right" style="float: right; width: 350px;">
-                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>To:</b></p>
-                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Para:</b></p>
-                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
+            <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
+                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>To:</p>
+                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Para:</b></p>
+                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
                 <span id="destination_input" style="line-height: 0.5">
                     @if($quote->pdf_option->show_logo==1)
                       @if($quote->company->logo!='')
@@ -69,18 +63,15 @@
                     <p>{{@$quote->contact->email}}</p>
                 </span>
             </div>
+            @if($quote->kind_of_cargo!='' || $quote->commodity!='')
+            <div style="margin-top: 120px;">
+                <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif</p>
+                <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif</p>
+                <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
+            </div>
+            @endif
         </div>
         <br>
-        @if($quote->kind_of_cargo!='')
-            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}}</p>
-            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
-            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}}</p>
-        @endif
-        @if($quote->commodity!='')
-            <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}><span class="title" >Commodity:</span> {{$quote->commodity}}</p>
-            <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><span class="title" >Mercancía:</span> {{$quote->commodity}}</p>
-            <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><span class="title" >Mercadoria:</span> {{$quote->commodity}}</p>
-        @endif        
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
             <br>
