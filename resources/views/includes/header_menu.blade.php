@@ -265,7 +265,7 @@
                                 <a  href="{{route('UserConfiguration.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-envelope"></i>
                                     <span class="m-menu__link-text">
-                                        Setting Notifications
+                                        Email Notifications
                                     </span>
                                 </a>
                             </li>

@@ -68,7 +68,7 @@
                         <div class="form-group row">
                             <div class="col-2">
                                 <label class=" col-form-label">
-                                    Import Contract FCL
+                                   FCL Contract Imported
                                 </label>
                             </div>
                             <div class="col-2">
@@ -85,7 +85,7 @@
                             </div>
                             <div class="col-2">
                                 <label class=" col-form-label">
-                                    Import Contract LCL
+                                    LCL Contract Imported
                                 </label>
                             </div>
                             <div class="col-2">
@@ -102,7 +102,7 @@
                             </div>
                             <div class="col-2">
                                 <label class=" col-form-label">
-                                    Import GlobalCharge FCL
+                                    Global Charges Imported
                                 </label>
                             </div>
                             <div class="col-2">
@@ -118,8 +118,6 @@
                                 </span>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
             </div>
