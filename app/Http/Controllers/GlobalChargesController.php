@@ -343,7 +343,7 @@ class GlobalChargesController extends Controller
             })
             ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
             ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function edit($id)
@@ -431,7 +431,7 @@ class GlobalChargesController extends Controller
             })
             ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
             ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function addAdm(){
