@@ -13,7 +13,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        GlobalCharges Administrator
+                        Global Charges Administrator
                     </h3>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                 <i class="la la-cog"></i>
-                                List Global Charge
+                                Global Charge List
                             </a>
                         </li>
                     </ul>
@@ -38,14 +38,18 @@
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-
                                 <div class="new col-xl-12 order-1 order-xl-2 m--align-right">
 
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xl-12 order-1 order-xl-2 m--align-right">
+                                <div class="col-xl-4 order-1 order-xl-2 m--align-left">
+                                    {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                                </div>
+                                <div class="col-xl-2 order-1 order-xl-2 m--align-left">
+                                </div>
+                                <div class="col-xl-6 order-1 order-xl-2 m--align-right">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             Add New &nbsp;
@@ -71,16 +75,16 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                        <table class="table m-table m-table--head-separator-primary" id="requesttable" width="100%" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Select</th>
                                     <th>Company</th>
                                     <th>Type</th>
-                                    <th>Origin Port</th>
-                                    <th>Destination Port</th>
-                                    <th>Charge Type</th>
-                                    <th>Calculationtype type</th>
+                                    <th>Origin port</th>
+                                    <th>Destination port</th>
+                                    <th>Charge type</th>
+                                    <th>Calculation type</th>
                                     <th>Currency</th>
                                     <th>Carrier</th>
                                     <th>Amount</th>
@@ -122,10 +126,8 @@
 @section('js')
 @parent
 
-
-
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+<script src="/js/globalcharges.js"></script>
 <script>
 
     function AbrirModal(action,id){
@@ -151,11 +153,14 @@
         }
     }
 
-    $(function() {
-        $('#requesttable').DataTable({
+    $(document).on('change', '#company_user', function(){
+        var company_id=$(this).val();
+            
+            table = $('#requesttable').DataTable({
             processing: true,
+            destroy: true,
             //serverSide: true,
-            ajax: '{{route("gcadm.create")}}',
+            ajax: '/globalcharges/createAdm/'+company_id,
             columns: [
                 { data: 'checkbox', orderable:false, searchable:false},
                 { data: 'company_user', name: 'company_user' },
@@ -184,7 +189,7 @@
             "dom": 'Bfrtip',
             "paging": true
         });
-
+        table.clear();
     });
 
     $(document).on('click', '#bulk_delete', function(){
@@ -283,7 +288,7 @@
     });
 
 </script>
-<script src="/js/globalcharges.js"></script>
+
 @if(session('globalchar'))
 <script>
     swal(

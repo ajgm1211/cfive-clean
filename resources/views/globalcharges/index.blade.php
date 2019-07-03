@@ -26,7 +26,7 @@
 						<li class="nav-item m-tabs__item">
 							<a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
 								<i class="la la-cog"></i>
-								List Global Charge
+								Global Charge List
 							</a>
 						</li>
 					</ul>

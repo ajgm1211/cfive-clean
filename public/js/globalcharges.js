@@ -239,7 +239,3 @@ $(document).on('click', '.addS', function () {
     toastr.error('You have to first add surcharges terms in order to add surcharges to this global. <a href="surcharges" > <b> Add Surcharge</b> </a>!','IMPORTANT MESSAGE!');
   }
 } );
-
-
-
-
