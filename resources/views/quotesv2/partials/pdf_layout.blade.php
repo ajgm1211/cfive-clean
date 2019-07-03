@@ -159,10 +159,10 @@
     <div class="m-portlet custom-portlet no-border">
       <div class="m-portlet__head" style="border-bottom: none; padding: 0;">
         <div class="tab">
-          <button class="tablinks active" onclick="openCity(event, 'detailed')">Detailed PDF Layout</button>
-          <button class="tablinks" onclick="openCity(event, 'all')">All-in PDF Layout</button>
+          <button class="tablinks {{$quote->pdf_option->show_type=='detailed' ? 'active':''}}" onclick="openTab(event, 'detailed',{{$quote->id}})" data-quote-id="{{$quote->id}}">Detailed PDF Layout</button>
+          <button class="tablinks {{$quote->pdf_option->show_type=='total in' ? 'active':''}}" onclick="openTab(event, 'all',{{$quote->id}})" data-quote-id="{{$quote->id}}">All-in PDF Layout</button>
         </div>
-        <div id="detailed" class="tabcontent">
+        <div id="detailed" class="tabcontent {{$quote->pdf_option->show_type=='detailed' ? '':'displayno'}}">
           <div class="row">
 
             <div class="col-md-3 show_carrier">
@@ -236,7 +236,7 @@
           </div>
         </div>
 
-        <div id="all" class="tabcontent displayno">
+        <div id="all" class="tabcontent {{$quote->pdf_option->show_type=='total in' ? '':'displayno'}}">
           <div class="row">
 
             <div class="col-md-3 col-xs-12">
@@ -260,7 +260,7 @@
               <div class="form-check">
                 <input class="form-check-input pdf-feature check" type="checkbox" name="show_carrier" value="1" id="show_carrier" data-quote-id="{{$quote->id}}" data-type="checkbox" data-name="show_carrier" {{$quote->pdf_option->show_carrier==1 ? 'checked':''}}>
                 <label class="form-check-label title-quote input_form" for="show_carrier">
-                  Show carrier
+                  Show carrier in the offer
                 </label>
               </div>
             </div>
@@ -279,10 +279,6 @@
 <div class="m-portlet__body" style="background-color: #e3e8ee; margin-bottom: 25px;">
   <div class="tab-content" id="show_detailed">
     <div class="row" style="padding-top: 10px;">
-      <!--  <div class="col-md-12 col-xs-12">
-<hr>
-{{ Form::select('show_type',['detailed'=>'Show detailed','total in'=>'Show total in'],$quote->pdf_option->show_type,['class'=>'form-control-sm type select2 pdf-feature select_forms','id'=>'show_hide_select','data-quote-id'=>$quote->id,'data-name'=>'show_type','data-type'=>'select']) }}
-</div> -->
       <div class="m-portlet__head-tools d-flex justify-content-center" style="width: 100%;">
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right m-tabs-line-danger" role="tablist" style="border-bottom: none;">
           <li class="nav-item m-tabs__item" id="edit_li">
@@ -309,7 +305,7 @@
 
 
 <script>
-  function openCity(evt, cityName) {
+  function openTab(evt, type, id) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -319,7 +315,24 @@
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    document.getElementById(cityName).style.display = "block";
+    document.getElementById(type).style.display = "block";
     evt.currentTarget.className += " active";
+    if(type=='all'){
+      type='total in';
+    }
+    changeType(type, id);
+  }
+
+  function changeType(type, id){
+    $.ajax({
+      type: 'POST',
+      url: '/v2/quotes/feature/pdf/update',
+      data:{"value":type,"name":"show_type","id":id},
+      success: function(data) {
+        if(data.message=='Ok'){
+          //$(this).attr('checked', true).val(0);
+        }
+      }
+    });
   }
 </script>
