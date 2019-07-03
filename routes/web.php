@@ -93,10 +93,10 @@ Route::prefix('globalcharges')->group(function () {
   Route::get('addGlobalCharge', ['uses' => 'GlobalChargesController@addGlobalChar', 'as' => 'add-global-charge'])->middleware(['auth']);
   Route::get('duplicateGlobalCharge/{id}', ['uses' => 'GlobalChargesController@duplicateGlobalCharges', 'as' => 'duplicate-global-charge'])->middleware(['auth']);
 
-  // CRUD Administrator FCL -------------------------------------------------------------------------------------------------
+  // CRUD Global Charge Administrator FCL -------------------------------------------------------------------------------------------------
 
   Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator|data_entry']);
-  Route::get('createAdm','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
+  Route::get('createAdm/{company_id}','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
   Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
   Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
   Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator|data_entry']);
@@ -110,12 +110,10 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
-
   //Route::get('add', 'ContractsController@add')->name('contracts.add');
   Route::get('addT', 'ContractsController@add')->name('contracts.add');
   Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
   Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
-
   Route::get('editLocalCharge/{id}', ['uses' => 'ContractsController@editLocalChar', 'as' => 'edit-local-charge']);
   Route::put('updateLocalCharge/{id}', ['uses' => 'ContractsController@updateLocalChar', 'as' => 'update-local-charge']);
   Route::get('addRate/{id}', ['uses' => 'ContractsController@addRates', 'as' => 'add-rates']);
@@ -130,7 +128,6 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
 
-
   //----- developer
 
   Route::get('FailRatesSurchrgesForNewContracts/{id}','ContractsController@failRatesSurchrgesForNewContracts')->name('Fail.Rates.Surchrges.For.New.Contracts');
@@ -142,14 +139,13 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
   Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 
-
 });
 
 Route::prefix('Requests')->group(function () {
   //New Request Importation
 
   Route::get('SimilarContracts/{id}','NewContractRequestsController@similarcontracts')->name('Similar.Contracts.Request')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
 
   Route::get('test','NewContractRequestsController@test')->name('RequestImportation.test');
 
@@ -157,93 +153,93 @@ Route::prefix('Requests')->group(function () {
   Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator|data_entry']);
 
   Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
   Route::get('StatusRquestFCL/{id}','NewContractRequestsController@showStatus')->name('show.status.Request')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::POST('RequestImportation/two','NewContractRequestsController@store2')->name('RequestImportation.store2')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
 
   Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 });
 
 
 Route::prefix('Importation')->group(function () {
   //Importar desde request
   Route::get('RequestProccessFCL/{id}/{selector}/{idrqex}','ImportationController@requestProccess')->name('process.request.fcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Importar Contracto
   Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('ProcessContractFclRatSurch','ImportationController@ProcessContractFclRatSurch')->name('process.contract.fcl.Rat.Surch')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('ValidateCompany/{id}','ImportationController@ValidateCompany')->name('validate.import')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Account FCL
   Route::get('AccountCFCL/','ImportationController@indexAccount')->name('index.Account.import.fcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DestroyAccountcfcl/{id}','ImportationController@DestroyAccount')->name('Destroy.account.cfcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DownloadAccountcfcl/{id}','ImportationController@Download')->name('Download.Account.cfcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Rates
   Route::put('UploadFileRates','ImportationController@UploadFileRateForContract')->name('Upload.File.Rates.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('EditRatesGoodForContracts/{id}','ImportationController@EditRatesGood')->name('Edit.Rates.Good.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('EditRatesFailForContracts/{id}','ImportationController@EditRatesFail')->name('Edit.Rates.Fail.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::PUT('CreateRatesFailForContracts/{id}','ImportationController@CreateRates')->name('create.Rates.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('UpdateRatesFailForContracts/{id}','ImportationController@UpdateRatesD')->name('Update.RatesD.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DestroyRatesFailForContracts/{id}','ImportationController@DestroyRatesF')->name('Destroy.RatesF.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DestroyRatesGForContracts/{id}','ImportationController@DestroyRatesG')->name('Destroy.RatesG.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Surcharge
   Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('fcl/surcharge/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('EditSurchargersGoodForContracts/{id}','ImportationController@EditSurchargersGood')->name('Edit.Surchargers.Good.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('EditSurchargersFailForContracts/{id}','ImportationController@EditSurchargersFail')->name('Edit.Surchargers.Fail.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::PUT('CreateSurchargersFailForContracts/{id}','ImportationController@CreateSurchargers')->name('create.Surchargers.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('UpdateSurchargersForContracts/{id}','ImportationController@UpdateSurchargersD')->name('Update.Surchargers.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DestroySurchargersFForContracts/{id}','ImportationController@DestroySurchargersF')->name('Destroy.SurchargersF.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('DestroySurchargersGForContracts/{id}','ImportationController@DestroySurchargersG')->name('Destroy.SurchargersG.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Reprocesar
   Route::get('/ReprocesarRates/{id}','ImportationController@ReprocesarRates')->name('Reprocesar.Rates')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('/ReprocesarSurchargers/{id}','ImportationController@ReprocesarSurchargers')->name('Reprocesar.Surchargers')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Datatable Rates Y Surchargers
   Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // DownLoad Files
   Route::get('/DownLoadFiles/{id}','ImportationController@DowLoadFiles')->name('DownLoad.Files')->middleware(['auth']);
@@ -266,7 +262,7 @@ Route::prefix('Importation')->group(function () {
 
   // Srucharge for contract
   Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   // Test
   Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
@@ -276,26 +272,26 @@ Route::prefix('Importation')->group(function () {
 Route::prefix('RequestsLcl')->group(function () {
 
   Route::get('SimilarContractsLcl/{id}','NewContractRequestLclController@similarcontracts')->name('Similar.Contracts.Request.Lcl')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  ->middleware(['auth','role:administrator|company|subuser']);
 
   Route::get('RequestImportationLcl/indexListClient','NewContractRequestLclController@indexListClient')->name('RequestImportationLcl.indexListClient')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
 
   Route::get('RequestImportationLcl/listClient/{id}','NewContractRequestLclController@listClient')->name('RequestImportationLcl.listClient')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
 
   Route::resource('RequestImportationLcl','NewContractRequestLclController')->middleware(['auth','role:administrator|data_entry']);
 
   Route::get('StatusRquestLCL/{id}','NewContractRequestLclController@showStatus')->name('show.status.Request.lcl')
-    ->middleware(['auth','role:administrator|data_entry']);    
+  ->middleware(['auth','role:administrator|data_entry']);    
   Route::POST('RequestImportationLcl/two','NewContractRequestLclController@store2')->name('RequestImportationLcl.store2')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
   Route::get('Requestimporlcl','NewContractRequestLclController@LoadViewRequestImporContractLcl')->name('Request.importaion.lcl')
-    ->middleware(['auth','role:administrator|company|subuser|data_entry']);
+  ->middleware(['auth','role:administrator|company|subuser|data_entry']);
   Route::get('RequestLclStatus','NewContractRequestLclController@UpdateStatusRequest')->name('RequestLcl.status')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 });
 
 
@@ -304,7 +300,7 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
 
   //Importar desde request
   Route::get('RequestProccessLCL/{id}/{selector}/{idrqex}','ImportationLclController@indexRequest')->name('process.request.lcl')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   Route::PUT('UploadFileLCL','ImportationLclController@UploadFileNewContract')->name('Upload.File.LCL.New');
 
@@ -558,37 +554,37 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
   //Route::resource('RequestsGlobalchargersFcl','NewGlobalchargeRequestControllerFcl')->middleware(['auth','role:administrator']);
   Route::get('RequestsGlobalchargersFcl/indexListClient','NewGlobalchargeRequestControllerFcl@indexListClient')->name('RequestsGlobalchargersFcl.indexListClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  ->middleware(['auth','role:administrator|company|subuser']);
 
   Route::get('RequestsGlobalchargersFcl/listClient/{id}','NewGlobalchargeRequestControllerFcl@listClient')->name('RequestsGlobalchargersFcl.listClient')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  ->middleware(['auth','role:administrator|company|subuser']);
 
   Route::get('StatusRquestGC/{id}','NewGlobalchargeRequestControllerFcl@showStatus')->name('show.status.Request.gc')
-    ->middleware(['auth','role:administrator|data_entry']);    
+  ->middleware(['auth','role:administrator|data_entry']);    
 
   Route::get('RequestsGlobalchargersFcl/create/','NewGlobalchargeRequestControllerFcl@create')->name('RequestsGlobalchargersFcl.create')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  ->middleware(['auth','role:administrator|company|subuser']);
 
   Route::get('RequestsGlobalchargersFcl/create2/','NewGlobalchargeRequestControllerFcl@create2')->name('RequestsGlobalchargersFcl.create2')
-    ->middleware(['auth','role:administrator']);
+  ->middleware(['auth','role:administrator']);
 
   Route::POST('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@store')->name('RequestsGlobalchargersFcl.store')
-    ->middleware(['auth','role:administrator|company|subuser']);
+  ->middleware(['auth','role:administrator|company|subuser']);
   Route::GET('RequestsGlobalchargersFcl/','NewGlobalchargeRequestControllerFcl@index')->name('RequestsGlobalchargersFcl.index')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::GET('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@show')->name('RequestsGlobalchargersFcl.show')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::PUT('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@update')->name('RequestsGlobalchargersFcl.update')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::DELETE('RequestsGlobalchargersFcl/{id}','NewGlobalchargeRequestControllerFcl@destroy')->name('RequestsGlobalchargersFcl.destroy')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::GET('RequestsGlobalchargersFcl/{id}/edit','NewGlobalchargeRequestControllerFcl@edit')->name('RequestsGlobalchargersFcl.edit')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   Route::get('RGlobalCDestroy/{id}','NewGlobalchargeRequestControllerFcl@destroyRequest')->name('destroy.GlobalC')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
   Route::get('RequestGCStatus','NewGlobalchargeRequestControllerFcl@UpdateStatusRequest')->name('Request.GlobalC.status')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 });
 
 // IMPORTATION GLOBALCHARGE FCL
@@ -597,7 +593,7 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
   Route::get('AccountGC/','ImportationGlobachargersFclController@indexAccount')->name('index.Account.import.gc');
   //Importar desde request
   Route::get('RequestProccessGC/{id}','ImportationGlobachargersFclController@indexRequest')->name('process.request.gc')
-    ->middleware(['auth','role:administrator|data_entry']);
+  ->middleware(['auth','role:administrator|data_entry']);
 
   Route::PUT('UploadFileGlobalchargesFcl','ImportationGlobachargersFclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Fcl');
   Route::get('DeleteAccountsGlobalchargesFcl/{id}/{select}','ImportationGlobachargersFclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Fcl'); 
@@ -637,7 +633,7 @@ Route::prefix('globalchargeslcl')->group(function () {
   // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
 
   Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator|data_entry']);
-  Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
+  Route::get('createLclAdm/{company_id}','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
   Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
   Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
   Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator|data_entry']);
@@ -694,7 +690,7 @@ Route::group(['prefix' => 'remarks', 'middleware' => ['auth']], function () {
 // User Configuration 
 
 Route::group(['prefix' => 'UserConfiguration'], function (){
-   Route::resource('UserConfiguration','UserConfigurationsController');
+ Route::resource('UserConfiguration','UserConfigurationsController');
 });
 
 Auth::routes();
