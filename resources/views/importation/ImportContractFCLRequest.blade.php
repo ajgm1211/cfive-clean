@@ -373,7 +373,11 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatCar" id="carrierchk" type="checkbox">
+                                                @if($load_carrier)
+                                                <input name="DatCar" id="carrierchk" type="checkbox" checked>
+                                                @else
+                                                <input name="DatCar" id="carrierchk" type="checkbox">                       
+                                                @endif
                                                 <span></span>
                                             </span>
                                         </span>
@@ -386,7 +390,15 @@ new registration
                                         </span>
                                     </label>
                                     <div class="col-form-label" hidden="hidden" id="carrierinp">
+                                        @if($load_carrier)
+                                            @if($selector == 1)
+                                                {!! Form::select('carrier',$carrier,$requestfcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                            @elseif($selector == 2)
+                                                {!! Form::select('carrier',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                            @endif
+                                        @else
                                         {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
