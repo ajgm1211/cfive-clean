@@ -210,12 +210,29 @@ class ImportationLclController extends Controller
 
     public function indexRequest($id,$selector,$request_id)
     {
+        $load_carrier = false;
+        $carrier_exec = Carrier::where('name','ALL')->first();
+        $carrier_exec = $carrier_exec->id;
         if($selector == 1){
             $requestlcl     = RequestLCL::find($id);
             $requestlcl->load('Requestcarriers');
+            if(count($requestlcl->Requestcarriers) == 1){
+                foreach($requestlcl->Requestcarriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         } elseif($selector == 2){
             $contract = ContractLcl::find($id);
             $contract->load('carriers');
+            if(count($contract->carriers) == 1){
+                foreach($contract->carriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         }
         //dd($requestlcl);
         $harbor         = harbor::all()->pluck('display_name','id');
@@ -223,9 +240,9 @@ class ImportationLclController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $direction      = Direction::pluck('name','id');
         if($selector == 1){
-            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl','selector'));
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl','selector','load_carrier'));
         } elseif($selector == 2){
-            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','contract','selector','request_id'));
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','contract','selector','request_id','load_carrier'));
         }
     }
 
