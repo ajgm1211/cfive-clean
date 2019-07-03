@@ -72,7 +72,7 @@
                                             <span>
                                                 Duplicate Selected &nbsp;
                                             </span>
-                                            <i class="la la-bars"></i>
+                                            <i class="la la-copy"></i>
                                         </span>
                                     </button>
                                 </div>
