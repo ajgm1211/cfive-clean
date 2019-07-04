@@ -413,11 +413,7 @@
               <div class="col-lg-2" >
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
-                  <?php echo e(Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true'])); ?><br><br><!-- lo se genesis no debo usar br -->
-
-                  <?php echo e(Form::checkbox('chargeOrigin',null,['id'=>'mode','class'=>'m-select2-general form-control'])); ?>
-
-                  Include origin charges
+                  <?php echo e(Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true'])); ?>
 
 
                 </div>
@@ -431,10 +427,9 @@
               <div class="col-lg-2">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
-                  <?php echo e(Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true'])); ?><br><br>
-                  <?php echo e(Form::checkbox('chargeDestination',null,['id'=>'mode','class'=>'m-select2-general form-control'])); ?>
+                  <?php echo e(Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true'])); ?>
 
-                  Include destination charges
+
                 </div>
                 <div id="destination_airport_label" style="display:none;">
                   <label>Destination airport</label>
@@ -454,7 +449,9 @@
                       <i class="la la-calendar-check-o"></i>
                     </span>
                   </div>
-                </div>
+                </div><br>
+
+
               </div>
               <div class="col-lg-2" id="delivery_type_label">
                 <label>Delivery type</label>
@@ -477,6 +474,22 @@
 
               </div>
 
+            </div>
+            <div class="row">
+              <div class="col-lg-2" >   
+               <?php echo e(Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode'])); ?>
+
+                Include origin charges</div>
+              <div class="col-lg-2" >
+                <?php echo e(Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode'])); ?>
+
+                Include destination charges
+              </div>
+              <div class="col-lg-2" >
+                <?php echo e(Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode'])); ?>
+
+                Include freight charges
+              </div>
             </div><br>
             <div class="row">
               <div class="col-lg-2">

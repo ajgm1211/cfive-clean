@@ -456,6 +456,19 @@
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
 
+            </div>
+            <div class="row">
+              <div class="col-lg-2" >   
+               {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
+                Include origin charges</div>
+              <div class="col-lg-2" >
+                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode']) }}
+                Include destination charges
+              </div>
+              <div class="col-lg-2" >
+                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode']) }}
+                Include freight charges
+              </div>
             </div><br>
             <div class="row">
               <div class="col-lg-2">
