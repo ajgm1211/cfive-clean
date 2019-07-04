@@ -6448,7 +6448,7 @@ class QuoteV2Controller extends Controller
 
       // EXCEL REQUEST 
 
-      $excelRequest = NewContractRequest::where('contract_id',3)->first();
+      $excelRequest = NewContractRequest::where('contract_id',$data->contract->id)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
@@ -6508,6 +6508,8 @@ class QuoteV2Controller extends Controller
 
 
     $arreglo  =  $arreglo->sortBy('total20');
+    
+  //  dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
@@ -8377,7 +8379,7 @@ class QuoteV2Controller extends Controller
 
       // EXCEL REQUEST 
 
-      $excelRequest = NewContractRequestLcl::where('contract_id',4)->first();
+      $excelRequest = NewContractRequestLcl::where('contract_id',$data->contract->id)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
