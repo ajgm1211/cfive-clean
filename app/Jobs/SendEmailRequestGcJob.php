@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\User;
+use PrvUserConfigurations;
 use App\NewGlobalchargeRequestFcl;
 use App\Mail\NewRequestGlobalChargeToUserMail;
 use App\Mail\NewRequestGlobalChargeToAdminMail;
@@ -42,12 +43,18 @@ class SendEmailRequestGcJob implements ShouldQueue
             $usersCompa = User::all()->where('type','=','company')->where('company_user_id','=',$Ncontract->company_user_id);
             foreach ($usersCompa as $userCmp) {
                 if($userCmp->id != $Ncontract->user_id){
-                    \Mail::to($userCmp->email)->send(new NewRequestGlobalChargeToAdminMail($userCmp->toArray(),$Ncontract->toArray()));
+                    $json = PrvUserConfigurations::allData($userCmp->id);
+                    if($json['notifications']['request-importation-gcfcl']){
+                        \Mail::to($userCmp->email)->send(new NewRequestGlobalChargeToAdminMail($userCmp->toArray(),$Ncontract->toArray()));
+                    }
                 }
             }
             
-            \Mail::to($usercreador['email'])->send(new NewRequestGlobalChargeToUserMail($usercreador,
-                                                                                      $Ncontract->toArray()));
+            $json = PrvUserConfigurations::allData($usercreador['id']);
+            if($json['notifications']['request-importation-gcfcl']){
+                \Mail::to($usercreador['email'])->send(new NewRequestGlobalChargeToUserMail($usercreador,
+                                                                                            $Ncontract->toArray()));
+            }
             $Ncontract->sentemail = true;
         }
         $Ncontract->save();

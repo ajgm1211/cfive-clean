@@ -73,6 +73,11 @@ font-family: sans-serif !important;
                 -ms-interpolation-mode:bicubic;
             }
 
+            .email-container {
+                width: 100% !important;
+                margin: auto !important;
+            }
+
             /* What it does: A work-around for email clients meddling in triggered links. */
             *[x-apple-data-detectors],  /* iOS */
             .x-gmail-data-detectors,    /* Gmail */
@@ -197,22 +202,12 @@ font-family: sans-serif !important;
 
             <!-- Preview Text Spacing Hack : BEGIN -->
             <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-                &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+                
             </div>
             <!-- Preview Text Spacing Hack : END -->
 
-            <!-- Email Header : BEGIN
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
-                <tr>
-                    <td style="padding: 20px 0; text-align: center;">
-                        <img src="{{ $message->embed(public_path().'/logo.png')}}" alt="alt_text" border="0" style="height: auto; background: #001728; font-family: sans-serif; font-size: 15px; line-height: 140%; max-width: 200px; margin-top: 50px">
-                    </td>
-                </tr>
-            </table>
-            <!-- Email Header : END -->
-
             <!-- Email Body : BEGIN -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto;" class="email-container">
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         {!!$text!!}

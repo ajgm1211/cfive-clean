@@ -295,11 +295,12 @@ class GlobalChargesLclController extends Controller
     // CRUD Administarator -----------------------------------------------------------------------------------------------------
 
     public function indexAdm(){
-        return view('globalchargesLclAdm.index');
+        $companies = CompanyUser::pluck('name','id');
+        return view('globalchargesLclAdm.index',compact('companies'));
     }
 
-    public function createAdm(){
-        $globalcharges = ViewGlobalchargeLcl::select(['id','port_orig','port_dest','country_orig','country_dest','carrier','surcharges','typedestiny','calculationtype','ammount','minimum','validity','expire','currency','company_user']);
+    public function createAdm($company){
+        $globalcharges = ViewGlobalchargeLcl::select(['id','port_orig','port_dest','country_orig','country_dest','carrier','surcharges','typedestiny','calculationtype','ammount','minimum','validity','expire','currency','company_user'])->where('company_user_id',$company);
         //dd($globalcharges);
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 
