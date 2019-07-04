@@ -592,10 +592,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <br>
                 @endforeach
             @endforeach
         @endif
-        <br>
         <!-- DESTINATIONS -->
 
         <!-- ALL in destination table -->
@@ -666,8 +666,8 @@
 
         <!-- Destinations detailed -->
         @if($quote->pdf_option->grouped_destination_charges==0 && $quote->pdf_option->show_type=='detailed' )
-            @foreach($destination_charges as $carrier => $value)
-                @foreach($value as $destination => $item)
+            @foreach($destination_charges as $destination => $value)
+                @foreach($value as $carrier => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
@@ -783,7 +783,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <br>
                     <br>
                 @endforeach
             @endforeach
