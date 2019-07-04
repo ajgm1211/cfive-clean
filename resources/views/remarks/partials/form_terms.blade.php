@@ -22,7 +22,7 @@
 </div>
 <div class="form-group m-form__group">
     {!! Form::label('Language', 'Language') !!}
-    {!! Form::select('language',$languages,@term['language_id'], 
+    {!! Form::select('language',$languages,@$remark['language_id'], 
     ['class' => 'm-select2-general form-control']) !!}
 </div>
 
