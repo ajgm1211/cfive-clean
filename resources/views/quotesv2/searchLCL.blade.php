@@ -1094,6 +1094,9 @@
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
                           </div>
+                               <div class="wth" >
+                            <span class="bg-rates"> {{ $localdestiny['monto'] / $localdestiny['cantidad'] }} </span> 
+                          </div> 
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
                           </div>
