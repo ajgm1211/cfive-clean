@@ -158,6 +158,7 @@ class UsersController extends Controller
     $requestForm = $request->all();
     $user = User::find($id);
     $roles = $user->getRoleNames();
+    //dd($roles);
     $user->removeRole($roles[0]);
 
     if($request->type == "subuser"){
@@ -226,7 +227,7 @@ class UsersController extends Controller
       $data = User::all();
     }
 
-    if(Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' ){
+    if(Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser' ){
       $data =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->get();
     }
 

@@ -199,21 +199,17 @@
                     @endforeach
                     <tr class="text-center color-table"> 
                         <td >
-                            @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                            @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @if($quote->type=='LCL') 
+                                {{@$rate->origin_port->name}}, {{@$rate->origin_port->code}} 
                             @else 
-                                {{$rate->origin_address}} 
+                                {{@$rate->origin_airport->name}}, {{@$rate->origin_airport->code}}
                             @endif
                         </td>
                         <td >
-                            @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                            @if($quote->type=='LCL') 
                                 {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                            @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                            @else
                                 {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                            @else 
-                                {{$rate->destination_address}} 
                             @endif
                         </td> 
                         @if($quote->type=='LCL')
@@ -283,21 +279,17 @@
                                 @endforeach
                                 <tr class="text-center color-table">
                                     <td >
-                                        @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                            {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                        @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                            {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                        @if($quote->type=='LCL') 
+                                            {{@$rate->origin_port->name}}, {{@$rate->origin_port->code}} 
                                         @else 
-                                            {{$rate->origin_address}} 
+                                            {{@$rate->origin_airport->name}}, {{@$rate->origin_airport->code}}
                                         @endif
                                     </td>
                                     <td >
-                                        @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                        @if($quote->type=='LCL') 
                                             {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                        @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                        @else
                                             {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                        @else 
-                                            {{$rate->destination_address}} 
                                         @endif
                                     </td> 
                                     @if($quote->type=='LCL')
@@ -676,6 +668,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <br>
                 @endforeach
             @endforeach
         @endif
