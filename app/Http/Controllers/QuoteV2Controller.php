@@ -818,8 +818,6 @@ class QuoteV2Controller extends Controller
       $rate_duplicate->destination_port_id=$rate->destination_port_id;
       $rate_duplicate->origin_airport_id=$rate->origin_airport_id;
       $rate_duplicate->destination_airport_id=$rate->destination_airport_id;
-      $rate_duplicate->origin_address=$rate->origin_address;
-      $rate_duplicate->destination_address=$rate->destination_address;
       $rate_duplicate->carrier_id=$rate->carrier_id;
       $rate_duplicate->rates=$rate->rates;
       $rate_duplicate->markups=$rate->markups;
