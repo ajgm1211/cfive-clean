@@ -380,7 +380,7 @@ class ImportationController extends Controller
                         $calculationtypeV = $calculationtypeV['id'];
                     }
 
-                        $calculationtypeB = true;
+                    $calculationtypeB = true;
                     //  Amount ---------------------------------------------------------------------------------
 
                     $amountV = floatval($ammountEX[0]);
@@ -527,15 +527,32 @@ class ImportationController extends Controller
 
     // precarga la vista para importar rates o rates mas surchargers desde Request
     public function requestProccess($id,$selector,$request_id){
+        $load_carrier = false;
+        $carrier_exec = Carrier::where('name','ALL')->first();
+        $carrier_exec = $carrier_exec->id;
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
             $requestfcl->load('Requestcarriers');
+            //dd($requestfcl);
+            if(count($requestfcl->Requestcarriers) == 1){
+                foreach($requestfcl->Requestcarriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         } elseif($selector == 2){
             $contract     = Contract::find($id);
             $contract->load('carriers');
             //dd($contract);
+            if(count($contract->carriers) == 1){
+                foreach($contract->carriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         }
-        //dd($requestfcl);
         $harbor         = harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
         $region         = Region::all()->pluck('name','id');
@@ -544,9 +561,9 @@ class ImportationController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         if($selector == 1){
-            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector'));    
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
         } elseif($selector == 2){
-            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id'));
+            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
         }
 
     }
@@ -3883,7 +3900,7 @@ class ImportationController extends Controller
         }
 
         // -------------- SURCHARGE ....-----------------------------------------------------
-        $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
+        $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',$failsurcharge->contract->company_user_id)->first();
         $surcharAin  = $surchargeOb['id'];
         $surchargeC = count($surchargeA);
         if($surchargeC <= 1){

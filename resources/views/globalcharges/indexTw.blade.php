@@ -27,7 +27,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                 <i class="la la-cog"></i>
-                                List Global Charge
+                                Global Charge List
                             </a>
                         </li>
                     </ul>
@@ -167,6 +167,7 @@ New \ Status Import  &nbsp;
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/record-selection.js" type="text/javascript"></script>
 
 <script>
     function AbrirModal(action,id){
