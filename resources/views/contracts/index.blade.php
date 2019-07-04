@@ -235,7 +235,8 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table tableData" id="tableRates" class="tableRates" width="100%">
+                        <div class="table-responsive">
+                            <table class="table tableData" id="tableRates" class="tableRates" width="100%">
                             <thead width="100%" class="tableRatesTH">
                                 <tr>
                                     <th style="width:25%;" title="Field #1">
@@ -293,7 +294,8 @@
 
 
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                         <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -351,12 +353,12 @@
     var oTable = $('#tableRates').DataTable({
         searching: true,
         ordering: true,
-        processing: true,
-        processing: true,
-        serverSide: true,
+        processing: false,
+        serverSide: false,
         autoWidth: true,
         "columnDefs": [
-            { className: "truncate", "targets": [ 0,1] }
+            { className: "truncate", "targets": [ 0,1] },
+            { "type": "num", targets: [4,5,6,7,8] }
         ],
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         ajax: {
