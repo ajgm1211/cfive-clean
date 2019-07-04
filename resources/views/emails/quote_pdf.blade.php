@@ -73,6 +73,11 @@ font-family: sans-serif !important;
                 -ms-interpolation-mode:bicubic;
             }
 
+            .email-container {
+                width: 100% !important;
+                margin: auto !important;
+            }
+
             /* What it does: A work-around for email clients meddling in triggered links. */
             *[x-apple-data-detectors],  /* iOS */
             .x-gmail-data-detectors,    /* Gmail */
@@ -202,7 +207,7 @@ font-family: sans-serif !important;
             <!-- Preview Text Spacing Hack : END -->
 
             <!-- Email Body : BEGIN -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="" style="margin: auto;" class="email-container">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto;" class="email-container">
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         {!!$text!!}
