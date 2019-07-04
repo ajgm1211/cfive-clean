@@ -171,7 +171,15 @@
             dom: 'Bfrtip',
             processing: true,
             destroy: true,
-            select: true,
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'multi',
+                selector: 'td:first-child'
+            },
             buttons: [
                 {
                     text: 'Select all',
@@ -189,7 +197,7 @@
             //serverSide: true,
             ajax: '/globalcharges/createAdm/'+company_id,
             columns: [
-                { data: 'checkbox', orderable:false, searchable:false},
+                { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
@@ -206,23 +214,21 @@
             "lengthChange": false,
             "searching": true,
             "ordering": true,
-            "select": true,
             "width": true,
             "info": true,
             "deferLoading": 57,
             "autoWidth": false,
             "stateSave": true,
             "processing": true,
-            "dom": 'Bfrtip',
             "paging": true
         });
         table.clear();
     });
 
+
     $('#requesttable tbody').on( 'click', 'tr', function () {
         $(this).toggleClass('selected');
     } );
-
 
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
@@ -237,11 +243,18 @@
         }).then(function(result){
             if (result.value) {
                 var oTableT = $("#requesttable").dataTable();
-                $('.checkbox_global:checked', oTableT.fnGetNodes()).each(function(){
-                    id.push($(this).val());
-                });
+                var length=table.rows('.selected').data().length;
+                if (length>10) {
+                    for (var i = 0; i < 10; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }else{
+                    for (var i = 0; i < length; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }           
 
-                if(id.length > 0)
+                if(length > 0)
                 {
                     url='{!! route("globalcharges.destroyArr",":id") !!}';
                     url = url.replace(':id', id);
@@ -283,9 +296,15 @@
         var id = [];
         var oTable = $("#requesttable").dataTable();
         var length=table.rows('.selected').data().length;                
-        for (var i = 0; i < table.rows('.selected').data().length; i++) { 
-            id.push(table.rows('.selected').data()[i].id);
-        }
+        if (length>10) {
+            for (var i = 0; i < 10; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        }else{
+            for (var i = 0; i < length; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        } 
         if(length > 0)
         {
             url='{!! route("gcadm.dupicate.Array",":id") !!}';
@@ -316,7 +335,7 @@
         }
         else
         {
-            swal("Error!", "Please select atleast one checkbox", "error");
+            swal("Error!", "Please select at least one record", "error");
         }
     });
 
