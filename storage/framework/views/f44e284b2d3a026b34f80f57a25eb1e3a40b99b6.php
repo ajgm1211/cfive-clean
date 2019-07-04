@@ -413,7 +413,12 @@
               <div class="col-lg-2" >
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
-                  <?php echo e(Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true'])); ?>
+                  <?php echo e(Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true'])); ?><br><br><!-- lo se genesis no debo usar br -->
+
+                  <?php echo e(Form::checkbox('chargeOrigin',null,['id'=>'mode','class'=>'m-select2-general form-control'])); ?>
+
+                  Include origin charges
+
 
                 </div>
 
@@ -426,8 +431,10 @@
               <div class="col-lg-2">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
-                  <?php echo e(Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true'])); ?>
+                  <?php echo e(Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true'])); ?><br><br>
+                  <?php echo e(Form::checkbox('chargeDestination',null,['id'=>'mode','class'=>'m-select2-general form-control'])); ?>
 
+                  Include destination charges
                 </div>
                 <div id="destination_airport_label" style="display:none;">
                   <label>Destination airport</label>
@@ -482,6 +489,7 @@
                 <?php echo e(Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true'])); ?>
 
               </div>
+
             </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
