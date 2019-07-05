@@ -209,8 +209,14 @@
             buttons: [
                 {
                     text: 'Select all',
-                    action: function () {
-                        table.rows().select();
+                    action : function(e) {
+                        e.preventDefault();
+                        table.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        table.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
                     }
                 },
                 {

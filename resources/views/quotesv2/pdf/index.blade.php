@@ -789,7 +789,7 @@
         @endif
         <br>
         @if($quote->payment_conditions!='')
-            <!--<br>
+            <br>
             <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
@@ -807,7 +807,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>-->
+            </div>
         @endif
         @if($quote->terms_and_conditions!='')
             <br>

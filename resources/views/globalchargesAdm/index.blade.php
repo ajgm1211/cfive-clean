@@ -183,8 +183,14 @@
             buttons: [
                 {
                     text: 'Select all',
-                    action: function () {
-                        table.rows().select();
+                    action : function(e) {
+                        e.preventDefault();
+                        table.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        table.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
                     }
                 },
                 {
@@ -245,7 +251,7 @@
                 var oTableT = $("#requesttable").dataTable();
                 var length=table.rows('.selected').data().length;
                 if (length>10) {
-                    for (var i = 0; i < 10; i++) { 
+                    for (var i = 0; i < 50; i++) { 
                         id.push(table.rows('.selected').data()[i].id);
                     }
                 }else{
@@ -297,7 +303,7 @@
         var oTable = $("#requesttable").dataTable();
         var length=table.rows('.selected').data().length;                
         if (length>10) {
-            for (var i = 0; i < 10; i++) { 
+            for (var i = 0; i < 50; i++) { 
                 id.push(table.rows('.selected').data()[i].id);
             }
         }else{
