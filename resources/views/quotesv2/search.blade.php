@@ -343,6 +343,10 @@
   .downexcel i {
     color: #6ee99e !important;
   }
+  .btn-plus__form {
+    position: relative;
+    top: 8px;
+  }
   /* estilos */
 </style>
 @endsection
@@ -379,7 +383,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle" style="color:blue; font-size: 18px;" ></i> </a>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
                     </span>
                   </span>
                 </div>
@@ -391,7 +395,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i></a>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;"></i></a>
                     </span>
                   </span>
                 </div>
@@ -463,7 +467,7 @@
             </div>
             <div class="row">
               <div class="col-lg-2" >   
-               {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
                 Include origin charges</div>
               <div class="col-lg-2" >
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode']) }}
@@ -859,7 +863,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
+                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate checkboxx" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
                       <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
@@ -1001,8 +1005,8 @@
                   </div>
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
@@ -1016,8 +1020,8 @@
                   @foreach($arr->rates as $rates)
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{ $rates['type'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode" style="white-space: nowrap">{{ $rates['detail'] }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup20'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
@@ -1034,8 +1038,8 @@
 
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
                           <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
@@ -1059,8 +1063,8 @@
                   @endforeach
 
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-3 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
@@ -1084,8 +1088,8 @@
                   </div>
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wthwth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
                         <div class="wthwth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
@@ -1100,8 +1104,8 @@
 
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
                           <span class="bg-rates">   {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }} </span><span class="bg-rates"> + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}   </b>       
@@ -1127,8 +1131,8 @@
 
 
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-3 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
@@ -1348,8 +1352,16 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
   $('.selected').on('click', function(){
-    $(this).toggleClass('selected-class'); 
+    $(this).toggleClass('selected-class');
+   
+    if($('.selected').hasClass('selected-class') ) {
+       $('.create-manual').prop( "disabled", true );
+    }else{
+      $('.create-manual').prop( "disabled", false );
+    }
   });
+  
+  
 
   $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');
