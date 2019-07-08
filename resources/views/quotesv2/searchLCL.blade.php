@@ -343,6 +343,11 @@
   .downexcel i {
     color: #6ee99e !important;
   }
+  .btn-plus__form {
+    position: relative;
+    top: 8px;
+  }
+
   /* estilos */
 </style>
 @endsection
@@ -379,7 +384,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle" style="color:blue; font-size: 18px;" ></i> </a>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
                     </span>
                   </span>
                 </div>
@@ -391,7 +396,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i></a>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;"></i></a>
                     </span>
                   </span>
                 </div>
@@ -459,7 +464,7 @@
             </div>
             <div class="row">
               <div class="col-lg-2" >   
-               {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
                 Include origin charges</div>
               <div class="col-lg-2" >
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode']) }}
@@ -1006,7 +1011,7 @@
                       <div class="col-lg-2 colorphacode"> {{ $rates['detail'] }} </div>
                       <div class="col-lg-7 colorphacode">
                         <div class="d-flex justify-content-between">
-                                    <div class="wth" >
+                          <div class="wth" >
                             <span class="bg-rates">  {{ $rates['cantidad'] }}</span> 
                           </div>
                           <div class="wth" >
@@ -1107,7 +1112,7 @@
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
                           </div>
-                               <div class="wth" >
+                          <div class="wth" >
                             <span class="bg-rates"> {{ $localdestiny['monto'] / $localdestiny['cantidad'] }} </span> 
                           </div> 
                           <div class="wth" >
@@ -1212,7 +1217,13 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
   <script>
     $('.selected').on('click', function(){
-      $(this).toggleClass('selected-class'); 
+      $(this).toggleClass('selected-class');
+
+      if($('.selected').hasClass('selected-class') ) {
+        $('.create-manual').prop( "disabled", true );
+      }else{
+        $('.create-manual').prop( "disabled", false );
+      }
     });
 
     $(document).ready(function() {
