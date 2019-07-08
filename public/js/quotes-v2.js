@@ -2353,6 +2353,7 @@ $('.inlandsO').on('click', function(){
 
 //Calcular el volumen individual
 $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
+  
   var sumAl = 0;
   var sumAn = 0;
   var sumLa = 0;
@@ -2380,7 +2381,9 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
       }
     });
   });
+
   $( ".quantity" ).each(function() {
+  
     $( this).each(function() {
       quantity = $(this).val();
       if (!isNaN(quantity)) {
