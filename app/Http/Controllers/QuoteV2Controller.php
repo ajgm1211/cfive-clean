@@ -6509,8 +6509,8 @@ class QuoteV2Controller extends Controller
 
 
     $arreglo  =  $arreglo->sortBy('total20');
-    
-  //  dd($arreglo);
+
+    //  dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
@@ -6685,6 +6685,19 @@ class QuoteV2Controller extends Controller
     }else{
       $currency_name = '';
     }
+
+
+    if($request->input('total_weight') != null ) {
+
+      $simple = 'show active';
+      $paquete = '';
+    }
+    if($request->input('total_weight_pkg') != null ) {
+
+      $simple = '';
+      $paquete = 'show active';
+    }
+
 
     $currencies = Currency::all()->pluck('alphacode','id');
 
@@ -8430,6 +8443,7 @@ class QuoteV2Controller extends Controller
     $hideO = 'hide';
     $hideD = 'hide';
     $form  = $request->all();
+   //dd($form);
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
 
