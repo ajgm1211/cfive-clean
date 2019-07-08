@@ -5121,8 +5121,9 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = 'true';
     $chargeDestination= 'true';
     $chargeFreight= 'true';
+    $form['equipment'] = array('20','40','40HC');
 
-    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight'));
+    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','form'));
 
 
   }
