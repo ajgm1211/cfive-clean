@@ -560,14 +560,13 @@
                   </div>
                   <!-- By packing -->
                   <div class="tab-pane fade {{ $paquete }} " id="tab_1_2"  >
-                    <div class="template">
-                      <input type="hidden" id="total_pallets" name="total_pallets"/>
-                      <input type="hidden" id="total_packages" name="total_packages"/>
-                           <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
-                          <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
-                      @foreach(@$form['quantity'] as $key => $var)
+              <input type="hidden" value="@$form['total_pallets']" id="total_pallets" name="total_pallets"/>
+                          <input type="hidden" value="@$form['total_packages']" id="total_packages" name="total_packages"/>
 
-                      @if($var != null )
+                    @foreach(@$form['quantity'] as $key => $var)
+
+                    @if($var != null )
+                    <div class="template">
                       <div class="row">
                         <div class="col-md-2">
                           <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
@@ -583,13 +582,13 @@
                         <div class="col-md-5" >
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
                             <div class="btn-group" role="group">
-                              <input class="height form-control size-12px height_2" value="{{ @$form['height'][$key] }}" min="0" name="height[]" id="height" type="number" placeholder="H"/>
+                              <input class="height form-control size-12px height_2" value="{{ @$form['height'][$key] }}" min="0" name="height[]"  type="number" placeholder="H"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="width form-control size-12px width_2" min="0" value="{{ @$form['width'][$key] }}" name="width[]" id="width" type="number" placeholder="W"/>
+                              <input class="width form-control size-12px width_2" min="0" value="{{ @$form['width'][$key] }}" name="width[]" type="number" placeholder="W"/>
                             </div>
                             <div class="btn-group" role="group">
-                              <input class="large form-control size-12px large_2" min="0" value="{{ @$form['large'][$key] }}" name="large[]" id="large" type="number" placeholder="L"/>
+                              <input class="large form-control size-12px large_2" min="0" value="{{ @$form['large'][$key] }}" name="large[]"  type="number" placeholder="L"/>
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
@@ -603,26 +602,29 @@
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          </div>  
                         </div>
                         <div class="col-md-2">
                           <div class="input-group">
-                            <input type="number" id="weight" value="{{ @$form['weight'][$key] }}" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
+                            <input type="number"  value="{{ @$form['weight'][$key] }}" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
                           </div><!-- /input-group -->
                         </div>
                         <div class="col-md-1">
                           <input type="hidden" class="volume_input"  value="{{ @$form['volume'][$key] }}" name="volume[]"/>
-                     
+            
+                          <input type="hidden" value="{{ @$form['quantity'][$key]  }}" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                          <input type="hidden"  value="{{ @$form['weight'][$key] * @$form['quantity'][$key] }}"   class="weight_input" id="weight_input" name="total_weight_pkg"/>
                         </div>
                         <div class="col-md-4">
                           <br>
                           <p class=""><span class="quantity">{{ @$form['quantity'][$key] }} un</span> <span class="volume"> {{ @$form['volume'][$key] }} m<sup>3</sup></span> <span class="weight"> {{ @$form['weight'][$key] * @$form['quantity'][$key] }}kg</span></p>
                         </div>
                       </div>
-                      @endif
-
-                      @endforeach
                     </div>
+                    @endif
+
+                    @endforeach
+
                     <div class="template hide" id="lcl_air_load_template">
                       <div class="row" style="padding-top: 15px;">
                         <div class="col-md-2">
