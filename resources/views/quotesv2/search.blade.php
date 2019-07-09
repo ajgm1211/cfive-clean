@@ -347,6 +347,37 @@
     position: relative;
     top: 8px;
   }
+  .include-checkbox[type="checkbox"] {
+    display: none;
+  }
+  .for-check {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 0px;
+  }
+  .label-check {
+    position: relative;
+  }
+  .label-check::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -25px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 2px solid #0000ff;
+    border-radius: 3px;
+    display: flex;
+    /*align-items: center*/
+    justify-content: center;
+  }
+  .include-checkbox[type="checkbox"]:checked + .label-check::before {
+    content: '✔';
+    color: #0000ff;
+    line-height: 15px;
+  }
+  
   /* estilos */
 </style>
 @endsection
@@ -466,17 +497,21 @@
 
             </div>
             <div class="row">
-              <div class="col-lg-2" >   
-                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
-                Include origin charges</div>
-              <div class="col-lg-2" >
-                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode']) }}
-                Include destination charges
+              <div class="col-lg-2 for-check">   
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
+                <label for="mode1" class="label-check">Include origin charges</label>
+                </div>
+                
+              <div class="col-lg-2 for-check">
+                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
+                <label for="mode2" class="label-check">Include destination charges</label>
               </div>
-              <div class="col-lg-2" >
-                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode']) }}
-                Include freight charges
+                
+              <div class="col-lg-2 for-check">
+                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
+                <label for="mode3" class="label-check">Include freight charges</label>
               </div>
+                
             </div><br>
             <div class="row">
               <div class="col-lg-2">
@@ -515,7 +550,7 @@
                           <div class="input-group">
                             <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <select class="form-control" id="type_cargo" name="cargo_type">
+                              <select class="form-control" id="type_cargo" name="cargo_type" style="height:2.5em">
                                 <option value="1">Pallets</option>
                                 <option value="2">Packages</option>
                               </select>
@@ -531,7 +566,7 @@
                           <div class="input-group">
                             <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">KG <span class="caret" ></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
                               </ul>
                             </div><!-- /btn-group -->
@@ -546,7 +581,7 @@
                           <div class="input-group">
                             <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">M<sup>3</sup> <span class="caret"></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
                               </ul>
                             </div><!-- /btn-group -->
@@ -564,8 +599,8 @@
                   <div class="tab-pane fade" id="tab_1_2">
                     <div class="template">
                       <div class="row">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
+                        <div class="col-md-2" style="padding-right:0px;">
+                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px" style="height: 2.7em">
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
@@ -573,24 +608,24 @@
                           <input type="hidden" id="total_pallets" name="total_pallets"/>
                           <input type="hidden" id="total_packages" name="total_packages"/>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="padding-right:0px;">
                           <input id="quantity" min="1" value="" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
                         </div>
-                        <div class="col-md-5" >
+                        <div class="col-md-5" style="padding-right:0px;">
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="height form-control size-12px height_2" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group"  style="margin-right: 15px;">
                               <input class="width form-control size-12px width_2" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                             </div>
-                            <div class="btn-group" role="group">
-                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                            <div class="btn-group" role="group"  style="margin-right: 15px;">
+                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L" />
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
                                 <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown" style="padding:0.45em 0.65em">
                                     <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu" role="menu">
@@ -612,38 +647,39 @@
                           <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
                         </div>
                         <div class="col-md-4">
-                          <br>
+
                           <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                         </div>
                       </div>
                     </div>
+                    <br>
                     <div class="template hide" id="lcl_air_load_template">
                       <div class="row" style="padding-top: 15px;">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                        <div class="col-md-2" style="padding-right:0px;">
+                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px" style="height: 2.7em">>
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
                           </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="padding-right:0px;">
                           <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5" style="padding-right:0px;">
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
                                 <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown" style="padding:0.45em 0.65em">
                                     <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu" role="menu">
@@ -671,28 +707,10 @@
                         </div>
                       </div>
                     </div>
-                    <br>
+
                     <div class="row">
                       <div class="col-md-12">
-                        <b>Total: </b>
-                        <span id="total_quantity_pkg"></span>
-                        <span id="total_volume_pkg"></span>
-                        <span id="total_weight_pkg"></span>
-                        <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
-                        <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
-                        <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
-                      </div>
-                      <br>
-                      <br>
-                      <div class="col-md-12">
-                        <b>Chargeable weight:</b>
-                        <span id="chargeable_weight_pkg"></span>
-                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <br>
+
                         <div id="saveActions" class="form-group">
                           <div class="btn-group">
                             <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
@@ -703,6 +721,27 @@
                         </div>
                       </div>
                     </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-4">
+
+                        <b>Total: </b>
+                        <span id="total_quantity_pkg"></span>
+                        <span id="total_volume_pkg"></span>
+                        <span id="total_weight_pkg"></span>
+                        <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
+                        <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
+                        <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
+                      </div>
+                      <br>
+                      <br>
+                      <div class="col-md-8">
+                        <b>Chargeable weight:</b>
+                        <span id="chargeable_weight_pkg"></span>
+                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -910,7 +949,7 @@
                           @if($arr->excelRequest !="")
                           <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
                             <a  id='excel_l{{$loop->iteration}}' href="/Requests/RequestImportation/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workgreen">Download Excel</span>  <!--  aqui -->
+                              <span class="workgreen">Download Excel</span>
 
                               <i class="la la-file-excel-o"></i>
                             </a>
@@ -1353,15 +1392,15 @@
 <script>
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class');
-   
+
     if($('.selected').hasClass('selected-class') ) {
-       $('.create-manual').prop( "disabled", true );
+      $('.create-manual').prop( "disabled", true );
     }else{
       $('.create-manual').prop( "disabled", false );
     }
   });
-  
-  
+
+
 
   $(document).ready(function() {
     var divRow = document.getElementsByClassName('data-rates');

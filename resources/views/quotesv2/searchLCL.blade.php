@@ -347,7 +347,36 @@
     position: relative;
     top: 8px;
   }
-
+  .include-checkbox[type="checkbox"] {
+    display: none;
+  }
+  .for-check {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 0px;
+  }
+  .label-check {
+    position: relative;
+  }
+  .label-check::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -25px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 2px solid #0000ff;
+    border-radius: 3px;
+    display: flex;
+    /*align-items: center*/
+    justify-content: center;
+  }
+  .include-checkbox[type="checkbox"]:checked + .label-check::before {
+    content: '✔';
+    color: #0000ff;
+    line-height: 15px;
+  }
   /* estilos */
 </style>
 @endsection
@@ -463,290 +492,291 @@
 
             </div>
             <div class="row">
-              <div class="col-lg-2" >   
-                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode']) }}
-                Include origin charges</div>
-              <div class="col-lg-2" >
-                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode']) }}
-                Include destination charges
-              </div>
-              <div class="col-lg-2" >
-                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode']) }}
-                Include freight charges
-              </div>
-            </div><br>
-            <div class="row">
-              <div class="col-lg-2">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-              </div>
+              <div class="col-lg-2 for-check" >   
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
+                <label for="mode1" class="label-check">Include origin charges</label></div>
+              <div class="col-lg-2 for-check" >
+                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
+                <label for="mode2" class="label-check">Include destination charges</label></div>
+                <div class="col-lg-2 for-check" >
+              {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
+              <label for="mode3" class="label-check">Include freight charges</label></div>
             </div>
-            <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
-              <div class="col-lg-2">
-                <label>
-                  <b>LOAD</b>
-                </label>
-              </div>
-              <div class="col-lg-10">
-                <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
-                  <li class="nav-item">
-                    <a href="#tab_1_1" class="nav-link {{ $simple }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#tab_1_2" class="nav-link {{ $paquete }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
-                  </li>
-                </ul>
-                <div class="tab-content">
-                  <!-- Simple -->
-                  <div class="tab-pane fade  {{ $simple }}"   id="tab_1_1"  >
-                    <div class="row">
-                      <div class="col-md-4">
-                        <label>
-                          Packages
-                        </label>
-                        <div class="m-bootstrap-touchspin-brand">
-                          <div class="input-group">
-                            <input type="number" id="total_quantity" value="{{ @$form['total_quantity'] }}" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
-                            <div class="input-group-btn">
-                              <select class="form-control" id="type_cargo" name="cargo_type">
-                                <option value="1">Pallets</option>
-                                <option value="2">Packages</option>
-                              </select>
-                            </div><!-- /btn-group -->
-                          </div><!-- /input-group -->
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <label>
-                          Total weight
-                        </label>
-                        <div class="m-bootstrap-touchspin-brand">
-                          <div class="input-group">
-                            <input type="number" id="total_weight" value="{{ @$form['total_weight'] }}" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
-                            <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
-                              <ul class="dropdown-menu dropdown-menu-right">
-                              </ul>
-                            </div><!-- /btn-group -->
-                          </div><!-- /input-group -->
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <label>
-                          Total volume
-                        </label>
-                        <div class="m-bootstrap-touchspin-brand">
-                          <div class="input-group">
-                            <input type="number" id="total_volume" value="{{ @$form['total_volume'] }}" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
-                            <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
-                              <ul class="dropdown-menu dropdown-menu-right">
-                              </ul>
-                            </div><!-- /btn-group -->
-                          </div><!-- /input-group -->
-                        </div>
-                      </div>
-                      <div class="col-md-12">
-                        <br>
-                        <br>
-                        <b>Chargeable weight:</b>
-                        <span id="chargeable_weight_total"> {{ @$form['chargeable_weight'] }} m<sup>3</sup></span>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- By packing -->
-                  <div class="tab-pane fade {{ $paquete }} " id="tab_1_2"  >
-              <input type="hidden" value="@$form['total_pallets']" id="total_pallets" name="total_pallets"/>
-                          <input type="hidden" value="@$form['total_packages']" id="total_packages" name="total_packages"/>
-
-                    @foreach(@$form['quantity'] as $key => $var)
-
-                    @if($var != null )
-                    <div class="template">
-                      <div class="row">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
-                            <option {{ ($form['type_load_cargo'][$key] == "" ) ? 'selected' : ""}} value="">Choose an option</option>
-                            <option {{ ($form['type_load_cargo'][$key] == "1" ) ? 'selected' : ""}} value="1">Pallets</option>
-                            <option {{ ($form['type_load_cargo'][$key] == "2" ) ? 'selected' : ""}} value="2">Packages</option>
-                          </select>
-
-                        </div>
-                        <div class="col-md-2">
-                          <input id="quantity" min="1" value="{{ @$form['quantity'][$key] }}" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
-                        </div>
-                        <div class="col-md-5" >
-                          <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
-                              <input class="height form-control size-12px height_2" value="{{ @$form['height'][$key] }}" min="0" name="height[]"  type="number" placeholder="H"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <input class="width form-control size-12px width_2" min="0" value="{{ @$form['width'][$key] }}" name="width[]" type="number" placeholder="W"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <input class="large form-control size-12px large_2" min="0" value="{{ @$form['large'][$key] }}" name="large[]"  type="number" placeholder="L"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <div class="input-group-btn">
-                                <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
-                                    <span class="xs-text size-12px">CM</span> <span class="caret"></span>
-                                  </button>
-                                  <ul class="dropdown-menu" role="menu">
-
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>  
-                        </div>
-                        <div class="col-md-2">
-                          <div class="input-group">
-                            <input type="number"  value="{{ @$form['weight'][$key] }}" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
-                          </div><!-- /input-group -->
-                        </div>
-                        <div class="col-md-1">
-                          <input type="hidden" class="volume_input"  value="{{ @$form['volume'][$key] }}" name="volume[]"/>
             
-                          <input type="hidden" value="{{ @$form['quantity'][$key]  }}" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
-                          <input type="hidden"  value="{{ @$form['weight'][$key] * @$form['quantity'][$key] }}"   class="weight_input" id="weight_input" name="total_weight_pkg"/>
-                        </div>
-                        <div class="col-md-4">
-                          <br>
-                          <p class=""><span class="quantity">{{ @$form['quantity'][$key] }} un</span> <span class="volume"> {{ @$form['volume'][$key] }} m<sup>3</sup></span> <span class="weight"> {{ @$form['weight'][$key] * @$form['quantity'][$key] }}kg</span></p>
-                        </div>
-                      </div>
-                    </div>
-                    @endif
-
-                    @endforeach
-
-                    <div class="template hide" id="lcl_air_load_template">
-                      <div class="row" style="padding-top: 15px;">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
-                            <option value="">Choose an option</option>
+          </div>
+        </div><br>
+        <div class="row">
+          <div class="col-lg-2">
+            <label>Incoterm</label>
+            {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
+          </div>
+          <div class="col-lg-2">
+            <label>Direction</label>
+            {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+          </div>
+        </div>
+        <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
+          <div class="col-lg-2">
+            <label>
+              <b>LOAD</b>
+            </label>
+          </div>
+          <div class="col-lg-10">
+            <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
+              <li class="nav-item">
+                <a href="#tab_1_1" class="nav-link {{ $simple }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
+              </li>
+              <li class="nav-item">
+                <a href="#tab_1_2" class="nav-link {{ $paquete }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <!-- Simple -->
+              <div class="tab-pane fade  {{ $simple }}"   id="tab_1_1"  >
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>
+                      Packages
+                    </label>
+                    <div class="m-bootstrap-touchspin-brand">
+                      <div class="input-group">
+                        <input type="number" id="total_quantity" value="{{ @$form['total_quantity'] }}" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
+                        <div class="input-group-btn">
+                          <select class="form-control" id="type_cargo" name="cargo_type" style="height:2.5em">
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
                           </select>
-                        </div>
-                        <div class="col-md-2">
-                          <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
-                        </div>
-                        <div class="col-md-5">
-                          <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
-                              <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
-                            </div>
-                            <div class="btn-group" role="group">
-                              <div class="input-group-btn">
-                                <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
-                                    <span class="xs-text size-12px">CM</span> <span class="caret"></span>
-                                  </button>
-                                  <ul class="dropdown-menu" role="menu">
-
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="input-group">
-                            <input type="number" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
-                          </div><!-- /input-group -->
-                        </div>
-                        <div class="col-md-1">                     
-                          <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
-                          <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
-                          <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
-                          <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
-                        </div>
-                        <div class="col-md-4">
-                          <br>
-                          <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
-                        </div>
-                      </div>
+                        </div><!-- /btn-group -->
+                      </div><!-- /input-group -->
                     </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label>
+                      Total weight
+                    </label>
+                    <div class="m-bootstrap-touchspin-brand">
+                      <div class="input-group">
+                        <input type="number" id="total_weight" value="{{ @$form['total_weight'] }}" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">KG <span class="caret"></span></button>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                          </ul>
+                        </div><!-- /btn-group -->
+                      </div><!-- /input-group -->
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label>
+                      Total volume
+                    </label>
+                    <div class="m-bootstrap-touchspin-brand">
+                      <div class="input-group">
+                        <input type="number" id="total_volume" value="{{ @$form['total_volume'] }}" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">M<sup>3</sup> <span class="caret"></span></button>
+                          <ul class="dropdown-menu dropdown-menu-right">
+                          </ul>
+                        </div><!-- /btn-group -->
+                      </div><!-- /input-group -->
+                    </div>
+                  </div>
+                  <div class="col-md-12">
                     <br>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <b>Total: </b>
-                        <span id="total_quantity_pkg">{{ @$form['total_quantity_pkg'] }} un</span>
-                        <span id="total_volume_pkg">{{ @$form['total_volume_pkg'] }} m<sup>3</sup></span>
-                        <span id="total_weight_pkg">{{ @$form['total_weight_pkg'] }} kg</span>
-                        <input type="hidden" id="total_quantity_pkg_input"  value="{{ @$form['total_quantity_pkg'] }}"  name="total_quantity_pkg"/>
-                        <input type="hidden" id="total_volume_pkg_input"  value="{{ @$form['total_volume_pkg'] }}"  name="total_volume_pkg"/>
-                        <input type="hidden" id="total_weight_pkg_input"  value="{{ @$form['total_weight_pkg'] }}"  name="total_weight_pkg"/>
-                      </div>
-                      <br>
-                      <br>
-                      <div class="col-md-12">
-                        <b>Chargeable weight:</b>
-                        <span id="chargeable_weight_pkg"> {{ @$form['chargeable_weight'] }} m<sup>3</sup></span>
-                        <input type="hidden" id="chargeable_weight_pkg_input" value="{{ @$form['chargeable_weight'] }}" name="chargeable_weight"/>
-                      </div>
+                    <br>
+                    <b>Chargeable weight:</b>
+                    <span id="chargeable_weight_total"> {{ @$form['chargeable_weight'] }} m<sup>3</sup></span>
+                  </div>
+                </div>
+              </div>
+              <!-- By packing -->
+              <div class="tab-pane fade {{ $paquete }} " id="tab_1_2"  >
+                <input type="hidden" value="@$form['total_pallets']" id="total_pallets" name="total_pallets"/>
+                <input type="hidden" value="@$form['total_packages']" id="total_packages" name="total_packages"/>
+
+                @foreach(@$form['quantity'] as $key => $var)
+
+                @if($var != null )
+                <div class="template">
+                  <div class="row">
+                    <div class="col-md-2" style="padding-right:0px;">
+                      <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px" style="height: 2.7em">
+                        <option {{ ($form['type_load_cargo'][$key] == "" ) ? 'selected' : ""}} value="">Choose an option</option>
+                        <option {{ ($form['type_load_cargo'][$key] == "1" ) ? 'selected' : ""}} value="1">Pallets</option>
+                        <option {{ ($form['type_load_cargo'][$key] == "2" ) ? 'selected' : ""}} value="2">Packages</option>
+                      </select>
+
                     </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <br>
-                        <div id="saveActions" class="form-group">
-                          <div class="btn-group">
-                            <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
-                              <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
-                              <span>Add load</span>
-                            </button>
+                    <div class="col-md-2" style="padding-right:0px;">
+                      <input id="quantity" min="1" value="{{ @$form['quantity'][$key] }}" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
+                    </div>
+                    <div class="col-md-5" style="padding-right:0px;">
+                      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group" style="margin-right: 15px;">
+                          <input class="height form-control size-12px height_2" value="{{ @$form['height'][$key] }}" min="0" name="height[]"  type="number" placeholder="H"/>
+                        </div>
+                        <div class="btn-group" role="group" style="margin-right: 15px;">
+                          <input class="width form-control size-12px width_2" min="0" value="{{ @$form['width'][$key] }}" name="width[]" type="number" placeholder="W"/>
+                        </div>
+                        <div class="btn-group" role="group" style="margin-right: 15px;">
+                          <input class="large form-control size-12px large_2" min="0" value="{{ @$form['large'][$key] }}" name="large[]"  type="number" placeholder="L"/>
+                        </div>
+                        <div class="btn-group" role="group" >
+                          <div class="input-group-btn">
+                            <div class="btn-group">
+                              <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown" style="padding:0.45em 0.65em">
+                                <span class="xs-text size-12px">CM</span> <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu" role="menu">
+
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>  
+                    </div>
+                    <div class="col-md-2">
+                      <div class="input-group">
+                        <input type="number"  value="{{ @$form['weight'][$key] }}" name="weight[]" min="0" step="0.0001" class="weight weight_2 form-control size-12px" placeholder="Weight" aria-label="...">
+                      </div><!-- /input-group -->
+                    </div>
+                    <div class="col-md-1">
+                      <input type="hidden" class="volume_input"  value="{{ @$form['volume'][$key] }}" name="volume[]"/>
+
+                      <input type="hidden" value="{{ @$form['quantity'][$key]  }}" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                      <input type="hidden"  value="{{ @$form['weight'][$key] * @$form['quantity'][$key] }}"   class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                    </div>
+                    <div class="col-md-4">
+
+                      <p class=""><span class="quantity">{{ @$form['quantity'][$key] }} un</span> <span class="volume"> {{ @$form['volume'][$key] }} m<sup>3</sup></span> <span class="weight"> {{ @$form['weight'][$key] * @$form['quantity'][$key] }}kg</span></p>
+                    </div>
+                  </div>
+                </div>
+                @endif
+
+                @endforeach
+
+                <div class="template hide" id="lcl_air_load_template">
+                  <div class="row" style="padding-top: 15px;">
+                    <div class="col-md-2">
+                      <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                        <option value="">Choose an option</option>
+                        <option value="1">Pallets</option>
+                        <option value="2">Packages</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
+                    </div>
+                    <div class="col-md-5">
+                      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                        <div class="btn-group" role="group">
+                          <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
+                        </div>
+                        <div class="btn-group" role="group">
+                          <div class="input-group-btn">
+                            <div class="btn-group">
+                              <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                <span class="xs-text size-12px">CM</span> <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu" role="menu">
+
+                              </ul>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-
-                </div>
-              </div>
-            </div><br>
-
-            <div class="row">
-              <div class="col-lg-12 no-padding">
-                <div class="row  justify-content-between">
-                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
-                    @if(isset($arreglo))
-                    @if($arreglo->isEmpty())
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
-                    @endif
-                    @endif
-                  </div><!-- aqui -->
-                  <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
-                    <!--  <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-</button> -->
+                    <div class="col-md-2">
+                      <div class="input-group">
+                        <input type="number" name="weight[]" min="0" step="0.0001" class="weight form-control size-12px" placeholder="Weight" aria-label="...">
+                      </div><!-- /input-group -->
+                    </div>
+                    <div class="col-md-1">                     
+                      <a class="remove_lcl_air_load" style="cursor: pointer;"><i class="fa fa-trash"></i></a>
+                      <input type="hidden" class="volume_input" id="volume_input" name="volume[]"/>
+                      <input type="hidden" class="quantity_input" id="quantity_input" name="total_quantity_pkg"/>
+                      <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
+                    </div>
+                    <div class="col-md-4">
+                      <br>
+                      <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
+                    </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <br>
+                    <div id="saveActions" class="form-group">
+                      <div class="btn-group">
+                        <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
+                          <span class="fa fa-plus" role="presentation" aria-hidden="true"></span> &nbsp;
+                          <span>Add load</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-4">
+                    <b>Total: </b>
+                    <span id="total_quantity_pkg">{{ @$form['total_quantity_pkg'] }} un</span>
+                    <span id="total_volume_pkg">{{ @$form['total_volume_pkg'] }} m<sup>3</sup></span>
+                    <span id="total_weight_pkg">{{ @$form['total_weight_pkg'] }} kg</span>
+                    <input type="hidden" id="total_quantity_pkg_input"  value="{{ @$form['total_quantity_pkg'] }}"  name="total_quantity_pkg"/>
+                    <input type="hidden" id="total_volume_pkg_input"  value="{{ @$form['total_volume_pkg'] }}"  name="total_volume_pkg"/>
+                    <input type="hidden" id="total_weight_pkg_input"  value="{{ @$form['total_weight_pkg'] }}"  name="total_weight_pkg"/>
+                  </div>
+                  <div class="col-md-8">
+                    <b>Chargeable weight:</b>
+                    <span id="chargeable_weight_pkg"> {{ @$form['chargeable_weight'] }} m<sup>3</sup></span>
+                    <input type="hidden" id="chargeable_weight_pkg_input" value="{{ @$form['chargeable_weight'] }}" name="chargeable_weight"/>
+                  </div>
+                </div>
+
               </div>
+
             </div>
+          </div>
+        </div><br>
 
-            <div class="row">
-              <div class="col-lg-12">   
-                <center>
-                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
-                  <button type="button" class="btn m-btn--pill  btn-search__quotes btn-info quote_man create-manual">Create Manual</span></button>
-                </center>
+        <div class="row">
+          <div class="col-lg-12 no-padding">
+            <div class="row  justify-content-between">
+              <div class="col-lg-10 d-flex message  align-items-end align-self-end">
+                @if(isset($arreglo))
+                @if($arreglo->isEmpty())
+                <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                @endif
+                @endif
+              </div><!-- aqui -->
+              <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
+                <!--  <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+</button> -->
+              </div>
             </div>
           </div>
         </div>
-      </div>      
+
+        <div class="row">
+          <div class="col-lg-12">   
+            <center>
+              <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+              <button type="button" class="btn m-btn--pill  btn-search__quotes btn-info quote_man create-manual">Create Manual</span></button>
+            </center>
+        </div>
+      </div>
     </div>
-  </div>
+  </div>      
+</div>
+</div>
 </div>
 
 {!! Form::close() !!}
