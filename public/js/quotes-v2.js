@@ -2053,7 +2053,7 @@ function display_r(id){
 
 
 $(".quote_search").on("click", function() {
-  
+
 
 
   //FCL
@@ -2353,9 +2353,9 @@ $('.inlandsO').on('click', function(){
 
 //Calcular el volumen individual
 $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
-  
 
-  
+
+
   var sumAl = 0;
   var sumAn = 0;
   var sumLa = 0;
@@ -2370,14 +2370,14 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
   $( ".width" ).each(function() {
     $( this).each(function() {
       width = $(this).val();
-         
+
       if (!isNaN(width)) {
         width = parseInt(width);
       }
     });
   });
 
-  
+
   $( ".height" ).each(function() {
     $( this).each(function() {
       thickness = $(this).val();
@@ -2388,7 +2388,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
   });
 
   $( ".quantity" ).each(function() {
-  
+
     $( this).each(function() {
       quantity = $(this).val();
       if (!isNaN(quantity)) {
@@ -2417,7 +2417,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
     width = $(this).closest('.row').find('.width').val();
     quantity = $(this).closest('.row').find('.quantity').val();
     weight = $(this).closest('.row').find('.weight').val();
-   //     alert(width);
+    //     alert(width);
 
     if(thickness > 0 || length > 0 || quantity > 0) {
       volume = Math.round(thickness * length * width * quantity / 10000) / 100;
@@ -2788,21 +2788,26 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
 function precargarLCL(){
 
 
-  // Validaciones por defecto 
-  $("#total_quantity").prop( "required", true );
-  $("#total_weight").prop( "required", true );
-  $("#total_volume").prop( "required", true );
+  // Validaciones por defecto
+
+  if($("#total_quantity").val() != ""){
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+  }
+
 
 
   $(".infocheck").val('');
   $(".quote_search").show();
-  
+
 
 
   $("#origin_harbor").prop( "disabled", false );
   $("#destination_harbor").prop( "disabled", false );
   $("#equipment_id").hide();
   $("#equipment").prop( "disabled", true );
+  $("#equipment").removeAttr('required');
   $("#delivery_type").prop( "disabled", false );
   $("#delivery_type_air").prop( "disabled", true );
   $("#delivery_type_label").show();
