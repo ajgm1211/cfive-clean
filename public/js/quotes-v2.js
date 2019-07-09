@@ -2354,6 +2354,8 @@ $('.inlandsO').on('click', function(){
 //Calcular el volumen individual
 $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
   
+
+  
   var sumAl = 0;
   var sumAn = 0;
   var sumLa = 0;
@@ -2368,11 +2370,14 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
   $( ".width" ).each(function() {
     $( this).each(function() {
       width = $(this).val();
+         
       if (!isNaN(width)) {
         width = parseInt(width);
       }
     });
   });
+
+  
   $( ".height" ).each(function() {
     $( this).each(function() {
       thickness = $(this).val();
@@ -2412,6 +2417,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
     width = $(this).closest('.row').find('.width').val();
     quantity = $(this).closest('.row').find('.quantity').val();
     weight = $(this).closest('.row').find('.weight').val();
+   //     alert(width);
 
     if(thickness > 0 || length > 0 || quantity > 0) {
       volume = Math.round(thickness * length * width * quantity / 10000) / 100;
