@@ -267,7 +267,7 @@ class ImportationController extends Controller
             }
 
         } else {
-            ReprocessRatesJob::dispatch($id);
+            ReprocessRatesJob::dispatch($id)->onQueue('importation');
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The rates are reprocessing in the background');
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'1']);
@@ -492,7 +492,7 @@ class ImportationController extends Controller
             }
 
         } else {
-            ReprocessSurchargersJob::dispatch($id);
+            ReprocessSurchargersJob::dispatch($id)->onQueue('importation');
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The Surchargers are reprocessing in the background');
             return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
@@ -639,7 +639,8 @@ class ImportationController extends Controller
             $account->request_id        = $request_id;
             $account->save();
 
-            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
+            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account')->onQueue('importation');
+            //Queue::connection("importation")->push(new ProcessContractFile($account->id,$account->namefile,'fcl','account'));
 
             if($selector == 2){
                 $contract = Contract::find($request->contract_id);
@@ -822,7 +823,8 @@ class ImportationController extends Controller
         /*Rate::where('contract_id',$request->Contract_id)->forceDelete();
         FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
         $errors = 0;
-        ImportationRatesFclJob::dispatch($requestobj);
+        ImportationRatesFclJob::dispatch($requestobj)->onQueue('importation');
+        //Queue::connection("importation")->push(new ImportationRatesFclJob($requestobj));
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
     }
     public function FailedRatesDeveloper($id,$tab){
@@ -849,7 +851,8 @@ class ImportationController extends Controller
         Rate::where('contract_id',$request->Contract_id)->forceDelete();
         FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
 
-        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
+        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId)->onQueue('importation'); //NO BORRAR!!
+        //Queue::connection("importation")->push(new ImportationRatesSurchargerJob($request->all(),$companyUserId,$UserId));
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
     }
