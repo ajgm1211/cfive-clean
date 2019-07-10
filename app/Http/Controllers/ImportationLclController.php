@@ -178,7 +178,7 @@ class ImportationLclController extends Controller
             }
 
         } else {
-            ReprocesarRatesLclJob::dispatch($id);
+            ReprocesarRatesLclJob::dispatch($id)->onQueue('importation');
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The rates are reprocessing in the background');
             return redirect()->route('Failed.Rates.lcl.view',[$id,'1']);
@@ -304,7 +304,7 @@ class ImportationLclController extends Controller
             $account->requestlcl_id     = $request_id;
             $account->save();
 
-            ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account');
+            ProcessContractFile::dispatch($account->id,$account->namefile,'lcl','account')->onQueue('importation');
             if($selector == 2){
                 $contract               = ContractLcl::find($request->contract_id);
                 $contract->account_id   = $account->id;
