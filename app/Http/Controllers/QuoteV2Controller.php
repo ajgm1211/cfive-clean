@@ -70,11 +70,7 @@ use App\GlobalCharPortLcl;
 
 class QuoteV2Controller extends Controller
 {
-  /**
-   * Show quotes list
-   * @param Request $request 
-   * @return Illuminate\View\View
-   */
+
   public function index(Request $request){
     $company_user='';
     $currency_cfg = '';
@@ -203,11 +199,6 @@ class QuoteV2Controller extends Controller
     ->editColumn('id', '{{$id}}')->make(true);
   }
 
-  /**
-   * Mostrar detalles de una cotización
-   * @param integer $id 
-   * @return Illuminate\View\View
-   */
   public function show($id)
   {
     //Setting id
@@ -515,11 +506,6 @@ class QuoteV2Controller extends Controller
     return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD'));
   }
 
-  /**
-   * Update charges by rate
-   * @param Request $request 
-   * @return array json
-   */
   public function updateRateCharges(Request $request)
   {
     $charge=AutomaticRate::find($request->pk);
@@ -542,11 +528,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update charges
-   * @param Request $request 
-   * @return array json
-   */
   public function updateQuoteCharges(Request $request)
   {
     $charge=Charge::find($request->pk);
@@ -569,11 +550,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update inland's charges
-   * @param Request $request 
-   * @return array json
-   */
   public function updateInlandCharges(Request $request)
   {
     $charge=AutomaticInland::find($request->pk);
@@ -596,11 +572,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['success'=>'Ok']);
   }
 
-  /**
-   * Update inland's charges LCL/AIR
-   * @param Request $request 
-   * @return array json
-   */
   public function updateInlandChargeLcl(Request $request)
   {
     $charge=AutomaticInlandLclAir::find($request->pk);
@@ -630,12 +601,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok']);
   }
 
-  /**
-   * Update Quote's data
-   * @param Request $request 
-   * @param integer $id 
-   * @return array json
-   */
   public function update(Request $request,$id)
   {
 
@@ -703,12 +668,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok','quote'=>$quote]);
   }
 
-  /**
-   * Actualizar términos y condiciones de una cotización
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
   public function updateTerms(Request $request,$id)
   {
     $quote=QuoteV2::find($id);
@@ -719,12 +678,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok','quote'=>$quote]);
   }
 
-  /**
-   * Actualizar remarsk de un rate
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
   public function updateRemarks(Request $request,$id)
   {
     $rate=AutomaticRate::find($id);
@@ -735,12 +688,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message'=>'Ok','rate'=>$rate]);
   }
 
-  /**
-   * Duplicar una cotización existente
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
   public function duplicate(Request $request, $id){
 
     $id = obtenerRouteKey($id);
@@ -874,10 +821,6 @@ class QuoteV2Controller extends Controller
     }
   }
 
-  /**
-   * Crea Custom ID a partir de datos del usuario
-   * @return type
-   */
   public function idPersonalizado(){
     $user_company = CompanyUser::where('id',\Auth::user()->company_user_id)->first();
     $iniciales =  strtoupper(substr($user_company->name,0, 2));
@@ -897,12 +840,6 @@ class QuoteV2Controller extends Controller
     return $iniciales;
   }
 
-  /**
-   * Mostrar/Ocultar contenedores en la vista
-   * @param array $equipmentForm 
-   * @param integer $tipo 
-   * @return type
-   */
   public function hideContainer($equipmentForm,$tipo){
     $equipment = new Collection();
     $hidden20 = 'hidden';
@@ -970,11 +907,6 @@ class QuoteV2Controller extends Controller
     return($equipment);
   }
 
-  /**
-   * Enviar cotizaciones vía email
-   * @param Request $request 
-   * @return Json
-   */
   public function send_pdf_quote(Request $request)
   {
     $quote = QuoteV2::findOrFail($request->id);
@@ -2085,11 +2017,7 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
-    /**
-   * Enviar cotizaciones vía email
-   * @param Request $request 
-   * @return Json
-   */
+
   public function send_pdf_quote_lcl_air(Request $request)
   {
     $quote = QuoteV2::findOrFail($request->id);
@@ -2396,12 +2324,6 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok']);
   }
 
-  /**
-   * Generate PDF FCL
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
   public function pdf(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
@@ -2630,77 +2552,6 @@ class QuoteV2Controller extends Controller
 
 
     /** FREIGHT CHARGES **/
-
-    /* $freight_charges_detailed = collect($freight_charges);
-
-    $freight_charges_detailed = $freight_charges_detailed->groupBy([   
-      function ($item) {
-        return $item['origin_port']['name'].', '.$item['origin_port']['code'];
-      },
-      function ($item) {
-        return $item['destination_port']['name'].', '.$item['destination_port']['code'];
-      },
-      function ($item) {
-        return $item['carrier']['name'];
-      },      
-    ], $preserveKeys = true);
-
-    foreach($freight_charges_detailed as $origin=>$item){
-      foreach($item as $destination=>$items){
-        foreach($items as $carrier=>$itemsDetail){
-          foreach ($itemsDetail as $value) {     
-            foreach ($value->charge as $amounts) {
-              if($amounts->type_id==3){
-                $sum_freight_20=0;
-                $sum_freight_40=0;
-                $sum_freight_40hc=0;
-                $sum_freight_40nor=0;
-                $sum_freight_45=0;
-                $total_freight_40=0;
-                $total_freight_20=0;
-                $total_freight_40hc=0;
-                $total_freight_40nor=0;
-                $total_freight_45=0;
-                //dd($quote->pdf_option->destination_charges_currency);
-                if($quote->pdf_option->grouped_freight_charges==1){
-                  $typeCurrency =  $quote->pdf_option->freight_charges_currency;
-                }else{
-                  $typeCurrency =  $currency_cfg->alphacode;
-                }
-                $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
-                $array_amounts = json_decode($amounts->amount,true);
-                $array_markups = json_decode($amounts->markups,true);
-                if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
-                  $sum_freight_20=$array_amounts['c20']+$array_markups['m20'];
-                  $total_freight_20=$sum_freight_20/$currency_rate;
-                  $amounts->total_20 = number_format($total_freight_20, 2, '.', '');
-                }
-                if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
-                  $sum_freight_40=$array_amounts['c40']+$array_markups['m40'];
-                  $total_freight_40=$sum_freight_40/$currency_rate;
-                  $amounts->total_40 = number_format($total_freight_40, 2, '.', '');                  
-                }
-                if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
-                  $sum_freight_40hc=$array_amounts['c40hc']+$array_markups['m40hc'];
-                  $total_freight_40hc=$sum_freight_40hc/$currency_rate;
-                  $amounts->total_40hc = number_format($total_freight_40hc, 2, '.', '');                  
-                }
-                if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
-                  $sum_freight_40nor=$array_amounts['c40nor']+$array_markups['m40nor'];
-                  $total_freight_40nor=$sum_freight_40nor/$currency_rate;
-                  $amounts->total_40nor = number_format($total_freight_40nor, 2, '.', '');
-                }
-                if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
-                  $sum_freight_45=$array_amounts['c45']+$array_markups['m45'];
-                  $total_freight_45=$sum_freight_45/$currency_rate;
-                  $amounts->total_45 = number_format($total_freight_45, 2, '.', '');
-                }
-              }
-            }
-          }
-        } 
-      }
-    }*/
       
     $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote);
 
@@ -2712,12 +2563,6 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
 
-  /**
-   * Generate PDF to LCL/AIR
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
   public function pdfLclAir(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
@@ -2979,13 +2824,7 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
     
-  /**
-   * Generate PDF to LCL/AIR
-   * @param Request $request 
-   * @param integer $id 
-   * @return type
-   */
-  public function pdfAir(Request $request,$id)
+public function pdfAir(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
     $equipmentHides = '';
@@ -3045,11 +2884,85 @@ class QuoteV2Controller extends Controller
       }
     }
 
-    $origin_charges_grouped=$this->processChargesLclAir($origin_charges,'origin_airport','destination_airport','airline');
+    $origin_charges_grouped = collect($origin_charges);
+
+    $origin_charges_grouped = $origin_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+      },
+      function ($item) {
+        return $item['airline']['name'];
+      },      
+      function ($item) {
+        return $item['destination_airport']['name'];
+      },
+    ], $preserveKeys = true);
+    foreach($origin_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==1){
+                if($quote->pdf_option->grouped_origin_charges==1){
+                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+
+              }
+            }
+          }
+        }
+      }
+    }
 
     /*** DESTINATION CHARGES ***/
-      
-    $origin_charges_grouped=$this->processChargesLclAir($destination_charges,'destination_airport','origin_airport','airline');    
+
+    $destination_charges_grouped = collect($destination_charges);
+
+    $destination_charges_grouped = $destination_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+      },
+      function ($item) {
+        return $item['airline']['name'];
+      },
+      function ($item) {
+        return $item['origin_port']['name'];
+      },
+
+    ], $preserveKeys = true);
+    foreach($destination_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==2){
+
+                if($quote->pdf_option->grouped_destination_charges==1){
+                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+              }
+            } 
+          }
+        }
+      }
+    }    
+
 
     /** FREIGHT CHARGES **/
 
@@ -3150,11 +3063,12 @@ class QuoteV2Controller extends Controller
 
                 $typeCurrency =  $quote->pdf_option->freight_charges_currency;
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-                  
+                
+                //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
+                //$value->markup=number_format(($value->markup/$currency_rate), 2, '.', '');
                 if($value->units>0){
                   $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
                 }
-                  
                 $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 
               }
@@ -3406,33 +3320,16 @@ class QuoteV2Controller extends Controller
     return $view = \View::make('quotesv2.html', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
   }
 
-  /**
-   * Delete quotes v2 (Soft Delete)
-   * @param integer $id 
-   * @return type
-   */
   public function destroy($id){
     $quote_id = obtenerRouteKey($id);
     QuoteV2::where('id',$quote_id)->delete();
     return response()->json(['message' => 'Ok']);
   }
 
-  /**
-   * Destroy automatic rates
-   * @param  integer $id
-   * @return array json
-   */
   public function delete($id){
     AutomaticRate::where('id',$id)->delete();
     return response()->json(['message' => 'Ok']);
   }
-
-  /**
-   * Delete Charges FCL
-   * @param Request $request 
-   * @param integer $id 
-   * @return array json
-   */
 
   public function deleteCharge(Request $request, $id){
     if($request->type==1){
@@ -3446,13 +3343,6 @@ class QuoteV2Controller extends Controller
 
     return response()->json(['message' => 'Ok','type'=>$request->type]);
   }
-
-  /**
-   * Delete charges FCL/AIR
-   * @param Request $request 
-   * @param integer $id 
-   * @return Array Json
-   */
 
   public function deleteChargeLclAir(Request $request, $id){
     if($request->type==1){
@@ -3468,25 +3358,12 @@ class QuoteV2Controller extends Controller
     return response()->json(['message' => 'Ok','type'=>$request->type]);
   }
 
-  /**
-   * Delete inlands
-   * @param Request $request 
-   * @param integer $id 
-   * @return Array Json
-   */
-
   public function deleteInland(Request $request, $id){
     
     AutomaticInland::where('id',$id)->delete();
     
     return response()->json(['message' => 'Ok']);
   }
-
-  /**
-   * Store quotes
-   * @param Request $request 
-   * @return type
-   */
 
   public function storeCharge(Request $request){
 
@@ -4257,11 +4134,6 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
-  /**
-   * Store new rates
-   * @param Request $request 
-   * @return STRING Json
-   */
   public function storeRates(Request $request){
 
     $arregloNull = array();
@@ -4319,11 +4191,6 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
-/**
- * Show modal with form to edit rates
- * @param integer $id 
- * @return Illuminate\View\View
- */
   public function editRates($id){
     $rate=AutomaticRate::find($id);
     $quote=QuoteV2::find($rate->quote_id);
@@ -4334,11 +4201,6 @@ class QuoteV2Controller extends Controller
     return view('quotesv2.partials.editRate', compact('rate','quote','harbors','carriers','airlines'));
   }
 
-/**
- * Update rates
- * @param integer $id 
- * @return Illuminate\View\View
- */
   public function updateRates(Request $request,$id){
 
     $rate=AutomaticRate::find($id);
@@ -4374,11 +4236,6 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($rate->quote_id));
   }
 
-  /**
-   * Store new inlands
-   * @param Request $request 
-   * @return Illuminate\View\View
-   */
   public function storeInlands(Request $request){
 
     $quote = QuoteV2::find($request->input('quote_id'));
@@ -4401,11 +4258,6 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
-  /**
- * Show modal with form to edit inlands
- * @param integer $id 
- * @return Illuminate\View\View
- */
   public function editInlands($id){
     $inland=AutomaticInland::find($id);
     $quote=QuoteV2::find($inland->quote_id);
@@ -4417,11 +4269,6 @@ class QuoteV2Controller extends Controller
     return view('quotesv2.partials.editInland', compact('inland','quote','harbors','carriers','airlines','currencies'));
   }
 
-/**
- * Show modal with form to edit inlands lcl air
- * @param integer $id 
- * @return Illuminate\View\View
- */
   public function editInlandsLcl($id){
     $inland=AutomaticInlandLclAir::find($id);
     $quote=QuoteV2::find($inland->quote_id);
@@ -4433,11 +4280,6 @@ class QuoteV2Controller extends Controller
     return view('quotesv2.partials.editInland', compact('inland','quote','harbors','carriers','airlines','currencies'));
   }
 
-  /**
- * Update inlands
- * @param integer $id 
- * @return Illuminate\View\View
- */
   public function updateInlands(Request $request,$id){
 
     if($request->quote_type=='FCL'){
@@ -4456,12 +4298,6 @@ class QuoteV2Controller extends Controller
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($inland->quote_id));
   }
 
-  /**
-   * Description
-   * @param type $pluck 
-   * @return type
-   */
-
   public function skipPluck($pluck)
   {
     $skips = ["[","]","\""];
@@ -4479,10 +4315,6 @@ class QuoteV2Controller extends Controller
     return $rateC;
   }
 
-  /**
-   * Search rates by ports
-   * @return Illuminate\View\View
-   */
   public function search()
   {
     $company_user_id=\Auth::user()->company_user_id;
@@ -4516,11 +4348,6 @@ class QuoteV2Controller extends Controller
 
   }
 
-  /**
-   * Return rates after process search
-   * @param Request $request 
-   * @return Illuminate\View\View
-   */
   public function processSearch(Request $request){
 
     //Variables del usuario conectado
@@ -7415,12 +7242,6 @@ class QuoteV2Controller extends Controller
 
   }
     
-    /**
-     * Process collections origins grouped rates
-     * @param  collection $origin_charges
-     * @param  collection $quote
-     * @return collection
-     */
     public function processOriginDetailed($origin_charges, $quote){
         $origin_charges_detailed = collect($origin_charges);
 
@@ -7630,12 +7451,6 @@ class QuoteV2Controller extends Controller
         return $origin_charges_detailed;
     }
     
-    /**
-     * Process collections origins grouped rates
-     * @param  collection $origin_charges
-     * @param  collection $quote
-     * @return collection
-     */
     public function processOriginGrouped($origin_charges, $quote){
         $origin_charges_grouped = collect($origin_charges);
 
@@ -7857,12 +7672,7 @@ class QuoteV2Controller extends Controller
         return $origin_charges_grouped;
     }
     
-    /**
-     * Process collections destination grouped rates
-     * @param  collection $destination_charges
-     * @param  collection $quote
-     * @return collection
-     */
+
     public function processDestinationGrouped($destination_charges, $quote){
         $destination_charges_grouped = collect($destination_charges);
 
@@ -8084,12 +7894,7 @@ class QuoteV2Controller extends Controller
         return $destination_charges_grouped;
     }
     
-    /**
-     * Process collections destination detailed rates
-     * @param  collection $destination_charges
-     * @param  collection $quote
-     * @return collection
-     */
+
     public function processDestinationDetailed($destination_charges, $quote){
         $destination_charges = $destination_charges->groupBy([
 
@@ -8251,12 +8056,7 @@ class QuoteV2Controller extends Controller
         return $destination_charges;
     }
     
-    /**
-     * Process collections freight charges
-     * @param  collection $freight_charges
-     * @param  collection $quote
-     * @return collection
-     */
+
     public function processFreightCharges($freight_charges, $quote){
         
         $freight_charges_grouped = collect($freight_charges);
@@ -8390,55 +8190,5 @@ class QuoteV2Controller extends Controller
         }
         
         return $freight_charges_grouped;
-    }
-    
-    /**
-     * Process collections process charges LCL/AIR
-     * @param  collection $charges
-     * @param  string $type          
-     * @param  string $type_2
-     * @param  string $carrier
-     * @return collection
-     */    
-    public function processChargesLclAir($charges,$type,$type_2,$carrier){
-        $charges_grouped = collect(charges);
-
-        $charges_grouped = $charges_grouped->groupBy([
-
-          function ($item) {
-            return $item[$type]['name'].', '.$item[$type]['code'];
-          },
-          function ($item) {
-            return $item[$carrier]['name'];
-          },      
-          function ($item) {
-            return $item[$type_2]['name'];
-          },
-        ], $preserveKeys = true);
-        foreach($origin_charges_grouped as $origin=>$detail){
-          foreach($detail as $item){
-            foreach($item as $v){
-              foreach($v as $rate){
-                foreach($rate->charge_lcl_air as $value){
-
-                  if($value->type_id==1){
-                    if($quote->pdf_option->grouped_origin_charges==1){
-                      $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                    }else{
-                      $typeCurrency =  $currency_cfg->alphacode;
-                    }
-
-                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-                    $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
-                    $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
-
-                  }
-                }
-              }
-            }
-          }
-        }
-        
-        return $charges_grouped;
     }
 }
