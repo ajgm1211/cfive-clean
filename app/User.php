@@ -59,6 +59,9 @@ class User extends Authenticatable implements Auditable
     public function NewContractRequests(){
         return $this->hasMany('App\NewContractRequest');
     }
+    public function userConfiguration(){
+        return $this->hasOne('App\UserConfiguration');
+    }
     /**
      * Send the password reset notification.
      *

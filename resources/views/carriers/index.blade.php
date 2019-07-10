@@ -80,6 +80,7 @@
                                     <th >ID</th>
                                     <th >Name</th>
                                     <th >Picture</th>
+                                    <th >Variation</th>
                                     <th >Options</th>
                                 </tr>
                             </thead>
@@ -121,6 +122,20 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script>
 
+        function agregarcampo(){
+            var newtr = '<div class="col-lg-4 ">';
+            newtr = newtr + '<label class="form-control-label">Variation:</label>';
+            newtr = newtr + '<input type="text" name="variation[]" class="form-control" required="required">';
+            newtr = newtr + '<a href="#" class="borrado"><span class="la la-remove"></span></a>';
+            newtr = newtr + '</div>';
+            $('#variatiogroup').append(newtr);
+        }
+
+        $(document).on('click','.borrado', function(e){
+            var elemento = $(this);
+            $(elemento).closest('div').remove();
+        });
+
         function showModal(id,operation){
 
             if(operation == 1){
@@ -147,6 +162,7 @@
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
                     { data: 'image', name: 'image' },
+                    { data: 'varation', name: 'varation' },
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ],
                 "order": [[0, 'asc']],

@@ -343,7 +343,7 @@ class GlobalChargesController extends Controller
             })
             ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
             ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function edit($id)
@@ -376,11 +376,12 @@ class GlobalChargesController extends Controller
     // CRUD Administarator -----------------------------------------------------------------------------------------------------
 
     public function indexAdm(){
-        return view('globalchargesAdm.index');
+        $companies = CompanyUser::pluck('name','id');
+        return view('globalchargesAdm.index',compact('companies'));
     }
 
-    public function createAdm(){
-        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user']);
+    public function createAdm($company){
+        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->where('company_user_id',$company);
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 
@@ -428,9 +429,9 @@ class GlobalChargesController extends Controller
 											<i class="la la-plus"></i>
 				   </a>';
             })
-            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-            ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function addAdm(){
