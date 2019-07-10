@@ -4668,6 +4668,7 @@ class QuoteV2Controller extends Controller
       }
 
       $payments = $this->getCompanyPayments($request->input('company_id_quote'));
+      $priceId = null;
       if(isset($request->price_id )){
         $priceId = $request->price_id;
         if($priceId=="0"){
@@ -4678,7 +4679,7 @@ class QuoteV2Controller extends Controller
       $quote= QuoteV2::create($request->all());
 
       // FCL
-      if($typeText == 'FCL' || $typeText == 'LCL'){
+      if($typeText == 'FCL' ){
         foreach($request->input('originport') as $origP){
           $infoOrig = explode("-", $origP);
           $origin_port[] = $infoOrig[0];
@@ -4706,22 +4707,55 @@ class QuoteV2Controller extends Controller
           }
         }
       }
+      if($typeText == 'LCL'){
+        foreach($request->input('originport') as $origP){
+          $infoOrig = explode("-", $origP);
+          $origin_port[] = $infoOrig[0];
+        }
+        foreach($request->input('destinyport') as $destP){
+          $infoDest = explode("-", $destP);
+          $destiny_port[] = $infoDest[0];
+        }
+        foreach($origin_port as $orig){
+          foreach($destiny_port as $dest){
+            $request->request->add(['contract' => '' ,'origin_port_id'=> $orig,'destination_port_id'=>$dest ,'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
+            $rate = AutomaticRate::create($request->all());
+
+
+            $oceanFreight = new ChargeLclAir();
+            $oceanFreight->automatic_rate_id= $rate->id;
+            $oceanFreight->type_id = '3' ;
+            $oceanFreight->surcharge_id = null ;
+            $oceanFreight->calculation_type_id = '4' ;
+            $oceanFreight->units = "0";
+            $oceanFreight->price_per_unit =  "0";
+            $oceanFreight->total = "0";
+            $oceanFreight->markup =  "0";
+            $oceanFreight->currency_id = $idCurrency; 
+            $oceanFreight->save();
+
+
+          }
+        }
+      }
       if($typeText == 'AIR' ){
 
         $request->request->add(['contract' => '' ,'origin_airport_id'=> $request->input('origin_airport_id'),'destination_airport_id'=> $request->input('destination_airport_id'),'currency_id'=>  $idCurrency ,'quote_id'=>$quote->id]);
         $rate = AutomaticRate::create($request->all());
 
 
-        $oceanFreight = new Charge();
+        $oceanFreight = new ChargeLclAir();
         $oceanFreight->automatic_rate_id= $rate->id;
         $oceanFreight->type_id = '3' ;
         $oceanFreight->surcharge_id = null ;
-        $oceanFreight->calculation_type_id = '5' ;
-        $oceanFreight->amount = $arregloNull;
-        $oceanFreight->markups = $arregloNull;
-        $oceanFreight->currency_id = $idCurrency;
-        $oceanFreight->total =  $arregloNull;
+        $oceanFreight->calculation_type_id = '4' ;
+        $oceanFreight->units = "0";
+        $oceanFreight->price_per_unit =  "0";
+        $oceanFreight->total = "0";
+        $oceanFreight->markup =  "0";
+        $oceanFreight->currency_id = $idCurrency; 
         $oceanFreight->save();
+
 
 
 
@@ -8443,7 +8477,7 @@ class QuoteV2Controller extends Controller
     $hideO = 'hide';
     $hideD = 'hide';
     $form  = $request->all();
-   //dd($form);
+    //dd($form);
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
 
