@@ -3,6 +3,9 @@
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+
 @endsection
 @section('title', 'GlobalCharges Adm.')
 @section('content')
@@ -13,7 +16,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        GlobalCharges Administrator
+                        Global Charges Administrator
                     </h3>
                 </div>
             </div>
@@ -25,7 +28,7 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                 <i class="la la-cog"></i>
-                                List Global Charge
+                                Global Charge List
                             </a>
                         </li>
                     </ul>
@@ -38,14 +41,18 @@
                         <!--begin: Search Form -->
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
-
                                 <div class="new col-xl-12 order-1 order-xl-2 m--align-right">
 
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xl-12 order-1 order-xl-2 m--align-right">
+                                <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                    {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                                </div>
+                                <div class="col-md-1 order-1 order-xl-2 m--align-left">
+                                </div>
+                                <div class="col-md-8 order-1 order-xl-2 m--align-right">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             Add New &nbsp;
@@ -65,30 +72,35 @@
                                             <span>
                                                 Duplicate Selected &nbsp;
                                             </span>
-                                            <i class="la la-bars"></i>
+                                            <i class="la la-copy"></i>
                                         </span>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Select</th>
-                                    <th>Company</th>
-                                    <th>Type</th>
-                                    <th>Origin Port</th>
-                                    <th>Destination Port</th>
-                                    <th>Charge Type</th>
-                                    <th>Calculationtype type</th>
-                                    <th>Currency</th>
-                                    <th>Carrier</th>
-                                    <th>Amount</th>
-                                    <th>Validity</th>
-                                    <th>Options</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table m-table m-table--head-separator-primary" id="requesttable" width="100%" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Company</th>
+                                        <th>Type</th>
+                                        <th>Origin port</th>
+                                        <th>Destination port</th>
+                                        <th>Charge type</th>
+                                        <th>Calculation type</th>
+                                        <th>Currency</th>
+                                        <th>Carrier</th>
+                                        <th>Amount</th>
+                                        <th>Validity</th>
+                                        <th>Options</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,10 +134,12 @@
 @section('js')
 @parent
 
-
-
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 
+<script src="/js/globalcharges.js"></script>
 <script>
 
     function AbrirModal(action,id){
@@ -151,13 +165,45 @@
         }
     }
 
-    $(function() {
-        $('#requesttable').DataTable({
+    $(document).on('change', '#company_user', function(){
+        var company_id=$(this).val();
+        table = $('#requesttable').DataTable({
+            dom: 'Bfrtip',
             processing: true,
+            destroy: true,
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            buttons: [
+                {
+                    text: 'Select all',
+                    action : function(e) {
+                        e.preventDefault();
+                        table.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        table.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
+                    }
+                },
+                {
+                    text: 'Select none',
+                    action: function () {
+                        table.rows().deselect();
+                    }
+                }
+            ],
             //serverSide: true,
-            ajax: '{{route("gcadm.create")}}',
+            ajax: '/globalcharges/createAdm/'+company_id,
             columns: [
-                { data: 'checkbox', orderable:false, searchable:false},
+                { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
@@ -174,18 +220,21 @@
             "lengthChange": false,
             "searching": true,
             "ordering": true,
-            "select": true,
             "width": true,
             "info": true,
             "deferLoading": 57,
             "autoWidth": false,
             "stateSave": true,
             "processing": true,
-            "dom": 'Bfrtip',
             "paging": true
         });
-
+        table.clear();
     });
+
+
+    $('#requesttable tbody').on( 'click', 'tr', function () {
+        $(this).toggleClass('selected');
+    } );
 
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
@@ -200,11 +249,18 @@
         }).then(function(result){
             if (result.value) {
                 var oTableT = $("#requesttable").dataTable();
-                $('.checkbox_global:checked', oTableT.fnGetNodes()).each(function(){
-                    id.push($(this).val());
-                });
+                var length=table.rows('.selected').data().length;
+                if (length>10) {
+                    for (var i = 0; i < 50; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }else{
+                    for (var i = 0; i < length; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }           
 
-                if(id.length > 0)
+                if(length > 0)
                 {
                     url='{!! route("globalcharges.destroyArr",":id") !!}';
                     url = url.replace(':id', id);
@@ -244,11 +300,18 @@
 
     $(document).on('click', '#bulk_duplicate', function(){
         var id = [];
-        var oTable = $("#requesttable").dataTable(); 
-        $('.checkbox_global:checked', oTable.fnGetNodes()).each(function(){
-            id.push($(this).val());
-        });
-        if(id.length > 0)
+        var oTable = $("#requesttable").dataTable();
+        var length=table.rows('.selected').data().length;                
+        if (length>10) {
+            for (var i = 0; i < 50; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        }else{
+            for (var i = 0; i < length; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        } 
+        if(length > 0)
         {
             url='{!! route("gcadm.dupicate.Array",":id") !!}';
             url = url.replace(':id', id);
@@ -278,12 +341,13 @@
         }
         else
         {
-            swal("Error!", "Please select atleast one checkbox", "error");
+            swal("Error!", "Please select at least one record", "error");
         }
     });
 
+
 </script>
-<script src="/js/globalcharges.js"></script>
+
 @if(session('globalchar'))
 <script>
     swal(

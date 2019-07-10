@@ -114,6 +114,24 @@ new registration
                                     'placeholder'=>'Request Lcl Id',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                <input name="DatShe" id="schedulechk" checked type="checkbox">
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Info Schedules Not Included
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
                             @elseif($selector == 2)
                             <div class="form-group m-form__group row">
@@ -329,7 +347,11 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatCar" id="carrierchk" type="checkbox">
+                                                @if($load_carrier)
+                                                <input name="DatCar" id="carrierchk" type="checkbox" checked>
+                                                @else
+                                                <input name="DatCar" id="carrierchk" type="checkbox">                       
+                                                @endif
                                                 <span></span>
                                             </span>
                                         </span>
@@ -341,8 +363,17 @@ new registration
                                             </span>
                                         </span>
                                     </label>
-                                    <div class="col-form-label" hidden="hidden" id="carrierinp">
-                                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                    <div class="col-form-label" hidden="hidden" id="carrierinp">                           
+                                        @if($load_carrier)
+                                            @if($selector == 1)
+                                                {!! Form::select('carrier',$carrier,$requestlcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                            @elseif($selector == 2)
+                                                {!! Form::select('carrier',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                            @endif
+                                        @else
+                                            {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                        @endif
+                                        
                                     </div>
                                 </div>
                             </div>

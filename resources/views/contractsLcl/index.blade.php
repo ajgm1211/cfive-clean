@@ -126,21 +126,21 @@ New \ Status Import  &nbsp;
                         <table class="table tableData text-center" id="tableContracts" width="100%">
                             <thead width="100%">
                                 <tr >
-                                    <th title="References">
+                                    <th width="27%" title="References">
                                         Reference
                                     </th>
-                                    <th title="Carriers">
+                                    <th width="12%" title="Carriers">
                                         Carriers
                                     </th><th title="Type">
                                     Direction
                                     </th>
-                                    <th title="Validity">
+                                    <th width="13%" title="Validity">
                                         Validity
                                     </th>
-                                    <th title="Expire">
+                                    <th width="13%" title="Expire">
                                         Expire
                                     </th>
-                                    <th title="Status">
+                                    <th width="12%" title="Status">
                                         Status
                                     </th>
                                     <th title="Options">
@@ -248,10 +248,10 @@ New \ Status Import  &nbsp;
                         <table class="table tableData text-center" id="tableRates" class="tableRates" width="100%">
                             <thead class="tableRatesTH">
                                 <tr>
-                                    <th title="Field #1">
+                                    <th width="40%" title="Field #1">
                                         Reference
                                     </th>
-                                    <th title="Field #3">
+                                    <th width="12%" title="Field #3">
                                         Carrier
                                     </th>
                                     <th title="Field #4">

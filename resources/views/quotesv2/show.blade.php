@@ -5,6 +5,9 @@
 
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 <style>
+  .pac-container {
+    z-index: 10000 !important;
+  }
   .bg-quotes {
     background-color: #e3e8ee !important;
   }
@@ -144,7 +147,7 @@
 
 </style>
 @endsection
-@section('title', 'Quotes')
+@section('title', 'Quotes | Details')
 @section('content')
     <div class="m-content bg-quotes">
         @if(Session::has('message.nivel'))
@@ -188,6 +191,8 @@
     </div>
     @include('quotesv2.partials.sendQuoteModal')
     @include('quotesv2.partials.createRateModal')
+    @include('quotesv2.partials.createInlandModal')
+    @include('quotesv2.partials.editRateModal')
 @endsection
 
 @section('js')
@@ -200,61 +205,105 @@
     <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
     <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
     <script type="text/javascript">
 
-        var editor_config = {
-            path_absolute : "/",
-            selector: "textarea.editor",
-            plugins: ["template"],
-            toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
-            external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
-            nanospell_server:"php",
-            browser_spellcheck: true,
-            relative_urls: false,
-            remove_script_host: false,
-            file_browser_callback : function(field_name, url, type, win) {
-                var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+        /*** GOOGLE MAPS API ***/
 
-                var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
-                if (type == 'image') {
-                    cmsURL = cmsURL + "&type=Images";
-                } else {
-                    cmsURL = cmsURL + "&type=Files";
-                }
+      var autocomplete;
+      function initAutocomplete() {
+        var geocoder = new google.maps.Geocoder();
+        var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+        var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+        //autocomplete.addListener('place_changed', fillInAddress);
+      }
 
-                tinymce.activeEditor.windowManager.open({
+      function codeAddress(address) {
+        var geocoder;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == 'OK') {
+            alert(results[0].geometry.location);
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+
+      var editor_config = {
+        path_absolute : "/",
+        selector: "textarea.editor",
+        plugins: ["template"],
+        toolbar: "insertfile undo redo | template | bold italic strikethrough | alignleft aligncenter alignright alignjustify | ltr rtl | bullist numlist outdent indent removeformat formatselect| link image media | emoticons charmap | code codesample | forecolor backcolor",
+        external_plugins: { "nanospell": "{{asset('js/tinymce/plugins/nanospell/plugin.js')}}" },
+        nanospell_server:"php",
+        browser_spellcheck: true,
+        relative_urls: false,
+        remove_script_host: false,
+        file_browser_callback : function(field_name, url, type, win) {
+          var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
+          var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
+
+          var cmsURL = editor_config.path_absolute + 'laravel-filemanager?field_name=' + field_name;
+          if (type == 'image') {
+            cmsURL = cmsURL + "&type=Images";
+          } else {
+            cmsURL = cmsURL + "&type=Files";
+          }
+
+          tinymce.activeEditor.windowManager.open({
                     file: '<?= route('elfinder.tinymce4') ?>',// use an absolute path!
                     title: 'File manager',
                     width: 900,
                     height: 450,
                     resizable: 'yes'
-                }, {
+                  }, {
                     setUrl: function (url) {
-                        win.document.getElementById(field_name).value = url;
+                      win.document.getElementById(field_name).value = url;
                     }
-                });
-            }
-        };
+                  });
+        }
+      };
 
-        tinymce.init(editor_config);
+      tinymce.init(editor_config);
 
-          $('.btn-open').on('click', function(){
-    var element = $(this).attr('id');
+      $('.btn-open').on('click', function(){
+        var element = $(this).attr('id');
 
-    if(element == 'pay')
-    {
-      $('.pay').toggle();
+        if(element == 'pay')
+        {
+          $('.pay').toggle();
+        }
+        if(element == 'terms')
+        {
+          $('.terms').toggle();
+        }
+        if(element == 'remks')
+        {
+          $('.remks').toggle();
+        }
+
+      });
+
+  function AbrirModal(action,id){
+    if(action == "edit"){
+      var url = '{{ route("quotes-v2.rates.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
+    }else if(action == "editInland"){
+      var url = '{{ route("quotes-v2.inlands.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
+    }else if(action == "editInlandLcl"){
+      var url = '{{ route("quotes-v2.inlands.lcl.edit", ":id") }}';
+      url = url.replace(':id', id);
+      $('.modal-body-rate').load(url,function(){
+        $('#editRateModal').modal({show:true});
+      });
     }
-    if(element == 'terms')
-    {
-      $('.terms').toggle();
-    }
-    if(element == 'remks')
-    {
-      $('.remks').toggle();
-    }
-
-  });
-    </script>
+  }
+</script>
 @stop
