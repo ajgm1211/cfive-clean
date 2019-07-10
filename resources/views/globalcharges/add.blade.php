@@ -121,7 +121,7 @@
         <i class="la la-sort-numeric-asc icon__modal"></i>
 {!! Form::label('ammountL', 'Amount') !!}
 
-        {!! Form::number('ammount', 0, ['id' => 'ammount','class' => 'form-control','min' => '0','step'=>'0.01' ,'required' => 'true']) !!}
+        {!! Form::number('ammount', 0, ['id' => 'ammount','class' => 'form-control','step'=>'0.01' ,'required' => 'true']) !!}
       </div>
     </div>
   </div>  

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Excel;
 use App\User;
 use PrvHarbor;
+use PrvCarrier;
 use App\Harbor;
 use PrvRatesLcl;
 use App\RateLcl;
@@ -81,7 +82,7 @@ class ImportationLclController extends Controller
 
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
-                if($carrierEX   <= 1 &&  $wmEX        <= 1 &&
+                if($wmEX        <= 1 &&
                    $minimunEX   <= 1 &&  $currencyEX  <= 1 ){
 
                     $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
@@ -99,12 +100,9 @@ class ImportationLclController extends Controller
 
                     //---------------- Carrier ------------------------------------------------------------------
 
-                    $carrierResul = str_replace($caracteres,'',$carrierArr[0]);
-                    $carrier = Carrier::where('name','=',$carrierResul)->first();
-                    if(empty($carrier->id) != true){
-                        $carriExitBol = true;
-                        $carrierVal = $carrier->id;
-                    }
+                    $carrierArr      = PrvCarrier::get_carrier($carrierArr[0]);
+                    $carriExitBol    = $carrierArr['boolean'];
+                    $carrierVal      = $carrierArr['carrier'];
 
                     //---------------- W/M ------------------------------------------------------------------
 
@@ -212,12 +210,29 @@ class ImportationLclController extends Controller
 
     public function indexRequest($id,$selector,$request_id)
     {
+        $load_carrier = false;
+        $carrier_exec = Carrier::where('name','ALL')->first();
+        $carrier_exec = $carrier_exec->id;
         if($selector == 1){
             $requestlcl     = RequestLCL::find($id);
             $requestlcl->load('Requestcarriers');
+            if(count($requestlcl->Requestcarriers) == 1){
+                foreach($requestlcl->Requestcarriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         } elseif($selector == 2){
             $contract = ContractLcl::find($id);
             $contract->load('carriers');
+            if(count($contract->carriers) == 1){
+                foreach($contract->carriers as $carrier_uniq){
+                    if($carrier_uniq->id != $carrier_exec){
+                        $load_carrier = true;
+                    }
+                }
+            }
         }
         //dd($requestlcl);
         $harbor         = harbor::all()->pluck('display_name','id');
@@ -225,9 +240,9 @@ class ImportationLclController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $direction      = Direction::pluck('name','id');
         if($selector == 1){
-            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl','selector'));
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','requestlcl','selector','load_carrier'));
         } elseif($selector == 2){
-            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','contract','selector','request_id'));
+            return view('ImportationLcl.indexRequest',compact('harbor','carrier','direction','companysUser','contract','selector','request_id','load_carrier'));
         }
     }
 
@@ -547,14 +562,9 @@ class ImportationLclController extends Controller
                             $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
                         } else {
                             $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                            $carrierResul = str_replace($caracteres,'',$carrierVal);
-                            $carrier = Carrier::where('name','=',$carrierResul)->first();
-                            if(empty($carrier->id) != true){
-                                $carriExitBol = true;
-                                $carrierVal = $carrier->id;
-                            }else{
-                                $carrierVal = $carrierVal.'_E_E';
-                            }
+                            $carrierArr      = PrvCarrier::get_carrier($carrierVal);
+                            $carriExitBol    = $carrierArr['boolean'];
+                            $carrierVal      = $carrierArr['carrier'];
                         }
 
                         //---------------- W/M ------------------------------------------------------------------

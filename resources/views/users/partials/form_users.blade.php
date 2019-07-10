@@ -20,6 +20,7 @@
                 <option value="admin">Admin</option>
                 <option value="company">Company</option>
                 <option value="subuser">Subuser</option>
+                <option value="data_entry">Data entry</option>
             </select>
         </div>
     @else
@@ -39,6 +40,7 @@
                 <option value="admin" {{$user->type=='admin' ? 'selected':''}}>Admin</option>
                 <option value="company" {{$user->type=='company' ? 'selected':''}}>Company</option>
                 <option value="subuser" {{$user->type=='subuser' ? 'selected':''}}>Subuser</option>
+                <option value="data_entry" {{$user->type=='data_entry' ? 'selected':''}}>Data entry</option>
             </select>
         </div>
     @else

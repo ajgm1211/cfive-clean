@@ -20,7 +20,7 @@
             <div class="modal-body">
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>To</b></label>
-                    {{ Form::text('addresse',$quote->contact->email,['placeholder' => 'Please choose a addresse','class'=>'form-control','id'=>'addresse']) }}
+                    {{ Form::text('addresse',@$quote->contact->email,['placeholder' => 'Please choose a addresse','class'=>'form-control','id'=>'addresse']) }}
                     <br>
                     <h6><label><small>To send to several recipients, separate them with a semicolon (;)</small></label></h6>
                 </div>
@@ -47,7 +47,11 @@
                 </div>
                 <hr>
                 <div class="form-group m-form__group">
-                    <button id="send-pdf-quotev2" class="btn btn-success">Send</button>
+                    @if($quote->type=='FCL')
+                        <button id="send-pdf-quotev2" class="btn btn-success">Send</button>
+                    @else
+                        <button id="send-pdf-quotev2-lcl-air" class="btn btn-success">Send</button>
+                    @endif
                     <button id="send-pdf-quote-sending" class="btn btn-success" style="display:none" disabled><i class="fa fa-spinner fa-spin"></i> &nbsp; Sending</button>
                     <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
                 </div>

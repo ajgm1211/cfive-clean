@@ -51,6 +51,16 @@ class CarriersController extends Controller
             $carrier = new Carrier();
             $carrier->name  = $request->name;
             $carrier->image = $request->image;
+            $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+            foreach($request->variation as $variation){
+                $variation = str_replace($caracteres,'',$variation);
+                $arreglo[] =  trim(strtolower($variation));
+            }
+
+            $type['type']       = $arreglo;
+            $json               = json_encode($type);
+            $carrier->varation  = $json;
             $carrier->save();
             ProcessContractFile::dispatch($carrier->id,$request->image,'n/a','carrier');
         }
@@ -69,7 +79,9 @@ class CarriersController extends Controller
         $carrier = Carrier::find($id);
         $image = Storage::disk('carriers')->url($carrier->image);
         //dd($image);
-        return view('carriers.Body-Modals.edit',compact('carrier','image'));
+        $decodejosn = json_decode($carrier->varation,true);
+        $decodejosn = $decodejosn['type'];
+        return view('carriers.Body-Modals.edit',compact('carrier','image','decodejosn'));
     }
 
     public function update(Request $request, $id)
@@ -84,7 +96,18 @@ class CarriersController extends Controller
             if($fillbool)
                 ProcessContractFile::dispatch($id,$request->image,'n/a','carrier');
         }
-        $carrier->image = $request->image;
+
+        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+        foreach($request->variation as $variation){
+            $variation = str_replace($caracteres,'',$variation);
+            $arreglo[] =  trim(strtolower($variation));
+        }
+
+        $type['type']       = $arreglo;
+        $json               = json_encode($type);
+        $carrier->varation  = $json;
+        $carrier->image     = $request->image;
         $carrier->save();
 
         $request->session()->flash('message.nivel', 'success');

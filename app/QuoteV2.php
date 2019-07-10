@@ -3,9 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QuoteV2 extends Model
 {
+    use SoftDeletes;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
     protected $casts = [
         'equipment' => 'array',
     ];
@@ -14,7 +24,7 @@ class QuoteV2 extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->hasOne('App\Company','id','company_id');
     }
 
     public function contact()

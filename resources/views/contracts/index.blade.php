@@ -109,17 +109,6 @@
                                             </span>
                                         </button>
                                     </a>
-                                    <!--<a href="{{route('RequestImportation.indexListClient')}}">
-
-<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-<span>
-<span>
-New \ Status Import  &nbsp;
-</span>
-<i class="la la-clipboard"></i>
-</span>
-</button>
-</a>-->
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
@@ -127,22 +116,22 @@ New \ Status Import  &nbsp;
                         <table class="table tableData" id="tableContracts" width="100%">
                             <thead width="100%">
                                 <tr >
-                                    <th title="Field #1">
+                                    <th  width="27%" title="Field #1">
                                         Reference
                                     </th>
-                                    <th title="Field #2">
+                                    <th width="12%" title="Field #2">
                                         Carriers
                                     </th>
-                                    <th title="Field #3">
+                                    <th width="12%" title="Field #3">
                                         Direction
                                     </th>
-                                    <th title="Field #9">
+                                    <th width="13%" title="Field #9">
                                         Validity
                                     </th>
-                                    <th title="Field #9">
+                                    <th width="13%" title="Field #9">
                                         Expire
                                     </th>
-                                    <th title="Field #11">
+                                    <th width="10%" title="Field #11">
                                         Status
                                     </th>
                                     <th title="Field #12">
@@ -211,18 +200,6 @@ New \ Status Import  &nbsp;
                                             </span>
                                         </button>
                                     </a>
-                                    <!--a href="{{route('RequestImportation.indexListClient')}}">
-
-<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
-<span>
-<span>
-New \ Status Import  &nbsp;
-</span>
-<i class="la la-clipboard"></i>
-</span>
-</button>
-</a>-->
-
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
@@ -263,10 +240,11 @@ New \ Status Import  &nbsp;
                                 </div>
                             </div>
                         </div>
-                        <table class="table tableData" id="tableRates" class="tableRates" width="100%">
+                        <div class="table-responsive">
+                            <table class="table tableData" id="tableRates" class="tableRates" width="100%">
                             <thead width="100%" class="tableRatesTH">
                                 <tr>
-                                    <th style="width:15%;" title="Field #1">
+                                    <th style="width:25%;" title="Field #1">
                                         Reference
                                     </th>
                                     <th style="width:20%" title="Field #3">
@@ -321,7 +299,8 @@ New \ Status Import  &nbsp;
 
 
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                         <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -379,12 +358,12 @@ New \ Status Import  &nbsp;
     var oTable = $('#tableRates').DataTable({
         searching: true,
         ordering: true,
-        processing: true,
-        processing: true,
-        serverSide: true,
+        processing: false,
+        serverSide: false,
         autoWidth: true,
         "columnDefs": [
-            { className: "truncate", "targets": [ 0,1] }
+            { className: "truncate", "targets": [ 0,1] },
+            { "type": "num", targets: [4,5,6,7,8] }
         ],
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         ajax: {

@@ -179,6 +179,8 @@ return [
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        App\Providers\CarrierServiceProvider::class,
+        App\Providers\UserConfigurationProvider::class,
 
 
     ],
@@ -243,6 +245,8 @@ return [
         'EventIntercom' => App\Helpers\Intercom::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'PrvCarrier' => App\Helpers\HelperCarriers::class,
+        'PrvUserConfigurations' => App\Helpers\Configurations\HelperUserConfiguracion::class,
     ],
 
 ];
