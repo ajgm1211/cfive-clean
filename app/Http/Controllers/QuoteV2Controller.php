@@ -2985,7 +2985,7 @@ class QuoteV2Controller extends Controller
    * @param integer $id 
    * @return type
    */
-  public function pdfAir(Request $request,$id)
+    public function pdfAir(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
     $equipmentHides = '';
@@ -3045,11 +3045,85 @@ class QuoteV2Controller extends Controller
       }
     }
 
-    $origin_charges_grouped=$this->processChargesLclAir($origin_charges,'origin_airport','destination_airport','airline');
+    $origin_charges_grouped = collect($origin_charges);
+
+    $origin_charges_grouped = $origin_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+      },
+      function ($item) {
+        return $item['airline']['name'];
+      },      
+      function ($item) {
+        return $item['destination_airport']['name'];
+      },
+    ], $preserveKeys = true);
+    foreach($origin_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==1){
+                if($quote->pdf_option->grouped_origin_charges==1){
+                  $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+
+              }
+            }
+          }
+        }
+      }
+    }
 
     /*** DESTINATION CHARGES ***/
 
-    $origin_charges_grouped=$this->processChargesLclAir($destination_charges,'destination_airport','origin_airport','airline');    
+    $destination_charges_grouped = collect($destination_charges);
+
+    $destination_charges_grouped = $destination_charges_grouped->groupBy([
+
+      function ($item) {
+        return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+      },
+      function ($item) {
+        return $item['airline']['name'];
+      },
+      function ($item) {
+        return $item['origin_port']['name'];
+      },
+
+    ], $preserveKeys = true);
+    foreach($destination_charges_grouped as $origin=>$detail){
+      foreach($detail as $item){
+        foreach($item as $v){
+          foreach($v as $rate){
+            foreach($rate->charge_lcl_air as $value){
+
+              if($value->type_id==2){
+
+                if($quote->pdf_option->grouped_destination_charges==1){
+                  $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                }else{
+                  $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+              }
+            } 
+          }
+        }
+      }
+    }    
+
 
     /** FREIGHT CHARGES **/
 
@@ -3150,13 +3224,11 @@ class QuoteV2Controller extends Controller
 
                 $typeCurrency =  $quote->pdf_option->freight_charges_currency;
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-
                 if($value->units>0){
                   $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
                 }
-
                 $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
-
+                
               }
             }
           }
@@ -3171,6 +3243,7 @@ class QuoteV2Controller extends Controller
 
     return $pdf->stream('quote');
   }
+
 
   public function html(Request $request,$id)
   {
