@@ -158,15 +158,24 @@ class UsersController extends Controller
     $requestForm = $request->all();
     $user = User::find($id);
     $roles = $user->getRoleNames();
-    //dd($roles);
-    $user->removeRole($roles[0]);
+    
+    if(!$roles->isEmpty()){
+        $user->removeRole($roles[0]);   
+    }
 
+    if($request->type == "admin"){
+      $user->assignRole('administrator');
+    }
     if($request->type == "subuser"){
       $user->assignRole('subuser');
     }
     if($request->type == "company"){
       $user->assignRole('company');
     }
+    if($request->type == "data_entry"){
+      $user->assignRole('data_entry');
+    }
+      
     $user->update($requestForm);
 
     $request->session()->flash('message.nivel', 'success');
