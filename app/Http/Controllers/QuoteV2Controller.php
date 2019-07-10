@@ -8392,6 +8392,14 @@ class QuoteV2Controller extends Controller
         return $freight_charges_grouped;
     }
     
+    /**
+     * Process collections process charges LCL/AIR
+     * @param  collection $charges
+     * @param  string $type          
+     * @param  string $type_2
+     * @param  string $carrier
+     * @return collection
+     */    
     public function processChargesLclAir($charges,$type,$type_2,$carrier){
         $charges_grouped = collect(charges);
 
