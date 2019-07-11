@@ -377,7 +377,7 @@
     color: #0000ff;
     line-height: 15px;
   }
-  
+
   /* estilos */
 </style>
 @endsection
@@ -500,18 +500,18 @@
               <div class="col-lg-2 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
-                </div>
-                
+              </div>
+
               <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
-                
+
               <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
-                
+
             </div><br>
             <div class="row">
               <div class="col-lg-2">
@@ -913,7 +913,7 @@
 <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
 </div>
 </div>-->
-                        @if(isset($arr->contract->remarks))
+                        @if(!empty($arr->remarks))
                         <div class="col-lg-1">
                           <div class="btn-detail__quotes btn-remarks">
                             <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" >
@@ -1325,7 +1325,7 @@
               </div>
               @endif
 
-              @if(isset($arr->contract->remarks))
+              @if(!empty($arr->remarks))
               <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
                 <div class="col-lg-12">
                   <div class="row">

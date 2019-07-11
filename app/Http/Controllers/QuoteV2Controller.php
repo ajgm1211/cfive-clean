@@ -1064,9 +1064,11 @@ class QuoteV2Controller extends Controller
 
     /** FREIGHT CHARGES **/
 
+
     $freight_charges_detailed = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
       
     $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
+
 
     $contact_email = Contact::find($quote->contact_id);
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
@@ -1950,7 +1952,7 @@ class QuoteV2Controller extends Controller
    * @param integer $id 
    * @return type
    */
-    public function pdfAir(Request $request,$id)
+  public function pdfAir(Request $request,$id)
   {
     $id = obtenerRouteKey($id);
     $equipmentHides = '';
@@ -2036,7 +2038,7 @@ class QuoteV2Controller extends Controller
                 }else{
                   $typeCurrency =  $currency_cfg->alphacode;
                 }
-                
+
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
                 $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
                 $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
@@ -2193,7 +2195,7 @@ class QuoteV2Controller extends Controller
                   $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
                 }
                 $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
-                
+
               }
             }
           }
@@ -2745,7 +2747,7 @@ class QuoteV2Controller extends Controller
     return $payments->payment_conditions;
   }
 
-   public function termsandconditions($origin_port,$destiny_port,$carrier,$mode){
+  public function termsandconditions($origin_port,$destiny_port,$carrier,$mode){
 
     // TERMS AND CONDITIONS 
     $carrier_all = 26;
@@ -4897,8 +4899,12 @@ class QuoteV2Controller extends Controller
       //remarks
       $mode = "";
 
-      $remarks = $data->contract->remarks."<br>";
+      $remarks="";
+      if($data->contract->remarks != "")
+        $remarks = $data->contract->remarks."<br>";
+      
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $remarks = trim($remarks);
 
       $data->setAttribute('remarks',$remarks);
 
@@ -6843,8 +6849,13 @@ class QuoteV2Controller extends Controller
       }
       //remarks
       $mode = "";
-      $remarks = $data->contract->comments."<br>";
+      $remarks="";
+      if($data->contract->comments != "")
+        $remarks = $data->contract->comments."<br>";
+
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $remarks = trim($remarks);
+
 
       // EXCEL REQUEST 
 
@@ -6854,7 +6865,6 @@ class QuoteV2Controller extends Controller
       }else{
         $excelRequestId = "";
       }
-
 
 
 
