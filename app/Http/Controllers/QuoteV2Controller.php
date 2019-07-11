@@ -2877,7 +2877,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
-      $pdf_option->show_schedules=1
+      $pdf_option->show_schedules=1;
       $pdf_option->language='English';
       $pdf_option->save();
 
@@ -7061,7 +7061,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
-      $pdf_option->show_schedules=1
+      $pdf_option->show_schedules=1;
       $pdf_option->language='English';
       $pdf_option->save();
 
