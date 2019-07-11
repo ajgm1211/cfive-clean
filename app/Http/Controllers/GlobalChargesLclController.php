@@ -540,11 +540,11 @@ class GlobalChargesLclController extends Controller
         $countries          = Country::pluck('name','id');
         $calculationT       = CalculationTypeLcl::all()->pluck('name','id');
         $typedestiny        = TypeDestiny::all()->pluck('description','id');
-        $surcharge          = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $globalcharges      = GlobalChargeLcl::find($id);
+        $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
         $harbor             = Harbor::all()->pluck('display_name','id');
         $carrier            = Carrier::all()->pluck('name','id');
         $currency           = Currency::all()->pluck('alphacode','id');
-        $globalcharges      = GlobalChargeLcl::find($id);
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $company_users      = CompanyUser::pluck('name','id');
         $globalcharges->setAttribute('validation_expire',$validation_expire);

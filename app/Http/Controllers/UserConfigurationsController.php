@@ -69,7 +69,7 @@ class UserConfigurationsController extends Controller
         $json['notifications']['request-importation-lcl']   = $nrilcl;
         $json['notifications']['request-importation-gcfcl'] = $nrigcfcl;
         
-        $conf = UserConfiguration::find($id);
+        $conf = UserConfiguration::where('user_id',$id)->first();
         $conf->paramerters = json_encode($json);
         $conf->save();
         

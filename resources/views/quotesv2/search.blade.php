@@ -123,7 +123,7 @@
     border-color: #0072fc; 
   }
 
-  .input-select[type="checkbox"]{
+  .input-select[type="checkbox"] {
     display: none; 
   }
   .input-select[type="checkbox"]:checked + .btn-input__select {
@@ -305,11 +305,84 @@
   .btn-remarks {
     width: 95px;
   }
+  .select-class::before {
+    content:'Select ->';
+    font-size: 13px;
+  }
+  .selected-class:before {
+    content: 'Selected';
+    font-size: 13px;
+  }
+  .full-width {
+    width: 100% !important;
+  }
+  .create-manual {
+    background-color: transparent !important;
+    color: #36a3f7 !important;
+    border-width: 2px;
+    border-color: #36a3f7 !important;
+  }
+  .create-manual:hover {
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+  }
+  .workgreen {
+    color: #6ee99e !important;
+    font-size: 12px;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    color: #6ee99e !important;
+  }
+  .btn-plus__form {
+    position: relative;
+    top: 8px;
+  }
+  .include-checkbox[type="checkbox"] {
+    display: none;
+  }
+  .for-check {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 0px;
+  }
+  .label-check {
+    position: relative;
+  }
+  .label-check::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -25px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 2px solid #0000ff;
+    border-radius: 3px;
+    display: flex;
+    /*align-items: center*/
+    justify-content: center;
+  }
+  .include-checkbox[type="checkbox"]:checked + .label-check::before {
+    content: '✔';
+    color: #0000ff;
+    line-height: 15px;
+  }
+
   /* estilos */
 </style>
 @endsection
 
-@section('title', 'Quotes | Search')
+@section('title', 'Quotes')
 @section('content')
 <br>
 
@@ -341,7 +414,7 @@
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle" style="color:blue; font-size: 18px;" ></i> </a>
+                      <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
                     </span>
                   </span>
                 </div>
@@ -353,7 +426,7 @@
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
-                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle" style="color:blue; font-size: 18px;"></i></a>
+                      <a    onclick="AbrirModal('addContact',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Contact if not exist">   <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;"></i></a>
                     </span>
                   </span>
                 </div>
@@ -370,6 +443,7 @@
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
+
                 </div>
 
                 <div id="origin_airport_label" style="display:none;">
@@ -382,6 +456,7 @@
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
                   {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+
                 </div>
                 <div id="destination_airport_label" style="display:none;">
                   <label>Destination airport</label>
@@ -399,7 +474,9 @@
                       <i class="la la-calendar-check-o"></i>
                     </span>
                   </div>
-                </div>
+                </div><br>
+
+
               </div>
               <div class="col-lg-2" id="delivery_type_label">
                 <label>Delivery type</label>
@@ -418,6 +495,23 @@
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
 
+            </div>
+            <div class="row">
+              <div class="col-lg-2 for-check">   
+                {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
+                <label for="mode1" class="label-check">Include origin charges</label>
+              </div>
+
+              <div class="col-lg-2 for-check">
+                {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
+                <label for="mode2" class="label-check">Include destination charges</label>
+              </div>
+
+              <div class="col-lg-2 for-check">
+                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
+                <label for="mode3" class="label-check">Include freight charges</label>
+              </div>
+
             </div><br>
             <div class="row">
               <div class="col-lg-2">
@@ -428,6 +522,7 @@
                 <label>Direction</label>
                 {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
+
             </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
@@ -455,7 +550,7 @@
                           <div class="input-group">
                             <input type="number" id="total_quantity" name="total_quantity" min="0" step="0.0001" class="total_quantity form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <select class="form-control" id="type_cargo" name="cargo_type">
+                              <select class="form-control" id="type_cargo" name="cargo_type" style="height:2.5em">
                                 <option value="1">Pallets</option>
                                 <option value="2">Packages</option>
                               </select>
@@ -471,7 +566,7 @@
                           <div class="input-group">
                             <input type="number" id="total_weight" name="total_weight" min="0" step="0.0001" class="total_weight form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">KG <span class="caret"></span></button>
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">KG <span class="caret" ></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
                               </ul>
                             </div><!-- /btn-group -->
@@ -486,7 +581,7 @@
                           <div class="input-group">
                             <input type="number" id="total_volume" name="total_volume" min="0" step="0.0001" class="total_volume form-control" placeholder="" aria-label="...">
                             <div class="input-group-btn">
-                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">M<sup>3</sup> <span class="caret"></span></button>
+                              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:2.5em">M<sup>3</sup> <span class="caret"></span></button>
                               <ul class="dropdown-menu dropdown-menu-right">
                               </ul>
                             </div><!-- /btn-group -->
@@ -504,8 +599,8 @@
                   <div class="tab-pane fade" id="tab_1_2">
                     <div class="template">
                       <div class="row">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px">
+                        <div class="col-md-2" style="padding-right:0px;">
+                          <select name="type_load_cargo[]" class="type_cargo type_cargo_2 form-control size-12px" style="height: 2.7em">
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
@@ -513,24 +608,24 @@
                           <input type="hidden" id="total_pallets" name="total_pallets"/>
                           <input type="hidden" id="total_packages" name="total_packages"/>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="padding-right:0px;">
                           <input id="quantity" min="1" value="" name="quantity[]" class="quantity quantity_2 form-control size-12px" type="number" placeholder="quantity" />
                         </div>
-                        <div class="col-md-5" >
+                        <div class="col-md-5" style="padding-right:0px;">
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="height form-control size-12px height_2" min="0" name="height[]" id="height" type="number" placeholder="H"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group"  style="margin-right: 15px;">
                               <input class="width form-control size-12px width_2" min="0" name="width[]" id="width" type="number" placeholder="W"/>
                             </div>
-                            <div class="btn-group" role="group">
-                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L"/>
+                            <div class="btn-group" role="group"  style="margin-right: 15px;">
+                              <input class="large form-control size-12px large_2" min="0" name="large[]" id="large" type="number" placeholder="L" />
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
                                 <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown" style="padding:0.45em 0.65em">
                                     <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu" role="menu">
@@ -552,38 +647,39 @@
                           <input type="hidden" class="weight_input" id="weight_input" name="total_weight_pkg"/>
                         </div>
                         <div class="col-md-4">
-                          <br>
+
                           <p class=""><span class="quantity"></span> <span class="volume"></span> <span class="weight"></span></p>
                         </div>
                       </div>
                     </div>
+                    <br>
                     <div class="template hide" id="lcl_air_load_template">
                       <div class="row" style="padding-top: 15px;">
-                        <div class="col-md-2">
-                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px">
+                        <div class="col-md-2" style="padding-right:0px;">
+                          <select name="type_load_cargo[]" class="type_cargo form-control size-12px" style="height: 2.7em">>
                             <option value="">Choose an option</option>
                             <option value="1">Pallets</option>
                             <option value="2">Packages</option>
                           </select>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="padding-right:0px;">
                           <input id="quantity" min="1" value="" name="quantity[]" class="quantity form-control size-12px" type="number" placeholder="quantity" />
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5" style="padding-right:0px;">
                           <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="height form-control size-12px" min="0" name="height[]" id="al" type="number" placeholder="H"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="width form-control size-12px" min="0" name="width[]" id="an" type="number" placeholder="W"/>
                             </div>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group" role="group" style="margin-right: 15px;">
                               <input class="large form-control size-12px" min="0" name="large[]" id="la" type="number" placeholder="L"/>
                             </div>
                             <div class="btn-group" role="group">
                               <div class="input-group-btn">
                                 <div class="btn-group">
-                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown">
+                                  <button class="btn btn-default dropdown-toggle dropdown-button" type="button" data-toggle="dropdown" style="padding:0.45em 0.65em">
                                     <span class="xs-text size-12px">CM</span> <span class="caret"></span>
                                   </button>
                                   <ul class="dropdown-menu" role="menu">
@@ -611,28 +707,10 @@
                         </div>
                       </div>
                     </div>
-                    <br>
+
                     <div class="row">
                       <div class="col-md-12">
-                        <b>Total: </b>
-                        <span id="total_quantity_pkg"></span>
-                        <span id="total_volume_pkg"></span>
-                        <span id="total_weight_pkg"></span>
-                        <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
-                        <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
-                        <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
-                      </div>
-                      <br>
-                      <br>
-                      <div class="col-md-12">
-                        <b>Chargeable weight:</b>
-                        <span id="chargeable_weight_pkg"></span>
-                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <br>
+
                         <div id="saveActions" class="form-group">
                           <div class="btn-group">
                             <button type="button" id="add_load_lcl_air" class="add_load_lcl_air btn btn-info btn-sm">
@@ -643,6 +721,27 @@
                         </div>
                       </div>
                     </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-4">
+
+                        <b>Total: </b>
+                        <span id="total_quantity_pkg"></span>
+                        <span id="total_volume_pkg"></span>
+                        <span id="total_weight_pkg"></span>
+                        <input type="hidden" id="total_quantity_pkg_input" name="total_quantity_pkg"/>
+                        <input type="hidden" id="total_volume_pkg_input" name="total_volume_pkg"/>
+                        <input type="hidden" id="total_weight_pkg_input" name="total_weight_pkg"/>
+                      </div>
+                      <br>
+                      <br>
+                      <div class="col-md-8">
+                        <b>Chargeable weight:</b>
+                        <span id="chargeable_weight_pkg"></span>
+                        <input type="hidden" id="chargeable_weight_pkg_input" name="chargeable_weight"/>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>
@@ -651,35 +750,36 @@
             <div class="row">
               <div class="col-lg-12 no-padding">
                 <div class="row  justify-content-between">
-                  <div class="col-lg-10 d-flex message  align-items-end align-self-end">
+                  <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     @if(isset($arreglo))
                     @if($arreglo->isEmpty())
                     <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                     @endif
                     @endif
-                  </div><!-- aqui -->
-                  <div class="col-lg-2 d-flex justify-content-star align-items-end" style="right: 35px;"> 
-                    <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
-                    </button>
+                  </div>
+                  <div class="col-lg-3 d-flex justify-content-end align-items-end" align='right'> 
+                    <!-- <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
+</button> -->
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div class="row">
               <div class="col-lg-12">   
                 <center>
                   <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+                  <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
                 </center>
-              </div>
             </div>
           </div>
-        </div>      
-      </div>
+        </div>
+      </div>      
     </div>
   </div>
+</div>
 
-  {!! Form::close() !!}
+{!! Form::close() !!}
 
 
 </div>
@@ -692,7 +792,7 @@
   <div class="col-lg-12"><br><br><span class="col-txt">Results</span><br><br></div>
 </div>
 <div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
-  {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group']) !!}
+  {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
   <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
     <div class="m-portlet no-shadow">
@@ -798,12 +898,12 @@
                         <div class="wth" {{ $equipmentHides['40hc'] }}><span class="darkblue validate">{{$arr->total40hc  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}><span class="darkblue validate">{{$arr->total40nor  }} </span> <span class="currency">{{ $arr->typeCurrency }} </span></div>
                         <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
-                        <div class="wth" {{ $equipmentHides['45'] }}><span class="darkblue validate">{{$arr->total45  }} </span><span class="currency">{{ $arr->typeCurrency }} </span></div>
+
                       </div>
                     </div>
                     <div class="col-lg-1 no-padding d-flex align-items-center pos-btn">
-                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
-                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate"  rate-id ='{{$arr->id }}'>Select <span class="la la-arrow-right"></span></label>
+                      <input type="checkbox" id="input-select{{$loop->iteration}}" class="input-select no-check btnrate checkboxx" rate-id ='{{$arr->id }} infocheck' name="info[]" value="{{ json_encode($arr) }}">
+                      <label for="input-select{{$loop->iteration}}"  class="btn-input__select btnrate select-class selected"  rate-id ='{{$arr->id }}' Select></label>
                     </div>
                     <div class="col-lg-12 b-top no-padding padding-min">
                       <div class="row justify-content-between">
@@ -813,8 +913,8 @@
 <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
 </div>
 </div>-->
-                        @if(isset($arr->contract->remarks))
-                        <div class="col-lg-2">
+                        @if(!empty($arr->remarks))
+                        <div class="col-lg-1">
                           <div class="btn-detail__quotes btn-remarks">
                             <a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l"  title="Cancel" >
                               <span class="workblue">Remarks</span>  
@@ -824,7 +924,7 @@
                         @endif
 
                         @if(isset($arr->sheduleType))
-                        <div class="col-lg-3 d-flex align-items-center">
+                        <div class="col-lg-3 d-flex align-items-center" style="padding-left: 40px;">
                           <span class="portalphacode" style="margin-right:15px;">Validity: </span> {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
                         </div>
                         @else
@@ -845,12 +945,22 @@
                           <span class="portalphacode" style="margin-right:15px;"> Via: </span> {{  $arr->via }}
                         </div>
                         @endif
-                        <div class="col-lg-2 no-padding d-flex justify-content-end">
+                        <div class="col-lg-3 no-padding d-flex justify-content-end">
+                          @if($arr->excelRequest !="")
+                          <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
+                            <a  id='excel_l{{$loop->iteration}}' href="/Requests/RequestImportation/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workgreen">Download Excel</span>
+
+                              <i class="la la-file-excel-o"></i>
+                            </a>
+                          </div>
+                          @endif
                           <div class="btn-detail__quotes btn-d">
                             <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
                               <span class="workblue">Detailed Cost</span>  
                               <i  class="la la-angle-down blue"></i></a>
                           </div>
+
                         </div>
                       </div>
                     </div>
@@ -881,7 +991,7 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   @foreach($arr->localorigin as $localorigin)
 
                   <div class="row data-rates">
@@ -908,7 +1018,7 @@
                     </div>
                     <div class="col-lg-1" ><span class="colorphacode">{{  str_replace(["[","]","\""], ' ', $localorigin['99']->pluck('currency')  ) }}</span></div>
 
-                  </div><br>
+                  </div>
                   @endforeach
                   <div class="row bg-light">
                     <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges</span></div>
@@ -934,8 +1044,8 @@
                   </div>
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
@@ -945,12 +1055,12 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   @foreach($arr->rates as $rates)
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{ $rates['type'] }}</div>
-                    <div class="col-lg-2 colorphacode">{{ $rates['detail'] }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode" style="white-space: nowrap">{{ $rates['detail'] }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup20'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
@@ -967,8 +1077,8 @@
 
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('calculation_name')  ) }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
                           <span class="bg-rates"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('monto')) : '0.00' }}</span><span class="bg-rates">+ {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('markup')) : '0.00' }}</span>  <i class="la la-caret-right arrow-down"></i> <b class="monto-down"> {{ isset($localfreight['20']) ?   str_replace(["[","]","\""], ' ', $localfreight['20']->pluck('montoMarkup')) : '0.00' }} </b>         
@@ -988,12 +1098,12 @@
                       </div>
                     </div>
                     <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localfreight['99']->pluck('currency')  ) }}</div>
-                  </div><br>
+                  </div>
                   @endforeach
 
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-3 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20F  }} </span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40F  }}</span></div>
@@ -1017,8 +1127,8 @@
                   </div>
                   <div class="row bg-light">
                     <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-1"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wthwth" {{ $equipmentHides['20'] }}><span class="portalphacode">20'</span></div>
                         <div class="wthwth" {{ $equipmentHides['40'] }}><span class="portalphacode">40'</span></div>
@@ -1028,13 +1138,13 @@
                       </div>
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
-                  </div><br>
+                  </div>
                   @foreach($arr->localdestiny as $localdestiny)
 
                   <div class="row data-rates">
                     <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('surcharge_name')  ) }}</div>
-                    <div class="col-lg-2 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
-                    <div class="col-lg-7 colorphacode">
+                    <div class="col-lg-1 colorphacode">{{  str_replace(["[","]","\""], ' ', $localdestiny['99']->pluck('calculation_name')  ) }}</div>
+                    <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>
                           <span class="bg-rates">   {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('monto')) : '0.00' }} </span><span class="bg-rates"> + {{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('markup')) : '0.00' }} </span> <i class="la la-caret-right arrow-down"></i>    <b class="monto-down">{{ isset($localdestiny['20']) ?   str_replace(["[","]","\""], ' ', $localdestiny['20']->pluck('montoMarkup')) : '0.00' }}   </b>       
@@ -1057,11 +1167,11 @@
                     <div class="col-lg-1" ></div>
                   </div>
                   @endforeach
-                  <br>
+
 
                   <div class="row bg-light">
-                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
-                    <div class="col-lg-7">
+                    <div class="col-lg-3 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges</span></div>
+                    <div class="col-lg-8">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}><span class="portalphacode">{{ $arr->tot20D  }} </span></div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="portalphacode">{{ $arr->tot40D  }}</span></div>
@@ -1215,7 +1325,7 @@
               </div>
               @endif
 
-              @if(isset($arr->contract->remarks))
+              @if(!empty($arr->remarks))
               <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
                 <div class="col-lg-12">
                   <div class="row">
@@ -1280,6 +1390,36 @@
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
+  $('.selected').on('click', function(){
+    $(this).toggleClass('selected-class');
+
+    if($('.selected').hasClass('selected-class') ) {
+      $('.create-manual').prop( "disabled", true );
+    }else{
+      $('.create-manual').prop( "disabled", false );
+    }
+  });
+
+
+
+  $(document).ready(function() {
+    var divRow = document.getElementsByClassName('data-rates');
+    var numDivRow = divRow.length;
+    var count = 0;
+    console.log(numDivRow);
+
+    for(var i = 1; i < numDivRow; i++){
+      if(i%2 == 1){
+        var clase = divRow[i];
+        console.log(clase);
+        $(clase).css({
+          'background-color' : '#fafafa'
+        });      
+        //console.log(clase);
+      }
+    }
+
+  });
 
   /*** GOOGLE MAPS API ***/
 
@@ -1312,9 +1452,12 @@
     $('#date_hidden').val(date);
   }
 
+
   $('.m-select3-general').select2();
 
   $('.select2-selection__arrow').remove();
+
+
 
   function AbrirModal(action,id){
 
@@ -1332,6 +1475,8 @@
     }
 
   }
+
+
 
 </script>
 
