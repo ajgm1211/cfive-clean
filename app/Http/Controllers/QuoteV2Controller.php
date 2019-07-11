@@ -1051,21 +1051,21 @@ class QuoteV2Controller extends Controller
 
     /** ORIGIN GHARGES **/
 
-    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote);
+    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote, $currency_cfg);
 
-    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote);
+    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote, $currency_cfg);
 
     /** DESTINATION CHARGES **/
 
-    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote);
+    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote, $currency_cfg);
 
-    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote);
+    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote, $currency_cfg);
 
     /** FREIGHT CHARGES **/
 
-    $freight_charges_detailed = $this->processFreightCharges($freight_charges, $quote);
+    $freight_charges_detailed = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
       
-    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote);
+    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
     $contact_email = Contact::find($quote->contact_id);
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
@@ -1654,19 +1654,19 @@ class QuoteV2Controller extends Controller
 
     /** ORIGIN GHARGES **/
 
-    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote);
+    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote, $currency_cfg);
 
-    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote);
+    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote, $currency_cfg);
 
     /** DESTINATION CHARGES **/
 
-    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote);
+    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote, $currency_cfg);
 
-    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote);
+    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote, $currency_cfg);
 
     /** FREIGHT CHARGES **/
 
-    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote);
+    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
     $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
 
@@ -2426,19 +2426,19 @@ class QuoteV2Controller extends Controller
 
     /** ORIGIN GHARGES **/
 
-    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote);
+    $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote, $currency_cfg);
 
-    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote);
+    $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote, $currency_cfg);
 
     /** DESTINATION CHARGES **/
 
-    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote);
+    $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote, $currency_cfg);
 
-    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote);
+    $destination_charges=$this->processDestinationDetailed($destination_charges, $quote, $currency_cfg);
 
     /** FREIGHT CHARGES **/
 
-    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote);
+    $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
     return $view = \View::make('quotesv2.html', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
   }
@@ -7298,7 +7298,7 @@ class QuoteV2Controller extends Controller
      * @param  collection $quote
      * @return collection
      */
-  public function processOriginDetailed($origin_charges, $quote){
+  public function processOriginDetailed($origin_charges, $quote, $currency_cfg){
     $origin_charges_detailed = collect($origin_charges);
 
     $origin_charges_detailed = $origin_charges_detailed->groupBy([
@@ -7513,7 +7513,7 @@ class QuoteV2Controller extends Controller
      * @param  collection $quote
      * @return collection
      */
-  public function processOriginGrouped($origin_charges, $quote){
+  public function processOriginGrouped($origin_charges, $quote, $currency_cfg){
     $origin_charges_grouped = collect($origin_charges);
 
     $origin_charges_grouped = $origin_charges_grouped->groupBy([
@@ -7740,7 +7740,7 @@ class QuoteV2Controller extends Controller
      * @param  collection $quote
      * @return collection
      */
-  public function processDestinationGrouped($destination_charges, $quote){
+  public function processDestinationGrouped($destination_charges, $quote, $currency_cfg){
     $destination_charges_grouped = collect($destination_charges);
 
     $destination_charges_grouped = $destination_charges_grouped->groupBy([
@@ -7967,7 +7967,7 @@ class QuoteV2Controller extends Controller
      * @param  collection $quote
      * @return collection
      */
-  public function processDestinationDetailed($destination_charges, $quote){
+  public function processDestinationDetailed($destination_charges, $quote, $currency_cfg){
     $destination_charges = $destination_charges->groupBy([
 
       function ($item) {
@@ -8134,7 +8134,7 @@ class QuoteV2Controller extends Controller
      * @param  collection $quote
      * @return collection
      */
-  public function processFreightCharges($freight_charges, $quote){
+  public function processFreightCharges($freight_charges, $quote, $currency_cfg){
 
     $freight_charges_grouped = collect($freight_charges);
 
