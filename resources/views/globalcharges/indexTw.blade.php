@@ -3,6 +3,18 @@
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<style>
+  .btn-save__modal {
+    padding: 15px 35px !important;
+    border-radius: 50px;
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+    font-size: 18px;
+  }
+  .icon__modal {
+    margin-right: 10px;
+  }
+</style>
 @endsection
 @section('title', 'Global Charges')
 @section('content')
@@ -202,7 +214,7 @@ New \ Status Import  &nbsp;
 
     $(function() {
         $('#requesttable').DataTable({
-            processing: true,
+
             //serverSide: true,
             ajax: '{!! route("globalcharges.show",$company_userid) !!}',
             columns: [
@@ -223,12 +235,10 @@ New \ Status Import  &nbsp;
             "searching": true,
             "ordering": true,
             "width": true,
-            "info": true,
-            "deferLoading": 57,
             "autoWidth": false,
             "stateSave": true,
             "processing": true,
-            "dom": 'Bfrtip',
+            "serverSide": true,
             "paging": true
         });
 
