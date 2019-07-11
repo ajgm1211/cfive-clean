@@ -8,27 +8,6 @@ $(document).ready(function() {
     }
   });
 
-  $(".open-inland-modal").click(function () {
-    var rate_id = $(this).data('rate-id');
-    $(".modal-body .automatic_rate_id").val(rate_id);
-  });
-
-    $(document).on('click','.edit_rate_modal',function(){
-        var url = "/v2/quotes/rates/edit";
-        var rate_id = $(this).data('rate-id');
-        $.get(url + '/' + rate_id, function (data) {
-            //success data
-            console.log(data.origin_port_id);
-            $('.origin_port_id').val(data.origin_port_id);
-            $('.destination_port_id').val(data.destination_port_id);
-            $('.contract').val(data.contract);
-            $('.type').val(data.type);
-            $('.transit_time').val(data.transit_time);
-            $('.via').val(data.transit_time);
-            $('#editRateModal').modal('show');
-        }) 
-    });
-
   //Hide grouped options in pdf layout
   if($('#show_hide_select').val()=='total in'){
     $(".group_origin_charges").addClass('hide');
@@ -128,21 +107,6 @@ $(document).ready(function() {
 
   $('.editable-lcl-air').editable({
     url:'/v2/quotes/lcl/charges/update',
-    emptytext:0,
-    success: function(response, newValue) {
-
-      if(!response) {
-        return "Unknown error!";
-      }
-
-      if(response.success === false) {
-        return response.msg;
-      }
-    }
-  });
-
-    $('.editable-lcl-air-inland').editable({
-    url:'/v2/quotes/lcl/inland/charge/update',
     emptytext:0,
     success: function(response, newValue) {
 
@@ -939,37 +903,6 @@ $(document).on('click', '.store_charge', function () {
   });
 });
 
-//Delete quote
-$(document).on('click', '#delete-quote-v2', function () {
-  var id = $(this).attr('data-quote-id');
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!'
-  }).then(function(result) {
-
-    if (result.value) {
-      $.ajax({
-        type: 'get',
-        url: '/v2/quotes/delete/' + id,
-        success: function(data) {
-          swal(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-            )
-          console.log(data.message);
-          $(theElement).closest('tr').remove();
-        }
-      });
-
-    }
-  });
-});
-
 //Delete rates
 $(document).on('click', '.delete-rate', function () {
   var id=$(this).attr('data-rate-id');
@@ -1061,41 +994,8 @@ $(document).on('click', '.delete-charge-lcl', function () {
               'success'
             )
           }
-          if(data.type==1){
-            $(theElement).closest('tr').remove();
-          }else{
-            setTimeout(location.reload.bind(location), 3000); 
-          }
-        }
-      });
-    }
-  });
-});
-
-//Delete inland
-$(document).on('click', '.delete-inland', function () {
-  var id=$(this).closest('ul').find('.inland_id').val();
-  var theElement = $(this);
-  swal({
-    title: 'Are you sure?',
-    text: "Please confirm!",
-    type: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, I am sure!'
-  }).then(function (result) {
-    if (result.value) {
-      $.ajax({
-        type: 'GET',
-        url: '/v2/quotes/delete/inland/'+id,
-        success: function(data) {
-          if(data.message=='Ok'){
-            swal(
-              'Updated!',
-              'The charge has been deleted.',
-              'success'
-            )
-          }
-          $(theElement).closest('span').find('.tab-content').remove();
+          $(theElement).closest('tr').remove();
+          //setTimeout(location.reload.bind(location), 3000);
         }
       });
     }
@@ -1210,7 +1110,7 @@ function update_remark($id,$content,$v){
           'success'
         )
 
-        $(".remarks_box_"+$v).html(data.rate['remarks']);
+        $(".remarks_span_"+$v).html(data.rate['remarks']);
         $(".remarks_span_"+$v).removeAttr('hidden');
         $(".remarks_textarea_"+$v).attr('hidden','true');
         $(".update_remarks_"+$v).attr('hidden','true');
@@ -1252,22 +1152,6 @@ $(document).on('click', '#edit-quote', function () {
   $(".price_id").removeAttr('hidden');
   $("#update_buttons").removeAttr('hidden');
   $("#edit_li").attr('hidden','true');
-  if($(".kind_of_cargo").val()=='Pharma'){
-    $(".gdp_span").attr('hidden','true');
-    $(".gdp").removeAttr('hidden');
-  }
-  if($(".gdp").val()==1){
-    $(".risk_level").removeAttr('hidden');
-    $(".risk_level_span").attr('hidden','true');
-  }
-  if($(".delivery_type").val()==3 || $(".delivery_type").val()==4){
-    $(".origin_address_span").attr('hidden','true');
-    $(".origin_address").removeAttr('hidden');
-  }
-  if($(".delivery_type").val()==2 || $(".delivery_type").val()==4){
-    $(".destination_address_span").attr('hidden','true');
-    $(".destination_address").removeAttr('hidden');
-  }
   $(".quote-type").select2();
   $(".status").select2();
   $(".kind_of_cargo").select2();
@@ -1278,7 +1162,6 @@ $(document).on('click', '#edit-quote', function () {
   $(".user_id").select2();
   $(".price_id").select2();
   $(".equipment").select2();
-  $(".gdp").select2();
 });
 
 $(document).on('click', '#cancel', function () {
@@ -1312,22 +1195,6 @@ $(document).on('click', '#cancel', function () {
   $(".price_id").attr('hidden','true');
   $("#update_buttons").attr('hidden','true');
   $("#edit_li").removeAttr('hidden');
-  if($(".kind_of_cargo").val()=='Pharma'){
-    $(".gdp").attr('hidden','true');
-    $(".gdp_span").removeAttr('hidden');
-  }
-  if($(".gdp").val()==1){
-    $(".risk_level").attr('hidden','true');
-    $(".risk_level_span").removeAttr('hidden');
-  }
-  if($(".delivery_type").val()==3 || $(".delivery_type").val()==4){
-    $(".origin_address").attr('hidden','true');
-    $(".origin_address_span").removeAttr('hidden');
-  }
-  if($(".delivery_type").val()==2 || $(".delivery_type").val()==4){
-    $(".destination_address").attr('hidden','true');
-    $(".destination_address_span").removeAttr('hidden');
-  }
   $(".quote-type ").select2('destroy');
   $(".kind_of_cargo").select2('destroy');
   $(".status").select2('destroy');
@@ -1338,7 +1205,6 @@ $(document).on('click', '#cancel', function () {
   $(".user_id").select2('destroy');
   $(".price_id").select2('destroy');
   $(".equipment").select2('destroy');
-  $(".gdp").select2('destroy');
 });
 
 $(document).on('click', '#update', function () {
@@ -1357,14 +1223,6 @@ $(document).on('click', '#update', function () {
   var price_id=$(".price_id").val();
   var commodity=$(".commodity").val();
   var kind_of_cargo=$(".kind_of_cargo").val();
-  var origin_address=$(".origin_address").val();
-  var destination_address=$(".destination_address").val();
-  var gdp=0;
-  var risk_level='';
-  if(kind_of_cargo=='Pharma'){
-    gdp=$(".gdp").val();
-    risk_level=$(".risk_level").val();
-  }
 
   $.ajax({
     type: 'POST',
@@ -1384,10 +1242,6 @@ $(document).on('click', '#update', function () {
       'price_id': price_id,
       'commodity': commodity,
       'kind_of_cargo': kind_of_cargo,
-      'gdp': gdp,
-      'risk_level': risk_level,
-      'origin_address': origin_address,
-      'destination_address': destination_address,
     },
     success: function(data) {
       if(data.message=='Ok'){
@@ -1440,7 +1294,7 @@ $(document).on('click', '#update', function () {
           $(".quote_id_span").html(data.quote['quote_id']);
         }
         $(".company_id").val(data.quote['company_id']);
-        $(".company_id_span").html(data.quote['company_id']);
+        $(".company_span").html(data.company_name);
         $(".status").val(data.quote['status']);
         $(".status_span").html(data.quote['status']+' <i class="fa fa-check"></i>');
         $(".status_span").addClass('Status_'+data.quote['status']);
@@ -1450,14 +1304,8 @@ $(document).on('click', '#update', function () {
         $(".incoterm_id_span").html(incoterm);
         $(".commodity").val(data.quote['commodity']);
         $(".commodity_span").html(data.quote['commodity']);
-        $(".gdp").val(data.quote['gdp']);
-        $(".gdp_span").html(data.gdp);
-        $(".risk_level").val(data.quote['risk_level']);
-        $(".risk_level_span").html(data.quote['risk_level']);
         $(".kind_of_cargo").val(data.quote['kind_of_cargo']);
-        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);
-        $(".origin_address_span").html(data.quote['origin_address']);
-        $(".destination_address_span").html(data.quote['destination_address']);     
+        $(".kind_of_cargo_span").html(data.quote['kind_of_cargo']);        
         $(".equipment").val(data.quote['equipment']);
         $(".equipment_span").empty();
         var length = $.parseJSON(data.quote['equipment']).length;
@@ -1510,22 +1358,6 @@ $(document).on('click', '#update', function () {
         $(".equipment").attr('hidden','true');
         $("#update_buttons").attr('hidden','true');
         $("#edit_li").removeAttr('hidden');
-        if($(".kind_of_cargo").val()=='Pharma'){
-          $(".gdp").attr('hidden','true');
-          $(".gdp_span").removeAttr('hidden');
-        }
-        if($(".gdp").val()==1){
-          $(".risk_level").attr('hidden','true');
-          $(".risk_level_span").removeAttr('hidden');
-        }
-        //if($(".origin_address").val()!=''){
-          $(".origin_address").attr('hidden','true');
-          $(".origin_address_span").removeAttr('hidden');
-        //}
-        //if($(".destination_address").val()!=''){
-          $(".destination_address").attr('hidden','true');
-          $(".destination_address_span").removeAttr('hidden');
-        //}
         $(".quote-type").select2('destroy');
         $(".status").select2('destroy');
         $(".company_id").select2('destroy');
@@ -1536,7 +1368,6 @@ $(document).on('click', '#update', function () {
         $(".price_id").select2('destroy');
         $(".equipment").select2('destroy');
         $(".kind_of_cargo").select2('destroy');
-        $(".gdp").select2('destroy');
 
         //Refresh page after 5 seconds
         //setTimeout(location.reload.bind(location), 5000);
@@ -1590,18 +1421,6 @@ function addDestinationCharge($value){
   });
 }
 
-function addInlandCharge($value){
-  var $template = $('#inland_charges_'+$value),
-      $clone = $template
-  .clone()
-  .removeClass('hide')
-  .removeAttr('id')
-  .insertAfter($template)
-  $clone.find("select").select2({
-    placeholder: "Currency"
-  });
-}
-
 $(document).on('click', '.removeFreightCharge', function (e) {
   $(this).closest('tr').remove();
 });
@@ -1614,7 +1433,7 @@ $(document).on('click', '.removeDestinationCharge', function (e) {
   $(this).closest('tr').remove();
 });
 
-//Sending quotes FCL
+//Sending quotes
 $(document).on('click', '#send-pdf-quotev2', function () {
   var id = $('#quote-id').val();
   var email = $('#quote_email').val();
@@ -1666,58 +1485,6 @@ $(document).on('click', '#send-pdf-quotev2', function () {
   }
 });
 
-//Sending quotes LCL/AIR
-$(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
-  var id = $('#quote-id').val();
-  var email = $('#quote_email').val();
-  var to = $('#addresse').val();
-  var email_template_id = $('#email_template').val();
-  var email_subject = $('#email-subject').val();
-  var email_body = $('#email-body').val();
-
-  if(email_template_id!=''&&to!=''){
-    $.ajax({
-      type: 'POST',
-      url: '/v2/quotes/send/lcl',
-      data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
-      beforeSend: function () {
-        $('#send-pdf-quotev2-lcl-air').hide();
-        $('#send-pdf-quote-sending').show();
-      },
-      success: function(data) {
-        $('#spin').hide();
-        $('#send-pdf-quotev2-lcl-air').show();
-        $('#send-pdf-quote-sending').hide();
-        if(data.message=='Ok'){
-          $('#SendQuoteModal').modal('toggle');
-          $('body').removeClass('modal-open');
-          $('.modal-backdrop').remove();
-          $('#subject-box').html('');
-          $('.editor').html('');
-          $('#textarea-box').hide();
-          swal(
-            'Done!',
-            'Your message has been sent.',
-            'success'
-          )
-        }else{
-          swal(
-            'Error!',
-            'Your message has not been sent.',
-            'error'
-          )
-        }
-      }
-    });
-  }else{
-    swal(
-      '',
-      'Please complete all fields',
-      'error'
-    )
-  }
-});
-
 /*** PDF ***/
 
 //Show and hide pdf layouts options
@@ -1732,33 +1499,6 @@ $(document).on('change', '#show_hide_select', function () {
     $(".group_freight_charges").removeClass('hide');      
   }
 
-});
-
-//GDP
-$(document).on('change', '.gdp', function () {
-  if($(this).val() == 1){
-    $(".risk_level").removeAttr('hidden');
-    $(".div_risk_level").removeAttr('hidden');
-    $(".risk_level_span").attr('hidden','true');
-  }else{
-    $(".risk_level_span").attr('hidden','true');
-    $(".div_risk_level").attr('hidden','true');
-  }
-});
-
-//King of cargo change
-$(document).on('change', '.kind_of_cargo', function () {
-  if($(this).val() == 'Pharma'){
-    $(".gdp").removeAttr('hidden');
-    $(".gdp_span").attr('hidden','true');
-    $(".div_gdp").removeAttr('hidden');
-    if($(".gdp").val()==1){
-      $(".div_risk_level").removeAttr('hidden');  
-    }
-  }else{
-    $(".div_gdp").attr('hidden','true');
-    $(".div_risk_level").attr('hidden','true');
-  }
 });
 
 //Updating pdf features
@@ -2013,7 +1753,7 @@ $(document).on('change', '#quoteType', function (e) {
 
 
     $(".infocheck").val('');
-    $(".quote_search").hide();
+    $(".quote_search").show();
     $(".formu").val('');
     $(".search").hide();
 
@@ -2255,6 +1995,10 @@ $( document ).ready(function() {
   });
 });
 
+$('.m-select2-general').select2({
+  placeholder: "Select an option"
+});
+
 function display(id){
 
   var freight = $("#freight"+id);
@@ -2310,7 +2054,17 @@ function display_r(id){
 
 $(".quote_search").on("click", function() {
 
-  $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+
+
+  //FCL
+  if($('#quoteType').val()==1){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  }
+
+  // LCL
+  if($('#quoteType').val()==2){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearchLCL');
+  }
   $(".quote_search").attr("type","submit");
 
 });
@@ -2599,6 +2353,9 @@ $('.inlandsO').on('click', function(){
 
 //Calcular el volumen individual
 $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weight", function(){
+
+
+
   var sumAl = 0;
   var sumAn = 0;
   var sumLa = 0;
@@ -2613,11 +2370,14 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
   $( ".width" ).each(function() {
     $( this).each(function() {
       width = $(this).val();
+
       if (!isNaN(width)) {
         width = parseInt(width);
       }
     });
   });
+
+
   $( ".height" ).each(function() {
     $( this).each(function() {
       thickness = $(this).val();
@@ -2626,7 +2386,9 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
       }
     });
   });
+
   $( ".quantity" ).each(function() {
+
     $( this).each(function() {
       quantity = $(this).val();
       if (!isNaN(quantity)) {
@@ -2655,6 +2417,7 @@ $(document).on("change keydown keyup", ".quantity, .height ,.width ,.large,.weig
     width = $(this).closest('.row').find('.width').val();
     quantity = $(this).closest('.row').find('.quantity').val();
     weight = $(this).closest('.row').find('.weight').val();
+    //     alert(width);
 
     if(thickness > 0 || length > 0 || quantity > 0) {
       volume = Math.round(thickness * length * width * quantity / 10000) / 100;
@@ -3022,51 +2785,98 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
   $('.weight').change();
 });
 
-/** Select2 **/
-$('.m-select2-general').select2({
-  placeholder: "Select an option"
-});
+function precargarLCL(){
 
-$('.m-select2-edit').select2({
-  placeholder: "Select an option"
-});
 
-$('#origin_airport_create').select2({
-      dropdownParent: $('#createRateModal'),
-      placeholder: "Select an option",
-      minimumInputLength: 2,
-      ajax: {
-        url: '/quotes/airports/find',
-        dataType: 'json',
-        data: function (params) {
-          return {
-            q: $.trim(params.term)
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data
-          };
-        },
+  // Validaciones por defecto
+
+  if($("#total_quantity").val() != ""){
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+  }
+
+
+
+  $(".infocheck").val('');
+  $(".quote_search").show();
+
+
+
+  $("#origin_harbor").prop( "disabled", false );
+  $("#destination_harbor").prop( "disabled", false );
+  $("#equipment_id").hide();
+  $("#equipment").prop( "disabled", true );
+  $("#equipment").removeAttr('required');
+  $("#delivery_type").prop( "disabled", false );
+  $("#delivery_type_air").prop( "disabled", true );
+  $("#delivery_type_label").show();
+  $("#delivery_type_air_label").hide();
+  $("#lcl_air_load").show();
+  $("#origin_harbor_label").show();
+  $("#destination_harbor_label").show();
+  $("#airline_label").hide();
+  $("#carrier_label").show();
+
+  $("#fcl_load").hide();
+  $("#origin_airport_label").hide();
+  $("#destination_airport_label").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  $("input[name=qty_45_hc]").val('');
+  /*
+    var chargeable_weight=0;
+    var volume=0;
+    var total_volume=0;
+    var total_weight=0;
+    var weight=sum;
+    var sum = 0;
+    var sum_vol = 0;
+
+    if(($('#total_volume').val()!='' && $('#total_volume').val()>0) && ($('#total_weight').val()!='' && $('#total_weight').val()>0)){
+      total_volume=$('#total_volume').val();
+      weight=$('#total_weight').val();
+
+      if($('#quoteType').val()==2){
+
+
+        total_weight=weight/1000;
+        if(total_volume>total_weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=total_weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      }else if($('#quoteType').val()==3){
+        total_volume=total_volume*166;
+        if(total_volume>weight){
+          chargeable_weight=total_volume;
+        }else{
+          chargeable_weight=weight;
+        }
+        $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" kg");
       }
-    });
 
-    $('#destination_airport_create').select2({
-      dropdownParent: $('#createRateModal'),
-      placeholder: "Select an option",
-      minimumInputLength: 2,
-      ajax: {
-        url: '/quotes/airports/find',
-        dataType: 'json',
-        data: function (params) {
-          return {
-            q: $.trim(params.term)
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data
-          };
-        },
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }else{
+      if(($('#total_volume_pkg_input').val()!='' && $('#total_volume_pkg_input').val()>0) && ($('#total_weight_pkg_input').val()!='' && $('#total_weight_pkg_input').val()>0)) {
+
+        sum_vol = $('#total_volume_pkg_input').val();
+        weight = $('#total_weight_pkg_input').val()/1000;
+
+        total_vol_chargeable = sum_vol;
+        if (total_vol_chargeable > weight) {
+          chargeable_weight = total_vol_chargeable;
+        } else {
+          chargeable_weight = weight;
+        }
+
       }
-    });
+
+      $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
+      $("#chargeable_weight_pkg_input").val(chargeable_weight);
+    }
+*/
+
+}
