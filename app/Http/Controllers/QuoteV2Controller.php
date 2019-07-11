@@ -6841,8 +6841,13 @@ class QuoteV2Controller extends Controller
       }
       //remarks
       $mode = "";
-      $remarks = $data->contract->comments."<br>";
+      $remarks="";
+      if($data->contract->comments != "")
+        $remarks = $data->contract->comments."<br>";
+      
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $remarks = trim($remarks);
+      
 
       // EXCEL REQUEST 
 
@@ -6852,7 +6857,6 @@ class QuoteV2Controller extends Controller
       }else{
         $excelRequestId = "";
       }
-
 
 
 
