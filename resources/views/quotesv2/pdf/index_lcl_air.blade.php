@@ -351,8 +351,16 @@
                                             $total_freight+=@$v->total_freight;
                                         ?>
                                         <tr class="text-center color-table">
-                                            <td>{{$v->surcharge->name}}</td>
-                                            <td>{{$v->calculation_type->name}}</td>
+                                            @if($v->surcharge_id!='')
+                                                <td>{{$v->surcharge->name}}</td>
+                                            @else
+                                                <td>Ocean freight</td>
+                                            @endif
+                                            @if($v->surcharge_id!='')
+                                                <td>{{$v->calculation_type->name}}</td>
+                                            @else
+                                                <td>TON/M3</td>
+                                            @endif
                                             @if($quote->type=='LCL')
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             @else
