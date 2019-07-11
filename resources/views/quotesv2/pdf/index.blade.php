@@ -39,11 +39,11 @@
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
                 <span id="destination_input" style="line-height: 0.5">
-                    <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                    <p>{{$user->companyUser->address}}</p>
-                    <p>{{$user->phone}}</p>
-                    <p>{{$quote->user->email}}</p>
+                    <p style="line-height:10px;">{{$quote->user->name}} {{$quote->user->lastname}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:10px;">{{$user->companyUser->address}}</p>
+                    <p style="line-height:10px;">{{$user->phone}}</p>
+                    <p style="line-height:10px;">{{$quote->user->email}}</p>
                 </span>
             </div>
             <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
@@ -56,15 +56,15 @@
                       <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
                       @endif
                     @endif
-                    <p>{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
-                    <p>{{$quote->company->address}}</p>
-                    <p>{{@$quote->contact->phone}}</p>
-                    <p>{{@$quote->contact->email}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
+                    <p style="line-height:10px;">{{$quote->company->address}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                 </span>
             </div>
             @if($quote->kind_of_cargo!='' || $quote->commodity!='')
-            <div style="margin-top: 120px;">
+            <div style="margin-top: 160px;">
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
