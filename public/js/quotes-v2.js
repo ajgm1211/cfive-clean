@@ -2785,6 +2785,46 @@ $(document).on('click', '.remove_lcl_air_load', function (e) {
   $('.weight').change();
 });
 
+$('#origin_airport_create').select2({
+      dropdownParent: $('#createRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });
+
+    $('#destination_airport_create').select2({
+      dropdownParent: $('#createRateModal'),
+      placeholder: "Select an option",
+      minimumInputLength: 2,
+      ajax: {
+        url: '/quotes/airports/find',
+        dataType: 'json',
+        data: function (params) {
+          return {
+            q: $.trim(params.term)
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data
+          };
+        },
+      }
+    });
+
 function precargarLCL(){
 
 
