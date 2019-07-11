@@ -68,6 +68,7 @@ use App\GlobalChargeLcl;
 use App\GlobalCharCarrierLcl;
 use App\GlobalCharPortLcl;
 use App\NewContractRequest;
+use App\NewContractRequestLcl;
 
 class QuoteV2Controller extends Controller
 {
