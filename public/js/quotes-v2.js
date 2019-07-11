@@ -1294,7 +1294,7 @@ $(document).on('click', '#update', function () {
           $(".quote_id_span").html(data.quote['quote_id']);
         }
         $(".company_id").val(data.quote['company_id']);
-        $(".company_id_span").html(data.quote['company_id']);
+        $(".company_span").html(data.company_name);
         $(".status").val(data.quote['status']);
         $(".status_span").html(data.quote['status']+' <i class="fa fa-check"></i>');
         $(".status_span").addClass('Status_'+data.quote['status']);
