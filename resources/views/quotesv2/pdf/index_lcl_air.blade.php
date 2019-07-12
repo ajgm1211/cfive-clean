@@ -63,14 +63,19 @@
                     <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                 </span>
             </div>
-            @if($quote->kind_of_cargo!='' || $quote->commodity!='')
-            <div style="margin-top: 160px;">
+        </div>
+        @if($quote->kind_of_cargo!='' || $quote->commodity!='')
+            <div style="margin-top: 30px;">
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
             </div>
-            @endif
-        </div>
+        @endif
+        @if($quote->gdp==1 && $quote->pdf_option->show_gdp_logo==1)
+            <br>
+            <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="115" height="auto">
+            <br>
+        @endif        
         <br>
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
@@ -680,9 +685,51 @@
                 @endforeach
             @endforeach
         @endif
+        <br>
+        <div class="clearfix">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <thead class="title-quote header-table">
+                    <tr>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Remarks</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Observaciones</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Observações</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:15px;">
+                            @foreach($rates as $rate)
+                                @if($rate->remarks != '')
+                                    <span class="text-justify">{!! $rate->remarks !!}</span>
+                                @endif
+                            @endforeach
+                        </td>
+                    </tr>                        
+                </tbody>
+            </table>
+        </div>
+        @if($quote->payment_conditions!='')
+             <div class="clearfix">
+                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                    <thead class="title-quote header-table">
+                        <tr>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
+                            <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:15px;">
+                                <span class="text-justify">{!! @$quote->terms_and_conditions !!}</span>
+                            </td>
+                        </tr>                        
+                    </tbody>
+                </table>
+            </div>
+        @endif
         <br>      
         @if($quote->payment_conditions!='')
-            <br>
             <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
@@ -702,29 +749,6 @@
                 </table>
             </div>
         @endif
-         <div class="clearfix">
-            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
-                <thead class="title-quote header-table">
-                    <tr>
-                        <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
-                        <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
-                        <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding:15px;">
-                            @foreach($rates as $rate)
-                                @if($rate->remarks != '')
-                                    <span class="text-justify">{!! $rate->remarks !!}</span>
-                                @endif
-                            @endforeach
-                            <span class="text-justify">{!! @$quote->terms_and_conditions !!}</span>
-                        </td>
-                    </tr>                        
-                </tbody>
-            </table>
-        </div> 
-</main>
+    </main>
 </body>
 </html>

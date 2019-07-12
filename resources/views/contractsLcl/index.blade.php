@@ -238,8 +238,8 @@ New \ Status Import  &nbsp;
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label><br></label>
-                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill form-control">Search</button>
+                                            <br>
+                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill btn-block">Search</button>
                                         </div>
                                     </div>
                                 </div>
@@ -329,23 +329,29 @@ New \ Status Import  &nbsp;
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contractsLcl.js"></script>
 <script>
+    $('#btnFiterSubmitSearch').click(function(){
+    var carrier=$('#carrierM').val();
+    var origin = $('#originS').val();
+    var destination = $('#destinationS').val();
+    var status = $('#statusS').val(); 
     var oTable = $('#tableRates').DataTable({
         processing: true,
         serverSide: true,
         autoWidth: true,
         searching: true,
         ordering: true,
+        destroy: true,
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         "columnDefs": [
             { className: "truncate", "targets": [ 0,1] }
         ],
         ajax: {
             url: "{{ route('contractlcl.table') }}",
-            data: function (d) {
-                d.carrierM = $('select#carrierM').val();
-                d.origin = $('select#originS').val();
-                d.destination = $('select#destinationS').val();
-                d.status = $('select#statusS').val();
+            data: {
+                "carrier":carrier,
+                "origin":origin,
+                "destination":destination,
+                "status":status,
             }
         },
         columns: [
@@ -365,16 +371,6 @@ New \ Status Import  &nbsp;
         ],
 
     });
-
-    $('#btnFiterSubmitSearch').click(function(){
-        $('#originS').removeAttr('required');
-        $('#carrierM').removeAttr('required');
-        $('#destinationS').removeAttr('required');
-        //alert($('select#originS').val());
-        $('#tableRates').DataTable().draw(true);
-        $('#originS').attr('required','required');
-        $('#carrierM').attr('required','required');
-        $('#destinationS').attr('required','required');
     });
     $(function() {
         /* $('#tableRates').DataTable({
