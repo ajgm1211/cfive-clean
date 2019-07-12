@@ -213,8 +213,14 @@ CONTENTS:
 }
 
 
+/* Rates */
 
-
+.long-text{
+  flex: 5 !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
 
 
 /*
