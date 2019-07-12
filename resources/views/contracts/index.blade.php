@@ -233,8 +233,8 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label><br></label>
-                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill form-control">Search</button>
+                                            <br>
+                                            <button type="text" id="btnFiterSubmitSearch" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill btn-block">Search</button>
                                         </div>
                                     </div>
                                 </div>
@@ -354,13 +354,18 @@
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
-
+ $('#btnFiterSubmitSearch').click(function(){
+    var carrier=$('#carrierM').val();
+    var origin = $('#originS').val();
+    var destination = $('#destinationS').val();
+    var status = $('#statusS').val();     
     var oTable = $('#tableRates').DataTable({
         searching: true,
         ordering: true,
         processing: false,
         serverSide: false,
         autoWidth: true,
+        destroy: true,
         "columnDefs": [
             { className: "truncate", "targets": [ 0,1] },
             { "type": "num", targets: [4,5,6,7,8] }
@@ -368,11 +373,11 @@
         order: [[ 3, "asc" ],[ 4, "asc" ]],
         ajax: {
             url: "{{ route('contract.table') }}",
-            data: function (d) {
-                d.carrierM = $('select#carrierM').val();
-                d.origin = $('select#originS').val();
-                d.destination = $('select#destinationS').val();
-                d.status = $('select#statusS').val();
+            data: {
+                "carrier":carrier,
+                "origin":origin,
+                "destination":destination,
+                "status":status,
             }
         },
         columns: [
@@ -396,15 +401,6 @@
 
     });
 
-    $('#btnFiterSubmitSearch').click(function(){
-        $('#originS').removeAttr('required');
-        $('#carrierM').removeAttr('required');
-        $('#destinationS').removeAttr('required');
-        //alert($('select#originS').val());
-        $('#tableRates').DataTable().draw(true);
-        $('#originS').attr('required','required');
-        $('#carrierM').attr('required','required');
-        $('#destinationS').attr('required','required');
     });
 
     $(function() {
