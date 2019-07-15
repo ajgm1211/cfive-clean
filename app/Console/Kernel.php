@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
       ->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
     //$schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
       //->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
-    $schedule->exec('php /var/www/html/artisan queue:work importation --timeout=3600 --tries=7 &')
+    $schedule->exec('php /var/www/html/artisan queue:work --queue=importation --timeout=3600 --tries=7 &')
       ->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
     // Comandos para backups
     // Comandos para backups
