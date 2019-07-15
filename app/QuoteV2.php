@@ -24,7 +24,7 @@ class QuoteV2 extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->hasOne('App\Company','id','company_id');
     }
 
     public function contact()

@@ -3902,7 +3902,7 @@ class ImportationController extends Controller
         }
 
         // -------------- SURCHARGE ....-----------------------------------------------------
-        $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
+        $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',$failsurcharge->contract->company_user_id)->first();
         $surcharAin  = $surchargeOb['id'];
         $surchargeC = count($surchargeA);
         if($surchargeC <= 1){

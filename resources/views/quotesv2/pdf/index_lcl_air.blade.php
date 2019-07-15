@@ -39,11 +39,11 @@
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
                 <span id="destination_input" style="line-height: 0.5">
-                    <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                    <p>{{$user->companyUser->address}}</p>
-                    <p>{{$user->phone}}</p>
-                    <p>{{$quote->user->email}}</p>
+                    <p style="line-height:10px;">{{$quote->user->name}} {{$quote->user->lastname}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:10px;">{{$user->companyUser->address}}</p>
+                    <p style="line-height:10px;">{{$user->phone}}</p>
+                    <p style="line-height:10px;">{{$quote->user->email}}</p>
                 </span>
             </div>
             <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
@@ -56,15 +56,15 @@
                       <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
                       @endif
                     @endif
-                    <p>{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
-                    <p>{{$quote->company->address}}</p>
-                    <p>{{@$quote->contact->phone}}</p>
-                    <p>{{@$quote->contact->email}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
+                    <p style="line-height:10px;">{{$quote->company->address}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                 </span>
             </div>
             @if($quote->kind_of_cargo!='' || $quote->commodity!='')
-            <div style="margin-top: 120px;">
+            <div style="margin-top: 160px;">
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
@@ -199,21 +199,17 @@
                     @endforeach
                     <tr class="text-center color-table"> 
                         <td >
-                            @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                            @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                            @if($quote->type=='LCL') 
+                                {{@$rate->origin_port->name}}, {{@$rate->origin_port->code}} 
                             @else 
-                                {{$rate->origin_address}} 
+                                {{@$rate->origin_airport->name}}, {{@$rate->origin_airport->code}}
                             @endif
                         </td>
                         <td >
-                            @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                            @if($quote->type=='LCL') 
                                 {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                            @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                            @else
                                 {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                            @else 
-                                {{$rate->destination_address}} 
                             @endif
                         </td> 
                         @if($quote->type=='LCL')
@@ -283,21 +279,17 @@
                                 @endforeach
                                 <tr class="text-center color-table">
                                     <td >
-                                        @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                            {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                        @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                            {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                        @if($quote->type=='LCL') 
+                                            {{@$rate->origin_port->name}}, {{@$rate->origin_port->code}} 
                                         @else 
-                                            {{$rate->origin_address}} 
+                                            {{@$rate->origin_airport->name}}, {{@$rate->origin_airport->code}}
                                         @endif
                                     </td>
                                     <td >
-                                        @if($rate->destination_address=='' && $rate->destination_port_id!='') 
+                                        @if($quote->type=='LCL') 
                                             {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                        @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
+                                        @else
                                             {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                        @else 
-                                            {{$rate->destination_address}} 
                                         @endif
                                     </td> 
                                     @if($quote->type=='LCL')
@@ -359,8 +351,16 @@
                                             $total_freight+=@$v->total_freight;
                                         ?>
                                         <tr class="text-center color-table">
-                                            <td>{{$v->surcharge->name}}</td>
-                                            <td>{{$v->calculation_type->name}}</td>
+                                            @if($v->surcharge_id!='')
+                                                <td>{{$v->surcharge->name}}</td>
+                                            @else
+                                                <td>Ocean freight</td>
+                                            @endif
+                                            @if($v->surcharge_id!='')
+                                                <td>{{$v->calculation_type->name}}</td>
+                                            @else
+                                                <td>TON/M3</td>
+                                            @endif
                                             @if($quote->type=='LCL')
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             @else
@@ -676,6 +676,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <br>
                 @endforeach
             @endforeach
         @endif
@@ -701,27 +702,29 @@
                 </table>
             </div>
         @endif
-        @if($quote->terms_and_conditions!='')
-            <br>
-            <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
-                    <thead class="title-quote header-table">
-                        <tr>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding:20px;">
-                                <span class="text-justify">{!! $quote->terms_and_conditions!!}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        @endif 
+         <div class="clearfix">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <thead class="title-quote header-table">
+                    <tr>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:15px;">
+                            @foreach($rates as $rate)
+                                @if($rate->remarks != '')
+                                    <span class="text-justify">{!! $rate->remarks !!}</span>
+                                @endif
+                            @endforeach
+                            <span class="text-justify">{!! @$quote->terms_and_conditions !!}</span>
+                        </td>
+                    </tr>                        
+                </tbody>
+            </table>
+        </div> 
 </main>
 </body>
 </html>
