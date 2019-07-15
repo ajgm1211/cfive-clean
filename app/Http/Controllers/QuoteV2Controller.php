@@ -1066,7 +1066,7 @@ class QuoteV2Controller extends Controller
 
 
     $freight_charges_detailed = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
-      
+
     $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
 
@@ -3581,6 +3581,9 @@ class QuoteV2Controller extends Controller
 
   }
 
+
+
+
   /**
    * Return rates after process search
    * @param Request $request 
@@ -4519,6 +4522,7 @@ class QuoteV2Controller extends Controller
 
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
+
                   $monto = number_format($monto, 2, '.', '');
                   $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
@@ -4532,6 +4536,7 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
+                  
                   $monto = number_format($monto, 2, '.', '');
                   $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
@@ -4902,7 +4907,7 @@ class QuoteV2Controller extends Controller
       $remarks="";
       if($data->contract->remarks != "")
         $remarks = $data->contract->remarks."<br>";
-      
+
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
       $remarks = trim($remarks);
 
