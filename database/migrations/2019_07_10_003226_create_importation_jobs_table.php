@@ -20,7 +20,7 @@ class CreateImportationJobsTable extends Migration
             $table->unsignedTinyInteger('attempts');
             $table->unsignedInteger('reserved_at')->nullable();
             $table->unsignedInteger('available_at');
-            $table->timestamps();
+            $table->unsignedInteger('created_at');
         });
     }
 

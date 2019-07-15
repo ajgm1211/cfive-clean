@@ -44,7 +44,7 @@ return [
         'importation' => [
             'driver' => 'database',
             'table' => 'importation_jobs',
-            'queue' => 'importation',
+            'queue' => 'default',
             'retry_after' => 3700,
         ],
 
