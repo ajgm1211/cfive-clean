@@ -2013,8 +2013,13 @@ $(document).on('change', '#quoteType', function (e) {
 
 
     $(".infocheck").val('');
-    $(".quote_search").hide();
+    //$(".quote_search").hide();
     $(".formu").val('');
+
+
+
+    $(".quote_search").show();
+
     $(".search").hide();
 
     $("#origin_harbor").prop( "disabled", false );
@@ -3123,6 +3128,5 @@ function precargarLCL(){
   $("input[name=qty_40]").val('');
   $("input[name=qty_40_hc]").val('');
   $("input[name=qty_45_hc]").val('');
- 
 
 }
