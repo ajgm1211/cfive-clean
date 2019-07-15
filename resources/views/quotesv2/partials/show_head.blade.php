@@ -18,8 +18,12 @@
                           <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
                             PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
                           </a>
-                        @else
+                        @elseif($quote->type=='LCL')
                           <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
+                            PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                          </a>
+                        @else
+                          <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.air',setearRouteKey($quote->id))}}" target="_blank">
                             PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
                           </a>
                         @endif

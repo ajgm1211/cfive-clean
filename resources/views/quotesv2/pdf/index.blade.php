@@ -39,11 +39,11 @@
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
                 <span id="destination_input" style="line-height: 0.5">
-                    <p>{{$quote->user->name}} {{$quote->user->lastname}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
-                    <p>{{$user->companyUser->address}}</p>
-                    <p>{{$user->phone}}</p>
-                    <p>{{$quote->user->email}}</p>
+                    <p style="line-height:10px;">{{$quote->user->name}} {{$quote->user->lastname}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$user->companyUser->name}}</b></span></p>
+                    <p style="line-height:10px;">{{$user->companyUser->address}}</p>
+                    <p style="line-height:10px;">{{$user->phone}}</p>
+                    <p style="line-height:10px;">{{$quote->user->email}}</p>
                 </span>
             </div>
             <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
@@ -56,15 +56,15 @@
                       <img src="{{Storage::disk('s3_upload')->url($quote->company->logo)}}" class="img img-responsive" width="115" height="auto" style="margin-bottom:20px">
                       @endif
                     @endif
-                    <p>{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                    <p><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
-                    <p>{{$quote->company->address}}</p>
-                    <p>{{@$quote->contact->phone}}</p>
-                    <p>{{@$quote->contact->email}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
+                    <p style="line-height:10px;">{{$quote->company->address}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
+                    <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                 </span>
             </div>
             @if($quote->kind_of_cargo!='' || $quote->commodity!='')
-            <div style="margin-top: 120px;">
+            <div style="margin-top: 160px;">
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
@@ -353,7 +353,7 @@
                                                 @else
                                                     <td>Per container</td>
                                                 @endif
-                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{number_format($v->total_20, 2, '.', '')}}</td>
                                                 <td {{ @$equipmentHides['40'] }}>{{number_format($v->total_40, 2, '.', '')}}</td>
                                                 <td {{ @$equipmentHides['40hc'] }}>{{number_format($v->total_40hc, 2, '.', '')}}</td>
@@ -531,7 +531,7 @@
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
                                             <td>{{$v->calculation_type->name}}</td>
-                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                             <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
                                             <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
@@ -558,7 +558,7 @@
                                             <tr class="text-center color-table">
                                                 <td>{{$v->provider}}</td>
                                                 <td>{{$v->distance}}</td>
-                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
                                                 <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
@@ -592,10 +592,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <br>
                 @endforeach
             @endforeach
         @endif
-        <br>
         <!-- DESTINATIONS -->
 
         <!-- ALL in destination table -->
@@ -666,8 +666,8 @@
 
         <!-- Destinations detailed -->
         @if($quote->pdf_option->grouped_destination_charges==0 && $quote->pdf_option->show_type=='detailed' )
-            @foreach($destination_charges as $carrier => $value)
-                @foreach($value as $destination => $item)
+            @foreach($destination_charges as $destination => $value)
+                @foreach($value as $carrier => $item)
                     <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
@@ -722,7 +722,7 @@
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
                                             <td>{{$v->calculation_type->name}}</td>
-                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                             <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
                                             <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
@@ -749,7 +749,7 @@
                                             <tr class="text-center color-table">
                                                 <td>{{$v->provider}}</td>
                                                 <td>{{$v->distance}}</td>
-                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$r->carrier->name}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
                                                 <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
@@ -784,13 +784,12 @@
                         </tbody>
                     </table>
                     <br>
-                    <br>
                 @endforeach
             @endforeach
         @endif
         <br>
         @if($quote->payment_conditions!='')
-            <!--<br>
+            <br>
             <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
@@ -808,34 +807,32 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>-->
-        @endif
-        @if($quote->terms_and_conditions!='')
-            <br>
-            <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
-                    <thead class="title-quote header-table">
-                        <tr>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
-                            <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding:15px;">
-                                @foreach($rates as $rate)
-                                    @if($rate->remarks != '')
-                                        <span class="text-justify">{!! $rate->remarks !!}</span>
-                                    @endif
-                                @endforeach
-                                <span class="text-justify">{!! $quote->terms_and_conditions !!}</span>
-                            </td>
-                        </tr>                        
-                    </tbody>
-                </table>
             </div>
-        @endif 
+        @endif
+        <br>
+        <div class="clearfix">
+            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <thead class="title-quote header-table">
+                    <tr>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Términos y condiciones</b></th>
+                        <th class="unit text-left" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Termos e Condições</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:15px;">
+                            @foreach($rates as $rate)
+                                @if($rate->remarks != '')
+                                    <span class="text-justify">{!! $rate->remarks !!}</span>
+                                @endif
+                            @endforeach
+                            <span class="text-justify">{!! @$quote->terms_and_conditions !!}</span>
+                        </td>
+                    </tr>                        
+                </tbody>
+            </table>
+        </div>
     </main>
 </body>
 </html>

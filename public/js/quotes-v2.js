@@ -13,21 +13,21 @@ $(document).ready(function() {
     $(".modal-body .automatic_rate_id").val(rate_id);
   });
 
-    $(document).on('click','.edit_rate_modal',function(){
-        var url = "/v2/quotes/rates/edit";
-        var rate_id = $(this).data('rate-id');
-        $.get(url + '/' + rate_id, function (data) {
-            //success data
-            console.log(data.origin_port_id);
-            $('.origin_port_id').val(data.origin_port_id);
-            $('.destination_port_id').val(data.destination_port_id);
-            $('.contract').val(data.contract);
-            $('.type').val(data.type);
-            $('.transit_time').val(data.transit_time);
-            $('.via').val(data.transit_time);
-            $('#editRateModal').modal('show');
-        }) 
-    });
+  $(document).on('click','.edit_rate_modal',function(){
+    var url = "/v2/quotes/rates/edit";
+    var rate_id = $(this).data('rate-id');
+    $.get(url + '/' + rate_id, function (data) {
+      //success data
+      console.log(data.origin_port_id);
+      $('.origin_port_id').val(data.origin_port_id);
+      $('.destination_port_id').val(data.destination_port_id);
+      $('.contract').val(data.contract);
+      $('.type').val(data.type);
+      $('.transit_time').val(data.transit_time);
+      $('.via').val(data.transit_time);
+      $('#editRateModal').modal('show');
+    }) 
+  });
 
   //Hide grouped options in pdf layout
   if($('#show_hide_select').val()=='total in'){
@@ -141,7 +141,7 @@ $(document).ready(function() {
     }
   });
 
-    $('.editable-lcl-air-inland').editable({
+  $('.editable-lcl-air-inland').editable({
     url:'/v2/quotes/lcl/inland/charge/update',
     emptytext:0,
     success: function(response, newValue) {
@@ -960,7 +960,7 @@ $(document).on('click', '#delete-quote-v2', function () {
             'Deleted!',
             'Your file has been deleted.',
             'success'
-            )
+          )
           console.log(data.message);
           $(theElement).closest('tr').remove();
         }
@@ -1519,12 +1519,12 @@ $(document).on('click', '#update', function () {
           $(".risk_level_span").removeAttr('hidden');
         }
         //if($(".origin_address").val()!=''){
-          $(".origin_address").attr('hidden','true');
-          $(".origin_address_span").removeAttr('hidden');
+        $(".origin_address").attr('hidden','true');
+        $(".origin_address_span").removeAttr('hidden');
         //}
         //if($(".destination_address").val()!=''){
-          $(".destination_address").attr('hidden','true');
-          $(".destination_address_span").removeAttr('hidden');
+        $(".destination_address").attr('hidden','true');
+        $(".destination_address_span").removeAttr('hidden');
         //}
         $(".quote-type").select2('destroy');
         $(".status").select2('destroy');
@@ -2013,8 +2013,13 @@ $(document).on('change', '#quoteType', function (e) {
 
 
     $(".infocheck").val('');
-    $(".quote_search").hide();
+
     $(".formu").val('');
+
+
+
+    $(".quote_search").show();
+
     $(".search").hide();
 
     $("#origin_harbor").prop( "disabled", false );
@@ -2254,6 +2259,10 @@ $( document ).ready(function() {
     }
   });
 });
+$('.m-select2-general').select2({
+  placeholder: "Select an option"
+});
+
 
 function display(id){
 
@@ -2310,7 +2319,15 @@ function display_r(id){
 
 $(".quote_search").on("click", function() {
 
-  $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  //FCL
+  if($('#quoteType').val()==1){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearch');
+  }
+
+  // LCL
+  if($('#quoteType').val()==2){
+    $('#FormQuote').attr('action', '/v2/quotes/processSearchLCL');
+  }
   $(".quote_search").attr("type","submit");
 
 });
@@ -3032,41 +3049,85 @@ $('.m-select2-edit').select2({
 });
 
 $('#origin_airport_create').select2({
-      dropdownParent: $('#createRateModal'),
-      placeholder: "Select an option",
-      minimumInputLength: 2,
-      ajax: {
-        url: '/quotes/airports/find',
-        dataType: 'json',
-        data: function (params) {
-          return {
-            q: $.trim(params.term)
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data
-          };
-        },
-      }
-    });
+  dropdownParent: $('#createRateModal'),
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
 
-    $('#destination_airport_create').select2({
-      dropdownParent: $('#createRateModal'),
-      placeholder: "Select an option",
-      minimumInputLength: 2,
-      ajax: {
-        url: '/quotes/airports/find',
-        dataType: 'json',
-        data: function (params) {
-          return {
-            q: $.trim(params.term)
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data
-          };
-        },
-      }
-    });
+$('#destination_airport_create').select2({
+  dropdownParent: $('#createRateModal'),
+  placeholder: "Select an option",
+  minimumInputLength: 2,
+  ajax: {
+    url: '/quotes/airports/find',
+    dataType: 'json',
+    data: function (params) {
+      return {
+        q: $.trim(params.term)
+      };
+    },
+    processResults: function (data) {
+      return {
+        results: data
+      };
+    },
+  }
+});
+
+function precargarLCL(){
+
+
+  // Validaciones por defecto
+
+  if($("#total_quantity").val() != ""){
+    $("#total_quantity").prop( "required", true );
+    $("#total_weight").prop( "required", true );
+    $("#total_volume").prop( "required", true );
+  }
+
+
+
+  $(".infocheck").val('');
+  $(".quote_search").show();
+
+
+
+  $("#origin_harbor").prop( "disabled", false );
+  $("#destination_harbor").prop( "disabled", false );
+  $("#equipment_id").hide();
+  $("#equipment").prop( "disabled", true );
+  $("#equipment").removeAttr('required');
+  $("#delivery_type").prop( "disabled", false );
+  $("#delivery_type_air").prop( "disabled", true );
+  $("#delivery_type_label").show();
+  $("#delivery_type_air_label").hide();
+  $("#lcl_air_load").show();
+  $("#origin_harbor_label").show();
+  $("#destination_harbor_label").show();
+  $("#airline_label").hide();
+  $("#carrier_label").show();
+
+  $("#fcl_load").hide();
+  $("#origin_airport_label").hide();
+  $("#destination_airport_label").hide();
+  $("input[name=qty_20]").val('');
+  $("input[name=qty_40]").val('');
+  $("input[name=qty_40_hc]").val('');
+  $("input[name=qty_45_hc]").val('');
+
+
+}

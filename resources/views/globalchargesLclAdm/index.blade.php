@@ -72,7 +72,7 @@
                                             <span>
                                                 Duplicate Selected &nbsp;
                                             </span>
-                                            <i class="la la-bars"></i>
+                                            <i class="la la-copy"></i>
                                         </span>
                                     </button>
                                 </div>
@@ -155,6 +155,10 @@
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+
 <script>
     $(document).ready( function () {
         $('#global-table').DataTable();
@@ -190,12 +194,42 @@
     $(document).on('change', '#company_user', function(){
         var company_id=$(this).val();
         table = $('#requesttable').DataTable({
+            dom: 'Bfrtip',
             processing: true,
             destroy: true,
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            buttons: [
+                {
+                    text: 'Select all',
+                    action : function(e) {
+                        e.preventDefault();
+                        table.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        table.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
+                    }
+                },
+                {
+                    text: 'Select none',
+                    action: function () {
+                        table.rows().deselect();
+                    }
+                }
+            ],
             //serverSide: true,
             ajax: '/globalchargeslcl/createLclAdm/'+company_id,
             columns: [
-                { data: 'checkbox', orderable:false, searchable:false},
+                { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },
@@ -225,6 +259,10 @@
         table.clear();
     });
 
+    $('#requesttable tbody').on( 'click', 'tr', function () {
+        $(this).toggleClass('selected');
+    } );
+
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
         swal({
@@ -238,11 +276,18 @@
         }).then(function(result){
             if (result.value) {
                 var oTableT = $("#requesttable").dataTable();
-                $('.checkbox_global:checked',oTableT.fnGetNodes()).each(function(){
-                    id.push($(this).val());
-                });
+                var length=table.rows('.selected').data().length;
+                if (length>10) {
+                    for (var i = 0; i < 10; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }else{
+                    for (var i = 0; i < length; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
+                }           
 
-                if(id.length > 0)
+                if(length > 0)
                 {
                     url='{!! route("globalchargeslcl.destroyArr",":id") !!}';
                     url = url.replace(':id', id);
@@ -284,10 +329,17 @@
         //alert();
         var id = [];
         var oTable = $("#requesttable").dataTable(); 
-        $('.checkbox_global:checked', oTable.fnGetNodes()).each(function(){
-            id.push($(this).val());
-        });
-        if(id.length > 0){
+        var length=table.rows('.selected').data().length;
+        if (length>10) {
+            for (var i = 0; i < 10; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        }else{
+            for (var i = 0; i < length; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+        } 
+        if(length > 0){
             url='{!! route("gclcladm.duplicate.Array",":id") !!}';
             url = url.replace(':id', id);
             var token = $("meta[name='csrf-token']").attr("content");
@@ -296,7 +348,7 @@
                 $('#modalGlobalcharge').modal({show:true});
             });
         } else {
-            swal("Error!", "Please select atleast one checkbox", "error");
+            swal("Error!", "Please select at least one record", "error");
         }
     });
 </script>
