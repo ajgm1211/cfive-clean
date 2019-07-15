@@ -39,14 +39,17 @@ class SendQuotes implements ShouldQueue
      */
     public function handle()
     {
-        if($this->to!=''){
-            $explode=explode(';',$this->to);
-            foreach($explode as $item) {
-                \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
+        try{
+            if($this->to!=''){
+                $explode=explode(';',$this->to);
+                foreach($explode as $item) {
+                    \Mail::to(trim($item))->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
+                }
+            }else{
+                \Mail::to($this->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
             }
-        }else{
-            \Mail::to($this->email)->bcc(\Auth::user()->email,\Auth::user()->name)->send(new SendQuotePdf($this->subject,$this->body,$this->quote));
+        } catch(\Exception $e){
+            $e->getMessage();
         }
-
     }
 }
