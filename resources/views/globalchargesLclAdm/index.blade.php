@@ -320,24 +320,24 @@
                             if(data.success == 1){
                                 swal(
                                     'Deleted!',
-                                    'Your GloblaChargers Lclc has been deleted.',
+                                    'Your GloblaCharger LCL has been deleted.',
                                     'success'
                                 );
                                 $('#requesttable').DataTable().ajax.reload();
                             }else if(data == 2){
-                                swal("Error!", "an internal error occurred!", "error");
+                                swal("Error!", "An internal error occurred!", "error");
                             }
                         }
                     });
                 }
                 else
                 {
-                    swal("Error!", "Please select atleast one checkbox", "error");
+                    swal("Error!", "Please select at least one record", "error");
                 }
             } else if (result.dismiss === 'cancel') {
                 swal(
                     'Cancelled',
-                    'Your GloblaChargers is safe :)',
+                    'Your GloblaCharger is safe :)',
                     'error'
                 )
             }
