@@ -1066,7 +1066,7 @@ class QuoteV2Controller extends Controller
 
 
     $freight_charges_detailed = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
-      
+
     $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
 
@@ -2808,7 +2808,12 @@ class QuoteV2Controller extends Controller
       });
     })->get();*/
 
-
+    $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+  
 
     $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
       $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
@@ -2822,9 +2827,16 @@ class QuoteV2Controller extends Controller
       });
     })->get();
 
+    $remarkA='';
     $remarkO='';
     $remarkD='';
     $rems ='';
+
+    foreach($remarks_all as $remAll){
+      $rems .="<br>";
+      $remarkA = $origin_port->name." / ".$carrier->name;
+      $remarkA .=  "<br>".$remAll->remark->export."<br>";
+    }
 
     foreach($remarks_origin as $remOrig){
       $rems .="<br>";
@@ -2836,7 +2848,7 @@ class QuoteV2Controller extends Controller
       $remarkD = $destiny_port->name." / ".$carrier->name;
       $remarkD .=  "<br>".$remDest->remark->export."<br>";
     }
-    $rems = $remarkO." ".$remarkD ; 
+    $rems = $remarkO." ".$remarkD." ".$remarkA ; 
     return $rems;
 
   }
@@ -3587,6 +3599,7 @@ class QuoteV2Controller extends Controller
    * @return Illuminate\View\View
    */
 
+
   public function processSearch(Request $request){
 
 
@@ -3725,13 +3738,13 @@ class QuoteV2Controller extends Controller
         $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
         // monto original
         $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
-  
+
         // monto aplicado al currency
         $localMarkup = $localAmmount / $localMarkup;
         $localMarkup = number_format($localMarkup, 2, '.', '');
 
       }
-              
+
       // Inlands
       $fclInland = $freight->inland_markup->where('price_type_id','=',1);
       if($request->modality == "1"){
@@ -4238,7 +4251,9 @@ class QuoteV2Controller extends Controller
       foreach($equipment as $containers){
         //Calculo para los diferentes tipos de contenedores
         if($containers == '20'){
-          $markup20 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers);
+          $markup20 = $this->freightMarkupsFCL($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers,$data->currency->id);
+
+          // dd($markup20);
 
           $array20Detail = array('price20' => $data->twuenty, 'currency20' => $data->currency->alphacode ,'idCurrency20' => $data->currency_id);
           $tot_20_F += $markup20['monto20'] / $rateC;
@@ -4246,7 +4261,7 @@ class QuoteV2Controller extends Controller
           $array_20_save = array('c20' => $data->twuenty);
           $arregloRateSave['rate']  = array_merge($array_20_save,$arregloRateSave['rate']);
           // Markups
-          $array_20_markup =  array('m20' => $markup20['markup20']);
+          $array_20_markup =  array('m20' => $markup20['montoMarkupO20']);
           $arregloRateSave['markups']  = array_merge($array_20_markup,$arregloRateSave['markups']);
 
           $array20T = array_merge($array20Detail,$markup20);
@@ -4365,7 +4380,7 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id ,'montoOrig' => $montoOrig,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
 
                   $arregloOrigin = array_merge($arregloOrigin,$markup20);
@@ -4377,14 +4392,15 @@ class QuoteV2Controller extends Controller
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
-                  
+
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 =$this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40','rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloOrigin = array_merge($arregloOrigin,$markup40);
                   $collectionOrigin->push($arregloOrigin);
+
                   $tot_40_O  +=  $markup40['montoMarkup'];
 
                 }
@@ -4392,11 +4408,11 @@ class QuoteV2Controller extends Controller
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
-                  
+
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc =$this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloOrigin = array_merge($arregloOrigin,$markup40hc);
                   $collectionOrigin->push($arregloOrigin);
@@ -4409,7 +4425,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloOrigin = array_merge($arregloOrigin,$markup40nor);
                   $collectionOrigin->push($arregloOrigin);
@@ -4422,7 +4438,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency );
                   $arregloOrigin = array_merge($arregloOrigin,$markup45);
                   $collectionOrigin->push($arregloOrigin);
@@ -4431,10 +4447,10 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
-                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency );
+                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency,'markupConvert' => 0.00 );
 
                 }else{
-                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency );
+                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency ,'markupConvert' => 0.00);
 
                 }
                 $collectionOrigin->push($arregloOrigin);
@@ -4451,7 +4467,7 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloDestiny = array_merge($arregloDestiny,$markup20);
                   $collectionDestiny->push($arregloDestiny);
@@ -4464,7 +4480,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloDestiny = array_merge($arregloDestiny,$markup40);
                   $collectionDestiny->push($arregloDestiny);
@@ -4476,7 +4492,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestiny = array_merge($arregloDestiny,$markup40hc);
                   $collectionDestiny->push($arregloDestiny);
@@ -4489,7 +4505,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestiny = array_merge($arregloDestiny,$markup40nor);
                   $collectionDestiny->push($arregloDestiny);
@@ -4502,7 +4518,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestiny = array_merge($arregloDestiny,$markup45);
                   $collectionDestiny->push($arregloDestiny);
@@ -4511,9 +4527,10 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
-                  $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
+                  $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00
+                                          ,'markupConvert' => 0.00 );
                 }else{
-                  $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency );
+                  $arregloDestiny = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
                 }
                 $collectionDestiny->push($arregloDestiny);
               }
@@ -4527,7 +4544,7 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup20);
                   $collectionFreight->push($arregloFreight);
@@ -4540,7 +4557,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup40);
                   $collectionFreight->push($arregloFreight);
@@ -4553,7 +4570,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40hc' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup40hc);
                   $collectionFreight->push($arregloFreight);
@@ -4566,7 +4583,7 @@ class QuoteV2Controller extends Controller
                   $monto = $local->ammount / $rateMount;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40nor','rate_id' => $data->id ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup40nor);
                   $collectionFreight->push($arregloFreight);
@@ -4579,7 +4596,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'45','rate_id' => $data->id ,'montoOrig' => $montoOrig,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup45);
                   $collectionFreight->push($arregloFreight);
@@ -4588,10 +4605,10 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
-                  $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5' , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency  );
+                  $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5' , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00 );
                 }else{
 
-                  $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99'  ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency ) ;
+                  $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99'  ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtype->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00 ) ;
                 }
 
                 $collectionFreight->push($arregloFreight);
@@ -4641,7 +4658,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
 
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency  );
                   $arregloOriginG = array_merge($arregloOriginG,$markup20);
                   $collectionOrigin->push($arregloOriginG);
@@ -4654,7 +4671,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40' ,'rate_id' => $data->id ,'montoOrig' => $montoOrig ,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloOriginG = array_merge($arregloOriginG,$markup40);
                   $collectionOrigin->push($arregloOriginG);
@@ -4666,7 +4683,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40hc','rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloOriginG = array_merge($arregloOriginG,$markup40hc);
                   $collectionOrigin->push($arregloOriginG);
@@ -4678,7 +4695,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40nor','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloOriginG = array_merge($arregloOriginG,$markup40nor);
                   $collectionOrigin->push($arregloOriginG);
@@ -4690,7 +4707,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'45','rate_id' => $data->id   ,'montoOrig' => $montoOrig ,  'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloOriginG = array_merge($arregloOriginG,$markup45);
                   $collectionOrigin->push($arregloOriginG);
@@ -4698,10 +4715,10 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($global->calculationtype_id,$arrayContainers)){
-                  $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5' ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> '5' ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
 
                 }else{
-                  $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloOriginG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
 
 
                 }
@@ -4717,7 +4734,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
 
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestinyG = array_merge($arregloDestinyG,$markup20);
                   $collectionDestiny->push($arregloDestinyG);
@@ -4729,7 +4746,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestinyG = array_merge($arregloDestinyG,$markup40);
                   $collectionDestiny->push($arregloDestinyG);
@@ -4740,7 +4757,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40hc' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestinyG = array_merge($arregloDestinyG,$markup40hc);
                   $collectionDestiny->push($arregloDestinyG);
@@ -4751,7 +4768,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40nor' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestinyG = array_merge($arregloDestinyG,$markup40nor);
                   $collectionDestiny->push($arregloDestinyG);
@@ -4762,7 +4779,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'45' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloDestinyG = array_merge($arregloDestinyG,$markup45);
                   $collectionDestiny->push($arregloDestinyG);
@@ -4771,9 +4788,9 @@ class QuoteV2Controller extends Controller
 
 
                 if(in_array($global->calculationtype_id,$arrayContainers)){
-                  $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> '5', 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
                 }else{
-                  $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id, 'montoOrig' => 0.00,  'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloDestinyG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id, 'montoOrig' => 0.00,  'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
                 }
 
                 $collectionDestiny->push($arregloDestinyG);
@@ -4789,7 +4806,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
 
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'20' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup20);
                   $collectionFreight->push($arregloFreightG);
@@ -4801,7 +4818,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40','rate_id' => $data->id   , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup40);
                   $collectionFreight->push($arregloFreightG);
@@ -4812,7 +4829,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40hc = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40hc = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40hc','rate_id' => $data->id   , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup40hc);
                   $collectionFreight->push($arregloFreightG);
@@ -4823,7 +4840,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup40nor = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup40nor = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40nor','rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency  ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup40nor);
                   $collectionFreight->push($arregloFreightG);
@@ -4834,7 +4851,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
-                  $markup45 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre);
+                  $markup45 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'45' ,'rate_id' => $data->id  , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup45);
                   $collectionFreight->push($arregloFreightG);
@@ -4843,10 +4860,10 @@ class QuoteV2Controller extends Controller
 
                 if(in_array($global->calculationtype_id,$arrayContainers)){
 
-                  $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> '5' , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => 'Per Container','contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99','rate_id' => $data->id ,'calculation_id'=> '5' , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00);
                 }else{
 
-                  $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' =>  $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
+                  $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' =>  $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtype->id ,'montoOrig' => 0.00,  'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency ,'montoMarkupO' => 0.00,'markupConvert' => 0.00 );
 
                 }
 
@@ -4860,6 +4877,7 @@ class QuoteV2Controller extends Controller
       }
 
       // ############################ Fin global charges ######################
+
 
       // Ordenar las colecciones
       if(!empty($collectionFreight))
@@ -4909,7 +4927,7 @@ class QuoteV2Controller extends Controller
       $remarks="";
       if($data->contract->remarks != "")
         $remarks = $data->contract->remarks."<br>";
-      
+
       $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
       $remarks = trim($remarks);
 
@@ -4971,14 +4989,9 @@ class QuoteV2Controller extends Controller
     $chargeDestination = ($chargesDestination != null ) ? true : false;
     $chargeFreight = ($chargesFreight != null ) ? true : false;
 
-
-
-
-
-
     $arreglo  =  $arreglo->sortBy('total20');
 
-    //  dd($arreglo);
+    // dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
@@ -5001,13 +5014,13 @@ class QuoteV2Controller extends Controller
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
       $monto = number_format($monto, 2, '.', '');
-      $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)",'montoInlandT' => $monto ) ;
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)",'montoInlandT' => $monto,'montoMarkupO' => $markup ) ;
     }else{
 
       $markup =$inlandAmmount;
       $markup = number_format($markup, 2, '.', '');
       $monto += number_format($inlandMarkup, 2, '.', '');
-      $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ) ;
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ,'montoMarkupO' => $markup) ;
 
     }
     return $arraymarkupI;
@@ -5022,13 +5035,39 @@ class QuoteV2Controller extends Controller
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
       number_format($monto, 2, '.', '');
-      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto) ;
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto,'montoMarkupO' => $markup) ;
     }else{
 
       $markup =trim($freighAmmount);
       $monto += $freighMarkup;
       $monto = number_format($monto, 2, '.', '');
-      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $freighMarkup, "typemarkup".$type => $typeCurrency,"monto".$type => $monto) ;
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $freighMarkup, "typemarkup".$type => $typeCurrency,"monto".$type => $monto,'montoMarkupO' => $markup) ;
+    }
+
+    return $arraymarkup;
+
+  }
+
+  public function freightMarkupsFCL($freighPercentage,$freighAmmount,$freighMarkup,$monto,$typeCurrency,$type,$chargeCurrency){
+
+    if($freighPercentage != 0){
+      $freighPercentage = intval($freighPercentage);
+      $markup = ( $monto *  $freighPercentage ) / 100 ;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $markup ;
+      number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto,'montoMarkupO'.$type  => $markup) ;
+    }else{
+
+      $valor = $this->ratesCurrency($chargeCurrency,$typeCurrency);
+
+      $markupOrig =$freighMarkup * $valor;
+      $montoOrig = $monto;
+
+      $markup =trim($freighAmmount);
+      $monto += $freighMarkup;
+      $monto = number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markupOrig, "typemarkup".$type => $typeCurrency,"monto".$type => $monto,'montoMarkupO'.$type  =>   number_format($montoOrig + $markupOrig, 2, '.', '') ) ;
     }
 
     return $arraymarkup;
@@ -5056,22 +5095,29 @@ class QuoteV2Controller extends Controller
     return $arraymarkup;
 
   }
-  
-  public function localMarkupsCopy($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre){
+
+  public function localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$chargeCurrency){
 
     if($localPercentage != 0){
       $markup = ( $monto *  $localPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup;
-      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto) ;
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto , 'montoMarkupO' => $markup) ;
 
     }else{// oki
-      $valor = $this->ratesCurrency('12',$typeCurrency);
-      $markup =$localAmmount;
+      $valor = $this->ratesCurrency($chargeCurrency,$typeCurrency);
+
+      if($valor == '1')
+        $markupOrig =$localMarkup * $valor;
+      else
+        $markupOrig =$localMarkup * $valor;
+
+      $markup =trim($localMarkup);
       $markup = number_format($markup, 2, '.', '');
       $monto += $localMarkup;
       $monto = number_format($monto, 2, '.', '');
-      $arraymarkup = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre,'montoMarkup' => $monto) ;
+
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markupOrig, "typemarkup" => $markupLocalCurre,'montoMarkup' => $monto,'montoMarkupO' => $montoOrig + $markupOrig ) ;
 
     }
 
@@ -5106,7 +5152,7 @@ class QuoteV2Controller extends Controller
 
             $monto += $itemsDetail['monto']; 
             $montoMarkup += $itemsDetail['montoMarkup']; 
-            $totalMarkup += $itemsDetail['markup']; 
+            $totalMarkup += $itemsDetail['markupConvert']; 
           }
           $itemsDetail['monto'] = number_format($monto, 2, '.', '');
           $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
@@ -5119,8 +5165,10 @@ class QuoteV2Controller extends Controller
           $totalMarkup = 0;
 
         }else{
-          foreach($items as $itemsDetail){
+          foreach($items as $itemsDetail){//aca
             $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
+            $itemsDetail['montoMarkup'] = number_format($itemsDetail['montoMarkupO'], 2, '.', '');
+            $itemsDetail['markup'] = number_format($itemsDetail['markupConvert'], 2, '.', '');
             $collect->push($itemsDetail); 
             $monto = 0;
             $montoMarkup = 0;
@@ -5359,6 +5407,7 @@ class QuoteV2Controller extends Controller
     })->get();
 
     foreach($arreglo as $data){
+
       $totalFreight = 0;
       $FreightCharges = 0;
       $totalRates = 0;
@@ -5722,6 +5771,7 @@ class QuoteV2Controller extends Controller
             }
           }
         }
+
 
         if(in_array($local->calculationtypelcl_id, $arrayPerTon)){
 
