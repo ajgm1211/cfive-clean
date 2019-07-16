@@ -3605,7 +3605,6 @@ class QuoteV2Controller extends Controller
 
   public function processSearch(Request $request){
 
-
     //Variables del usuario conectado
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
@@ -4191,6 +4190,7 @@ class QuoteV2Controller extends Controller
 
     $arrayContainers =  array('1','2','3','4','7','8'); 
 
+
     foreach($arreglo as $data){
       $collectionRate = new Collection();
       $totalFreight = 0;
@@ -4560,7 +4560,7 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
-                  
+
                   $monto = number_format($monto, 2, '.', '');
                   $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'40','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
@@ -4995,8 +4995,6 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null ) ? true : false;
 
     $arreglo  =  $arreglo->sortBy('total20');
-
-    // dd($arreglo);
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
