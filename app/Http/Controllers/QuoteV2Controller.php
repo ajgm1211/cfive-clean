@@ -4548,7 +4548,7 @@ class QuoteV2Controller extends Controller
                   $monto =   $local->ammount  / $rateMount ;
 
                   $monto = number_format($monto, 2, '.', '');
-                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre);
+                  $markup20 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$local->currency->id);
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => $monto, 'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'20','rate_id' => $data->id  ,'montoOrig' => $montoOrig ,'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreight = array_merge($arregloFreight,$markup20);
                   $collectionFreight->push($arregloFreight);
