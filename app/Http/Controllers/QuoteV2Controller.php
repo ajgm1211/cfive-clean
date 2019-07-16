@@ -3592,8 +3592,6 @@ class QuoteV2Controller extends Controller
 
   public function processSearch(Request $request){
 
-    \Debugbar::startMeasure('render','Time for rendering');
-
     //Variables del usuario conectado
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
@@ -4972,13 +4970,7 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null ) ? true : false;
 
 
-
-
-
-
     $arreglo  =  $arreglo->sortBy('total20');
-
-    \Debugbar::stopMeasure('render');
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
