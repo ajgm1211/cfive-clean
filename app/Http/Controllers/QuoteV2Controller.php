@@ -5080,7 +5080,7 @@ class QuoteV2Controller extends Controller
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup ;
       number_format($monto, 2, '.', '');
-      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto,'montoMarkupO'.$type  => $markup) ;
+      $arraymarkup = array("markup".$type => $markup , "markupConvert".$type => $markup, "typemarkup".$type => "$typeCurrency ($freighPercentage%)", "monto".$type => $monto,'montoMarkupO'.$type  => $monto) ;
     }else{
 
       $valor = $this->ratesCurrency($chargeCurrency,$typeCurrency);
@@ -5126,7 +5126,7 @@ class QuoteV2Controller extends Controller
       $markup = ( $monto *  $localPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup;
-      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto , 'montoMarkupO' => $markup) ;
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto , 'montoMarkupO' => $monto) ;
 
     }else{// oki
       $valor = $this->ratesCurrency($chargeCurrency,$typeCurrency);
