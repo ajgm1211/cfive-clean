@@ -3,9 +3,9 @@
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 <style>
-  #tableRates_wrapper {
-    overflow: auto;
-  }
+    #tableRates_wrapper {
+        overflow: auto;
+    }
 </style>
 @endsection
 
@@ -204,30 +204,30 @@
                                 </div>
                             </div>
                             <div class="row align-items-center" >
-                                <div class="col-xl-12 order-2 order-xl-1">
+                                <div class="col-xl-12 order-2 order-xl-1" style="margin-top:30px;">
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                     <div class="form-group m-form__group row align-items-center">
 
                                         <div class="col-lg-3">
-                                            <label class="">Origin</label>
+                                            <label class=""><b>Origin</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('origin',$values['origin'],null,['class'=>'m-select2-general form-control','id'=>'originS','required'])!!}
                                             </div>                                            
                                         </div>
                                         <div class="col-lg-3">
-                                            <label class="">Destination</label>
+                                            <label class=""><b>Destination</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['destination'],null,['class'=>'m-select2-general form-control','id'=>'destinationS','required'])!!}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Carrier</label>
+                                            <label class=""><b>Carrier</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('carrierM[]',$values['carrier'],null,['class'=>'m-select2-general form-control','id'=>'carrierM','required'])!!}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Status</label>
+                                            <label class=""><b>Status</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
@@ -242,63 +242,63 @@
                         </div>
                         <div class="table-responsive">
                             <table class="table tableData" id="tableRates" class="tableRates" width="100%">
-                            <thead width="100%" class="tableRatesTH">
-                                <tr>
-                                    <th style="width:25%;" title="Field #1">
-                                        Reference
-                                    </th>
-                                    <th style="width:20%" title="Field #3">
-                                        Carrier
-                                    </th>
-                                    <th style="width:20%" title="Field #4">
-                                        Origin Port
-                                    </th>
-                                    <th style="width:20%" title="Field #5">
-                                        Destination Port
-                                    </th>
-                                    <th title="Field #6" >
-                                        20'
-                                    </th>
-                                    <th title="Field #7" >
-                                        40'
-                                    </th>
-                                    <th title="Field #8" >
-                                        40'HC
-                                    </th>
-                                    <th title="Field #9" >
-                                        40'NOR
-                                    </th>
-                                    <th title="Field #10" >
-                                        45'HC
-                                    </th>
-                                    <th title="Field #10">
-                                        Currency
-                                    </th>
-                                    <th title="Field #9">
-                                        Validity
-                                    </th>
-                                    <th style="width:10%">
-                                        Status
-                                    </th>
-                                    <th style="width:15%">
-                                        Schedule
-                                    </th>
-                                    <th style="width:5%">
-                                        Transit Time
-                                    </th>
-                                    <th style="width:5%">
-                                        Via
-                                    </th>
-                                    <th  title="Field #12">
-                                        Options
-                                    </th>
+                                <thead width="100%" class="tableRatesTH">
+                                    <tr>
+                                        <th style="width:25%;" title="Field #1">
+                                            Reference
+                                        </th>
+                                        <th style="width:20%" title="Field #3">
+                                            Carrier
+                                        </th>
+                                        <th style="width:20%" title="Field #4">
+                                            Origin Port
+                                        </th>
+                                        <th style="width:20%" title="Field #5">
+                                            Destination Port
+                                        </th>
+                                        <th title="Field #6" >
+                                            20'
+                                        </th>
+                                        <th title="Field #7" >
+                                            40'
+                                        </th>
+                                        <th title="Field #8" >
+                                            40'HC
+                                        </th>
+                                        <th title="Field #9" >
+                                            40'NOR
+                                        </th>
+                                        <th title="Field #10" >
+                                            45'HC
+                                        </th>
+                                        <th title="Field #10">
+                                            Currency
+                                        </th>
+                                        <th title="Field #9">
+                                            Validity
+                                        </th>
+                                        <th style="width:10%">
+                                            Status
+                                        </th>
+                                        <th style="width:15%">
+                                            Schedule
+                                        </th>
+                                        <th style="width:5%">
+                                            TT
+                                        </th>
+                                        <th style="width:5%">
+                                            Via
+                                        </th>
+                                        <th  title="Field #12">
+                                            Options
+                                        </th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
 
-                            </tbody>
+                                </tbody>
                             </table>
                         </div>
                         <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -354,53 +354,61 @@
         //$('.tableRatesTH').css('width',$(window).width() );
     });
 
- $('#btnFiterSubmitSearch').click(function(){
-    var carrier=$('#carrierM').val();
-    var origin = $('#originS').val();
-    var destination = $('#destinationS').val();
-    var status = $('#statusS').val();     
-    var oTable = $('#tableRates').DataTable({
-        searching: true,
-        ordering: true,
-        processing: false,
-        serverSide: false,
-        autoWidth: true,
-        destroy: true,
-        "columnDefs": [
-            { className: "truncate", "targets": [ 0,1] },
-            { "type": "num", targets: [4,5,6,7,8] }
-        ],
-        order: [[ 3, "asc" ],[ 4, "asc" ]],
-        ajax: {
-            url: "{{ route('contract.table') }}",
-            data: {
-                "carrier":carrier,
-                "origin":origin,
-                "destination":destination,
-                "status":status,
-            }
-        },
-        columns: [
-            {data: 'name', name: 'name'},
-            {data: 'carrier', name: 'carrier'},
-            {data: 'port_orig', name: 'port_orig'},
-            {data: 'port_dest', name: 'port_dest'},
-            {data: 'twuenty', name: 'twuenty'},
-            {data: 'forty', name: 'forty'},
-            {data: 'fortyhc', name: 'fortyhc'},
-            {data: 'fortynor', name: 'fortynor'},
-            {data: 'fortyfive', name: 'fortyfive'},
-            {data: 'currency', name: 'currency'},
-            {data: 'validity', name: 'validity'},
-            {data: 'status', name: 'status'},
-            {data: 'schedule_type', name: 'schedule_type'},
-            {data: 'transit_time', name: 'transit_time'},
-            {data: 'via', name: 'via'},
-            {data: 'options', name: 'options'}
-        ],
+    $('#btnFiterSubmitSearch').click(function(){
+        var carrier=$('#carrierM').val();
+        var origin = $('#originS').val();
+        var destination = $('#destinationS').val();
+        var status = $('#statusS').val();
 
-    });
+        if(carrier!='null' || origin!='null' || destination!='null' || status!='null'){
+            var oTable = $('#tableRates').DataTable({
+                searching: true,
+                ordering: true,
+                processing: false,
+                serverSide: false,
+                autoWidth: true,
+                destroy: true,
+                "columnDefs": [
+                    { className: "truncate", "targets": [ 0,1] },
+                    { "type": "num", targets: [4,5,6,7,8] }
+                ],
+                order: [[ 3, "asc" ],[ 4, "asc" ]],
+                ajax: {
+                    url: "{{ route('contract.table') }}",
+                    data: {
+                        "carrier":carrier,
+                        "origin":origin,
+                        "destination":destination,
+                        "status":status,
+                    }
+                },
+                columns: [
+                    {data: 'name', name: 'name'},
+                    {data: 'carrier', name: 'carrier'},
+                    {data: 'port_orig', name: 'port_orig'},
+                    {data: 'port_dest', name: 'port_dest'},
+                    {data: 'twuenty', name: 'twuenty'},
+                    {data: 'forty', name: 'forty'},
+                    {data: 'fortyhc', name: 'fortyhc'},
+                    {data: 'fortynor', name: 'fortynor'},
+                    {data: 'fortyfive', name: 'fortyfive'},
+                    {data: 'currency', name: 'currency'},
+                    {data: 'validity', name: 'validity'},
+                    {data: 'status', name: 'status'},
+                    {data: 'schedule_type', name: 'schedule_type'},
+                    {data: 'transit_time', name: 'transit_time'},
+                    {data: 'via', name: 'via'},
+                    {data: 'options', name: 'options'}
+                ],
 
+            });
+        }else{
+            swal(
+                'Warning!',
+                'Select an option at least',
+                'warning'
+            )
+        }
     });
 
     $(function() {
