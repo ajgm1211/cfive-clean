@@ -382,10 +382,7 @@ class GlobalChargesController extends Controller
     }
 
     public function createAdm(Request $request){
-        if($request->carrier!=''){
-            $carrier = Carrier::find($request->carrier);
-        }
-        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->where('company_user_id',$request->company_id)->orWhere('carrier','like','%'.@$carrier->name.'%');
+        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 

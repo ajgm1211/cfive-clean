@@ -638,7 +638,7 @@ Route::prefix('globalchargeslcl')->group(function () {
   // CRUD Administrator LCL -------------------------------------------------------------------------------------------------
 
   Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator|data_entry']);
-  Route::get('createLclAdm/{company_id}','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
+  Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
   Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
   Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
   Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator|data_entry']);
