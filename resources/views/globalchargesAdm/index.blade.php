@@ -309,7 +309,7 @@
             } else if (result.dismiss === 'cancel') {
                 swal(
                     'Cancelled',
-                    'Your GloblaChargers is safe :)',
+                    'Your GloblaCharger is safe :)',
                     'error'
                 )
             }
