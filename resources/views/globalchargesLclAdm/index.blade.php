@@ -3,11 +3,11 @@
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
 @endsection
 @section('title', 'Global Charges LCL')
 @section('content')
-
-
 
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
@@ -91,7 +91,7 @@
                         <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Select</th>
+                                    <th></th>
                                     <th>Company</th>
                                     <th>Type</th>
                                     <th>Origin</th>
