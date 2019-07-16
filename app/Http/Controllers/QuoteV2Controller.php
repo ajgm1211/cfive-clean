@@ -3700,7 +3700,7 @@ class QuoteV2Controller extends Controller
       $fclLocal = $freight->local_markup->where('price_type_id','=',1);
       // markup currency
 
-      if($request->modality == "1"){
+      if($request->mode == "1"){
         $markupLocalCurre =  $this->skipPluck($fclLocal->pluck('currency_export'));
         // valor de la conversion segun la moneda
         $localMarkup = $this->ratesCurrency($markupLocalCurre,$typeCurrency);
@@ -3725,10 +3725,13 @@ class QuoteV2Controller extends Controller
         $localPercentage = intval($this->skipPluck($fclLocal->pluck('percent_markup_import')));
         // monto original
         $localAmmount =  intval($this->skipPluck($fclLocal->pluck('fixed_markup_import')));
+  
         // monto aplicado al currency
         $localMarkup = $localAmmount / $localMarkup;
         $localMarkup = number_format($localMarkup, 2, '.', '');
+
       }
+              
       // Inlands
       $fclInland = $freight->inland_markup->where('price_type_id','=',1);
       if($request->modality == "1"){
@@ -4373,6 +4376,8 @@ class QuoteV2Controller extends Controller
                 if(in_array($local->calculationtype_id, $array40) && in_array( '40',$equipment) ){
 
                   $montoOrig = $local->ammount;
+                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4386,6 +4391,8 @@ class QuoteV2Controller extends Controller
                 if(in_array($local->calculationtype_id, $array40Hc)&& in_array( '40HC',$equipment)){
 
                   $montoOrig = $local->ammount;
+                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  
                   $monto =   $local->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$local->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -5037,6 +5044,29 @@ class QuoteV2Controller extends Controller
       $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto) ;
 
     }else{
+      $markup =$localAmmount;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $localMarkup;
+      $monto = number_format($monto, 2, '.', '');
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $localMarkup, "typemarkup" => $markupLocalCurre,'montoMarkup' => $monto) ;
+
+    }
+
+
+    return $arraymarkup;
+
+  }
+  
+  public function localMarkupsCopy($localPercentage,$localAmmount,$localMarkup,$monto,$typeCurrency,$markupLocalCurre){
+
+    if($localPercentage != 0){
+      $markup = ( $monto *  $localPercentage ) / 100 ;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $markup;
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto) ;
+
+    }else{// oki
+      $valor = $this->ratesCurrency('12',$typeCurrency);
       $markup =$localAmmount;
       $markup = number_format($markup, 2, '.', '');
       $monto += $localMarkup;
