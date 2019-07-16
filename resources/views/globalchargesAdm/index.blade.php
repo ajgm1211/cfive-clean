@@ -47,12 +47,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3 order-1 order-xl-2 m--align-left">
-                                    {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
-                                </div>
-                                <div class="col-md-1 order-1 order-xl-2 m--align-left">
-                                </div>
-                                <div class="col-md-8 order-1 order-xl-2 m--align-right">
+                                <div class="col-md-12 order-1 order-xl-2 m--align-right">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             Add New &nbsp;
@@ -78,6 +73,20 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
+                        <br>
+                        <div class="row" style="margin-bottom:30px;">
+                            <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                            </div>
+                            <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                {!! Form::select('carrier',@$carriers,null,['class'=>'m-select2-general form-control','id'=>'carrier','placeholder'=>'Select company'])!!}
+                            </div>
+                            <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                <button id="search" class="btn btn-primary">Search</button>
+                                <a href="/globalcharges/indexAdm" class="btn btn-primary">Reset</a>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table m-table m-table--head-separator-primary" id="requesttable" width="100%" style="width:100%">
                                 <thead>
@@ -97,7 +106,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -165,8 +174,10 @@
         }
     }
 
-    $(document).on('change', '#company_user', function(){
-        var company_id=$(this).val();
+    $(document).on('click', '#search', function(){
+        var company_id=$('#company_user').val();
+        var carrier=$('#carrier').val();
+
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -201,7 +212,14 @@
                 }
             ],
             //serverSide: true,
-            ajax: '/globalcharges/createAdm/'+company_id,
+            //ajax: '/globalcharges/createAdm/'+company_id+'/1',
+            ajax: {
+                url: "{{ route('gcadm.create') }}",
+                data: {
+                    "company_id":company_id,
+                    "carrier":carrier,
+                }
+            },
             columns: [
                 { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
@@ -251,7 +269,7 @@
                 var oTableT = $("#requesttable").dataTable();
                 var length=table.rows('.selected').data().length;
                 if (length>10) {
-                    for (var i = 0; i < 50; i++) { 
+                    for (var i = 0; i < 30; i++) { 
                         id.push(table.rows('.selected').data()[i].id);
                     }
                 }else{
@@ -303,7 +321,7 @@
         var oTable = $("#requesttable").dataTable();
         var length=table.rows('.selected').data().length;                
         if (length>10) {
-            for (var i = 0; i < 50; i++) { 
+            for (var i = 0; i < 30; i++) { 
                 id.push(table.rows('.selected').data()[i].id);
             }
         }else{
