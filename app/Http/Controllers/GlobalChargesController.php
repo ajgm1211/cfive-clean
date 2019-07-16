@@ -377,11 +377,12 @@ class GlobalChargesController extends Controller
 
     public function indexAdm(){
         $companies = CompanyUser::pluck('name','id');
-        return view('globalchargesAdm.index',compact('companies'));
+        $carriers = Carrier::pluck('name','id');
+        return view('globalchargesAdm.index',compact('companies','carriers'));
     }
 
-    public function createAdm($company){
-        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->where('company_user_id',$company);
+    public function createAdm(Request $request){
+        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 
