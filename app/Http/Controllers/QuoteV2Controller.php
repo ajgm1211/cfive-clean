@@ -5123,10 +5123,16 @@ class QuoteV2Controller extends Controller
   public function localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$chargeCurrency){
 
     if($localPercentage != 0){
+
+      // Monto original 
+      $markupO = ( $montoOrig *  $localPercentage ) / 100 ;
+      $montoOrig += $markupO;
+      $montoOrig = number_format($montoOrig, 2, '.', '');
+      
       $markup = ( $monto *  $localPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup;
-      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto , 'montoMarkupO' => $monto) ;
+      $arraymarkup = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($localPercentage%)",'montoMarkup' => $monto , 'montoMarkupO' => $montoOrig) ;
 
     }else{// oki
       $valor = $this->ratesCurrency($chargeCurrency,$typeCurrency);
