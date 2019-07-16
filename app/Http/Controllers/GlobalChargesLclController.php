@@ -347,9 +347,9 @@ class GlobalChargesLclController extends Controller
                       <i class="la la-plus"></i>
                     </a>';
             })
-            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-            ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function addAdm(){
