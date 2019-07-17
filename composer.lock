@@ -4776,16 +4776,16 @@
         },
         {
             "name": "spatie/temporary-directory",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/temporary-directory.git",
-                "reference": "5e1799fa2297363ebfb4df296fea90afbd4ef9b7"
+                "reference": "539d0856c5d6344619b3c5ab472e1ff6c655df5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/5e1799fa2297363ebfb4df296fea90afbd4ef9b7",
-                "reference": "5e1799fa2297363ebfb4df296fea90afbd4ef9b7",
+                "url": "https://api.github.com/repos/spatie/temporary-directory/zipball/539d0856c5d6344619b3c5ab472e1ff6c655df5a",
+                "reference": "539d0856c5d6344619b3c5ab472e1ff6c655df5a",
                 "shasum": ""
             },
             "require": {
@@ -4818,7 +4818,7 @@
                 "spatie",
                 "temporary-directory"
             ],
-            "time": "2018-04-12 09:34:43"
+            "time": "2019-07-16 20:39:53"
         },
         {
             "name": "studio-42/elfinder",
