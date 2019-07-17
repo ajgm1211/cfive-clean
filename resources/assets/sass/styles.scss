@@ -82,19 +82,36 @@ CONTENTS:
     font-size: $size-10 !important;
 }
 
-.m-width-230{
-    min-width: 230px !important;
-    max-width: 230px !important;
+.m-width-200{
+    min-width: 200px !important;
+    max-width: 200px !important;
 }
 
-.m-width-180{
-    min-width: 180px !important;
-    max-width: 180px !important;
-}
-
-.m-width-180{
+.m-width-150{
     min-width: 150px !important;
     max-width: 150px !important;
+}
+
+.m-width-120{
+    min-width: 120px !important;
+    max-width: 120px !important;
+}
+
+.m-width-100{
+    min-width: 100px !important;
+    max-width: 100px !important;
+}
+
+.m-width-50{
+    min-width: 50px !important;
+    max-width: 50px !important;
+}
+
+.desktop {
+    display: block;
+}
+.responsive {
+    display: none;
 }
 
 .mCustomScrollbar {
@@ -16808,7 +16825,7 @@ body.swal2-no-backdrop > .swal2-shown.swal2-bottom-right {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-left: -65px;
+    margin-left: -40px;
 
 }
 .flex-list li {
@@ -17130,4 +17147,43 @@ blockquote {
 }
 .btn-remarks {
     width: 95px;
+}
+
+@media only screen and (max-width: 767px) {
+    .desktop {
+        display: none !important;
+    }
+    .responsive {
+        display: block !important;
+    }
+    .m-width-200 {
+        min-width: 200px !important;
+        max-width: 250px !important;
+    }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) and (orientation: portrait) {
+    .desktop {
+        display: none !important;
+    }
+    .responsive {
+        display: block !important;
+    }
+    .m-width-200 {
+        min-width: 200px !important;
+        max-width: 250px !important;
+    }
+}
+
+@media (max-width: 1270px) and (min-width: 1024px) {
+    .desktop {
+        display: none !important;
+    }
+    .responsive {
+        display: block !important;
+    }
+    .m-width-200 {
+        min-width: 200px !important;
+        max-width: 250px !important;
+    } 
 }

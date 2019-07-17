@@ -9,21 +9,21 @@
                     <div class="tab-content">
                         <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
                             <ul >
-                                <li style="max-width: 120px;">
+                                <li class="m-width-120">
                                     @if(isset($rate->carrier->image) && $rate->carrier->image!='')
                                         <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="45" height="auto" style="margin-top: 15px;" />
                                     @endif
                                 </li>
-                                <li class="size-12px long-text m-width-230"><b>POL:</b> &nbsp;{{$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
-                                <li class="size-12px long-text m-width-230"><b>POD:</b> &nbsp;{{$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
-                                <li class="size-12px long-text m-width-230"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
-                                <li class="size-12px long-text m-width-180"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
-                                <li class="size-12px long-text m-width-150"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
-                                <li class="size-12px long-text m-width-150"><b>Via:</b> &nbsp;{{$rate->via}}</li>
-                                <li class="size-12px no-border-left d-flex justify-content-end">
+                                <li class="size-12px long-text m-width-200"><b>POL:</b> &nbsp;{{$rate->origin_port->name.', '.$rate->origin_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/></li>
+                                <li class="size-12px long-text m-width-200"><b>POD:</b> &nbsp;{{$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
+                                <li class="size-12px long-text m-width-150 desktop"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
+                                <li class="size-12px long-text m-width-100 desktop"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
+                                <li class="size-12px long-text m-width-50 desktop"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
+                                <li class="size-12px long-text m-width-100 desktop"><b>Via:</b> &nbsp;{{$rate->via}}</li>
+                                <li class="size-12px no-border-left d-flex justify-content-end m-width-50">
                                     <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                                 </li>
-                                <li class="size-12px">
+                                <li class="size-12px m-width-100">
                                     <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit">
                                         <i class="la la-edit"></i>
                                     </button>
