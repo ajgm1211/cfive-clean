@@ -48,6 +48,7 @@ class LoginController extends Controller
       "user_id" => $user->id,
       "name" => $user->name,
     ]);
+    // Crear hash id del usuario logueado 
 
     
     if($user->company_user_id != ""){
