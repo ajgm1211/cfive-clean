@@ -69,6 +69,11 @@ use App\GlobalCharCarrierLcl;
 use App\GlobalCharPortLcl;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
+use Illuminate\Support\Facades\Storage;
+use App\SearchRate;
+use App\SearchPort;
+
+
 
 class QuoteV2Controller extends Controller
 {
@@ -3662,6 +3667,12 @@ class QuoteV2Controller extends Controller
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
     $mode = $request->mode;
+    $incoterm_id = $request->input('incoterm_id');
+    $address =$request->input('origin_address')." ".$request->input('destination_address'); 
+
+
+    $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$incoterm_id,$address,$company_user_id);
+
     // Fecha Contrato
     $dateRange =  $request->input('date');
     $dateRange = explode("/",$dateRange);
@@ -4684,7 +4695,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40)&& in_array( '40',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4697,7 +4708,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '40HC',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4710,7 +4721,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '40NOR',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4722,7 +4733,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45)&& in_array( '45',$equipment)){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4761,7 +4772,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40)&& in_array( '40',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4773,7 +4784,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '40HC',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4785,7 +4796,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '40NOR',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4797,7 +4808,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45)&& in_array( '45',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4837,7 +4848,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40) && in_array( '40',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4849,7 +4860,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Hc) && in_array( '40HC',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4861,7 +4872,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Nor) && in_array( '40NOR',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4873,7 +4884,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45) && in_array( '45',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -5128,7 +5139,7 @@ class QuoteV2Controller extends Controller
       $markupO = ( $montoOrig *  $localPercentage ) / 100 ;
       $montoOrig += $markupO;
       $montoOrig = number_format($montoOrig, 2, '.', '');
-      
+
       $markup = ( $monto *  $localPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup;
@@ -5217,6 +5228,32 @@ class QuoteV2Controller extends Controller
     ], $preserveKeys = true);
 
     return $collect;
+  }
+
+
+  public function excelDownload($id){
+
+    $Ncontract = NewContractRequest::find($id);
+    $time       = new \DateTime();
+    $now        = $time->format('d-m-y');
+    $company    = CompanyUser::find($Ncontract->company_user_id);
+    $extObj     = new \SplFileInfo($Ncontract->namefile);
+    $ext        = $extObj->getExtension();
+    $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+    try{
+      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
+    } catch(\Exception $e){
+      try{
+        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+      } catch(\Exception $e){
+        try{
+          return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+        } catch(\Exception $e){
+          return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
+      }
+    }
+
   }
 
 
@@ -8433,5 +8470,38 @@ class QuoteV2Controller extends Controller
     }
 
     return $charges_grouped;
+  }
+
+
+  public function storeSearchV2($origPort,$destPort,$pickUpDate,$equipment,$delivery,$incoterm,$direction,$company){
+
+
+    $searchRate = new SearchRate();
+    $searchRate->pick_up_date  = $pickUpDate;
+    $searchRate->equipment  = json_encode($equipment);
+    $searchRate->delivery  = $delivery;
+    $searchRate->direction  = $direction;
+    $searchRate->incoterm  = $incoterm;
+    $searchRate->company_user_id  = $company;
+    $searchRate->type  = 'FCL';
+
+    $searchRate->user_id = \Auth::id();
+    $searchRate->save();
+    foreach($origPort as $orig => $valueOrig)
+    {
+      foreach($destPort as $dest => $valueDest)
+      {
+        $detailport = new SearchPort();
+        $detailport->port_orig =$valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+        $detailport->port_dest = $valueDest;//$request->input('port_destlocal'.$contador.'.'.$dest);
+        $detailport->search_rate()->associate($searchRate);
+        $detailport->save();
+      }
+
+    }
+    // Intercom SEARCH 
+    //   $event = new  EventIntercom();
+    //  $event->event_searchRate();
+
   }
 }
