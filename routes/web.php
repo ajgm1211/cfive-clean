@@ -698,5 +698,17 @@ Route::group(['prefix' => 'UserConfiguration'], function (){
   Route::resource('UserConfiguration','UserConfigurationsController');
 });
 
+// Importation Automatic Companies 
+Route::group(['prefix' => 'CompanyImportation','middleware' => ['auth','role:administrator']],function(){
+    route::resource('CompanyImportation','CompanyImportationController');
+    route::get('Add','CompanyImportationController@add')->name('CompanyImportation.add');
+    route::get('AddFiltro/{id}','CompanyImportationController@addFiltro')->name('CompanyImportation.filtro.add');
+    route::post('StoreFiltro/','CompanyImportationController@storeFiltro')->name('CompanyImportation.filtro.store');
+    route::get('EditFiltro/{id}','CompanyImportationController@editFiltro')->name('CompanyImportation.filtro.edit');
+    route::get('UpdateFiltro/{id}','CompanyImportationController@UpdateFiltro')->name('CompanyImportation.filtro.update');
+    route::delete('DestroyFiltro/{id}','CompanyImportationController@DestroyFiltro')->name('CompanyImportation.filtro.destroy');
+    route::get('IndexFiltro/{id}','CompanyImportationController@indexFiltro')->name('CompanyImportation.filtro.index');
+});
+
 Auth::routes();
 
