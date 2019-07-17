@@ -948,7 +948,7 @@
                         <div class="col-lg-3 no-padding d-flex justify-content-end">
                           @if($arr->excelRequest !="")
                           <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
-                            <a  id='excel_l{{$loop->iteration}}' href="/Requests/RequestImportation/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excel/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen">Download Excel</span>
 
                               <i class="la la-file-excel-o"></i>

@@ -69,6 +69,7 @@ use App\GlobalCharCarrierLcl;
 use App\GlobalCharPortLcl;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
+use Illuminate\Support\Facades\Storage;
 
 class QuoteV2Controller extends Controller
 {
@@ -5128,7 +5129,7 @@ class QuoteV2Controller extends Controller
       $markupO = ( $montoOrig *  $localPercentage ) / 100 ;
       $montoOrig += $markupO;
       $montoOrig = number_format($montoOrig, 2, '.', '');
-      
+
       $markup = ( $monto *  $localPercentage ) / 100 ;
       $markup = number_format($markup, 2, '.', '');
       $monto += $markup;
@@ -5217,6 +5218,32 @@ class QuoteV2Controller extends Controller
     ], $preserveKeys = true);
 
     return $collect;
+  }
+
+
+  public function excelDownload($id){
+
+    $Ncontract = NewContractRequest::find($id);
+    $time       = new \DateTime();
+    $now        = $time->format('d-m-y');
+    $company    = CompanyUser::find($Ncontract->company_user_id);
+    $extObj     = new \SplFileInfo($Ncontract->namefile);
+    $ext        = $extObj->getExtension();
+    $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+    try{
+      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
+    } catch(\Exception $e){
+      try{
+        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+      } catch(\Exception $e){
+        try{
+          return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+        } catch(\Exception $e){
+          return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
+      }
+    }
+
   }
 
 
