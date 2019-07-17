@@ -476,6 +476,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
   Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
   Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
+  Route::get('excel/{id}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
   //LCL 
   Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
 
