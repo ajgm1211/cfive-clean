@@ -4961,7 +4961,7 @@ class QuoteV2Controller extends Controller
 
       // EXCEL REQUEST 
 
-      $excelRequest = NewContractRequest::where('contract_id',$data->contract->id)->first();
+      $excelRequest = NewContractRequest::where('contract_id','1')->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;
       }else{
