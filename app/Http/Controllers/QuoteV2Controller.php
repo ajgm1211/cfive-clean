@@ -70,6 +70,10 @@ use App\GlobalCharPortLcl;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use Illuminate\Support\Facades\Storage;
+use App\SearchRate;
+use App\SearchPort;
+
+
 
 class QuoteV2Controller extends Controller
 {
@@ -3663,6 +3667,12 @@ class QuoteV2Controller extends Controller
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
     $mode = $request->mode;
+    $incoterm_id = $request->input('incoterm_id');
+    $address =$request->input('origin_address')." ".$request->input('destination_address'); 
+
+
+    $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$incoterm_id,$address,$company_user_id);
+
     // Fecha Contrato
     $dateRange =  $request->input('date');
     $dateRange = explode("/",$dateRange);
@@ -8460,5 +8470,38 @@ class QuoteV2Controller extends Controller
     }
 
     return $charges_grouped;
+  }
+
+
+  public function storeSearchV2($origPort,$destPort,$pickUpDate,$equipment,$delivery,$incoterm,$direction,$company){
+
+
+    $searchRate = new SearchRate();
+    $searchRate->pick_up_date  = $pickUpDate;
+    $searchRate->equipment  = json_encode($equipment);
+    $searchRate->delivery  = $delivery;
+    $searchRate->direction  = $direction;
+    $searchRate->incoterm  = $incoterm;
+    $searchRate->company_user_id  = $company;
+    $searchRate->type  = 'FCL';
+
+    $searchRate->user_id = \Auth::id();
+    $searchRate->save();
+    foreach($origPort as $orig => $valueOrig)
+    {
+      foreach($destPort as $dest => $valueDest)
+      {
+        $detailport = new SearchPort();
+        $detailport->port_orig =$valueOrig; // $request->input('port_origlocal'.$contador.'.'.$orig);
+        $detailport->port_dest = $valueDest;//$request->input('port_destlocal'.$contador.'.'.$dest);
+        $detailport->search_rate()->associate($searchRate);
+        $detailport->save();
+      }
+
+    }
+    // Intercom SEARCH 
+    //   $event = new  EventIntercom();
+    //  $event->event_searchRate();
+
   }
 }
