@@ -13,4 +13,10 @@ class SearchController extends Controller
     return view('search/index', compact('searchRates'));
 
   }
+  public function listar()
+  {        
+    $searchRates = SearchRate::with('search_ports')->get();
+    return view('search/history', compact('searchRates'));
+
+  }
 }
