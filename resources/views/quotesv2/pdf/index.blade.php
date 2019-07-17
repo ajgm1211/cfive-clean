@@ -796,7 +796,18 @@
         @endif
         <br>
         <br>
-        <div class="clearfix">
+        <?php
+            $i=0;
+        ?>
+        @foreach($rates as $rate)
+            @if($rate->remarks != '')
+                <?php
+                    $i++;
+                ?>
+            @endif
+        @endforeach
+        @if($i>0)
+            <div class="clearfix">
             <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote header-table">
                     <tr>
@@ -818,6 +829,7 @@
                 </tbody>
             </table>
         </div>
+        @endif
         <br>
         @if($quote->terms_and_conditions!='')
             <div class="clearfix">
