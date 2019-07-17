@@ -663,6 +663,12 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('ManagerCarr
   Route::get('synchronousCarrier','CarriersController@synchronous')->name('synchronous.carrier');
 });
 
+Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
+  
+  Route::get('list', 'SearchController@listar')->name('search.list');
+  
+});
+
 Route::resource('search', 'SearchController')->middleware('auth');
 
 // Nuevos terminos y condiciones 
