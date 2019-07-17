@@ -4684,7 +4684,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40)&& in_array( '40',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4697,7 +4697,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '40HC',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4710,7 +4710,7 @@ class QuoteV2Controller extends Controller
                 if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '40NOR',$equipment)){
 
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4722,7 +4722,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45)&& in_array( '45',$equipment)){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4761,7 +4761,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40)&& in_array( '40',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4773,7 +4773,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '40HC',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4785,7 +4785,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '40NOR',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4797,7 +4797,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45)&& in_array( '45',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4837,7 +4837,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40) && in_array( '40',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4849,7 +4849,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Hc) && in_array( '40HC',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4861,7 +4861,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array40Nor) && in_array( '40NOR',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
@@ -4873,7 +4873,7 @@ class QuoteV2Controller extends Controller
                 }
                 if(in_array($global->calculationtype_id, $array45) && in_array( '45',$equipment) ){
                   $montoOrig = $global->ammount ;
-                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
                   $monto = number_format($monto, 2, '.', '');
