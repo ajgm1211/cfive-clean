@@ -57,11 +57,18 @@
       <div class="tab-content">
         <div class="tab-pane active " id="m_tabs_6_1" role="tabpanel">
           <div class="m-portlet__body">
-         <table class="table" id="otro" width="100%">
+            <table class="table" id="otro" width="100%">
+
+
+
+
               <thead>
                 <tr>
                   <th title="name">
                     Usuario
+                  </th>
+                  <th title="name">
+                    Equipment
                   </th>
                   <th title="description">
                     Pick Up Date
@@ -73,22 +80,38 @@
                   <th title="options">
                     Destination Port
                   </th>
+                  <th title="delivery">
+                    Delivery Type
+                  </th>
+                  <th title="incoterm">
+                    Incoterm
+                  </th>
+                  <th title="direction">
+                    Direction
+                  </th>
+                  <th title="company">
+                    Company
+                  </th>
                 </tr>
               </thead>
               <tbody>
-      
+                @foreach ($searchRates as $search)
                 <tr>
-                  <td>aaaaa/td>
-                  <td>aaaaa</td>
-
+                  <td>{{ $search->user->name }}</td>
+                  <td>{!! str_replace(["[","]","\""], ' ', $search->equipment) !!} </td>
+                  <td>{{ $search->pick_up_date }}</td>
                   <td>
-                   aaaa
+                    {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portOrig')->unique()->pluck('name') ) !!}
                   </td>
                   <td>
-                    aaaa
+                    {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
+                  <td>{{ $search->pick_up_date }}</td>
+                  <td>{{ (@$search->incoterm->name != "" ) ? @$search->incoterm->name : "-"}} </td>
+                  <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
+                  <td>{{ $search->company->name }}</td>
                 </tr>
-
+                @endforeach
               </tbody>
             </table>
           </div>
@@ -111,20 +134,36 @@
                   <th title="options">
                     Destination Port
                   </th>
+                  <th title="delivery">
+                    Delivery Type
+                  </th>
+                  <th title="incoterm">
+                    Incoterm
+                  </th>
+                  <th title="direction">
+                    Direction
+                  </th>
+                  <th title="company">
+                    Company
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($searchRates as $search)
+                @foreach ($searchRatesLCL as $search)
                 <tr>
                   <td>{{ $search->user->name }}</td>
+                  
                   <td>{{ $search->pick_up_date }}</td>
-
                   <td>
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portOrig')->unique()->pluck('name') ) !!}
                   </td>
                   <td>
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
+                  <td>{{ $search->pick_up_date }}</td>
+                  <td>{{ (@$search->incoterm->name != "" ) ? @$search->incoterm->name : "-"}} </td>
+                  <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
+                  <td>{{ $search->company->name }}</td>
                 </tr>
                 @endforeach
               </tbody>
