@@ -15,8 +15,11 @@ class SearchController extends Controller
   }
   public function listar()
   {        
-    $searchRates = SearchRate::with('search_ports')->get();
-    return view('search/history', compact('searchRates'));
+    $searchRates = SearchRate::where('type','FCL')->with('search_ports')->get();
+    $searchRatesLCL = SearchRate::where('type','LCL')->with('search_ports')->get();
+    
+   
+    return view('search/history', compact('searchRates','searchRatesLCL'));
 
   }
 }
