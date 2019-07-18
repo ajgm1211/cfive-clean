@@ -893,7 +893,7 @@
                         </div>
                       </div>
                       <br>
-                    </div>
+                    </div><!-- aqui -->
 
                     <div class="col-lg-6" style="padding-right: 35px;">
                       <div class="table-r__quotes">
