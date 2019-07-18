@@ -100,7 +100,7 @@
         @else
             <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
         @endif
-            <thead class="title-quote text-center header-table">
+            <thead class="title-quote text-left header-table">
                 <tr >
                     <th class="unit"><b>POL</b></th>
                     <th class="unit"><b>POD</b></th>
@@ -169,7 +169,7 @@
                         ?>
                       @endforeach
                     @endif
-                    <tr class="text-center color-table">
+                    <tr class="text-left color-table">
                        <td >
                             @if($rate->origin_address=='' && $rate->origin_port_id!='') 
                                 {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
@@ -219,7 +219,7 @@
             </div>
 
             <table border="0" cellspacing="1" cellpadding="1" >
-                <thead class="title-quote text-center header-table">
+                <thead class="title-quote text-left header-table">
                     <tr >
                         <th class="unit"><b>POL</b></th>
                         <th class="unit"><b>POD</b></th>
@@ -261,7 +261,7 @@
                                         ?>
                                     @endforeach
                                 @endforeach
-                                <tr class="text-center color-table">
+                                <tr class="text-left color-table">
                                      <td >
                                         @if($rate->origin_address=='' && $rate->origin_port_id!='') 
                                             {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
@@ -309,7 +309,7 @@
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                        <thead class="title-quote text-center header-table">
+                        <thead class="title-quote text-left header-table">
                             <tr >
                                 <th class="unit"><b>Charge</b></th>
                                 <th class="unit"><b>Detail</b></th>
@@ -349,7 +349,7 @@
                                                 $sum_freight_40nor+=$v->total_40nor;
                                                 $sum_freight_45+=$v->total_45;
                                             ?>
-                                            <tr class="text-center color-table">
+                                            <tr class="text-left color-table">
                                                  @if($v->surcharge_id!='')
                                                     <td>{{$v->surcharge->name}}</td>
                                                 @else
@@ -410,7 +410,7 @@
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
-                    <thead class="title-quote text-center header-table">
+                    <thead class="title-quote text-left header-table">
                         <tr >
                             <th class="unit" colspan="2"><b>Charge</b></th>
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
@@ -460,7 +460,7 @@
                                 ?>
                             @endforeach
                         @endforeach
-                        <tr class="text-center color-table">
+                        <tr class="text-left color-table">
                             <td colspan="2">Total Origin Charges</td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                             <td {{ @$equipmentHides['20'] }}>{{@$sum_origin_20+@$inland_origin_20}}</td>
@@ -491,7 +491,7 @@
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                        <thead class="title-quote text-center header-table">
+                        <thead class="title-quote text-left header-table">
                             <tr >
                                 <th class="unit"><b>Charge</b></th>
                                 <th class="unit"><b>Detail</b></th>
@@ -535,7 +535,7 @@
                                             $sum_origin_40nor+=$v->total_40nor;
                                             $sum_origin_45+=$v->total_45;
                                         ?>
-                                        <tr class="text-center color-table">
+                                        <tr class="text-left color-table">
                                             <td>{{$v->surcharge->name}}</td>
                                             <td>{{$v->calculation_type->name}}</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
@@ -562,7 +562,7 @@
                                                 $inland_40nor+=$v->total_40nor;
                                                 $inland_45+=$v->total_45;
                                             ?>
-                                            <tr class="text-center color-table">
+                                            <tr class="text-left color-table">
                                                 <td>{{$v->provider}}</td>
                                                 <td>{{$v->distance}}</td>
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
@@ -616,7 +616,7 @@
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
-                    <thead class="title-quote text-center header-table">
+                    <thead class="title-quote text-left header-table">
                         <tr >
                             <th class="unit" colspan="2"><b>Charge</b></th>
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
@@ -651,7 +651,7 @@
                                 ?>
                             @endforeach
                         @endforeach
-                        <tr class="text-center color-table">
+                        <tr class="text-left color-table">
                             <td colspan="2">Total Destination Charges</td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                             <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20}}</td>
@@ -682,7 +682,7 @@
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                        <thead class="title-quote text-center header-table">
+                        <thead class="title-quote text-left header-table">
                             <tr >
                                 <th class="unit"><b>Charge</b></th>
                                 <th class="unit"><b>Detail</b></th>
@@ -726,7 +726,7 @@
                                             $sum_destination_40nor+=$v->total_40nor;
                                             $sum_destination_45+=$v->total_45;
                                         ?>
-                                        <tr class="text-center color-table">
+                                        <tr class="text-left color-table">
                                             <td>{{$v->surcharge->name}}</td>
                                             <td>{{$v->calculation_type->name}}</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
@@ -753,7 +753,7 @@
                                                 $inland_40nor+=$v->total_40nor;
                                                 $inland_45+=$v->total_45;
                                             ?>
-                                            <tr class="text-center color-table">
+                                            <tr class="text-left color-table">
                                                 <td>{{$v->provider}}</td>
                                                 <td>{{$v->distance}}</td>
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
