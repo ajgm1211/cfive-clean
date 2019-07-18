@@ -3671,7 +3671,7 @@ class QuoteV2Controller extends Controller
     $address =$request->input('origin_address')." ".$request->input('destination_address'); 
 
 
-    $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$incoterm_id,$address,$company_user_id);
+    $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$equipment,$delivery_type,$incoterm_id,$mode,$company_user_id,'FCL');
 
     // Fecha Contrato
     $dateRange =  $request->input('date');
@@ -5332,6 +5332,11 @@ class QuoteV2Controller extends Controller
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
     $mode = $request->mode;
+    $incoterm_id = $request->input('incoterm_id');
+    $arregloNull = array();
+    $arregloNull = json_encode($arregloNull);
+    //istory
+    $this->storeSearchV2($origin_port,$destiny_port,$request->input('date'),$arregloNull,$delivery_type,$incoterm_id,$mode,$company_user_id,'LCL');
 
     $weight = $request->input("chargeable_weight");
     $weight =  number_format($weight, 2, '.', '');
@@ -8473,7 +8478,7 @@ class QuoteV2Controller extends Controller
   }
 
 
-  public function storeSearchV2($origPort,$destPort,$pickUpDate,$equipment,$delivery,$incoterm,$direction,$company){
+  public function storeSearchV2($origPort,$destPort,$pickUpDate,$equipment,$delivery,$incoterm,$direction,$company,$type){
 
 
     $searchRate = new SearchRate();
@@ -8481,9 +8486,9 @@ class QuoteV2Controller extends Controller
     $searchRate->equipment  = json_encode($equipment);
     $searchRate->delivery  = $delivery;
     $searchRate->direction  = $direction;
-    $searchRate->incoterm  = $incoterm;
+    $searchRate->incoterm_id  = $incoterm;
     $searchRate->company_user_id  = $company;
-    $searchRate->type  = 'FCL';
+    $searchRate->type  = $type;
 
     $searchRate->user_id = \Auth::id();
     $searchRate->save();
