@@ -35,7 +35,7 @@
                             </ul>
                         </div>
                         <br>
-                        <div class="details_{{$v}}  hide" style="background-color: white; border-radius: 5px; margin-top: 20px;">
+                        <div class="details_{{$v}} rates hide" style="background-color: white; border-radius: 5px; margin-top: 20px;">
                             <!-- Freight charges -->
                             <div class="row no-mg-row">
                                 <div class="col-md-12 header-charges">
@@ -833,7 +833,7 @@
                                                 ?>
                                                 <tr style="height:40px;">
                                                     <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a">{{$amount_20}}</span> + <span class=" td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a sum_total_amount_20">{{$amount_20}}</span> + <span class=" td-a sum_total_markup_20">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_20">{{$amount_markup_20}}</span></td>
                                                     <td {{ @$equipmentHides['40'] }} class="tds"><span class=" td-a">{{$amount_40}}</span> + <span class=" td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
                                                     <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a">{{$amount_40hc}}</span> + <span class=" td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
                                                     <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a">{{$amount_40nor}}</span> + <span class=" td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
@@ -889,7 +889,7 @@
                                                 ?>
                                                 <tr style="height:40px;">
                                                     <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
-                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a">{{$amount_20}}</span> + <span class=" td-a">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_20}}</td>
+                                                    <td {{ @$equipmentHides['20'] }} class="tds"><span class=" td-a sum_total_amount_20">{{$amount_20}}</span> + <span class=" td-a sum_total_markup_20">{{$markup_20}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_20">{{$amount_markup_20}}</span></td>
                                                     <td {{ @$equipmentHides['40'] }} class="tds"><span class=" td-a">{{$amount_40}}</span> + <span class=" td-a">{{$markup_40}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40}}</td>
                                                     <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a">{{$amount_40hc}}</span> + <span class=" td-a">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40hc}}</td>
                                                     <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a">{{$amount_40nor}}</span> + <span class=" td-a">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i> {{$amount_markup_40nor}}</td>
