@@ -756,7 +756,7 @@
                 <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                 @endif
                 @endif
-              </div><!-- aqui -->
+              </div>
               <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
                 <!--  <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
 </button> -->
@@ -880,13 +880,13 @@
                           </div>
                           Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>
-                        <div class="col-lg-4 d-flex align-items-center">
-                          <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
+                        <div class="col-lg-4 d-flex align-items-center flex-column">
+                          <span class="portcss"> {{$arr->port_destiny->name  }}</span>
                           <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
                         </div>
                       </div>
                       <br>
-                    </div>
+                    </div><!-- aqui -->
 
                     <div class="col-lg-3" style="padding-right: 35px;">
                       <div class="table-r__quotes">
@@ -936,7 +936,7 @@
                           @if($arr->excelRequest !="")
                           <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
                             <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workgreen">Download Excel</span>  
+                              <span class="workgreen"><i class="icon-excel"></i></span>  
 
                               <i class="la la-file-excel-o"></i>
                               </div>
