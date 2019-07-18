@@ -815,6 +815,7 @@ class QuoteV2Controller extends Controller
     $pdf_duplicate->language=$pdf->language;
     $pdf_duplicate->show_carrier=$pdf->show_carrier;
     $pdf_duplicate->show_logo=$pdf->show_logo;
+    $pdf_duplicate->show_gdp_logo=$pdf->show_gdp_logo;
     $pdf_duplicate->save();
 
     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
@@ -2895,6 +2896,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
+      $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
       $pdf_option->save();
 
@@ -3068,6 +3070,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
+      $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
       $pdf_option->save();
       // MANUAL RATE
@@ -7214,6 +7217,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
+      $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
       $pdf_option->save();
 
