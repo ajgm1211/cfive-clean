@@ -114,7 +114,9 @@ class CompanyImportationController extends Controller
 
     public function indexFiltro($id)
     {
-        return view('importationCompanyUser.show',compact('id'));
+        $company_ob = CompanyAutoImportation::find($id);
+        $company_ob = $company_ob->load('companyUser');
+        return view('importationCompanyUser.show',compact('id','company_ob'));
     }
 
     public function show($id)
