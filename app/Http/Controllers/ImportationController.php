@@ -1401,7 +1401,7 @@ class ImportationController extends Controller
     public function DestroyRatesG($id){
         try{
             $Rate = Rate::find($id);
-            $Rate->delete();
+            $Rate->forceDelete();
             return 1;
         }catch(\Exception $e){
             return 2;
@@ -4169,7 +4169,7 @@ class ImportationController extends Controller
     public function DestroySurchargersG($id){
         try{
             $surchargers = LocalCharge::find($id);
-            $surchargers->delete();
+            $surchargers->forceDelete();
             return 1;
         }catch(\Exception $e){
             return 2;
