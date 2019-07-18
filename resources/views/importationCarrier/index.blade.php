@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
 
 @endsection
-@section('title', 'Importation Company.')
+@section('title', 'Importation Carrier.')
 @section('content')
 
 <div class="m-content">
@@ -33,7 +33,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation Company
+                        Importation Carrier
                     </h3>
                 </div>
             </div>
@@ -52,10 +52,14 @@
                 <div class="row">
                     <div class="col-md-12 order-1 order-xl-2 m--align-right">
                         <a  id="newmodal" class="">
-                            <button id="new" type="button"  onclick="AbrirModal('addCompanyImp',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                            <button id="new" type="button"  onclick="AbrirModal('addCarriers',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                 Add New &nbsp;
                                 <i class="fa fa-plus"></i>
                             </button>
+                            <a href="{{route('surcherger.filtro.index')}}" id="new"  onclick="AbrirModal('addCarriers',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                Surchargers Filters &nbsp;
+                                <i class="fa fa-plus"></i>
+                            </a>
                         </a>
                     </div>
                 </div>
@@ -65,7 +69,8 @@
                         <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Company</th>
+                                <th>Name</th>
+                                <th>Carriers</th>
                                 <th>Status</th>
                                 <th>Options</th>
                             </tr>
@@ -84,7 +89,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
-                        Importation Company User
+                        Importation Carrier 
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -115,15 +120,15 @@
 <script>
 
     function AbrirModal(action,id){
-        if(action == "company-import-edit"){
-            var url = '{{ route("CompanyImportation.edit", ":id") }}';
+        if(action == "carrier-import-edit"){
+            var url = '{{ route("CarrierImportation.edit", ":id") }}';
             url = url.replace(':id', id);
             $('#company-imp-body').load(url,function(){
                 $('#company-imp-modal').modal({show:true});
             });
         }
-        if(action == "addCompanyImp"){
-            var url = '{{ route("CompanyImportation.add")}}';
+        if(action == "addCarriers"){
+            var url = '{{ route("CarrierImportation.add")}}';
             $('#company-imp-body').load(url,function(){
                 $('#company-imp-modal').modal({show:true});
             });
@@ -133,10 +138,11 @@
     $(function() {
         $('#importationcompany').DataTable({
             //serverSide: true,
-            ajax: '{!! route("CompanyImportation.create") !!}',
+            ajax: '{!! route("CarrierImportation.create") !!}',
             columns: [
                 { data: 'id', name: 'id'},
                 { data: 'name', name: 'name' },
+                { data: 'carriers', name: 'carriers' },
                 { data: 'status', name: 'status' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
@@ -166,7 +172,7 @@
             reverseButtons: true
         }).then(function(result){
             if (result.value) {
-                url='{!! route("CompanyImportation.destroy",":id") !!}';
+                url='{!! route("CarrierImportation.destroy",":id") !!}';
                 url = url.replace(':id', id);
                 var token = $("meta[name='csrf-token']").attr("content");
                 $.ajax({

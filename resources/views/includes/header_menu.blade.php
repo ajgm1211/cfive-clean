@@ -468,10 +468,10 @@
                             </li>
 
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('CompanyImportation.index')}}" class="m-menu__link ">
+                                <a  href="{{route('CarrierImportation.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-dropbox"></i>
                                     <span class="m-menu__link-text">
-                                        Company Importation
+                                        Carrier Auto Importation
                                     </span>
                                 </a>
                             </li>

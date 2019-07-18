@@ -706,15 +706,17 @@ Route::group(['prefix' => 'UserConfiguration'], function (){
 });
 
 // Importation Automatic Companies 
-Route::group(['prefix' => 'CompanyImportation','middleware' => ['auth','role:administrator']],function(){
-    route::resource('CompanyImportation','CompanyImportationController');
-    route::get('Add','CompanyImportationController@add')->name('CompanyImportation.add');
-    route::get('AddFiltro/{id}','CompanyImportationController@addFiltro')->name('CompanyImportation.filtro.add');
-    route::post('StoreFiltro/','CompanyImportationController@storeFiltro')->name('CompanyImportation.filtro.store');
-    route::get('EditFiltro/{id}','CompanyImportationController@editFiltro')->name('CompanyImportation.filtro.edit');
-    route::get('UpdateFiltro/{id}','CompanyImportationController@UpdateFiltro')->name('CompanyImportation.filtro.update');
-    route::delete('DestroyFiltro/{id}','CompanyImportationController@DestroyFiltro')->name('CompanyImportation.filtro.destroy');
-    route::get('IndexFiltro/{id}','CompanyImportationController@indexFiltro')->name('CompanyImportation.filtro.index');
+Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:administrator']],function(){
+    route::resource('CarrierImportation','CarriersImportationController');
+    
+    route::get('Add','CarriersImportationController@add')->name('CarrierImportation.add');
+    route::get('AddFiltro/{id}','CarriersImportationController@addFiltro')->name('surcherger.filtro.add');
+    route::post('StoreFiltro/','CarriersImportationController@storeFiltro')->name('surcherger.filtro.store');
+    route::get('EditFiltro/{id}','CarriersImportationController@editFiltro')->name('surcherger.filtro.edit');
+    route::put('UpdateFiltro/{id}','CarriersImportationController@UpdateFiltro')->name('surcherger.filtro.update');
+    route::delete('DestroyFiltro/{id}','CarriersImportationController@DestroyFiltro')->name('surcherger.filtro.destroy');
+    route::get('IndexFiltro/','CarriersImportationController@indexFiltro')->name('surcherger.filtro.index');
+    route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
 });
 
 Auth::routes();

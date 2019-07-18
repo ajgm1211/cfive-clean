@@ -33,7 +33,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation - Filter Surchergers - <strong style="color:#0b790b">{{ $company_ob->companyUser->name}}</strong>
+                        Importation - Filter Surchergers
                     </h3>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <div class="row">
                     <div class="col-md-12 order-1 order-xl-2 m--align-right">
                         <a  id="newmodal" class="">
-                            <button id="new" type="button"  onclick="AbrirModal('addSurchar',{{$id}})" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                            <button id="new" type="button"  onclick="AbrirModal('addSurchar',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                 Add New &nbsp;
                                 <i class="fa fa-plus"></i>
                             </button>
@@ -115,14 +115,14 @@
 
     function AbrirModal(action,id){
         if(action == "surchar-edit"){
-            var url = '{{ route("CompanyImportation.filtro.edit", ":id") }}';
+            var url = '{{ route("surcherger.filtro.edit", ":id") }}';
             url = url.replace(':id', id);
             $('#company-imp-body').load(url,function(){
                 $('#company-imp-modal').modal({show:true});
             });
         }
         if(action == "addSurchar"){
-            var url = '{{ route("CompanyImportation.filtro.add",":id")}}';
+            var url = '{{ route("surcherger.filtro.add",":id")}}';
             url = url.replace(':id', id);
             $('#company-imp-body').load(url,function(){
                 $('#company-imp-modal').modal({show:true});
@@ -133,7 +133,7 @@
     $(function() {
         $('#importationcompanyFiltros').DataTable({
             //serverSide: true,
-            ajax: '{!! route("CompanyImportation.show",$id) !!}',
+            ajax: '{!! route("surcherger.filtro.show") !!}',
             columns: [
                 { data: 'id', name: 'id'},
                 { data: 'name', name: 'name' },
@@ -165,7 +165,7 @@
             reverseButtons: true
         }).then(function(result){
             if (result.value) {
-                url='{!! route("CompanyImportation.filtro.destroy",":id") !!}';
+                url='{!! route("surcherger.filtro.destroy",":id") !!}';
                 url = url.replace(':id', id);
                 var token = $("meta[name='csrf-token']").attr("content");
                 $.ajax({
