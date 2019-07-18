@@ -476,6 +476,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
   Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
   Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
+  Route::get('excel/{id}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
   //LCL 
   Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
 
@@ -660,6 +661,12 @@ Route::middleware(['auth'])->prefix('Region')->group(function () {
 Route::middleware(['auth','role:administrator|data_entry'])->prefix('ManagerCarriers')->group(function(){
   Route::resource('managercarriers', 'CarriersController');
   Route::get('synchronousCarrier','CarriersController@synchronous')->name('synchronous.carrier');
+});
+
+Route::group(['prefix' => 'search', 'middleware' => ['auth']], function () {
+  
+  Route::get('list', 'SearchController@listar')->name('search.list');
+  
 });
 
 Route::resource('search', 'SearchController')->middleware('auth');
