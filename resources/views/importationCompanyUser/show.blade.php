@@ -33,7 +33,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation - Filter Surchergers
+                        Importation - Filter Surchergers - <strong style="color:#0b790b">{{ $company_ob->companyUser->name}}</strong>
                     </h3>
                 </div>
             </div>
