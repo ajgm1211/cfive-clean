@@ -358,13 +358,19 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var sum_total = 0;
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
             $(this).closest('table').find('.total_20').each(function(){
                 sum += parseFloat($( this).html());
             });
             $(this).closest('table').find('.total_'+type+'_20').html(sum);
-
+            
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_20').html())+parseFloat($(this).closest('div.rates').find('.total_origin_20').html())+parseFloat($(this).closest('div.rates').find('.total_destination_20').html());
+            
+            alert(sum_total);
+            $(this).closest('div.rates').find('.sum_total_20').html(sum_total);
+            
             if(!response) {
                 return "Unknown error!";
             }
