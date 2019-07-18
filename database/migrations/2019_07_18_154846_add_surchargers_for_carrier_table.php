@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCompaniesAutoImportationsTable extends Migration
+class AddSurchargersForCarrierTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddCompaniesAutoImportationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('companies_auto_importations', function (Blueprint $table) {
+        Schema::create('surchargers_for_carrier', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('status')->defautl(true);
-            $table->integer('company_user_id')->unsigned();
-            $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class AddCompaniesAutoImportationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies_auto_importations');
+        Schema::dropIfExists('surchargers_for_carrier');
     }
 }

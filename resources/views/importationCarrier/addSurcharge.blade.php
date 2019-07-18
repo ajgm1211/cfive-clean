@@ -1,21 +1,15 @@
 
 
     <!--begin::Form-->
-    {{ Form::open(['route' => 'CompanyImportation.store', 'method' => 'POST']) }}
+    {{ Form::open(['route' => 'surcherger.filtro.store', 'method' => 'POST']) }}
 
 
     <div class="m-portlet__body">
         <div class="form-group m-form__group row"> 
-            <div class="col-lg-7">
-                {!! Form::label('Company', 'Company') !!}
-                <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('company_user_id',$companies,null,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;']) }}
-                </div>
-
-            </div>
-            <div class="col-lg-3">
-                {!! Form::label('status', 'Status') !!}
-                {{ Form::select('status',[ 1 => 'Active', 0 => 'Inactive'],1,['id' => 'carrier','class'=>'m-select2-general form-control']) }}
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                {!! Form::label('Surcharger', 'Surcharger') !!}
+                {{ Form::text('surcharger',null,['id' => 'surcharger','class'=>' form-control']) }}
 
             </div>
         </div>
