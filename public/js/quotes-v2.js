@@ -359,18 +359,44 @@ $(document).ready(function() {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
             var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;
+
+            //Calculando total de la línea dinámico
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
+
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_20').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_20').html(sum);
-            
+
+            //Calculando total dinámico
             sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_20').html())+parseFloat($(this).closest('div.rates').find('.total_origin_20').html())+parseFloat($(this).closest('div.rates').find('.total_destination_20').html());
-            
-            alert(sum_total);
+
+            //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_20').html(sum_total);
-            
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -385,16 +411,46 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
             $(this).closest('tr').find('.total_20').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_20').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_20').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_20').html())+parseFloat($(this).closest('div.rates').find('.total_origin_20').html())+parseFloat($(this).closest('div.rates').find('.total_destination_20').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_20').html(sum_total);
+
 
             if(!response) {
                 return "Unknown error!";
@@ -410,16 +466,45 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40').html(sum_total);
 
             if(!response) {
                 return "Unknown error!";
@@ -435,16 +520,45 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
             $(this).closest('tr').find('.total_40').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40').html(sum_total);
 
             if(!response) {
                 return "Unknown error!";
@@ -460,17 +574,45 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
 
-
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40hc').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40hc').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40hc').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40hc').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40hc').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40hc').html(sum_total);
 
             if(!response) {
                 return "Unknown error!";
@@ -486,16 +628,45 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;            
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
             $(this).closest('tr').find('.total_40hc').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40hc').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40hc').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40hc').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40hc').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40hc').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40hc').html(sum_total);
 
             if(!response) {
                 return "Unknown error!";
@@ -511,16 +682,45 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;    
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40nor').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40nor').html(sum);
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40nor').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40nor').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40nor').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40nor').html(sum_total);
 
             if(!response) {
                 return "Unknown error!";
@@ -536,17 +736,46 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;             
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
             $(this).closest('tr').find('.total_40nor').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_40nor').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_40nor').html(sum);
-            
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_40nor').html())+parseFloat($(this).closest('div.rates').find('.total_origin_40nor').html())+parseFloat($(this).closest('div.rates').find('.total_destination_40nor').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_40nor').html(sum_total);
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -561,17 +790,46 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;            
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
 
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_45').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_45').html(sum);
-            
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_45').html())+parseFloat($(this).closest('div.rates').find('.total_origin_45').html())+parseFloat($(this).closest('div.rates').find('.total_destination_45').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_45').html(sum_total);
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -586,17 +844,46 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,    
         success: function(response, newValue) {
+            var type = $(this).attr('data-cargo-type');
+            var sum = 0;
+            var sum_total = 0;
+            var total = 0;
+            var total_currency = 0;            
 
             total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
             $(this).closest('tr').find('.total_45').html(total);
-            
-            var type = $(this).attr('data-cargo-type');
-            var sum = 0;            
+
+            //Conversión de monedas dinámica
             $(this).closest('table').find('.total_45').each(function(){
-                sum += parseFloat($( this).html());
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency);    
             });
+
+            //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_45').html(sum);
-            
+
+            //Calculando total dinámico
+            sum_total = parseFloat($(this).closest('div.rates').find('.total_freight_45').html())+parseFloat($(this).closest('div.rates').find('.total_origin_45').html())+parseFloat($(this).closest('div.rates').find('.total_destination_45').html());
+
+            //Mostrando total dinámico
+            $(this).closest('div.rates').find('.sum_total_45').html(sum_total);
+
 
             if(!response) {
                 return "Unknown error!";
@@ -960,6 +1247,28 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_freight_'+number).find('.total_freight_40nor').html(data.sum_total_40nor);
                 $('.total_freight_'+number).find('.total_freight_45').html('');
                 $('.total_freight_'+number).find('.total_freight_45').html(data.sum_total_45);
+
+                //Calculando total dinámico
+                sum_total_20 = parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_freight_20').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_origin_20').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_destination_20').html());
+
+                //Calculando total dinámico
+                sum_total_40 = parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_freight_40').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_origin_40').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_destination_40').html());
+
+                //Calculando total dinámico
+                sum_total_40hc = parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_freight_40hc').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_origin_40hc').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_destination_40hc').html());
+
+                //Calculando total dinámico
+                sum_total_40nor = parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_freight_40nor').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_origin_40nor').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_destination_40nor').html());
+
+                //Calculando total dinámico
+                sum_total_45 = parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_freight_45').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_origin_45').html())+parseFloat($('.total_freight_'+number).closest('div.rates').find('.total_destination_45').html());
+
+                //Mostrando total dinámico
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_20').html(sum_total_20);
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_40').html(sum_total_40);
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
             }
             if(type_id==2){
                 $('<tr style="height:40px;">'+
@@ -982,6 +1291,28 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_destination_'+number).find('.total_destination_40nor').html(data.sum_total_40nor);
                 $('.total_destination_'+number).find('.total_destination_45').html('');
                 $('.total_destination_'+number).find('.total_destination_45').html(data.sum_total_45);
+                
+                 //Calculando total dinámico
+                sum_total_20 = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_20').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_20').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_20').html());
+
+                //Calculando total dinámico
+                sum_total_40 = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_40').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_40').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_40').html());
+
+                //Calculando total dinámico
+                sum_total_40hc = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_40hc').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_40hc').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_40hc').html());
+
+                //Calculando total dinámico
+                sum_total_40nor = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_40nor').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_40nor').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_40nor').html());
+
+                //Calculando total dinámico
+                sum_total_45 = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_45').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_45').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_45').html());
+
+                //Mostrando total dinámico
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_20').html(sum_total_20);
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_40').html(sum_total_40);
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
             }
             if(type_id==1){
                 $('<tr style="height:40px;">'+
@@ -1004,6 +1335,28 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_origin_'+number).find('.total_origin_40nor').html(data.sum_total_40nor);
                 $('.total_origin_'+number).find('.total_origin_45').html('');
                 $('.total_origin_'+number).find('.total_origin_45').html(data.sum_total_45);
+                
+                 //Calculando total dinámico
+                sum_total_20 = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_20').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_20').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_20').html());
+
+                //Calculando total dinámico
+                sum_total_40 = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_40').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_40').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_40').html());
+
+                //Calculando total dinámico
+                sum_total_40hc = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_40hc').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_40hc').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_40hc').html());
+
+                //Calculando total dinámico
+                sum_total_40nor = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_40nor').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_40nor').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_40nor').html());
+
+                //Calculando total dinámico
+                sum_total_45 = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_45').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_45').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_45').html());
+
+                //Mostrando total dinámico
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_20').html(sum_total_20);
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_40').html(sum_total_40);
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
             }            
             //setTimeout(location.reload.bind(location), 3000);
         }
