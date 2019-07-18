@@ -21,6 +21,10 @@ Route::get('currency/{value}', function($value) {
     return \App\Currency::find($value);
 });
 
+Route::get('currency/alphacode/{value}', function($value) {
+    return \App\Currency::where('alphacode',$value)->first();
+});
+
 Route::get('airports/', function() {
     return \App\Airport::All();
 });
