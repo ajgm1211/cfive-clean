@@ -130,6 +130,51 @@ $(document).ready(function() {
         url:'/v2/quotes/lcl/charges/update',
         emptytext:0,
         success: function(response, newValue) {
+            var sum = 0;
+            var sum_total = 0;
+            var sub_total = 0;
+            var total_currency = 0;
+            if($(this).attr("data-name")=='units'){
+                value = (parseFloat(newValue) * parseFloat($(this).closest('tr').find('.price_per_unit').html())) + parseFloat($(this).closest('tr').find('.markup').html());
+                $(this).closest('tr').find('.total-amount').html(value);
+            }else if($(this).attr("data-name")=='price_per_unit'){
+                value = (parseFloat(newValue) * parseFloat($(this).closest('tr').find('.units').html())) + parseFloat($(this).closest('tr').find('.markup').html());
+                $(this).closest('tr').find('.total-amount').html(value);                
+            }else{
+                value = (parseFloat($(this).closest('tr').find('.price_per_unit').html()) * parseFloat($(this).closest('tr').find('.units').html())) + parseFloat(newValue);
+                $(this).closest('tr').find('.total-amount').html(value);                
+            }
+
+            $(this).closest('table').find('.total-amount').each(function(){
+                var value = parseFloat($(this).html());
+                var currency=$(this).closest('tr').find('.local_currency').html();
+                var currency_cfg = $("#currency_id").val();
+                $.ajax({
+                    url: '/api/currency/alphacode/'+currency,
+                    dataType: 'json',
+                    async: false,
+                    success: function (json) {
+
+                        if(currency_cfg+json.alphacode == json.api_code){
+                            total_currency = value / json.rates;
+                        }else{
+                            total_currency = value / json.rates_eur;
+                        }
+                        total_currency = total_currency.toFixed(2);
+                    }
+                });
+                sum += parseFloat(total_currency); 
+            });
+
+            $(this).closest('table').find('.sub_total').html(sum);
+            
+            $(this).closest('div.amount_charges').find('.sub_total').each(function(){
+                sub_total = parseFloat($(this).html());
+                sum_total += sub_total;
+            });
+            
+            //Mostrando total dinámico
+            $(this).closest('div.amount_charges').find('.sum_total_amount').html(sum_total.toFixed(2));
 
             if(!response) {
                 return "Unknown error!";
@@ -1291,8 +1336,8 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_destination_'+number).find('.total_destination_40nor').html(data.sum_total_40nor);
                 $('.total_destination_'+number).find('.total_destination_45').html('');
                 $('.total_destination_'+number).find('.total_destination_45').html(data.sum_total_45);
-                
-                 //Calculando total dinámico
+
+                //Calculando total dinámico
                 sum_total_20 = parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_freight_20').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_origin_20').html())+parseFloat($('.total_destination_'+number).closest('div.rates').find('.total_destination_20').html());
 
                 //Calculando total dinámico
@@ -1335,8 +1380,8 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_origin_'+number).find('.total_origin_40nor').html(data.sum_total_40nor);
                 $('.total_origin_'+number).find('.total_origin_45').html('');
                 $('.total_origin_'+number).find('.total_origin_45').html(data.sum_total_45);
-                
-                 //Calculando total dinámico
+
+                //Calculando total dinámico
                 sum_total_20 = parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_freight_20').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_origin_20').html())+parseFloat($('.total_origin_'+number).closest('div.rates').find('.total_destination_20').html());
 
                 //Calculando total dinámico
