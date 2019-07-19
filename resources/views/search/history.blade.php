@@ -83,9 +83,6 @@
                   <th title="delivery">
                     Delivery Type
                   </th>
-                  <th title="incoterm">
-                    Incoterm
-                  </th>
                   <th title="direction">
                     Direction
                   </th>
@@ -107,7 +104,7 @@
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
                   <td>{{ $search->pick_up_date }}</td>
-                  <td>{{ (@$search->incoterm->name != "" ) ? @$search->incoterm->name : "-"}} </td>
+                 
                   <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
                   <td>{{ $search->company->name }}</td>
                 </tr>
@@ -137,9 +134,7 @@
                   <th title="delivery">
                     Delivery Type
                   </th>
-                  <th title="incoterm">
-                    Incoterm
-                  </th>
+           
                   <th title="direction">
                     Direction
                   </th>
@@ -161,7 +156,7 @@
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
                   <td>{{ $search->pick_up_date }}</td>
-                  <td>{{ (@$search->incoterm->name != "" ) ? @$search->incoterm->name : "-"}} </td>
+                  
                   <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
                   <td>{{ $search->company->name }}</td>
                 </tr>
