@@ -359,7 +359,7 @@
                                             @if($v->surcharge_id!='')
                                                 <td>{{$v->surcharge->name}}</td>
                                             @else
-                                                <td>Ocean freight</td>
+                                                <td>{{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}</td>
                                             @endif
                                             @if($v->surcharge_id!='')
                                                 <td>{{$v->calculation_type->name}}</td>
