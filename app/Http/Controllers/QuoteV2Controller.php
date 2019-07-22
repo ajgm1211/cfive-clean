@@ -3575,7 +3575,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-    $companies->prepend('Select at option','');
+    $companies->prepend('Select at option','0');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
 
@@ -3633,7 +3633,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
-    $companies->prepend('Select at option','');
+    $companies->prepend('Please an option','0');
     $airlines = Airline::all()->pluck('name','id');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
@@ -4184,7 +4184,7 @@ class QuoteV2Controller extends Controller
 
     // Consulta base de datos rates
 
-    if($company_id != null ){
+    if($company_id != null || $company_id != 0 ){
       $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
     {
       $q->whereHas('contract_user_restriction', function($a) use($user_id){
