@@ -518,10 +518,7 @@
 
             </div><br>
             <div class="row">
-              <div class="col-lg-2">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
-              </div>
+          
               <div class="col-lg-2">
                 <label>Direction</label>
                 {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
