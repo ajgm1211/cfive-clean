@@ -2878,7 +2878,7 @@ class QuoteV2Controller extends Controller
 
       $payments = $this->getCompanyPayments($form->company_id_quote);
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
       $quote= QuoteV2::create($request->all());
 
 
@@ -3670,7 +3670,7 @@ class QuoteV2Controller extends Controller
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
     $mode = $request->mode;
-    $incoterm_id = $request->input('incoterm_id');
+   // $incoterm_id = $request->input('incoterm_id');
     $address =$request->input('origin_address')." ".$request->input('destination_address'); 
 
 
@@ -7169,7 +7169,7 @@ class QuoteV2Controller extends Controller
       $delivery_type = $request->input('delivery_type') ;
       $payments = $this->getCompanyPayments($form->company_id_quote);
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'LCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'incoterm_id' =>$form->incoterm_id  ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'total_quantity' => $form->total_quantity , 'total_weight' => $form->total_weight , 'total_volume' => $form->total_volume , 'chargeable_weight' => $form->chargeable_weight]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'LCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'total_quantity' => $form->total_quantity , 'total_weight' => $form->total_weight , 'total_volume' => $form->total_volume , 'chargeable_weight' => $form->chargeable_weight]);
       $quote= QuoteV2::create($request->all());
 
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
