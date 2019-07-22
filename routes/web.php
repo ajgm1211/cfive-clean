@@ -719,5 +719,10 @@ Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:adm
     route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
 });
 
+// Test Controller 
+Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
+    route::resource('TestApp','TestController');
+});
+
 Auth::routes();
 
