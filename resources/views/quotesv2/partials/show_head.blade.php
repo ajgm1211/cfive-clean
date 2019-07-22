@@ -228,10 +228,10 @@
                                     <br>
                                     <hr>
                                     <br>
-                                    <a class="btn btn-danger" id="cancel" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                    <a class="btn btn-danger" id="cancel" style="color:white;">
                                         Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
                                     </a>
-                                    <a class="btn btn-primary" id="update" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                    <a class="btn btn-primary" id="update" style="color:white;">
                                         Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
                                     </a>
                                 </div>
