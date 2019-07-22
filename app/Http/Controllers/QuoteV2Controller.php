@@ -3575,6 +3575,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
+    $companies->prepend('Select at option','');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
 
@@ -3595,6 +3596,7 @@ class QuoteV2Controller extends Controller
     $chargeDestination= 'true';
     $chargeFreight= 'true';
     $form['equipment'] = array('20','40','40HC');
+    $form['company_id_quote'] ='';
 
     return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','form'));
 
@@ -3631,6 +3633,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
+    $companies->prepend('Select at option','');
     $airlines = Airline::all()->pluck('name','id');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
@@ -3670,7 +3673,7 @@ class QuoteV2Controller extends Controller
     $modality_inland = $request->modality;
     $company_id = $request->input('company_id_quote');
     $mode = $request->mode;
-   // $incoterm_id = $request->input('incoterm_id');
+    // $incoterm_id = $request->input('incoterm_id');
     $address =$request->input('origin_address')." ".$request->input('destination_address'); 
 
 
@@ -4180,7 +4183,9 @@ class QuoteV2Controller extends Controller
 
 
     // Consulta base de datos rates
-    $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
+
+    if($company_id != null ){
+      $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$user_id,$company_user_id,$company_id)
     {
       $q->whereHas('contract_user_restriction', function($a) use($user_id){
         $a->where('user_id', '=',$user_id);
@@ -4191,8 +4196,24 @@ class QuoteV2Controller extends Controller
                      $b->where('company_id', '=',$company_id);
                    })->orDoesntHave('contract_company_restriction');
                  })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
-    });
+        $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+      });
+    }else{
+
+
+      $arreglo = Rate::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q){
+        $q->doesnthave('contract_user_restriction');
+      })->whereHas('contract', function($q){
+        $q->doesnthave('contract_company_restriction');
+      })->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+        $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id','=',$company_user_id);
+      });
+
+
+
+    }
+
+
     $arreglo = $arreglo->get();
 
     $formulario = $request;
@@ -4283,7 +4304,7 @@ class QuoteV2Controller extends Controller
 
           $array20T = array_merge($array20Detail,$markup20);
           $arregloRate = array_merge($array20T,$arregloRate);
-     
+
           //Total 
           $totales['20F'] =  $tot_20_F;
 
@@ -5030,8 +5051,9 @@ class QuoteV2Controller extends Controller
     $chargeDestination = ($chargesDestination != null ) ? true : false;
     $chargeFreight = ($chargesFreight != null ) ? true : false;
 
+
     $arreglo  =  $arreglo->sortBy('total20');
-    
+
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
