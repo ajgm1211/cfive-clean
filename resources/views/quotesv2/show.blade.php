@@ -30,7 +30,6 @@
     margin: 0 !important;
     border-left: 1px solid #eee;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 0 20px !important;
   }

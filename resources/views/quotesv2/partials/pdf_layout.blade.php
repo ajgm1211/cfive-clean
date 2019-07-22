@@ -122,14 +122,14 @@
               </div>
             </div>
               
-            <div class="col-md-3 show_logo">
+            <!--<div class="col-md-3 show_logo">
               <div class="form-check">
                 <input class="form-check-input pdf-feature check" type="checkbox" name="show_gdp_logo" value="1" id="show_gdp_logo" data-quote-id="{{$quote->id}}" data-name="show_gdp_logo" data-type="checkbox" {{$quote->pdf_option->show_gdp_logo==1 ? 'checked':''}}>
                 <label class="form-check-label title-quote input_form" for="show_gdp_logo">
                   Show GDP logo (Only for pharma charges)
                 </label>
               </div>
-            </div>
+            </div>-->
 
           </div>
         </div>
@@ -172,14 +172,14 @@
               </div>
             </div>
               
-            <div class="col-md-3 show_logo">
+            <!--<div class="col-md-3 show_logo">
               <div class="form-check">
                 <input class="form-check-input pdf-feature check" type="checkbox" name="show_gdp_logo" value="1" id="show_gdp_logo" data-quote-id="{{$quote->id}}" data-name="show_gdp_logo" data-type="checkbox" {{$quote->pdf_option->show_gdp_logo==1 ? 'checked':''}}>
                 <label class="form-check-label title-quote input_form" for="show_gdp_logo">
                   Show GDP logo (Only for pharma charges)
                 </label>
               </div>
-            </div>
+            </div>-->
 
           </div>
         </div>

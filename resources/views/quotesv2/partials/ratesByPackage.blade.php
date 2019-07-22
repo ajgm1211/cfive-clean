@@ -14,7 +14,7 @@
                 <div class="tab-content">
                   <div class="flex-list" style=" margin-bottom:-30px; margin-top: 0;">
                     <ul >
-                      <li style="max-width: 120px;">                                  
+                      <li class="m-width-120" style="border-left:none;">                                  
                         @if($quote->type!='AIR')
                           @if(isset($rate->carrier->image) && $rate->carrier->image!='')
                           <img src="{{ url('imgcarrier/'.$rate->carrier->image) }}"  class="img img-responsive" width="50" height="auto" style="margin-top: 10px;" />
@@ -25,24 +25,24 @@
                           @endif
                         @endif
                       </li>
-                      <li class="size-12px long-text" style="min-width: 230px; max-width: 230px;"><b>POL:</b> &nbsp;@if($quote->type=='LCL') {{$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_airport->display_name}} @endif &nbsp;
+                      <li class="size-12px long-text m-width-200"><b>POL:</b> &nbsp;@if($quote->type=='LCL') {{$rate->origin_port->name.', '.$rate->origin_port->code}}  @else {{$rate->origin_airport->display_name}} @endif &nbsp;
                         @if($quote->type!='AIR')
                         <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->origin_country_code}}.svg"/>
                         @endif
                       </li>
-                      <li class="size-12px long-text" style="min-width: 230px; max-width: 230px;"><b>POD:</b> &nbsp;@if($quote->type=='LCL') {{$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_airport->display_name}} @endif &nbsp;
+                      <li class="size-12px long-text m-width-200"><b>POD:</b> &nbsp;@if($quote->type=='LCL') {{$rate->destination_port->name.', '.$rate->destination_port->code}} @else {{$rate->destination_airport->display_name}} @endif &nbsp;
                         @if($quote->type!='AIR')
                         <img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/>
                         @endif
                       </li>
-                      <li class="size-12px long-text" style="min-width: 230px; max-width: 230px;"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
-                      <li class="size-12px long-text" style="min-width: 180px; max-width: 180px;"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
-                      <li class="size-12px long-text" style="min-width: 150px; max-width: 150px;"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
-                      <li class="size-12px long-text" style="min-width: 150px; max-width: 150px;"><b>Via:</b> &nbsp;{{$rate->via}}</li>
-                      <li class="size-12px no-border-left d-flex justify-content-end">
+                      <li class="size-12px long-text m-width-200 desktop"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
+                      <li class="size-12px long-text m-width-100 desktop"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
+                      <li class="size-12px long-text m-width-50 desktop"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
+                      <li class="size-12px long-text m-width-100 desktop"><b>Via:</b> &nbsp;{{$rate->via}}</li>
+                      <li class="size-12px no-border-left d-flex justify-content-end m-width-50">
                         <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
                       </li>
-                      <li class="size-12px">
+                      <li class="size-12px m-width-100">
                         <button onclick="AbrirModal('edit',{{$rate->id}})" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit">
                           <i class="la la-edit"></i>
                         </button>
@@ -100,7 +100,7 @@
                                         <a href="#" class="editable-lcl-air td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{@$item->id}}" data-title="Select surcharge"></a>
                                       @else
                                         <input name="type" value="2" class="form-control type" type="hidden" />
-                                        Ocean freight
+                                        {{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}
                                       @endif
                                     </td>
                                     <td class="tds">
