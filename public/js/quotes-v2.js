@@ -167,12 +167,12 @@ $(document).ready(function() {
             });
 
             $(this).closest('table').find('.sub_total').html(sum);
-            
+
             $(this).closest('div.amount_charges').find('.sub_total').each(function(){
                 sub_total = parseFloat($(this).html());
                 sum_total += sub_total;
             });
-            
+
             //Mostrando total dinámico
             $(this).closest('div.amount_charges').find('.sum_total_amount').html(sum_total.toFixed(2));
 
@@ -403,12 +403,26 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_c20 = 0;
+            var sum_c20 = 0;
             var sum_total = 0;
             var total = 0;
             var total_currency = 0;
+            var markup_m20=parseFloat($(this).closest('tr').find('.markup_20').html());
+
+            if(markup_m20==''){
+                markup_m20=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
 
             //Calculando total de la línea dinámico
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
+            total =  parseFloat(newValue) + markup_m20;
             $(this).closest('tr').find('.total_20').html(total);
 
             //Conversión de monedas dinámica
@@ -441,6 +455,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_20').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-amount-20').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_c20 = parseFloat($(this).html());
+                }else{
+                    amount_c20 = 0;
+                }
+                sum_c20 += amount_c20;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_amount_20').html(sum_c20);
 
             if(!response) {
                 return "Unknown error!";
@@ -458,11 +485,25 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_m20 = 0;
+            var sum_m20 = 0;            
             var sum_total = 0;
             var total = 0;
             var total_currency = 0;
+            var amount_c20=parseFloat($(this).closest('tr').find('.amount_20').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
+            if(amount_c20==''){
+                amount_c20=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }            
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + amount_c20;
             $(this).closest('tr').find('.total_20').html(total);
 
             //Conversión de monedas dinámica
@@ -496,6 +537,18 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_20').html(sum_total);
 
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-markup-20').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_m20 = parseFloat($(this).html());
+                }else{
+                    amount_m20 = 0;
+                }
+                sum_m20 += amount_m20;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_markup_20').html(sum_m20);
 
             if(!response) {
                 return "Unknown error!";
@@ -513,11 +566,26 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_c40 = 0;
+            var sum_c40 = 0;
             var sum_total = 0;
             var total = 0;
             var total_currency = 0;
+            var markup_m40=parseFloat($(this).closest('tr').find('.markup_40').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
+            if(markup_m40==''){
+                markup_m40=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + markup_m40;
             $(this).closest('tr').find('.total_40').html(total);
 
             //Conversión de monedas dinámica
@@ -550,6 +618,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-amount-40').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_c40 = parseFloat($(this).html());
+                }else{
+                    amount_c40 = 0;
+                }
+                sum_c40 += amount_c40;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_amount_40').html(sum_c40);
 
             if(!response) {
                 return "Unknown error!";
@@ -567,11 +648,25 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_m40 = 0;
+            var sum_m40 = 0;             
             var sum_total = 0;
             var total = 0;
             var total_currency = 0;
+            var amount_c40=parseFloat($(this).closest('tr').find('.amount_40').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
+            if(amount_c40==''){
+                amount_c40=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }            
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + amount_c40;            
             $(this).closest('tr').find('.total_40').html(total);
 
             //Conversión de monedas dinámica
@@ -605,6 +700,19 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40').html(sum_total);
 
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-markup-40').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_m40 = parseFloat($(this).html());
+                }else{
+                    amount_m40 = 0;
+                }
+                sum_m40 += amount_m40;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_markup_40').html(sum_m40);            
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -621,11 +729,26 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_c40hc = 0;
+            var sum_c40hc = 0;
             var sum_total = 0;
             var total = 0;
             var total_currency = 0;
+            var markup_m40hc=parseFloat($(this).closest('tr').find('.markup_40hc').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+            if(markup_m40hc==''){
+                markup_m40hc=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + markup_m40hc;
             $(this).closest('tr').find('.total_40hc').html(total);
 
             //Conversión de monedas dinámica
@@ -658,6 +781,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40hc').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-amount-40hc').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_c40hc = parseFloat($(this).html());
+                }else{
+                    amount_c40hc = 0;
+                }
+                sum_c40hc += amount_c40hc;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_amount_40hc').html(sum_c40hc);            
 
             if(!response) {
                 return "Unknown error!";
@@ -675,11 +811,25 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_m40hc = 0;
+            var sum_m40hc = 0;             
             var sum_total = 0;
             var total = 0;
-            var total_currency = 0;            
+            var total_currency = 0;
+            var amount_c40hc=parseFloat($(this).closest('tr').find('.amount_40hc').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
+            if(amount_c40hc==''){
+                amount_c40hc=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }            
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + amount_c40hc;
             $(this).closest('tr').find('.total_40hc').html(total);
 
             //Conversión de monedas dinámica
@@ -713,6 +863,19 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40hc').html(sum_total);
 
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-markup-40hc').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_m40hc = parseFloat($(this).html());
+                }else{
+                    amount_m40hc = 0;
+                }
+                sum_m40hc += amount_m40hc;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_markup_40hc').html(sum_m40hc);               
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -729,11 +892,27 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_c40nor = 0;
+            var sum_c40nor = 0;
             var sum_total = 0;
             var total = 0;
-            var total_currency = 0;    
+            var total_currency = 0;
+            var markup_m40nor=parseFloat($(this).closest('tr').find('.markup_40nor').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+            
+            if(markup_m40nor==''){
+                markup_m40nor=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+            console.log(newValue);
+            console.log(markup_m40nor);
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + markup_m40nor;
             $(this).closest('tr').find('.total_40nor').html(total);
 
             //Conversión de monedas dinámica
@@ -766,6 +945,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40nor').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-amount-40nor').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_c40nor = parseFloat($(this).html());
+                }else{
+                  amount_c40nor = 0;  
+                }
+                sum_c40nor += amount_c40nor;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_amount_40nor').html(sum_c40nor);            
 
             if(!response) {
                 return "Unknown error!";
@@ -783,11 +975,28 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_m40nor = 0;
+            var sum_m40nor = 0;             
             var sum_total = 0;
             var total = 0;
-            var total_currency = 0;             
+            var total_currency = 0;
+            var amount_c40nor=parseFloat($(this).closest('tr').find('.amount_40nor').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            if(amount_c40nor==''){
+                amount_c40nor=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+            console.log(newValue);
+            console.log(amount_c40nor);
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + amount_c40nor;
+
             $(this).closest('tr').find('.total_40nor').html(total);
 
             //Conversión de monedas dinámica
@@ -821,6 +1030,20 @@ $(document).ready(function() {
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_40nor').html(sum_total);
 
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-markup-40nor').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_m40nor = parseFloat($(this).html());
+                }else{
+                    amount_m40nor=0;
+                }
+
+                sum_m40nor += amount_m40nor;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_markup_40nor').html(sum_m40nor);             
+
             if(!response) {
                 return "Unknown error!";
             }
@@ -837,11 +1060,26 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_c45 = 0;
+            var sum_c45 = 0;
             var sum_total = 0;
             var total = 0;
-            var total_currency = 0;            
+            var total_currency = 0;
+            var markup_m45=parseFloat($(this).closest('tr').find('.markup_45').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
+            if(markup_m45==''){
+                markup_m45=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + markup_m45;
             $(this).closest('tr').find('.total_45').html(total);
 
             //Conversión de monedas dinámica
@@ -874,6 +1112,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_45').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-amount-45').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_c45 = parseFloat($(this).html());
+                }else{
+                    amount_c45 = 0;
+                }
+                sum_c45 += amount_c45;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_amount_45').html(sum_c45);              
 
             if(!response) {
                 return "Unknown error!";
@@ -891,11 +1142,25 @@ $(document).ready(function() {
         success: function(response, newValue) {
             var type = $(this).attr('data-cargo-type');
             var sum = 0;
+            var amount_m45 = 0;
+            var sum_m45 = 0;             
             var sum_total = 0;
             var total = 0;
-            var total_currency = 0;            
+            var total_currency = 0;
+            var amount_c45=parseFloat($(this).closest('tr').find('.amount_45').html());
 
-            total =  parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
+            if(amount_c45==''){
+                amount_c45=0;
+            }
+
+            if(newValue==''){
+                newValue=0;
+            }            
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total =  parseFloat(newValue) + amount_c45;
             $(this).closest('tr').find('.total_45').html(total);
 
             //Conversión de monedas dinámica
@@ -928,6 +1193,19 @@ $(document).ready(function() {
 
             //Mostrando total dinámico
             $(this).closest('div.rates').find('.sum_total_45').html(sum_total);
+
+            //Calculando sub total de gastos
+            $(this).closest('div.rates').find('.editable-markup-45').each(function(){
+                if(parseFloat($(this).html())){
+                    amount_m45 = parseFloat($(this).html());
+                }else{
+                    amount_m45 = 0;
+                }
+                sum_m45 += amount_m45;
+            });
+
+            //Mostrando sub total de gastos
+            $(this).closest('div.rates').find('.sum_total_markup_45').html(sum_m45);             
 
 
             if(!response) {
