@@ -72,7 +72,7 @@
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
             </div>
         @endif
-        @if($quote->gdp==1 && $quote->pdf_option->show_gdp_logo==1)
+        @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1)
             <br>
             <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="115" height="auto">
             <br>
