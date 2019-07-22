@@ -4268,7 +4268,7 @@ class QuoteV2Controller extends Controller
       foreach($equipment as $containers){
         //Calculo para los diferentes tipos de contenedores
         if($containers == '20'){
-          $markup20 = $this->freightMarkupsFCL($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers,$data->currency->id);
+          $markup20 = $this->freightMarkups($freighPercentage,$freighAmmount,$freighMarkup,$data->twuenty,$typeCurrency,$containers);
 
           // dd($markup20);
 
@@ -4278,11 +4278,12 @@ class QuoteV2Controller extends Controller
           $array_20_save = array('c20' => $data->twuenty);
           $arregloRateSave['rate']  = array_merge($array_20_save,$arregloRateSave['rate']);
           // Markups
-          $array_20_markup =  array('m20' => $markup20['montoMarkupO20']);
+          $array_20_markup =  array('m20' => $markup20['markup20']);
           $arregloRateSave['markups']  = array_merge($array_20_markup,$arregloRateSave['markups']);
 
           $array20T = array_merge($array20Detail,$markup20);
           $arregloRate = array_merge($array20T,$arregloRate);
+     
           //Total 
           $totales['20F'] =  $tot_20_F;
 
@@ -5030,6 +5031,7 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null ) ? true : false;
 
     $arreglo  =  $arreglo->sortBy('total20');
+    
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
 
