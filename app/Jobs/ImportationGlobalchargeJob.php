@@ -4681,7 +4681,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
         $FileTmp = FileTmpGlobalcharge::where('name_file','=',$NameFile)->delete();
 
         $userNotifique = User::find($this->UserId);
-        $message = 'The file imported was processed :' . $account->id;
+        $message = 'The file imported was processed :' . $requestobj['account_id'];
         $userNotifique->notify(new SlackNotification($message));
         $userNotifique->notify(new N_general($userNotifique,$message)); 
 

@@ -257,7 +257,7 @@ class NewContractRequestsController extends Controller
             $request->session()->flash('message.content', 'Your request was created');
             return redirect()->route('contracts.index');*/
             //return redirect()->route('RequestImportation.indexListClient');
-            dd($request->all());
+            //dd($request->all());
         } else {
             /*$request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
