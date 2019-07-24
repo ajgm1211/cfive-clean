@@ -29,10 +29,10 @@
             <div class="row">
               <div class="col-md-12 text-center" id="update_terms" hidden>
                 <br>
-                <a class="btn btn-danger" id="cancel-terms" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                <a class="btn btn-danger" id="cancel-terms">
                   Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
                 </a>
-                <a class="btn btn-primary" id="update-terms" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                <a class="btn btn-primary" id="update-terms">
                   Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
                 </a>
                 <br>

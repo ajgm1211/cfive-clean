@@ -10,7 +10,7 @@
     </style>
   </head>
   <body style="background-color: white; font-size: 11px;">
-    <header class="clearfix">
+    <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
         <div id="logo">
             @if($user->companyUser->logo!='')
             <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:25px">
@@ -30,8 +30,8 @@
             </div>
             @endif
         </div>
+        <hr>
     </header>
-    <hr>
     <main>
         <div id="details" class="clearfix details">
             <div class="client" style="line-height: 10px;">
@@ -71,7 +71,7 @@
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif</p>
             </div>
         @endif
-        @if($quote->gdp==1 && $quote->pdf_option->show_gdp_logo==1)
+        @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1)
             <br>
             <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="115" height="auto">
             <br>
@@ -359,7 +359,7 @@
                                             @if($v->surcharge_id!='')
                                                 <td>{{$v->surcharge->name}}</td>
                                             @else
-                                                <td>Ocean freight</td>
+                                                <td>{{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}</td>
                                             @endif
                                             @if($v->surcharge_id!='')
                                                 <td>{{$v->calculation_type->name}}</td>
