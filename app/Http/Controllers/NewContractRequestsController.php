@@ -10,10 +10,12 @@ use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
+use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use App\CarrierautoImportation;
 use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
@@ -230,14 +232,15 @@ class NewContractRequestsController extends Controller
             $Ncontract->contract_id     = $contract->id;
             //$Ncontract->contract_id     = 100;
             $Ncontract->save();
-
-            foreach($request->carrierM as $carrierVal){
+            $carrier_arr = $request->carrierM;
+            foreach($carrier_arr as $carrierVal){
                 RequetsCarrierFcl::create([
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id
                 ]);
             }
-
+            
+            
             ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -258,6 +261,14 @@ class NewContractRequestsController extends Controller
             return redirect()->route('contracts.index');*/
             //return redirect()->route('RequestImportation.indexListClient');
             //dd($request->all());
+            /*
+            if(count($carrier_arr) == 1){
+                $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($carrier_arr) {
+                    $query->whereIn('carrier_id',$carrier_arr);
+                })->where('status',1)->get();
+                dd($autoImp);
+            }*/
+            
         } else {
             /*$request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
