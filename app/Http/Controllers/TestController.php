@@ -16,34 +16,19 @@ class TestController extends Controller
     {
         $client = new Client(['base_uri' => 'http://contractsai/']);
         // Send a request to https://foo.com/api/test
-
-        $response = $client->request('GET','ConverterFile/CFIndex',[
-            'form_params' => [
-                                    'email' => 'admin@example.com'
-                                ]
-        ]);
-
-        /*$client = new Client();
-        $response = $client->post($event->data['auth_post'].'oauth/token', [
-            'form_params' => [
-                'client_id' => $event->data['client_id'],
-                // The secret generated when you ran: php artisan passport:install
-                'client_secret' => $event->data['client_secret'],
-                'grant_type' => 'password',
-                'username' => $event->data['user_name'],
-                'password' => $event->data['password'],
-                'scope' => '*',
-            ]
-        ]);
-        $auth = json_decode((string)$response->getBody());
-        $response = $client->get($event->data['auth_post'].$event->data['url_get'], [
+        //$response = $client->get('login?email=admin@example.com&password=secret');
+        //$auth = json_decode((string)$response->getBody());
+        $response = $client->request('GET','ConverterFile/CFIndex', [
             'headers' => [
-                'Authorization' => 'Bearer '.$auth->access_token,
+                //'Authorization' => $auth->api_key,
+                'Authorization' => 'Bearer VDAxaU9KRDFsd1JvWHRSOFFjUGtJMGtuWWRZTUtXRWprWkxFV0cyOQ==',
+                'Accept'        => 'application/json',
             ]
-        ]);*/
+        ]);
         $dataGen = json_decode($response->getBody()->getContents(),true);
-        //return $dataGen;
         dd($dataGen);
+        return $dataGen;
+        //dd($dataGen);
     }
 
     /**
