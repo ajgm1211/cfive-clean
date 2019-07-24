@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\QuotesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\AutomaticRate;
 use App\AutomaticInland;
 use App\AutomaticInlandLclAir;
