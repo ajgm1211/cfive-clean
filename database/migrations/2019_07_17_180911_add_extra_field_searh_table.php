@@ -18,12 +18,10 @@ class AddExtraFieldSearhTable extends Migration
       $table->json('equipment')->nullable()->after('pick_up_date');
       $table->string('delivery')->nullable()->after('equipment');
       $table->string('direction')->nullable()->after('delivery');
-      $table->string('incoterm')->nullable()->after('direction');
-      $table->enum('type', ['LCL', 'FCL'])->nullable()->after('incoterm');;
-      $table->integer('incoterm_id')->unsigned()->nullable()->after('type');
-      $table->integer('company_user_id')->unsigned()->nullable()->after('incoterm_id');
+      $table->enum('type', ['LCL', 'FCL'])->nullable()->after('direction');;
+      $table->integer('company_user_id')->unsigned()->nullable()->after('type');
       $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
-      $table->foreign('incoterm_id')->references('id')->on('incoterms')->onDelete('cascade');
+      
 
     });
   }
