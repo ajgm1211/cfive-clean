@@ -62,7 +62,7 @@
                                             </div>
                                             <div class="col-md-12 thead freight_box">
                                                 <div class="table-responsive">
-                                                    <table class="table table-sm table-bordered table-hover table color-blue text-center">
+                                                    <table class="table table-sm table-bordered table-hover charges color-blue text-center">
                                                         <thead class="title-quote text-center header-table">
                                                             <tr style="height: 40px;">
                                                                 <td class="td-table" style="padding-left: 30px">Charge</td>
@@ -219,10 +219,10 @@
                                                         </thead>
                                                         <tbody style="background-color: white;">
                                                             @php
-                                                            $a=0;
-                                                            $total_origin_units=0;
-                                                            $total_origin_rates=0;
-                                                            $total_origin_markups=0;
+                                                                $a=0;
+                                                                $total_origin_units=0;
+                                                                $total_origin_rates=0;
+                                                                $total_origin_markups=0;
                                                             @endphp
                                                             @foreach($rate->charge_lcl_air as $item)
                                                             @if($item->type_id==1)
