@@ -133,6 +133,8 @@ $(document).ready(function() {
             var sum = 0;
             var sum_total = 0;
             var sub_total = 0;
+            var sub_total_markup = 0;
+            var sum_total_markup = 0;
             var total_currency = 0;
             if($(this).attr("data-name")=='units'){
                 value = (parseFloat(newValue) * parseFloat($(this).closest('tr').find('.price_per_unit').html())) + parseFloat($(this).closest('tr').find('.markup').html());
@@ -140,10 +142,12 @@ $(document).ready(function() {
             }else if($(this).attr("data-name")=='price_per_unit'){
                 value = (parseFloat(newValue) * parseFloat($(this).closest('tr').find('.units').html())) + parseFloat($(this).closest('tr').find('.markup').html());
                 $(this).closest('tr').find('.total-amount').html(value);                
-            }else{
+            }else if($(this).attr("data-name")=='markup'){
                 value = (parseFloat($(this).closest('tr').find('.price_per_unit').html()) * parseFloat($(this).closest('tr').find('.units').html())) + parseFloat(newValue);
                 $(this).closest('tr').find('.total-amount').html(value);                
             }
+
+            $(this).editable('setValue', newValue);                       
 
             $(this).closest('table').find('.total-amount').each(function(){
                 var value = parseFloat($(this).html());
@@ -169,12 +173,23 @@ $(document).ready(function() {
             $(this).closest('table').find('.sub_total').html(sum);
 
             $(this).closest('div.amount_charges').find('.sub_total').each(function(){
-                sub_total = parseFloat($(this).html());
-                sum_total += sub_total;
+                if($(this).html()){
+                    sub_total = parseFloat($(this).html());
+                    sum_total += sub_total;
+                }
             });
 
             //Mostrando total dinámico
             $(this).closest('div.amount_charges').find('.sum_total_amount').html(sum_total.toFixed(2));
+
+            $(this).closest('div.amount_charges').find('.markup').each(function(){
+                if($(this).html()){
+                    sub_total_markup = parseFloat($(this).html());
+                    sum_total_markup += sub_total_markup;
+                }
+            });
+
+            $(this).closest('div.amount_charges').find('.sum_total_markup').html(sum_total_markup.toFixed(2));
 
             if(!response) {
                 return "Unknown error!";
@@ -901,7 +916,7 @@ $(document).ready(function() {
 
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
-            
+
             if(markup_m40nor==''){
                 markup_m40nor=0;
             }
@@ -951,7 +966,7 @@ $(document).ready(function() {
                 if(parseFloat($(this).html())){
                     amount_c40nor = parseFloat($(this).html());
                 }else{
-                  amount_c40nor = 0;  
+                    amount_c40nor = 0;  
                 }
                 sum_c40nor += amount_c40nor;
             });
@@ -1421,7 +1436,7 @@ $(document).ready(function() {
     });
 });
 
-//Add rates lcl
+//Guardar Rates LCL/AIR
 $(document).on('click', '.store_charge_lcl', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
@@ -1434,7 +1449,33 @@ $(document).on('click', '.store_charge_lcl', function () {
     var currency_id = $(this).closest("tr").find(".currency_id").val();
     var number = $(this).closest("tr").find(".number").val();
     var theElement = $(this);
+    var sum = 0;
+    
+    $(this).closest("table").find('.total-amount').each(function(){
+        var sub_total = parseFloat($(this).html());
+        console.log(sub_total);
+        var currency=$(this).closest('tr').find('.local_currency').html();
+        var currency_cfg = $("#currency_id").val();
+        $.ajax({
+            url: '/api/currency/alphacode/'+currency,
+            dataType: 'json',
+            async: false,
+            success: function (json) {
 
+                if(currency_cfg+json.alphacode == json.api_code){
+                    total_currency = sub_total / json.rates;
+                }else{
+                    total_currency = sub_total / json.rates_eur;
+                }
+                total_currency = total_currency.toFixed(2);
+            }
+        });
+        sum += parseFloat(total_currency);
+    });
+
+    //Subtotal dinámico
+    $(this).closest('table').find('.td_sum_total').html(sum+parseFloat(total));
+    
     $.ajax({
         type: 'POST',
         url: '/v2/quotes/lcl/store/charge',
@@ -1457,44 +1498,46 @@ $(document).on('click', '.store_charge_lcl', function () {
                     'success'
                 )
                 $(theElement).closest('tr').remove();
+                //Agregar nuevo tr en freight
                 if(data.type==3){
                     $('<tr style="height:40px;">'+
                       '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
                       '</tr>').insertBefore('.total_freight_'+number);
-                }else if(data.type==2){
+                }else if(data.type==2){ //Agregar nuevo tr en destination
                     $('<tr style="height:40px;">'+
                       '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
                       '</tr>').insertBefore('.total_destination_'+number);
-                }else if(data.type==1){
+                }else if(data.type==1){ //Agregar nuevo tr en origin
                     $('<tr style="height:40px;">'+
                       '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
                       '</tr>').insertBefore('.total_origin_'+number);
                 }
+
             }
             //setTimeout(location.reload.bind(location), 3000);
         }
     });
 });
 
-//Add rates
+//Guardar rates FCL
 $(document).on('click', '.store_charge', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
     var number = $(this).closest("tr").find(".number").val();
@@ -2592,17 +2635,16 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     });
 });
 
-$(document).on("change keyup keydown", ".total_2", function() {
+$(document).on("change", ".total_2", function() {
     var sum = 0;
     var value = 0;
-    $(".total_2").each(function(){
-        value = Number($(this).closest('tr').find('.total_2').val());
+    $(this).each(function(){
+        value = Number($(this).closest('table').find('.total-amount').html());
         sum += value;
     });
     sum_total= Number($(this).closest('div').find('.sum_total').val())+Number(sum);
-    $(this).closest('div').find('.td_sum_total').html('');
     $(this).closest('div').find('.td_sum_total').html(sum_total);
-    console.log(sum_total);
+
 });
 
 $( document ).ready(function() {
