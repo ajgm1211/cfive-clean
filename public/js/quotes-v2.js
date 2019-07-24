@@ -2634,7 +2634,7 @@ $(document).on("change keyup keydown", ".units, .price_per_unit, .markup", funct
     });
 });
 
-$(document).on("change", ".total_2", function() {
+$(document).on("change", ".total_22", function() {
     var sum = 0;
     var value = 0;
     $(this).each(function(){
