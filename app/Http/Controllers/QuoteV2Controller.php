@@ -2048,7 +2048,11 @@ class QuoteV2Controller extends Controller
                                 }
 
                                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-                                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                                if($value->units>0){
+                                    $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                                }else{
+                                    $value->rate=0;
+                                }
                                 $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
 
                             }
@@ -2089,8 +2093,11 @@ class QuoteV2Controller extends Controller
                                     $typeCurrency =  $currency_cfg->alphacode;
                                 }
                                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
-
-                                $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                                if($value->units>0){
+                                    $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                                }else{
+                                    $value->rate=0;
+                                }
                                 $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                             }
                         } 

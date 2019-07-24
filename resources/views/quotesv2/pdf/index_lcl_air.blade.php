@@ -10,7 +10,7 @@
     </style>
   </head>
   <body style="background-color: white; font-size: 11px;">
-    <header class="clearfix">
+    <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
         <div id="logo">
             @if($user->companyUser->logo!='')
             <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:25px">
@@ -30,8 +30,8 @@
             </div>
             @endif
         </div>
+        <hr>
     </header>
-    <hr>
     <main>
         <div id="details" class="clearfix details">
             <div class="client" style="line-height: 10px;">
