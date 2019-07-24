@@ -8522,7 +8522,10 @@ class QuoteV2Controller extends Controller
         //  $event->event_searchRate();
 
     }
-
+    
+    /**
+     * Descargar archivo .xlsx con listado de Cotizaciones
+     */
     public function downloadQuotes(){
         //return Excel::download(new QuotesExport, 'quotes.xlsx');
         $company_user_id = \Auth::user()->company_user_id;
@@ -8585,6 +8588,7 @@ class QuoteV2Controller extends Controller
                 foreach($quotes as $quote) {
                     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
                     $origin = '';
+                    $incoterm = '';
                     foreach($rates as $rate){
                         if($rate->origin_port_id!=''){
                             $origin.=$rate->origin_port->name.'|';
