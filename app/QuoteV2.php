@@ -67,10 +67,10 @@ class QuoteV2 extends Model
         return $this->hasMany('App\PaymentCondition','id','quote_id');
     }
 
-    public function terms()
+    /*public function terms()
     {
         return $this->hasMany('App\TermsAndCondition','id','quote_id');
-    }
+    }*/
 
     public function rate()
     {
