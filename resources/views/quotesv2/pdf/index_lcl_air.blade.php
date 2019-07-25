@@ -791,7 +791,7 @@
             </table>
         </div>
         @endif
-        @if($quote->terms!='')
+        @if($quote->terms_and_conditions!='')
              <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
