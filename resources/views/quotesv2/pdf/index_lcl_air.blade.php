@@ -761,7 +761,7 @@
             $i=0;
         ?>
         @foreach($rates as $rate)
-            @if($rate->remarks != '')
+            @if($rate->remarks != '' && $rate->remarks!='<br>')
                 <?php
                     $i++;
                 ?>
