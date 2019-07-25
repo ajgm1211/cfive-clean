@@ -2896,7 +2896,7 @@ class QuoteV2Controller extends Controller
           $priceId = null;
         }
       }
-      if($form->company_id_quote != 0 || $form->company_id_quote == null ){
+      if($form->company_id_quote != 0 || $form->company_id_quote != null ){
         $payments = $this->getCompanyPayments($form->company_id_quote);
         $fcompany_id = $form->company_id_quote;
         $fcontact_id  = $form->contact_id;
@@ -2963,7 +2963,8 @@ class QuoteV2Controller extends Controller
         $delivery_type = $request->input('delivery_type_air') ;
 
       }
-      if($request->input('company_id_quote')!= 0 || $request->input('company_id_quote') == null ){
+
+      if($request->input('company_id_quote')!= 0 || $request->input('company_id_quote') != null ){
         $payments = $this->getCompanyPayments($request->input('company_id_quote'));
         $fcompany_id = $request->input('company_id_quote');
         $fcontact_id  = $request->input('contact_id');
@@ -7225,7 +7226,7 @@ class QuoteV2Controller extends Controller
           $priceId = null;
         }
       }
-      if($form->company_id_quote != 0 || $form->company_id_quote == null ){
+      if($form->company_id_quote != 0 || $form->company_id_quote != null ){
         $payments = $this->getCompanyPayments($form->company_id_quote);
         $fcompany_id = $form->company_id_quote;
         $fcontact_id  = $form->contact_id;
