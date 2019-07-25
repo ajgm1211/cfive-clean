@@ -130,8 +130,8 @@ class QuoteV2Controller extends Controller
             if(isset($quote->company)){
                 $company  = $quote->company->business_name;
             }
-            if($quote->quote_id!=''){
-                $id  = $quote->quote_id;
+            if($quote->custom_quote_id!=''){
+                $id  = $quote->custom_quote_id;
             }else{
                 $id = $quote->quote_id;
             }
@@ -1935,8 +1935,15 @@ class QuoteV2Controller extends Controller
                     foreach($item as $rate){
                         foreach ($rate->charge_lcl_air as $value) {
                             if($value->type_id==3){
-
-                                $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                if($freight_charges_grouped->count()>1){
+                                    $typeCurrency = $currency_cfg->alphacode;
+                                }else{
+                                    if($quote->pdf_option->grouped_freight_charges==1){
+                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                    }else{
+                                        $typeCurrency = $currency_cfg->alphacode;
+                                    }
+                                }
                                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
 
                                 //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
@@ -2212,8 +2219,15 @@ class QuoteV2Controller extends Controller
                     foreach($item as $rate){
                         foreach ($rate->charge_lcl_air as $value) {
                             if($value->type_id==3){
-
-                                $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                if($freight_charges_grouped->count()>1){
+                                    $typeCurrency = $currency_cfg->alphacode;
+                                }else{
+                                    if($quote->pdf_option->grouped_freight_charges==1){
+                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                    }else{
+                                        $typeCurrency = $currency_cfg->alphacode;
+                                    }
+                                }
                                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
                                 if($value->units>0){
                                     $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
@@ -2828,6 +2842,7 @@ class QuoteV2Controller extends Controller
         $rem_carrier_id[] = $carrier->id;
         array_push($rem_carrier_id,$carrier_all);
 
+
         /* $terms_all = TermsPort::where('port_id',$port_all->id)->with('term')->whereHas('term', function($q) use($term_carrier_id)  {
       $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id)->whereHas('TermConditioncarriers', function($b) use($term_carrier_id)  {
         $b->wherein('carrier_id',$term_carrier_id);
@@ -2894,11 +2909,23 @@ class QuoteV2Controller extends Controller
                 if($priceId=="0"){
                     $priceId = null;
                 }
+            }       
+            $fcompany_id = null;
+            $fcontact_id  = null;
+            $payments = null;
+
+            if(isset($form->company_id_quote)){
+
+                if($form->company_id_quote != "0" && $form->company_id_quote != null ){
+                    $payments = $this->getCompanyPayments($form->company_id_quote);
+                    $fcompany_id = $form->company_id_quote;
+                    $fcontact_id  = $form->contact_id;
+                }
             }
 
-            $payments = $this->getCompanyPayments($form->company_id_quote);
 
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
+
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
             $quote= QuoteV2::create($request->all());
 
 
@@ -2952,8 +2979,19 @@ class QuoteV2Controller extends Controller
                 $delivery_type = $request->input('delivery_type_air') ;
 
             }
+            $fcompany_id = null;
+            $fcontact_id  = null;
+            $payments = null;
+            if(isset($form->company_id_quote )){
+                if($request->input('company_id_quote')!= "0" && $request->input('company_id_quote') != null ){
+                    $payments = $this->getCompanyPayments($request->input('company_id_quote'));
+                    $fcompany_id = $request->input('company_id_quote');
+                    $fcontact_id  = $request->input('contact_id');
+                }
+            }
 
-            $payments = $this->getCompanyPayments($request->input('company_id_quote'));
+
+
             $priceId = null;
             if(isset($request->price_id )){
                 $priceId = $request->price_id;
@@ -2961,7 +2999,7 @@ class QuoteV2Controller extends Controller
                     $priceId = null;
                 }
             }
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$request->input('company_id_quote'),'contact_id' =>$request->input('contact_id') ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ,'price_id' => $priceId ]);
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ,'price_id' => $priceId ]);
             $quote= QuoteV2::create($request->all());
 
             // FCL
@@ -5326,6 +5364,7 @@ class QuoteV2Controller extends Controller
         }else{
             $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
         }
+        $companies->prepend('Select at option','0');
         $airlines = Airline::all()->pluck('name','id');
         $harbors = Harbor::get()->pluck('display_name','id_complete');
         $countries = Country::all()->pluck('name','id');
@@ -7204,6 +7243,17 @@ class QuoteV2Controller extends Controller
                     $priceId = null;
                 }
             }
+            $fcompany_id = null;
+            $fcontact_id  = null;
+            $payments = null;
+            if(isset($form->company_id_quote )){
+                if($form->company_id_quote != "0" && $form->company_id_quote != null ){
+                    $payments = $this->getCompanyPayments($form->company_id_quote);
+                    $fcompany_id = $form->company_id_quote;
+                    $fcontact_id  = $form->contact_id;
+                }
+            }
+
 
 
             $typeText = "LCL";
@@ -7211,9 +7261,9 @@ class QuoteV2Controller extends Controller
             $arregloNull = json_encode($arregloNull);
             $equipment =  $arregloNull;
             $delivery_type = $request->input('delivery_type') ;
-            $payments = $this->getCompanyPayments($form->company_id_quote);
 
-            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'LCL','delivery_type'=>$form->delivery_type,'company_id'=>$form->company_id_quote,'contact_id' => $form->contact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'total_quantity' => $form->total_quantity , 'total_weight' => $form->total_weight , 'total_volume' => $form->total_volume , 'chargeable_weight' => $form->chargeable_weight]);
+
+            $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'LCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' => $fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'total_quantity' => $form->total_quantity , 'total_weight' => $form->total_weight , 'total_volume' => $form->total_volume , 'chargeable_weight' => $form->chargeable_weight]);
             $quote= QuoteV2::create($request->all());
 
             $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
@@ -8395,10 +8445,14 @@ class QuoteV2Controller extends Controller
 
                         foreach ($rate->charge as $amounts) {
                             if($amounts->type_id==3){
-                                if($quote->pdf_option->grouped_freight_charges==1){
-                                    $typeCurrency =  $quote->pdf_option->freight_charges_currency;
-                                }else{
+                                if($freight_charges_grouped->count()>1){
                                     $typeCurrency =  $currency_cfg->alphacode;
+                                }else{
+                                    if($quote->pdf_option->grouped_freight_charges==1){
+                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                    }else{
+                                        $typeCurrency = $currency_cfg->alphacode;   
+                                    }
                                 }
                                 $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
                                 $array_amounts = json_decode($amounts->amount,true);
@@ -8556,7 +8610,7 @@ class QuoteV2Controller extends Controller
         //  $event->event_searchRate();
 
     }
-    
+
     /**
      * Descargar archivo .xlsx con listado de Cotizaciones
      */
@@ -8690,7 +8744,7 @@ class QuoteV2Controller extends Controller
                     $sheet->row($i, array(
                         'Id' => $quote->id,
                         'Quote Id' => $quote->quote_id,
-                        'Custom Quote Id' => $quote->custom_quote,
+                        'Custom Quote Id' => $quote->custom_quote_id,
                         'Type' => $quote->type,
                         'Delivery type' => $delivery_type,
                         'Equipment' => $quote->equipment,
