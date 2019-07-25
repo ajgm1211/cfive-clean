@@ -805,7 +805,6 @@
             @endforeach
         @endif
         <br>
-        <br>
         <?php
             $i=0;
         ?>
@@ -817,6 +816,7 @@
             @endif
         @endforeach
         @if($i>0)
+            <br>
             <div class="clearfix">
             <table class="table-border" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote header-table">
