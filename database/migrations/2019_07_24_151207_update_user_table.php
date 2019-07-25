@@ -14,7 +14,7 @@ class UpdateUserTable extends Migration
     public function up()
     {
         Schema::table('users', function(Blueprint $table){
-            $table->string('api_key')->nullable()->default('N/A-CERO')->after('company_user_id');
+            $table->string('api_token')->nullable()->default('N/A-CERO')->after('company_user_id');
         });
     }
 

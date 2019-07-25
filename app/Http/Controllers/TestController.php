@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 
 class TestController extends Controller
 {
@@ -16,22 +18,24 @@ class TestController extends Controller
      */
     public function index()
     {
-        $user_adm = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
-        $client = new Client(['base_uri' => 'http://contractsai/']);
-        // Send a request to https://foo.com/api/test
-        //$response = $client->get('login?email=admin@example.com&password=secret');
-        //$auth = json_decode((string)$response->getBody());
-        //$response = $client->request('GET','ConverterFile/CFIndex', [
-        $response = $client->request('GET','ConverterFile/CFDispatchJob/5', [
-            'headers' => [
-                //'Authorization' => $auth->api_key,
-                'Authorization' => 'Bearer '.$user_adm->api_token,
-                'Accept'        => 'application/json',
-            ]
-        ]);
-        $dataGen = json_decode($response->getBody()->getContents(),true);
-        dd($dataGen);
-        return $dataGen;
+        try{
+            $user_adm = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
+            $client = new Client(['base_uri' => 'http://contractsai/']);
+            //$response = $client->get('login?email=admin@example.com&password=secret');
+            //$response = $client->request('GET','ConverterFile/CFIndex', [
+            $response = $client->request('GET','ConverterFile/CFDispatchJob/5', [
+                'headers' => [
+                    //'Authorization' => $auth->api_key,
+                    'Authorization' => 'Bearer '.$user_adm->api_token,
+                    'Accept'        => 'application/json',
+                ]
+            ]);
+            $dataGen = json_decode($response->getBody()->getContents(),true);
+            dd($dataGen);
+            return $dataGen;
+        } catch (RequestException $e) {
+            echo 'falla de conexion';
+        }
         //dd($dataGen);
     }
 
@@ -64,7 +68,7 @@ class TestController extends Controller
      */
     public function show($id)
     {
-        
+
         dd($id);
     }
 

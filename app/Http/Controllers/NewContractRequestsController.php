@@ -10,6 +10,7 @@ use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
+use GuzzleHttp\Client;
 use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
@@ -22,9 +23,11 @@ use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\Mail\NewRequestToAdminMail;
+use App\Mail\NotificationAutoImport;
 use App\Jobs\SendEmailRequestFclJob;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
+use GuzzleHttp\Exception\RequestException;
 
 
 class NewContractRequestsController extends Controller
@@ -239,8 +242,8 @@ class NewContractRequestsController extends Controller
                     'request_id' => $Ncontract->id
                 ]);
             }
-            
-            
+
+
             ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
             $user = User::find($request->user);
             $message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -256,19 +259,7 @@ class NewContractRequestsController extends Controller
             //evento Intercom 
             $event = new  EventIntercom();
             $event->event_newRequest();
-            /*$request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('contracts.index');*/
-            //return redirect()->route('RequestImportation.indexListClient');
-            //dd($request->all());
-            /*
-            if(count($carrier_arr) == 1){
-                $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($carrier_arr) {
-                    $query->whereIn('carrier_id',$carrier_arr);
-                })->where('status',1)->get();
-                dd($autoImp);
-            }*/
-            
+
         } else {
             /*$request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
