@@ -1,5 +1,11 @@
 @extends('layouts.app')
+@section('css')
+@parent
+<link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+
+@endsection
 @section('title', 'History Search')
+
 @section('content')
 
 <div class="m-content">
@@ -173,6 +179,16 @@
 
 @section('js')
 @parent
+<script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
+<script>
+
+		$('#html_table').DataTable({         
+        });
+  
+		$('#otro').DataTable({         
+        });
+
+</script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
 
 @stop

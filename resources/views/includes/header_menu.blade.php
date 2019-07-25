@@ -476,7 +476,7 @@
                                     </a>
                                 </li>
                                 <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{route('search.index')}}" class="m-menu__link ">
+                                    <a  href="{{route('search.list')}}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-search"></i>
                                         <span class="m-menu__link-text">
                                             Search History
