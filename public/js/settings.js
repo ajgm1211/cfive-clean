@@ -26,7 +26,9 @@ $(document).on('click', '#default-currency-submit', function () {
 
         // Create an FormData object
         //var data = new FormData(form);
+        var footer_text = tinymce.get("footer_text").getContent();
         var data = new FormData($("#default-currency")[0]);
+        data.append("footer_text_content", footer_text);
 
         // disabled the submit button
         $("#default-currency-submit").prop("disabled", true);
@@ -62,4 +64,15 @@ $(document).on('click', '#default-currency-submit', function () {
       showCancelButton: false,
     })
   }
+});
+
+$(document).on('change', '#pdf_footer', function () {
+    var value = $(this).val();
+    if(value=='Text'){
+        $('#footer_text').removeClass('hide');
+        $('#footer_image').addClass('hide');
+    }else{
+        $('#footer_image').removeClass('hide');
+        $('#footer_text').addClass('hide');
+    }
 });

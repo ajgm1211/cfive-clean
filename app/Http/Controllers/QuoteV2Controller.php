@@ -1739,11 +1739,30 @@ class QuoteV2Controller extends Controller
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
 
                 if($value->type_id==3){
-                    $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');          
+                    if($value->units>0){
+                        $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
                 }elseif($value->type_id==1){
-                    $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    if($value->units>0){
+                        $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
                 }else{
-                    $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    if($value->units>0){
+                        $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+            if(!$item->automaticInlandLclAir->isEmpty()){
+                foreach($item->automaticInlandLclAir as $inland){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                    if($inland->units>0){
+                        $inland->total_inland=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+                    }
                 }
             }
             foreach ($item->inland as $inland) {
@@ -1787,7 +1806,26 @@ class QuoteV2Controller extends Controller
                                     $value->rate=0;
                                 }
                                 $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                            }
+                        }
 
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $inland){
+                                if($inland->type=='Origin'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                                    if($inland->units>0){
+                                        $inland->rate_amount=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$inland->units, 2, '.', '');
+                                    }else{
+                                        $inland->rate_amount=0;
+                                    }
+                                    $inland->total_inland_origin=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+
+                                }
                             }
                         }
                     }
@@ -1833,7 +1871,25 @@ class QuoteV2Controller extends Controller
                                 }
                                 $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                             }
-                        } 
+                        }
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $value){
+                                if($value->type=='Destination'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                                    if($value->units>0){
+                                        $value->rate_amount=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                                    }else{
+                                        $value->rate_amount=0;
+                                    }
+                                    $value->total_inland_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2003,7 +2059,6 @@ class QuoteV2Controller extends Controller
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
             $currency_cfg = Currency::find($company_user->currency_id);
         }
 
@@ -2029,6 +2084,19 @@ class QuoteV2Controller extends Controller
                     $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 }
             }
+            if(!$item->automaticInlandLclAir->isEmpty()){
+                foreach($item->automaticInlandLclAir as $inland){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                    if($inland->units>0){
+                        $inland->total_inland=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }            
             foreach ($item->inland as $inland) {
                 $currency_charge = Currency::find($inland->currency_id);
                 $inland->currency_usd = $currency_charge->rates;
@@ -2071,6 +2139,25 @@ class QuoteV2Controller extends Controller
                                 }
                                 $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
 
+                            }
+                        }
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $inland){
+                                if($inland->type=='Origin'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                                    if($inland->units>0){
+                                        $inland->rate_amount=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$inland->units, 2, '.', '');
+                                    }else{
+                                        $inland->rate_amount=0;
+                                    }
+                                    $inland->total_inland_origin=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+
+                                }
                             }
                         }
                     }
@@ -2116,7 +2203,26 @@ class QuoteV2Controller extends Controller
                                 }
                                 $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                             }
-                        } 
+                        }
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $inland){
+                                if($inland->type=='Destination'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                                    if($inland->units>0){
+                                        $inland->rate_amount=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$inland->units, 2, '.', '');
+                                    }else{
+                                        $inland->rate_amount=0;
+                                    }
+                                    $inland->total_inland_origin=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+
+                                }
+                            }
+                        }
                     }
                 }
             }

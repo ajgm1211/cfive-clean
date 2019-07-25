@@ -826,7 +826,7 @@
                                                 $inland_45+=$v->total_45;
                                             ?>
                                             <tr class="text-left color-table">
-                                                <td>{{$v->provider}}</td>
+                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
                                                 <td>{{$v->distance}}</td>
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>

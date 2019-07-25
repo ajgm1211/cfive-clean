@@ -189,12 +189,18 @@
                         $total_freight= 0;
                         $total_origin= 0;
                         $total_destination= 0;
+                        $total_inland= 0;
                     ?>
                     @foreach($rate->charge_lcl_air as $value)
                         <?php
                           $total_freight+=$value->total_freight;
                           $total_origin+=$value->total_origin;
                           $total_destination+=$value->total_destination;
+                        ?>
+                    @endforeach
+                    @foreach($rate->automaticInlandLclAir as $inland)
+                        <?php
+                           $total_inland+=$inland->total_inland; 
                         ?>
                     @endforeach
                     <tr class="text-center color-table"> 
@@ -218,7 +224,7 @@
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                         @endif
                         <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 4, '.', '')}}</td>
-                        <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination, 2, '.', '')}}</td>
+                        <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination+@$total_inland, 2, '.', '')}}</td>
                         @if($quote->pdf_option->show_schedules==1)
                             <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
                             <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
@@ -588,11 +594,32 @@
                                             @endif
                                             <td >{{$v->units}}</td>
                                             <td >{{$v->rate}}</td>
-                                            <td >{{$v->total}}</td>
+                                            <td >{{$v->units*$v->rate}}</td>
                                             <td>{{$v->currency->alphacode}}</td>
                                         </tr>
                                     @endif
                                 @endforeach
+                                @if(!$r->automaticInlandLclAir->isEmpty()){
+                                    @php
+                                        $total_inland=0;
+                                    @endphp
+                                    @foreach($r->automaticInlandLclAir as $v)
+                                        @if($v->type=='Origin')
+                                            <?php
+                                                $total_inland+=@$v->total_inland_origin;
+                                            ?>
+                                            <tr class="text-center color-table">
+                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                <td>{{$v->distance}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
+                                                <td >{{$v->units}}</td>
+                                                <td >{{$v->rate}}</td>
+                                                <td >{{$v->total}}</td>
+                                                <td>{{$v->currency->alphacode}}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif                            
                             @endforeach
                         @endforeach
                         <tr>
@@ -730,11 +757,32 @@
                                             @endif
                                             <td >{{$v->units}}</td>
                                             <td >{{$v->rate}}</td>
-                                            <td >{{$v->total}}</td>
+                                            <td >{{$v->units*$v->rate}}</td>
                                             <td>{{$v->currency->alphacode}}</td>
                                         </tr>
                                     @endif
                                 @endforeach
+                                @if(!$r->automaticInlandLclAir->isEmpty()){
+                                    @php
+                                        $total_inland=0;
+                                    @endphp
+                                    @foreach($r->automaticInlandLclAir as $v)
+                                        @if($v->type=='Destination')
+                                            <?php
+                                                $total_inland+=@$v->total_inland_destination;
+                                            ?>
+                                            <tr class="text-center color-table">
+                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                <td>{{$v->distance}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
+                                                <td >{{$v->units}}</td>
+                                                <td >{{$v->rate_amount}}</td>
+                                                <td >{{$v->units*$v->rate_amount}}</td>
+                                                <td>{{$v->currency->alphacode}}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
                             @endforeach
                         @endforeach
                         <tr>
@@ -743,7 +791,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_destination, 2, '.', '')}}</b></td>
+                            <td ><b>{{number_format(@$total_destination+@$total_inland, 2, '.', '')}}</b></td>
                             @if($quote->pdf_option->grouped_destintion_charges==1)
                                 <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                             @else
@@ -756,6 +804,7 @@
                 @endforeach
             @endforeach
         @endif
+        <br>
         <br>
         <?php
             $i=0;
@@ -791,6 +840,7 @@
             </table>
         </div>
         @endif
+        <br>
         @if($quote->terms_and_conditions!='')
              <div class="clearfix">
                 <table class="table-border" border="0" cellspacing="0" cellpadding="0">
