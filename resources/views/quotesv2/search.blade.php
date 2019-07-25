@@ -415,7 +415,7 @@
                 <label>Company</label>
 
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal','required'=>'true']) }} 
+                  {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
                       <a   onclick="AbrirModal('add',0)" data-container="body" data-toggle="m-tooltip" data-placement="top" title="" data-original-title="Add Company if not exist"> <i class="la  la-plus-circle btn-plus__form" style="color:blue; font-size: 18px;" ></i> </a>
@@ -426,7 +426,7 @@
               <div class="col-lg-2">
                 <label>Contact</label>
                 <div class="m-input-icon m-input-icon--right">
-                  {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control','required'=>'true']) }}
+                  {{ Form::select('contact_id',[],null,['id' => 'contact_id', 'class'=>'m-select2-general form-control']) }}
                   {{  Form::hidden('contact_id_num', @$form['contact_id'] , ['id' => 'contact_id_num'  ])  }}
                   <span class="m-input-icon__icon m-input-icon__icon--right">
                     <span>
@@ -439,6 +439,10 @@
                 <label>Price level</label>
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
+              </div>
+                           <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
 
             </div><br>
@@ -518,14 +522,8 @@
 
             </div><br>
             <div class="row">
-              <div class="col-lg-2">
-                <label>Incoterm</label>
-                {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
-              </div>
-              <div class="col-lg-2">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-              </div>
+          
+ 
 
             </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
@@ -1066,7 +1064,7 @@
                     <div class="col-lg-1 colorphacode" style="white-space: nowrap">{{ $rates['detail'] }}</div>
                     <div class="col-lg-8 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markupConvert20'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['montoMarkupO20'] }}</b>  </div>
+                        <div class="wth" {{ $equipmentHides['20'] }}> <span class="bg-rates">{{ @$rates['price20'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup20'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto20'] }}</b>  </div>
                         <div class="wth" {{ $equipmentHides['40'] }}><span class="bg-rates">{{ @$rates['price40'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40'], 2, '.', '')   }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40'] }}</b>  </div>
                         <div class="wth" {{ $equipmentHides['40hc'] }}><span class="bg-rates">{{ @$rates['price40hc'] }}</span> <span class="bg-rates">+{{  number_format(@$rates['markup40'], 2, '.', '')  }}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40HC'] }}</b>  </div>
                         <div class="wth" {{ $equipmentHides['40nor'] }}><span class="bg-rates">{{ @$rates['price40nor'] }}</span> <span class="bg-rates">+{{ number_format(@$rates['markup40NOR'] , 2, '.', '')}}</span> <i class="la la-caret-right arrow-down"></i> <b class="monto-down">{{  @$rates['monto40NOR'] }}</b>  </div>
