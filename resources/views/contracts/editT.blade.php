@@ -265,7 +265,7 @@ Upload Surcharge
                                 <div class="col-md-12" id="origin_harbor_label">
                                     <label>Company</label>
                                     <div class="form-group m-form__group align-items-center">
-                                        {{ Form::select('companies[]',$companies,@$company->id,['multiple','class'=>'m-select2-general','id' => 'm-select2-company']) }}
+                                        {{ Form::select('companies[]',$companies,@$company,['multiple','class'=>'m-select2-general','id' => 'm-select2-company']) }}
                                     </div>
                                 </div>
                             </div>

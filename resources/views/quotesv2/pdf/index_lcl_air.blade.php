@@ -13,7 +13,7 @@
     <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
         <div id="logo">
             @if($user->companyUser->logo!='')
-            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:25px">
+            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
             @endif
         </div>
         <div id="company">
@@ -65,7 +65,7 @@
             </div>
         </div>
         @if($quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 25px;">
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Risk level:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nivel de riesgo:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nível de risco:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
@@ -232,7 +232,7 @@
         </table>
         <br>
         <!-- Freight charges all in -->
-        @if($rates->count()>1)
+        @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
             <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
@@ -298,7 +298,7 @@
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                     @endif
                                     <td >{{@$total_freight}}</td>
-                                    <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                    <td >{{$currency_cfg->alphacode}}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -308,7 +308,7 @@
         @endif
 
         <!-- Freigth charges detailed -->
-        @if($rates->count()==1)
+        @if($quote->pdf_option->show_type=='detailed' && $rates->count()==1)
             @if($quote->pdf_option->grouped_freight_charges==0)
                 @foreach($freight_charges_grouped as $origin => $value)
                     @foreach($value as $destination => $item)
@@ -383,11 +383,7 @@
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 <td ><b>{{number_format(@$total_freight, 2, '.', '')}}</b></td>
-                                @if($quote->pdf_option->grouped_freight_charges==1)
-                                    <td><b>{{$quote->pdf_option->freight_charges_currency}}</b></td>
-                                @else
-                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
-                                @endif     
+                                <td><b>{{$currency_cfg->alphacode}}</b></td>  
                             </tr>
                         </tbody>
                     </table>
@@ -459,7 +455,11 @@
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                         @endif
                                         <td >{{@$total_freight}}</td>
-                                        <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                        @if($quote->pdf_option->grouped_freight_charges==1)
+                                            <td>{{$quote->pdf_option->freight_charges_currency}}</td>
+                                        @else
+                                            <td>{{$currency_cfg->alphacode}}</td>
+                                        @endif 
                                     </tr>
                                 @endforeach
                             @endforeach
