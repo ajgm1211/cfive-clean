@@ -2895,16 +2895,18 @@ class QuoteV2Controller extends Controller
         if($priceId=="0"){
           $priceId = null;
         }
-      }
-      if($form->company_id_quote != 0 || $form->company_id_quote != null ){
-        $payments = $this->getCompanyPayments($form->company_id_quote);
-        $fcompany_id = $form->company_id_quote;
-        $fcontact_id  = $form->contact_id;
-      }else{ 
-        $fcompany_id = null;
-        $fcontact_id  = null;
-        $payments = null;
+      }       
+      $fcompany_id = null;
+      $fcontact_id  = null;
+      $payments = null;
 
+      if(isset($form->company_id_quote)){
+
+        if($form->company_id_quote != "0" && $form->company_id_quote != null ){
+          $payments = $this->getCompanyPayments($form->company_id_quote);
+          $fcompany_id = $form->company_id_quote;
+          $fcontact_id  = $form->contact_id;
+        }
       }
 
 
@@ -2963,17 +2965,17 @@ class QuoteV2Controller extends Controller
         $delivery_type = $request->input('delivery_type_air') ;
 
       }
-
-      if($request->input('company_id_quote')!= 0 || $request->input('company_id_quote') != null ){
-        $payments = $this->getCompanyPayments($request->input('company_id_quote'));
-        $fcompany_id = $request->input('company_id_quote');
-        $fcontact_id  = $request->input('contact_id');
-      }else{ 
-        $fcompany_id = null;
-        $fcontact_id  = null;
-        $payments = null;
-
+      $fcompany_id = null;
+      $fcontact_id  = null;
+      $payments = null;
+      if(isset($form->company_id_quote )){
+        if($request->input('company_id_quote')!= "0" && $request->input('company_id_quote') != null ){
+          $payments = $this->getCompanyPayments($request->input('company_id_quote'));
+          $fcompany_id = $request->input('company_id_quote');
+          $fcontact_id  = $request->input('contact_id');
+        }
       }
+
 
 
       $priceId = null;
@@ -5348,6 +5350,7 @@ class QuoteV2Controller extends Controller
     }else{
       $companies = Company::where('company_user_id','=',$company_user_id)->pluck('business_name','id');
     }
+    $companies->prepend('Select at option','0');
     $airlines = Airline::all()->pluck('name','id');
     $harbors = Harbor::get()->pluck('display_name','id_complete');
     $countries = Country::all()->pluck('name','id');
@@ -7226,15 +7229,15 @@ class QuoteV2Controller extends Controller
           $priceId = null;
         }
       }
-      if($form->company_id_quote != 0 || $form->company_id_quote != null ){
-        $payments = $this->getCompanyPayments($form->company_id_quote);
-        $fcompany_id = $form->company_id_quote;
-        $fcontact_id  = $form->contact_id;
-      }else{ 
-        $fcompany_id = null;
-        $fcontact_id  = null;
-        $payments = null;
-
+      $fcompany_id = null;
+      $fcontact_id  = null;
+      $payments = null;
+      if(isset($form->company_id_quote )){
+        if($form->company_id_quote != "0" && $form->company_id_quote != null ){
+          $payments = $this->getCompanyPayments($form->company_id_quote);
+          $fcompany_id = $form->company_id_quote;
+          $fcontact_id  = $form->contact_id;
+        }
       }
 
 
