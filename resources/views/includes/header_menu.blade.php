@@ -275,7 +275,7 @@
                                     <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-profile"></i>
                                         <span class="m-menu__link-text">
-                                            Company's Profile
+                                            Company Profile
                                         </span>
                                     </a>
                                 </li>
