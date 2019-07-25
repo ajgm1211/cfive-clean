@@ -13,7 +13,7 @@
     <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
         <div id="logo">
             @if($user->companyUser->logo!='')
-            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:25px">
+            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:25px">
             @endif
         </div>
         <div id="company">
@@ -298,7 +298,7 @@
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                     @endif
                                     <td >{{@$total_freight}}</td>
-                                    <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                    <td >{{$currency_cfg->alphacode}}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -383,11 +383,7 @@
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 <td ><b>{{number_format(@$total_freight, 2, '.', '')}}</b></td>
-                                @if($quote->pdf_option->grouped_freight_charges==1)
-                                    <td><b>{{$quote->pdf_option->freight_charges_currency}}</b></td>
-                                @else
-                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
-                                @endif     
+                                <td><b>{{$currency_cfg->alphacode}}</b></td>  
                             </tr>
                         </tbody>
                     </table>
@@ -459,7 +455,11 @@
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                         @endif
                                         <td >{{@$total_freight}}</td>
-                                        <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                        @if($quote->pdf_option->grouped_freight_charges==1)
+                                            <td>{{$quote->pdf_option->freight_charges_currency}}</td>
+                                        @else
+                                            <td>{{$currency_cfg->alphacode}}</td>
+                                        @endif 
                                     </tr>
                                 @endforeach
                             @endforeach

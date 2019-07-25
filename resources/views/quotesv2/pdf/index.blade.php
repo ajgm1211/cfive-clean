@@ -13,7 +13,7 @@
     <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
         <div id="logo">
             @if($user->companyUser->logo!='')
-            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
+            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:0">
             @endif
         </div>
         <div id="company">
@@ -280,11 +280,7 @@
                                     <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_freight_45, 2, '.', '')}}</td>
-                                    @if($quote->pdf_option->grouped_freight_charges==1)
-                                        <td >{{$quote->pdf_option->freight_charges_currency}}</td>
-                                    @else
-                                        <td >{{$currency_cfg->alphacode}}</td>
-                                    @endif
+                                    <td >{{$currency_cfg->alphacode}}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -361,11 +357,7 @@
                                                     <td {{ @$equipmentHides['40hc'] }}>{{number_format($v->total_40hc, 2, '.', '')}}</td>
                                                     <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
                                                     <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
-                                                    @if($quote->pdf_option->grouped_freight_charges==1)
-                                                        <td>{{$quote->pdf_option->freight_charges_currency}}</td>
-                                                    @else
-                                                        <td>{{$currency_cfg->alphacode}}</td>
-                                                    @endif
+                                                    <td>{{$v->currency->alphacode}}</td>
                                                 </tr>
                                             @endif
                                         @endforeach                                
@@ -380,11 +372,7 @@
                                     <td {{ @$equipmentHides['40hc'] }}><b>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</b></td>
                                     <td {{ @$equipmentHides['40nor'] }}><b>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</b></td>
                                     <td {{ @$equipmentHides['45'] }}><b>{{number_format(@$sum_freight_45, 2, '.', '')}}</b></td>
-                                    @if($quote->pdf_option->grouped_freight_charges==1)
-                                        <td><b>{{$quote->pdf_option->freight_charges_currency}}</b></td>
-                                    @else
-                                        <td><b>{{$currency_cfg->alphacode}}</b></td>
-                                    @endif     
+                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -647,8 +635,8 @@
                                                 $inland_45+=$v->total_45;
                                             ?>
                                             <tr class="text-left color-table">
-                                                <td>{{$v->provider}}</td>
-                                                <td>{{$v->distance}}</td>
+                                                <td>Inland Origen-Destino</td>
+                                                <td>{{$v->distance!='' ? $v->distance:'0'}}</td>
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
