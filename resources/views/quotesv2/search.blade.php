@@ -440,6 +440,10 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
+                           <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
 
             </div><br>
             <div class="row">
@@ -519,10 +523,7 @@
             </div><br>
             <div class="row">
           
-              <div class="col-lg-2">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-              </div>
+ 
 
             </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
