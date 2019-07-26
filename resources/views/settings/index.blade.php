@@ -75,14 +75,16 @@
                         <li class="nav-item">
                             <a class="nav-link color-black" aria-controls="home" aria-selected="true"><h6><b>Company profile</b></h6></a>
                         </li>
+                        @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
+                            <li class="nav-item">
+                                <a class="nav-link {{\Auth::user()->type!='subuser' ? 'active':''}}" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-home"></i>&nbsp;Company info</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pdf-tab" data-toggle="tab" href="#pdf" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-edit"></i> &nbsp;PDF Settings</a>
+                            </li>
+                        @endif
                         <li class="nav-item">
-                            <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-home"></i>&nbsp;Company info</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pdf-tab" data-toggle="tab" href="#pdf" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-edit"></i> &nbsp;PDF Settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-envelope"></i> &nbsp;Emails</a>
+                            <a class="nav-link {{\Auth::user()->type=='subuser' ? 'active':''}}" id="emails-tab" data-toggle="tab" href="#emails" role="tab" aria-controls="profile" aria-selected="false"><i class="fa fa-envelope"></i> &nbsp;Emails</a>
                         </li>
                     </ul>
                 </div>
@@ -138,10 +140,37 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="pdf" role="tabpanel" aria-labelledby="pdf-tab">
-                                <div class="col-md-12">
-                                    <div class="form-group m-form__group">
-                                        <label for="pdf_language">PDF language</label>
-                                        {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group m-form__group">
+                                            <label for="pdf_language">PDF language</label>
+                                            {{ Form::select('pdf_language',['0'=>'Choose a language','1'=>'English','2'=>'Spanish','3'=>'Portuguese'],null,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_language','required'=>'true']) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_type">PDF Footer</label>
+                                            {{ Form::select('footer_type',[''=>'Choose a type','Text'=>'Text','Image'=>'Image'],$company->companyUser->footer_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'pdf_footer','required'=>'true']) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 hide" id="footer_image">
+                                        <hr>
+                                        <div class="form-group files">
+                                            <label for="footer_image">PDF Footer image</label>
+                                            <input type="file" class="form-control-file" name="footer_image">
+                                            @if($company->companyUser->footer_image!='')
+                                            <img src="{{Storage::disk('s3_upload')->url($company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="width:100%; height: 80px;">
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 hide" id="footer_text">
+                                        <hr>
+                                        <div class="form-group files">
+                                            <label for="footer_text">PDF Footer text</label>
+                                            <textarea name="footer_text" class="form-control footer_text editor" id="footer_text">{!!$company->companyUser->footer_text!!}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -155,7 +184,7 @@
                     @else
                     <form id="default-currency" enctype="multipart/form-data">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                            <div class="tab-pane fade {{\Auth::user()->type!='subuser' ? 'show active':''}}" id="general" role="tabpanel" aria-labelledby="general-tab">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group files">
@@ -230,10 +259,10 @@
                                     <div class="col-md-12 {{$company->companyUser->footer_type=='Image' ? '':'hide'}}" id="footer_image">
                                         <hr>
                                         <div class="form-group files">
-                                            <label for="footer_image">PDF Footer image (1000 x 80 pixels)</label>
+                                            <label for="footer_image">PDF Footer image</label>
                                             <input type="file" class="form-control-file" name="footer_image">
                                             @if($company->companyUser->footer_image!='')
-                                            <img src="{{Storage::disk('s3_upload')->url($company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="width:100%; height: 80px;">
+                                            <img src="{{Storage::disk('s3_upload')->url($company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="">
                                             @endif
                                         </div>
                                     </div>
@@ -254,7 +283,48 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="emails" role="tabpanel" aria-labelledby="emails-tab"></div>
+                            <div class="tab-pane fade {{\Auth::user()->type=='subuser' ? 'show active':''}}" id="emails" role="tabpanel" aria-labelledby="emails-tab">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_text">Email from</label>
+                                            <input type="email" value="{{@$email_settings->email_from}}" id="email_from" name="email_from" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group m-form__group">
+                                            <label for="footer_text">Signature type</label>
+                                            {{ Form::select('email_signature_type',[''=>'Choose a type','text'=>'Text','image'=>'Image'],@$email_settings->email_signature_type,['placeholder' => 'Please choose a option','class'=>'custom-select form-control','id' => 'signature_type']) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6 {{@$email_settings->email_signature_type=='image' ? '':'hide'}}" id="signature_image">
+                                        <div class="form-group files">
+                                            <label for="footer_image">Email signature image</label>
+                                            <input type="file" class="form-control-file" name="email_signature_image">
+                                            @if(@$email_settings->email_signature_image!='')
+                                            <img src="{{Storage::disk('s3_upload')->url($email_settings->email_signature_image )}}" class="img img-thumbnail img-fluid" style="">
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 {{@$email_settings->email_signature_type=='text' ? '':'hide'}}" id="signature_text">
+                                        <div class="form-group files">
+                                            <label for="footer_text">Email signature text</label>
+                                            <textarea name="email_signature_text" class="form-control email_signature_text editor" id="email_signature_text">{!!@$email_settings->email_signature_text!!}</textarea>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <br>
+                                        <div class="form-group m-form__group">
+                                            <button type="button" id="default-currency-submit" class="btn btn-primary btn-block" style="background-color: #006BFA !important;">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     @endif
@@ -273,15 +343,6 @@
 <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
 <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
 <script>
-    $('#currency_id').select2({
-        placeholder: "Select an option"
-    });
-    $('#pdf_language').select2({
-        placeholder: "Select an option"
-    });
-    $('#pdf_footer').select2({
-        placeholder: "Select an option"
-    });
     var editor_config = {
         path_absolute : "/",
         selector: "textarea.editor",
