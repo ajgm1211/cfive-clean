@@ -271,11 +271,12 @@
                             </li>
                             @endif
                             @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
+
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-profile"></i>
                                     <span class="m-menu__link-text">
-                                        Company's Profile
+                                        Company Profile
                                     </span>
                                 </a>
                             </li>
@@ -311,6 +312,7 @@
                                     </span>
                                 </a>
                             </li>
+
                             @endif
                             @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company' || \Auth::user()->type=='subuser')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
@@ -466,7 +468,6 @@
                                     </ul>
                                 </div>
                             </li>
-
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('CarrierImportation.index')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-dropbox"></i>
@@ -484,7 +485,7 @@
                                 </a>
                             </li>
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('search.index')}}" class="m-menu__link ">
+                                <a  href="{{route('search.list')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-search"></i>
                                     <span class="m-menu__link-text">
                                         Search History

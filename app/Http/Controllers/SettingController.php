@@ -58,13 +58,23 @@ class SettingController extends Controller
 
     public function store(Request $request){
         $file = Input::file('image');
+        $footer_image = Input::file('footer_image');
         $filepath = '';
+        $filepath_footer_image = '';
         if($file != ""){
             $filepath = 'Logos/Companies/'.$file->getClientOriginalName();
             $name     = $file->getClientOriginalName();
             \Storage::disk('logos')->put($name,file_get_contents($file));
             $s3 = \Storage::disk('s3_upload');
             $s3->put($filepath, file_get_contents($file), 'public');
+            //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
+        }
+        if($footer_image != ""){
+            $filepath_footer_image = 'Footer/'.$footer_image->getClientOriginalName();
+            $name_footer_image = $footer_image->getClientOriginalName();
+            \Storage::disk('logos')->put($name_footer_image,file_get_contents($footer_image));
+            $s3 = \Storage::disk('s3_upload');
+            $s3->put($filepath_footer_image, file_get_contents($footer_image), 'public');
             //ProcessLogo::dispatch(auth()->user()->id,$filepath,$name,1);
         }
         if(!$request->company_id){
@@ -76,6 +86,11 @@ class SettingController extends Controller
             $company->currency_id = $request->currency_id;
             $company->hash = \Hash::make($request->name);
             $company->pdf_language = $request->pdf_language;
+            $company->footer_type = $request->footer_type;
+            $company->footer_text = $request->footer_text_content;
+            if($footer_image!=""){
+                $company->footer_image = $filepath_footer_image;   
+            }
             $company->type_pdf = 2;
             $company->pdf_ammounts = 2;
             if($file != ""){
@@ -90,6 +105,11 @@ class SettingController extends Controller
             $company->address=$request->address;
             $company->currency_id=$request->currency_id;
             $company->pdf_language = $request->pdf_language;
+            $company->footer_type = $request->footer_type;
+            $company->footer_text = $request->footer_text_content;
+            if($footer_image!=""){
+                $company->footer_image = $filepath_footer_image;   
+            }
             if($file != ""){
                 $company->logo = $filepath;
             }

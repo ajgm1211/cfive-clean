@@ -18,10 +18,10 @@ class AutomaticInland extends Model
 		return $this->belongsTo('App\QuoteV2','id','quote_id');
 	}
 
-	public function rate()
-	{
-		return $this->belongsTo('App\AutomaticRate','id','automatic_rate_id');
-	}
+    public function rate()
+    {
+        return $this->belongsTo('App\AutomaticRate','automatic_rate_id','id');
+    }
 
 	public function currency()
 	{
