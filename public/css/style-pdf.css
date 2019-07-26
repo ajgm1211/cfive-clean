@@ -185,7 +185,7 @@ table tr:nth-child(odd) td{
 table th,
 table td {
     padding: 8px;
-    text-align: center;
+    text-align: left;
 }
 
 table th {
@@ -196,7 +196,7 @@ table th {
 }
 
 table td {
-    text-align: center;
+    text-align: left;
     background-color: #fff;
     color: #031B4E;
 }

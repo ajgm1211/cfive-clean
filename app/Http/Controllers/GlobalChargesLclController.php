@@ -296,11 +296,12 @@ class GlobalChargesLclController extends Controller
 
     public function indexAdm(){
         $companies = CompanyUser::pluck('name','id');
-        return view('globalchargesLclAdm.index',compact('companies'));
+        $carriers = Carrier::pluck('name','id');        
+        return view('globalchargesLclAdm.index',compact('companies','carriers'));
     }
 
-    public function createAdm($company){
-        $globalcharges = ViewGlobalchargeLcl::select(['id','port_orig','port_dest','country_orig','country_dest','carrier','surcharges','typedestiny','calculationtype','ammount','minimum','validity','expire','currency','company_user'])->where('company_user_id',$company);
+    public function createAdm(Request $request){
+        $globalcharges = ViewGlobalchargeLcl::select(['id','port_orig','port_dest','country_orig','country_dest','carrier','surcharges','typedestiny','calculationtype','ammount','minimum','validity','expire','currency','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
         //dd($globalcharges);
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 
@@ -346,9 +347,9 @@ class GlobalChargesLclController extends Controller
                       <i class="la la-plus"></i>
                     </a>';
             })
-            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-            ->rawColumns(['checkbox','action'])
-            ->editColumn('id', 'ID: {{$id}}')->toJson();
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
     public function addAdm(){

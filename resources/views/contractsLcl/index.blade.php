@@ -3,9 +3,9 @@
 @parent
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 <style>
-  #tableRates_wrapper {
-    overflow: auto;
-  }
+    #tableRates_wrapper {
+        overflow: auto;
+    }
 </style>
 @endsection
 
@@ -208,38 +208,38 @@ New \ Status Import  &nbsp;
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
-                            <div class="row align-items-center">
+                            <div class="row align-items-center" style="margin-top:30px;">
                                 <div class="col-xl-12 order-2 order-xl-1">
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                     <div class="form-group m-form__group row align-items-center">
 
                                         <div class="col-lg-3">
-                                            <label class="">Origin</label>
+                                            <label class=""><b>Origin</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('origin',$values['origin'],null,['class'=>'m-select2-general form-control','id'=>'originS','required'])!!}
                                             </div>                                            
                                         </div>
                                         <div class="col-lg-3">
-                                            <label class="">Destination</label>
+                                            <label class=""><b>Destination</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['destination'],null,['class'=>'m-select2-general form-control','id'=>'destinationS','required'])!!}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Carrier</label>
+                                            <label class=""><b>Carrier</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('carrierM[]',$values['carrier'],null,['class'=>'m-select2-general form-control','id'=>'carrierM','required'])!!}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label class="">Status</label>
+                                            <label class=""><b>Status</b></label>
                                             <div class="" id="carrierMul">
                                                 {!! Form::select('destination',$values['status'],null,['class'=>'m-select2-general form-control','id'=>'statusS','required'])!!}
                                             </div>
                                         </div>
                                         <div class="col-lg-2">
-                                            <label><br></label>
-                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill form-control">Search</button>
+                                            <br>
+                                            <button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill btn-block">Search</button>
                                         </div>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@ New \ Status Import  &nbsp;
                                         Schedule
                                     </th>
                                     <th style="width:7%">
-                                        Transit Time
+                                        TT
                                     </th>
                                     <th style="width:10%">
                                         Via
@@ -329,52 +329,56 @@ New \ Status Import  &nbsp;
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contractsLcl.js"></script>
 <script>
-    var oTable = $('#tableRates').DataTable({
-        processing: true,
-        serverSide: true,
-        autoWidth: true,
-        searching: true,
-        ordering: true,
-        order: [[ 3, "asc" ],[ 4, "asc" ]],
-        "columnDefs": [
-            { className: "truncate", "targets": [ 0,1] }
-        ],
-        ajax: {
-            url: "{{ route('contractlcl.table') }}",
-            data: function (d) {
-                d.carrierM = $('select#carrierM').val();
-                d.origin = $('select#originS').val();
-                d.destination = $('select#destinationS').val();
-                d.status = $('select#statusS').val();
-            }
-        },
-        columns: [
-            {data: 'name', name: 'name'},
-            {data: 'carrier', name: 'carrier'},
-            {data: 'port_orig', name: 'port_orig'},
-            {data: 'port_dest', name: 'port_dest'},
-            {data: 'uom', name: 'uom'},
-            {data: 'minimum', name: 'minimum'},
-            {data: 'currency', name: 'currency'},
-            {data: 'validity', name: 'validity'},
-            {data: 'status', name: 'status'},
-            {data: 'schedule_type', name: 'schedule_type'},
-            {data: 'transit_time', name: 'transit_time'},
-            {data: 'via', name: 'via'},
-            {data: 'options', name: 'options'}
-        ],
-
-    });
-
     $('#btnFiterSubmitSearch').click(function(){
-        $('#originS').removeAttr('required');
-        $('#carrierM').removeAttr('required');
-        $('#destinationS').removeAttr('required');
-        //alert($('select#originS').val());
-        $('#tableRates').DataTable().draw(true);
-        $('#originS').attr('required','required');
-        $('#carrierM').attr('required','required');
-        $('#destinationS').attr('required','required');
+        var carrier=$('#carrierM').val();
+        var origin = $('#originS').val();
+        var destination = $('#destinationS').val();
+        var status = $('#statusS').val();
+        if(carrier!='null' || origin!='null' || destination!='null' || status!='null'){
+            var oTable = $('#tableRates').DataTable({
+                processing: true,
+                serverSide: true,
+                autoWidth: true,
+                searching: true,
+                ordering: true,
+                destroy: true,
+                order: [[ 3, "asc" ],[ 4, "asc" ]],
+                "columnDefs": [
+                    { className: "truncate", "targets": [ 0,1] }
+                ],
+                ajax: {
+                    url: "{{ route('contractlcl.table') }}",
+                    data: {
+                        "carrier":carrier,
+                        "origin":origin,
+                        "destination":destination,
+                        "status":status,
+                    }
+                },
+                columns: [
+                    {data: 'name', name: 'name'},
+                    {data: 'carrier', name: 'carrier'},
+                    {data: 'port_orig', name: 'port_orig'},
+                    {data: 'port_dest', name: 'port_dest'},
+                    {data: 'uom', name: 'uom'},
+                    {data: 'minimum', name: 'minimum'},
+                    {data: 'currency', name: 'currency'},
+                    {data: 'validity', name: 'validity'},
+                    {data: 'status', name: 'status'},
+                    {data: 'schedule_type', name: 'schedule_type'},
+                    {data: 'transit_time', name: 'transit_time'},
+                    {data: 'via', name: 'via'},
+                    {data: 'options', name: 'options'}
+                ],
+
+            });
+        }else{
+            swal(
+                'Warning!',
+                'Select an option at least',
+                'warning'
+            )
+        }
     });
     $(function() {
         /* $('#tableRates').DataTable({

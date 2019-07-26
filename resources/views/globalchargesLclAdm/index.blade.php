@@ -3,11 +3,11 @@
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
 @endsection
 @section('title', 'Global Charges LCL')
 @section('content')
-
-
 
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
@@ -47,12 +47,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xl-4 order-1 order-xl-2 m--align-left">
-                                    {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
-                                </div>
-                                <div class="col-xl-2 order-1 order-xl-2 m--align-left">
-                                </div>
-                                <div class="col-xl-6 order-1 order-xl-2 m--align-right">
+                                <div class="col-xl-12 order-1 order-xl-2 m--align-right">
                                     <a  id="newmodal" class="">
                                         <button id="new" type="button"  onclick="AbrirModal('addGlobalCharge',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             Add New
@@ -78,11 +73,25 @@
                                 </div>
 
                             </div>
+                            <br>
+                            <br>
+                            <div class="row" style="margin-bottom:30px;">
+                                <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                    {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                                </div>
+                                <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                    {!! Form::select('carrier',@$carriers,null,['class'=>'m-select2-general form-control','id'=>'carrier','placeholder'=>'Select company'])!!}
+                                </div>
+                                <div class="col-md-3 order-1 order-xl-2 m--align-left">
+                                    <button id="search" class="btn btn-primary">Search</button>
+                                    <a href="/globalchargeslcl/indexLclAdm" class="btn btn-primary">Reset</a>
+                                </div>
+                            </div>
                         </div>
                         <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Select</th>
+                                    <th></th>
                                     <th>Company</th>
                                     <th>Type</th>
                                     <th>Origin</th>
@@ -191,8 +200,10 @@
         }
     }
 
-    $(document).on('change', '#company_user', function(){
-        var company_id=$(this).val();
+    $(document).on('click', '#search', function(){
+        var company_id=$('#company_user').val();
+        var carrier=$('#carrier').val();
+        
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -227,7 +238,15 @@
                 }
             ],
             //serverSide: true,
-            ajax: '/globalchargeslcl/createLclAdm/'+company_id,
+            //ajax: '/globalchargeslcl/createLclAdm/'+company_id,
+            ajax: {
+                processData: true,
+                url: "{{ route('gclcladm.create') }}",
+                data: {
+                    "company_id":company_id,
+                    "carrier":carrier,
+                }
+            },
             columns: [
                 { data: null, render:function(){return "";}},
                 { data: 'company_user', name: 'company_user' },
@@ -278,7 +297,7 @@
                 var oTableT = $("#requesttable").dataTable();
                 var length=table.rows('.selected').data().length;
                 if (length>10) {
-                    for (var i = 0; i < 10; i++) { 
+                    for (var i = 0; i < 30; i++) { 
                         id.push(table.rows('.selected').data()[i].id);
                     }
                 }else{
@@ -301,24 +320,24 @@
                             if(data.success == 1){
                                 swal(
                                     'Deleted!',
-                                    'Your GloblaChargers Lclc has been deleted.',
+                                    'Your GloblaCharger LCL has been deleted.',
                                     'success'
                                 );
                                 $('#requesttable').DataTable().ajax.reload();
                             }else if(data == 2){
-                                swal("Error!", "an internal error occurred!", "error");
+                                swal("Error!", "An internal error occurred!", "error");
                             }
                         }
                     });
                 }
                 else
                 {
-                    swal("Error!", "Please select atleast one checkbox", "error");
+                    swal("Error!", "Please select at least one record", "error");
                 }
             } else if (result.dismiss === 'cancel') {
                 swal(
                     'Cancelled',
-                    'Your GloblaChargers is safe :)',
+                    'Your GloblaCharger is safe :)',
                     'error'
                 )
             }
@@ -331,7 +350,7 @@
         var oTable = $("#requesttable").dataTable(); 
         var length=table.rows('.selected').data().length;
         if (length>10) {
-            for (var i = 0; i < 10; i++) { 
+            for (var i = 0; i < 30; i++) { 
                 id.push(table.rows('.selected').data()[i].id);
             }
         }else{
