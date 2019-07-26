@@ -435,6 +435,10 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
+                        <div class="col-lg-2">
+            <label>Direction</label>
+            {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+          </div>
 
             </div><br>
             <div class="row">
@@ -506,14 +510,8 @@
           </div>
         </div><br>
         <div class="row">
-          <div class="col-lg-2">
-            <label>Incoterm</label>
-            {{ Form::select('incoterm_id',$incoterm,@$form['incoterm_id'],['id' => 'incoterm' ,'class'=>'form-control m-select2-general','required' => 'true']) }}
-          </div>
-          <div class="col-lg-2">
-            <label>Direction</label>
-            {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-          </div>
+
+
         </div>
         <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
           <div class="col-lg-2">
@@ -756,7 +754,7 @@
                 <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
                 @endif
                 @endif
-              </div><!-- aqui -->
+              </div>
               <div class="col-lg-2 d-flex justify-content-star align-items-end" align='right'> 
                 <!--  <button type="button" class="btn m-btn--pill  btn-info quote_man">Create Manual Quote<span class="la la-arrow-right"></span>
 </button> -->
@@ -880,13 +878,13 @@
                           </div>
                           Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>
-                        <div class="col-lg-4 d-flex align-items-center">
-                          <span class="portcss"> {{$arr->port_destiny->name  }}</span><br>
+                        <div class="col-lg-4 d-flex align-items-center flex-column">
+                          <span class="portcss"> {{$arr->port_destiny->name  }}</span>
                           <span class="portalphacode"> {{$arr->port_destiny->code  }}</span>
                         </div>
                       </div>
                       <br>
-                    </div>
+                    </div><!-- aqui -->
 
                     <div class="col-lg-3" style="padding-right: 35px;">
                       <div class="table-r__quotes">
@@ -936,7 +934,7 @@
                           @if($arr->excelRequest !="")
                           <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
                             <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workgreen">Download Excel</span>  
+                              <span class="workgreen"><i class="icon-excel"></i></span>  
 
                               <i class="la la-file-excel-o"></i>
                               </div>
@@ -974,10 +972,10 @@
                           <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
                           <div class="wth"><span class="portalphacode">Ammount</span></div>
                           <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Total</span></div>
+                          <div class="wth"><span class="portalphacode">Currency</span></div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
+                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
                     </div>
 
                     @foreach($arr->localOrig as $localO)   
@@ -1002,11 +1000,11 @@
                             <span class="bg-rates">{{ $localorigin['markup']}} </span>
                           </div>
                           <div class="wth" >     
-                            <span class="bg-rates"> {{ $localorigin['montoMarkup']}} </span>
+                            <span class="bg-rates"> {{ $localorigin['currency']}} </span>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['currency']}}</span></div>
+                      <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['montoMarkup']}}</span></div>
 
                     </div>
                     @endforeach
@@ -1040,10 +1038,10 @@
                           <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
                           <div class="wth"><span class="portalphacode">Ammount</span></div>
                           <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Total</span></div>
+                          <div class="wth"><span class="portalphacode">Currency</span></div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
+                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
                     </div>
                     @foreach($arr->rates as $rates)
                     <div class="row data-rates">
@@ -1065,11 +1063,11 @@
                             <span class="bg-rates">{{ $rates['markup'] }}  </span>
                           </div>
                           <div class="wth" >     
-                            <span class="bg-rates"> {{ $rates['total'] }} </span>
+                            <span class="bg-rates"> {{ $rates['currency'] }} </span>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="colorphacode"> {{ $rates['currency'] }}</span></div>
+                      <div class="col-lg-1" ><span class="colorphacode"> {{ $rates['total'] }}</span></div>
 
                     </div>
                     @endforeach
@@ -1098,11 +1096,11 @@
                             <span class="bg-rates">{{ $localfreight['markup']}} </span>
                           </div>
                           <div class="wth" >     
-                            <span class="bg-rates"> {{ $localfreight['montoMarkup']}} </span>
+                            <span class="bg-rates"> {{ $localfreight['currency']}} </span>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['currency']}}</span></div>
+                      <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['montoMarkup']}}</span></div>
                     </div>
                     @endforeach
                     @endforeach
@@ -1136,10 +1134,10 @@
                           <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
                           <div class="wth"><span class="portalphacode">Ammount</span></div>
                           <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Total</span></div>
+                          <div class="wth"><span class="portalphacode">Currency</span></div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
+                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
                     </div>
                     @foreach($arr->localDest as $local)   
                     @foreach($local as $localA)
@@ -1163,11 +1161,11 @@
                             <span class="bg-rates">{{ $localdestiny['markup']}} </span>
                           </div>
                           <div class="wth" >     
-                            <span class="bg-rates"> {{ $localdestiny['montoMarkup']}} </span>
+                            <span class="bg-rates"> {{ $localdestiny['currency']}} </span>
                           </div>
                         </div>
                       </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['currency']}}</span></div>
+                      <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['montoMarkup']}}</span></div>
 
                     </div>
                     @endforeach

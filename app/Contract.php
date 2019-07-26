@@ -49,13 +49,44 @@ class Contract extends Model implements Auditable
     public function FilesTmps(){
         return $thid->hasMany('App\FileTmp');  
     }
-    
+
     public function carriers(){
         return $this->hasMany('App\ContractCarrier','contract_id');
     }
-    
+
     public function direction(){
         return $this->belongsTo('App\Direction','direction_id');
     }
 
+    public function scopeCarrier($query, $carrier)
+    {
+        if ($carrier) {
+            return $query->where('carrier', $carrier);
+        }
+        return $query;
+    }
+
+    public function scopeStatus($query, $status)
+    {
+        if ($status) {
+            return $query->where('status', $status);
+        }
+        return $query;
+    }
+    
+    public function scopeDestPort($query, $port_dest)
+    {
+        if ($port_dest) {
+            return $query->where('port_dest', $port_dest);
+        }
+        return $query;
+    }
+    
+    public function scopeOrigPort($query, $port_orig)
+    {
+        if ($port_orig) {
+            return $query->where('port_orig', $port_orig);
+        }
+        return $query;
+    }
 }

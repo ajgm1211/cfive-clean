@@ -16,5 +16,13 @@ class SearchRate extends Model
   {
     return $this->belongsTo('App\User');
   }
+  public function company()
+  {
+    return $this->belongsTo('App\CompanyUser','company_user_id');
+  }
+  public function incoterm()
+  {
+    return $this->belongsTo('App\Incoterm','incoterm_id');
+  }
 
 }

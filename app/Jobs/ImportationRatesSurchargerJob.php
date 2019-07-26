@@ -4541,7 +4541,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $FileTmp = FileTmp::where('name_file','=',$NameFile)->delete();
 
         $userNotifique = User::find($this->UserId);
-        $message = 'The file imported was processed :' . $contractData->number ;
+        $message = 'The file imported was processed :' .$requestobj['Contract_id'] ;
         $userNotifique->notify(new SlackNotification($message));
         $userNotifique->notify(new N_general($userNotifique,$message)); 
 

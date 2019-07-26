@@ -237,7 +237,9 @@
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script>
 	$(document).ready( function () {
-		$('#global-table').DataTable();
+		$('#global-table').DataTable({
+            serverSide: true,
+        });
 	} );
 </script>
 <script>
