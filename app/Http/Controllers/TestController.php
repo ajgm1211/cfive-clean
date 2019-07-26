@@ -18,6 +18,7 @@ class TestController extends Controller
      */
     public function index()
     {
+        dd(env('APP_NAME'));
         try{
             $user_adm = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
             $client = new Client(['base_uri' => 'http://contractsai/']);

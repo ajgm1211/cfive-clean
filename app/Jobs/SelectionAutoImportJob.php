@@ -49,8 +49,13 @@ class SelectionAutoImportJob implements ShouldQueue
                 })->where('status',1)->first();
                 if(!empty($autoImp)){
                     try{
-                        $client = new Client(['base_uri' => 'http://contractsai/']);
-                        //$client = new Client(['base_uri' => 'http://contractsai/']);
+                        if(env('APP_ENV') == 'local'){
+                            $client = new Client(['base_uri' => 'http://contractsai/']);                            
+                        }else if(env('APP_ENV') == 'developer'){
+                            $client = new Client(['base_uri' => 'dev.contractsai.cargofive.com']);
+                        }else{
+                            $client = new Client(['base_uri' => 'prod.contractsai.cargofive.com']);
+                        }
                         //$response = $client->get('login?email=admin@example.com&password=secret');
                         //$response = $client->request('GET','ConverterFile/CFIndex', [
                         $response = $client->request('GET','ConverterFile/CFDispatchJob/'.$req_id, [
