@@ -1475,8 +1475,6 @@ class QuoteV2Controller extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
             $currency_cfg = Currency::find($company_user->currency_id);
         }
 
@@ -1679,7 +1677,7 @@ class QuoteV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -8858,7 +8856,7 @@ class QuoteV2Controller extends Controller
                         'Total weight (LCL/AIR)' => $quote->total_weight,
                         'Total volume (LCL/AIR)' => $quote->total_volume,
                         'Chargeable weight (LCL/AIR)' => $quote->chargeable_weight,
-                        'Company' => $quote->company->business_name,
+                        'Company' => @$quote->company->business_name,
                         'Contact' => @$quote->contact->first_name . ' ' . @$quote->contact->last_name,
                         'User' => @$quote->user->name . ' ' . @$quote->user->lastname,
                         'Price level' => @$quote->price->name,

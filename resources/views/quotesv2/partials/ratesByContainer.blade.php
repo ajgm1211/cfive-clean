@@ -278,6 +278,17 @@ $v=0;
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
+                                                <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
+                                                <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
+                                                <input type="hidden" name="subtotal_c40nor_freight" value="{{$sum40nor}}" class="subtotal_c40nor_freight"/>
+                                                <input type="hidden" name="subtotal_c45_freight" value="{{$sum45}}" class="subtotal_c45_freight"/>
+
+                                                <input type="hidden" name="subtotal_m20_freight" value="{{$sum_m20}}" class="subtotal_m20_freight"/>
+                                                <input type="hidden" name="subtotal_m40_freight" value="{{$sum_m40}}" class="subtotal_m40_freight"/>
+                                                <input type="hidden" name="subtotal_m40hc_freight" value="{{$sum_m40hc}}" class="subtotal_m40hc_freight"/>
+                                                <input type="hidden" name="subtotal_m40nor_freight" value="{{$sum_m40nor}}" class="subtotal_m40nor_freight"/>
+                                                <input type="hidden" name="subtotal_m45_freight" value="{{$sum_m45}}" class="subtotal_m45_freight"/>
                                             </tr>
                                             @endif
                                         </tbody>
@@ -524,6 +535,17 @@ $v=0;
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_origin_40nor">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_origin_45">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                <input type="hidden" name="subtotal_c20_origin" value="{{$sum_origin_20}}" class="subtotal_c20_origin"/>
+                                                <input type="hidden" name="subtotal_c40_origin" value="{{$sum_origin_40}}" class="subtotal_c40_origin"/>
+                                                <input type="hidden" name="subtotal_c40hc_origin" value="{{$sum_origin_40hc}}" class="subtotal_c40hc_origin"/>
+                                                <input type="hidden" name="subtotal_c40nor_origin" value="{{$sum_origin_40nor}}" class="subtotal_c40nor_origin"/>
+                                                <input type="hidden" name="subtotal_c45_origin" value="{{$sum_origin_45}}" class="subtotal_c45_origin"/>
+
+                                                <input type="hidden" name="subtotal_m20_origin" value="{{$sum_origin_m20}}" class="subtotal_m20_origin"/>
+                                                <input type="hidden" name="subtotal_m40_origin" value="{{$sum_origin_m40}}" class="subtotal_m40_origin"/>
+                                                <input type="hidden" name="subtotal_m40hc_origin" value="{{$sum_origin_m40hc}}" class="subtotal_m40hc_origin"/>
+                                                <input type="hidden" name="subtotal_m40nor_origin" value="{{$sum_origin_m40nor}}" class="subtotal_m40nor_origin"/>
+                                                <input type="hidden" name="subtotal_m45_origin" value="{{$sum_origin_m45}}" class="subtotal_m45_origin"/>                                                
                                             </tr>
                                             @endif
                                         </tbody>
@@ -773,6 +795,18 @@ $v=0;
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_destination_40nor">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_destination_45">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                
+                                                <input type="hidden" name="subtotal_c20_destination" value="{{$sum_destination_20}}" class="subtotal_c20_destination"/>
+                                                <input type="hidden" name="subtotal_c40_destination" value="{{$sum_destination_40}}" class="subtotal_c40_destination"/>
+                                                <input type="hidden" name="subtotal_c40hc_destination" value="{{$sum_destination_40hc}}" class="subtotal_c40hc_destination"/>
+                                                <input type="hidden" name="subtotal_c40nor_destination" value="{{$sum_destination_40nor}}" class="subtotal_c40nor_destination"/>
+                                                <input type="hidden" name="subtotal_c45_destination" value="{{$sum_destination_45}}" class="subtotal_c45_destination"/>
+
+                                                <input type="hidden" name="subtotal_m20_destination" value="{{$sum_destination_m20}}" class="subtotal_m20_destination"/>
+                                                <input type="hidden" name="subtotal_m40_destination" value="{{$sum_destination_m40}}" class="subtotal_m40_destination"/>
+                                                <input type="hidden" name="subtotal_m40hc_destination" value="{{$sum_destination_m40hc}}" class="subtotal_m40hc_destination"/>
+                                                <input type="hidden" name="subtotal_m40nor_destination" value="{{$sum_destination_m40nor}}" class="subtotal_m40nor_destination"/>
+                                                <input type="hidden" name="subtotal_m45_destination" value="{{$sum_destination_m45}}" class="subtotal_m45_destination"/>                                                 
                                             </tr>
                                             @endif
                                         </tbody>

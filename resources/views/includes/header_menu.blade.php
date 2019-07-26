@@ -269,8 +269,6 @@
                                         </span>
                                     </a>
                                 </li>
-                            @endif
-                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
                                 <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                     <a  href="{{ route('settings.index') }}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-profile"></i>
@@ -279,6 +277,8 @@
                                         </span>
                                     </a>
                                 </li>
+                            @endif
+                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
                                 <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                     <a  href="{{ route('terms.list') }}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-warning-sign"></i>
