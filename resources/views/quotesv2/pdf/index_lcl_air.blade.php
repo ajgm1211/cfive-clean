@@ -47,9 +47,11 @@
                 </span>
             </div>
             <div class="company text-right" style="float: right; width: 350px; line-height: 10px;">
+                @if($quote->company_id!='')
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>To:</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Para:</b></p>
                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Para:</b></p>
+                @endif
                 <span id="destination_input" style="line-height: 0.5">
                     @if($quote->pdf_option->show_logo==1)
                       @if($quote->company->logo!='')
@@ -57,8 +59,8 @@
                       @endif
                     @endif
                     <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{$quote->company->business_name}}</b></span></p>
-                    <p style="line-height:10px;">{{$quote->company->address}}</p>
+                    <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
+                    <p style="line-height:10px;">{{@$quote->company->address}}</p>
                     <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
                     <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                 </span>
@@ -883,5 +885,16 @@
             </div>
         @endif
     </main>
+    <footer>
+        @if($user->companyUser->footer_type=='Image')
+            @if($user->companyUser->footer_image!='')
+                <div class="clearfix">
+                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->footer_image)}}" class="img img-fluid" style="max-height:70px;">
+                </div>
+            @endif
+        @else
+            {!!$user->companyUser->footer_text!!}
+        @endif
+    </footer>        
 </body>
 </html>
