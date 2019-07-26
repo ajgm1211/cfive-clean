@@ -727,7 +727,7 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
 
 Auth::routes();
 
-/*$router->get('/tests', function() {
+$router->get('/APP_ENV', function() {
     return env('APP_ENV');
     //return App\User::where('email','admin@example.com')->first();
-});*/
+})->middleware(['auth','role:administrator|company|subuser']);
