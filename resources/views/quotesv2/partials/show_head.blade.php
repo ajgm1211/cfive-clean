@@ -71,7 +71,7 @@
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
                                     {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden']) }}
-                                    <span class="company_span">{{$quote->company->business_name}}</span>
+                                    <span class="company_span">{{@$quote->company->business_name}}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -169,8 +169,8 @@
                                 <div class="col-md-4">
                                     <br>
                                     <label class="title-quote"><b>Incoterm:&nbsp;&nbsp;</b></label>
-                                    {{ Form::select('incoterm_id',$incoterms,$quote->incoterm_id,['class'=>'form-control incoterm_id select2','hidden','']) }}
-                                    <span class="incoterm_id_span">{{$quote->incoterm->name}}</span>
+                                    {{ Form::select('incoterm_id',@$incoterms,$quote->incoterm_id,['class'=>'form-control incoterm_id select2','hidden','']) }}
+                                    <span class="incoterm_id_span">{{@$quote->incoterm->name}}</span>
                                 </div>
                                 <div class="col-md-4">
                                     <br>
@@ -228,10 +228,10 @@
                                     <br>
                                     <hr>
                                     <br>
-                                    <a class="btn btn-danger" id="cancel" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                    <a class="btn btn-danger" id="cancel" style="color:white;">
                                         Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
                                     </a>
-                                    <a class="btn btn-primary" id="update" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                    <a class="btn btn-primary" id="update" style="color:white;">
                                         Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
                                     </a>
                                 </div>
