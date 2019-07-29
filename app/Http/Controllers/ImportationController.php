@@ -39,6 +39,7 @@ use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use App\Jobs\ImportationRatesFclJob;
+use App\Jobs\SynchronImgCarrierJob;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
@@ -267,7 +268,7 @@ class ImportationController extends Controller
             }
 
         } else {
-            ReprocessRatesJob::dispatch($id);
+            ReprocessRatesJob::dispatch($id)->onQueue('importation');
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The rates are reprocessing in the background');
             return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'1']);
@@ -492,7 +493,7 @@ class ImportationController extends Controller
             }
 
         } else {
-            ReprocessSurchargersJob::dispatch($id);
+            ReprocessSurchargersJob::dispatch($id)->onQueue('importation');
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The Surchargers are reprocessing in the background');
             return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
@@ -639,7 +640,8 @@ class ImportationController extends Controller
             $account->request_id        = $request_id;
             $account->save();
 
-            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
+            ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account')->onQueue('importation');
+            //Queue::connection("importation")->push(new ProcessContractFile($account->id,$account->namefile,'fcl','account'));
 
             if($selector == 2){
                 $contract = Contract::find($request->contract_id);
@@ -822,7 +824,7 @@ class ImportationController extends Controller
         /*Rate::where('contract_id',$request->Contract_id)->forceDelete();
         FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
         $errors = 0;
-        ImportationRatesFclJob::dispatch($requestobj);
+        ImportationRatesFclJob::dispatch($requestobj)->onQueue('importation');
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
     }
     public function FailedRatesDeveloper($id,$tab){
@@ -849,7 +851,7 @@ class ImportationController extends Controller
         Rate::where('contract_id',$request->Contract_id)->forceDelete();
         FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
 
-        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
+        ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId)->onQueue('importation'); //NO BORRAR!!
         $id = $request['Contract_id'];
         return redirect()->route('redirect.Processed.Information',$id);
     }
@@ -1401,7 +1403,7 @@ class ImportationController extends Controller
     public function DestroyRatesG($id){
         try{
             $Rate = Rate::find($id);
-            $Rate->delete();
+            $Rate->forceDelete();
             return 1;
         }catch(\Exception $e){
             return 2;
@@ -4169,7 +4171,7 @@ class ImportationController extends Controller
     public function DestroySurchargersG($id){
         try{
             $surchargers = LocalCharge::find($id);
-            $surchargers->delete();
+            $surchargers->forceDelete();
             return 1;
         }catch(\Exception $e){
             return 2;
@@ -5326,15 +5328,17 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        $carriers = Carrier::all();
+        /*$carriers = Carrier::all();
         foreach($carriers as $carrier){
             $type['type'] = [strtolower($carrier->name)];
-            $json = json_encode($type);
+            $json = json_encode($type);importation
             $carrier->varation  = $json;
             $carrier->save();
         }
         //dd(PrvHarbor::get_harbor('chile'));
-        dd(PrvCarrier::get_carrier('cosco'));
+        dd(PrvCarrier::get_carrier('cosco'));*/
+        //SynchronImgCarrierJob::dispatch()->onConnection('importation');
+        SynchronImgCarrierJob::dispatch()->onQueue('importation');
     }
 
 }

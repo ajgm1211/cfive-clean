@@ -267,19 +267,13 @@
         }).then(function(result){
             if (result.value) {
                 var oTableT = $("#requesttable").dataTable();
-                var length=table.rows('.selected').data().length;
-                if (length>10) {
-                    for (var i = 0; i < 30; i++) { 
-                        id.push(table.rows('.selected').data()[i].id);
-                    }
-                }else{
-                    for (var i = 0; i < length; i++) { 
-                        id.push(table.rows('.selected').data()[i].id);
-                    }
-                }           
+                var length=table.rows('.selected').data().length;       
 
                 if(length > 0)
                 {
+                    for (var i = 0; i < length; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
                     url='{!! route("globalcharges.destroyArr",":id") !!}';
                     url = url.replace(':id', id);
                     var token = $("meta[name='csrf-token']").attr("content");
@@ -320,38 +314,15 @@
         var id = [];
         var oTable = $("#requesttable").dataTable();
         var length=table.rows('.selected').data().length;                
-        if (length>10) {
-            for (var i = 0; i < 30; i++) { 
-                id.push(table.rows('.selected').data()[i].id);
-            }
-        }else{
+
+        if(length > 0)
+        {
             for (var i = 0; i < length; i++) { 
                 id.push(table.rows('.selected').data()[i].id);
             }
-        } 
-        if(length > 0)
-        {
             url='{!! route("gcadm.dupicate.Array",":id") !!}';
             url = url.replace(':id', id);
             var token = $("meta[name='csrf-token']").attr("content");
-            /*$.ajax({
-                        url:url,
-                        method:"post",
-                        data:{id:id,_token:token},
-                        success:function(data)
-                        {
-                            if(data.success == 1){
-                                swal(
-                                    'Deleted!',
-                                    'Your GloblaChargers has been deleted.',
-                                    'success'
-                                );
-                                $('#requesttable').DataTable().ajax.reload();
-                            }else if(data == 2){
-                                swal("Error!", "an internal error occurred!", "error");
-                            }
-                        }
-                    });*/
             url = url.replace(':id', id);
             $('#global-body').load(url,{id:id,_token:token},function(){
                 $('#global-modal').modal({show:true});
