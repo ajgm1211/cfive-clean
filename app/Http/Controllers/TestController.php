@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 use App\User;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
+use App\AutoImportation;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
-use GuzzleHttp\Psr7;
+use App\Jobs\SendEmailAutoImporJob;
 use GuzzleHttp\Exception\RequestException;
 
 class TestController extends Controller
@@ -16,27 +18,9 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        dd(env('APP_NAME'));
-        try{
-            $user_adm = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
-            $client = new Client(['base_uri' => 'http://contractsai/']);
-            //$response = $client->get('login?email=admin@example.com&password=secret');
-            //$response = $client->request('GET','ConverterFile/CFIndex', [
-            $response = $client->request('GET','ConverterFile/CFDispatchJob/5', [
-                'headers' => [
-                    //'Authorization' => $auth->api_key,
-                    'Authorization' => 'Bearer '.$user_adm->api_token,
-                    'Accept'        => 'application/json',
-                ]
-            ]);
-            $dataGen = json_decode($response->getBody()->getContents(),true);
-            dd($dataGen);
-            return $dataGen;
-        } catch (RequestException $e) {
-            echo 'falla de conexion';
-        }
+        return view('testings.index');
         //dd($dataGen);
     }
 
@@ -45,9 +29,14 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        SelectionAutoImportJob::dispatch($request->text1,'fcl');
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'OK');
+
+        return back();
     }
 
     /**
@@ -69,8 +58,58 @@ class TestController extends Controller
      */
     public function show($id)
     {
-
-        dd($id);
+        $req_id = $id;
+        $request_cont = NewContractRequest::find($req_id);
+        $request_cont = $request_cont->load('Requestcarriers');
+        $user_adm_rq = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
+        $admins = User::where('type','admin')->get();
+        if(count($request_cont->Requestcarriers) == 1){
+            $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {
+                $query->whereIn('carrier_id',$request_cont->Requestcarriers->pluck('carrier_id'));
+            })->where('status',1)->first();
+            if(!empty($autoImp)){
+                try{
+                    if(env('APP_ENV') == 'local'){
+                        $client = new Client(['base_uri' => 'http://contractsai/']);                            
+                    }else if(env('APP_ENV') == 'developer'){
+                        $client = new Client(['base_uri' => 'http://dev.contractsai.cargofive.com/']);
+                    }else{
+                        $client = new Client(['base_uri' => 'http://prod.contractsai.cargofive.com/']);
+                    }
+                    //$response = $client->get('login?email=admin@example.com&password=secret');
+                    //$response = $client->request('GET','ConverterFile/CFIndex', [
+                    $response = $client->request('GET','ConverterFile/CFDispatchJob/'.$req_id, [
+                        'headers' => [
+                            //'Authorization' => $auth->api_key,
+                            'Authorization' => 'Bearer '.$user_adm_rq->api_token,
+                            'Accept'        => 'application/json',
+                        ]
+                    ]);
+                    $dataGen = json_decode($response->getBody()->getContents(),true);
+                    dd($dataGen);
+                    //return $dataGen;
+                } catch (RequestException $e) {
+                    //Enviar correo falla de conexion
+                    $message = 'connection failure, Request Id: '.$req_id.' I qualify for Auto-Import';
+                    dd($message);
+                    foreach($admins as $userNotifique){
+                        SendEmailAutoImporJob::dispatch($userNotifique->email,$message);
+                    }
+                }
+            }
+        } else{
+            $autoImp = AutoImportation::whereHas('carriersAutoImportation',function($query) use($request_cont) {
+                $query->whereIn('carrier_id',$request_cont->Requestcarriers->pluck('carrier_id'));
+            })->where('status',1)->first();
+            if(!empty($autoImp)){
+                //Enviar correo
+                $message = 'There is more than one carrier and one of them are listed in the Auto Import. Request Id: '.$req_id;
+                dd($message);
+                foreach($admins as $userNotifique){
+                    SendEmailAutoImporJob::dispatch($userNotifique->email,$message);
+                }
+            } 
+        }
     }
 
     /**
