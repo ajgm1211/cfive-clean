@@ -211,6 +211,12 @@ font-family: sans-serif !important;
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         {!!$text!!}
+                        <br>
+                        @if($sign_type=='text')
+                            {!!$sign!!}
+                        @else
+                            <img src="{{$message->embed(Storage::disk('s3_upload')->url($sign))}}" width=100>
+                        @endif
                     </td>
                 </tr>
             </table>
