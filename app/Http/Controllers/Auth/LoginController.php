@@ -49,10 +49,10 @@ class LoginController extends Controller
       "name" => $user->name,
     ]);
     // Crear hash id del usuario logueado 
-    setHashID();
+    
 
     if($user->company_user_id != ""){
-
+setHashID();
       $client->users->create([
         "email" => $user->email,
         "companies" => [
