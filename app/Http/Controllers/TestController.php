@@ -9,6 +9,7 @@ use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\Jobs\SendEmailAutoImporJob;
+use App\Jobs\SelectionAutoImportJob;
 use GuzzleHttp\Exception\RequestException;
 
 class TestController extends Controller
