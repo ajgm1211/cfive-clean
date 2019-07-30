@@ -61,7 +61,7 @@ class TestController extends Controller
     {
         $req_id = $id;
         $request_cont = NewContractRequest::find($req_id);
-        $request_cont = $request_cont->load('Requestcarriers');
+        $request_cont->load('Requestcarriers');
         $user_adm_rq = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
         $admins = User::where('type','admin')->get();
         if(count($request_cont->Requestcarriers) == 1){
