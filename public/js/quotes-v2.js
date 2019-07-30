@@ -155,7 +155,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -168,7 +168,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency); 
             });
 
@@ -488,11 +489,6 @@ $(document).ready(function() {
                 }
                 sum_c20 += amount_c20;
             });
-
-            /*sub_total_freight_20 = parseFloat($(this).closest('div.rates').find('.subtotal_c20_freight').val())+parseFloat($(this).closest('div.rates').find('.subtotal_c20_origin').val())+parseFloat($(this).closest('div.rates').find('.subtotal_c20_destination').val());
-            alert(parseFloat($(this).closest('div.rates').find('.subtotal_c20_'+type).val())+parseFloat(newValue));
-
-            $(this).closest('div.rates').find('.sum_total_amount_20').html(sub_total_freight_20);*/
 
             //Mostrando sub total de gastos
             $(this).closest('div.rates').find('.sum_total_amount_20').html(sum_c20);
@@ -869,7 +865,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -882,7 +878,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -1474,7 +1471,7 @@ $(document).on('click', '.store_charge_lcl', function () {
         var sub_total = parseFloat($(this).html());
         var currency=$(this).closest('tr').find('.local_currency').html();
         var currency_cfg = $("#currency_id").val();
-        $.ajax({
+        /*$.ajax({
             url: '/api/currency/alphacode/'+currency,
             dataType: 'json',
             async: false,
@@ -1487,7 +1484,8 @@ $(document).on('click', '.store_charge_lcl', function () {
                 }
                 total_currency = total_currency.toFixed(2);
             }
-        });
+        });*/
+        total_currency = currencyRateAlphacode(currency, currency_cfg, value);
         sum += parseFloat(total_currency);
     });
 
