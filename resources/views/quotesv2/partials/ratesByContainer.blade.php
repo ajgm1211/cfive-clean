@@ -256,7 +256,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -278,7 +278,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
-                                                <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
+                                                <input type="text" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
                                                 <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
                                                 <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
                                                 <input type="hidden" name="subtotal_c40nor_freight" value="{{$sum40nor}}" class="subtotal_c40nor_freight"/>
@@ -513,7 +513,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -773,7 +773,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control local_currency currency_id select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -980,7 +980,7 @@ $v=0;
                                                         </li>
                                                     </ul>
                                                 </div>
-                                                <div class="details_inland_{{$x}} hide">
+                                                <div class="details_inland_{{$x}}">
                                                     <table class="table table-sm table-bordered color-blue text-center">
                                                         <thead class="title-quote text-center header-table">
                                                             <tr style="height: 40px;">
@@ -1041,9 +1041,6 @@ $v=0;
                                                                 <td class="tds">
                                                                     <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
                                                                     &nbsp;
-                                                                    <!--<a class="delete-inland" style="cursor: pointer;" title="Delete">
-<span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-</a>-->
                                                                 </td>
                                                             </tr>
                                                             <tr style="height:40px;" class="hide" id="inland_charges_{{$x}}">
