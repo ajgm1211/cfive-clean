@@ -96,7 +96,7 @@ Route::prefix('globalcharges')->group(function () {
   // CRUD Global Charge Administrator FCL -------------------------------------------------------------------------------------------------
 
   Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator|data_entry']);
-  Route::get('createAdm','GlobalChargesController@createAdm')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
+  Route::get('createAdm','GlobalChargesController@createAdm_proc')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
   Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
   Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
   Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator|data_entry']);
