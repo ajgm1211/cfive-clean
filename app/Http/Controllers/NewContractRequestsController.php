@@ -294,8 +294,21 @@ class NewContractRequestsController extends Controller
 
     public function showStatus($id){
         $requests = NewContractRequest::find($id);
-        //dd($requests);
-        return view('Requests.Body-Modals.edit',compact('requests'));
+        $status = $requests->status;
+        $status_arr = [];
+        if($status == 'Pending'){
+            $status_arr['Pending'] = 'Pending';
+            $status_arr['Processing'] = 'Processing';
+        } elseif($status == 'Processing'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+        } elseif($status == 'Review' || $status == 'Done'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+            $status_arr['Done'] = 'Done';
+        }
+
+        return view('Requests.Body-Modals.edit',compact('requests','status_arr'));
     }
     public function edit($id)
     {
