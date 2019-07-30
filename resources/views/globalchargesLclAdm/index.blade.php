@@ -203,7 +203,7 @@
     $(document).on('click', '#search', function(){
         var company_id=$('#company_user').val();
         var carrier=$('#carrier').val();
-        
+
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -296,18 +296,12 @@
             if (result.value) {
                 var oTableT = $("#requesttable").dataTable();
                 var length=table.rows('.selected').data().length;
-                if (length>10) {
-                    for (var i = 0; i < 30; i++) { 
-                        id.push(table.rows('.selected').data()[i].id);
-                    }
-                }else{
-                    for (var i = 0; i < length; i++) { 
-                        id.push(table.rows('.selected').data()[i].id);
-                    }
-                }           
 
                 if(length > 0)
                 {
+                    for (var i = 0; i < length; i++) { 
+                        id.push(table.rows('.selected').data()[i].id);
+                    }
                     url='{!! route("globalchargeslcl.destroyArr",":id") !!}';
                     url = url.replace(':id', id);
                     var token = $("meta[name='csrf-token']").attr("content");
@@ -349,16 +343,11 @@
         var id = [];
         var oTable = $("#requesttable").dataTable(); 
         var length=table.rows('.selected').data().length;
-        if (length>10) {
-            for (var i = 0; i < 30; i++) { 
-                id.push(table.rows('.selected').data()[i].id);
-            }
-        }else{
+
+        if(length > 0){
             for (var i = 0; i < length; i++) { 
                 id.push(table.rows('.selected').data()[i].id);
             }
-        } 
-        if(length > 0){
             url='{!! route("gclcladm.duplicate.Array",":id") !!}';
             url = url.replace(':id', id);
             var token = $("meta[name='csrf-token']").attr("content");

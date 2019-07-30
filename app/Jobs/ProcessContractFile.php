@@ -12,6 +12,7 @@ use App\Carrier;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
+use App\Jobs\SelectionAutoImportJob;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\AccountImportationContractFcl as AccountFcl;
@@ -56,6 +57,7 @@ class ProcessContractFile implements ShouldQueue
                 //$file       = \Storage::disk('FclRequest')->get($file);
                 $file       = File::get(storage_path('app/public/Request/Fcl/'.$name));
                 $s3->put('Request/FCL/'.$filePath, $file, 'public');
+                SelectionAutoImportJob::dispatch($this->id,$this->type);
 
             } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
 

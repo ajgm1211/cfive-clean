@@ -149,8 +149,20 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 
     public function showStatus($id){
         $requests = NewGlobalchargeRequestFcl::find($id);
-        //dd($requests);
-        return view('RequestGlobalChargeFcl.Body-Modals.edit',compact('requests'));
+        $status = $requests->status;
+        $status_arr = [];
+        if($status == 'Pending'){
+            $status_arr['Pending'] = 'Pending';
+            $status_arr['Processing'] = 'Processing';
+        } elseif($status == 'Processing'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+        } elseif($status == 'Review' || $status == 'Done'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+            $status_arr['Done'] = 'Done';
+        }
+        return view('RequestGlobalChargeFcl.Body-Modals.edit',compact('requests','status_arr'));
     }
 
     public function store(Request $request)
