@@ -603,22 +603,24 @@
                                 @endforeach
                                 @if(!$r->automaticInlandLclAir->isEmpty()){
                                     @php
-                                        $total_inland=0;
+                                        $total_inland_origin=0;
                                     @endphp
                                     @foreach($r->automaticInlandLclAir as $v)
                                         @if($v->type=='Origin')
-                                            <?php
-                                                $total_inland+=@$v->total_inland_origin;
-                                            ?>
-                                            <tr class="text-center color-table">
-                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
-                                                <td>{{$v->distance}}</td>
-                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
-                                                <td >{{$v->units}}</td>
-                                                <td >{{$v->rate}}</td>
-                                                <td >{{$v->total}}</td>
-                                                <td>{{$v->currency->alphacode}}</td>
-                                            </tr>
+                                            @if($r->automaticInlandLclAir->where('port_id', $v->port_id)->count()==1)
+                                                <?php
+                                                    $total_inland_origin+=$v->total_inland_origin;
+                                                ?>
+                                                <tr class="text-center color-table">
+                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>{{$v->distance}}</td>
+                                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
+                                                    <td >{{$v->units}}</td>
+                                                    <td >{{$v->rate_amount}}</td>
+                                                    <td >{{$v->units*$v->rate_amount}}</td>
+                                                    <td>{{$v->currency->alphacode}}</td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @endforeach
                                 @endif                            
@@ -630,7 +632,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_origin, 2, '.', '')}}</b></td>
+                            <td ><b>{{number_format(@$total_origin+@$total_inland_origin, 2, '.', '')}}</b></td>
                             @if($quote->pdf_option->grouped_origin_charges==1)
                                 <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
                             @else
@@ -643,6 +645,97 @@
             @endforeach
         @endif
         <br>
+        <?php
+            $i=0;
+            foreach($rate as $r){
+                if(!$r->inland->isEmpty()){
+                    foreach($r->inland as $v){
+                        if($v->type=='Origin'){
+                            if($r->inland->where('port_id', $v->port_id)->count()>1){
+                                $a++;
+                            }
+                        }
+                    }
+                }
+            }
+        ?>
+        @if($quote->pdf_option->grouped_origin_charges==0 && $quote->pdf_option->show_type=='detailed' && $i>1)
+            @foreach($origin_charges_grouped as $origin => $value)
+                @foreach($value as $carrier => $item)
+                    <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin inlands - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Inlands de origen - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Inlands de origem - {{$origin}}</p>
+                        <br>
+                    </div>
+                    <table border="0" cellspacing="1" cellpadding="1"  {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
+                        <thead class="title-quote text-center header-table">
+                            <tr >
+                                <th class="unit"><b>Charge</b></th>
+                                <th class="unit"><b>Detail</b></th>
+                                @if($quote->type=='LCL')
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                @else
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                @endif
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Units</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Unidades</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Unidades</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Rate</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tarifa</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Taxa</b></th>
+                                <th ><b>Total</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($item as $rate)
+                            @foreach($rate as $r)
+                                @if(!$r->automaticInlandLclAir->isEmpty()){
+                                    @php
+                                        $total_inland=0;
+                                    @endphp
+                                    @foreach($r->automaticInlandLclAir as $v)
+                                        @if($v->type=='Origin')
+                                            @if($r->inland->where('port_id', $v->port_id)->count()>1)
+                                                <?php
+                                                    $total_inland+=@$v->total_inland_origin;
+                                                ?>
+                                                <tr class="text-center color-table">
+                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>{{$v->distance}}</td>
+                                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
+                                                    <td >{{$v->units}}</td>
+                                                    <td >{{$v->rate}}</td>
+                                                    <td >{{$v->total}}</td>
+                                                    <td>{{$v->currency->alphacode}}</td>
+                                                </tr>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                @endif                            
+                            @endforeach
+                        @endforeach
+                        <tr>
+                            <td><b>Total local charges</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+                            <td ><b>{{number_format(@$total_inland, 2, '.', '')}}</b></td>
+                            @if($quote->pdf_option->grouped_origin_charges==1)
+                                <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
+                            @else
+                                <td><b>{{$currency_cfg->alphacode}}</b></td>
+                            @endif     
+                        </tr>
+                    </tbody>
+                </table>
+                @endforeach
+            @endforeach
+        @endif
         <!-- All in destination table -->
         @if($quote->pdf_option->grouped_destination_charges==1 && $quote->pdf_option->show_type=='detailed' )
             @foreach($destination_charges_grouped as $destination=>$detail)
