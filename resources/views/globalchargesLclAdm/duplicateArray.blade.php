@@ -5,7 +5,7 @@
         <div class="form-group m-form__group row">
             <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         {!! Form::label('company_user', 'Company User') !!}
                         <div class="m-input-icon m-input-icon--right">
                             {{ Form::select('company_user_id',$company_users,null,['id' => 'company_user_id','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
@@ -17,39 +17,11 @@
         <div class="form-group m-form__group row">
 
             <div class="col-lg-12">
-                <table class="table m-table m-table--head-separator-primary examm"  id="load" >
-                    <thead class="examm" width="100%">
-                        <tr>
-                            <th>Type</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Charge T</th>
-                            <th>Calculation T</th>
-                            <th>Currency</th>
-                            <th>Carrier</th>
-                            <th>Amount</th>
-                            <th>Minimum</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($global as $gb)
-                        <tr>
-                            <th>{{$gb['surcharge']}}</th>
-                            <th>{{$gb['origin']}}</th>
-                            <th>{{$gb['destination']}}</th>
-                            <th>{{$gb['typedestiny']}}</th>
-                            <th>{{$gb['calculationtype']}}</th>
-                            <th>{{$gb['currency']}}</th>
-                            <th>{{$gb['carrier']}}</th>
-                            <th>{{$gb['ammount']}}</th>
-                            <th>{{$gb['minimum']}}</th>
-
-                        </tr>
-
-                        @endforeach
-                    </tbody>
-
-                </table>
+                <center>
+                    <h5 >{{$count}} - Globalchargers selected</h5>
+                </center>
+            </div>
+            <div class="col-lg-12">
                 @foreach($globals_id_array as $gb)
                 <input type="hidden" name="idArray[]" value="{{$gb}}">
                 @endforeach
