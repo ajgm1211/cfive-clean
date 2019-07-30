@@ -60,6 +60,7 @@ use App\ScheduleType;
 use App\RemarkCondition;
 use App\RemarkHarbor;
 use App\RemarkCarrier;
+use App\EmailSetting;
 //LCL
 use App\ContractLcl;
 use App\RateLcl;
@@ -135,8 +136,9 @@ class QuoteV2Controller extends Controller
             }else{
                 $id = $quote->quote_id;
             }
-            $rates = AutomaticRate::where('quote_id',$quote->id)->get();
+            $rates = AutomaticRate::where('quote_id',$quote->id)->with('origin_port','destination_port')->get();
             $origin = '';
+            $destination = '';
             foreach($rates as $rate){
                 if($rate->origin_port_id!=''){
                     $origin.='<li>'.$rate->origin_port->name.'</li>';
@@ -145,9 +147,6 @@ class QuoteV2Controller extends Controller
                 }else if($rate->origin_address!=''){
                     $origin.='<li>'.$rate->origin_address.'</li>';
                 }
-            }
-            $destination = '';
-            foreach($rates as $rate){
                 if($rate->destination_port_id!=''){
                     $destination.='<li>'.$rate->destination_port->name.'</li>';
                 }else if($rate->destination_airport_id!=''){
@@ -1008,9 +1007,13 @@ class QuoteV2Controller extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
             $currency_cfg = Currency::find($company_user->currency_id);
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings->email_signature_type=='text'){
+                $sign = $email_settings->email_signature_text;
+            }else{
+                $sign = $email_settings->email_signature_image;
+            }
         }
 
         /** RATES **/
@@ -1085,12 +1088,18 @@ class QuoteV2Controller extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings->email_signature_type=='text'){
+                $sign = $email_settings->email_signature_text;
+                $sign_type = 'text';
+            }else{
+                $sign = $email_settings->email_signature_image;
+                $sign_type = 'image';
+            }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'ammounts_type'=>$ammounts_type,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed]);
 
         // EVENTO INTERCOM 
         $event = new  EventIntercom();
@@ -1112,6 +1121,8 @@ class QuoteV2Controller extends Controller
                 $send_quote->subject = $subject;
                 $send_quote->body = $body;
                 $send_quote->quote_id = $quote->id;
+                $send_quote->sign_type = $sign_type;
+                $send_quote->sign = $sign;
                 $send_quote->status = 0;
                 $send_quote->save();
             }
@@ -1122,6 +1133,8 @@ class QuoteV2Controller extends Controller
             $send_quote->subject = $subject;
             $send_quote->body = $body;
             $send_quote->quote_id = $quote->id;
+            $send_quote->sign_type = $sign_type;
+            $send_quote->sign = $sign;
             $send_quote->status = 0;
             $send_quote->save();
         }
@@ -1161,8 +1174,12 @@ class QuoteV2Controller extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings->email_signature_type=='text'){
+                $sign = $email_settings->email_signature_text;
+            }else{
+                $sign = '<img src="'.email_signature_image.'" width=100>';
+            }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
 
@@ -1396,12 +1413,16 @@ class QuoteV2Controller extends Controller
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $type=$company_user->type_pdf;
-            $ammounts_type=$company_user->pdf_ammounts;
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings->email_signature_type=='text'){
+                $sign = $email_settings->email_signature_text;
+            }else{
+                $sign = '<img src="'.email_signature_image.'" width=100>';
+            }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
 
-        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
+        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
 
         // EVENTO INTERCOM 
         $event = new  EventIntercom();
@@ -1423,6 +1444,7 @@ class QuoteV2Controller extends Controller
                 $send_quote->subject = $subject;
                 $send_quote->body = $body;
                 $send_quote->quote_id = $quote->id;
+                $send_quote->sign = $sign;
                 $send_quote->status = 0;
                 $send_quote->save();
             }
@@ -1433,6 +1455,7 @@ class QuoteV2Controller extends Controller
             $send_quote->subject = $subject;
             $send_quote->body = $body;
             $send_quote->quote_id = $quote->id;
+            $send_quote->sign = $sign;
             $send_quote->status = 0;
             $send_quote->save();
         }
@@ -2838,7 +2861,7 @@ class QuoteV2Controller extends Controller
 
             if(isset($array_amounts['c45'])){
                 $amount45=$array_amounts['c45'];
-                $total45=($amount45+$markup45)/$currency_rate;
+                $total45=$amount45/$currency_rate;
                 $sum45 = number_format($total45, 2, '.', '');
             }
 
