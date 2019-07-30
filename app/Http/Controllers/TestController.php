@@ -91,7 +91,7 @@ class TestController extends Controller
                     //return $dataGen;
                 } catch (RequestException $e) {
                     //Enviar correo falla de conexion
-                    $message = 'connection failure, Request Id: '.$req_id.' I qualify for Auto-Import';
+                    $message = 'connection failure, Request Id: '.$req_id.' I qualify for Auto-Import ENV: '.env('APP_ENV');
                     dd($message);
                     foreach($admins as $userNotifique){
                         SendEmailAutoImporJob::dispatch($userNotifique->email,$message);
