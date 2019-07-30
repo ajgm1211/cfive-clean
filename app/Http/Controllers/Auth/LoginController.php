@@ -49,9 +49,10 @@ class LoginController extends Controller
       "name" => $user->name,
     ]);
     // Crear hash id del usuario logueado 
+    setHashID();
 
-    
     if($user->company_user_id != ""){
+
       $client->users->create([
         "email" => $user->email,
         "companies" => [
@@ -62,15 +63,15 @@ class LoginController extends Controller
       ]);
     }
 
-      if (!$user->verified) {
-        auth()->logout();
-        return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
-      }else if($user->state!=1){
-        auth()->logout();
-        return back()->with('warning', 'This user has been disabled.');
-      }else  if($user->company_user_id==''){
-        return redirect('/settings');
-      }
+    if (!$user->verified) {
+      auth()->logout();
+      return back()->with('warning', 'You need to confirm your account. We have sent you an activation code, please check your email.');
+    }else if($user->state!=1){
+      auth()->logout();
+      return back()->with('warning', 'This user has been disabled.');
+    }else  if($user->company_user_id==''){
+      return redirect('/settings');
+    }
 
     return redirect()->intended($this->redirectPath());
   }
