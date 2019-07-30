@@ -706,6 +706,7 @@ Route::group(['prefix' => 'UserConfiguration'], function (){
   Route::resource('UserConfiguration','UserConfigurationsController');
 });
 
+
 // Inlands Locations
 Route::group(['prefix' => 'inlandL', 'middleware' => ['auth']], function () {
   Route::get('add', 'InlandLocationController@add')->name('inlandL.add');
@@ -720,5 +721,29 @@ Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
 });
 Route::resource('inlandD', 'InlandDistanceController')->middleware('auth');
 
+// Importation Automatic Companies 
+Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:administrator']],function(){
+    route::resource('CarrierImportation','CarriersImportationController');
+    
+    route::get('Add','CarriersImportationController@add')->name('CarrierImportation.add');
+    route::get('AddFiltro/{id}','CarriersImportationController@addFiltro')->name('surcherger.filtro.add');
+    route::post('StoreFiltro/','CarriersImportationController@storeFiltro')->name('surcherger.filtro.store');
+    route::get('EditFiltro/{id}','CarriersImportationController@editFiltro')->name('surcherger.filtro.edit');
+    route::put('UpdateFiltro/{id}','CarriersImportationController@UpdateFiltro')->name('surcherger.filtro.update');
+    route::delete('DestroyFiltro/{id}','CarriersImportationController@DestroyFiltro')->name('surcherger.filtro.destroy');
+    route::get('IndexFiltro/','CarriersImportationController@indexFiltro')->name('surcherger.filtro.index');
+    route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
+});
+
+// Test Controller 
+Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
+    route::resource('TestApp','TestController');
+});
+
+
 Auth::routes();
 
+$router->get('/APP_ENV', function() {
+    return env('APP_ENV');
+    //return App\User::where('email','admin@example.com')->first();
+})->middleware(['auth','role:administrator|company|subuser']);
