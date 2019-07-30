@@ -13,7 +13,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Bus\Dispatchableuse App\Jobs\SendEmailAutoImporJob;;
 
 class SelectionAutoImportJob implements ShouldQueue
 {
@@ -52,9 +52,9 @@ class SelectionAutoImportJob implements ShouldQueue
                         if(env('APP_ENV') == 'local'){
                             $client = new Client(['base_uri' => 'http://contractsai/']);                            
                         }else if(env('APP_ENV') == 'developer'){
-                            $client = new Client(['base_uri' => 'http://dev.contractsai.cargofive.com']);
+                            $client = new Client(['base_uri' => 'http://dev.contractsai.cargofive.com/']);
                         }else{
-                            $client = new Client(['base_uri' => 'http://prod.contractsai.cargofive.com']);
+                            $client = new Client(['base_uri' => 'http://prod.contractsai.cargofive.com/']);
                         }
                         //$response = $client->get('login?email=admin@example.com&password=secret');
                         //$response = $client->request('GET','ConverterFile/CFIndex', [
