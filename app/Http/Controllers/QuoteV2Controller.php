@@ -1705,7 +1705,7 @@ class QuoteV2Controller extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        return $pdf->stream('quote');
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
     }
 
     /**
@@ -1780,7 +1780,7 @@ class QuoteV2Controller extends Controller
                     }else{
                         $typeCurrency =  $currency_cfg->alphacode;
                     }
-                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                    $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
                     if($inland->units>0){
                         $inland->total_inland=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
                     }
@@ -2044,7 +2044,7 @@ class QuoteV2Controller extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        return $pdf->stream('quote');
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
     }
 
     /**
@@ -2375,7 +2375,7 @@ class QuoteV2Controller extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-        return $pdf->stream('quote');
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
     }
 
 
