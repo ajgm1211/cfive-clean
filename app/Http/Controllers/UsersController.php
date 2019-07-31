@@ -106,9 +106,14 @@ class UsersController extends Controller
             return redirect('users/home');
             
         } catch (\Exception $e) {
+            if($e->errorInfo[0]=='23000'){
+                $error = 'The email address entered is already registered';
+            }else{
+                $error = 'An error has occurred. Try again';
+            }
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', '');
-            $request->session()->flash('message.content', $e->errorInfo[2]);
+            $request->session()->flash('message.content', $error);
             
             return redirect('users/home');
         }
