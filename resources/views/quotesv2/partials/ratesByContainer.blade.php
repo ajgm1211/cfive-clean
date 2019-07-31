@@ -278,7 +278,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
-                                                <input type="text" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
+                                                <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
                                                 <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
                                                 <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
                                                 <input type="hidden" name="subtotal_c40nor_freight" value="{{$sum40nor}}" class="subtotal_c40nor_freight"/>
@@ -1022,21 +1022,21 @@ $v=0;
                                                                     +
                                                                     <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->m40hc" data-value="{{@$inland_markups['m40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                     <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_40hc td-a">{{@$inland_amounts['c40hc']+@$inland_markups['m40hc']}}</span>
+                                                                    <span class="total_40hc td-a">{{@$inland_rates['c40hc']+@$inland_markups['m40hc']}}</span>
                                                                 </td>
                                                                 <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                                     <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_rates['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                     +
                                                                     <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->m40nor" data-value="{{@$inland_markups['m40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                     <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_40nor td-a">{{@$inland_amounts['c40nor']+@$inland_markups['m40nor']}}</span>
+                                                                    <span class="total_40nor td-a">{{@$inland_rates['c40nor']+@$inland_markups['m40nor']}}</span>
                                                                 </td>
                                                                 <td {{ @$equipmentHides['45'] }} class="tds">
                                                                     <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_rates['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                     +
                                                                     <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->m45" data-value="{{@$inland_markups['m45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
                                                                     <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_45 td-a">{{@$inland_amounts['c45']+@$inland_markups['m45']}}</span>
+                                                                    <span class="total_45 td-a">{{@$inland_rates['c45']+@$inland_markups['m45']}}</span>
                                                                 </td>
                                                                 <td class="tds">
                                                                     <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
