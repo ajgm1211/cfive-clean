@@ -198,6 +198,80 @@ $(document).on('click', '#delete-surcharge', function () {
   });
 });
 
+$(document).on('click', '.delete-inlandl', function () {
+  var id = $(this).attr('data-inlandl-id');
+
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'inlandL/delete/' + id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            $(theElement).closest('tr').remove();
+          }else{
+            swal(
+              'Error!',
+              'Your can\'t delete this surcharge because have sale terms related.',
+              'warning'
+            )
+            console.log(data.message);
+          }
+        }
+      });
+    }
+  });
+});
+
+$(document).on('click', '.delete-inlandd', function () {
+  var id = $(this).attr('data-inlandd-id');
+
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: 'inlandD/delete/' + id,
+        success: function(data) {
+          if(data.message=='Ok'){
+            swal(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+            $(theElement).closest('tr').remove();
+          }else{
+            swal(
+              'Error!',
+              'Your can\'t delete this surcharge because have sale terms related.',
+              'warning'
+            )
+            console.log(data.message);
+          }
+        }
+      });
+    }
+  });
+});
+
 //Contacts
 
 $(document).on('click', '.remove', function () {
