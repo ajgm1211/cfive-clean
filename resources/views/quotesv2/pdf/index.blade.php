@@ -60,8 +60,16 @@
                         @endif
                         @endif
                         <p style="line-height:10px;">{{@$quote->contact->first_name.' '.@$quote->contact->last_name}}</p>
-                        <p style="line-height:12px;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
-                        <p style="line-height:10px;">{{@$quote->company->address}}</p>
+                        @if(strlen(@$quote->company->business_name)>49)
+                            <p style="line-height:12px; text-align:justify;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
+                        @else
+                            <p style="line-height:10px;"><span style="color: #4e4e4e"><b>{{@$quote->company->business_name}}</b></span></p>
+                        @endif
+                        @if(strlen(@$quote->company->address)>49)
+                            <p style="line-height:12px; text-align:justify;">{{@$quote->company->address}}</p>
+                        @else
+                            <p style="line-height:10px;">{{@$quote->company->address}}</p>
+                        @endif
                         <p style="line-height:10px;">{{@$quote->contact->phone}}</p>
                         <p style="line-height:10px;">{{@$quote->contact->email}}</p>
                     </span>
