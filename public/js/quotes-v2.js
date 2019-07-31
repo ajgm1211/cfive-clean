@@ -155,7 +155,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -168,7 +168,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency); 
             });
 
@@ -449,7 +450,8 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -462,10 +464,12 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
-
+            //amount_20_curr=currencyRate(currency, currency_cfg, data.amount20);
             //Subtotal dinámico
             $(this).closest('table').find('.total_'+type+'_20').html(sum);
 
@@ -477,6 +481,7 @@ $(document).ready(function() {
 
             //Calculando sub total de gastos
             $(this).closest('div.rates').find('.editable-amount-20').each(function(){
+                console.log($(this).html());
                 if(parseFloat($(this).html())){
                     amount_c20 = parseFloat($(this).html());
                 }else{
@@ -530,7 +535,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -543,7 +548,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -612,7 +618,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -625,7 +631,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -693,7 +700,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -706,7 +713,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -775,7 +783,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -788,7 +796,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -856,7 +865,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -869,7 +878,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -939,7 +949,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -952,7 +962,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -1023,7 +1034,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -1036,7 +1047,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -1106,7 +1118,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -1119,7 +1131,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -1187,7 +1200,7 @@ $(document).ready(function() {
                 var value = parseFloat($(this).html());
                 var currency=$(this).closest('tr').find('.local_currency').html();
                 var currency_cfg = $("#currency_id").val();
-                $.ajax({
+                /*$.ajax({
                     url: '/api/currency/alphacode/'+currency,
                     dataType: 'json',
                     async: false,
@@ -1200,7 +1213,8 @@ $(document).ready(function() {
                         }
                         total_currency = total_currency.toFixed(2);
                     }
-                });
+                });*/
+                total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);    
             });
 
@@ -1457,7 +1471,7 @@ $(document).on('click', '.store_charge_lcl', function () {
         var sub_total = parseFloat($(this).html());
         var currency=$(this).closest('tr').find('.local_currency').html();
         var currency_cfg = $("#currency_id").val();
-        $.ajax({
+        /*$.ajax({
             url: '/api/currency/alphacode/'+currency,
             dataType: 'json',
             async: false,
@@ -1470,7 +1484,8 @@ $(document).on('click', '.store_charge_lcl', function () {
                 }
                 total_currency = total_currency.toFixed(2);
             }
-        });
+        });*/
+        total_currency = currencyRateAlphacode(currency, currency_cfg, value);
         sum += parseFloat(total_currency);
     });
 
@@ -1565,6 +1580,7 @@ $(document).on('click', '.store_charge', function () {
     var sum_c20 = 0;
     var sum_c40 = 0;
     var self = $(this);
+    var amount_20_curr = 0;
 
     $.ajax({
         type: 'POST',
@@ -1596,6 +1612,11 @@ $(document).on('click', '.store_charge', function () {
                 )
             }
             $(theElement).closest('tr').remove();
+            line_total_20=parseFloat(data.amount20)+parseFloat(data.markup20);
+            line_total_40=parseFloat(data.amount40)+parseFloat(data.markup40);
+            line_total_40hc=parseFloat(data.amount40hc)+parseFloat(data.markup40hc);
+            line_total_40nor=parseFloat(data.amount40nor)+parseFloat(data.markup40nor);
+            line_total_45=parseFloat(data.amount45)+parseFloat(data.markup45);
             if(type_id==3){
                 $('<tr style="height:40px;">'+
                   '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
@@ -1639,57 +1660,110 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_freight_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
                 $('.total_freight_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
 
+                var currency=$(theElement).closest('tr').find('.local_currency').val();
+                var currency_cfg = $("#currency_id").val();
+
+                amount_20_curr=currencyRate(currency, currency_cfg, data.amount20);
+                markup_20_curr=currencyRate(currency, currency_cfg, data.markup20);
+                amount_40_curr=currencyRate(currency, currency_cfg, data.amount40);
+                markup_40_curr=currencyRate(currency, currency_cfg, data.markup40);
+                amount_40hc_curr=currencyRate(currency, currency_cfg, data.amount40hc);
+                markup_40hc_curr=currencyRate(currency, currency_cfg, data.markup40hc);
+                amount_40nor_curr=currencyRate(currency, currency_cfg, data.amount40nor);
+                markup_40nor_curr=currencyRate(currency, currency_cfg, data.markup40nor);
+                amount_45_curr=currencyRate(currency, currency_cfg, data.amount45);
+                markup_45_curr=currencyRate(currency, currency_cfg, data.markup45);
+
                 //Calculando subtotal de rates 20'
-                subtotal_c20=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c20_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c20_freight').val(subtotal_c20+parseFloat(data.amount20));
+                subtotal_c20=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c20_freight').val());         
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c20_freight').val(subtotal_c20+parseFloat(amount_20_curr));
+
+                //Calculando sum de subtotal de rates 20'
+                sum_total_amount_20=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_20').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr)+sum_total_amount_20);
 
                 //Calculando subtotal de markups 20'
                 subtotal_m20=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_m20_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m20_freight').val(subtotal_m20+parseFloat(data.markup20));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m20_freight').val(subtotal_m20+parseFloat(markup_20_curr));
+
+                //Calculando sum de subtotal de markups 20'
+                sum_total_markup_20=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_20').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr)+sum_total_markup_20);
 
                 //Calculando subtotal de rates 40'
                 subtotal_c40=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c40_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40_freight').val(subtotal_c40+parseFloat(data.amount40));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40_freight').val(subtotal_c40+parseFloat(amount_40_curr));
+
+                //Calculando sum de subtotal de rates 40'
+                sum_total_amount_40=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr)+sum_total_amount_40);                
 
                 //Calculando subtotal de markups 40'
                 subtotal_m40=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_m40_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40_freight').val(subtotal_m40+parseFloat(data.markup40));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40_freight').val(subtotal_m40+parseFloat(markup_40_curr));
+
+                //Calculando sum de subtotal de markups 40'
+                sum_total_markup_40=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr)+sum_total_markup_40);                
 
                 //Calculando subtotal de rates 40hc'
                 subtotal_c40hc=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c40hc_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40hc_freight').val(subtotal_c40hc+parseFloat(data.amount40hc));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40hc_freight').val(subtotal_c40hc+parseFloat(amount_40hc_curr));
+
+                //Calculando sum de subtotal de rates 40hc'
+                sum_total_amount_40hc=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40hc').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr)+sum_total_amount_40hc);                
 
                 //Calculando subtotal de markups 40hc'
                 subtotal_m40hc=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_m40hc_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40hc_freight').val(subtotal_m40hc+parseFloat(data.markup40hc));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40hc_freight').val(subtotal_m40hc+parseFloat(markup_40hc_curr));
+
+                //Calculando sum de subtotal de markups 40hc'
+                sum_total_markup_40hc=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40hc').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr)+sum_total_markup_40hc);                
 
                 //Calculando subtotal de rates 40nor'
                 subtotal_c40nor=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c40nor_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40nor_freight').val(subtotal_c40nor+parseFloat(data.amount40nor));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c40nor_freight').val(subtotal_c40nor+parseFloat(amount_40nor_curr));
+
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_40nor=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40nor').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr)+sum_total_amount_40nor);                
 
                 //Calculando subtotal de markups 40nor'
                 subtotal_m40nor=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_m40nor_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40nor_freight').val(subtotal_m40nor+parseFloat(data.markup40nor));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m40nor_freight').val(subtotal_m40nor+parseFloat(markup_40nor_curr));
+
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_40nor=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40nor').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr)+sum_total_markup_40nor);                  
 
                 //Calculando subtotal de rates 45'
                 subtotal_c45=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_c45_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c45_freight').val(subtotal_c45+parseFloat(data.amount45));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_c45_freight').val(subtotal_c45+parseFloat(amount_45_curr));
 
-                //Calculando subtotal de markups 25'
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_45=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_45').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr)+sum_total_amount_45);                 
+
+                //Calculando subtotal de markups 45'
                 subtotal_m45=parseFloat($('.total_freight_'+number).closest('div.rates').find('.subtotal_m45_freight').val());
-                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m45_freight').val(subtotal_m45+parseFloat(data.markup45));
+                $('.total_freight_'+number).closest('div.rates').find('.subtotal_m45_freight').val(subtotal_m45+parseFloat(markup_45_curr));
 
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_45=parseFloat($('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_45').html());
+                $('.total_freight_'+number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr)+sum_total_markup_45);
 
             }
             if(type_id==2){
                 $('<tr style="height:40px;">'+
                   '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
                   '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
-                  '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
-                  '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
-                  '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
-                  '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
-                  '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
+                  '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_20+'</td>'+
+                  '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40+'</td>'+
+                  '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40hc+'</td>'+
+                  '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40nor+'</td>'+
+                  '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_45+'</td>'+
                   '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
                   '</tr>').insertBefore('.total_destination_'+number);
                 $('.total_destination_'+number).find('.total_destination_20').html('');
@@ -1724,50 +1798,101 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_destination_'+number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
                 $('.total_destination_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
                 $('.total_destination_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
-                
+
+                var currency=$(theElement).closest('tr').find('.local_currency').val();
+                var currency_cfg = $("#currency_id").val();
+
+                amount_20_curr=currencyRate(currency, currency_cfg, data.amount20);
+                markup_20_curr=currencyRate(currency, currency_cfg, data.markup20);
+                amount_40_curr=currencyRate(currency, currency_cfg, data.amount40);
+                markup_40_curr=currencyRate(currency, currency_cfg, data.markup40);
+                amount_40hc_curr=currencyRate(currency, currency_cfg, data.amount40hc);
+                markup_40hc_curr=currencyRate(currency, currency_cfg, data.markup40hc);
+                amount_40nor_curr=currencyRate(currency, currency_cfg, data.amount40nor);
+                markup_40nor_curr=currencyRate(currency, currency_cfg, data.markup40nor);
+                amount_45_curr=currencyRate(currency, currency_cfg, data.amount45);
+                markup_45_curr=currencyRate(currency, currency_cfg, data.markup45);
+
                 //Calculando subtotal de rates 20'
-                subtotal_c20=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c20_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c20_destination').val(subtotal_c20+parseFloat(data.amount20));
+                subtotal_c20=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c20_destination').val());         
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c20_destination').val(subtotal_c20+parseFloat(amount_20_curr));
+
+                //Calculando sum de subtotal de rates 20'
                 sum_total_amount_20=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_20').html());
-                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_20').html(subtotal_c20+parseFloat(data.amount20)+sum_total_amount_20);
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr)+sum_total_amount_20);
 
                 //Calculando subtotal de markups 20'
                 subtotal_m20=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_m20_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m20_destination').val(subtotal_m20+parseFloat(data.markup20));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m20_destination').val(subtotal_m20+parseFloat(markup_20_curr));
+
+                //Calculando sum de subtotal de markups 20'
+                sum_total_markup_20=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_20').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr)+sum_total_markup_20);
 
                 //Calculando subtotal de rates 40'
                 subtotal_c40=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c40_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40_destination').val(subtotal_c40+parseFloat(data.amount40));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40_destination').val(subtotal_c40+parseFloat(amount_40_curr));
+
+                //Calculando sum de subtotal de rates 40'
+                sum_total_amount_40=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr)+sum_total_amount_40);                
 
                 //Calculando subtotal de markups 40'
                 subtotal_m40=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_m40_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40_destination').val(subtotal_m40+parseFloat(data.markup40));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40_destination').val(subtotal_m40+parseFloat(markup_40_curr));
+
+                //Calculando sum de subtotal de markups 40'
+                sum_total_markup_40=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr)+sum_total_markup_40);                
 
                 //Calculando subtotal de rates 40hc'
                 subtotal_c40hc=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c40hc_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40hc_destination').val(subtotal_c40hc+parseFloat(data.amount40hc));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40hc_destination').val(subtotal_c40hc+parseFloat(amount_40hc_curr));
+
+                //Calculando sum de subtotal de rates 40hc'
+                sum_total_amount_40hc=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40hc').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr)+sum_total_amount_40hc);                
 
                 //Calculando subtotal de markups 40hc'
                 subtotal_m40hc=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_m40hc_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40hc_destination').val(subtotal_m40hc+parseFloat(data.markup40hc));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40hc_destination').val(subtotal_m40hc+parseFloat(markup_40hc_curr));
+
+                //Calculando sum de subtotal de markups 40hc'
+                sum_total_markup_40hc=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40hc').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr)+sum_total_markup_40hc);                
 
                 //Calculando subtotal de rates 40nor'
                 subtotal_c40nor=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c40nor_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40nor_destination').val(subtotal_c40nor+parseFloat(data.amount40nor));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c40nor_destination').val(subtotal_c40nor+parseFloat(amount_40nor_curr));
+
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_40nor=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40nor').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr)+sum_total_amount_40nor);                
 
                 //Calculando subtotal de markups 40nor'
                 subtotal_m40nor=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_m40nor_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40nor_destination').val(subtotal_m40nor+parseFloat(data.markup40nor));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m40nor_destination').val(subtotal_m40nor+parseFloat(markup_40nor_curr));
+
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_40nor=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40nor').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr)+sum_total_markup_40nor);                  
 
                 //Calculando subtotal de rates 45'
                 subtotal_c45=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_c45_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c45_destination').val(subtotal_c45+parseFloat(data.amount45));
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_c45_destination').val(subtotal_c45+parseFloat(amount_45_curr));
+
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_45=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_45').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr)+sum_total_amount_45);                 
 
                 //Calculando subtotal de markups 45'
                 subtotal_m45=parseFloat($('.total_destination_'+number).closest('div.rates').find('.subtotal_m45_destination').val());
-                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m45_destination').val(subtotal_m45+parseFloat(data.markup45));
-                
-                
+                $('.total_destination_'+number).closest('div.rates').find('.subtotal_m45_destination').val(subtotal_m45+parseFloat(markup_45_curr));
+
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_45=parseFloat($('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_45').html());
+                $('.total_destination_'+number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr)+sum_total_markup_45);                  
+
             }
             if(type_id==1){
                 $('<tr style="height:40px;">'+
@@ -1812,46 +1937,100 @@ $(document).on('click', '.store_charge', function () {
                 $('.total_origin_'+number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
                 $('.total_origin_'+number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
                 $('.total_origin_'+number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
-                
+
+                var currency=$(theElement).closest('tr').find('.local_currency').val();
+                var currency_cfg = $("#currency_id").val();
+
+                amount_20_curr=currencyRate(currency, currency_cfg, data.amount20);
+                markup_20_curr=currencyRate(currency, currency_cfg, data.markup20);
+                amount_40_curr=currencyRate(currency, currency_cfg, data.amount40);
+                markup_40_curr=currencyRate(currency, currency_cfg, data.markup40);
+                amount_40hc_curr=currencyRate(currency, currency_cfg, data.amount40hc);
+                markup_40hc_curr=currencyRate(currency, currency_cfg, data.markup40hc);
+                amount_40nor_curr=currencyRate(currency, currency_cfg, data.amount40nor);
+                markup_40nor_curr=currencyRate(currency, currency_cfg, data.markup40nor);
+                amount_45_curr=currencyRate(currency, currency_cfg, data.amount45);
+                markup_45_curr=currencyRate(currency, currency_cfg, data.markup45);
+
                 //Calculando subtotal de rates 20'
-                subtotal_c20=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c20_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c20_origin').val(subtotal_c20+parseFloat(data.amount20));
+                subtotal_c20=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c20_origin').val());         
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c20_origin').val(subtotal_c20+parseFloat(amount_20_curr));
+
+                //Calculando sum de subtotal de rates 20'
+                sum_total_amount_20=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_20').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr)+sum_total_amount_20);
 
                 //Calculando subtotal de markups 20'
                 subtotal_m20=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_m20_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m20_origin').val(subtotal_m20+parseFloat(data.markup20));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m20_origin').val(subtotal_m20+parseFloat(markup_20_curr));
+
+                //Calculando sum de subtotal de markups 20'
+                sum_total_markup_20=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_20').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr)+sum_total_markup_20);
 
                 //Calculando subtotal de rates 40'
                 subtotal_c40=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c40_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40_origin').val(subtotal_c40+parseFloat(data.amount40));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40_origin').val(subtotal_c40+parseFloat(amount_40_curr));
+
+                //Calculando sum de subtotal de rates 40'
+                sum_total_amount_40=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr)+sum_total_amount_40);                
 
                 //Calculando subtotal de markups 40'
                 subtotal_m40=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_m40_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40_origin').val(subtotal_m40+parseFloat(data.markup40));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40_origin').val(subtotal_m40+parseFloat(markup_40_curr));
+
+                //Calculando sum de subtotal de markups 40'
+                sum_total_markup_40=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr)+sum_total_markup_40);                
 
                 //Calculando subtotal de rates 40hc'
                 subtotal_c40hc=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c40hc_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40hc_origin').val(subtotal_c40hc+parseFloat(data.amount40hc));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40hc_origin').val(subtotal_c40hc+parseFloat(amount_40hc_curr));
+
+                //Calculando sum de subtotal de rates 40hc'
+                sum_total_amount_40hc=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40hc').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr)+sum_total_amount_40hc);                
 
                 //Calculando subtotal de markups 40hc'
                 subtotal_m40hc=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_m40hc_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40hc_origin').val(subtotal_m40hc+parseFloat(data.markup40hc));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40hc_origin').val(subtotal_m40hc+parseFloat(markup_40hc_curr));
+
+                //Calculando sum de subtotal de markups 40hc'
+                sum_total_markup_40hc=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40hc').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr)+sum_total_markup_40hc);                
 
                 //Calculando subtotal de rates 40nor'
                 subtotal_c40nor=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c40nor_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40nor_origin').val(subtotal_c40nor+parseFloat(data.amount40nor));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c40nor_origin').val(subtotal_c40nor+parseFloat(amount_40nor_curr));
+
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_40nor=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40nor').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr)+sum_total_amount_40nor);                
 
                 //Calculando subtotal de markups 40nor'
                 subtotal_m40nor=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_m40nor_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40nor_origin').val(subtotal_m40nor+parseFloat(data.markup40nor));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m40nor_origin').val(subtotal_m40nor+parseFloat(markup_40nor_curr));
+
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_40nor=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40nor').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr)+sum_total_markup_40nor);                  
 
                 //Calculando subtotal de rates 45'
                 subtotal_c45=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_c45_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c45_origin').val(subtotal_c45+parseFloat(data.amount45));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_c45_origin').val(subtotal_c45+parseFloat(amount_45_curr));
+
+                //Calculando sum de subtotal de rates 40nor'
+                sum_total_amount_45=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_45').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr)+sum_total_amount_45);                 
 
                 //Calculando subtotal de markups 45'
                 subtotal_m45=parseFloat($('.total_origin_'+number).closest('div.rates').find('.subtotal_m45_origin').val());
-                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m45_origin').val(subtotal_m45+parseFloat(data.markup45));
+                $('.total_origin_'+number).closest('div.rates').find('.subtotal_m45_origin').val(subtotal_m45+parseFloat(markup_45_curr));
+
+                //Calculando sum de subtotal de markups 40nor'
+                sum_total_markup_45=parseFloat($('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_45').html());
+                $('.total_origin_'+number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr)+sum_total_markup_45);
             }            
             //setTimeout(location.reload.bind(location), 3000);
         }
@@ -4096,4 +4275,40 @@ function changeType(type, id){
             }
         }
     });
+}
+
+function currencyRate(currency, currency_cfg, amount){
+    $.ajax({
+        url: '/api/currency/'+currency,
+        dataType: 'json',
+        async: false,
+        success: function (json) {
+            if(currency_cfg+json.alphacode == json.api_code){
+                amount = parseFloat(amount) / json.rates;
+            }else{
+                amount = parseFloat(amount) / json.rates_eur;
+            }
+            amount = amount.toFixed(2);
+        }
+    });
+
+    return amount; 
+}
+
+function currencyRateAlphacode(currency, currency_cfg, value){
+    $.ajax({
+        url: '/api/currency/alphacode/'+currency,
+        dataType: 'json',
+        async: false,
+        success: function (json) {
+            if(currency_cfg+json.alphacode == json.api_code){
+                total_currency = value / json.rates;
+            }else{
+                total_currency = value / json.rates_eur;
+            }
+            total_currency = total_currency.toFixed(2);
+        }
+    });
+
+    return parseFloat(total_currency);
 }

@@ -555,7 +555,7 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="details_inland_{{$x}} hide">
+                                                            <div class="details_inland_{{$x}}">
                                                                 <table class="table table-sm table-bordered color-blue text-center">
                                                                     <thead class="title-quote text-center header-table">
                                                                         <tr style="height: 40px;">

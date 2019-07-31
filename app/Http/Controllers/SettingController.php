@@ -34,9 +34,11 @@ class SettingController extends Controller
 {
     public function index()
     {
-
+        $email_settings='';
         $company = User::where('id',\Auth::id())->with('companyUser')->first();
-        $email_settings = EmailSetting::where('company_user_id',$company->companyUser->id)->first();
+        if($company->companyUser){
+            $email_settings = EmailSetting::where('company_user_id',$company->companyUser->id)->first();
+        }
         $currencies = Currency::where('alphacode','=','USD')->orwhere('alphacode','=','EUR')->pluck('alphacode','id');
 
         return view('settings/index',compact('company','currencies','email_settings'));
