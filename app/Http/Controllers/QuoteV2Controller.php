@@ -1700,6 +1700,7 @@ class QuoteV2Controller extends Controller
 
     $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
+<<<<<<< HEAD
     $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'package_loads'=>$package_loads]);
 
     $pdf = \App::make('dompdf.wrapper');
@@ -1707,6 +1708,10 @@ class QuoteV2Controller extends Controller
 
     return $pdf->stream('quote');
   }
+=======
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
+    }
+>>>>>>> julio
 
   /**
    * Generate PDF to LCL/AIR
@@ -1753,7 +1758,43 @@ class QuoteV2Controller extends Controller
         $typeCurrency =  $currency_cfg->alphacode;
       }
 
+<<<<<<< HEAD
       $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+=======
+                if($value->type_id==3){
+                    if($value->units>0){
+                        $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
+                }elseif($value->type_id==1){
+                    if($value->units>0){
+                        $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
+                }else{
+                    if($value->units>0){
+                        $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+            if(!$item->automaticInlandLclAir->isEmpty()){
+                foreach($item->automaticInlandLclAir as $inland){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
+                    if($inland->units>0){
+                        $inland->total_inland=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+            foreach ($item->inland as $inland) {
+                $currency_charge = Currency::find($inland->currency_id);
+                $inland->currency_usd = $currency_charge->rates;
+                $inland->currency_eur = $currency_charge->rates_eur;
+            }
+        }
+>>>>>>> julio
 
       foreach ($item->charge_lcl_air as $value) {
 
@@ -1858,7 +1899,12 @@ class QuoteV2Controller extends Controller
 
     $destination_charges_grouped = collect($destination_charges);
 
+<<<<<<< HEAD
     $destination_charges_grouped = $destination_charges_grouped->groupBy([
+=======
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
+    }
+>>>>>>> julio
 
       function ($item) {
         return $item['destination_port']['name'].', '.$item['destination_port']['code'];
@@ -2047,6 +2093,7 @@ class QuoteV2Controller extends Controller
     return $pdf->stream('quote');
   }
 
+<<<<<<< HEAD
   /**
    * Generate PDF to LCL/AIR
    * @param Request $request 
@@ -2075,6 +2122,9 @@ class QuoteV2Controller extends Controller
     $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
     if($quote->equipment!=''){
       $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+=======
+        return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
+>>>>>>> julio
     }
 
     if(\Auth::user()->company_user_id){

@@ -646,7 +646,7 @@
                                                                 $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                                <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                                 <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
@@ -747,7 +747,7 @@
                                                                 $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                                <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                                 <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
@@ -942,7 +942,7 @@
                                                             $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                                <td>Inland {{$destination}}-{{$v->port->name}}, {{$v->port->code}}</td>
                                                                 <td>{{$v->distance}} km</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
@@ -1047,8 +1047,7 @@
                                                             $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
-                                                                <td>{{$v->distance}} km</td>
+                                                                <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>

@@ -620,7 +620,7 @@
                                                     $total_inland_origin+=$v->total_inland_origin;
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                     <td>{{$v->distance}} km</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
@@ -713,7 +713,7 @@
                                                     $total_inland+=@$v->total_inland_origin;
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                     <td>{{$v->distance}} km</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
@@ -880,7 +880,7 @@
                                                     $total_inland+=@$v->total_inland_destination;
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                     <td>{{$v->distance}}</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
@@ -976,7 +976,7 @@
                                                     $total_inland+=@$v->total_inland_destination;
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland @if($quote->pdf_option->language=='English') Origin-Destination @elseif($quote->pdf_option->language=='Spanish') Origen - Destino @else Origem - Destino @endif</td>
+                                                    <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
                                                     <td>{{$v->distance}}</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
