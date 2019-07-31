@@ -561,7 +561,7 @@
                 </table>
                 @endforeach
                 @endif
-
+                
                 <!-- Origins detailed -->
                 @if($quote->pdf_option->grouped_origin_charges==0 && $quote->pdf_option->show_type=='detailed' )
                     @foreach($origin_charges_detailed as $carrier => $value)
