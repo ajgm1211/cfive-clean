@@ -573,16 +573,17 @@ class ContractsController extends Controller
     $typedestiny = $objtypedestiny->all()->pluck('description','id');
     $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
     $company_restriction = ContractCompanyRestriction::where('contract_id',$contracts->id)->get();
-    $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->first();
+    $user_restriction = ContractUserRestriction::where('contract_id',$contracts->id)->get();
     if(!empty($company_restriction)){
-      
+
       $company = Company::wherein('id',$company_restriction->pluck('company_id'))->get();
       $company = $company->pluck('id');
 
     }
 
     if(!empty($user_restriction)){
-      $user = User::where('id',$user_restriction->user_id)->select('id')->first();
+      $user = User::wherein('id',$user_restriction->pluck('user_id'))->get();
+      $user = $user->pluck('id');
     }
     $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
     if(Auth::user()->type == 'company' ){
@@ -698,35 +699,35 @@ class ContractsController extends Controller
       ]);
     }
 
-      ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
+    ContractCompanyRestriction::where('contract_id',$contract->id)->delete();
 
-      if(!empty($companies)){
-        foreach($companies as $key3 => $value)
-        {
-          $contract_company_restriction = new ContractCompanyRestriction();
-          $contract_company_restriction->company_id=$value;
-          $contract_company_restriction->contract_id=$contract->id;
-          $contract_company_restriction->save();
-        }
+    if(!empty($companies)){
+      foreach($companies as $key3 => $value)
+      {
+        $contract_company_restriction = new ContractCompanyRestriction();
+        $contract_company_restriction->company_id=$value;
+        $contract_company_restriction->contract_id=$contract->id;
+        $contract_company_restriction->save();
       }
+    }
 
-    
 
 
-      ContractUserRestriction::where('contract_id',$contract->id)->delete();
 
-      if(!empty($users)){
-        foreach($users as $key4 => $value)
-        {
-          $contract_client_restriction = new ContractUserRestriction();
-          $contract_client_restriction->user_id=$value;
-          $contract_client_restriction->contract_id=$contract->id;
-          $contract_client_restriction->save();
-        }
+    ContractUserRestriction::where('contract_id',$contract->id)->delete();
+
+    if(!empty($users)){
+      foreach($users as $key4 => $value)
+      {
+        $contract_client_restriction = new ContractUserRestriction();
+        $contract_client_restriction->user_id=$value;
+        $contract_client_restriction->contract_id=$contract->id;
+        $contract_client_restriction->save();
       }
+    }
 
 
-    
+
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
