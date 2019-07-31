@@ -6212,7 +6212,11 @@ class QuoteV2Controller extends Controller
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
+
                     if($subtotal_local < $local->minimum){
                       $subtotal_local = $local->minimum;
                       $totalAmmount =    $subtotal_local / $rateMount ;
@@ -6258,7 +6262,10 @@ class QuoteV2Controller extends Controller
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
                     if($subtotal_local < $local->minimum){
                       $subtotal_local = $local->minimum;
                       $totalAmmount =    $subtotal_local / $rateMount ;
@@ -6307,7 +6314,10 @@ class QuoteV2Controller extends Controller
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
                     if($subtotal_local < $local->minimum){
                       $subtotal_local = $local->minimum;
                       $totalAmmount =    $subtotal_local / $rateMount ;
