@@ -10,19 +10,24 @@ use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
+use GuzzleHttp\Client;
+use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use App\CarrierautoImportation;
 use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\Mail\NewRequestToAdminMail;
+use App\Mail\NotificationAutoImport;
 use App\Jobs\SendEmailRequestFclJob;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
+use GuzzleHttp\Exception\RequestException;
 
 
 class NewContractRequestsController extends Controller
@@ -230,13 +235,14 @@ class NewContractRequestsController extends Controller
             $Ncontract->contract_id     = $contract->id;
             //$Ncontract->contract_id     = 100;
             $Ncontract->save();
-
-            foreach($request->carrierM as $carrierVal){
+            $carrier_arr = $request->carrierM;
+            foreach($carrier_arr as $carrierVal){
                 RequetsCarrierFcl::create([
                     'carrier_id' => $carrierVal,
                     'request_id' => $Ncontract->id
                 ]);
             }
+
 
             ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
             $user = User::find($request->user);
@@ -253,11 +259,7 @@ class NewContractRequestsController extends Controller
             //evento Intercom 
             $event = new  EventIntercom();
             $event->event_newRequest();
-            /*$request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('contracts.index');*/
-            //return redirect()->route('RequestImportation.indexListClient');
-            //dd($request->all());
+
         } else {
             /*$request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
@@ -292,8 +294,21 @@ class NewContractRequestsController extends Controller
 
     public function showStatus($id){
         $requests = NewContractRequest::find($id);
-        //dd($requests);
-        return view('Requests.Body-Modals.edit',compact('requests'));
+        $status = $requests->status;
+        $status_arr = [];
+        if($status == 'Pending'){
+            $status_arr['Pending'] = 'Pending';
+            $status_arr['Processing'] = 'Processing';
+        } elseif($status == 'Processing'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+        } elseif($status == 'Review' || $status == 'Done'){
+            $status_arr['Processing'] = 'Processing';
+            $status_arr['Review'] = 'Review';
+            $status_arr['Done'] = 'Done';
+        }
+
+        return view('Requests.Body-Modals.edit',compact('requests','status_arr'));
     }
     public function edit($id)
     {

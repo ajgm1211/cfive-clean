@@ -21,8 +21,6 @@ class AddExtraFieldSearhTable extends Migration
       $table->enum('type', ['LCL', 'FCL'])->nullable()->after('direction');;
       $table->integer('company_user_id')->unsigned()->nullable()->after('type');
       $table->foreign('company_user_id')->references('id')->on('company_users')->onDelete('cascade');
-      
-
     });
   }
 
