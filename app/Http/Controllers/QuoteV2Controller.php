@@ -6071,7 +6071,7 @@ class QuoteV2Controller extends Controller
 
 
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
-                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  //$totalAmmount =  number_format($totalAmmount, 2, '.', '');
                   $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'origin', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount );
                   $arregloOrig = array_merge($arregloOrig,$markupTONM3);
                   $dataOrig[] = $arregloOrig;
@@ -6697,7 +6697,10 @@ class QuoteV2Controller extends Controller
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
                     if($subtotal_global < $global->minimum){
                       $subtotal_global = $global->minimum;
                       $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -6721,8 +6724,8 @@ class QuoteV2Controller extends Controller
 
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' => $unidades );
 
-
-                  $collectionOrig->push($arregloOrigin);
+                  $dataGOrig[] = $arregloOrigin;
+                  
                 }
               }
 
@@ -6744,7 +6747,10 @@ class QuoteV2Controller extends Controller
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
                     if($subtotal_global < $global->minimum){
                       $subtotal_global = $global->minimum;
                       $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -6766,8 +6772,8 @@ class QuoteV2Controller extends Controller
 
                   $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' => $unidades );
 
+                  $dataGDest[] = $arregloDest;
 
-                  $collectionDest->push($arregloDest);
 
                 }
               }
@@ -6791,7 +6797,10 @@ class QuoteV2Controller extends Controller
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
-                    $unidades = $totalW;
+                    if($totalW > 1)
+                      $unidades = $totalW;
+                    else
+                      $unidades = '1';
                     if($subtotal_global < $global->minimum){
                       $subtotal_global = $global->minimum;
                       $totalAmmount =    $subtotal_global / $rateMountG ;
@@ -6813,8 +6822,8 @@ class QuoteV2Controller extends Controller
 
                   // ARREGLO GENERAL 99 
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' => $unidades);
+                  $dataGFreight[] = $arregloFreight;
 
-                  $collectionFreight->push($arregloFreight);
 
 
                 }
@@ -6955,21 +6964,23 @@ class QuoteV2Controller extends Controller
 
         $m3tonOrig= $collectOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
+                
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalOrigin += $totalA[0];  
             $collectionOrig->push($test);
+   
             return $test;
           }
         });
       }
-
+   
       if(!empty($dataDest)){
         $collectDest = Collection::make($dataDest);
         $m3tonDest= $collectDest->groupBy('surcharge_name')->map(function($item) use($collectionDest,&$totalDestiny,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalDestiny += $totalA[0];  
@@ -6985,7 +6996,7 @@ class QuoteV2Controller extends Controller
         $collectFreight = Collection::make($dataFreight);
         $m3tonFreight= $collectFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalFreight += $totalA[0];  
@@ -7002,7 +7013,7 @@ class QuoteV2Controller extends Controller
 
         $m3tonGOrig= $collectGOrig->groupBy('surcharge_name')->map(function($item) use($collectionGloOrig,&$totalOrigin,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalOrigin += $totalA[0];  
@@ -7018,7 +7029,7 @@ class QuoteV2Controller extends Controller
         $collectGDest = Collection::make($dataGDest);
         $m3tonDestG= $collectGDest->groupBy('surcharge_name')->map(function($item) use($collectionGloDest,&$totalDestiny,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalDestiny += $totalA[0];  
@@ -7034,7 +7045,7 @@ class QuoteV2Controller extends Controller
         $collectGFreight = Collection::make($dataGFreight);
         $m3tonFreightG= $collectGFreight->groupBy('surcharge_name')->map(function($item) use($collectionGloFreight,&$totalFreight,$data,$carrier_all){
           $carrArreglo = array($data->carrier_id,$carrier_all);
-          $test = $item->where('totalAmmount', $item->max('totalAmmount'))->wherein('carrier_id',$carrArreglo)->first();
+          $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
           if(!empty($test)){
             $totalA = explode(' ',$test['totalAmmount']);
             $totalFreight += $totalA[0];  
