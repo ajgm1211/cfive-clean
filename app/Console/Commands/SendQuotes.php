@@ -49,7 +49,7 @@ class SendQuotes extends Command
                 $send_notification->status=1;
                 $send_notification->update();
                 
-                Mail::to($item->to)->bcc($item->from)->send(new SendQuotePdf($item->subject,$item->body,$quote,$item->from));
+                Mail::to($item->to)->bcc($item->from)->send(new SendQuotePdf($item->subject,$item->body,$quote,$item->from,$item->sign,$item->sign_type));
             }
         } catch(\Exception $e){
             $e->getMessage();
