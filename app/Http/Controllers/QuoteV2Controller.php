@@ -6238,8 +6238,8 @@ class QuoteV2Controller extends Controller
 
                   $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency,'cantidad' => $unidades );
 
-
-                  $collectionOrig->push($arregloOrigin);
+                  $dataOrig[] = $arregloOrigin;
+                  //$collectionOrig->push($arregloOrigin);
 
                 }
               }
@@ -6288,8 +6288,8 @@ class QuoteV2Controller extends Controller
 
                   $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency, 'cantidad' => $unidades );
 
-
-                  $collectionDest->push($arregloDest);
+                  $dataDest[] = $arregloDest;
+                  //$collectionDest->push($arregloDest);
 
 
 
@@ -6343,8 +6343,8 @@ class QuoteV2Controller extends Controller
 
                   $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' =>$unidades );
 
-
-                  $collectionFreight->push($arregloFreight);
+                  $dataFreight[] = $arregloFreight;
+                  //$collectionFreight->push($arregloFreight);
 
 
                 }
