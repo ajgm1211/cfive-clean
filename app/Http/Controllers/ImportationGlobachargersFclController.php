@@ -282,7 +282,7 @@ class ImportationGlobachargersFclController extends Controller
             }
 
         } else {
-            ReprocessGlobalChargersJob::dispatch($id)->onQueue('importation');
+            ReprocessGlobalChargersJob::dispatch($id);
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The Surchargers are reprocessing in the background');
             return redirect()->route('showview.globalcharge.fcl',[$id,'1']);
@@ -388,7 +388,7 @@ class ImportationGlobachargersFclController extends Controller
             $account->company_user_id  = $CompanyUserId;
             $account->save(); 
 
-            ProcessContractFile::dispatch($account->id,$account->namefile,'gcfcl','account')->onQueue('importation');
+            ProcessContractFile::dispatch($account->id,$account->namefile,'gcfcl','account');
 
             $account_id = $account->id;
             $fileTmp    = new FileTmpGlobalcharge();
@@ -560,7 +560,7 @@ class ImportationGlobachargersFclController extends Controller
         //FailedGlobalcharge::where('company_user_id',$companyUserIdVal)->delete();
         //GlobalCharge::where('company_user_id',$companyUserIdVal)->delete();
 
-        ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId)->onQueue('importation'); //NO BORRAR!!
+        ImportationGlobalchargeJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
         $id = $request['account_id'];
         return redirect()->route('ImportationGlobalchargeFcl.show',$id);
     }
