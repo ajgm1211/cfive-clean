@@ -639,11 +639,13 @@
                                                     @if($v->type=='Origin')
                                                         @if($r->inland->where('port_id', $v->port_id)->count()==1)
                                                             <?php
-                                                                $inland_20+=$v->total_20;
-                                                                $inland_40+=$v->total_40;
-                                                                $inland_40hc+=$v->total_40hc;
-                                                                $inland_40nor+=$v->total_40nor;
-                                                                $inland_45+=$v->total_45;
+                                                                if($r->inland->where('type', 'Origin')->count()==1){
+                                                                    $inland_20+=$v->total_20;
+                                                                    $inland_40+=$v->total_40;
+                                                                    $inland_40hc+=$v->total_40hc;
+                                                                    $inland_40nor+=$v->total_40nor;
+                                                                    $inland_45+=$v->total_45;
+                                                                }
                                                             ?>
                                                             <tr class="text-left color-table">
                                                                 <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
@@ -767,7 +769,7 @@
                                             @endif
                                         @endforeach
                                     @endforeach
-                                    <tr>
+                                    <!--<tr>
                                         <td><b>Total local charges</b></td>
                                         <td></td>
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
@@ -781,7 +783,7 @@
                                         @else
                                             <td><b>{{$currency_cfg->alphacode}}</b></td>
                                         @endif     
-                                    </tr>
+                                    </tr>-->
                                 </tbody>
                             </table>
                             <br>
@@ -935,11 +937,13 @@
                                                     @if($v->type=='Destination')
                                                         @if($r->inland->where('port_id', $v->port_id)->count()==1)
                                                             <?php
-                                                            $inland_20+=$v->total_20;
-                                                            $inland_40+=$v->total_40;
-                                                            $inland_40hc+=$v->total_40hc;
-                                                            $inland_40nor+=$v->total_40nor;
-                                                            $inland_45+=$v->total_45;
+                                                                if($r->inland->where('type', 'Destination')->count()==1){
+                                                                    $inland_20+=$v->total_20;
+                                                                    $inland_40+=$v->total_40;
+                                                                    $inland_40hc+=$v->total_40hc;
+                                                                    $inland_40nor+=$v->total_40nor;
+                                                                    $inland_45+=$v->total_45;
+                                                                }
                                                             ?>
                                                             <tr class="text-left color-table">
                                                                 <td>Inland {{$destination}}-{{$v->port->name}}, {{$v->port->code}}</td>
@@ -1048,6 +1052,7 @@
                                                             ?>
                                                             <tr class="text-left color-table">
                                                                 <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
+                                                                <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -1062,7 +1067,7 @@
                                             @endif
                                         @endforeach
                                     @endforeach
-                                <tr>
+                                <!--<tr>
                                     <td><b>Total local charges</b></td>
                                     <td></td>
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
@@ -1076,7 +1081,7 @@
                                     @else
                                         <td><b>{{$currency_cfg->alphacode}}</b></td>
                                     @endif     
-                                </tr>
+                                </tr>-->
                             </tbody>
                         </table>
                         <br>
