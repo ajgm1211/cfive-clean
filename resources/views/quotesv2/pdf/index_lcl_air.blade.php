@@ -617,7 +617,9 @@
                                         @if($v->type=='Origin')
                                             @if($r->automaticInlandLclAir->where('port_id', $v->port_id)->count()==1)
                                                 <?php
-                                                    $total_inland_origin+=$v->total_inland_origin;
+                                                    if($r->automaticInlandLclAir->where('type', 'Origin')->count()==1){
+                                                        $total_inland_origin+=$v->total_inland_origin;
+                                                    }
                                                 ?>
                                                 <tr class="text-center color-table">
                                                     <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
@@ -727,7 +729,7 @@
                                 @endif                            
                             @endforeach
                         @endforeach
-                        <tr>
+                        <!--<tr>
                             <td><b>Total local charges</b></td>
                             <td></td>
                             <td></td>
@@ -739,7 +741,7 @@
                             @else
                                 <td><b>{{$currency_cfg->alphacode}}</b></td>
                             @endif     
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
                 @endforeach
@@ -877,7 +879,9 @@
                                         @if($v->type=='Destination')
                                             @if($r->automaticInlandLclAir->where('port_id', $v->port_id)->count()==1)
                                                 <?php
-                                                    $total_inland+=@$v->total_inland_destination;
+                                                    if($r->automaticInlandLclAir->where('type', 'Destination')->count()==1){
+                                                        $total_inland+=@$v->total_inland_destination;
+                                                    }
                                                 ?>
                                                 <tr class="text-center color-table">
                                                     <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
@@ -990,7 +994,7 @@
                                 @endif
                             @endforeach
                         @endforeach
-                        <tr>
+                        <!--<tr>
                             <td><b>Total local charges</b></td>
                             <td></td>
                             <td></td>
@@ -998,7 +1002,7 @@
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                             <td ><b>{{number_format(@$total_inland, 2, '.', '')}}</b></td>
                             <td><b>{{$currency_cfg->alphacode}}</b></td>    
-                        </tr>
+                        </tr>-->
                     </tbody>
                 </table>
                 <br>
