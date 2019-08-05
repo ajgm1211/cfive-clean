@@ -159,7 +159,7 @@
                                     <div class="col-md-12 hide" id="footer_image">
                                         <hr>
                                         <div class="form-group files">
-                                            <label for="footer_image">PDF Footer image</label>
+                                            <label for="footer_image">PDF Footer image (1280 x 120 recommended)</label>
                                             <input type="file" class="form-control-file" name="footer_image">
                                             @if(@$company->companyUser->footer_image!='')
                                             <img src="{{Storage::disk('s3_upload')->url(@$company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="width:100%; height: 80px;">
@@ -305,7 +305,7 @@
                                     <div class="col-md-12 {{@$company->companyUser->footer_type=='Image' ? '':'hide'}}" id="footer_image">
                                         <hr>
                                         <div class="form-group files">
-                                            <label for="footer_image">PDF Footer image</label>
+                                            <label for="footer_image">PDF Footer image (1280 x 120 recommended)</label>
                                             <input type="file" class="form-control-file" name="footer_image">
                                             @if(@$company->companyUser->footer_image!='')
                                             <img src="{{Storage::disk('s3_upload')->url(@$company->companyUser->footer_image )}}" class="img img-thumbnail img-fluid" style="">
