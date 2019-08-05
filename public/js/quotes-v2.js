@@ -101,7 +101,7 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,
         success: function(response, newValue) {
-
+            setTimeout(location.reload.bind(location), 3000);
             if(!response) {
                 return "Unknown error!";
             }
