@@ -11,7 +11,7 @@
         <div class="modal-content" style="min-width: 900px; right: 200px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
-                    Edit Rate
+                    Edit Inland
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
