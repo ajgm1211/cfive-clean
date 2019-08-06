@@ -2893,7 +2893,8 @@ class QuoteV2Controller extends Controller
 
 
 
-      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments]);
+      $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'origin_address'=> $form->origin_address,'destination_address'  => $form->destination_address ]);
+
       $quote= QuoteV2::create($request->all());
 
 
@@ -3148,7 +3149,7 @@ class QuoteV2Controller extends Controller
               $montoInDest = array();
               $markupInDest = array();
               foreach($inlandDestiny->inlandDetails as $key => $inlandDet){
-  
+
                 if(@$inlandDet->sub_in != 0){
                   $arregloMontoInDest = array($key => $inlandDet->sub_in);
                   $montoInDest = array_merge($arregloMontoInDest,$montoInDest);  
@@ -3161,7 +3162,7 @@ class QuoteV2Controller extends Controller
               }
 
 
-        
+
               $arregloMontoInDest =  json_encode($montoInDest);
               $arregloMarkupsInDest =  json_encode($markupInDest);
               $inlandDest = new AutomaticInland();
@@ -4903,11 +4904,16 @@ class QuoteV2Controller extends Controller
                   $montoOrig = $global->ammount ;
                   $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
                   $monto =   $global->ammount  / $rateMount ;
+
                   $monto = $this->perTeu($monto,$global->calculationtype_id);
+
                   $monto = number_format($monto, 2, '.', '');
+
                   $markup40 = $this->localMarkupsFCL($localPercentage,$localAmmount,$localMarkup,$monto,$montoOrig,$typeCurrency,$markupLocalCurre,$global->currency->id);
+
                   $arregloFreightG = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => $monto, 'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtype->name,'contract_id' => $data->contract_id,'carrier_id' => $globalCarrier->carrier_id,'type'=>'40','rate_id' => $data->id   , 'montoOrig' => $montoOrig , 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id  ,'currency_orig_id' => $idCurrency );
                   $arregloFreightG = array_merge($arregloFreightG,$markup40);
+
                   $collectionFreight->push($arregloFreightG);
                   $totales['40F'] +=  $markup40['montoMarkup'];
                 }
@@ -4976,6 +4982,8 @@ class QuoteV2Controller extends Controller
         $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
       if(!empty($collectionOrigin))
         $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
+
+
 
       // Totales Freight 
       if(!isset($totales['20F']))
@@ -5082,6 +5090,8 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
     $chargeFreight = ($chargesFreight != null ) ? true : false;
+
+
 
     // Ordenar por prioridad 
     if(in_array('20',$equipment))
@@ -5254,9 +5264,11 @@ class QuoteV2Controller extends Controller
 
 
       foreach($item as $items){
-        $total = count($items);
 
-        if($total > 1 ){
+        $totalPadres = count($item);
+        $totalhijos = count($items);
+
+        if($totalPadres > 2 ){
           foreach($items as $itemsDetail){
 
             $monto += $itemsDetail['monto']; 
@@ -5273,17 +5285,44 @@ class QuoteV2Controller extends Controller
           $montoMarkup = 0;
           $totalMarkup = 0;
 
-        }else{
+        }else if($totalhijos > 1 ){
+          foreach($items as $itemsDetail){
+
+            $monto += $itemsDetail['monto']; 
+            $montoMarkup += $itemsDetail['montoMarkup']; 
+            $totalMarkup += $itemsDetail['markupConvert']; 
+          }
+          $itemsDetail['monto'] = number_format($monto, 2, '.', '');
+          $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
+          $itemsDetail['markup'] =  number_format($totalMarkup, 2, '.', '');
+          $itemsDetail['currency'] = $itemsDetail['typecurrency'];
+          $itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
+          $collect->push($itemsDetail);
+          $monto = 0;
+          $montoMarkup = 0;
+          $totalMarkup = 0;
+
+        }
+        else{
           foreach($items as $itemsDetail){//aca
             $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
             $itemsDetail['montoMarkup'] = number_format($itemsDetail['montoMarkupO'], 2, '.', '');
             $itemsDetail['markup'] = number_format($itemsDetail['markupConvert'], 2, '.', '');
+            $test[] =  $itemsDetail['currency_id'] ;
             $collect->push($itemsDetail); 
             $monto = 0;
             $montoMarkup = 0;
             $totalMarkup = 0;
           }
         }
+
+
+
+
+
+
+
+
       }
     }
 
@@ -5294,6 +5333,8 @@ class QuoteV2Controller extends Controller
         return $item['type'];
       },
     ], $preserveKeys = true);
+
+
 
     return $collect;
   }
