@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use EventIntercom;
+use App\ApiIntegrationSetting;
 
 
 class CompanyController extends Controller
@@ -27,7 +28,8 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $company_user_id=\Auth::user()->company_user_id;
+        $company_user_id = \Auth::user()->company_user_id;
+        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
         $user_id = \Auth::user()->id;
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
         if(\Auth::user()->hasRole('subuser')){
@@ -43,7 +45,7 @@ class CompanyController extends Controller
             return response()->json($companies);
         }
 
-        return view('companies/index', ['companies' => $companies,'users'=>$users]);
+        return view('companies/index', ['companies' => $companies,'users'=>$users,'api'=>$api]);
     }
 
     public function add()
