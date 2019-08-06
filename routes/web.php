@@ -27,6 +27,11 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
   Route::get('delete/token/{id}', 'ApiController@deleteToken')->name('delete.token');
   Route::get('create-passport-client', 'ApiController@createAccessToken')->name('create.passport.client');
 });
+
+Route::middleware(['auth'])->prefix('api')->group(function () {
+  Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
+});
+
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
 Route::middleware(['auth'])->prefix('users')->group(function () {
   Route::resource('users', 'UsersController'); 
