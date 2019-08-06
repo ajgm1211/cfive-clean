@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ApiIntegration;
+use App\ApiIntegrationSetting;
 
 class ApiIntegrationController extends Controller
 {
@@ -13,7 +15,32 @@ class ApiIntegrationController extends Controller
      */
     public function index()
     {
-        return view ('api.index');
+        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
+        
+        return view ('api.index',compact('api'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(Request $request)
+    {
+        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+
+        if($api){
+            $api->enable = $request->value;
+            $api->update();
+        }else{
+            $api_int = new ApiIntegrationSetting();
+            $api_int->company_user_id = $request->company_user_id;
+            $api_int->api_integration_id = 1;
+            $api_int->enable = $request->value;
+            $api_int->save();   
+        }
+
+        return response()->json(['message' => 'Ok']);
     }
 
     /**
@@ -34,7 +61,11 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        $api_int->api_key = $request->api_key;
+        $api_int->update();
+
+        return response()->json(['message' => 'Ok']);        
     }
 
     /**
