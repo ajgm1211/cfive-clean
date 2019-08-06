@@ -660,8 +660,8 @@
                                                     $total_inland_origin+=$v->total_inland_origin;
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                                    <td>{{$v->distance}} km</td>
+                                                    <td>{{$v->provider}}</td>
+                                                    <td>-</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
                                                     <td >{{$v->rate_amount}}</td>
@@ -712,8 +712,8 @@
                                             //}
                                         ?>
                                         <tr class="text-center color-table">
-                                            <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                            <td>{{$v->distance}}</td>
+                                            <td>{{$v->provider}}</td>
+                                            <td>-</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                             <td >{{$v->units}}</td>
                                             <td >{{$v->rate_amount}}</td>
@@ -867,8 +867,8 @@
                                                     //}
                                                 ?>
                                                 <tr class="text-center color-table">
-                                                    <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                                    <td>{{$v->distance}}</td>
+                                                    <td>{{$v->provider}}</td>
+                                                    <td>-</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                                     <td >{{$v->units}}</td>
                                                     <td >{{$v->rate_amount}}</td>
@@ -919,8 +919,8 @@
                                             //}
                                         ?>
                                         <tr class="text-center color-table">
-                                            <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                            <td>{{$v->distance}}</td>
+                                            <td>{{$v->provider}}</td>
+                                            <td>-</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                             <td >{{$v->units}}</td>
                                             <td >{{$v->rate_amount}}</td>

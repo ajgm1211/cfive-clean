@@ -698,8 +698,8 @@
                                                                     $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                                                <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
+                                                                <td>{{$v->provider}}</td>
+                                                                <td>-</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -766,8 +766,8 @@
                                                         $inland_45+=$v->total_45;
                                                     ?>
                                                     <tr class="text-left color-table">
-                                                        <td>Inland {{$origin}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                                        <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
+                                                        <td>{{$v->provider}}</td>
+                                                        <td>-</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                         <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                         <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -940,8 +940,8 @@
                                                                 $inland_45+=$v->total_45;
                                                             ?>
                                                             <tr class="text-left color-table">
-                                                                <td>Inland {{$destination}}-{{$v->port->name}}, {{$v->port->code}}</td>
-                                                                <td>{{$v->distance}} km</td>
+                                                                <td>{{$v->provider}}</td>
+                                                                <td>-</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                                 <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                                 <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -1008,8 +1008,8 @@
                                                         $inland_45+=$v->total_45;
                                                     ?>
                                                     <tr class="text-left color-table">
-                                                        <td>Inland {{$destination}} - {{$v->port->name}}, {{$v->port->code}}</td>
-                                                        <td>{{$v->distance!='' ? $v->distance:'0'}} km</td>
+                                                        <td>{{$v->provider}}</td>
+                                                        <td>-</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                         <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                         <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
