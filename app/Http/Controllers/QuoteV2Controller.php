@@ -5265,7 +5265,7 @@ class QuoteV2Controller extends Controller
 
       foreach($item as $items){
 
-        $totalPadres = count($item);
+        $totalPadres = count($item['99']);
         $totalhijos = count($items);
 
         if($totalPadres > 2 ){
