@@ -95,7 +95,7 @@ Companies List
                             </a>
                         </div>
                         @if($api->enable==1)
-                            <button type="button" dusk="addCompany" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                            <a href="#" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>
                                         Sync with API
@@ -103,7 +103,16 @@ Companies List
                                     &nbsp;
                                     <i class="la la-refresh"></i>
                                 </span>
-                            </button>
+                            </a>
+                            <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill hide disabled">
+                                <span>
+                                    <span>
+                                        Synchronizing
+                                    </span>
+                                    &nbsp;
+                                    <i class="la la-refresh la-spin"></i>
+                                </span>
+                            </a>
                         @endif
                     </div>
                 </div>

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\ApiIntegration;
 use App\ApiIntegrationSetting;
+use GuzzleHttp\Client;
+use GuzzleHttp\Message\Request as ClienteR;
+use GuzzleHttp\Message\Response;
+use App\Company;
 
 class ApiIntegrationController extends Controller
 {
@@ -16,7 +20,7 @@ class ApiIntegrationController extends Controller
     public function index()
     {
         $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
-        
+
         return view ('api.index',compact('api'));
     }
 
@@ -111,5 +115,55 @@ class ApiIntegrationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getCompanies(){
+
+        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
+
+        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_m?api_key=".$api->api_key;
+
+        $client = new Client([
+            'headers' => ['Content-Type'=>'application/json','Accept'=>'*/*'],
+        ]);
+
+        try {
+
+            $response = $client->get($endpoint, [
+                'headers' => [
+                    'Content-Type'=>'application/json',
+                    'X-Requested-With'=>'XMLHttpRequest',
+                ]
+            ]);
+
+            $api_response = json_decode( $response->getBody() );
+
+            $this->syncCompanies($api_response);
+            
+            return response()->json(['message' => 'Ok']);
+            
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            return "Unable to retrieve access token.";
+        }
+    }
+
+    public function syncCompanies($response){
+        $i=0;
+        foreach($response->ent_m as $item){
+            $exist_com = Company::where('business_name',$item->nom_com)->count();
+            if($exist_com==0){
+                $company = new Company();
+                $company->business_name = $item->nom_com;
+                $company->phone = $item->tlf;
+                $company->address = $item->address;
+                $company->email = $item->eml;
+                $company->company_user_id = \Auth::user()->company_user_id;
+                $company->owner = \Auth::user()->id;
+                $company->save();
+            }
+            $i++;
+        }
+        
+        return 'Done';
     }
 }
