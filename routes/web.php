@@ -32,6 +32,7 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
     Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
+    Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
 
 // Grupo de rutas para administrar Usuarios  Admin / Empresas
