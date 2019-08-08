@@ -31,9 +31,9 @@ class ApiIntegrationController extends Controller
      */
     public function enable(Request $request)
     {
-        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->count();
 
-        if($api){
+        if($api>0){
             $api->enable = $request->value;
             $api->update();
         }else{
