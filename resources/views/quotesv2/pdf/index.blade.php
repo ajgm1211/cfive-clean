@@ -147,7 +147,7 @@
                         
                                 foreach($rate->charge as $value){
                                     if($quote->pdf_option->show_type=='charges'){
-                                        if($value->surcharge_id!=''){
+                                        if($value->type_id!=3){
                                             $total_20=$value->total_20+$value->total_markup20;
                                             $sum_total20+=$total_20;
                                             $total_40=$value->total_40+$value->total_markup40;
@@ -231,7 +231,7 @@
                 <!-- DETAILED TABLES -->
 
                 <!-- Freights table all in-->
-                @if(($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges') && $rates->count()>1)
+                @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
                     <div>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
@@ -272,41 +272,31 @@
                                             $inland_freight_45= 0; 
                                             foreach($item as $rate){
                                                 foreach($rate->charge as $value){
-                                                    if($quote->pdf_option->show_type=='charges'){
-                                                        if($value->surcharge_id!=''){
-                                                            $sum_freight_20+=$value->total_20;
-                                                            $sum_freight_40+=$value->total_40;
-                                                            $sum_freight_40hc+=$value->total_40hc;
-                                                            $sum_freight_40nor+=$value->total_40nor;
-                                                            $sum_freight_45+=$value->total_45;
-                                                        }
-                                                    }else{
-                                                        $sum_freight_20+=$value->total_20;
-                                                        $sum_freight_40+=$value->total_40;
-                                                        $sum_freight_40hc+=$value->total_40hc;
-                                                        $sum_freight_40nor+=$value->total_40nor;
-                                                        $sum_freight_45+=$value->total_45;
-                                                    }
+                                                    $sum_freight_20+=$value->total_20;
+                                                    $sum_freight_40+=$value->total_40;
+                                                    $sum_freight_40hc+=$value->total_40hc;
+                                                    $sum_freight_40nor+=$value->total_40nor;
+                                                    $sum_freight_45+=$value->total_45;
                                                 }
                                             }
                                         ?>
                                         <tr class="text-left color-table">
                                             <td >
                                                 @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                                {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
+                                                    {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
                                                 @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                                {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
+                                                    {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
                                                 @else 
-                                                {{$rate->origin_address}} 
+                                                    {{$rate->origin_address}} 
                                                 @endif
                                             </td>
                                             <td >
                                                 @if($rate->destination_address=='' && $rate->destination_port_id!='') 
-                                                {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
+                                                    {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
                                                 @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
-                                                {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
+                                                    {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
                                                 @else 
-                                                {{$rate->destination_address}} 
+                                                    {{$rate->destination_address}} 
                                                 @endif
                                             </td>                           
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
@@ -325,7 +315,7 @@
                 @endif
                 
                 <!-- Freight charges detailed -->
-                @if(($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges') && $rates->count()==1)
+                @if($quote->pdf_option->show_type=='detailed' && $rates->count()==1)
                     @if($quote->pdf_option->grouped_freight_charges==0)
                         @foreach($freight_charges_grouped as $origin => $value)
                             @foreach($value as $destination => $item)
@@ -439,7 +429,7 @@
                             @endforeach
                         @endforeach
                     @else
-                        @if($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges')
+                        @if($quote->pdf_option->show_type=='detailed')
                             <div>
                                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
