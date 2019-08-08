@@ -80,13 +80,14 @@
                     <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
+                           <!--
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('quotes.index')}}" class="m-menu__link ">
                                     <span class="m-menu__link-text">
                                         <b>Quotes</b>
                                     </span>
                                 </a>
-                            </li>
+                            </li>-->
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
                                     <span class="m-menu__link-text">
@@ -299,6 +300,7 @@
                                         </span>
                                     </a>
                                 </li>
+                                <!--
                                 <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                     <a  href="{{ route('terms.list') }}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-warning-sign"></i>
@@ -306,12 +308,12 @@
                                             Terms & Conditions
                                         </span>
                                     </a>
-                                </li>
+                                </li>-->
                                 <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                     <a  href="{{ route('termsv2.list') }}" class="m-menu__link ">
                                         <i class="m-menu__link-icon flaticon-warning-sign"></i>
                                         <span class="m-menu__link-text">
-                                            Terms & Conditions V2
+                                            Terms & Conditions 
                                         </span>
                                     </a>
                                 </li>
