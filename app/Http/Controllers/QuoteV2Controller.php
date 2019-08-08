@@ -3343,7 +3343,7 @@ class QuoteV2Controller extends Controller
       $modo  =  $request->input('mode');
       $companyUser = CompanyUser::All();
       $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
+      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->with('language')->get();
 
       $terminos="";
       //Export
