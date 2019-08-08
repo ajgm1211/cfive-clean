@@ -12,11 +12,11 @@
 */
 
 Route::get('/', function () {
-    return redirect('dashboard');
+    return redirect()->route('quotes-v2.search');
 });
 
 Route::get('/home', function () {
-    return redirect('dashboard');
+    return redirect()->route('quotes-v2.search');
 });
 
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
