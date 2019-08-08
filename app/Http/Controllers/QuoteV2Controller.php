@@ -129,8 +129,11 @@ class QuoteV2Controller extends Controller
         foreach($quotes as $quote){
             $custom_id      = '---';
             $company  = '---';
-            $origin         = '';
-            $destination    = '';
+            $origin = '';
+            $destination = '';
+            $origin_li = '';
+            $destination_li = '';
+            
             if(isset($quote->company)){
                 $company  = $quote->company->business_name;
             }
@@ -139,30 +142,26 @@ class QuoteV2Controller extends Controller
             }else{
                 $id = $quote->quote_id;
             }
-            $rates = AutomaticRate::where('quote_id',$quote->id)->with('origin_port','destination_port')->get();
-            $origin = '';
-            $destination = '';
-            foreach($rates as $rate){
-                if($rate->origin_port_id!=''){
-                    $origin.='<li>'.$rate->origin_port->name.'</li>';
-                }else if($rate->destination_airport_id!=''){
-                    $origin.='<li>'.$rate->origin_airport->name.'</li>';
-                }else if($rate->origin_address!=''){
-                    $origin.='<li>'.$rate->origin_address.'</li>';
-                }
-                if($rate->destination_port_id!=''){
-                    $destination.='<li>'.$rate->destination_port->name.'</li>';
-                }else if($rate->destination_airport_id!=''){
-                    $destination.='<li>'.$rate->destination_airport->name.'</li>';
-                }else if($rate->destination_address!=''){
-                    $destination.='<li>'.$rate->destination_address.'</li>';
-                }
-            }
 
             if($quote->type=='AIR'){
+                $origin=$quote->origin_airport;
+                $destination=$quote->destination_airport;
                 $img='<img src="/images/plane-blue.svg" class="img img-responsive" width="25">';
             }else{
+                $origin=$quote->origin_port;
+                $destination=$quote->destination_port;
                 $img='<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+            }
+
+            $explode_orig = explode("| ",$origin);
+            $explode_dest = explode("| ",$destination);
+
+            foreach($explode_orig as $item){
+                $origin_li.='<li>'.$item.'</li>';
+            }
+
+            foreach($explode_dest as $item){
+                $destination_li.='<li>'.$item.'</li>';
             }
 
             $data = [
@@ -171,8 +170,8 @@ class QuoteV2Controller extends Controller
                 'client'        => $quote->business_name,
                 'created'       => date_format($quote->created_at, 'M d, Y H:i'),
                 'user'          => $quote->owner,
-                'origin'        => $quote->origin_port,
-                'destination'   => $quote->destination_port,
+                'origin'        => '<ul>'.$origin_li.'</ul>',
+                'destination'   => '<ul>'.$destination_li.'</ul>',
                 'type'          => $quote->type,
                 'img'          => $img,
             ];
