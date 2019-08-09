@@ -112,15 +112,15 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
-            /*$quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+            $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->get();*/
-            $quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            })->orderBy('created_at', 'desc')->get();
+            //$quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
         }else{
-            /*$quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+            $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->get();*/
-            $quotes = ViewQuoteV2::orderBy('created_at', 'desc')->get();
+            })->orderBy('created_at', 'desc')->get();
+            //$quotes = ViewQuoteV2::orderBy('created_at', 'desc')->get();
         }
 
         $colletions = collect([]);
