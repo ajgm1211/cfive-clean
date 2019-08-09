@@ -122,7 +122,7 @@ class QuoteV2Controller extends Controller
             /*$quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->get();*/
-            $quotes = ViewQuoteV2::orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
         }
 
         $colletions = collect([]);
