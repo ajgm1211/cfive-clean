@@ -198,6 +198,12 @@
             serverSide: true,
             order: [[ 3, "asc" ],[ 4, "asc" ]],
             ajax:  "{{ route('quotes-v2.index.datatable') }}",
+            "columnDefs": [
+                { "width": "5%", "targets": 0 },
+                { "width": "20%", "targets": 1 },
+                { "width": "10%", "targets": [2,3] },
+                { "width": "20%", "targets": [4,5] },
+            ],
             columns: [
                {data: 'id', name: 'id'},
                {data: 'client', name: 'client'},

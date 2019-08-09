@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Message\Request as ClienteR;
 use GuzzleHttp\Message\Response;
 use App\Company;
+use App\Contact;
 
 class ApiIntegrationController extends Controller
 {
@@ -151,6 +152,8 @@ class ApiIntegrationController extends Controller
         $i=0;
         foreach($response->ent_m as $item){
             $exist_com = Company::where('business_name',$item->nom_com)->count();
+            $exist_cont = Contact::where('api_id',$item->id)->count();
+
             if($exist_com==0){
                 $company = new Company();
                 $company->business_name = $item->nom_com;
@@ -159,6 +162,7 @@ class ApiIntegrationController extends Controller
                 $company->email = $item->eml;
                 $company->company_user_id = \Auth::user()->company_user_id;
                 $company->owner = \Auth::user()->id;
+                $company->api_id = $item->id;
                 $company->save();
             }
             $i++;
