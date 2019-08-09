@@ -3167,7 +3167,7 @@ class QuoteV2Controller extends Controller
                             $inlandDest = new AutomaticInland();
                             $inlandDest->quote_id= $quote->id;
                             $inlandDest->automatic_rate_id = $rate->id;
-                            $inlandDest->provider =  $inlandDestiny->providerName;
+                            $inlandDest->provider =  "Inland ".$form->destination_address;
                             $inlandDest->distance =  $inlandDestiny->km;
                             $inlandDest->contract = $info_D->contract->id;
                             $inlandDest->port_id = $inlandDestiny->port_id;
@@ -3211,7 +3211,7 @@ class QuoteV2Controller extends Controller
                             $inlandOrig = new AutomaticInland();
                             $inlandOrig->quote_id= $quote->id;
                             $inlandOrig->automatic_rate_id = $rate->id;
-                            $inlandOrig->provider =  $inlandOrigin->providerName;
+                            $inlandOrig->provider = "Inland ". $form->origin_address;
                             $inlandOrig->distance =  $inlandOrigin->km;
                             $inlandOrig->contract = $info_D->contract->id;
                             $inlandOrig->port_id = $inlandOrigin->port_id;
