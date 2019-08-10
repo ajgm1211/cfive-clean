@@ -328,3 +328,24 @@ $(document).on('change', '#logo', function (e) {
         $("#logo-error").addClass('hide');
     }
 });
+
+$(document).on('click', '#syncCompanies', function (e) {
+    $("#syncCompanies").addClass("hide");
+    $("#syncCompaniesLoading").removeClass("hide");
+    $.ajax({
+        type: 'GET',
+        url: '/api/get/companies',
+        success: function(data) {
+            swal(
+                'Done!',
+                'Synchronization completed successfully.',
+                'success'
+            )
+            $("#syncCompaniesLoading").addClass("hide");
+            $("#syncCompanies").removeClass("hide");
+        },
+        error: function (request, status, error) {
+            alert(request.responseText);
+        }
+    });
+});

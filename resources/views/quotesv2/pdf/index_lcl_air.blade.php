@@ -201,11 +201,7 @@
                         $total_destination= 0;
                         $total_inland= 0;
                         foreach($rate->charge_lcl_air as $value){
-                            if($quote->pdf_option->show_type=='charges'){
-                                if($value->surcharge_id!=''){
-                                    $total_freight+=$value->total_freight;
-                                }
-                            }else{
+                            if($quote->pdf_option->show_type!='charges'){
                                 $total_freight+=$value->total_freight;
                             }
                             $total_origin+=$value->total_origin;
@@ -250,7 +246,7 @@
         </table>
         <br>
         <!-- Freight charges all in -->
-        @if(($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges') && $rates->count()>1)
+        @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
             <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Freight charges</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de flete</p>
@@ -285,19 +281,10 @@
                                     foreach($item as $rate){
                                         foreach($rate->charge_lcl_air as $value){
                                             if($value->type_id==3){
-                                                if($quote->pdf_option->show_type=='charges'){
-                                                    if($value->surcharge_id!=''){
-                                                        $total_freight+=$value->total_freight;
-                                                        $total_freight_units+=$value->units;
-                                                        $total_freight_rates+=$value->price_per_unit*$value->units;
-                                                        $total_freight_markups+=$value->markup;
-                                                    }
-                                                }else{
-                                                    $total_freight+=$value->total_freight;
-                                                    $total_freight_units+=$value->units;
-                                                    $total_freight_rates+=$value->price_per_unit*$value->units;
-                                                    $total_freight_markups+=$value->markup;
-                                                }
+                                                $total_freight+=$value->total_freight;
+                                                $total_freight_units+=$value->units;
+                                                $total_freight_rates+=$value->price_per_unit*$value->units;
+                                                $total_freight_markups+=$value->markup;
                                             }
                                         }
                                     }
@@ -333,7 +320,7 @@
         @endif
 
         <!-- Freigth charges detailed -->
-        @if(($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges') && $rates->count()==1)
+        @if($quote->pdf_option->show_type=='detailed' && $rates->count()==1)
             @if($quote->pdf_option->grouped_freight_charges==0)
                 @foreach($freight_charges_grouped as $origin => $value)
                     @foreach($value as $destination => $item)
@@ -373,51 +360,30 @@
                                 @foreach($rate as $r)
                                     @foreach($r->charge_lcl_air as $v)
                                         @if($v->type_id==3)
-                                            @if($quote->pdf_option->show_type!='charges')
-                                                <?php
-                                                    $total_freight+=@$v->total_freight;
-                                                ?>
-                                                <tr class="text-center color-table">
-                                                    @if($v->surcharge_id!='')
-                                                        <td>{{$v->surcharge->name}}</td>
-                                                    @else
-                                                        <td>{{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}</td>
-                                                    @endif
-                                                    @if($v->surcharge_id!='')
-                                                        <td>{{$v->calculation_type->name}}</td>
-                                                    @else
-                                                        <td>TON/M3</td>
-                                                    @endif
-                                                    @if($quote->type=='LCL')
-                                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                    @else
-                                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->airline->name}}</td>
-                                                    @endif
-                                                    <td >{{$v->units}}</td>
-                                                    <td >{{$v->rate}}</td>
-                                                    <td >{{$v->units*$v->rate}}</td>
-                                                    <td>{{$v->currency->alphacode}}</td>
-                                                </tr>
-                                            @else
+                                            <?php
+                                                $total_freight+=@$v->total_freight;
+                                            ?>
+                                            <tr class="text-center color-table">
                                                 @if($v->surcharge_id!='')
-                                                    <?php
-                                                        $total_freight+=@$v->total_freight;
-                                                    ?>
-                                                    <tr class="text-center color-table">
-                                                        <td>{{$v->surcharge->name}}</td>
-                                                        <td>{{$v->calculation_type->name}}</td>
-                                                        @if($quote->type=='LCL')
-                                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        @else
-                                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->airline->name}}</td>
-                                                        @endif
-                                                        <td >{{$v->units}}</td>
-                                                        <td >{{$v->rate}}</td>
-                                                        <td >{{$v->units*$v->rate}}</td>
-                                                        <td>{{$v->currency->alphacode}}</td>
-                                                    </tr>
+                                                    <td>{{$v->surcharge->name}}</td>
+                                                @else
+                                                    <td>{{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}</td>
                                                 @endif
-                                            @endif
+                                                @if($v->surcharge_id!='')
+                                                    <td>{{$v->calculation_type->name}}</td>
+                                                @else
+                                                    <td>TON/M3</td>
+                                                @endif
+                                                @if($quote->type=='LCL')
+                                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
+                                                @else
+                                                    <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->airline->name}}</td>
+                                                @endif
+                                                <td >{{$v->units}}</td>
+                                                <td >{{$v->rate}}</td>
+                                                <td >{{$v->units*$v->rate}}</td>
+                                                <td>{{$v->currency->alphacode}}</td>
+                                            </tr>
                                         @endif
                                     @endforeach
                                 @endforeach
