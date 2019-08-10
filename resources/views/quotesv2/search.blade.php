@@ -1375,7 +1375,7 @@
 @if(empty($arreglo))
 <script>
 
-
+  //mensaje();
   $('select[name="contact_id"]').prop("disabled",true);
   $("select[name='company_id_quote']").val('');
   $('#select2-m_select2_2_modal-container').text('Please an option');
