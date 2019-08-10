@@ -77,8 +77,6 @@ use App\SearchRate;
 use App\SearchPort;
 use App\ViewQuoteV2;
 
-
-
 class QuoteV2Controller extends Controller
 {
     /**
@@ -122,7 +120,7 @@ class QuoteV2Controller extends Controller
             /*$quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->get();*/
-            $quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            $quotes = ViewQuoteV2::where('company_user_id',$company_user_id)->orderBy('created_at', 'desc')->get();
         }
 
         $colletions = collect([]);
@@ -133,7 +131,7 @@ class QuoteV2Controller extends Controller
             $destination = '';
             $origin_li = '';
             $destination_li = '';
-            
+
             if(isset($quote->company)){
                 $company  = $quote->company->business_name;
             }
@@ -184,33 +182,32 @@ class QuoteV2Controller extends Controller
             })->addColumn('action',function($colletion){
             return
                 '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Options
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-      <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
-      <span>
-      <i class="la la-eye"></i>
-      &nbsp;
-      Show
-      </span>
-      </a>
-      <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
-      <span>
-      <i class="la la-plus"></i>
-      &nbsp;
-      Duplicate
-      </span>
-      </a>
-      <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="'.$colletion['idSet'].'" >
-      <span>
-      <i class="la la-eraser"></i>
-      &nbsp;
-      Delete
-      </span>
-      </a>
-      </div>';
-        })
-            ->editColumn('id', '{{$id}}')->make(true);
+          Options
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+          <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
+          <span>
+          <i class="la la-eye"></i>
+          &nbsp;
+          Show
+          </span>
+          </a>
+          <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
+          <span>
+          <i class="la la-plus"></i>
+          &nbsp;
+          Duplicate
+          </span>
+          </a>
+          <a href="#" class="dropdown-item" id="delete-quote-v2" data-quote-id="'.$colletion['idSet'].'" >
+          <span>
+          <i class="la la-eraser"></i>
+          &nbsp;
+          Delete
+          </span>
+          </a>
+          </div>';
+        })->editColumn('id', '{{$id}}')->make(true);
     }
 
     /**
@@ -3345,7 +3342,7 @@ class QuoteV2Controller extends Controller
             $modo  =  $request->input('mode');
             $companyUser = CompanyUser::All();
             $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-            $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
+            $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->with('language')->get();
 
             $terminos="";
             //Export
@@ -5262,15 +5259,14 @@ class QuoteV2Controller extends Controller
         $montoMarkup = 0;
         $totalMarkup = 0;
 
+
+
         foreach($collection as $item){
-
-
             foreach($item as $items){
-
                 $totalPadres = count($item['99']);
                 $totalhijos = count($items);
 
-                if($totalPadres > 2 ){
+                if($totalPadres >= 2 ){
                     foreach($items as $itemsDetail){
 
                         $monto += $itemsDetail['monto']; 
@@ -5317,16 +5313,9 @@ class QuoteV2Controller extends Controller
                         $totalMarkup = 0;
                     }
                 }
-
-
-
-
-
-
-
-
             }
         }
+
 
         $collect = $collect->groupBy([
             'surcharge_name',
@@ -5335,6 +5324,7 @@ class QuoteV2Controller extends Controller
                 return $item['type'];
             },
         ], $preserveKeys = true);
+
 
 
 
@@ -7060,7 +7050,7 @@ class QuoteV2Controller extends Controller
             if(!empty($dataGOrig)){
                 $collectGOrig = Collection::make($dataGOrig);
 
-                $m3tonGOrig= $collectGOrig->groupBy('surcharge_name')->map(function($item) use($collectionGloOrig,&$totalOrigin,$data,$carrier_all){
+                $m3tonGOrig= $collectGOrig->groupBy('surcharge_name')->map(function($item) use($collectionOrig,&$totalOrigin,$data,$carrier_all){
                     $carrArreglo = array($data->carrier_id,$carrier_all);
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
                     if(!empty($test)){
@@ -7068,7 +7058,7 @@ class QuoteV2Controller extends Controller
                         $totalOrigin += $totalA[0];  
 
                         //$arre['origin'] = $test;
-                        $collectionGloOrig->push($test);
+                        $collectionOrig->push($test);
                         return $test;
                     }
                 });
@@ -7076,14 +7066,14 @@ class QuoteV2Controller extends Controller
 
             if(!empty($dataGDest)){
                 $collectGDest = Collection::make($dataGDest);
-                $m3tonDestG= $collectGDest->groupBy('surcharge_name')->map(function($item) use($collectionGloDest,&$totalDestiny,$data,$carrier_all){
+                $m3tonDestG= $collectGDest->groupBy('surcharge_name')->map(function($item) use($collectionDest,&$totalDestiny,$data,$carrier_all){
                     $carrArreglo = array($data->carrier_id,$carrier_all);
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
                     if(!empty($test)){
                         $totalA = explode(' ',$test['totalAmmount']);
                         $totalDestiny += $totalA[0];  
                         // $arre['destiny'] = $test;
-                        $collectionGloDest->push($test);
+                        $collectionDest->push($test);
                         return $test;
                     }
                 });
@@ -7092,14 +7082,14 @@ class QuoteV2Controller extends Controller
             if(!empty($dataGFreight)){
 
                 $collectGFreight = Collection::make($dataGFreight);
-                $m3tonFreightG= $collectGFreight->groupBy('surcharge_name')->map(function($item) use($collectionGloFreight,&$totalFreight,$data,$carrier_all){
+                $m3tonFreightG= $collectGFreight->groupBy('surcharge_name')->map(function($item) use($collectionFreight,&$totalFreight,$data,$carrier_all){
                     $carrArreglo = array($data->carrier_id,$carrier_all);
                     $test = $item->where('montoOrig', $item->max('montoOrig'))->wherein('carrier_id',$carrArreglo)->first();
                     if(!empty($test)){
                         $totalA = explode(' ',$test['totalAmmount']);
                         $totalFreight += $totalA[0];  
                         //$arre['freight'] = $test;
-                        $collectionGloFreight->push($test);
+                        $collectionFreight->push($test);
                         return $test;
                     }
                 });
