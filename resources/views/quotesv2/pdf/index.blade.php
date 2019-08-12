@@ -385,7 +385,8 @@
                                                             <td {{ @$equipmentHides['40hc'] }}>{{number_format($v->total_40hc, 2, '.', '')}}</td>
                                                             <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
                                                             <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
-                                                            <td>{{$v->currency->alphacode}}</td>
+                                                            <!--<td>{{$v->currency->alphacode}}</td>-->
+                                                            <td>{{$currency_cfg->alphacode}}</td>
                                                         </tr>
                                                     @else
                                                         @if($v->surcharge_id!='')
@@ -405,7 +406,8 @@
                                                                 <td {{ @$equipmentHides['40hc'] }}>{{number_format($v->total_40hc, 2, '.', '')}}</td>
                                                                 <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
                                                                 <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
-                                                                <td>{{$v->currency->alphacode}}</td>
+                                                                <!--<td>{{$v->currency->alphacode}}</td>-->
+                                                                <td>{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @endif
                                                     @endif
