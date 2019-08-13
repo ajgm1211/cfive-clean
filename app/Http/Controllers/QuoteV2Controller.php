@@ -1008,10 +1008,12 @@ class QuoteV2Controller extends Controller
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
             $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-            if($email_settings->email_signature_type=='text'){
-                $sign = $email_settings->email_signature_text;
-            }else{
-                $sign = $email_settings->email_signature_image;
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                }
             }
         }
 
@@ -1177,7 +1179,7 @@ class QuoteV2Controller extends Controller
             if($email_settings->email_signature_type=='text'){
                 $sign = $email_settings->email_signature_text;
             }else{
-                $sign = '<img src="'.email_signature_image.'" width=100>';
+                $sign = '<img src="'.$email_signature_image.'" width=100>';
             }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
