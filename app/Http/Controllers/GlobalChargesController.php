@@ -26,287 +26,287 @@ use Illuminate\Support\Collection as Collection;
 
 class GlobalChargesController extends Controller
 {
-  public function index()
-  {
-    $company_userid = \Auth::user()->company_user_id;
-    return view('globalcharges.indexTw', compact('company_userid'));
-  }
+    public function index()
+    {
+        $company_userid = \Auth::user()->company_user_id;
+        return view('globalcharges.indexTw', compact('company_userid'));
+    }
 
-  public function create()
-  {
-    //
-  }
+    public function create()
+    {
+        //
+    }
 
-  public function store(Request $request){
-    $detailscharges = $request->input('type');
-    $calculation_type = $request->input('calculationtype');
+    public function store(Request $request){
+        $detailscharges = $request->input('type');
+        $calculation_type = $request->input('calculationtype');
 
 
-    //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
-    foreach($calculation_type as $ct => $ctype)
+        //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
+        foreach($calculation_type as $ct => $ctype)
+        {
+
+            $global = new GlobalCharge();
+            $validation = explode('/',$request->validation_expire);
+            $global->validity = $validation[0];
+            $global->expire = $validation[1];
+            $global->surcharge_id = $request->input('type');
+            $global->typedestiny_id = $request->input('changetype');
+            $global->calculationtype_id = $ctype;
+            $global->ammount = $request->input('ammount');
+            $global->currency_id = $request->input('localcurrency_id');
+            $global->company_user_id = Auth::user()->company_user_id; 
+            $global->save();
+            // Detalles de puertos y carriers
+            //$totalCarrier = count($request->input('localcarrier'.$contador));
+            //$totalport =  count($request->input('port_id'.$contador));
+            $detailcarrier = $request->input('localcarrier');
+            foreach($detailcarrier as $c => $value)
+            {
+
+                $detailcarrier = new GlobalCharCarrier();
+                $detailcarrier->carrier_id =$value;
+                $detailcarrier->globalcharge()->associate($global);
+                $detailcarrier->save();
+            }
+            $typerate =  $request->input('typeroute');
+            if($typerate == 'port'){
+                $detailport = $request->input('port_orig');
+                $detailportDest = $request->input('port_dest');
+                foreach($detailport as $p => $value)
+                {
+                    foreach($detailportDest as $dest => $valuedest)
+                    {
+                        $ports = new GlobalCharPort();
+                        $ports->port_orig = $value;
+                        $ports->port_dest = $valuedest;
+                        $ports->typedestiny_id = $request->input('changetype');
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
+                }
+            }elseif($typerate == 'country'){
+                $detailCountrytOrig =$request->input('country_orig');
+                $detailCountryDest = $request->input('country_dest');
+                foreach($detailCountrytOrig as $p => $valueC)
+                {
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig = $valueC;
+                        $detailcountry->country_dest =  $valuedestC;
+                        $detailcountry->globalcharge()->associate($global);
+                        $detailcountry->save();
+                    }
+                }
+
+            }
+        }
+        // EVENTO INTERCOM 
+        $event = new  EventIntercom();
+        $event->event_globalChargesFcl();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+        return redirect()->action('GlobalChargesController@index');
+    }
+
+    public function updateGlobalChar(Request $request, $id)
     {
 
-      $global = new GlobalCharge();
-      $validation = explode('/',$request->validation_expire);
-      $global->validity = $validation[0];
-      $global->expire = $validation[1];
-      $global->surcharge_id = $request->input('type');
-      $global->typedestiny_id = $request->input('changetype');
-      $global->calculationtype_id = $ctype;
-      $global->ammount = $request->input('ammount');
-      $global->currency_id = $request->input('localcurrency_id');
-      $global->company_user_id = Auth::user()->company_user_id; 
-      $global->save();
-      // Detalles de puertos y carriers
-      //$totalCarrier = count($request->input('localcarrier'.$contador));
-      //$totalport =  count($request->input('port_id'.$contador));
-      $detailcarrier = $request->input('localcarrier');
-      foreach($detailcarrier as $c => $value)
-      {
 
-        $detailcarrier = new GlobalCharCarrier();
-        $detailcarrier->carrier_id =$value;
-        $detailcarrier->globalcharge()->associate($global);
-        $detailcarrier->save();
-      }
-      $typerate =  $request->input('typeroute');
-      if($typerate == 'port'){
-        $detailport = $request->input('port_orig');
-        $detailportDest = $request->input('port_dest');
-        foreach($detailport as $p => $value)
-        {
-          foreach($detailportDest as $dest => $valuedest)
-          {
-            $ports = new GlobalCharPort();
-            $ports->port_orig = $value;
-            $ports->port_dest = $valuedest;
-            $ports->typedestiny_id = $request->input('changetype');
-            $ports->globalcharge()->associate($global);
-            $ports->save();
-          }
-        }
-      }elseif($typerate == 'country'){
-        $detailCountrytOrig =$request->input('country_orig');
-        $detailCountryDest = $request->input('country_dest');
-        foreach($detailCountrytOrig as $p => $valueC)
-        {
-          foreach($detailCountryDest as $dest => $valuedestC)
-          {
-            $detailcountry = new GlobalCharCountry();
-            $detailcountry->country_orig = $valueC;
-            $detailcountry->country_dest =  $valuedestC;
-            $detailcountry->globalcharge()->associate($global);
-            $detailcountry->save();
-          }
-        }
-
-      }
-    }
-    // EVENTO INTERCOM 
-    $event = new  EventIntercom();
-    $event->event_globalChargesFcl();
-
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
-    return redirect()->action('GlobalChargesController@index');
-  }
-
-  public function updateGlobalChar(Request $request, $id)
-  {
-
-
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-    $objtypedestiny = new TypeDestiny();
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    //dd($request);
-    /* $type =  TypeDestiny::all();
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $objtypedestiny = new TypeDestiny();
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        //dd($request);
+        /* $type =  TypeDestiny::all();
         $changetype = $type->find($request->input('changetype'))->toArray();*/
-    $global = GlobalCharge::find($id);
-    $validation = explode('/',$request->validation_expire);
-    $global->validity = $validation[0];
-    $global->expire = $validation[1];
-    $global->surcharge_id = $request->input('surcharge_id');
-    $global->typedestiny_id = $request->input('changetype');
-    $global->calculationtype_id = $request->input('calculationtype_id');
-    $global->ammount = $request->input('ammount');
-    $global->currency_id = $request->input('currency_id');
+        $global = GlobalCharge::find($id);
+        $validation = explode('/',$request->validation_expire);
+        $global->validity = $validation[0];
+        $global->expire = $validation[1];
+        $global->surcharge_id = $request->input('surcharge_id');
+        $global->typedestiny_id = $request->input('changetype');
+        $global->calculationtype_id = $request->input('calculationtype_id');
+        $global->ammount = $request->input('ammount');
+        $global->currency_id = $request->input('currency_id');
 
 
 
-    $carrier = $request->input('carrier_id');
-    $deleteCarrier = GlobalCharCarrier::where("globalcharge_id",$id);
-    $deleteCarrier->delete();
-    $deletePort = GlobalCharPort::where("globalcharge_id",$id);
-    $deletePort->delete();
-    $deleteCountry = GlobalCharCountry::where("globalcharge_id",$id);
-    $deleteCountry->delete();
+        $carrier = $request->input('carrier_id');
+        $deleteCarrier = GlobalCharCarrier::where("globalcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort->delete();
+        $deleteCountry = GlobalCharCountry::where("globalcharge_id",$id);
+        $deleteCountry->delete();
 
-    $typerate =  $request->input('typeroute');
-    if($typerate == 'port'){
-      $port_orig = $request->input('port_orig');
-      $port_dest = $request->input('port_dest');
-      foreach($port_orig as  $orig => $valueorig)
-      {
-        foreach($port_dest as $dest => $valuedest)
-        {
-          $detailport = new GlobalCharPort();
-          $detailport->port_orig = $valueorig;
-          $detailport->port_dest = $valuedest;
-          $detailport->typedestiny_id = $request->input('changetype');
-          $detailport->globalcharge_id = $id;
-          $detailport->save();
+        $typerate =  $request->input('typeroute');
+        if($typerate == 'port'){
+            $port_orig = $request->input('port_orig');
+            $port_dest = $request->input('port_dest');
+            foreach($port_orig as  $orig => $valueorig)
+            {
+                foreach($port_dest as $dest => $valuedest)
+                {
+                    $detailport = new GlobalCharPort();
+                    $detailport->port_orig = $valueorig;
+                    $detailport->port_dest = $valuedest;
+                    $detailport->typedestiny_id = $request->input('changetype');
+                    $detailport->globalcharge_id = $id;
+                    $detailport->save();
+                }
+            }
+        }elseif($typerate == 'country'){
+
+            $detailCountrytOrig =$request->input('country_orig');
+            $detailCountryDest = $request->input('country_dest');
+            foreach($detailCountrytOrig as $p => $valueC)
+            {
+                foreach($detailCountryDest as $dest => $valuedestC)
+                {
+                    $detailcountry = new GlobalCharCountry();
+                    $detailcountry->country_orig = $valueC;
+                    $detailcountry->country_dest =  $valuedestC;
+                    $detailcountry->globalcharge()->associate($global);
+                    $detailcountry->save();
+                }
+            }
         }
-      }
-    }elseif($typerate == 'country'){
 
-      $detailCountrytOrig =$request->input('country_orig');
-      $detailCountryDest = $request->input('country_dest');
-      foreach($detailCountrytOrig as $p => $valueC)
-      {
-        foreach($detailCountryDest as $dest => $valuedestC)
+
+
+        foreach($carrier as $key)
         {
-          $detailcountry = new GlobalCharCountry();
-          $detailcountry->country_orig = $valueC;
-          $detailcountry->country_dest =  $valuedestC;
-          $detailcountry->globalcharge()->associate($global);
-          $detailcountry->save();
+            $detailcarrier = new GlobalCharCarrier();
+            $detailcarrier->carrier_id = $key;
+            $detailcarrier->globalcharge_id = $id;
+            $detailcarrier->save();
         }
-      }
-    }
 
-
-
-    foreach($carrier as $key)
-    {
-      $detailcarrier = new GlobalCharCarrier();
-      $detailcarrier->carrier_id = $key;
-      $detailcarrier->globalcharge_id = $id;
-      $detailcarrier->save();
-    }
-
-    $global->update();
-    /*
+        $global->update();
+        /*
     $global =  GlobalCharge::whereHas('companyUser', function($q) {
       $q->where('company_user_id', '=', Auth::user()->company_user_id);
     })->with('globalcharport.portOrig','globalcharport.portDest','GlobalCharCarrier.carrier','typedestiny')->get();
 
     return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
-    return redirect()->back()->with('globalchar','true');
-  }
-  public function destroyGlobalCharges($id)
-  {
+        return redirect()->back()->with('globalchar','true');
+    }
+    public function destroyGlobalCharges($id)
+    {
 
-    $global = GlobalCharge::find($id);
-    $global->delete();
+        $global = GlobalCharge::find($id);
+        $global->delete();
 
-  }
-  public function editGlobalChar($id){
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objtypedestiny = new TypeDestiny();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-    $countries = Country::pluck('name','id');
+    }
+    public function editGlobalChar($id){
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objtypedestiny = new TypeDestiny();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $countries = Country::pluck('name','id');
 
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $globalcharges = GlobalCharge::find($id);
-    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
-    $globalcharges->setAttribute('validation_expire',$validation_expire);
-    return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
-  }
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $globalcharges = GlobalCharge::find($id);
+        $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+        return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+    }
 
-  public function addGlobalChar(){
+    public function addGlobalChar(){
 
-    $objcarrier = new Carrier();
-    $objharbor = new Harbor();
-    $objcurrency = new Currency();
-    $objtypedestiny = new TypeDestiny();
-    $objcalculation = new CalculationType();
-    $objsurcharge = new Surcharge();
-    $countries = Country::pluck('name','id');
+        $objcarrier = new Carrier();
+        $objharbor = new Harbor();
+        $objcurrency = new Currency();
+        $objtypedestiny = new TypeDestiny();
+        $objcalculation = new CalculationType();
+        $objsurcharge = new Surcharge();
+        $countries = Country::pluck('name','id');
 
 
-    $calculationT = $objcalculation->all()->pluck('name','id');
-    $typedestiny = $objtypedestiny->all()->pluck('description','id');
-    $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $harbor = $objharbor->all()->pluck('display_name','id');
-    $carrier = $objcarrier->all()->pluck('name','id');
-    $currency = $objcurrency->all()->pluck('alphacode','id');
-    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-    $currency_cfg = Currency::find($company_user->currency_id);
+        $calculationT = $objcalculation->all()->pluck('name','id');
+        $typedestiny = $objtypedestiny->all()->pluck('description','id');
+        $surcharge = $objsurcharge->where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor = $objharbor->all()->pluck('display_name','id');
+        $carrier = $objcarrier->all()->pluck('name','id');
+        $currency = $objcurrency->all()->pluck('alphacode','id');
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg = Currency::find($company_user->currency_id);
 
-    return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','currency_cfg'));
-  }
+        return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','currency_cfg'));
+    }
 
-  public function duplicateGlobalCharges($id){
+    public function duplicateGlobalCharges($id){
 
-    $countries = Country::pluck('name','id');
-    $calculationT = CalculationType::all()->pluck('name','id');
-    $typedestiny = TypeDestiny::all()->pluck('description','id');
-    $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-    $harbor = Harbor::all()->pluck('display_name','id');
-    $carrier = Carrier::all()->pluck('name','id');
-    $currency = Currency::all()->pluck('alphacode','id');
-    $globalcharges = GlobalCharge::find($id);
-    $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
-    $globalcharges->setAttribute('validation_expire',$validation_expire);
-    return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
-  }
+        $countries = Country::pluck('name','id');
+        $calculationT = CalculationType::all()->pluck('name','id');
+        $typedestiny = TypeDestiny::all()->pluck('description','id');
+        $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor = Harbor::all()->pluck('display_name','id');
+        $carrier = Carrier::all()->pluck('name','id');
+        $currency = Currency::all()->pluck('alphacode','id');
+        $globalcharges = GlobalCharge::find($id);
+        $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+        return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+    }
 
-  public function show($id)
-  {
-    $globalcharges = DB::select('call  select_for_company_globalcharger('.$id.')');
+    public function show($id)
+    {
+        $globalcharges = DB::select('call  select_for_company_globalcharger('.$id.')');
 
-    return DataTables::of($globalcharges)
-      ->editColumn('surchargelb', function ($globalcharges){ 
-        return $globalcharges->surcharges;
-      })
-      ->editColumn('origin_portLb', function ($globalcharges){ 
-        if(empty($globalcharges->port_orig) != true){
-          return $globalcharges->port_orig;
-        } else if(empty($globalcharges->country_orig) != true) {
-          return $globalcharges->country_orig; 
-        }
-      })
-      ->editColumn('destiny_portLb', function ($globalcharges){ 
-        if(empty($globalcharges->port_dest) != true){
-          return $globalcharges->port_dest;
-        } else if(empty($globalcharges->country_dest) != true) {
-          return $globalcharges->country_dest; 
-        }
-      })
-      ->editColumn('typedestinylb', function ($globalcharges){ 
-        return $globalcharges->typedestiny;
-      })
-      ->editColumn('calculationtypelb', function ($globalcharges){ 
-        return $globalcharges->calculationtype;
-      })
-      ->editColumn('currencylb', function ($globalcharges){ 
-        return $globalcharges->currency;
-      })
-      ->editColumn('carrierlb', function ($globalcharges){ 
-        return $globalcharges->carrier;
-      })
-      ->editColumn('validitylb', function ($globalcharges){ 
-        return $globalcharges->validity.'/'.$globalcharges->expire;
-      })
-      ->addColumn('action', function ( $globalcharges) {
-        return '
+        return DataTables::of($globalcharges)
+            ->editColumn('surchargelb', function ($globalcharges){ 
+                return $globalcharges->surcharges;
+            })
+            ->editColumn('origin_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->port_orig) != true){
+                    return $globalcharges->port_orig;
+                } else if(empty($globalcharges->country_orig) != true) {
+                    return $globalcharges->country_orig; 
+                }
+            })
+            ->editColumn('destiny_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->port_dest) != true){
+                    return $globalcharges->port_dest;
+                } else if(empty($globalcharges->country_dest) != true) {
+                    return $globalcharges->country_dest; 
+                }
+            })
+            ->editColumn('typedestinylb', function ($globalcharges){ 
+                return $globalcharges->typedestiny;
+            })
+            ->editColumn('calculationtypelb', function ($globalcharges){ 
+                return $globalcharges->calculationtype;
+            })
+            ->editColumn('currencylb', function ($globalcharges){ 
+                return $globalcharges->currency;
+            })
+            ->editColumn('carrierlb', function ($globalcharges){ 
+                return $globalcharges->carrier;
+            })
+            ->editColumn('validitylb', function ($globalcharges){ 
+                return $globalcharges->validity.'/'.$globalcharges->expire;
+            })
+            ->addColumn('action', function ( $globalcharges) {
+                return '
                     <a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                     <i class="la la-edit"></i>
                     </a>
@@ -319,85 +319,85 @@ class GlobalChargesController extends Controller
 											<i class="la la-plus"></i>
 										</a>
                     ';
-      })
-      ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-      ->rawColumns(['checkbox','action'])
-      ->editColumn('id', '{{$id}}')->toJson();
-  }
-
-  public function edit($id)
-  {
-    //
-  }
-
-  public function update(Request $request, $id)
-  {
-    //
-  }
-
-  public function destroy($id)
-  {
-
-  }
-
-  public function destroyArr(Request $request)
-  {
-    $globals_id_array = $request->input('id');
-    $global = GlobalCharge::whereIn('id', $globals_id_array);
-    if($global->delete())
-    {
-      return response()->json(['success' => '1']);
-    } else {
-      return response()->json(['success' => '2']);
+            })
+            ->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            ->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
-  }
 
-  // CRUD Administarator -----------------------------------------------------------------------------------------------------
+    public function edit($id)
+    {
+        //
+    }
 
-  public function indexAdm(){
-    $companies = CompanyUser::pluck('name','id');
-    $carriers = Carrier::pluck('name','id');
-    return view('globalchargesAdm.index',compact('companies','carriers'));
-  }
+    public function update(Request $request, $id)
+    {
+        //
+    }
 
-  public function createAdm(Request $request){
-    $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
+    public function destroy($id)
+    {
 
-    return DataTables::of($globalcharges)
-      ->editColumn('surchargelb', function ($globalcharges){ 
-        return $globalcharges->charge;
-      })
-      ->editColumn('origin_portLb', function ($globalcharges){ 
-        if(empty($globalcharges->origin_port) != true){
-          return $globalcharges->origin_port;
-        } else if(empty($globalcharges->origin_country) != true) {
-          return $globalcharges->origin_country; 
+    }
+
+    public function destroyArr(Request $request)
+    {
+        $globals_id_array = $request->input('id');
+        $global = GlobalCharge::whereIn('id', $globals_id_array);
+        if($global->delete())
+        {
+            return response()->json(['success' => '1']);
+        } else {
+            return response()->json(['success' => '2']);
         }
-      })
-      ->editColumn('destiny_portLb', function ($globalcharges){ 
-        if(empty($globalcharges->destination_port) != true){
-          return $globalcharges->destination_port;
-        } else if(empty($globalcharges->destination_country) != true) {
-          return $globalcharges->destination_country; 
-        }
-      })
-      ->editColumn('typedestinylb', function ($globalcharges){ 
-        return $globalcharges->charge_type;
-      })
-      ->editColumn('calculationtypelb', function ($globalcharges){ 
-        return $globalcharges->calculation_type;
-      })
-      ->editColumn('currencylb', function ($globalcharges){ 
-        return $globalcharges->currency_code;
-      })
-      ->editColumn('carrierlb', function ($globalcharges){ 
-        return $globalcharges->carrier;
-      })
-      ->editColumn('validitylb', function ($globalcharges){ 
-        return $globalcharges->valid_from.'/'.$globalcharges->valid_until;
-      })
-      ->addColumn('action', function ( $globalcharges) {
-        return '<a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+    }
+
+    // CRUD Administarator -----------------------------------------------------------------------------------------------------
+
+    public function indexAdm(){
+        $companies = CompanyUser::pluck('name','id');
+        $carriers = Carrier::pluck('name','id');
+        return view('globalchargesAdm.index',compact('companies','carriers'));
+    }
+
+    public function createAdm(Request $request){
+        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
+
+        return DataTables::of($globalcharges)
+            ->editColumn('surchargelb', function ($globalcharges){ 
+                return $globalcharges->charge;
+            })
+            ->editColumn('origin_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->origin_port) != true){
+                    return $globalcharges->origin_port;
+                } else if(empty($globalcharges->origin_country) != true) {
+                    return $globalcharges->origin_country; 
+                }
+            })
+            ->editColumn('destiny_portLb', function ($globalcharges){ 
+                if(empty($globalcharges->destination_port) != true){
+                    return $globalcharges->destination_port;
+                } else if(empty($globalcharges->destination_country) != true) {
+                    return $globalcharges->destination_country; 
+                }
+            })
+            ->editColumn('typedestinylb', function ($globalcharges){ 
+                return $globalcharges->charge_type;
+            })
+            ->editColumn('calculationtypelb', function ($globalcharges){ 
+                return $globalcharges->calculation_type;
+            })
+            ->editColumn('currencylb', function ($globalcharges){ 
+                return $globalcharges->currency_code;
+            })
+            ->editColumn('carrierlb', function ($globalcharges){ 
+                return $globalcharges->carrier;
+            })
+            ->editColumn('validitylb', function ($globalcharges){ 
+                return $globalcharges->valid_from.'/'.$globalcharges->valid_until;
+            })
+            ->addColumn('action', function ( $globalcharges) {
+                return '<a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                     <i class="la la-edit"></i>
                     </a>
 
@@ -408,77 +408,77 @@ class GlobalChargesController extends Controller
                     <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges->id.')">
 											<i class="la la-plus"></i>
 				   </a>';
-      })
-      //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-      //->rawColumns(['checkbox','action'])
-      ->editColumn('id', '{{$id}}')->toJson();
-  }
-
-  public function createAdm_proc(Request $request){
-    /*  $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);*/
-
-    $co = $request->company_id;
-    $ca =  $request->carrier;
-
-    $data1 = \DB::select(\DB::raw('call select_globalcharge_adm('.$co.','.$ca.')'));
-    $globalcharges = new Collection;
-    for ($i = 0; $i < count($data1); $i++) {
-      $globalcharges->push([
-        'id' => $data1[$i]->id,
-        'charge' =>  $data1[$i]->charge,
-        'charge_type' =>   $data1[$i]->charge_type,
-        'calculation_type' =>   $data1[$i]->calculation_type,
-        'origin_port' =>  $data1[$i]->origin_port,
-        'origin_country' =>   $data1[$i]->origin_country,
-        'destination_port' =>  $data1[$i]->destination_port,
-        'destination_country' =>   $data1[$i]->destination_country,
-        'carrier' => $data1[$i]->carrier,
-        'amount' =>   $data1[$i]->amount,
-        'currency_code' =>   $data1[$i]->currency_code,
-        'valid_from' =>   $data1[$i]->valid_from,
-        'valid_until' =>   $data1[$i]->valid_until,
-        'company_user' =>   $data1[$i]->company_user
-
-      ]);
+            })
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
 
+    public function createAdm_proc(Request $request){
+        /*  $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);*/
+
+        $co = $request->company_id;
+        $ca =  $request->carrier;
+
+        $data1 = \DB::select(\DB::raw('call select_globalcharge_adm('.$co.','.$ca.')'));
+        $globalcharges = new Collection;
+        for ($i = 0; $i < count($data1); $i++) {
+            $globalcharges->push([
+                'id' => $data1[$i]->id,
+                'charge' =>  $data1[$i]->charge,
+                'charge_type' =>   $data1[$i]->charge_type,
+                'calculation_type' =>   $data1[$i]->calculation_type,
+                'origin_port' =>  $data1[$i]->origin_port,
+                'origin_country' =>   $data1[$i]->origin_country,
+                'destination_port' =>  $data1[$i]->destination_port,
+                'destination_country' =>   $data1[$i]->destination_country,
+                'carrier' => $data1[$i]->carrier,
+                'amount' =>   $data1[$i]->amount,
+                'currency_code' =>   $data1[$i]->currency_code,
+                'valid_from' =>   $data1[$i]->valid_from,
+                'valid_until' =>   $data1[$i]->valid_until,
+                'company_user' =>   $data1[$i]->company_user
+
+            ]);
+        }
 
 
-    return DataTables::of($globalcharges)
-      ->addColumn('surchargelb', function ($globalcharges){ 
-        return $globalcharges['charge'];
-      })
-      ->addColumn('origin_portLb', function ($globalcharges){ 
-        if(empty($globalcharges['origin_port']) != true){
-          return $globalcharges['origin_port'];
-        } else if(empty($globalcharges['origin_country']) != true) {
-          return $globalcharges['origin_country']; 
-        }
-      })
-      ->addColumn('destiny_portLb', function ($globalcharges){ 
-        if(empty($globalcharges['destination_port']) != true){
-          return $globalcharges['destination_port'];
-        } else if(empty($globalcharges['destination_country']) != true) {
-          return $globalcharges['destination_country']; 
-        }
-      })
-      ->addColumn('typedestinylb', function ($globalcharges){ 
-        return $globalcharges['charge_type'];
-      })
-      ->addColumn('calculationtypelb', function ($globalcharges){ 
-        return $globalcharges['calculation_type'];
-      })
-      ->addColumn('currencylb', function ($globalcharges){ 
-        return $globalcharges['currency_code'];
-      })
-      ->addColumn('carrierlb', function ($globalcharges){ 
-        return $globalcharges['carrier'];
-      })
-      ->addColumn('validitylb', function ($globalcharges){ 
-        return $globalcharges['valid_from'].'/'.$globalcharges['valid_until'];
-      })
-      ->addColumn('action', function ( $globalcharges) {
-        return '<a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges['id'].')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
+
+        return DataTables::of($globalcharges)
+            ->addColumn('surchargelb', function ($globalcharges){ 
+                return $globalcharges['charge'];
+            })
+            ->addColumn('origin_portLb', function ($globalcharges){ 
+                if(empty($globalcharges['origin_port']) != true){
+                    return $globalcharges['origin_port'];
+                } else if(empty($globalcharges['origin_country']) != true) {
+                    return $globalcharges['origin_country']; 
+                }
+            })
+            ->addColumn('destiny_portLb', function ($globalcharges){ 
+                if(empty($globalcharges['destination_port']) != true){
+                    return $globalcharges['destination_port'];
+                } else if(empty($globalcharges['destination_country']) != true) {
+                    return $globalcharges['destination_country']; 
+                }
+            })
+            ->addColumn('typedestinylb', function ($globalcharges){ 
+                return $globalcharges['charge_type'];
+            })
+            ->addColumn('calculationtypelb', function ($globalcharges){ 
+                return $globalcharges['calculation_type'];
+            })
+            ->addColumn('currencylb', function ($globalcharges){ 
+                return $globalcharges['currency_code'];
+            })
+            ->addColumn('carrierlb', function ($globalcharges){ 
+                return $globalcharges['carrier'];
+            })
+            ->addColumn('validitylb', function ($globalcharges){ 
+                return $globalcharges['valid_from'].'/'.$globalcharges['valid_until'];
+            })
+            ->addColumn('action', function ( $globalcharges) {
+                return '<a  id="edit_l" onclick="AbrirModal('."'editGlobalCharge'".','.$globalcharges['id'].')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
                     <i class="la la-edit"></i>
                     </a>
 
@@ -489,237 +489,237 @@ class GlobalChargesController extends Controller
                     <a   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"  title="Duplicate "  onclick="AbrirModal('."'duplicateGlobalCharge'".','.$globalcharges['id'].')">
 											<i class="la la-plus"></i>
 				   </a>';
-      })
-      //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
-      //->rawColumns(['checkbox','action'])
-      ->editColumn('id', '{{$id}}')->toJson();
-  }
-
-  public function addAdm(){
-
-    $countries      = Country::pluck('name','id');
-    $calculationT   = CalculationType::pluck('name','id');
-    $typedestiny    = TypeDestiny::pluck('description','id');
-    $harbor         = Harbor::pluck('display_name','id');
-    $carrier        = Carrier::pluck('name','id');
-    $currency       = Currency::pluck('alphacode','id');
-    $company_usersO = CompanyUser::all();
-    $currency_cfg   = Currency::pluck('name','id');
-    $company_users  = ['null'=>'Please Select'];
-    foreach($company_usersO as $d){
-      $company_users[$d['id']]=$d->name;
+            })
+            //->addColumn('checkbox', '<input type="checkbox" name="check[]" class="checkbox_global" value="{{$id}}" />')
+            //->rawColumns(['checkbox','action'])
+            ->editColumn('id', '{{$id}}')->toJson();
     }
-    return view('globalchargesAdm.add', compact('harbor','carrier','currency','calculationT','company_users','typedestiny','countries','currency_cfg'));
-  }
 
-  public function typeChargeAdm(Request $request,$id){
-    if($request->ajax()){
-      if($id != 'null'){
-        $surcharges = Surcharge::where('company_user_id','=',$id)->get();
-      } else{
-        $surcharges = null;
-      }
-      return response()->json($surcharges);
-    }
-  }
+    public function addAdm(){
 
-  public function storeAdm(Request $request){
-    //dd($request);
-    $detailscharges = $request->input('type');
-    $calculation_type = $request->input('calculationtype');
-
-    //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
-    foreach($calculation_type as $ct => $ctype)
-    {
-
-      $global                     = new GlobalCharge();
-      $validation                 = explode('/',$request->validation_expire);
-      $global->validity           = $validation[0];
-      $global->expire             = $validation[1];
-      $global->surcharge_id       = $request->input('type');
-      $global->typedestiny_id     = $request->input('changetype');
-      $global->calculationtype_id = $ctype;
-      $global->ammount            = $request->input('ammount');
-      $global->currency_id        = $request->input('localcurrency_id');
-      $global->company_user_id    = $request->company_user_id; 
-      $global->save();
-
-      $detailcarrier = $request->input('localcarrier');
-      foreach($detailcarrier as $c => $value)
-      {
-        $detailcarrier = new GlobalCharCarrier();
-        $detailcarrier->carrier_id =$value;
-        $detailcarrier->globalcharge()->associate($global);
-        $detailcarrier->save();
-      }
-      $typerate =  $request->input('typeroute');
-      if($typerate == 'port'){
-        $detailport = $request->input('port_orig');
-        $detailportDest = $request->input('port_dest');
-        foreach($detailport as $p => $value)
-        {
-          foreach($detailportDest as $dest => $valuedest)
-          {
-            $ports                  = new GlobalCharPort();
-            $ports->port_orig       = $value;
-            $ports->port_dest       = $valuedest;
-            $ports->typedestiny_id  = $request->input('changetype');
-            $ports->globalcharge()->associate($global);
-            $ports->save();
-          }
+        $countries      = Country::pluck('name','id');
+        $calculationT   = CalculationType::pluck('name','id');
+        $typedestiny    = TypeDestiny::pluck('description','id');
+        $harbor         = Harbor::pluck('display_name','id');
+        $carrier        = Carrier::pluck('name','id');
+        $currency       = Currency::pluck('alphacode','id');
+        $company_usersO = CompanyUser::all();
+        $currency_cfg   = Currency::pluck('name','id');
+        $company_users  = ['null'=>'Please Select'];
+        foreach($company_usersO as $d){
+            $company_users[$d['id']]=$d->name;
         }
-      }elseif($typerate == 'country'){
-        $detailCountrytOrig =$request->input('country_orig');
-        $detailCountryDest = $request->input('country_dest');
-        foreach($detailCountrytOrig as $p => $valueC)
-        {
-          foreach($detailCountryDest as $dest => $valuedestC)
-          {
-            $detailcountry = new GlobalCharCountry();
-            $detailcountry->country_orig = $valueC;
-            $detailcountry->country_dest =  $valuedestC;
-            $detailcountry->globalcharge()->associate($global);
-            $detailcountry->save();
-          }
-        }
-
-      }
+        return view('globalchargesAdm.add', compact('harbor','carrier','currency','calculationT','company_users','typedestiny','countries','currency_cfg'));
     }
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
-    return redirect()->route('gcadm.index');
-  }
-
-  public function showAdm($id){
-
-    $objsurcharge = new Surcharge();
-    $countries = Country::pluck('name','id');
-
-    $globalcharges      = GlobalCharge::find($id);
-    $calculationT       = CalculationType::pluck('name','id');
-    $typedestiny        = TypeDestiny::pluck('description','id');
-    $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
-    $harbor             = Harbor::pluck('display_name','id');
-    $carrier            = Carrier::pluck('name','id');
-    $currency           = Currency::pluck('alphacode','id');
-    $company_users      = CompanyUser::pluck('name','id');
-    $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
-    $globalcharges->setAttribute('validation_expire',$validation_expire);
-    return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
-  }
-
-  public function updateAdm(Request $request, $id){
-
-    $harbor         = Harbor::pluck('display_name','id');
-    $carrier        = Carrier::pluck('name','id');
-    $currency       = Currency::pluck('alphacode','id');
-    $calculationT   = CalculationType::pluck('name','id');
-    $typedestiny    = TypeDestiny::pluck('description','id');
-
-    $global                     = GlobalCharge::find($id);
-    $validation                 = explode('/',$request->validation_expire);
-    $global->validity           = $validation[0];
-    $global->expire             = $validation[1];
-    $global->surcharge_id       = $request->input('surcharge_id');
-    $global->typedestiny_id     = $request->input('changetype');
-    $global->calculationtype_id = $request->input('calculationtype_id');
-    $global->ammount            = $request->input('ammount');
-    $global->currency_id        = $request->input('currency_id');
-    $global->company_user_id    = $request->input('company_user_id');
-
-    $carrier        = $request->input('carrier_id');
-    $deleteCarrier  = GlobalCharCarrier::where("globalcharge_id",$id);
-    $deleteCarrier->delete();
-    $deletePort     = GlobalCharPort::where("globalcharge_id",$id);
-    $deletePort->delete();
-    $deleteCountry  = GlobalCharCountry::where("globalcharge_id",$id);
-    $deleteCountry->delete();
-
-    $typerate =  $request->input('typeroute');
-    if($typerate == 'port'){
-      $port_orig = $request->input('port_orig');
-      $port_dest = $request->input('port_dest');
-      foreach($port_orig as  $orig => $valueorig)
-      {
-        foreach($port_dest as $dest => $valuedest)
-        {
-          $detailport = new GlobalCharPort();
-          $detailport->port_orig       = $valueorig;
-          $detailport->port_dest       = $valuedest;
-          $detailport->typedestiny_id  = $request->input('changetype');
-          $detailport->globalcharge_id = $id;
-          $detailport->save();
+    public function typeChargeAdm(Request $request,$id){
+        if($request->ajax()){
+            if($id != 'null'){
+                $surcharges = Surcharge::where('company_user_id','=',$id)->get();
+            } else{
+                $surcharges = null;
+            }
+            return response()->json($surcharges);
         }
-      }
-    } elseif($typerate == 'country'){
-
-      $detailCountrytOrig = $request->input('country_orig');
-      $detailCountryDest  = $request->input('country_dest');
-      foreach($detailCountrytOrig as $p => $valueC)
-      {
-        foreach($detailCountryDest as $dest => $valuedestC)
-        {
-          $detailcountry = new GlobalCharCountry();
-          $detailcountry->country_orig = $valueC;
-          $detailcountry->country_dest =  $valuedestC;
-          $detailcountry->globalcharge()->associate($global);
-          $detailcountry->save();
-        }
-      }
     }
 
-    foreach($carrier as $key)
-    {
-      $detailcarrier = new GlobalCharCarrier();
-      $detailcarrier->carrier_id      = $key;
-      $detailcarrier->globalcharge_id = $id;
-      $detailcarrier->save();
+    public function storeAdm(Request $request){
+        //dd($request);
+        $detailscharges = $request->input('type');
+        $calculation_type = $request->input('calculationtype');
+
+        //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
+        foreach($calculation_type as $ct => $ctype)
+        {
+
+            $global                     = new GlobalCharge();
+            $validation                 = explode('/',$request->validation_expire);
+            $global->validity           = $validation[0];
+            $global->expire             = $validation[1];
+            $global->surcharge_id       = $request->input('type');
+            $global->typedestiny_id     = $request->input('changetype');
+            $global->calculationtype_id = $ctype;
+            $global->ammount            = $request->input('ammount');
+            $global->currency_id        = $request->input('localcurrency_id');
+            $global->company_user_id    = $request->company_user_id; 
+            $global->save();
+
+            $detailcarrier = $request->input('localcarrier');
+            foreach($detailcarrier as $c => $value)
+            {
+                $detailcarrier = new GlobalCharCarrier();
+                $detailcarrier->carrier_id =$value;
+                $detailcarrier->globalcharge()->associate($global);
+                $detailcarrier->save();
+            }
+            $typerate =  $request->input('typeroute');
+            if($typerate == 'port'){
+                $detailport = $request->input('port_orig');
+                $detailportDest = $request->input('port_dest');
+                foreach($detailport as $p => $value)
+                {
+                    foreach($detailportDest as $dest => $valuedest)
+                    {
+                        $ports                  = new GlobalCharPort();
+                        $ports->port_orig       = $value;
+                        $ports->port_dest       = $valuedest;
+                        $ports->typedestiny_id  = $request->input('changetype');
+                        $ports->globalcharge()->associate($global);
+                        $ports->save();
+                    }
+                }
+            }elseif($typerate == 'country'){
+                $detailCountrytOrig =$request->input('country_orig');
+                $detailCountryDest = $request->input('country_dest');
+                foreach($detailCountrytOrig as $p => $valueC)
+                {
+                    foreach($detailCountryDest as $dest => $valuedestC)
+                    {
+                        $detailcountry = new GlobalCharCountry();
+                        $detailcountry->country_orig = $valueC;
+                        $detailcountry->country_dest =  $valuedestC;
+                        $detailcountry->globalcharge()->associate($global);
+                        $detailcountry->save();
+                    }
+                }
+
+            }
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+        return redirect()->route('gcadm.index');
     }
 
-    $global->update();
+    public function showAdm($id){
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully updated this contract.');
-    return redirect()->route('gcadm.index');
-  }
+        $objsurcharge = new Surcharge();
+        $countries = Country::pluck('name','id');
 
-  public function dupicateAdm($id){
+        $globalcharges      = GlobalCharge::find($id);
+        $calculationT       = CalculationType::pluck('name','id');
+        $typedestiny        = TypeDestiny::pluck('description','id');
+        $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
+        $harbor             = Harbor::pluck('display_name','id');
+        $carrier            = Carrier::pluck('name','id');
+        $currency           = Currency::pluck('alphacode','id');
+        $company_users      = CompanyUser::pluck('name','id');
+        $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+        return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
+    }
 
-    $globalcharges      = GlobalCharge::find($id);
-    $harbor             = Harbor::pluck('display_name','id');
-    $carrier            = Carrier::pluck('name','id');
-    $currency           = Currency::pluck('alphacode','id');
-    $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
-    $countries          = Country::pluck('name','id');
-    $typedestiny        = TypeDestiny::pluck('description','id');
-    $calculationT       = CalculationType::pluck('name','id');
-    $company_users      = CompanyUser::pluck('name','id');
-    $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
-    $globalcharges->setAttribute('validation_expire',$validation_expire);
+    public function updateAdm(Request $request, $id){
 
-    return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries'));
-  }
+        $harbor         = Harbor::pluck('display_name','id');
+        $carrier        = Carrier::pluck('name','id');
+        $currency       = Currency::pluck('alphacode','id');
+        $calculationT   = CalculationType::pluck('name','id');
+        $typedestiny    = TypeDestiny::pluck('description','id');
 
-  public function dupicateArrAdm(Request $request){
-    $company_users      = CompanyUser::pluck('name','id');
-    $globals_id_array   = $request->input('id');
-    $count = count($globals_id_array);
-    //$global             = $global->toArray();
-    //dd($globals_id_array);
-    return view('globalchargesAdm.duplicateArray',compact('count','company_users','globals_id_array'));
-  }
+        $global                     = GlobalCharge::find($id);
+        $validation                 = explode('/',$request->validation_expire);
+        $global->validity           = $validation[0];
+        $global->expire             = $validation[1];
+        $global->surcharge_id       = $request->input('surcharge_id');
+        $global->typedestiny_id     = $request->input('changetype');
+        $global->calculationtype_id = $request->input('calculationtype_id');
+        $global->ammount            = $request->input('ammount');
+        $global->currency_id        = $request->input('currency_id');
+        $global->company_user_id    = $request->input('company_user_id');
 
-  public function storeArrayAdm(Request $request){
-    //dd($request->all());
-    $requestJob = $request->all();
-    GCDplFclLcl::dispatch($requestJob,'fcl');
+        $carrier        = $request->input('carrier_id');
+        $deleteCarrier  = GlobalCharCarrier::where("globalcharge_id",$id);
+        $deleteCarrier->delete();
+        $deletePort     = GlobalCharPort::where("globalcharge_id",$id);
+        $deletePort->delete();
+        $deleteCountry  = GlobalCharCountry::where("globalcharge_id",$id);
+        $deleteCountry->delete();
 
-    $request->session()->flash('message.nivel', 'success');
-    $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully add this contract.');
-    return redirect()->route('gcadm.index');
-  }
+        $typerate =  $request->input('typeroute');
+        if($typerate == 'port'){
+            $port_orig = $request->input('port_orig');
+            $port_dest = $request->input('port_dest');
+            foreach($port_orig as  $orig => $valueorig)
+            {
+                foreach($port_dest as $dest => $valuedest)
+                {
+                    $detailport = new GlobalCharPort();
+                    $detailport->port_orig       = $valueorig;
+                    $detailport->port_dest       = $valuedest;
+                    $detailport->typedestiny_id  = $request->input('changetype');
+                    $detailport->globalcharge_id = $id;
+                    $detailport->save();
+                }
+            }
+        } elseif($typerate == 'country'){
+
+            $detailCountrytOrig = $request->input('country_orig');
+            $detailCountryDest  = $request->input('country_dest');
+            foreach($detailCountrytOrig as $p => $valueC)
+            {
+                foreach($detailCountryDest as $dest => $valuedestC)
+                {
+                    $detailcountry = new GlobalCharCountry();
+                    $detailcountry->country_orig = $valueC;
+                    $detailcountry->country_dest =  $valuedestC;
+                    $detailcountry->globalcharge()->associate($global);
+                    $detailcountry->save();
+                }
+            }
+        }
+
+        foreach($carrier as $key)
+        {
+            $detailcarrier = new GlobalCharCarrier();
+            $detailcarrier->carrier_id      = $key;
+            $detailcarrier->globalcharge_id = $id;
+            $detailcarrier->save();
+        }
+
+        $global->update();
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully updated this contract.');
+        return redirect()->route('gcadm.index');
+    }
+
+    public function dupicateAdm($id){
+
+        $globalcharges      = GlobalCharge::find($id);
+        $harbor             = Harbor::pluck('display_name','id');
+        $carrier            = Carrier::pluck('name','id');
+        $currency           = Currency::pluck('alphacode','id');
+        $surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
+        $countries          = Country::pluck('name','id');
+        $typedestiny        = TypeDestiny::pluck('description','id');
+        $calculationT       = CalculationType::pluck('name','id');
+        $company_users      = CompanyUser::pluck('name','id');
+        $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
+        $globalcharges->setAttribute('validation_expire',$validation_expire);
+
+        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries'));
+    }
+
+    public function dupicateArrAdm(Request $request){
+        $company_users      = CompanyUser::pluck('name','id');
+        $globals_id_array   = $request->input('id');
+        $count = count($globals_id_array);
+        //$global             = $global->toArray();
+        //dd($globals_id_array);
+        return view('globalchargesAdm.duplicateArray',compact('count','company_users','globals_id_array'));
+    }
+
+    public function storeArrayAdm(Request $request){
+        //dd($request->all());
+        $requestJob = $request->all();
+        GCDplFclLcl::dispatch($requestJob,'fcl');
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully add this contract.');
+        return redirect()->route('gcadm.index');
+    }
 }

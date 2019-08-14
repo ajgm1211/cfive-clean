@@ -344,6 +344,8 @@ $(document).on('click', '#syncCompanies', function (e) {
             )
             $("#syncCompaniesLoading").addClass("hide");
             $("#syncCompanies").removeClass("hide");
+            
+            setTimeout(function(){ location.replace("/companies/api"); }, 2000);
         },
         error: function (request, status, error) {
             alert(request.responseText);

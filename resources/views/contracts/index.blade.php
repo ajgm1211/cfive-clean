@@ -18,7 +18,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        List Contracts
+                        List of contracts
                     </h3>
                 </div>
             </div>
