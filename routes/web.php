@@ -45,6 +45,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+    Route::get('verify/{user_id}', ['as' => 'users.verify', 'uses' => 'UsersController@verify']);
     Route::get('notifications', 'UsersController@notifications');
     Route::get('notifications_read', 'UsersController@notifications_read');
     Route::get('updatenot', 'UsersController@updateNotifications');
