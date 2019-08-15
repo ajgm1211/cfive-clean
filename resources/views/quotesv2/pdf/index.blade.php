@@ -813,6 +813,11 @@
                                     $sum_destionation_40hc= 0;
                                     $sum_destination_40nor= 0;
                                     $sum_destination_45= 0;
+                                    $inland_destination_20=0;
+                                    $inland_destination_40=0;
+                                    $inland_destination_40hc=0;
+                                    $inland_destination_40nor=0;
+                                    $inland_destination_45=0;
                                 ?>  
                             @foreach($item as $rate)
                                 @foreach($rate->charge as $value)
@@ -824,15 +829,26 @@
                                         $sum_destination_45+=$value->total_45;                                
                                     ?>
                                 @endforeach
+                                @foreach($rate->inland as $value)
+                                    @if($value->type=='Destination')
+                                        <?php
+                                            $inland_destination_20+=$value->total_20;
+                                            $inland_destination_40+=$value->total_40;
+                                            $inland_destination_40hc+=$value->total_40hc;
+                                            $inland_destination_40nor+=$value->total_40nor;
+                                            $inland_destination_45+=$value->total_45;                                
+                                        ?>
+                                    @endif
+                                @endforeach
                             @endforeach
                             <tr class="text-left color-table">
                                 <td colspan="2">Total Destination Charges</td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
-                                <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20}}</td>
-                                <td {{ @$equipmentHides['40'] }}>{{@$sum_destination_40}}</td>
-                                <td {{ @$equipmentHides['40hc'] }}>{{@$sum_destionation_40hc}}</td>
-                                <td {{ @$equipmentHides['40nor'] }}>{{@$sum_destination_40nor}}</td>
-                                <td {{ @$equipmentHides['45'] }}>{{@$sum_destination_45}}</td>
+                                <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20+@$inland_destination_20}}</td>
+                                <td {{ @$equipmentHides['40'] }}>{{@$sum_destination_40+@$inland_destination_40}}</td>
+                                <td {{ @$equipmentHides['40hc'] }}>{{@$sum_destionation_40hc+@$inland_destination_40hc}}</td>
+                                <td {{ @$equipmentHides['40nor'] }}>{{@$sum_destination_40nor+@$inland_destination_40nor}}</td>
+                                <td {{ @$equipmentHides['45'] }}>{{@$sum_destination_45+@$inland_destination_45}}</td>
                                 @if($quote->pdf_option->grouped_destination_charges==1)
                                     <td >{{$quote->pdf_option->destination_charges_currency}}</td>
                                 @else

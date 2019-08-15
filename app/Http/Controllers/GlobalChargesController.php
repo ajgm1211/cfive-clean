@@ -416,10 +416,18 @@ class GlobalChargesController extends Controller
 
     public function createAdm_proc(Request $request){
         /*  $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);*/
-
-        $co = $request->company_id;
-        $ca =  $request->carrier;
-
+        
+        $co=0;
+        $ca=0;
+        
+        if($request->company_id){
+           $co = $request->company_id; 
+        }
+        
+        if($request->carrier){
+            $ca =  $request->carrier;
+        }
+        
         $data1 = \DB::select(\DB::raw('call select_globalcharge_adm('.$co.','.$ca.')'));
         $globalcharges = new Collection;
         for ($i = 0; $i < count($data1); $i++) {
