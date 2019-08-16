@@ -162,6 +162,9 @@
                                         <i class="la la-user"></i>
                                     </a>
                                     @role('administrator')
+                                    <a href="{{route('users.verify',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Verify User" >
+                                        <i class="la la-toggle-on"></i>
+                                    </a>
                                     <a href="{{route('impersonate.impersonate',$arr->id)}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Impersonate User" >
                                         <i class="la la-eye"></i>
                                     </a>
