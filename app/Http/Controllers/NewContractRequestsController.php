@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
 use App\User;
+use PrvRequest;
 use App\Harbor;
 use App\Carrier;
 use App\Contract;
@@ -573,12 +575,97 @@ class NewContractRequestsController extends Controller
     }
 
     // EXPORT Request Importation ----------------------------------------------------------
-    
-    public function export($date){
-        dd($date);
+
+    public function export(Request $request){
+        $dates = explode('/',$request->between);
+        $dateStart  = trim($dates[0]);
+        $dateEnd    = trim($dates[1]);
+        $now        = new \DateTime();
+        $now        = $now->format('dmY_His');
+        $nameFile   = 'Request_Fcl_'.$now;
+        $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
+        
+        //dd($data->chunk(2));
+
+        $myFile = Excel::create($nameFile, function($excel) use($data) {
+
+            $excel->sheet('Reuqest', function($sheet) use($data) {
+                $sheet->cells('A1:J1', function($cells) {
+                    $cells->setBackground('#2525ba');
+                    $cells->setFontColor('#ffffff');
+                    //$cells->setValignment('center');
+                });
+
+                $sheet->setWidth(array(
+                    'A'     =>  30,
+                    'B'     =>  25,
+                    'C'     =>  10,
+                    'D'     =>  20,
+                    'E'     =>  30,
+                    'F'     =>  15,
+                    'G'     =>  20,
+                    'H'     =>  20,
+                    'I'     =>  20,
+                    'J'     =>  15
+                ));
+
+                $sheet->row(1, array(
+                    "Company",
+                    "Reference",
+                    "Direction",
+                    "Carrier",
+                    "Validation",
+                    "Date",
+                    "User",
+                    "Time Elapsed",
+                    "Username load",
+                    "Status"
+                ));
+                $i= 2;
+
+                $data   = $data->chunk(500);
+                $data   = $data->toArray();;
+                foreach($data as $nrequests){
+                    foreach($nrequests as $nrequest){                   
+                        $sheet->row($i, array(
+                            "Company"           => $nrequest['company'],
+                            "Reference"         => $nrequest['reference'],
+                            "Direction"         => $nrequest['direction'],
+                            "Carrier"           => $nrequest['carrier'],
+                            "Validation"        => $nrequest['validation'],
+                            "Date"              => $nrequest['date'],
+                            "User"              => $nrequest['user'],
+                            "Username load"     => $nrequest['username_load'],
+                            "Time Elapsed"      => $nrequest['time_elapsed'],
+                            "Status"            => $nrequest['status']
+                        ));
+                        $sheet->setBorder('A1:J'.$i, 'thin');
+
+                        $sheet->cells('I'.$i, function($cells) {
+                            $cells->setAlignment('center');
+                        });
+
+                        $sheet->cells('J'.$i, function($cells) {
+                            $cells->setAlignment('center');
+                        });
+                        $i++;
+                    }
+                }
+            });
+
+        });
+
+        $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+        $response =  array(
+            'actt' => 1,
+            'name' => $nameFile.'.xlsx', //no extention needed
+            'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+        );
+        
+        return response()->json($response);
     }
-    
-    
+
+
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
         $fecha_actual = date("Y-m-d H:i:s");
