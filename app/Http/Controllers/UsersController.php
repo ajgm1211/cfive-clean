@@ -104,7 +104,7 @@ class UsersController extends Controller
             $request->session()->flash('message.content', 'You successfully added this user.');
 
             return redirect('users/home');
-            
+
         } catch (\Exception $e) {
             if($e->errorInfo[0]=='23000'){
                 $error = 'The email address entered is already registered';
@@ -114,7 +114,7 @@ class UsersController extends Controller
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', '');
             $request->session()->flash('message.content', $error);
-            
+
             return redirect('users/home');
         }
     }
@@ -305,6 +305,25 @@ class UsersController extends Controller
         foreach($notifications as $notification ){
             $notification->markAsRead();
 
+        }
+    }
+
+    public function verify(Request $request, $id){
+        $user = User::find($id);
+        if($user->verified==0){
+            $user->verified = 1;
+            $user->update();
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'User has been verified successfully!');
+            return redirect()->route('users.home');
+        }else{
+            $user->verified = 0;
+            $user->update();
+            $request->session()->flash('message.nivel', 'warning');
+            $request->session()->flash('message.title', 'Alert!');
+            $request->session()->flash('message.content', 'This user has been placed as unverified!');
+            return redirect()->route('users.home');
         }
     }
 }
