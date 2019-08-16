@@ -49,55 +49,13 @@
             <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
                 @if(empty(\Auth::user()->company_user_id) != true)
-                <!--<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="{{route('quotes.index')}}" class="m-menu__link ">
-<span class="m-menu__link-text">
-<b>Quotes</b>
-</span>
-</a>
-</li>
-<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-<a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-<span class="m-menu__link-text">
-<b>Quotes</b>
-</span>
-</a>
-</li>-->
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-wrap">
-                                <span class="m-menu__link-text">
-                                    <b>Quotes</b>
-                                </span>
-                            </span>
+                    <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
+                        <span class="m-menu__link-text">
+                            <b>Quotes</b>
                         </span>
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
                     </a>
-
-
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                        <ul class="m-menu__subnav">
-                           <!--
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('quotes.index')}}" class="m-menu__link ">
-                                    <span class="m-menu__link-text">
-                                        <b>Quotes</b>
-                                    </span>
-                                </a>
-                            </li>-->
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('quotes-v2.index')}}" class="m-menu__link ">
-                                    <span class="m-menu__link-text">
-                                        <b>Quotes V2 (Beta)</b>
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>                
+                </li>               
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -273,109 +231,109 @@
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
                             @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company' || \Auth::user()->type=='subuser')
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('prices.index') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon la la-sellsy"></i>
-                                        <span class="m-menu__link-text">
-                                            Price levels
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{route('UserConfiguration.index')}}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon la la-envelope"></i>
-                                        <span class="m-menu__link-text">
-                                            Email Notifications
-                                        </span>
-                                    </a>
-                                </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('prices.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-sellsy"></i>
+                                    <span class="m-menu__link-text">
+                                        Price levels
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('UserConfiguration.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-envelope"></i>
+                                    <span class="m-menu__link-text">
+                                        Email Notifications
+                                    </span>
+                                </a>
+                            </li>
                             @endif
                             @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
 
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('settings.index') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-profile"></i>
-                                        <span class="m-menu__link-text">
-                                            Company Profile
-                                        </span>
-                                    </a>
-                                </li>
-                                <!--
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('terms.list') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-warning-sign"></i>
-                                        <span class="m-menu__link-text">
-                                            Terms & Conditions
-                                        </span>
-                                    </a>
-                                </li>-->
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('termsv2.list') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-warning-sign"></i>
-                                        <span class="m-menu__link-text">
-                                            Terms & Conditions 
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-book"></i>
-                                        <span class="m-menu__link-text">
-                                            Remarks
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                    <a  href="#" class="m-menu__link m-menu__toggle">
-                                        <i class="m-menu__link-icon flaticon-share"></i>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <span class="m-menu__link-text">
-                                            API Settings
-                                        </span>                                    
-                                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                    </a>
-                                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('settings.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-profile"></i>
+                                    <span class="m-menu__link-text">
+                                        Company Profile
+                                    </span>
+                                </a>
+                            </li>
+                            <!--
+<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+<a  href="{{ route('terms.list') }}" class="m-menu__link ">
+<i class="m-menu__link-icon flaticon-warning-sign"></i>
+<span class="m-menu__link-text">
+Terms & Conditions
+</span>
+</a>
+</li>-->
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('termsv2.list') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-warning-sign"></i>
+                                    <span class="m-menu__link-text">
+                                        Terms & Conditions 
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('remarks.list') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-book"></i>
+                                    <span class="m-menu__link-text">
+                                        Remarks
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                <a  href="#" class="m-menu__link m-menu__toggle">
+                                    <i class="m-menu__link-icon flaticon-share"></i>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <span class="m-menu__link-text">
+                                        API Settings
+                                    </span>                                    
+                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                </a>
+                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
 
-                                        <ul class="m-menu__subnav">
-                                            <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                                <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
-                                                    <i class="m-menu__link-icon flaticon-refresh"></i>
-                                                    <span class="m-menu__link-text">
-                                                        API tokens
-                                                    </span>
-                                                </a>
-                                            </li>
+                                    <ul class="m-menu__subnav">
+                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-refresh"></i>
+                                                <span class="m-menu__link-text">
+                                                    API tokens
+                                                </span>
+                                            </a>
+                                        </li>
 
-                                            <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                                <a  href="{{route('api.settings')}}" class="m-menu__link ">
-                                                    <i class="m-menu__link-icon flaticon-network"></i>
-                                                    <span class="m-menu__link-text">
-                                                        API Integrations
-                                                    </span>
-                                                </a>
-                                            </li>-->
-                                        </ul>
-                                    </div>
-                                </li>
+                                        <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{route('api.settings')}}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-network"></i>
+                                                <span class="m-menu__link-text">
+                                                    API Integrations
+                                                </span>
+                                            </a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                            </li>
                             @endif
                             @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company' || \Auth::user()->type=='subuser')
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('templates.index') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon fa fa-envelope-square"></i>
-                                        <span class="m-menu__link-text">
-                                            Email templates
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                    <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
-                                        <i class="m-menu__link-icon flaticon-graph"></i>
-                                        <span class="m-menu__link-text">
-                                            Dashboard
-                                        </span>
-                                    </a>
-                                </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('templates.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon fa fa-envelope-square"></i>
+                                    <span class="m-menu__link-text">
+                                        Email templates
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{ route('dashboard.index') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-graph"></i>
+                                    <span class="m-menu__link-text">
+                                        Dashboard
+                                    </span>
+                                </a>
+                            </li>
                             @endif
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('users.home') }}" class="m-menu__link ">

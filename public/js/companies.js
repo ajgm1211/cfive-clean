@@ -332,6 +332,7 @@ $(document).on('change', '#logo', function (e) {
 $(document).on('click', '#syncCompanies', function (e) {
     $("#syncCompanies").addClass("hide");
     $("#syncCompaniesLoading").removeClass("hide");
+    msg('This process may take a few minutes');
     $.ajax({
         type: 'GET',
         url: '/api/get/companies',
@@ -343,9 +344,19 @@ $(document).on('click', '#syncCompanies', function (e) {
             )
             $("#syncCompaniesLoading").addClass("hide");
             $("#syncCompanies").removeClass("hide");
+            
+            setTimeout(function(){ location.replace("/companies/api"); }, 2000);
         },
         error: function (request, status, error) {
             alert(request.responseText);
         }
     });
 });
+
+function msg(message){
+
+    toastr.options.positionClass = 'toast-bottom-center';
+    toastr.options.progressBar = 'true';
+    toastr.options.timeOut = 10000; 
+    toastr.info(message,'IMPORTANT MESSAGE!');
+}
