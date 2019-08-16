@@ -426,4 +426,11 @@ class CompanyController extends Controller
 
         return $prices;
     }
+
+    public function apiCompanies()
+    {
+        $companies = Company::where('api_id','!=','')->get();
+        
+        return view('companies.api.index',compact('companies'));
+    }
 }
