@@ -172,6 +172,8 @@ Route::prefix('Requests')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
         ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestExport/','NewContractRequestsController@export')->name('export.Request')
+        ->middleware(['auth','role:administrator|data_entry']);
 });
 
 
