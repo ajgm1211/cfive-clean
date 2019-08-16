@@ -194,10 +194,17 @@
          $('#tablequote').DataTable({
             ordering: true,
             searching: true,
-            processing: true,
-            serverSide: true,
-            order: [[ 3, "asc" ],[ 4, "asc" ]],
+            processing: false,
+            serverSide: false,
+            order: [[ 0, "desc" ]],
             ajax:  "{{ route('quotes-v2.index.datatable') }}",
+            "columnDefs": [
+                { "width": "5%", "targets": 0 },
+                { "width": "20%", "targets": 1 },
+                { "width": "10%", "targets": [2,3] },
+                { "width": "20%", "targets": [4,5] },
+                { "type": "date", "targets": 2 },
+            ],
             columns: [
                {data: 'id', name: 'id'},
                {data: 'client', name: 'client'},
@@ -210,7 +217,6 @@
             ] ,
             "autoWidth": true,
             'overflow':false,
-            "ordering": true,
             "paging":true,
             "sScrollY": ($(window).height() - 437),
             "bPaginate": false,

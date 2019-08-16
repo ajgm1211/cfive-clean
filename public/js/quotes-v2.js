@@ -101,7 +101,7 @@ $(document).ready(function() {
         url:'/v2/quotes/charges/update',
         emptytext:0,
         success: function(response, newValue) {
-
+            setTimeout(location.reload.bind(location), 3000);
             if(!response) {
                 return "Unknown error!";
             }
@@ -2393,17 +2393,11 @@ $(document).on('click', '#cancel', function () {
         $(".destination_address").attr('hidden','true');
         $(".destination_address_span").removeAttr('hidden');
     }
-    $(".quote-type ").select2('destroy');
-    $(".kind_of_cargo").select2('destroy');
-    $(".status").select2('destroy');
-    $(".company_id").select2('destroy');
-    $(".delivery_type").select2('destroy');
-    $(".incoterm_id").select2('destroy');
-    $(".contact_id").select2('destroy');
-    $(".user_id").select2('destroy');
-    $(".price_id").select2('destroy');
-    $(".equipment").select2('destroy');
-    $(".gdp").select2('destroy');
+
+
+    if ($('select').data('select2')) {
+        $('select').select2('destroy');
+    }
 });
 
 //Actualizar datos de cotización
@@ -2592,17 +2586,9 @@ $(document).on('click', '#update', function () {
                 $(".destination_address").attr('hidden','true');
                 $(".destination_address_span").removeAttr('hidden');
                 //}
-                $(".quote-type").select2('destroy');
-                $(".status").select2('destroy');
-                $(".company_id").select2('destroy');
-                $(".delivery_type").select2('destroy');
-                $(".incoterm_id").select2('destroy');
-                $(".contact_id").select2('destroy');
-                $(".user_id").select2('destroy');
-                $(".price_id").select2('destroy');
-                $(".equipment").select2('destroy');
-                $(".kind_of_cargo").select2('destroy');
-                $(".gdp").select2('destroy');
+                if ($('select').data('select2')) {
+                    $('select').select2('destroy');
+                }
 
                 //Refresh page after 5 seconds
                 //setTimeout(location.reload.bind(location), 5000);
