@@ -45,6 +45,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+    Route::get('verify/{user_id}', ['as' => 'users.verify', 'uses' => 'UsersController@verify']);
     Route::get('notifications', 'UsersController@notifications');
     Route::get('notifications_read', 'UsersController@notifications_read');
     Route::get('updatenot', 'UsersController@updateNotifications');
@@ -351,8 +352,6 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 //Companies
 Route::middleware(['auth'])->prefix('companies')->group(function () {
-
-
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
     Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
@@ -369,8 +368,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
     Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
     Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
-
-
+    Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
