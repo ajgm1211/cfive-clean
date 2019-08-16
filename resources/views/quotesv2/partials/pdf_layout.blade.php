@@ -71,7 +71,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_origin_charges" type="checkbox" data-type="checkbox" name="grouped_origin_charges" value="1" {{$quote->pdf_option->grouped_origin_charges==1 ? 'checked':''}}>
                                     <span class="title-quote input_form" ><b>Group Origin Charges in:</b></span>
-                                    {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charges_currency']) }}
+                                    {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm  pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charges_currency']) }}
                                 </label>
                             </div>
                         </div>
@@ -81,14 +81,14 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" type="checkbox" data-quote-id="{{$quote->id}}" name="grouped_total_currency" data-name="grouped_total_currency" data-type="checkbox" value="1" {{$quote->pdf_option->grouped_total_currency==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Show total in:</b></span>
-                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2 pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
+                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type  pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label class="title-quote"><b>Language:</b></label>
-                            {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
+                            {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm  pdf-feature select_forms','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
                         </div>
 
                     </div>
@@ -100,7 +100,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_destination_charges" type="checkbox" data-type="checkbox" name="grouped_destination_charges" value="1" {{$quote->pdf_option->grouped_destination_charges==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Group Destination Charges in:</b></span>
-                                    {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charges_currency']) }}
+                                    {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm   pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charges_currency']) }}
                                 </label>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_freight_charges" type="checkbox" data-type="checkbox" name="grouped_freight_charges" value="1" {{$quote->pdf_option->grouped_freight_charges==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Group Freight Charges in (Single rate):</b></span>
-                                    {{ Form::select('freight_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->freight_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'freight_charges_currency']) }}
+                                    {{ Form::select('freight_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->freight_charges_currency,['class'=>'form-control-sm   pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'freight_charges_currency']) }}
                                 </label>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" type="checkbox" data-quote-id="{{$quote->id}}" name="grouped_total_currency" data-name="grouped_total_currency" data-type="checkbox" value="1" {{$quote->pdf_option->grouped_total_currency==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Show total in:</b></span>
-                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2 pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
+                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type  pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
                                 </label>
                             </div>
                         </div>
@@ -205,7 +205,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_origin_charges" type="checkbox" data-type="checkbox" name="grouped_origin_charges" value="1" {{$quote->pdf_option->grouped_origin_charges==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Group Origin Charges in:</b></span>
-                                    {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charges_currency']) }}
+                                    {{ Form::select('origin_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->origin_charges_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'origin_charges_currency']) }}
                                 </label>
                             </div>
                         </div>
@@ -215,14 +215,14 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" type="checkbox" data-quote-id="{{$quote->id}}" name="grouped_total_currency" data-name="grouped_total_currency" data-type="checkbox" value="1" {{$quote->pdf_option->grouped_total_currency==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Show total in:</b></span>
-                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type select2 pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
+                                    {{ Form::select('total_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->total_in_currency,['class'=>'form-control-sm type  pdf-feature select_forms','data-quote-id'=>$quote->id,'data-name'=>'total_in_currency','data-type'=>'select']) }}
                                 </label>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label class="title-quote"><b>Language:</b></label>
-                            {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
+                            {{ Form::select('language',['English'=>'English','Spanish'=>'Spanish','Portuguese'=>'Portuguese'],$quote->pdf_option->language,['class'=>'form-control-sm  pdf-feature select_forms','id'=>'language','data-quote-id'=>$quote->id,'data-name'=>'language','data-type'=>'select']) }}
                         </div>
 
                     </div>
@@ -234,7 +234,7 @@
                                 <label>
                                     <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="grouped_destination_charges" type="checkbox" data-type="checkbox" name="grouped_destination_charges" value="1" {{$quote->pdf_option->grouped_destination_charges==1 ? 'checked':''}}>
                                     <span class="title-quote input_form"><b>Group Destination Charges in:</b></span>
-                                    {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm company_id select2 pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charges_currency']) }}
+                                    {{ Form::select('destination_charge_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->destination_charges_currency,['class'=>'form-control-sm   pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'destination_charges_currency']) }}
                                 </label>
                             </div>
                         </div>
