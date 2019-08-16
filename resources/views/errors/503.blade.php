@@ -37,7 +37,7 @@
 <div class="container">
     <div class="content">
         <img class="img" src="{{asset('images/logo-icon.png')}}"/>
-        <div class="title"><p>><b>We’ll be back in a few minutes.</b></p</div>
+        <div class="title"><p><b>We’ll be back in a few minutes.</b></p</div>
     </div>
 </div>
 </body>
