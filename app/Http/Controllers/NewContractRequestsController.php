@@ -572,6 +572,13 @@ class NewContractRequestsController extends Controller
             ->make(true);
     }
 
+    // EXPORT Request Importation ----------------------------------------------------------
+    
+    public function export($date){
+        dd($date);
+    }
+    
+    
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
         $fecha_actual = date("Y-m-d H:i:s");
