@@ -440,7 +440,7 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-                           <div class="col-lg-2">
+              <div class="col-lg-2">
                 <label>Direction</label>
                 {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
@@ -522,8 +522,8 @@
 
             </div><br>
             <div class="row">
-          
- 
+
+
 
             </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
@@ -795,6 +795,7 @@
 </div>
 <div class="row padding search"  ><!-- Tabla de muestreo de las cotizaciones -->
   {!! Form::open(['route' => 'quotes-v2.store','class' => 'form-group m-form__group full-width']) !!}
+  <input type="hidden" id="oculto" value="no">
   <input  type="hidden" name="form" value="{{ json_encode($form) }}" class="btn btn-sm btn-default btn-bold btn-upper formu">
   <div class="col-lg-12">
     <div class="m-portlet no-shadow">
@@ -1222,18 +1223,18 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }} {{ @$inlandDestiny['inlandDetails']['i20']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20']['markup']  }}</b>
-                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['i20']['montoInlandT'], 2, '.', '') }}  </span>
+                        <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }} {{ @$inlandDestiny['inlandDetails']['c20']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['c20']['markup']  }}</b>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['c20']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          {{ @$inlandDestiny['inlandDetails']['i40']['sub_in']  }}
-                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ number_format(@$inlandDestiny['inlandDetails']['i40']['montoInlandT'] , 2, '.', '')   }} </span> 
+                          {{ @$inlandDestiny['inlandDetails']['c40']['sub_in']  }}
+                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['c40']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ number_format(@$inlandDestiny['inlandDetails']['c40']['montoInlandT'] , 2, '.', '')   }} </span> 
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
-                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{  number_format(@$inlandDestiny['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }}  </span>
+                          {{ @$inlandDestiny['inlandDetails']['c40hc']['sub_in']  }}
+                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['c40hc']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{  number_format(@$inlandDestiny['inlandDetails']['c40hc']['montoInlandT'], 2, '.', '')  }}  </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
@@ -1269,18 +1270,18 @@
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20'] }}>{{ $equipmentHides['20'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i20']['sub_in']  }} 
-                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{  number_format(@$inlandOrigin['inlandDetails']['i20']['montoInlandT'], 2, '.', '') }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['c20']['sub_in']  }} 
+                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['c20']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{  number_format(@$inlandOrigin['inlandDetails']['c20']['montoInlandT'], 2, '.', '') }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40'] }}>{{ $equipmentHides['40'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i40']['sub_in']  }} 
-                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40']['montoInlandT'], 2, '.', '')  }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['c40']['sub_in']  }} 
+                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['c40']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['c40']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40hc'] }}>{{ $equipmentHides['40hc'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }}
-                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['c40hc']['sub_in']  }}
+                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['c40hc']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['c40hc']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40nor'] }}>N/A</div>
@@ -1353,6 +1354,7 @@
 
   </div>
 
+
   {!! Form::close() !!}
 </div>
 @endif
@@ -1373,6 +1375,7 @@
 @if(empty($arreglo))
 <script>
 
+  //mensaje();
   $('select[name="contact_id"]').prop("disabled",true);
   $("select[name='company_id_quote']").val('');
   $('#select2-m_select2_2_modal-container').text('Please an option');
@@ -1380,11 +1383,19 @@
 @else
 
 <script>
+  
+
+  
+
   precargar()
 </script>
 
 
 @endif
+
+
+
+
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
@@ -1404,7 +1415,12 @@
 
 
 
+
   $(document).ready(function() {
+
+
+
+
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
     var count = 0;

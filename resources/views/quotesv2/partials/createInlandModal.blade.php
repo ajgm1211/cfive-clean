@@ -41,8 +41,8 @@
                     </div>
                      <div class="col-md-4">
                         <div id="destination_harbor_label" >
-                          <label>Provider</label>
-                          <input  type="text" name="provider" value="" class="form-control" required>
+                          <label>Charge</label>
+                          <input type="text" name="provider" value="" class="form-control" required>
                         </div>
                     </div>
                 </div>
