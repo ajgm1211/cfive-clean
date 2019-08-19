@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
 use App\User;
 use App\Harbor;
+use PrvRequest;
 use App\Carrier;
 use Carbon\Carbon;
 use App\Direction;
@@ -14,6 +16,7 @@ use App\RequetsCarrierLcl;
 use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
 use App\NewContractRequestLcl;
+use App\Jobs\ExportRequestsJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
@@ -472,7 +475,7 @@ class NewContractRequestLclController extends Controller
         }
     }
 
-    // New Request Importation ----------------------------------------------------------
+    // New Request Importation -------------------------------------------------------------
     public function LoadViewRequestImporContractLcl(){
         $harbor         = harbor::all()->pluck('display_name','id');
         $carrier        = carrier::all()->pluck('name','id');
@@ -483,6 +486,114 @@ class NewContractRequestLclController extends Controller
         }
         $user   = \Auth::user();
         return view('RequestsLcl.NewRequest',compact('harbor','carrier','user','direction'));
+    }
+
+    // EXPORT Request Importation ----------------------------------------------------------
+    public function export(Request $request){
+        $dates = explode('/',$request->between);
+        $dateStart  = trim($dates[0]);
+        $dateEnd    = trim($dates[1]);
+        $now        = new \DateTime();
+        $now        = $now->format('dmY_His');
+        $countNRq   = NewContractRequestLcl::whereBetween('created',[$dateStart.' 00:00:00',$dateEnd.' 23:59:59'])->count();
+
+        if($countNRq <= 100){
+            $nameFile   = 'Request_Lcl_'.$now;
+            $data       = PrvRequest::RequestLclBetween($dateStart,$dateEnd);
+
+            //dd($data->chunk(2));
+
+            $myFile = Excel::create($nameFile, function($excel) use($data) {
+
+                $excel->sheet('Reuqest', function($sheet) use($data) {
+                    $sheet->cells('A1:J1', function($cells) {
+                        $cells->setBackground('#2525ba');
+                        $cells->setFontColor('#ffffff');
+                        //$cells->setValignment('center');
+                    });
+
+                    $sheet->setWidth(array(
+                        'A'     =>  30,
+                        'B'     =>  25,
+                        'C'     =>  10,
+                        'D'     =>  20,
+                        'E'     =>  30,
+                        'F'     =>  15,
+                        'G'     =>  20,
+                        'H'     =>  20,
+                        'I'     =>  20,
+                        'J'     =>  15
+                    ));
+
+                    $sheet->row(1, array(
+                        "Company",
+                        "Reference",
+                        "Direction",
+                        "Carrier",
+                        "Validation",
+                        "Date",
+                        "User",
+                        "Time Elapsed",
+                        "Username load",
+                        "Status"
+                    ));
+                    $i= 2;
+
+                    $data   = $data->chunk(500);
+                    $data   = $data->toArray();;
+                    foreach($data as $nrequests){
+                        foreach($nrequests as $nrequest){                   
+                            $sheet->row($i, array(
+                                "Company"           => $nrequest['company'],
+                                "Reference"         => $nrequest['reference'],
+                                "Direction"         => $nrequest['direction'],
+                                "Carrier"           => $nrequest['carrier'],
+                                "Validation"        => $nrequest['validation'],
+                                "Date"              => $nrequest['date'],
+                                "User"              => $nrequest['user'],
+                                "Username load"     => $nrequest['username_load'],
+                                "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Status"            => $nrequest['status']
+                            ));
+                            $sheet->setBorder('A1:J'.$i, 'thin');
+
+                            $sheet->cells('I'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+
+                            $sheet->cells('J'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            $i++;
+                        }
+                    }
+                });
+
+            });
+
+            $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+            $response =  array(
+                'actt' => 1,
+                'name' => $nameFile.'.xlsx', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+            );
+        } else{
+            $auth = \Auth::user()->toArray();
+            ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'lcl');
+            $response =  array(
+                'actt' => 2
+            );
+        }
+        return response()->json($response);
+    }
+
+    // TEST --------------------------------------------------------------------------------
+    public function test(){
+        $dateStart = '2019-08-19 00:00:00';
+        $dateEnd = '2019-08-19 23:59:59';
+        $data       = PrvRequest::RequestLclBetween($dateStart,$dateEnd);
+        $data       = NewContractRequestLcl::whereBetween('created',[$dateStart,$dateEnd])->get();
+        dd($data);
     }
 
     public function similarcontracts(Request $request,$id){
