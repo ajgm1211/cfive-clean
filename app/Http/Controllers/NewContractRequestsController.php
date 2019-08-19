@@ -583,85 +583,94 @@ class NewContractRequestsController extends Controller
         $now        = new \DateTime();
         $now        = $now->format('dmY_His');
         $nameFile   = 'Request_Fcl_'.$now;
-        $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
-        
-        //dd($data->chunk(2));
+        $countNRq   = NewContractRequest::whereBetween('created',[$dateStart,$dateEnd])->count();
+        dd($countNRq);
+        if($countNRq <= 100){
+            $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
 
-        $myFile = Excel::create($nameFile, function($excel) use($data) {
+            //dd($data->chunk(2));
 
-            $excel->sheet('Reuqest', function($sheet) use($data) {
-                $sheet->cells('A1:J1', function($cells) {
-                    $cells->setBackground('#2525ba');
-                    $cells->setFontColor('#ffffff');
-                    //$cells->setValignment('center');
+            $myFile = Excel::create($nameFile, function($excel) use($data) {
+
+                $excel->sheet('Reuqest', function($sheet) use($data) {
+                    $sheet->cells('A1:J1', function($cells) {
+                        $cells->setBackground('#2525ba');
+                        $cells->setFontColor('#ffffff');
+                        //$cells->setValignment('center');
+                    });
+
+                    $sheet->setWidth(array(
+                        'A'     =>  30,
+                        'B'     =>  25,
+                        'C'     =>  10,
+                        'D'     =>  20,
+                        'E'     =>  30,
+                        'F'     =>  15,
+                        'G'     =>  20,
+                        'H'     =>  20,
+                        'I'     =>  20,
+                        'J'     =>  15
+                    ));
+
+                    $sheet->row(1, array(
+                        "Company",
+                        "Reference",
+                        "Direction",
+                        "Carrier",
+                        "Validation",
+                        "Date",
+                        "User",
+                        "Time Elapsed",
+                        "Username load",
+                        "Status"
+                    ));
+                    $i= 2;
+
+                    $data   = $data->chunk(500);
+                    $data   = $data->toArray();;
+                    foreach($data as $nrequests){
+                        foreach($nrequests as $nrequest){                   
+                            $sheet->row($i, array(
+                                "Company"           => $nrequest['company'],
+                                "Reference"         => $nrequest['reference'],
+                                "Direction"         => $nrequest['direction'],
+                                "Carrier"           => $nrequest['carrier'],
+                                "Validation"        => $nrequest['validation'],
+                                "Date"              => $nrequest['date'],
+                                "User"              => $nrequest['user'],
+                                "Username load"     => $nrequest['username_load'],
+                                "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Status"            => $nrequest['status']
+                            ));
+                            $sheet->setBorder('A1:J'.$i, 'thin');
+
+                            $sheet->cells('I'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+
+                            $sheet->cells('J'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            $i++;
+                        }
+                    }
                 });
 
-                $sheet->setWidth(array(
-                    'A'     =>  30,
-                    'B'     =>  25,
-                    'C'     =>  10,
-                    'D'     =>  20,
-                    'E'     =>  30,
-                    'F'     =>  15,
-                    'G'     =>  20,
-                    'H'     =>  20,
-                    'I'     =>  20,
-                    'J'     =>  15
-                ));
-
-                $sheet->row(1, array(
-                    "Company",
-                    "Reference",
-                    "Direction",
-                    "Carrier",
-                    "Validation",
-                    "Date",
-                    "User",
-                    "Time Elapsed",
-                    "Username load",
-                    "Status"
-                ));
-                $i= 2;
-
-                $data   = $data->chunk(500);
-                $data   = $data->toArray();;
-                foreach($data as $nrequests){
-                    foreach($nrequests as $nrequest){                   
-                        $sheet->row($i, array(
-                            "Company"           => $nrequest['company'],
-                            "Reference"         => $nrequest['reference'],
-                            "Direction"         => $nrequest['direction'],
-                            "Carrier"           => $nrequest['carrier'],
-                            "Validation"        => $nrequest['validation'],
-                            "Date"              => $nrequest['date'],
-                            "User"              => $nrequest['user'],
-                            "Username load"     => $nrequest['username_load'],
-                            "Time Elapsed"      => $nrequest['time_elapsed'],
-                            "Status"            => $nrequest['status']
-                        ));
-                        $sheet->setBorder('A1:J'.$i, 'thin');
-
-                        $sheet->cells('I'.$i, function($cells) {
-                            $cells->setAlignment('center');
-                        });
-
-                        $sheet->cells('J'.$i, function($cells) {
-                            $cells->setAlignment('center');
-                        });
-                        $i++;
-                    }
-                }
             });
 
-        });
-
-        $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
-        $response =  array(
-            'actt' => 1,
-            'name' => $nameFile.'.xlsx', //no extention needed
-            'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
-        );
-        
+            $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+            $response =  array(
+                'actt' => 1,
+                'name' => $nameFile.'.xlsx', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+            );
+        } else{
+            auth = \Auth::user()->toArray();
+            //ExportRequests::dispatch($dateStart,$dateEnd,$auth,'fcl');
+            $response =  array(
+                'actt' => 2
+            );
+        }
         return response()->json($response);
     }
 
