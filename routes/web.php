@@ -303,6 +303,10 @@ Route::prefix('RequestsLcl')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl')
         ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestLclExport/','NewContractRequestLclController@export')->name('export.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::get('testLcl/','NewContractRequestLclController@test')->name('test.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 });
 
 

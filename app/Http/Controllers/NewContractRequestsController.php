@@ -18,6 +18,7 @@ use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use App\Jobs\ExportRequestsJob;
 use App\CarrierautoImportation;
 use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
@@ -582,10 +583,10 @@ class NewContractRequestsController extends Controller
         $dateEnd    = trim($dates[1]);
         $now        = new \DateTime();
         $now        = $now->format('dmY_His');
-        $nameFile   = 'Request_Fcl_'.$now;
         $countNRq   = NewContractRequest::whereBetween('created',[$dateStart,$dateEnd])->count();
-        dd($countNRq);
+
         if($countNRq <= 100){
+            $nameFile   = 'Request_Fcl_'.$now;
             $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
 
             //dd($data->chunk(2));
@@ -665,8 +666,8 @@ class NewContractRequestsController extends Controller
                 'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
             );
         } else{
-            auth = \Auth::user()->toArray();
-            //ExportRequests::dispatch($dateStart,$dateEnd,$auth,'fcl');
+            $auth = \Auth::user()->toArray();
+            ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl');
             $response =  array(
                 'actt' => 2
             );

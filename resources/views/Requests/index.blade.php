@@ -174,7 +174,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle2">
-                        Export - Request
+                        Export - Request FCL
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">
@@ -182,7 +182,7 @@
                         </span>
                     </button>
                 </div>
-                <div id="modal-body" class="modal-body">
+                <div id="modal-bodyl" class="modal-body">
                     <div class="row">
                         <div class="col-md-2">
                             <h4 class="">Between:</h4>
@@ -425,13 +425,13 @@
             });
 
             $.ajax({
-                cache: true,
+                cache: false,
                 type:'POST',
                 data:{between:between},
                 url: url,
-                beforeSend: function(){
+                /*beforeSend: function(){
                     $('#modalwait').modal('show');
-                },
+                },*/
                 success: function (response, textStatus, request) {
                     $('#exportdata').modal('hide');
                     $('body').removeClass('modal-open');
@@ -445,6 +445,7 @@
                             document.body.appendChild(a);
                             a.click();
                             a.remove();
+                            location.reload();
                         } else if(response.actt == 2){
                             swal(
                                 'Done!',
