@@ -680,9 +680,10 @@ class NewContractRequestsController extends Controller
 
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        
-        $data = PrvValidation::ContractWithJob(4);
+        //dd(Job::find(11));
+        //$data = PrvValidation::ContractWithJob(4);
+        $data = PrvValidation::AcountWithJob(1);
         dd($data);
-        
+
     }
 }
