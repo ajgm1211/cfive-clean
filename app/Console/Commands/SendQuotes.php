@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\SendQuotePdf;
-use App\Quote;
+use App\QuoteV2;
 use App\SendQuote;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -44,7 +44,7 @@ class SendQuotes extends Command
         try{
             $notifications=SendQuote::where('status',0)->get();
             foreach ($notifications as $item) {
-                $quote=Quote::findOrFail($item->quote_id);
+                $quote=QuoteV2::findOrFail($item->quote_id);
                 $send_notification=SendQuote::find($item->id);
                 $send_notification->status=1;
                 $send_notification->update();
