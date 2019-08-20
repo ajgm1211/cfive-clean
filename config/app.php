@@ -183,6 +183,7 @@ return [
     App\Providers\UserConfigurationProvider::class,
 
     App\Providers\RouteServiceProvider::class,
+    App\Providers\RequetsProvider::class,
 
 
 
@@ -250,6 +251,7 @@ return [
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
     'PrvCarrier' => App\Helpers\HelperCarriers::class,
     'PrvUserConfigurations' => App\Helpers\Configurations\HelperUserConfiguracion::class,
+    'PrvRequest' => App\Helpers\Request\NRequest::class,
 
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
