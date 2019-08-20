@@ -13,7 +13,7 @@
         <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
             <div id="logo">
                 @if($user->companyUser->logo!='')
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:0">
+                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
                 @endif
             </div>
             <div id="company">
@@ -591,7 +591,9 @@
                         <table border="0" cellspacing="1" cellpadding="1" >
                             <thead class="title-quote text-left header-table">
                                 <tr >
-                                    <th class="unit" colspan="2"><b>Charge</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                                     <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                     <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
                                     <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
@@ -854,9 +856,9 @@
                     <table border="0" cellspacing="1" cellpadding="1" >
                         <thead class="title-quote text-left header-table">
                             <tr >
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                 <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
                                 <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
@@ -1120,7 +1122,7 @@
                 @if($i>0)    
                     <br>
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Remarks</b></th>
@@ -1145,7 +1147,7 @@
                 <br>
                 @if($quote->terms_and_conditions!='')
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
@@ -1166,7 +1168,7 @@
                 <br>
                 @if($quote->payment_conditions!='')
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Payments conditions</b></th>
@@ -1189,7 +1191,7 @@
                 @if($user->companyUser->footer_type=='Image')
                     @if($user->companyUser->footer_image!='')
                         <div class="clearfix">
-                            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->footer_image)}}" class="img img-fluid" style="max-width:100%;">
+                            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->footer_image)}}" class="img img-fluid" style="max-width:100%; max-height:95px;">
                         </div>
                     @endif
                 @else
