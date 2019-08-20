@@ -378,7 +378,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
-//Pricees
+//Prices
 Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
@@ -490,6 +490,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
     Route::get('excel/{id}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
     Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
+    Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
     //LCL 
     Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
 
