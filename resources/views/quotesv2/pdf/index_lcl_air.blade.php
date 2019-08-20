@@ -1012,7 +1012,7 @@
         @if($i>0)
             <br>
             <div class="clearfix">
-            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+            <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote header-table">
                     <tr>
                         <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Remarks</b></th>
@@ -1037,7 +1037,7 @@
         <br>
         @if($quote->terms_and_conditions!='')
              <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
                         <tr>
                             <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
@@ -1058,7 +1058,7 @@
         <br>      
         @if($quote->payment_conditions!='')
             <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
                         <tr>
                             <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Payments conditions</b></th>

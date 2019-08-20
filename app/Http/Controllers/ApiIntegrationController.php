@@ -151,9 +151,9 @@ class ApiIntegrationController extends Controller
     public function syncCompanies($response){
         $i=0;
         foreach($response->ent_m as $item){
-            $exist_com = Company::where('business_name',$item->nom_com)->count();
+            $exist_com = Company::where('business_name',$item->nom_com)->get();
 
-            if($exist_com==0){
+            if($exist_com->count()==0){
                 $company = new Company();
                 $company->business_name = $item->nom_com;
                 $company->phone = $item->tlf;
@@ -162,6 +162,7 @@ class ApiIntegrationController extends Controller
                 $company->company_user_id = \Auth::user()->company_user_id;
                 $company->owner = \Auth::user()->id;
                 $company->api_id = $item->id;
+                $company->api_status = 'created';
                 $company->save();
 
                 $contacts = $this->getContacts($item->id);
