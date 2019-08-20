@@ -215,7 +215,9 @@ font-family: sans-serif !important;
                         @if($sign_type=='text')
                             {!!$sign!!}
                         @else
-                            <img src="{{$message->embed(Storage::disk('s3_upload')->url($sign))}}" width=100>
+                            @if($sign!='')
+                                <img src="{{$message->embed(Storage::disk('s3_upload')->url($sign))}}" width=100>
+                            @endif
                         @endif
                     </td>
                 </tr>
