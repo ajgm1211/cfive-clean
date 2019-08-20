@@ -61,6 +61,7 @@ use App\RemarkCondition;
 use App\RemarkHarbor;
 use App\RemarkCarrier;
 use App\EmailSetting;
+use App\SaleTermV2;
 //LCL
 use App\ContractLcl;
 use App\RateLcl;
@@ -232,6 +233,7 @@ class QuoteV2Controller extends Controller
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
         $harbors = Harbor::get()->pluck('display_name','id');
         $countries = Country::pluck('name','id');
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->get();
 
         $prices = Price::pluck('name','id');
         $carrierMan = Carrier::pluck('name','id');
@@ -512,6 +514,18 @@ class QuoteV2Controller extends Controller
             }); 
         }
 
+        foreach ($sale_terms as $v) {
+            $sale_terms->map(function ($v) {
+                if($v->port_id!='' ){
+                    $v['country_code'] = strtolower(substr($v->port->code, 0, 2));
+                }else{
+                    $v['country_code'] = strtolower($v->airport->code);
+                }
+
+                return $v;
+            }); 
+        }
+
         $emaildimanicdata = json_encode([
             'quote_bool'   => 'true',
             'company_id'   => '',
@@ -519,7 +533,7 @@ class QuoteV2Controller extends Controller
             'quote_id'     => $id
         ]);
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms'));
     }
 
     /**
@@ -8363,7 +8377,7 @@ class QuoteV2Controller extends Controller
                                 $total45=($amount45+$markup45)/$currency_rate;
                                 $sum45 += number_format($total45, 2, '.', '');
                             }else if(isset($array_amounts['c45']) && !isset($array_markups['m45'])){
-                                $amount45=$array_amounts['m45'];
+                                $amount45=$array_amounts['c45'];
                                 $total45=$amount45/$currency_rate;
                                 $sum45 += number_format($total45, 2, '.', '');
                             }else if(!isset($array_amounts['c45']) && isset($array_markups['m45'])){
