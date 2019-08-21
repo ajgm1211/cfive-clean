@@ -24,13 +24,19 @@
                     <div class="col-md-4">
                         <label>Type</label>
                         <div class="input-group date">
-                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control']) }}
+                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control','id'=>'saleterm_type']) }}
                         </div>
                     </div>
                     <div class="col-md-4" >
-                        <div id="origin_harbor_label" {{$quote->type=='AIR' ? 'hidden':''}}>
-                            <label>Port</label>
-                            {{ Form::select('port_id',$harbors,null,['class'=>'m-select2-general form-control','id'=>'origin_harbor','placeholder'=>'Select an option']) }}
+                        <div  {{$quote->type=='AIR' ? 'hidden':''}}>
+                            <div class="origin_port hide">
+                                <label>Origin Port</label>
+                                {{ Form::select('port_id',$rate_origin_ports,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option']) }}
+                            </div>                        
+                            <div class="destination_port hide">
+                                <label>Destination Port</label>
+                                {{ Form::select('port_id',$rate_destination_ports,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option']) }}
+                            </div>
                         </div>
                         <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
                             <label>Airport</label>
