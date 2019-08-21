@@ -65,7 +65,7 @@ $(document).on('click', '#delete-contract', function () {
                         }
                     }else{
                         swal(
-                            'Deleted!',
+                            'Error!',
                             'Your contract cannot be deleted. It is being managed',
                             'warning'
                         );
