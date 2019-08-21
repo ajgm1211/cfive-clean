@@ -8363,7 +8363,7 @@ class QuoteV2Controller extends Controller
                                 $total45=($amount45+$markup45)/$currency_rate;
                                 $sum45 += number_format($total45, 2, '.', '');
                             }else if(isset($array_amounts['c45']) && !isset($array_markups['m45'])){
-                                $amount45=$array_amounts['m45'];
+                                $amount45=$array_amounts['c45'];
                                 $total45=$amount45/$currency_rate;
                                 $sum45 += number_format($total45, 2, '.', '');
                             }else if(!isset($array_amounts['c45']) && isset($array_markups['m45'])){
