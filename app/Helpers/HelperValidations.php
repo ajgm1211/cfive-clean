@@ -31,7 +31,9 @@ class HelperValidations {
         if($bool == false){
             $request_id = null;
             $data       = NewContractRequest::where('contract_id',$contract_id)->first();
-            $request_id = $data->id;
+            if(!empty($data->id)){
+                $request_id = $data->id;
+            }
             $jobs       = ImportationJob::where('payload','LIKE','%id%')->get();
             foreach($jobs as $job){
                 $poscion    = null;
