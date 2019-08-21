@@ -234,6 +234,12 @@ class QuoteV2Controller extends Controller
         $harbors = Harbor::get()->pluck('display_name','id');
         $countries = Country::pluck('name','id');
         $sale_terms = SaleTermV2::where('quote_id',$quote->id)->get();
+        $port_origin_ids = $rates->implode('origin_port_id', ', ');
+        $port_origin_ids = explode(",",$port_origin_ids);
+        $port_destination_ids = $rates->implode('destination_port_id', ', ');
+        $port_destination_ids = explode(",",$port_destination_ids);
+        $rate_origin_ports = Harbor::whereIn('id',$port_origin_ids)->pluck('display_name','id');
+        $rate_destination_ports = Harbor::whereIn('id',$port_destination_ids)->pluck('display_name','id');
 
         $prices = Price::pluck('name','id');
         $carrierMan = Carrier::pluck('name','id');
@@ -533,7 +539,7 @@ class QuoteV2Controller extends Controller
             'quote_id'     => $id
         ]);
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports'));
     }
 
     /**

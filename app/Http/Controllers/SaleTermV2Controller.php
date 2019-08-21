@@ -37,7 +37,7 @@ class SaleTermV2Controller extends Controller
     public function store(Request $request)
     {
         $sale_term = SaleTermV2::create($request->all());
-        
+
         $sale_charge = new SaleTermV2Charge();
         $sale_charge->sale_term_id = $sale_term->id;
         $sale_charge->save();
@@ -82,6 +82,20 @@ class SaleTermV2Controller extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    /**
+   * Update charges by saleterms
+   * @param Request $request 
+   * @return array json
+   */
+    public function updateSaleCharges(Request $request)
+    {
+        $charge=SaleTermV2Charge::find($request->pk);
+        $name = $request->name;
+        $charge->$name=$request->value;
+        $charge->update();
+        return response()->json(['success'=>'Ok']);
     }
 
     /**
