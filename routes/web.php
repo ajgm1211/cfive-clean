@@ -745,6 +745,9 @@ Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:adm
     route::delete('DestroyFiltro/{id}','CarriersImportationController@DestroyFiltro')->name('surcherger.filtro.destroy');
     route::get('IndexFiltro/','CarriersImportationController@indexFiltro')->name('surcherger.filtro.index');
     route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
+    route::get('ShowModalForward/','CarriersImportationController@ShowModalForward')->name('forward.modal.show');
+    route::post('RequestsForward/','CarriersImportationController@forwardRequest')->name('forward.request');
+    route::get('test','CarriersImportationController@test')->name('test.carrier.autoimport');
 });
 
 // Test Controller 
