@@ -112,6 +112,21 @@ $(document).ready(function() {
         }
     });
 
+    $('.editable-saleterms').editable({
+        url:'/v2/quotes/sale/charges/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            setTimeout(location.reload.bind(location), 3000);
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
     $('.editable-rate').editable({
         url:'/v2/quotes/rate/charges/update',
         emptytext:0,
@@ -2718,6 +2733,21 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
     }
 });
 
+//Mostrar y ocultar puertos en Sale Terms
+$(document).on('change', '#saleterm_type', function () {
+    if($('#saleterm_type').val()=='origin'){
+        $(".origin_port").removeClass('hide');
+        $(".destination_port").addClass('hide');
+        $(".origin_port_select").prop('disabled', false);
+        $(".destination_port_select").prop('disabled', true);
+    }else{
+        $(".origin_port").addClass('hide');
+        $(".destination_port").removeClass('hide'); 
+        $(".origin_port_select").prop('disabled', true);
+        $(".destination_port_select").prop('disabled', false);        
+    }
+});
+
 //Mostrar y ocultar opciones pdf
 $(document).on('change', '#show_hide_select', function () {
     if($('#show_hide_select').val()=='total in'){
@@ -4141,6 +4171,19 @@ function precargarLCL(){
     $("input[name=qty_40_hc]").val('');
     $("input[name=qty_45_hc]").val('');
 
+}
+
+function addSaleCharge($value){
+
+    var $template = $('#sale_charges_'+$value),
+        $clone = $template
+    .clone()
+    .removeClass('hide')
+    .removeAttr('id')
+    .insertAfter($template)
+    $clone.find("select").select2({
+        placeholder: "Currency"
+    });
 }
 
 function addFreightCharge($value){
