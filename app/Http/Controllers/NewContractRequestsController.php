@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use App\Job;
 use App\User;
 use PrvRequest;
 use App\Harbor;
 use App\Carrier;
 use App\Contract;
+use PrvValidation;
 use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
@@ -678,16 +680,9 @@ class NewContractRequestsController extends Controller
 
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        $fecha_actual = date("Y-m-d H:i:s");
-        /*$fecha1 = new \DateTime("2019-04-15 14:26:47");
-        $fecha2 = new \DateTime($fecha_actual);
-        $tiempo_transcurrido = $fecha1->diff($fecha2);*/
-
-        $fechaExpiracion = Carbon::parse($fecha_actual);
-        //$fechaEmision = Carbon::parse("2019-04-15 14:26:47");
-        $fechaEmision = Carbon::parse($fecha_actual);
-
-        $diasDiferencia = $fechaExpiracion->diffForHumans($fechaEmision);
-        dd(str_replace('after','',$diasDiferencia));
+        
+        $data = PrvValidation::ContractWithJob(4);
+        dd($data);
+        
     }
 }
