@@ -403,8 +403,7 @@
                                 }else if(data.success == 2){
                                     swal("Error!", "An internal error occurred!", "error");
                                 }
-                            } else {r
-                            
+                            } else {                            
                                 swal('Error!',
                                      'Your Acount cannot be deleted. It is being managed by Importation',
                                      'warning');
