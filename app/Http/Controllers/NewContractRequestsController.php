@@ -15,6 +15,7 @@ use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
 use GuzzleHttp\Client;
+use App\ImportationJob;
 use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
@@ -682,8 +683,25 @@ class NewContractRequestsController extends Controller
     public function test(){
         //dd(Job::find(11));
         //$data = PrvValidation::ContractWithJob(4);
-        $data = PrvValidation::AcountWithJob(1);
-        dd($data);
+        //$data = PrvValidation::AcountWithJob(1);
+        $data       = NewContractRequest::where('contract_id',6)->first();
+        $request_id = $data->id;
+        $jobs       = ImportationJob::where('payload','LIKE','%id%')->get();
+        foreach($jobs as $job){
+            $poscion    = null;
+            $json       = json_decode($job['payload']);
+            $poscion    = strripos($json->{'data'}->{'command'},'id');
+            $data       = substr($json->{'data'}->{'command'},$poscion,100);
+            $data       = explode(";",$data);
+            $poscion    = strripos($data[1],':"');
+            $data       = substr($data[1],$poscion,100);
+            $data       = str_replace([':','"'],'',$data);
+            if($data == $request_id){
+                $bool   = true;
+                $job_id = $job->id;
+            }
+        }
+        dd($job);
 
     }
 }
