@@ -172,6 +172,8 @@ Route::prefix('Requests')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
         ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestExport/','NewContractRequestsController@export')->name('export.Request')
+        ->middleware(['auth','role:administrator|data_entry']);
 });
 
 
@@ -300,6 +302,10 @@ Route::prefix('RequestsLcl')->group(function () {
     Route::get('RequestLclStatus','NewContractRequestLclController@UpdateStatusRequest')->name('RequestLcl.status')
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestLclExport/','NewContractRequestLclController@export')->name('export.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::get('testLcl/','NewContractRequestLclController@test')->name('test.RequestLcl')
         ->middleware(['auth','role:administrator|data_entry']);
 });
 
@@ -739,6 +745,9 @@ Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:adm
     route::delete('DestroyFiltro/{id}','CarriersImportationController@DestroyFiltro')->name('surcherger.filtro.destroy');
     route::get('IndexFiltro/','CarriersImportationController@indexFiltro')->name('surcherger.filtro.index');
     route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
+    route::get('ShowModalForward/','CarriersImportationController@ShowModalForward')->name('forward.modal.show');
+    route::post('RequestsForward/','CarriersImportationController@forwardRequest')->name('forward.request');
+    route::get('test','CarriersImportationController@test')->name('test.carrier.autoimport');
 });
 
 // Test Controller 

@@ -13,7 +13,7 @@
         <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
             <div id="logo">
                 @if($user->companyUser->logo!='')
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 100px; height: auto; margin-bottom:0">
+                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
                 @endif
             </div>
             <div id="company">
@@ -120,7 +120,9 @@
                             <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
                             <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
                             @if($quote->pdf_option->show_schedules==1)
-                                <th ><b>Type</b></th>
+                                <th {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                                <th {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                                <th {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
                                 <th ><b>TT</b></th>
                                 <th ><b>Via</b></th>
                             @endif
@@ -261,7 +263,7 @@
                                 <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
-                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tipo</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
@@ -367,7 +369,7 @@
                                             <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                                 <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
-                                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tipo</b></th>
+                                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
                                                 <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
                                                 <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
                                                 <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
@@ -415,9 +417,17 @@
                                                                 <td>Ocean freight</td>
                                                             @endif
                                                             @if($v->surcharge_id!='')
-                                                                <td>{{$v->calculation_type->name}}</td>
+                                                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                                    @php
+                                                                        echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                                    @endphp
+                                                                </td>
+                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                                             @else
-                                                                <td>Per container</td>
+                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Per container</td>
+                                                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Por container</td>
+                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Per container</td>
                                                             @endif
                                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                             <td {{ @$equipmentHides['20'] }}>{{number_format($v->total_20, 2, '.', '')}}</td>
@@ -584,14 +594,16 @@
                         <br>
                         <div>
                             <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen - {{$origin}}</p>
+                            <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
                             <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                             <br>
                         </div>
                         <table border="0" cellspacing="1" cellpadding="1" >
                             <thead class="title-quote text-left header-table">
                                 <tr >
-                                    <th class="unit" colspan="2"><b>Charge</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                    <th class="unit" colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                                     <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                     <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
                                     <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
@@ -665,7 +677,7 @@
                         @foreach($value as $origin => $item)
                             <div>
                                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen - {{$origin}}</p>
+                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
                                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                                 <br>
                             </div>
@@ -721,7 +733,13 @@
                                                     ?>
                                                     <tr class="text-left color-table">
                                                         <td>{{$v->surcharge->name}}</td>
-                                                        <td>{{$v->calculation_type->name}}</td>
+                                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                            @php
+                                                                echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                            @endphp
+                                                        </td>
+                                                        <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                                        <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                         <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                         <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -770,7 +788,7 @@
                                     @endforeach
                                     <tr>
                                         <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
-                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos de origen</b></td>
+                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en origen</b></td>
                                         <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                         <td></td>
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
@@ -847,16 +865,16 @@
                     <br>
                     <div>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$origin}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$origin}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1" >
                         <thead class="title-quote text-left header-table">
                             <tr >
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                <th class="unit" colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                 <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
                                 <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
@@ -931,7 +949,7 @@
                             @foreach($value as $destination => $item)
                                 <div>
                                     <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
                                     <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
                                     <br>
                                 </div>
@@ -987,7 +1005,13 @@
                                                         ?>
                                                         <tr class="text-left color-table">
                                                             <td>{{$v->surcharge->name}}</td>
-                                                            <td>{{$v->calculation_type->name}}</td>
+                                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                                @php
+                                                                    echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                                @endphp
+                                                            </td>
+                                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                             <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                             <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
@@ -1036,7 +1060,7 @@
                                     @endforeach
                                 <tr>
                                     <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
-                                    <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos de destino</b></td>
+                                    <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en destino</b></td>
                                     <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                     <td></td>
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
@@ -1120,7 +1144,7 @@
                 @if($i>0)    
                     <br>
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Remarks</b></th>
@@ -1145,7 +1169,7 @@
                 <br>
                 @if($quote->terms_and_conditions!='')
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
@@ -1166,7 +1190,7 @@
                 <br>
                 @if($quote->payment_conditions!='')
                     <div class="clearfix">
-                        <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                        <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                             <thead class="title-quote header-table">
                                 <tr>
                                     <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Payments conditions</b></th>
@@ -1189,7 +1213,7 @@
                 @if($user->companyUser->footer_type=='Image')
                     @if($user->companyUser->footer_image!='')
                         <div class="clearfix">
-                            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->footer_image)}}" class="img img-fluid" style="max-width:100%;">
+                            <img src="{{Storage::disk('s3_upload')->url($user->companyUser->footer_image)}}" class="img img-fluid" style="max-width:100%; max-height:95px;">
                         </div>
                     @endif
                 @else
