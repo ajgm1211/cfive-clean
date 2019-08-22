@@ -388,19 +388,25 @@
                         url:url,
                         method:'get',
                         success: function(data){
-                            if(data == 1){
-                                swal(
-                                    'Deleted!',
-                                    'Your Account FCL has been deleted.',
-                                    'success'
-                                )
-                                $(elemento).closest('tr').remove();
-                                var a = $('#strfailinput').val();
-                                a--;
-                                $('#strfail').text(a);
-                                $('#strfailinput').attr('value',a);
-                            }else if(data == 2){
-                                swal("Error!", "An internal error occurred!", "error");
+                            if(data.jobAssociate == false){
+                                if(data.success == 1){
+                                    swal(
+                                        'Deleted!',
+                                        'Your Account FCL has been deleted.',
+                                        'success'
+                                    )
+                                    $(elemento).closest('tr').remove();
+                                    var a = $('#strfailinput').val();
+                                    a--;
+                                    $('#strfail').text(a);
+                                    $('#strfailinput').attr('value',a);
+                                }else if(data.success == 2){
+                                    swal("Error!", "An internal error occurred!", "error");
+                                }
+                            } else {                            
+                                swal('Error!',
+                                     'Your Acount cannot be deleted. It is being managed by Importation',
+                                     'warning');
                             }
                         }
                     });
