@@ -11,6 +11,7 @@ use App\Region;
 use App\Carrier;
 use App\Country;
 use App\Currency;
+use PrvValidation;
 use Carbon\Carbon;
 use App\Surcharge;
 use App\CompanyUser;
@@ -1285,21 +1286,23 @@ class ImportationGlobachargersFclController extends Controller
 
     public function deleteAccounts($id,$select){
         try{
-            $account = AccountImportationGlobalcharge::with('FileTmp')->find($id);
-            if(count($account)>0){
-                if(count($account->FileTmp)>0){
-                    Storage::disk('UpLoadFile')->delete($account->FileTmp->name_file);
+            $data = PrvValidation::AcountWithJob($id);
+            if($data['bool'] == false){
+                $account = AccountImportationGlobalcharge::with('FileTmp')->find($id);
+                if(count($account)>0){
+                    if(count($account->FileTmp)>0){
+                        Storage::disk('UpLoadFile')->delete($account->FileTmp->name_file);
+                    }
+                    $account->delete();
                 }
-                $account->delete();
             }
-
             if($select == 1){
                 return redirect()->route('ImportationGlobalchargeFcl.index');
             } elseif($select == 2){
-                return response()->json(['success' => '1']);			
+                return response()->json(['success' => '1','jobAssociate' => $data['bool']]);			
             }
         } catch(\Exception $e){
-            return response()->json(['success' => '2']);			
+            return response()->json(['success' => '2','jobAssociate' => false]);			
         }
 
     }

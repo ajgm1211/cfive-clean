@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
         <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-        <title>Quote Email</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+        <title>Exportation Finished</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
         <!-- Web Font / @font-face : BEGIN -->
         <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
@@ -71,11 +71,6 @@ font-family: sans-serif !important;
             /* What it does: Uses a better rendering method when resizing images in IE. */
             img {
                 -ms-interpolation-mode:bicubic;
-            }
-
-            .email-container {
-                width: 100% !important;
-                margin: auto !important;
             }
 
             /* What it does: A work-around for email clients meddling in triggered links. */
@@ -195,33 +190,59 @@ font-family: sans-serif !important;
             }
 
         </style>
+
+
     </head>
 
-    <body width="100%" bgcolor="#ffffff" style="margin: 0; mso-line-height-rule: exactly; background-color: #fff;">
+    <body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly; background-color: #001728;">
         <center style="width: 100%; text-align: left; margin-bottom: 100px !important;">
 
             <!-- Preview Text Spacing Hack : BEGIN -->
             <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-
+                &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
             </div>
             <!-- Preview Text Spacing Hack : END -->
 
-            <!-- Email Body : BEGIN -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto;" class="email-container">
+            <!-- Email Header : BEGIN -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
                 <tr>
-                    <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        {!!$text!!}
+                    <td style="padding: 20px 0; text-align: center;">
+                        <img src="{{ url('/logo.png')}}" alt="alt_text" border="0" style="height: auto; background: #001728; font-family: sans-serif; font-size: 15px; line-height: 140%; max-width: 200px; margin-top: 50px">
                     </td>
                 </tr>
+            </table>
+            <!-- Email Header : END -->
+
+            <!-- Email Body : BEGIN -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
+
+                <!-- 1 Column Text + Button : BEGIN -->
                 <tr>
-                    <td>
-                        @if($sign_type=='text')
-                            {!!$sign!!}
-                        @else
-                            @if($sign!='')
-                                <img src="{{$message->embed(Storage::disk('s3_upload')->url($sign))}}" width=100>
-                            @endif
-                        @endif
+                    <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
+                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">The exportation of the Request {{$selector}} was finished</h1>
+                </tr>
+
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728;">
+                        <!-- Button : BEGIN -->
+                       <!-- <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
+                            <tr>
+                                <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                                    <a href="{{url('/home')}}" style="background: #001728; border: 15px solid #001728; font-family: sans-serif; font-size: 13px; line-height: 110%; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#fff;">Go</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>    -->
+                        <!-- Button : END -->
+                    </td>
+                </tr>
+                <!-- 1 Column Text + Button : END -->
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: center;">
+                        <p>This message was sent to <b>info@cargofive.com</b>. If you do not want to receive more emails, please tell us.</p>
+                        <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
+                        <h4 style="text-align: center;">info@cargofive.com </h4>
                     </td>
                 </tr>
             </table>

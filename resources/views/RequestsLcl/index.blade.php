@@ -82,6 +82,16 @@
                                                 </span>
                                             </button>
                                         </a>
+                                        <a href="#">
+                                            <button type="button" data-toggle="modal" data-target="#exportdata" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                                <span>
+                                                    <span>
+                                                        Export Request&nbsp;
+                                                    </span>
+                                                    <i class="la la-cloud-download"></i>
+                                                </span>
+                                            </button>
+                                        </a>
                                     </div>
                                     <br>
                                     <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
@@ -146,6 +156,46 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade bd-example-modal-lg" id="exportdata" role="dialog" aria-labelledby="exampleModalCenterTitle2" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle2">
+                        Export - Request LCL
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div id="modal-bodyl" class="modal-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h4 class="">Between:</h4>
+                        </div>
+                        <div class="col-md-5">
+                            <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="Please enter validation date">
+                        </div>
+                        <div class="col-md-5">
+                            <a href="#" onclick="exportjs()" class="btn btn-info">
+                                Export Contract
+                                <i class="fa flaticon-tool-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -353,6 +403,53 @@
                 }
             });
         });
+        
+        function exportjs(){
+            var url = '{!! route("export.RequestLcl") !!}';
+            var between = $('#m_daterangepicker_1').val();
+            //alert(date);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                cache: false,
+                type:'POST',
+                data:{between:between},
+                url: url,
+                /*beforeSend: function(){
+                    $('#modalwait').modal('show');
+                },*/
+                success: function (response, textStatus, request) {
+                    $('#exportdata').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    if (request.status === 200) {
+                        if(response.actt == 1){
+                            console.log('Load: '+request.status);
+                            var a = document.createElement("a");
+                            a.href = response.file;
+                            a.download = response.name;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            location.reload();
+                        } else if(response.actt == 2){
+                            swal(
+                                'Done!',
+                                'The export is being processed. We will send it to your email.',
+                                'success'
+                            )
+                        }
+                    }
+                },
+                error: function (ajaxContext) {
+                    toastr.error('Export error: '+ajaxContext.responseText);
+                }
+            });
+        }
     </script>
 
     @stop
