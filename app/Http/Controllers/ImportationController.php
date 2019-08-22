@@ -5303,7 +5303,7 @@ class ImportationController extends Controller
     public function DestroyAccount($id){
         try{
             $contract = Contract::where('account_id',$id)->first();
-            if(empty($contract->id) != false){
+            if(count($contract) == 1){
                 $data = PrvValidation::ContractWithJob($contract->id);
                 if($data['bool'] == false){
                     $account = AccountFcl::find($id);
