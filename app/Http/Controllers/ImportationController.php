@@ -5303,13 +5303,20 @@ class ImportationController extends Controller
     public function DestroyAccount($id){
         try{
             $contract = Contract::where('account_id',$id)->first();
-            $data = PrvValidation::ContractWithJob($contract->id);
-            if($data['bool'] == false){
+            if(count($contract) == 1){
+                $data = PrvValidation::ContractWithJob($contract->id);
+                if($data['bool'] == false){
+                    $account = AccountFcl::find($id);
+                    Storage::disk('FclAccount')->delete($account->namefile);
+                    $account->delete();
+                }
+                return response()->json(['success' => 1,'jobAssociate' => $data['bool']]);
+            } else {
                 $account = AccountFcl::find($id);
                 Storage::disk('FclAccount')->delete($account->namefile);
                 $account->delete();
+                return response()->json(['success' => 1,'jobAssociate' => false]);
             }
-            return response()->json(['success' => 1,'jobAssociate' => $data['bool']]);
         } catch(Exception $e){
             return response()->json(['success' => 2,'jobAssociate' => false]);
         }
