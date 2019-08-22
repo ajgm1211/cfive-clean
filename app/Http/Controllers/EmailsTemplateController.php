@@ -9,7 +9,7 @@ use App\CompanyUser;
 use App\MergeTag;
 use App\Contact;
 use App\Company;
-use App\Quote;
+use App\QuoteV2;
 use App\User;
 
 class EmailsTemplateController extends Controller
@@ -179,7 +179,7 @@ class EmailsTemplateController extends Controller
       $data = json_decode($data);
       
       if($data->quote_bool == 'true'){
-         $quote         = Quote::find($data->quote_id);
+         $quote         = QuoteV2::find($data->quote_id);
          $quote_id      = $quote->id;
          $contact_id    = $quote->contact_id;
          $company_id    = $quote->company_id;
@@ -192,8 +192,8 @@ class EmailsTemplateController extends Controller
       $company = Company::find($company_id);
       $contact = Contact::find($contact_id);
 
-      $body = str_replace('{First Name}',$contact->first_name,$template->menssage);
-      $body = str_replace('{Last Name}',$contact->last_name,$body);
+      $body = str_replace('{First Name}',@$contact->first_name,$template->menssage);
+      $body = str_replace('{Last Name}',@$contact->last_name,$body);
       $body = str_replace('{Company Name}',$company->business_name,$body);
       
       return response()->json(['id'=>$template->id,'subject'=>$template->subject,'message'=>$body]);
