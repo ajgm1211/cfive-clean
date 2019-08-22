@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Carrier;
 use App\AutoImportation;
+use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\CarrierautoImportation;
 use Yajra\Datatables\Datatables;
+use App\Jobs\SelectionAutoImportJob;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use App\Jobs\ForwardRequestAutoImportJob;
 use App\SurchergerForCarrier as FiltroSucharger;
 
 class CarriersImportationController extends Controller
@@ -197,7 +202,7 @@ class CarriersImportationController extends Controller
         $filtro = FiltroSucharger::find($id);
         return view('importationCarrier.editSurcharger',compact('filtro','companies'));
     }
-    
+
     public function UpdateFiltro(Request $request,$id){
         $filtro = FiltroSucharger::find($id);
         $filtro->name = $request->name;
@@ -216,6 +221,51 @@ class CarriersImportationController extends Controller
             return response()->json(['success' => '1']);
         } catch(\Exception $e){
             return response()->json(['success' => '2']);
+        }
+    }
+
+    // LIST FOR AUTOMATIC IMPORTER --------------------------------------------------------------------------------------------
+
+    public function ShowModalForward(){
+        return view('importationCarrier.forwardrequest');
+    }
+    public function forwardRequest(Request $request){
+        $response   = null;
+        $between    = null;
+        try{
+            $between    = explode('/',$request->between);
+            $dateStart  = trim($between[0]);
+            $dateEnd    = trim($between[1]);
+            ForwardRequestAutoImportJob::dispatch($dateStart,$dateEnd,'fcl');
+            $response   = 1;
+        } catch(Exception $e){
+            $response   = 2;
+        }
+        return response()->json(['success' => $response]);
+    }
+
+    // TEST -------------------------------------------------------------------------------------------------------------------
+    public function test(){
+        $dateStart  = '2019-08-01';
+        $dateEnd    = '2019-08-21';
+        $requets    = NewContractRequest::whereBetween('created',[$dateStart,$dateEnd])->get();
+        foreach($requets as $requet){
+            $existsS3 = Storage::disk('s3_upload')->exists('Request/FCL/'.$requet->namefile);
+            if($existsS3 == true && $requet->status == $status){
+                SelectionAutoImportJob::dispatch($requet->id,'fcl');
+            } else{
+                $existsLocal = Storage::disk('FclRequest')->exists($requet->namefile);
+                if($existsLocal){
+                    $name       = $requet->namefile;
+                    $s3         = \Storage::disk('s3_upload');
+                    //$file       = \Storage::disk('FclRequest')->get($file);
+                    $file       = File::get(storage_path('app/public/Request/Fcl/'.$name));
+                    $s3 = $s3->put('Request/FCL/'.$name, $file, 'public');
+                    if($s3 == true && $requet->status == $status){
+                        SelectionAutoImportJob::dispatch($requet->id,'fcl');
+                    }
+                }
+            }
         }
     }
 }

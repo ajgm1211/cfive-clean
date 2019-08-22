@@ -327,16 +327,22 @@
                         url:url,
                         method:'get',
                         success: function(data){
-                            if(data.success == 1){
-                                swal(
-                                    'Deleted!',
-                                    'The Request has been deleted.',
-                                    'success'
-                                )
-                                //$(elemento).closest('tr').remove();
-                                $('#myatest').DataTable().ajax.reload();
-                            }else if(data.success == 2){
-                                swal("Error!", "an internal error occurred!", "error");
+                            if(data.jobAssociate == false){
+                                if(data.success == 1){
+                                    swal(
+                                        'Deleted!',
+                                        'The Request has been deleted.',
+                                        'success'
+                                    )
+                                    //$(elemento).closest('tr').remove();
+                                    $('#myatest').DataTable().ajax.reload();
+                                }else if(data.success == 2){
+                                    swal("Error!", "an internal error occurred!", "error");
+                                }
+                            } else {
+                                swal('Error!',
+                                     'Your Acount cannot be deleted. It is being managed by Importation',
+                                     'warning');
                             }
                         }
                     });
