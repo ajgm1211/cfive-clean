@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use Excel;
+use App\Job;
 use App\User;
 use PrvRequest;
 use App\Harbor;
 use App\Carrier;
 use App\Contract;
+use PrvValidation;
 use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
 use GuzzleHttp\Client;
+use App\ImportationJob;
 use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
@@ -678,16 +681,27 @@ class NewContractRequestsController extends Controller
 
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        $fecha_actual = date("Y-m-d H:i:s");
-        /*$fecha1 = new \DateTime("2019-04-15 14:26:47");
-        $fecha2 = new \DateTime($fecha_actual);
-        $tiempo_transcurrido = $fecha1->diff($fecha2);*/
+        //dd(Job::find(11));
+        //$data = PrvValidation::ContractWithJob(4);
+        //$data = PrvValidation::AcountWithJob(1);
+        $data       = NewContractRequest::where('contract_id',6)->first();
+        $request_id = $data->id;
+        $jobs       = ImportationJob::where('payload','LIKE','%id%')->get();
+        foreach($jobs as $job){
+            $poscion    = null;
+            $json       = json_decode($job['payload']);
+            $poscion    = strripos($json->{'data'}->{'command'},'id');
+            $data       = substr($json->{'data'}->{'command'},$poscion,100);
+            $data       = explode(";",$data);
+            $poscion    = strripos($data[1],':"');
+            $data       = substr($data[1],$poscion,100);
+            $data       = str_replace([':','"'],'',$data);
+            if($data == $request_id){
+                $bool   = true;
+                $job_id = $job->id;
+            }
+        }
+        dd($job);
 
-        $fechaExpiracion = Carbon::parse($fecha_actual);
-        //$fechaEmision = Carbon::parse("2019-04-15 14:26:47");
-        $fechaEmision = Carbon::parse($fecha_actual);
-
-        $diasDiferencia = $fechaExpiracion->diffForHumans($fechaEmision);
-        dd(str_replace('after','',$diasDiferencia));
     }
 }
