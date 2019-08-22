@@ -202,7 +202,7 @@ font-family: sans-serif !important;
 
             <!-- Preview Text Spacing Hack : BEGIN -->
             <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-                
+
             </div>
             <!-- Preview Text Spacing Hack : END -->
 
@@ -211,7 +211,10 @@ font-family: sans-serif !important;
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         {!!$text!!}
-                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         @if($sign_type=='text')
                             {!!$sign!!}
                         @else
