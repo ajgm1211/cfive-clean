@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\User;
+use App\Harbor;
+use App\Country;
 use GuzzleHttp\Psr7;
+use App\Jobs\TestJob;
 use GuzzleHttp\Client;
 use App\AutoImportation;
 use App\RequetsCarrierFcl;
@@ -119,9 +122,14 @@ class TestController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id,Request $request)
     {
-        //
+        //dd($request);
+
+        TestJob::dispatch();
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'OK');
+        return back();
     }
 
     /**
