@@ -69,16 +69,17 @@ $x=0;
                                             @endforeach
                                             <tr class="hide" id="sale_charges_{{$x}}">
                                                 <td class="tds" style="padding-left: 30px">
-                                                    <input type="text" class="form-control" name="charge"/>
+                                                    <input type="text" class="form-control charge" name="charge"/>
+                                                    <input type="hidden" class="form-control sale_term_id" name="sale_term_id" value="{{$item->id}}"/>
                                                 </td>
                                                 <td class="tds">
-                                                    <input type="text" class="form-control" name="detail"/>
+                                                    <input type="text" class="form-control detail" name="detail"/>
                                                 </td>
-                                                <td class="tds" {{ @$equipmentHides['20'] }}><input type="number" class="form-control" name="c20"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40'] }}><input type="number" class="form-control" name="c40"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40hc'] }}><input type="number" class="form-control" name="c40hc"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40nor'] }}><input type="number" class="form-control" name="c40nor"/></td>
-                                                <td class="tds" {{ @$equipmentHides['45'] }}><input type="number" class="form-control" name="c45"/></td>
+                                                <td class="tds" {{ @$equipmentHides['20'] }}><input type="number" class="form-control c20" name="c20"/></td>
+                                                <td class="tds" {{ @$equipmentHides['40'] }}><input type="number" class="form-control c40" name="c40"/></td>
+                                                <td class="tds" {{ @$equipmentHides['40hc'] }}><input type="number" class="form-control c40hc" name="c40hc"/></td>
+                                                <td class="tds" {{ @$equipmentHides['40nor'] }}><input type="number" class="form-control c40nor" name="c40nor"/></td>
+                                                <td class="tds" {{ @$equipmentHides['45'] }}><input type="number" class="form-control c45" name="c45"/></td>
                                                 <td class="tds">
                                                     <div class="input-group">
                                                         <div class="input-group-btn">

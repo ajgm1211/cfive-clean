@@ -1568,6 +1568,43 @@ $(document).on('click', '.store_charge_lcl', function () {
     });
 });
 
+$(document).on('click', '.store_sale_charge', function () {
+    var id = $(this).closest("tr").find(".sale_term_id").val();
+    var theElement = $(this);
+    var charge = $(this).closest("tr").find(".charge").val();
+    var detail = $(this).closest("tr").find(".detail").val();
+    var c20 = $(this).closest("tr").find(".c20").val();
+    var c40 = $(this).closest("tr").find(".c40").val();
+    var c40hc = $(this).closest("tr").find(".c40hc").val();
+    var c40nor = $(this).closest("tr").find(".c40nor").val();
+    var c45 = $(this).closest("tr").find(".c45").val();
+    var currency_id = $(this).closest("tr").find(".currency_id").val();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/store/sale/charge',
+        data:{
+            "sale_term_id":id,
+            "charge":charge,
+            "detail":detail,
+            "c20":c20,
+            "c40":c40,
+            "c40hc":c40hc,
+            "c40nor":c40nor,
+            "c45":c45,
+            "currency_id":currency_id,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The payment conditions has been updated.',
+                    'success'
+                )
+            }
+        }
+    });
+});
+
 //Guardar cargos FCL
 $(document).on('click', '.store_charge', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();

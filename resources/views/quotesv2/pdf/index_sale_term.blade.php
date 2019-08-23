@@ -234,57 +234,7 @@
                     <tfoot>
                 </table>
                 <br>
-                <!-- SALE TERMS -->
-                    
-                @if($sale_terms->count()>0)
-                    <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Sale terms charges</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Sale terms</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Sale terms</p>
-                        <br>
-                    </div>
 
-                    <table border="0" cellspacing="1" cellpadding="1" >
-                        <thead class="title-quote text-left header-table">
-                            <tr >
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Cargo</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Cargo</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detail</b></th>
-                                <th {{ @$equipmentHides['20'] }}><b>20'</b></th>
-                                <th {{ @$equipmentHides['40'] }}><b>40'</b></th>
-                                <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
-                                <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
-                                <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($sale_terms as $value)
-                            @foreach($value->charge as $item)
-                                <tr class="text-left color-table">
-                                            <td >
-                                                {{$item->charge!='' ? $item->charge:'-'}}
-                                            </td>
-                                            <td >
-                                                {{$item->detail!='' ? $item->detail:'-'}}
-                                            </td>
-                                            <td {{ @$equipmentHides['20'] }}>{{number_format(@$item->c20, 2, '.', '')}}</td>
-                                            <td {{ @$equipmentHides['40'] }}>{{number_format(@$item->c40, 2, '.', '')}}</td>
-                                            <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$item->c40hc, 2, '.', '')}}</td>
-                                            <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$item->c40nor, 2, '.', '')}}</td>
-                                            <td {{ @$equipmentHides['45'] }}>{{number_format(@$item->c45, 2, '.', '')}}</td>
-                                            <td >{{$currency_cfg->alphacode}}</td>
-                                        </tr>
-                            @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
                 <!-- DETAILED TABLES -->
 
                 <!-- Freights table all in-->
