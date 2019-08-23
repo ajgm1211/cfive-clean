@@ -223,7 +223,17 @@
                                 <td {{ @$equipmentHides['40nor'] }}>{{number_format((float)@$sum_total40nor+@$sum_inland40nor, 2, '.', '')}}</td>
                                 <td {{ @$equipmentHides['45'] }}>{{number_format((float)@$sum_total45+@$sum_inland45, 2, '.', '')}}</td>
                                 @if($quote->pdf_option->show_schedules==1)
-                                    <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                    @if($quote->pdf_option->language=='Spanish')
+                                                    @if($rate->schedule_type=='Transfer')
+                                                    <td>Transbordo</td>
+                                                    @elseif($rate->schedule_type=='Direct')
+                                                    <td>Directo</td>
+                                                    @else
+                                                    <td>-</td>
+                                                    @endif
+                                                @else
+                                                    <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                @endif                                    
                                     <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                                     <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                                 @endif
@@ -328,7 +338,17 @@
                                             <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</td>
                                             <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_freight_45, 2, '.', '')}}</td>
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                @if($quote->pdf_option->language=='Spanish')
+                                                    @if($rate->schedule_type=='Transfer')
+                                                    <td>Transbordo</td>
+                                                    @elseif($rate->schedule_type=='Direct')
+                                                    <td>Directo</td>
+                                                    @else
+                                                    <td>-</td>
+                                                    @endif
+                                                @else
+                                                    <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                @endif
                                                 <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                                                 <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                                             @endif
@@ -436,7 +456,17 @@
                                                             <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
                                                             <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
                                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                                <td>{{$r->schedule_type!='' ? $r->schedule_type:'-'}}</td>
+                                                                @if($quote->pdf_option->language=='Spanish')
+                                                                    @if($rate->schedule_type=='Transfer')
+                                                                    <td>Transbordo</td>
+                                                                    @elseif($rate->schedule_type=='Direct')
+                                                                    <td>Directo</td>
+                                                                    @else
+                                                                    <td>-</td>
+                                                                    @endif
+                                                                @else
+                                                                    <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                                @endif
                                                                 <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                                 <td>{{$r->via!='' ? $r->via:'-'}}</td>
                                                             @endif
@@ -461,7 +491,17 @@
                                                                 <td {{ @$equipmentHides['40nor'] }}>{{number_format($v->total_40nor, 2, '.', '')}}</td>
                                                                 <td {{ @$equipmentHides['45'] }}>{{number_format($v->total_45, 2, '.', '')}}</td>
                                                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
-                                                                    <td>{{$r->schedule_type!='' ? $r->schedule_type:'-'}}</td>
+                                                                    @if($quote->pdf_option->language=='Spanish')
+                                                                        @if($rate->schedule_type=='Transfer')
+                                                                        <td>Transbordo</td>
+                                                                        @elseif($rate->schedule_type=='Direct')
+                                                                        <td>Directo</td>
+                                                                        @else
+                                                                        <td>-</td>
+                                                                        @endif
+                                                                    @else
+                                                                        <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                                    @endif
                                                                     <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                                     <td>{{$r->via!='' ? $r->via:'-'}}</td>
                                                                 @endif
