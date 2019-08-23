@@ -77,6 +77,7 @@ use Illuminate\Support\Facades\Storage;
 use App\SearchRate;
 use App\SearchPort;
 use App\ViewQuoteV2;
+use App\SaleTermV2Charge;
 
 class QuoteV2Controller extends Controller
 {
@@ -1509,6 +1510,8 @@ class QuoteV2Controller extends Controller
         $equipmentHides = '';
         $quote = QuoteV2::findOrFail($id);
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->get();
+
         $origin_charges = AutomaticRate::where('quote_id',$quote->id)
             ->where(function ($query) {
                 $query->whereHas('charge', function ($query) {
@@ -1561,7 +1564,7 @@ class QuoteV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms'=>$sale_terms]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -2562,7 +2565,7 @@ class QuoteV2Controller extends Controller
     }
 
     /**
-   * Store quotes
+   * Store rates charges
    * @param Request $request 
    * @return type
    */
@@ -2778,6 +2781,25 @@ class QuoteV2Controller extends Controller
 
         return response()->json(['message' => 'Ok','surcharge'=>$charge->surcharge->name,'calculation_type'=>$charge->calculation_type->name,'units'=>$charge->units,'rate'=>$charge->price_per_unit,'markup'=>$charge->markup,'total'=>$total,'currency'=>$charge->currency->alphacode,'type'=>$charge->type_id]);
 
+    }
+
+    public function storeSaleCharge(Request $request){
+        $charge = new SaleTermV2Charge();
+        $charge->sale_term_id=$request->sale_term_id;
+        $charge->charge=$request->charge;
+        $charge->detail=$request->detail;
+        $charge->c20=$request->c20;
+        $charge->c40=$request->c40;
+        $charge->c40hc=$request->c40hc;
+        $charge->c40nor=$request->c40nor;
+        $charge->c45=$request->c45;
+        $charge->currency_id=$request->currency_id;
+        $charge->save();
+
+        //$charge = SaleTermV2Charge::find($charge->id);
+        //$total=$charge->c20+$charge->c40+$charge->c40hc+$charge->c40nor+$charge->c45;
+
+        return response()->json(['message' => 'Ok']);
     }
 
     public function getCompanyPayments($id)
