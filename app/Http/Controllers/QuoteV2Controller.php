@@ -1508,11 +1508,64 @@ class QuoteV2Controller extends Controller
     {
         $id = obtenerRouteKey($id);
         $equipmentHides = '';
+
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $currency_cfg = Currency::find($company_user->currency_id);
+        }
         $quote = QuoteV2::findOrFail($id);
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
-        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->get();
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('port_id');
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
-        $origin_charges = AutomaticRate::where('quote_id',$quote->id)
+        foreach($sale_terms_origin as $value){
+            foreach($value->charge as $item){
+                if($quote->pdf_option->grouped_origin_charges==1){
+                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                }else{
+                    $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                $item->sum20 += $item->c20/$currency_rate;
+                $item->sum40 += $item->c40/$currency_rate;
+                $item->sum40hc += $item->c40hc/$currency_rate;
+                $item->sum40nor += $item->c40nor/$currency_rate;
+                $item->sum45 += $item->c45/$currency_rate;
+            }
+
+        }
+
+        foreach($sale_terms_destination as $value){
+            foreach($value->charge as $item){
+                if($quote->pdf_option->grouped_destination_charges==1){
+                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                }else{
+                    $typeCurrency =  $currency_cfg->alphacode;
+                }
+                $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                $item->sum20 += $item->c20/$currency_rate;
+                $item->sum40 += $item->c40/$currency_rate;
+                $item->sum40hc += $item->c40hc/$currency_rate;
+                $item->sum40nor += $item->c40nor/$currency_rate;
+                $item->sum45 += $item->c45/$currency_rate;
+            }
+
+        }
+
+        $origin_sales = $sale_terms_origin->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $destination_sales = $sale_terms_destination->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_sales)->where('quote_id',$quote->id)
             ->where(function ($query) {
                 $query->whereHas('charge', function ($query) {
                     $query->where('type_id', 1);
@@ -1520,7 +1573,7 @@ class QuoteV2Controller extends Controller
                     $query->where('type', 'Origin');
                 });
             })->get();
-        $destination_charges = AutomaticRate::where('quote_id',$quote->id)
+        $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->where(function ($query) {
                 $query->whereHas('charge', function ($query) {
                     $query->where('type_id', 2);
@@ -1537,11 +1590,6 @@ class QuoteV2Controller extends Controller
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
         if($quote->equipment!=''){
             $equipmentHides = $this->hideContainer($quote->equipment,'BD');
-        }
-
-        if(\Auth::user()->company_user_id){
-            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $currency_cfg = Currency::find($company_user->currency_id);
         }
 
         /** Rates **/
@@ -1564,7 +1612,7 @@ class QuoteV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms'=>$sale_terms]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
