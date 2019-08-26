@@ -78,6 +78,16 @@
     clear: both;
 }
 
+.img-footer {
+    position: relative !important;
+    float: left !important;
+    width:  100%  !important;
+    height: auto  !important;
+    background-position: 50% 50%  !important;
+    background-repeat:   no-repeat  !important;
+    background-size:     cover  !important;
+}
+
 .page-break{
     page-break-after: always;
 }
@@ -85,6 +95,10 @@
 a {
     color: #0087C3;
     text-decoration: none;
+}
+
+.table-no-split {
+    page-break-inside: avoid !important;
 }
 
 .color-table{
