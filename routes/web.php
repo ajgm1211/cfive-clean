@@ -755,6 +755,11 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
     route::resource('TestApp','TestController');
 });
 
+// IMPORTATION GLOBALCHARGE FCL
+Route::middleware(['auth','role:administrator|data_entry'])->prefix('ImportationGlobalChargerLcl')->group(function () {
+    Route::resource('ImportationGlobalChargerLcl','ImportationGlobalChargerLclController');
+    Route::PUT('UploadFileGlobalchargesLcl','ImportationGlobalChargerLclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Lcl');
+});
 
 Auth::routes();
 
