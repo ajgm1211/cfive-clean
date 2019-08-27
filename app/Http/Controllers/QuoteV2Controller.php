@@ -234,13 +234,75 @@ class QuoteV2Controller extends Controller
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
         $harbors = Harbor::get()->pluck('display_name','id');
         $countries = Country::pluck('name','id');
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        if(count($company_user->companyUser)>0) {
+            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+        }else{
+            $currency_name = '';
+        }
+        $currency_cfg = Currency::find($company_user->currency_id);
         $sale_terms = SaleTermV2::where('quote_id',$quote->id)->get();
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+
+        //if($sale_terms_origin->count()>0){
+        foreach($sale_terms_origin as $value){
+            foreach($value->charge as $item){
+                if($item->currency_id!=''){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                    $item->sum20 += $item->c20/$currency_rate;
+                    $item->sum40 += $item->c40/$currency_rate;
+                    $item->sum40hc += $item->c40hc/$currency_rate;
+                    $item->sum40nor += $item->c40nor/$currency_rate;
+                    $item->sum45 += $item->c45/$currency_rate;
+                }
+            }
+        }
+        //}
+
+
+        //if($sale_terms_destination->count()>0){
+        foreach($sale_terms_destination as $value){
+            foreach($value->charge as $item){
+                if($item->currency_id!=''){
+                    if($quote->pdf_option->grouped_destination_charges==1){
+                        $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                    $item->sum20 += $item->c20/$currency_rate;
+                    $item->sum40 += $item->c40/$currency_rate;
+                    $item->sum40hc += $item->c40hc/$currency_rate;
+                    $item->sum40nor += $item->c40nor/$currency_rate;
+                    $item->sum45 += $item->c45/$currency_rate;
+                }
+            }
+        }
+        //}
+
+        $origin_sales = $sale_terms_origin->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $destination_sales = $sale_terms_destination->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
         $port_origin_ids = $rates->implode('origin_port_id', ', ');
         $port_origin_ids = explode(",",$port_origin_ids);
         $port_destination_ids = $rates->implode('destination_port_id', ', ');
         $port_destination_ids = explode(",",$port_destination_ids);
-        $rate_origin_ports = Harbor::whereIn('id',$port_origin_ids)->pluck('display_name','id');
-        $rate_destination_ports = Harbor::whereIn('id',$port_destination_ids)->pluck('display_name','id');
+        $rate_origin_ports = Harbor::whereIn('id',$port_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
+        $rate_destination_ports = Harbor::whereIn('id',$port_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
 
         $prices = Price::pluck('name','id');
         $carrierMan = Carrier::pluck('name','id');
@@ -251,13 +313,6 @@ class QuoteV2Controller extends Controller
         $users = User::where('company_user_id',$company_user_id)->pluck('name','id');
         $prices = Price::where('company_user_id',$company_user_id)->pluck('name','id');
         $currencies = Currency::pluck('alphacode','id');
-        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-        if(count($company_user->companyUser)>0) {
-            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-        }else{
-            $currency_name = '';
-        }
-        $currency_cfg = Currency::find($company_user->currency_id);
         if($quote->equipment!=''){
             $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
@@ -1574,14 +1629,14 @@ class QuoteV2Controller extends Controller
 
         $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_sales)->where('quote_id',$quote->id)
             ->Charge(1,'Origin')->with('charge')->get();
-        
+
         $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->Charge(2,'Destination')->with('charge')->get();
-        
+
         $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
             $query->where('type_id', 3);
         })->with('charge')->where('quote_id',$quote->id)->get();
-        
+
         $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -1593,6 +1648,47 @@ class QuoteV2Controller extends Controller
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $currency_cfg);
+        $origin_sales = $origin_sales->toArray();
+        $destination_sales = $destination_sales->toArray();
+        $origin_sales = array_column($origin_sales, 'port_id');
+        $destination_sales = array_column($destination_sales, 'port_id');
+
+        $rates = $rates->map(function ($item, $key) use($origin_sales, $destination_sales){
+            if(in_array($item->origin_port_id,$origin_sales)){
+                $item->charge->map(function ($value, $key){
+                    if($value->type_id==1){
+                        $value->total_20=0;
+                        $value->total_40=0;
+                        $value->total_40hc=0;
+                        $value->total_40nor=0;
+                        $value->total_45=0;
+                        $value->total_markup20=0;
+                        $value->total_markup40=0;
+                        $value->total_markup40hc=0;
+                        $value->total_markup40nor=0;
+                        $value->total_markup45=0;
+                    }
+                });
+            }
+            if(in_array($item->destination_port_id,$destination_sales)){
+                $item->charge->map(function ($value, $key){
+                    if($value->type_id==2){
+                        $value->total_20=0;
+                        $value->total_40=0;
+                        $value->total_40hc=0;
+                        $value->total_40nor=0;
+                        $value->total_45=0;
+                        $value->total_markup20=0;
+                        $value->total_markup40=0;
+                        $value->total_markup40hc=0;
+                        $value->total_markup40nor=0;
+                        $value->total_markup45=0;                        
+                    }
+                });
+            }
+
+            return $item;
+        });
 
         /** Origin Charges **/
 
@@ -1610,7 +1706,7 @@ class QuoteV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -1691,13 +1787,13 @@ class QuoteV2Controller extends Controller
         $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
             $query->where('type_id', 3);
         })->where('quote_id',$quote->id)->get();
-        
+
         $origin_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->ChargeLclAir(1,'Origin')->get();
-        
+
         $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->ChargeLclAir(2,'Destination')->get();
-        
+
         $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
