@@ -494,6 +494,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
     Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
     Route::post('sale/charges/update', 'SaleTermV2Controller@updateSaleCharges')->name('quotes-v2.saleterm.update.charges');
+    Route::get('sale/edit/{sale_id}', 'SaleTermV2Controller@editSaleTerm')->name('quotes-v2.saleterm.edit');
+    Route::post('sale/update', 'SaleTermV2Controller@updateSaleTerm')->name('quotes-v2.saleterm.update');
     //LCL 
     Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
 

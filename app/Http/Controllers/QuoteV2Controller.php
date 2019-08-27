@@ -1573,24 +1573,15 @@ class QuoteV2Controller extends Controller
         });
 
         $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_sales)->where('quote_id',$quote->id)
-            ->where(function ($query) {
-                $query->whereHas('charge', function ($query) {
-                    $query->where('type_id', 1);
-                })->orWhereHas('inland', function($query) {
-                    $query->where('type', 'Origin');
-                });
-            })->with('charge')->get();
+            ->Charge(1,'Origin')->with('charge')->get();
+        
         $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
-            ->where(function ($query) {
-                $query->whereHas('charge', function ($query) {
-                    $query->where('type_id', 2);
-                })->orWhereHas('inland', function($query) {
-                    $query->where('type', 'Destination');
-                });
-            })->with('charge')->get();
+            ->Charge(2,'Destination')->with('charge')->get();
+        
         $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
             $query->where('type_id', 3);
         })->with('charge')->where('quote_id',$quote->id)->get();
+        
         $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -1702,22 +1693,10 @@ class QuoteV2Controller extends Controller
         })->where('quote_id',$quote->id)->get();
         
         $origin_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
-            ->where(function ($query) {
-                $query->whereHas('charge_lcl_air', function ($query) {
-                    $query->where('type_id', 1);
-                })->orWhereHas('automaticInlandLclAir', function($query) {
-                    $query->where('type', 'Origin');
-                });
-            })->get();
+            ->ChargeLclAir(1,'Origin')->get();
         
         $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
-            ->where(function ($query) {
-                $query->whereHas('charge_lcl_air', function ($query) {
-                    $query->where('type_id', 2);
-                })->orWhereHas('automaticInlandLclAir', function($query) {
-                    $query->where('type', 'Destination');
-                });
-            })->get();
+            ->ChargeLclAir(2,'Destination')->get();
         
         $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
@@ -9270,7 +9249,6 @@ class QuoteV2Controller extends Controller
 
         return $charges_grouped;
     }
-
 
     public function storeSearchV2($origPort,$destPort,$pickUpDate,$equipment,$delivery,$direction,$company,$type){
 
