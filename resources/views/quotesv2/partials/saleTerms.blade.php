@@ -21,7 +21,7 @@ $x=0;
                                     <i class="la la-edit"></i>
                                 </button>
 
-                                <button class="delete-rate m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-rate-id="{{$item->id}}">
+                                <button class="delete-sale-term m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Delete" data-saleterm-id="{{$item->id}}">
                                     <i class="la la-trash"></i>
                                 </button>
                             </li>
