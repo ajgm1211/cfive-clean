@@ -2829,10 +2829,10 @@ class QuoteV2Controller extends Controller
     })->get();*/
 
     $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
-  
+
     $language_id = $company->companyUser->pdf_language;
-    
-    
+
+
 
     $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
       $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->where('language_id',$language_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
@@ -5012,11 +5012,11 @@ class QuoteV2Controller extends Controller
 
       // Ordenar las colecciones
       if(!empty($collectionFreight))
-        $collectionFreight = $this->OrdenarCollection($collectionFreight);
-      if(!empty($collectionDestiny))
-        $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
-      if(!empty($collectionOrigin))
-        $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
+        // $collectionFreight = $this->OrdenarCollection($collectionFreight);
+        if(!empty($collectionDestiny))
+          //$collectionDestiny = $this->OrdenarCollection($collectionDestiny);
+          if(!empty($collectionOrigin))
+            $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
 
 
 
@@ -5300,12 +5300,18 @@ class QuoteV2Controller extends Controller
 
 
 
+
     foreach($collection as $item){
+      $total = count($item['99']);
+      foreach($item['99'] as $test){  
+        $fin[] = $test['currency_id'];
+      }
+      $resultado = array_unique($fin); 
       foreach($item as $items){
         $totalPadres = count($item['99']);
-        $totalhijos = count($items);
-
-        if($totalPadres >= 2 ){
+        // $totalhijos = count($items);
+        
+        if($totalPadres >= 2 && count($resultado) > 1  ){
           foreach($items as $itemsDetail){
 
             $monto += $itemsDetail['monto']; 
@@ -5322,7 +5328,7 @@ class QuoteV2Controller extends Controller
           $montoMarkup = 0;
           $totalMarkup = 0;
 
-        }else if($totalhijos > 1 ){
+        }/*else if($totalhijos > 1 ){
           foreach($items as $itemsDetail){
 
             $monto += $itemsDetail['monto']; 
@@ -5339,21 +5345,28 @@ class QuoteV2Controller extends Controller
           $montoMarkup = 0;
           $totalMarkup = 0;
 
-        }
+        }*/
         else{
+          $monto = 0;
+          $montoMarkup = 0;
+          $markup = 0;
+
           foreach($items as $itemsDetail){//aca
-            $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
-            $itemsDetail['montoMarkup'] = number_format($itemsDetail['montoMarkupO'], 2, '.', '');
-            $itemsDetail['markup'] = number_format($itemsDetail['markupConvert'], 2, '.', '');
-            $test[] =  $itemsDetail['currency_id'] ;
-            $collect->push($itemsDetail); 
-            $monto = 0;
-            $montoMarkup = 0;
-            $totalMarkup = 0;
-          }
+
+            $monto += $itemsDetail['montoOrig']; 
+            $montoMarkup += $itemsDetail['montoMarkupO'];
+            $markup += $itemsDetail['markupConvert'];
+          }  
+          $itemsDetail['monto'] = number_format($monto, 2, '.', ''); 
+          $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', '');
+          $itemsDetail['markup'] = number_format($markup, 2, '.', '');
+
+          $collect->push($itemsDetail); 
+
         }
       }
     }
+
 
 
     $collect = $collect->groupBy([
