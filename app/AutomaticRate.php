@@ -89,5 +89,21 @@ class AutomaticRate extends Model
         return $this->hasMany('App\ChargeLclAir','automatic_rate_id');
     }
 
-
+    public function scopeCharge($query, $type_id, $type)
+    {
+        return $query->whereHas('charge', function ($query) use($type_id) {
+            $query->where('type_id', $type_id);
+        })->orWhereHas('inland', function($query) use($type)  {
+            $query->where('type', $type);
+        });
+    }
+    
+    public function scopeChargeLclAir($query, $type_id, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use($type_id) {
+            $query->where('type_id', $type_id);
+        })->orWhereHas('automaticInlandLclAir', function($query) use($type) {
+            $query->where('type', $type);
+        });
+    }
 }

@@ -735,6 +735,13 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                $sum_sale20 = 0;
+                                $sum_sale40 = 0;
+                                $sum_sale40hc = 0;
+                                $sum_sale40nor = 0;
+                                $sum_sale45 = 0;
+                                @endphp
                                 @if($sale_terms_origin->count()>0)
                                 @foreach($sale_terms_origin as $value)
                                 @foreach($value->charge as $item)
@@ -1020,6 +1027,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $sum_sale20 = 0;
+                                $sum_sale40 = 0;
+                                $sum_sale40hc = 0;
+                                $sum_sale40nor = 0;
+                                $sum_sale45 = 0;
+                            @endphp
                             @if($sale_terms_destination->count()>0)
                                 @foreach($sale_terms_destination as $value)
                                     @foreach($value->charge as $item)
