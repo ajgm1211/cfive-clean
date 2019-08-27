@@ -469,6 +469,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('/air/pdf/{quote_id}', 'QuoteV2Controller@pdfAir')->name('quotes-v2.pdf.air');
     Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
     Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
+    Route::get('delete/saleterm/{id}', 'QuoteV2Controller@deleteSaleTerm')->name('quotes-v2.delete.saleterm');
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
     Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
     Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');

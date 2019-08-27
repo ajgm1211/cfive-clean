@@ -63,8 +63,8 @@ class AutomaticRate extends Model
     {
         return $this->hasOne('App\Harbor','id','destination_port_id');
     }
-  
-      public function origin_airport()
+
+    public function origin_airport()
     {
         return $this->hasOne('App\Airport','id','origin_airport_id');
     }
@@ -87,5 +87,7 @@ class AutomaticRate extends Model
     public function charge_lcl_air()
     {
         return $this->hasMany('App\ChargeLclAir','automatic_rate_id');
-    }    
+    }
+
+
 }
