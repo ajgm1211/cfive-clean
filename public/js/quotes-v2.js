@@ -2151,6 +2151,37 @@ $(document).on('click', '.delete-rate', function () {
     });
 });
 
+//Borrar sale terms
+$(document).on('click', '.delete-sale-term', function () {
+    var id=$(this).attr('data-saleterm-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function (result) {
+        if (result.value) {
+            $.ajax({
+                type: 'GET',
+                url: '/v2/quotes/delete/saleterm/'+id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Updated!',
+                            'The rete has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('.row').find('.tab-content').remove();
+                        //setTimeout(location.reload.bind(location), 3000);
+                    }
+                }
+            });
+        }
+    });
+});
+
 //Borrar cargo FCL
 $(document).on('click', '.delete-charge', function () {
     var id=$(this).closest('tr').find('.charge_id').val();
