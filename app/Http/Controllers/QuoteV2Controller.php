@@ -1598,7 +1598,7 @@ class QuoteV2Controller extends Controller
         if($quote->equipment!=''){
             $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
-        
+
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $currency_cfg);
@@ -1639,10 +1639,69 @@ class QuoteV2Controller extends Controller
         $equipmentHides = '';
         $quote = QuoteV2::findOrFail($id);
         $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge_lcl_air')->select('port_id');
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge_lcl_air')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge_lcl_air')->get();
+
+        //if($sale_terms_origin->count()>0){
+        foreach($sale_terms_origin as $value){
+            foreach($value->charge as $item){
+                if($item->currency_id!=''){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                    $item->sum20 += $item->c20/$currency_rate;
+                    $item->sum40 += $item->c40/$currency_rate;
+                    $item->sum40hc += $item->c40hc/$currency_rate;
+                    $item->sum40nor += $item->c40nor/$currency_rate;
+                    $item->sum45 += $item->c45/$currency_rate;
+                }
+            }
+        }
+        //}
+
+
+        //if($sale_terms_destination->count()>0){
+        foreach($sale_terms_destination as $value){
+            foreach($value->charge as $item){
+                if($item->currency_id!=''){
+                    if($quote->pdf_option->grouped_destination_charges==1){
+                        $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                    $item->sum20 += $item->c20/$currency_rate;
+                    $item->sum40 += $item->c40/$currency_rate;
+                    $item->sum40hc += $item->c40hc/$currency_rate;
+                    $item->sum40nor += $item->c40nor/$currency_rate;
+                    $item->sum45 += $item->c45/$currency_rate;
+                }
+            }
+        }
+        //}
+
+        $origin_sales = $sale_terms_origin->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $destination_sales = $sale_terms_destination->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+
         $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
             $query->where('type_id', 3);
         })->where('quote_id',$quote->id)->get();
-        $origin_charges = AutomaticRate::where('quote_id',$quote->id)
+        
+        $origin_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->where(function ($query) {
                 $query->whereHas('charge_lcl_air', function ($query) {
                     $query->where('type_id', 1);
@@ -1650,7 +1709,8 @@ class QuoteV2Controller extends Controller
                     $query->where('type', 'Origin');
                 });
             })->get();
-        $destination_charges = AutomaticRate::where('quote_id',$quote->id)
+        
+        $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
             ->where(function ($query) {
                 $query->whereHas('charge_lcl_air', function ($query) {
                     $query->where('type_id', 2);
@@ -1658,6 +1718,7 @@ class QuoteV2Controller extends Controller
                     $query->where('type', 'Destination');
                 });
             })->get();
+        
         $contact_email = Contact::find($quote->contact_id);
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
@@ -7732,13 +7793,13 @@ class QuoteV2Controller extends Controller
             $currency = Currency::find($item->currency_id);
             $item->currency_usd = $currency->rates;
             $item->currency_eur = $currency->rates_eur;
-            
+
             $sum_inland20 = 0;
             $sum_inland40 = 0;
             $sum_inland40hc = 0;
             $sum_inland40nor = 0;
             $sum_inland45 = 0;
-            
+
             $total_inland_markup20 = 0;
             $total_inland_markup40 = 0;
             $total_inland_markup40hc = 0;
@@ -7913,9 +7974,9 @@ class QuoteV2Controller extends Controller
 
         return $rates;
     }
-    
+
     public function processGlobalRatesWithSales($rates, $quote, $currency_cfg, $origin_ports, $destination_ports){
-        
+
         foreach ($rates as $item) {
             $sum_rate_20=0;
             $sum_rate_40=0;
@@ -7936,13 +7997,13 @@ class QuoteV2Controller extends Controller
             $currency = Currency::find($item->currency_id);
             $item->currency_usd = $currency->rates;
             $item->currency_eur = $currency->rates_eur;
-            
+
             $sum_inland20 = 0;
             $sum_inland40 = 0;
             $sum_inland40hc = 0;
             $sum_inland40nor = 0;
             $sum_inland45 = 0;
-            
+
             $total_inland_markup20 = 0;
             $total_inland_markup40 = 0;
             $total_inland_markup40hc = 0;

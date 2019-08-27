@@ -221,13 +221,6 @@
                                     }
                                 }
                                 if(!$rate->inland->isEmpty()){
-                                    foreach($rate->inland as $item){
-                                        if($rate->inland->where('port_id', $item->port_id)->count()==1){
-                                            $sum_i20=$item->total_20+$item->total_m20;
-                                            $sum_i40=$item->total_40+$item->total_m40;
-                                            $sum_i40hc=$item->total_40hc+$item->total_m40hc;
-                                            $sum_i40nor=$item->total_40nor+$item->total_m40nor;
-                                            $sum_i45=$item->total_45+$item->total_m45;
                                     foreach($rate->inland as $inland){
                                         if($rate->inland->where('port_id', $inland->port_id)->count()==1){
                                             $sum_i20=$inland->total_20+$inland->total_m20;
@@ -808,6 +801,7 @@
                             </tbody>
                         </table>
                     @endforeach
+                    <br>
                 @endif
                 
                 <!-- Origins detailed -->
@@ -994,6 +988,7 @@
                             <br>
                         @endforeach
                     @endforeach
+                    <br>
                 @endif        
                 
                 <!-- DESTINATIONS -->
@@ -1001,7 +996,6 @@
                 <!-- ALL in destination table -->
                 @if($quote->pdf_option->grouped_destination_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @foreach($destination_charges_grouped as $origin=>$detail)
-                    <br>
                     <div>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$origin}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$origin}}</p>
