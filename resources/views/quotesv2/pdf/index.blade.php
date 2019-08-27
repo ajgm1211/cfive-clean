@@ -132,6 +132,7 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         @if($sale_terms_origin->count()>0)
                         @foreach($sale_terms_origin as $sale_origin)
                             @php
@@ -208,6 +209,7 @@
                                             $sum_total45+=$total_45;
                                         }
                                     }else{
+                                        
                                         $total_20=$value->total_20+$value->total_markup20;
                                         $sum_total20+=$total_20;
                                         $total_40=$value->total_40+$value->total_markup40;
@@ -218,6 +220,7 @@
                                         $sum_total40nor+=$total_40nor;
                                         $total_45=$value->total_45+$value->total_markup45;
                                         $sum_total45+=$total_45;
+                                        
                                     }
                                 }
                                 if(!$rate->inland->isEmpty()){
@@ -481,7 +484,7 @@
                                                                 <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                                 <td>{{$r->via!='' ? $r->via:'-'}}</td>
                                                             @endif
-                                                            <td>{{$v->currency->alphacode}}</td>
+                                                            <td>{{$currency_cfg->alphacode}}</td>
                                                         </tr>
                                                     @else
                                                         @if($v->surcharge_id!='')
@@ -506,7 +509,7 @@
                                                                     <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                                     <td>{{$r->via!='' ? $r->via:'-'}}</td>
                                                                 @endif
-                                                                <td>{{$v->currency->alphacode}}</td>
+                                                                <td >{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @endif
                                                     @endif
@@ -615,7 +618,7 @@
                                             @if($quote->pdf_option->grouped_freight_charges==1)
                                                 <td >{{$quote->pdf_option->freight_charges_currency}}</td>
                                             @else
-                                            <td >{{$currency_cfg->alphacode}}</td>
+                                                <td >{{$currency_cfg->alphacode}}</td>
                                             @endif
                                         </tr>
                                         @endforeach
