@@ -43,7 +43,7 @@ class SaleTermV2Controller extends Controller
         $sale_charge->save();
 
         $notification = array(
-            'toastr' => 'Registro guardado con éxito',
+            'toastr' => 'Record saved successfully!',
             'alert-type' => 'success'
         );
 
