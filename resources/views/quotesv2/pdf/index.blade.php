@@ -633,7 +633,7 @@
                 <!-- ORIGINS -->
                     
                 <!-- SALE TERMS ORIGIN -->
-                    
+                @if($quote->pdf_option->grouped_origin_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                 @if($sale_terms_origin->count()>0)
                     @foreach($sale_terms_origin as $value)
                     <div>
@@ -709,7 +709,8 @@
                         </tbody>
                     </table>
                     @endforeach
-                @endif                
+                @endif               
+                @endif              
 
                 <!-- ALL in origin table -->
                 @if($quote->pdf_option->grouped_origin_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
@@ -1106,7 +1107,7 @@
                     @endif
                     
                 <!-- SALE TERMS DESTINATION-->
-                    
+                @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                 @if($sale_terms_destination->count()>0)
                     @foreach($sale_terms_destination as $value)
                     <div>
@@ -1188,6 +1189,7 @@
                     @endforeach
                     <br>
                 @endif 
+                @endif
 
                     <!-- Destinations detailed -->
                     @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))

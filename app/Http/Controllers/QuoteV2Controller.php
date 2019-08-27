@@ -1730,7 +1730,6 @@ class QuoteV2Controller extends Controller
         $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge_lcl_air')->get();
         $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge_lcl_air')->get();
 
-        //if($sale_terms_origin->count()>0){
         foreach($sale_terms_origin as $value){
             foreach($value->charge as $item){
                 if($item->currency_id!=''){
@@ -1739,19 +1738,18 @@ class QuoteV2Controller extends Controller
                     }else{
                         $typeCurrency =  $currency_cfg->alphacode;
                     }
-                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
-                    $item->sum20 += $item->c20/$currency_rate;
-                    $item->sum40 += $item->c40/$currency_rate;
-                    $item->sum40hc += $item->c40hc/$currency_rate;
-                    $item->sum40nor += $item->c40nor/$currency_rate;
-                    $item->sum45 += $item->c45/$currency_rate;
+
+                    $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+                    if($value->units>0){
+                        $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                    }else{
+                        $value->rate=0;
+                    }
+                    $value->total_sale_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 }
             }
         }
-        //}
 
-
-        //if($sale_terms_destination->count()>0){
         foreach($sale_terms_destination as $value){
             foreach($value->charge as $item){
                 if($item->currency_id!=''){
@@ -1761,15 +1759,15 @@ class QuoteV2Controller extends Controller
                         $typeCurrency =  $currency_cfg->alphacode;
                     }
                     $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
-                    $item->sum20 += $item->c20/$currency_rate;
-                    $item->sum40 += $item->c40/$currency_rate;
-                    $item->sum40hc += $item->c40hc/$currency_rate;
-                    $item->sum40nor += $item->c40nor/$currency_rate;
-                    $item->sum45 += $item->c45/$currency_rate;
+                    if($value->units>0){
+                        $value->rate=number_format((($value->units*$value->price_per_unit)+$value->markup)/$value->units, 2, '.', '');
+                    }else{
+                        $value->rate=0;
+                    }
+                    $value->total_sale_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
                 }
             }
         }
-        //}
 
         $origin_sales = $sale_terms_origin->map(function ($origin) {
             return collect($origin->toArray())
@@ -1782,7 +1780,6 @@ class QuoteV2Controller extends Controller
                 ->only(['port_id'])
                 ->all();
         });
-
 
         $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
             $query->where('type_id', 3);
@@ -2105,7 +2102,7 @@ class QuoteV2Controller extends Controller
             }
         }
 
-        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads]);
+        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
