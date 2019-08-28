@@ -47,9 +47,10 @@ class FileHarborsPortsController extends Controller
 
     public function store(Request $request)
     {  
+        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
         foreach($request->variation as $variation){
-            $arreglo[] =  trim(strtolower($variation));
+            $arreglo[] =  str_replace($caracteres,'',trim(strtolower($variation)));
         }
         $type['type'] = $arreglo;
         $json = json_encode($type);
@@ -90,8 +91,10 @@ class FileHarborsPortsController extends Controller
     public function update(Request $request, $id)
     {
 
+        $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+        
         foreach($request->variation as $variation){
-            $arreglo[] =  trim(strtolower($variation));
+            $arreglo[] =  str_replace($caracteres,'',trim(strtolower($variation)));
         }
 
         $type['type'] = $arreglo;
