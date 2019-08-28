@@ -596,27 +596,31 @@ class NewContractRequestsController extends Controller
 
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
-                $excel->sheet('Reuqest', function($sheet) use($data) {
-                    $sheet->cells('A1:J1', function($cells) {
+                $excel->sheet('REQUEST_FCL', function($sheet) use($data) {
+                    $sheet->cells('A1:M1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
                     });
 
                     $sheet->setWidth(array(
-                        'A'     =>  30,
-                        'B'     =>  25,
-                        'C'     =>  10,
-                        'D'     =>  20,
-                        'E'     =>  30,
-                        'F'     =>  15,
-                        'G'     =>  20,
+                        'A'     =>  10,
+                        'B'     =>  30,
+                        'C'     =>  25,
+                        'D'     =>  10,
+                        'E'     =>  20,
+                        'F'     =>  25,
+                        'G'     =>  15,
                         'H'     =>  20,
                         'I'     =>  20,
-                        'J'     =>  15
+                        'J'     =>  25,
+                        'K'     =>  25,
+                        'L'     =>  15,
+                        'M'     =>  15
                     ));
 
                     $sheet->row(1, array(
+                        "Id",
                         "Company",
                         "Reference",
                         "Direction",
@@ -624,8 +628,10 @@ class NewContractRequestsController extends Controller
                         "Validation",
                         "Date",
                         "User",
-                        "Time Elapsed",
                         "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed",
                         "Status"
                     ));
                     $i= 2;
@@ -635,6 +641,7 @@ class NewContractRequestsController extends Controller
                     foreach($data as $nrequests){
                         foreach($nrequests as $nrequest){                   
                             $sheet->row($i, array(
+                                "Id"                => $nrequest['id'],
                                 "Company"           => $nrequest['company'],
                                 "Reference"         => $nrequest['reference'],
                                 "Direction"         => $nrequest['direction'],
@@ -643,18 +650,25 @@ class NewContractRequestsController extends Controller
                                 "Date"              => $nrequest['date'],
                                 "User"              => $nrequest['user'],
                                 "Username load"     => $nrequest['username_load'],
+                                "Time Start"        => $nrequest['time_start'],
+                                "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:J'.$i, 'thin');
+                            $sheet->setBorder('A1:M'.$i, 'thin');
 
-                            $sheet->cells('I'.$i, function($cells) {
+                            $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-
+                            
+                            $sheet->cells('K'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
                             $sheet->cells('J'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
+                            
                             $i++;
                         }
                     }
@@ -681,27 +695,7 @@ class NewContractRequestsController extends Controller
 
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        //dd(Job::find(11));
-        //$data = PrvValidation::ContractWithJob(4);
-        //$data = PrvValidation::AcountWithJob(1);
-        $data       = NewContractRequest::where('contract_id',6)->first();
-        $request_id = $data->id;
-        $jobs       = ImportationJob::where('payload','LIKE','%id%')->get();
-        foreach($jobs as $job){
-            $poscion    = null;
-            $json       = json_decode($job['payload']);
-            $poscion    = strripos($json->{'data'}->{'command'},'id');
-            $data       = substr($json->{'data'}->{'command'},$poscion,100);
-            $data       = explode(";",$data);
-            $poscion    = strripos($data[1],':"');
-            $data       = substr($data[1],$poscion,100);
-            $data       = str_replace([':','"'],'',$data);
-            if($data == $request_id){
-                $bool   = true;
-                $job_id = $job->id;
-            }
-        }
-        dd($job);
-
+        
+        dd(PrvRequest::RequestFclBetween('2019-08-26','2019-08-26'));
     }
 }
