@@ -6,7 +6,7 @@ use App\Company;
 use App\CompanyPrice;
 use App\Contact;
 use App\Jobs\ProcessLogo;
-use App\Quote;
+use App\QuoteV2;
 use App\Price;
 use App\User;
 use App\GroupUserCompany;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use EventIntercom;
 use App\ApiIntegrationSetting;
+use App\ViewQuoteV2;
 
 
 class CompanyController extends Controller
@@ -86,7 +87,12 @@ class CompanyController extends Controller
         $id = obtenerRouteKey($id);
         $company = Company::find($id);
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
-        $quotes = Quote::where('company_id',$id)->get();
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        }else{
+            $quotes = ViewQuoteV2::where('company_user_id',$company_user_id)->orderBy('created_at', 'desc')->get();
+        }
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
         $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
 
@@ -430,7 +436,7 @@ class CompanyController extends Controller
     public function apiCompanies()
     {
         $companies = Company::where('api_id','!=','')->get();
-        
+
         return view('companies.api.index',compact('companies'));
     }
 }
