@@ -47,27 +47,31 @@ class ExportRequestsJob implements ShouldQueue
             $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
-                $excel->sheet('Reuqest', function($sheet) use($data) {
-                    $sheet->cells('A1:J1', function($cells) {
+                $excel->sheet('REQUEST_FCL', function($sheet) use($data) {
+                    $sheet->cells('A1:M1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
                     });
 
                     $sheet->setWidth(array(
-                        'A'     =>  30,
-                        'B'     =>  25,
-                        'C'     =>  10,
-                        'D'     =>  20,
-                        'E'     =>  30,
-                        'F'     =>  15,
-                        'G'     =>  20,
+                        'A'     =>  10,
+                        'B'     =>  30,
+                        'C'     =>  25,
+                        'D'     =>  10,
+                        'E'     =>  20,
+                        'F'     =>  25,
+                        'G'     =>  15,
                         'H'     =>  20,
                         'I'     =>  20,
-                        'J'     =>  15
+                        'J'     =>  25,
+                        'K'     =>  25,
+                        'L'     =>  15,
+                        'M'     =>  15
                     ));
 
                     $sheet->row(1, array(
+                        "Id",
                         "Company",
                         "Reference",
                         "Direction",
@@ -75,8 +79,10 @@ class ExportRequestsJob implements ShouldQueue
                         "Validation",
                         "Date",
                         "User",
-                        "Time Elapsed",
                         "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed",
                         "Status"
                     ));
                     $i= 2;
@@ -86,6 +92,7 @@ class ExportRequestsJob implements ShouldQueue
                     foreach($data as $nrequests){
                         foreach($nrequests as $nrequest){                   
                             $sheet->row($i, array(
+                                "Id"                => $nrequest['id'],
                                 "Company"           => $nrequest['company'],
                                 "Reference"         => $nrequest['reference'],
                                 "Direction"         => $nrequest['direction'],
@@ -94,18 +101,25 @@ class ExportRequestsJob implements ShouldQueue
                                 "Date"              => $nrequest['date'],
                                 "User"              => $nrequest['user'],
                                 "Username load"     => $nrequest['username_load'],
+                                "Time Start"        => $nrequest['time_start'],
+                                "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:J'.$i, 'thin');
+                            $sheet->setBorder('A1:M'.$i, 'thin');
 
-                            $sheet->cells('I'.$i, function($cells) {
+                            $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-
+                            
+                            $sheet->cells('K'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
                             $sheet->cells('J'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
+                            
                             $i++;
                         }
                     }
@@ -119,27 +133,31 @@ class ExportRequestsJob implements ShouldQueue
             $data       = PrvRequest::RequestLclBetween($dateStart,$dateEnd);
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
-                $excel->sheet('Reuqest', function($sheet) use($data) {
-                    $sheet->cells('A1:J1', function($cells) {
+                $excel->sheet('REQUEST_LCL', function($sheet) use($data) {
+                    $sheet->cells('A1:M1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
                     });
 
                     $sheet->setWidth(array(
-                        'A'     =>  30,
-                        'B'     =>  25,
-                        'C'     =>  10,
-                        'D'     =>  20,
-                        'E'     =>  30,
-                        'F'     =>  15,
-                        'G'     =>  20,
+                        'A'     =>  10,
+                        'B'     =>  30,
+                        'C'     =>  25,
+                        'D'     =>  10,
+                        'E'     =>  20,
+                        'F'     =>  25,
+                        'G'     =>  25,
                         'H'     =>  20,
                         'I'     =>  20,
-                        'J'     =>  15
+                        'J'     =>  25,
+                        'K'     =>  25,
+                        'L'     =>  15,
+                        'M'     =>  15
                     ));
 
                     $sheet->row(1, array(
+                        "Id",
                         "Company",
                         "Reference",
                         "Direction",
@@ -147,8 +165,10 @@ class ExportRequestsJob implements ShouldQueue
                         "Validation",
                         "Date",
                         "User",
-                        "Time Elapsed",
                         "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed",
                         "Status"
                     ));
                     $i= 2;
@@ -158,6 +178,7 @@ class ExportRequestsJob implements ShouldQueue
                     foreach($data as $nrequests){
                         foreach($nrequests as $nrequest){                   
                             $sheet->row($i, array(
+                                "Id"                => $nrequest['id'],
                                 "Company"           => $nrequest['company'],
                                 "Reference"         => $nrequest['reference'],
                                 "Direction"         => $nrequest['direction'],
@@ -166,18 +187,29 @@ class ExportRequestsJob implements ShouldQueue
                                 "Date"              => $nrequest['date'],
                                 "User"              => $nrequest['user'],
                                 "Username load"     => $nrequest['username_load'],
+                                "Time Start"        => $nrequest['time_start'],
+                                "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:J'.$i, 'thin');
+                            $sheet->setBorder('A1:M'.$i, 'thin');
 
-                            $sheet->cells('I'.$i, function($cells) {
+                            $sheet->cells('F'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
+                            $sheet->cells('G'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+
+                            $sheet->cells('K'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
 
                             $sheet->cells('J'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
+
                             $i++;
                         }
                     }
