@@ -671,6 +671,7 @@
                         @foreach($v as $item)
                             <?php
                                 $total_origin = 0;
+                                $total_sale_terms_origin = 0;
                                 $total_origin_units = 0;
                                 $total_origin_rates = 0;
                                 $total_origin_markups = 0;
@@ -743,7 +744,7 @@
                         <tbody>
                         @foreach($value->charge as $rate)
                             <?php
-                                $total_origin += @$rate->total_origin;
+                                $total_origin += @$rate->total_sale_origin;
                             ?>
                             <tr class="text-center color-table">
                                 <td>{{$rate->charge}}</td>
@@ -751,7 +752,7 @@
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                 <td >{{$rate->units}}</td>
                                 <td >{{$rate->rate}}</td>
-                                <td >{{$rate->units*$rate->rate}}</td>
+                                <td >{{$rate->total}}</td>
                                 <td>{{$rate->currency->alphacode}}</td>
                             </tr>
                         @endforeach
@@ -1018,7 +1019,7 @@
                         <tbody>
                         @foreach($value->charge as $rate)
                             <?php
-                                $total_destination += @$rate->total_destination;
+                                $total_destination += @$rate->total_sale_destination;
                             ?>
                             <tr class="text-center color-table">
                                 <td>{{$rate->charge}}</td>
@@ -1026,10 +1027,25 @@
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>--</td>
                                 <td >{{$rate->units}}</td>
                                 <td >{{$rate->rate}}</td>
-                                <td >{{$rate->units*$rate->rate}}</td>
+                                <td >{{$rate->total}}</td>
                                 <td>{{$rate->currency->alphacode}}</td>
                             </tr>
                         @endforeach
+                        <tr>
+                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
+                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en destino</b></td>
+                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
+                            <td ><b>{{number_format(@$total_destination, 2, '.', '')}}</b></td>
+                            @if($quote->pdf_option->grouped_destintion_charges==1)
+                                <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
+                            @else
+                                <td><b>{{$currency_cfg->alphacode}}</b></td>
+                            @endif     
+                        </tr>
                     </tbody>
                 </table>
                 @endforeach
