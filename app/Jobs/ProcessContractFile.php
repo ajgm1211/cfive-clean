@@ -69,6 +69,16 @@ class ProcessContractFile implements ShouldQueue
                 $file       = File::get(storage_path('app/public/Request/GC/'.$name));                
                 $s3->put('Request/Global-charges/FCL/'.$filePath, $file, 'public');
 
+            } elseif(strnatcasecmp($this->type,'gclcl') == 0){
+
+                $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
+                $name       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                //$file       = \Storage::disk('GCRequest')->get($file); 
+                $file       = File::get(storage_path('app/public/Request/GC-LCL/'.$name));                
+                $s3->put('Request/Global-charges/LCL/'.$filePath, $file, 'public');
+
             } elseif(strnatcasecmp($this->type,'lcl') == 0){
 
                 $Ncontracts = NewContractRequestLcl::find($this->id);

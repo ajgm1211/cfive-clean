@@ -23,7 +23,7 @@ class CreateNewRequestGlobalChargerLclsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->dateTime('created');
             $table->dateTime('updated')->nullable();
-            $table->string('time_start')->nullable();
+            $table->string('time_star')->nullable();
             $table->string('time_total')->nullable();
             $table->string('username_load')->default('Not assigned');
             $table->boolean('time_star_one')->default(false);
