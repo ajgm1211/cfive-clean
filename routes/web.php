@@ -772,12 +772,11 @@ Route::prefix('RequestsGlobalchargersLcl')->group(function () {
     Route::get('RequestsGlobalchargersLcl/listClient/{id}','NewRequestGlobalChargerLclController@listClient')->name('RequestsGlobalchargersFcl.listClient')
         ->middleware(['auth','role:administrator|company|subuser']);
 */
-    Route::get('StatusRquestGCLCL/{id}','NewRequestGlobalChargerLclController@showStatus')->name('show.status.Request.gc')
+    Route::get('StatusRquestGCLCL/{id}','NewRequestGlobalChargerLclController@showStatus')->name('show.status.Request.gc.lcl')
         ->middleware(['auth','role:administrator|data_entry']);    
-/*
+
     Route::get('RequestsGlobalchargersLcl/create/','NewRequestGlobalChargerLclController@create')->name('RequestsGlobalchargersLcl.create')
         ->middleware(['auth','role:administrator|company|subuser']);
-*/
     Route::get('RequestsGlobalchargersLcl/create2/','NewRequestGlobalChargerLclController@create2')->name('RequestsGlobalchargersLcl.create2')
         ->middleware(['auth','role:administrator']);
 
@@ -796,8 +795,8 @@ Route::prefix('RequestsGlobalchargersLcl')->group(function () {
 
     Route::get('RGlobalCDestroy/{id}','NewRequestGlobalChargerLclController@destroyRequest')->name('destroy.GlobalC.lcl')
         ->middleware(['auth','role:administrator|data_entry']);
-    //Route::get('RequestGCStatus','NewRequestGlobalChargerLclController@UpdateStatusRequest')->name('Request.GlobalC.status')
-      //  ->middleware(['auth','role:administrator|data_entry']);
+    Route::get('RequestGCStatusLcl','NewRequestGlobalChargerLclController@UpdateStatusRequest')->name('Request.GlobalC.status')
+        ->middleware(['auth','role:administrator|data_entry']);
 });
 
 Auth::routes();

@@ -188,7 +188,7 @@
     @parent
 
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script type="application/x-javascript" src="/js/Globalchargers/Request.GlobalC.Status.js"></script>
+    <script type="application/x-javascript" src="/js/Globalchargers/Request.GlobalCLCL.Status.js"></script>
     <script>
 
         $(function() {
@@ -252,17 +252,17 @@
             });
 
         });
-/*
+
         function showModal(id){
 
-            var url = '{{ route("show.status.Request.gc",":id") }}';
+            var url = '{{ route("show.status.Request.gc.lcl",":id") }}';
             url = url.replace(':id',id);
             $('#modal-body').load(url,function(){
                 $('#changeStatus').modal();
             });
 
         }
-
+/*
         $(document).on('click','.eliminarrequest',function(e){
             var id = $(this).attr('data-id-request');
             var info = $(this).attr('data-info');
