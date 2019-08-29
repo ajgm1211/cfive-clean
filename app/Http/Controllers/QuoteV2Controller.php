@@ -5012,11 +5012,11 @@ class QuoteV2Controller extends Controller
 
       // Ordenar las colecciones
       if(!empty($collectionFreight))
-        // $collectionFreight = $this->OrdenarCollection($collectionFreight);
-        if(!empty($collectionDestiny))
-          //$collectionDestiny = $this->OrdenarCollection($collectionDestiny);
-          if(!empty($collectionOrigin))
-            $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
+        $collectionFreight = $this->OrdenarCollection($collectionFreight);
+      if(!empty($collectionDestiny))
+        $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
+      if(!empty($collectionOrigin))
+        $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
 
 
 
@@ -5303,6 +5303,8 @@ class QuoteV2Controller extends Controller
 
     foreach($collection as $item){
       $total = count($item['99']);
+      $fin = array();
+      
       foreach($item['99'] as $test){  
         $fin[] = $test['currency_id'];
       }
@@ -5310,7 +5312,7 @@ class QuoteV2Controller extends Controller
       foreach($item as $items){
         $totalPadres = count($item['99']);
         // $totalhijos = count($items);
-        
+
         if($totalPadres >= 2 && count($resultado) > 1  ){
           foreach($items as $itemsDetail){
 
