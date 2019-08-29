@@ -770,7 +770,11 @@ class QuoteV2Controller extends Controller
         }
 
         $owner=$quote->user->name.' '.$quote->user->lastname;
-        $company_name=$quote->company->business_name;
+        if($quote->company_id!=''){
+            $company_name=$quote->company->business_name;   
+        }else{
+            $company_name = '';
+        }
 
         return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name,'gdp'=>$gdp,'company_name'=>$company_name]);
     }

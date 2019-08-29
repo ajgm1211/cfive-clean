@@ -2583,7 +2583,7 @@ $(document).on('click', '#update', function () {
                     $(".quote_id_span").html(data.quote['quote_id']);
                 }
                 $(".company_id").val(data.quote['company_id']);
-                $(".company_id_span").html(data.quote['company_id']);
+                $(".company_span").html(data.company_name);
                 $(".status").val(data.quote['status']);
                 $(".status_span").html(data.quote['status']+' <i class="fa fa-check"></i>');
                 $(".status_span").addClass('Status_'+data.quote['status']);
@@ -2954,6 +2954,10 @@ $(document).on("change", ".total_22", function() {
 });
 
 $( document ).ready(function() {
+    if($( "select[name='company_id']" ).val()==''){
+        $('select[name="contact_id"]').empty(); 
+    }
+       
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
