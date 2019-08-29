@@ -112,6 +112,21 @@ $(document).ready(function() {
         }
     });
 
+    $('.editable-saleterms').editable({
+        url:'/v2/quotes/sale/charges/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            //setTimeout(location.reload.bind(location), 3000);
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
     $('.editable-rate').editable({
         url:'/v2/quotes/rate/charges/update',
         emptytext:0,
@@ -1553,6 +1568,43 @@ $(document).on('click', '.store_charge_lcl', function () {
     });
 });
 
+$(document).on('click', '.store_sale_charge', function () {
+    var id = $(this).closest("tr").find(".sale_term_id").val();
+    var theElement = $(this);
+    var charge = $(this).closest("tr").find(".charge").val();
+    var detail = $(this).closest("tr").find(".detail").val();
+    var c20 = $(this).closest("tr").find(".c20").val();
+    var c40 = $(this).closest("tr").find(".c40").val();
+    var c40hc = $(this).closest("tr").find(".c40hc").val();
+    var c40nor = $(this).closest("tr").find(".c40nor").val();
+    var c45 = $(this).closest("tr").find(".c45").val();
+    var currency_id = $(this).closest("tr").find(".currency_id").val();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/store/sale/charge',
+        data:{
+            "sale_term_id":id,
+            "charge":charge,
+            "detail":detail,
+            "c20":c20,
+            "c40":c40,
+            "c40hc":c40hc,
+            "c40nor":c40nor,
+            "c45":c45,
+            "currency_id":currency_id,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The payment conditions has been updated.',
+                    'success'
+                )
+            }
+        }
+    });
+});
+
 //Guardar cargos FCL
 $(document).on('click', '.store_charge', function () {
     var id = $(this).closest("tr").find(".automatic_rate_id").val();
@@ -2099,6 +2151,37 @@ $(document).on('click', '.delete-rate', function () {
     });
 });
 
+//Borrar sale terms
+$(document).on('click', '.delete-sale-term', function () {
+    var id=$(this).attr('data-saleterm-id');
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function (result) {
+        if (result.value) {
+            $.ajax({
+                type: 'GET',
+                url: '/v2/quotes/delete/saleterm/'+id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Updated!',
+                            'The rete has been deleted.',
+                            'success'
+                        )
+                        $(theElement).closest('.row').find('.tab-content').remove();
+                        //setTimeout(location.reload.bind(location), 3000);
+                    }
+                }
+            });
+        }
+    });
+});
+
 //Borrar cargo FCL
 $(document).on('click', '.delete-charge', function () {
     var id=$(this).closest('tr').find('.charge_id').val();
@@ -2500,7 +2583,7 @@ $(document).on('click', '#update', function () {
                     $(".quote_id_span").html(data.quote['quote_id']);
                 }
                 $(".company_id").val(data.quote['company_id']);
-                $(".company_id_span").html(data.quote['company_id']);
+                $(".company_span").html(data.company_name);
                 $(".status").val(data.quote['status']);
                 $(".status_span").html(data.quote['status']+' <i class="fa fa-check"></i>');
                 $(".status_span").addClass('Status_'+data.quote['status']);
@@ -2718,6 +2801,21 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
     }
 });
 
+//Mostrar y ocultar puertos en Sale Terms
+$(document).on('change', '#saleterm_type', function () {
+    if($('#saleterm_type').val()=='origin'){
+        $(".origin_port").removeClass('hide');
+        $(".destination_port").addClass('hide');
+        $(".origin_port_select").prop('disabled', false);
+        $(".destination_port_select").prop('disabled', true);
+    }else{
+        $(".origin_port").addClass('hide');
+        $(".destination_port").removeClass('hide'); 
+        $(".origin_port_select").prop('disabled', true);
+        $(".destination_port_select").prop('disabled', false);        
+    }
+});
+
 //Mostrar y ocultar opciones pdf
 $(document).on('change', '#show_hide_select', function () {
     if($('#show_hide_select').val()=='total in'){
@@ -2856,6 +2954,10 @@ $(document).on("change", ".total_22", function() {
 });
 
 $( document ).ready(function() {
+    if($( "select[name='company_id']" ).val()==''){
+        $('select[name="contact_id"]').empty(); 
+    }
+       
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
@@ -4141,6 +4243,19 @@ function precargarLCL(){
     $("input[name=qty_40_hc]").val('');
     $("input[name=qty_45_hc]").val('');
 
+}
+
+function addSaleCharge($value){
+
+    var $template = $('#sale_charges_'+$value),
+        $clone = $template
+    .clone()
+    .removeClass('hide')
+    .removeAttr('id')
+    .insertAfter($template)
+    $clone.find("select").select2({
+        placeholder: "Currency"
+    });
 }
 
 function addFreightCharge($value){
