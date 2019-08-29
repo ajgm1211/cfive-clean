@@ -211,7 +211,7 @@
                                         {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
-                                    <label for="destiny" class=" ">Countries</label>
+                                        <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
@@ -377,7 +377,15 @@
         var pdrs = document.getElementById('file').files[0].name;
         document.getElementById('info').innerHTML = pdrs;
     } 
-    
+
+    function validate(formData, jqForm, options) {
+        var form = jqForm[0];
+        if (!form.file.value) {
+            alert('File not found');
+            return false;
+        }
+    }
+
     function selectvalidate(){
         var id = $('#CompanyUserId').val();
         //alert(id);

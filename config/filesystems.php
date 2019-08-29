@@ -110,6 +110,13 @@ return [
             'url' => 'storage/app/public/Request/GC',
             'visibility' => 'public',
         ],
+        
+        'GCRequestLcl' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Request/GC-LCL'),
+            'url' => 'storage/app/public/Request/GC-LCL',
+            'visibility' => 'public',
+        ],
 
         'GCAccount' => [
             'driver' => 'local',
