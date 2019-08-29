@@ -90,9 +90,9 @@
                         <th title="Client">
                             Client Company
                         </th>
-                        <th title="Contact">
+                        <!--<th title="Contact">
                             Client Contact
-                        </th>
+                        </th>-->
                         <th title="User">
                             User
                         </th>
@@ -203,15 +203,16 @@
             ajax:  "{{ route('quotes-v2.index.datatable') }}",
             "columnDefs": [
                 { "width": "5%", "targets": 0 },
-                { "width": "20%", "targets": 1 },
-                { "width": "10%", "targets": [2,3] },
-                { "width": "12%", "targets": [4,5] },
+                { "width": "25%", "targets": 1 },
+                { "width": "12%", "targets": [2,3] },
+                { "width": "15%", "targets": [4,5] },
+                { "width": "10%", "targets": 6 },
                 { "type": "date", "targets": 2 },
             ],
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'client', name: 'client'},
-                {data: 'contact', name: 'contact'},
+                //{data: 'contact', name: 'contact'},
                 {data: 'user', name: 'user'},
                 {data: 'created', name: 'created'},
                 {data: 'origin', name: 'origin', className: 'details-control'},
