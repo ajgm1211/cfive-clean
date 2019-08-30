@@ -73,17 +73,16 @@
                             <div class="row align-items-center">
                                 <div class="col-xl-12 order-2 order-xl-1 conten_load">
                                     <div class="col-xl-12 order-1 order-xl-2 m--align-right">
-                                        <!--<a href="{{route('ImportationGlobalchargeFcl.index')}}">
+                                        <a href="{{route('ImportationGlobalChargerLcl.index')}}">
                                             <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                                 <span>
                                                     <span>
-                                                        Import Globalchargers&nbsp;
+                                                        Import Globalchargers Lcl &nbsp;
                                                     </span>
                                                     <i class="la la-cloud-upload"></i>
                                                 </span>
                                             </button>
                                         </a>
-                                         -->
                                     </div>
                                     <br>
                                     <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
@@ -262,7 +261,7 @@
             });
 
         }
-/*
+
         $(document).on('click','.eliminarrequest',function(e){
             var id = $(this).attr('data-id-request');
             var info = $(this).attr('data-info');
@@ -278,7 +277,7 @@
             }).then(function(result){
                 if (result.value) {
 
-                    url='{!! route("destroy.GlobalC",":id") !!}';
+                    url='{!! route("destroy.GlobalC.lcl",":id") !!}';
                     url = url.replace(':id', id);
                     // $(this).closest('tr').remove();
                     $.ajax({
@@ -308,7 +307,7 @@
             });
 
         });
-        $(document).on('click','.eliminaracount',function(e){
+        /*    $(document).on('click','.eliminaracount',function(e){
             var id = $(this).attr('data-id-acount');
             var elemento = $(this);
             swal({
