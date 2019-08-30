@@ -12,12 +12,14 @@ use App\Carrier;
 use App\NewContractRequest;
 use App\NewContractRequestLcl;
 use App\NewGlobalchargeRequestFcl;
+use App\NewRequestGlobalChargerLcl;
 use App\Jobs\SelectionAutoImportJob;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\AccountImportationContractFcl as AccountFcl;
 use App\AccountImportationContractLcl as AccountLcl;
 use App\AccountImportationGlobalcharge as AccountGc;
+use App\AccountImportationGlobalChargerLcl as AccountGcLcl;
 
 class ProcessContractFile implements ShouldQueue
 {
@@ -71,7 +73,7 @@ class ProcessContractFile implements ShouldQueue
 
             } elseif(strnatcasecmp($this->type,'gclcl') == 0){
 
-                $Ncontracts = NewGlobalchargeRequestFcl::find($this->id);
+                $Ncontracts = NewRequestGlobalChargerLcl::find($this->id);
                 $name       = $Ncontracts->namefile;
                 $s3         = \Storage::disk('s3_upload');
                 $filePath   = $this->name;
@@ -111,6 +113,15 @@ class ProcessContractFile implements ShouldQueue
                 //$file       = \Storage::disk('GCAccount')->get($file); 
                 $file       = File::get(storage_path('app/public/Account/GC/'.$name));                
                 $s3->put('Account/Global-charges/FCL/'.$filePath, $file, 'public');
+
+            }elseif(strnatcasecmp($this->type,'gclcl') == 0){
+
+                $Ncontracts = AccountGcLcl::find($this->id);
+                $name       = $Ncontracts->namefile;
+                $s3         = \Storage::disk('s3_upload');
+                $filePath   = $this->name;
+                $file       = File::get(storage_path('app/public/Account/GC-LCL/'.$name));                
+                $s3->put('Account/Global-charges/LCL/'.$filePath, $file, 'public');
 
             } elseif(strnatcasecmp($this->type,'lcl') == 0){
 

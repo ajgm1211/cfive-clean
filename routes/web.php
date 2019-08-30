@@ -757,6 +757,8 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
 
 // IMPORTATION GLOBALCHARGE LCL
 Route::middleware(['auth','role:administrator|data_entry'])->prefix('ImportationGlobalChargerLcl')->group(function () {
+    Route::get('RequestProccessGCLCL/{id}','ImportationGlobalChargerLclController@indexRequest')->name('process.request.gc.lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
     Route::resource('ImportationGlobalChargerLcl','ImportationGlobalChargerLclController');
     Route::get('AccountGCLcl/','ImportationGlobalChargerLclController@indexAccount')->name('index.Account.import.gc.lcl');
     Route::PUT('UploadFileGlobalchargesLcl','ImportationGlobalChargerLclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Lcl');
