@@ -223,7 +223,7 @@
             "autoWidth": true,
             'overflow':false,
             "paging":true,
-            "sScrollY": false,
+            "sScrollY": "490px",
             "bPaginate": false,
             "bJQueryUI": true,
             buttons: [
