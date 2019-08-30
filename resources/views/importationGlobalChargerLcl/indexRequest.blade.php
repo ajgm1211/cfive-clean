@@ -3,10 +3,14 @@
 @parent
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 @endsection
-@section('title', 'Importation GlobalCharger LCL')
+
+@section('title', 'Importation GlobalCharge')
 @section('content')
+
 <div class="m-content">
+
     @if(Session::has('message.nivel'))
+
     <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
         <div class="m-alert__icon">
             <i class="la la-warning"></i>
@@ -22,6 +26,7 @@
         </div>
     </div>
     @endif
+
     <!--Begin::Main Portlet-->
     <div class="m-portlet m-portlet--full-height">
         <!--begin: Portlet Head-->
@@ -29,10 +34,11 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation Globalchargers LCL
+                        Importation Globalchargers 
                     </h3>
                 </div>
             </div>
+
         </div>
         {!! Form::open(['route'=>'Upload.File.Globalcharges.Lcl','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
         <div class="m-portlet__body">
@@ -40,19 +46,21 @@
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <div class="row">
                         <div class="col-lg-12">
+
                             <div class="form-group m-form__group row">
+
                                 <div class="col-lg-2">
                                     <label class="col-form-labe"><b>CONTRACT:</b></label>
                                 </div>
                                 <div class="col-lg-3">
                                     <label for="numberid" class=" ">Company User</label>
-                                    {!!  Form::select('CompanyUserId',$companysUser,null,['id'=>'CompanyUserId',
+                                     {!!  Form::select('CompanyUserId',$companysUser,$requestgc['company_user_id'],['id'=>'CompanyUserId',
                                     'required',
                                     'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
                                 </div>
                                 <div class="col-lg-3">
                                     <label for="nameid" class="">Importation Name</label>
-                                    {!!  Form::text('name',null,['id'=>'nameid',
+                                    {!!  Form::text('name',$requestgc['name'],['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
                                     'required',
                                     'class'=>'form-control m-input'])!!}
@@ -64,14 +72,16 @@
                                     'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
+
                             </div>
                             <div class="form-group m-form__group row">
+
                                 <div class="col-lg-2">
                                     <label class="col-form-labe"><b></b></label>
                                 </div>
                                 <div class="col-lg-3">
                                     <label for="request_id" class=" ">Request Gc Id</label>
-                                    {!!  Form::text('request_id',null,['id'=>'request_id',
+                                    {!!  Form::text('request_id',$requestgc['id'],['id'=>'request_id',
                                     'placeholder'=>'Request Gc Id',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
@@ -81,6 +91,7 @@
                                 <div class="col-lg-2">
                                     <label class="col-form-label"><b>TYPE:</b></label>
                                 </div>
+
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -121,6 +132,7 @@
                                 <div class="col-lg-2">
                                     <label class="col-form-label"><b>PLACES:</b></label>
                                 </div>
+
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -158,9 +170,12 @@
                             </div>
                             <hr>
                             <div class="form-group m-form__group row">
+
                                 <div class="col-lg-2">
                                     <label class="col-form-label"><b>DATA:</b></label>
                                 </div>
+
+
                                 <div class="col-3" id="divorigin">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -172,7 +187,7 @@
                                         <span class="m-option__label">
                                             <span class="m-option__head">
                                                 <span class="m-option__title">
-                                                    Origin Port, Country or Regions Not Included
+                                                    Origin Port and Country or Region Not Included
                                                 </span>
                                             </span>
                                         </span>
@@ -190,6 +205,7 @@
                                         {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
                                     </div>
                                 </div>
+
                                 <div class="col-3" id="divdestiny">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -211,7 +227,7 @@
                                         {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
-                                        <label for="destiny" class=" ">Countries</label>
+                                    <label for="destiny" class=" ">Countries</label>
                                         {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
                                     </div>
                                     <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
@@ -242,6 +258,8 @@
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2"></div>
+
+
                                 <div class="col-3" id="divtyped">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -262,6 +280,7 @@
                                         {!! Form::select('typedestiny',$typedestiny,null,['class'=>'m-select2-general form-control','id'=>'typedestiny'])!!}
                                     </div>
                                 </div>
+                            
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -305,11 +324,14 @@
                                         <button type="submit" id="loadbutton" class="btn btn-success col-2 form-control">
                                             Load
                                         </button>
+
                                         <a href="#" id="validatebutton" onclick="validar()" class="btn btn-primary col-2 form-control"> Validate</a>
                                     </center>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -318,19 +340,22 @@
         <!--end: Form Wizard-->
     </div>
     <!--End::Main Portlet-->
+
+
+
 </div>
 
 @endsection
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="{{asset('js/Globalchargers/ImporttationGlobalchargersFcl.js')}}"></script>
+<script src="{{asset('js/Globalchargers/ImporttationGlobalchargersLcl.js')}}"></script>
 
 <script>
     $(document).ready(function(){
         $('#loadbutton').hide();
     });
-
+    
     function fileempty(){
         if( document.getElementById("file").files.length == 0 ){
             swal("Error!", "Choose File", "error");

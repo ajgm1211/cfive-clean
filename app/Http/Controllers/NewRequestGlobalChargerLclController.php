@@ -6,6 +6,7 @@ use App\User;
 use App\Harbor;
 use App\Carrier;
 use Carbon\Carbon;
+use App\CompanyUser;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use App\Notifications\N_general;
@@ -90,17 +91,17 @@ class NewRequestGlobalChargerLclController extends Controller
             })
             ->addColumn('action', function ($Ncontracts) {
                 return '
-                <!--<a href="/ImportationGlobalchargesFcl/RequestProccessGC/'.$Ncontracts->id.'" title="Proccess GC Request">
+                <a href="'.route('process.request.gc.lcl',$Ncontracts->id).'" title="Proccess GC Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
+                <a href="'.route('RequestsGlobalchargersLcl.show',$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: "  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                </a>-->';
+                </a>';
             })
             ->make();
     }
@@ -137,8 +138,8 @@ class NewRequestGlobalChargerLclController extends Controller
             $message = 'has created an new request: '.$Ncontract->id;
             foreach($admins as $userNotifique){
                 \Mail::to($userNotifique->email)->send(new NewRequestGlobalChargeLclToAdminMail($userNotifique->toArray(),
-                                                                                             $user->toArray(),
-                                                                                             $Ncontract->toArray()));
+                                                                                                $user->toArray(),
+                                                                                                $Ncontract->toArray()));
                 $userNotifique->notify(new N_general($user,$message));
             }
 
@@ -156,9 +157,43 @@ class NewRequestGlobalChargerLclController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($id,Request $request)
     {
-        //
+        $Ncontract = NewRequestGlobalChargerLcl::find($id);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($Ncontract->company_user_id);
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
+
+        if(Storage::disk('s3_upload')->exists('Request/Global-charges/LCL/'.$Ncontract->namefile)){
+            return Storage::disk('s3_upload')->download('Request/Global-charges/LCL/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile)){
+            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('GCRequestLcl')->exists($Ncontract->namefile)){
+            return Storage::disk('GCRequestLcl')->download($Ncontract->namefile,$name);
+        } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
+
+        return back();
+
+
+        /* try{
+            return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
+        } catch(\Exception $e){
+            try{
+                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+            } catch(\Exception $e){
+                try{
+                    return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
+                } catch(\Exception $e){
+                    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+                }
+            }
+        }*/
+
     }
 
     public function edit($id)
@@ -172,11 +207,6 @@ class NewRequestGlobalChargerLclController extends Controller
     }
 
     public function destroy($id)
-    {
-        //
-    }
-
-    public function destroyRequest($id)
     {
         //
     }
@@ -198,7 +228,18 @@ class NewRequestGlobalChargerLclController extends Controller
         }
         return view('RequestGlobalChargeLcl.Body-Modals.edit',compact('requests','status_arr'));
     }
-    
+
+    public function destroyRequest($id){
+        try{
+            $Ncontract = NewRequestGlobalChargerLcl::find($id);
+            Storage::disk('GCRequestLcl')->delete($Ncontract->namefile);
+            $Ncontract->delete();
+            return 1;
+        } catch(\Exception $e){
+            return 2;
+        }
+    }
+
     // Update Request Importation ----------------------------------------------------------
     public function UpdateStatusRequest(){
         $id     = $_REQUEST['id'];
@@ -210,7 +251,6 @@ class NewRequestGlobalChargerLclController extends Controller
             $now2   = $time->format('Y-m-d H:i:s');
             $Ncontract = NewRequestGlobalChargerLcl::find($id);
             $Ncontract->status        = $status;
-            $Ncontract->updated       = $now2;
             if($Ncontract->username_load == 'Not assigned'){
                 $Ncontract->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
             }
@@ -221,6 +261,7 @@ class NewRequestGlobalChargerLclController extends Controller
                 }
             } elseif($Ncontract->status == 'Review'){
                 if($Ncontract->time_total == null){
+                    $Ncontract->updated       = $now2;
                     $fechaEnd = Carbon::parse($now2);
                     if(empty($Ncontract->time_star) == true){
                         $Ncontract->time_total = 'It did not go through the processing state';

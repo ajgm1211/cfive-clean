@@ -272,6 +272,21 @@ class NewGlobalchargeRequestControllerFcl extends Controller
         $extObj     = new \SplFileInfo($Ncontract->namefile);
         $ext        = $extObj->getExtension();
         $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
+        
+        
+        if(Storage::disk('s3_upload')->exists('Request/Global-charges/FCL/'.$Ncontract->namefile)){
+            return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile)){
+            return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('GCRequest')->exists($Ncontract->namefile)){
+            return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
+        } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+        }
+        
+        return back();
+        
+        /*
         try{
             return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
@@ -284,7 +299,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                     return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
                 }
             }
-        }
+        }*/
 
     }
 

@@ -110,7 +110,7 @@ return [
             'url' => 'storage/app/public/Request/GC',
             'visibility' => 'public',
         ],
-        
+
         'GCRequestLcl' => [
             'driver' => 'local',
             'root' => storage_path('app/public/Request/GC-LCL'),
@@ -124,11 +124,25 @@ return [
             'url' => 'storage/app/public/Account/GC',
             'visibility' => 'public',
         ],
+        
+        'GCAccountLcl' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Account/GC-LCL'),
+            'url' => 'storage/app/public/Account/GC-LCL',
+            'visibility' => 'public',
+        ],
 
         'GCImport' => [
             'driver' => 'local',
             'root' => storage_path('app/public/Import/GC'),
             'url' => 'storage/app/public/Import/GC',
+            'visibility' => 'public',
+        ],
+        
+        'GCImportLcl' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/Import/GC-LCL'),
+            'url' => 'storage/app/public/Import/GC-LCL',
             'visibility' => 'public',
         ],
 
@@ -152,7 +166,7 @@ return [
             'url' => 'public',
             'visibility' => 'public',
         ],
-        
+
         'carriers' => [
             'driver' => 'local',
             'root' => public_path('imgcarrier'),
@@ -174,7 +188,7 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
-        
+
         's3_upload' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
