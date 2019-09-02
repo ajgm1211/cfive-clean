@@ -14,7 +14,8 @@ class AddFieldToCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->integer('api_id')->nullable()->after('company_user_id');
+
+            $table->integer('api_id')->nullable()->after('owner');
             $table->enum('api_status',['created','updated'])->nullable()->after('api_id');
         });
     }
