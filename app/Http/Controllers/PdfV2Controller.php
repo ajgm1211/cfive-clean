@@ -849,7 +849,7 @@ class PdfV2Controller extends Controller
                 $query->where('type_id', 3);
             })->where('quote_id',$quote->id)->get();
 
-            $origin_charges = AutomaticRate::whereNotIn('origin_airport_id',$destination_sales)->where('quote_id',$quote->id)
+            $origin_charges = AutomaticRate::whereNotIn('origin_airport_id',$origin_sales)->where('quote_id',$quote->id)
                 ->ChargeLclAir(1,'Origin')->get();
 
             $destination_charges = AutomaticRate::whereNotIn('destination_airport_id',$destination_sales)->where('quote_id',$quote->id)
