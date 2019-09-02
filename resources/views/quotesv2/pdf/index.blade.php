@@ -1152,9 +1152,9 @@
                                 @endforeach
                             @endforeach
                             <tr class="text-left color-table">
-                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total destination charges</b></td>
-                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en destino</b></td>
-                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
+                                <td colspan="2" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total destination charges</td>
+                                <td colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
+                                <td colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                 <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20+@$inland_destination_20+@$sum_sale20}}</td>
                                 <td {{ @$equipmentHides['40'] }}>{{@$sum_destination_40+@$inland_destination_40+@$sum_sale40}}</td>
@@ -1305,7 +1305,7 @@
                             @endforeach
                             <tr>
                                 <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
-                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en origen</b></td>
+                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en destino</b></td>
                                 <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
@@ -1327,8 +1327,8 @@
                 @endif 
                 @endif
 
-                    <!-- Destinations detailed -->
-                    @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
+                <!-- Destinations detailed -->
+                @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                         @foreach($destination_charges as $carrier => $value)
                             @foreach($value as $destination => $item)
                                 <div>
