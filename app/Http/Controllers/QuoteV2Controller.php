@@ -9,6 +9,7 @@ use App\AutomaticInland;
 use App\AutomaticInlandLclAir;
 use App\CalculationType;
 use App\CalculationTypeLcl;
+use App\Airport;
 use App\Charge;
 use App\Company;
 use App\CompanyUser;
@@ -297,12 +298,21 @@ class QuoteV2Controller extends Controller
                 ->only(['port_id'])
                 ->all();
         });
+        //Ports when saleterms
         $port_origin_ids = $rates->implode('origin_port_id', ', ');
         $port_origin_ids = explode(",",$port_origin_ids);
         $port_destination_ids = $rates->implode('destination_port_id', ', ');
         $port_destination_ids = explode(",",$port_destination_ids);
         $rate_origin_ports = Harbor::whereIn('id',$port_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
         $rate_destination_ports = Harbor::whereIn('id',$port_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
+        
+        //Airports when saleterms
+        $airport_origin_ids = $rates->implode('origin_airport_id', ', ');
+        $airport_origin_ids = explode(",",$airport_origin_ids);
+        $airport_destination_ids = $rates->implode('destination_airport_id', ', ');
+        $airport_destination_ids = explode(",",$airport_destination_ids);
+        $rate_origin_airports = Airport::whereIn('id',$airport_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
+        $rate_destination_airports = Airport::whereIn('id',$airport_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
 
         $prices = Price::pluck('name','id');
         $carrierMan = Carrier::pluck('name','id');
@@ -595,7 +605,7 @@ class QuoteV2Controller extends Controller
             'quote_id'     => $id
         ]);
 
-        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports'));
+        return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports','rate_origin_airports','rate_destination_airports'));
     }
 
     /**

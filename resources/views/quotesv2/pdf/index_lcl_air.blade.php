@@ -686,9 +686,15 @@
             @if($sale_terms_origin->count()>0)
                 @foreach($sale_terms_origin as $value)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->port->name.', '.$value->port->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->port->name.', '.$value->port->code}}</p>
+                        @if($quote->type=='AIR')
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->airport->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->airport->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->airport->name.', '.$value->airport->code}}</p>
+                        @else
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->port->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->port->code}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->port->name.', '.$value->port->code}}</p>
+                        @endif
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">

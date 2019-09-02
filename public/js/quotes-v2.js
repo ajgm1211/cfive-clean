@@ -2805,14 +2805,22 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
 $(document).on('change', '#saleterm_type', function () {
     if($('#saleterm_type').val()=='origin'){
         $(".origin_port").removeClass('hide');
+        $(".origin_airport").removeClass('hide');
         $(".destination_port").addClass('hide');
+        $(".destination_airport").addClass('hide');
         $(".origin_port_select").prop('disabled', false);
+        $(".origin_airport_select").prop('disabled', false);
         $(".destination_port_select").prop('disabled', true);
+        $(".destination_airport_select").prop('disabled', true);
     }else{
         $(".origin_port").addClass('hide');
+        $(".origin_airport").addClass('hide');
         $(".destination_port").removeClass('hide'); 
+        $(".destination_airport").removeClass('hide'); 
         $(".origin_port_select").prop('disabled', true);
-        $(".destination_port_select").prop('disabled', false);        
+        $(".origin_airport_select").prop('disabled', true);
+        $(".destination_port_select").prop('disabled', false);
+        $(".destination_airport_select").prop('disabled', false);
     }
 });
 
