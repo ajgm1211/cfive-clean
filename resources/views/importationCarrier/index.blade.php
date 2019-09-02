@@ -60,6 +60,10 @@
                                 Surchargers Filters &nbsp;
                                 <i class="fa fa-plus"></i>
                             </a>
+                            <a href="#" id="new"  onclick="AbrirModal('forwardRequest',0)" class="new btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                Forward Request &nbsp;
+                                <i class="fa fa-refresh"></i>
+                            </a>
                         </a>
                     </div>
                 </div>
@@ -133,6 +137,12 @@
                 $('#company-imp-modal').modal({show:true});
             });
         }
+        if(action == "forwardRequest"){
+            var url = '{{ route("forward.modal.show")}}';
+            $('#company-imp-body').load(url,function(){
+                $('#company-imp-modal').modal({show:true});
+            });
+        }
     }
 
     $(function() {
@@ -202,6 +212,8 @@
             }
         });
     });
+    
+
 
 </script>
 

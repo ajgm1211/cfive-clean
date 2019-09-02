@@ -45,6 +45,7 @@ Route::middleware(['auth'])->prefix('users')->group(function () {
     Route::put('reset-password/{user_id}', ['uses' => 'UsersController@resetPass'  , 'as' =>'reset-password']);
     Route::put('delete-user/{user_id}', ['uses' => 'UsersController@destroyUser', 'as' => 'delete-user']);
     Route::get('activate/{user_id}', ['as' => 'users.activate', 'uses' => 'UsersController@activate']);
+    Route::get('verify/{user_id}', ['as' => 'users.verify', 'uses' => 'UsersController@verify']);
     Route::get('notifications', 'UsersController@notifications');
     Route::get('notifications_read', 'UsersController@notifications_read');
     Route::get('updatenot', 'UsersController@updateNotifications');
@@ -170,6 +171,8 @@ Route::prefix('Requests')->group(function () {
     Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestExport/','NewContractRequestsController@export')->name('export.Request')
         ->middleware(['auth','role:administrator|data_entry']);
 });
 
@@ -300,6 +303,10 @@ Route::prefix('RequestsLcl')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('RequestLclDestroy/{id}','NewContractRequestLclController@destroyRequest')->name('destroy.RequestLcl')
         ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('RequestLclExport/','NewContractRequestLclController@export')->name('export.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::get('testLcl/','NewContractRequestLclController@test')->name('test.RequestLcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 });
 
 
@@ -351,8 +358,6 @@ Route::resource('contracts', 'ContractsController')->middleware('auth');
 
 //Companies
 Route::middleware(['auth'])->prefix('companies')->group(function () {
-
-
     Route::get('add', 'CompanyController@add')->name('companies.add');
     Route::get('addM', 'CompanyController@addWithModal')->name('companies.addM'); // with modal
     Route::get('add/owner', 'CompanyController@addOwner')->name('companies.add.owner');
@@ -369,8 +374,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
     Route::get('update/details/tax/{company_id}', 'CompanyController@updateTaxNumber')->name('companies.update.tax');
     Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
     Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
-
-
+    Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
@@ -741,6 +745,9 @@ Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:adm
     route::delete('DestroyFiltro/{id}','CarriersImportationController@DestroyFiltro')->name('surcherger.filtro.destroy');
     route::get('IndexFiltro/','CarriersImportationController@indexFiltro')->name('surcherger.filtro.index');
     route::get('ShowFiltro/','CarriersImportationController@show2')->name('surcherger.filtro.show');
+    route::get('ShowModalForward/','CarriersImportationController@ShowModalForward')->name('forward.modal.show');
+    route::post('RequestsForward/','CarriersImportationController@forwardRequest')->name('forward.request');
+    route::get('test','CarriersImportationController@test')->name('test.carrier.autoimport');
 });
 
 // Test Controller 
