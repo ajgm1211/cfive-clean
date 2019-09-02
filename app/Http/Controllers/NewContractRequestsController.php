@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Excel;
+use App\Job;
 use App\User;
+use PrvRequest;
 use App\Harbor;
 use App\Carrier;
 use App\Contract;
+use PrvValidation;
 use App\Direction;
 use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
 use GuzzleHttp\Client;
+use App\ImportationJob;
 use App\AutoImportation;
 use App\ContractCarrier;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use App\Jobs\ExportRequestsJob;
 use App\CarrierautoImportation;
 use App\Mail\RequestToUserMail;
 use App\Notifications\N_general;
@@ -572,18 +578,124 @@ class NewContractRequestsController extends Controller
             ->make(true);
     }
 
+    // EXPORT Request Importation ----------------------------------------------------------
+
+    public function export(Request $request){
+        $dates = explode('/',$request->between);
+        $dateStart  = trim($dates[0]);
+        $dateEnd    = trim($dates[1]);
+        $now        = new \DateTime();
+        $now        = $now->format('dmY_His');
+        $countNRq   = NewContractRequest::whereBetween('created',[$dateStart,$dateEnd])->count();
+
+        if($countNRq <= 100){
+            $nameFile   = 'Request_Fcl_'.$now;
+            $data       = PrvRequest::RequestFclBetween($dateStart,$dateEnd);
+
+            //dd($data->chunk(2));
+
+            $myFile = Excel::create($nameFile, function($excel) use($data) {
+
+                $excel->sheet('REQUEST_FCL', function($sheet) use($data) {
+                    $sheet->cells('A1:M1', function($cells) {
+                        $cells->setBackground('#2525ba');
+                        $cells->setFontColor('#ffffff');
+                        //$cells->setValignment('center');
+                    });
+
+                    $sheet->setWidth(array(
+                        'A'     =>  10,
+                        'B'     =>  30,
+                        'C'     =>  25,
+                        'D'     =>  10,
+                        'E'     =>  20,
+                        'F'     =>  25,
+                        'G'     =>  15,
+                        'H'     =>  20,
+                        'I'     =>  20,
+                        'J'     =>  25,
+                        'K'     =>  25,
+                        'L'     =>  15,
+                        'M'     =>  15
+                    ));
+
+                    $sheet->row(1, array(
+                        "Id",
+                        "Company",
+                        "Reference",
+                        "Direction",
+                        "Carrier",
+                        "Validation",
+                        "Date",
+                        "User",
+                        "Username load",
+                        "Time Start",
+                        "Time End",
+                        "Time Elapsed",
+                        "Status"
+                    ));
+                    $i= 2;
+
+                    $data   = $data->chunk(500);
+                    $data   = $data->toArray();;
+                    foreach($data as $nrequests){
+                        foreach($nrequests as $nrequest){                   
+                            $sheet->row($i, array(
+                                "Id"                => $nrequest['id'],
+                                "Company"           => $nrequest['company'],
+                                "Reference"         => $nrequest['reference'],
+                                "Direction"         => $nrequest['direction'],
+                                "Carrier"           => $nrequest['carrier'],
+                                "Validation"        => $nrequest['validation'],
+                                "Date"              => $nrequest['date'],
+                                "User"              => $nrequest['user'],
+                                "Username load"     => $nrequest['username_load'],
+                                "Time Start"        => $nrequest['time_start'],
+                                "Time End"          => $nrequest['time_end'],
+                                "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Status"            => $nrequest['status']
+                            ));
+                            $sheet->setBorder('A1:M'.$i, 'thin');
+
+                            $sheet->cells('F'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
+                            $sheet->cells('K'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
+                            $sheet->cells('J'.$i, function($cells) {
+                                $cells->setAlignment('center');
+                            });
+                            
+                            $i++;
+                        }
+                    }
+                });
+
+            });
+
+            $myFile = $myFile->string('xlsx'); //change xlsx for the format you want, default is xls
+            $response =  array(
+                'actt' => 1,
+                'name' => $nameFile.'.xlsx', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,".base64_encode($myFile) //mime type of used format
+            );
+        } else{
+            $auth = \Auth::user()->toArray();
+            ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl');
+            $response =  array(
+                'actt' => 2
+            );
+        }
+        return response()->json($response);
+    }
+
+
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        $fecha_actual = date("Y-m-d H:i:s");
-        /*$fecha1 = new \DateTime("2019-04-15 14:26:47");
-        $fecha2 = new \DateTime($fecha_actual);
-        $tiempo_transcurrido = $fecha1->diff($fecha2);*/
-
-        $fechaExpiracion = Carbon::parse($fecha_actual);
-        //$fechaEmision = Carbon::parse("2019-04-15 14:26:47");
-        $fechaEmision = Carbon::parse($fecha_actual);
-
-        $diasDiferencia = $fechaExpiracion->diffForHumans($fechaEmision);
-        dd(str_replace('after','',$diasDiferencia));
+        
+        dd(PrvRequest::RequestFclBetween('2019-08-26','2019-08-26'));
     }
 }
