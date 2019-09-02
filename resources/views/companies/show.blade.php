@@ -305,7 +305,7 @@
                             <thead>
                             <tr>
                                 <th title="Status">
-                                    Status
+                                    Id
                                 </th>
                                 <th title="Created">
                                     Created
@@ -316,38 +316,57 @@
                                 <th title="Destination">
                                     Destination
                                 </th>
-                                <th title="Ammount">
-                                    Ammount
-                                </th>
                                 <th title="Options">
                                     Options
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
+                            @php
+                                $origin_li='';
+                                $destination_li='';
+                            @endphp
                             @foreach ($quotes as $quote)
+                                <?php
+                                    if(isset($quote->company)){
+                                        $company_name  = $quote->company->business_name;
+                                    }
+                                    if($quote->custom_quote_id!=''){
+                                        $id  = $quote->custom_quote_id;
+                                    }else{
+                                        $id = $quote->quote_id;
+                                    }
+
+                                    if($quote->type=='AIR'){
+                                        $origin=$quote->origin_airport;
+                                        $destination=$quote->destination_airport;
+                                        $img='<img src="/images/plane-blue.svg" class="img img-responsive" width="25">';
+                                    }else{
+                                        $origin=$quote->origin_port;
+                                        $destination=$quote->destination_port;
+                                        $img='<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
+                                    }
+                                    
+                                    $explode_orig = explode("| ",$origin);
+                                    $explode_dest = explode("| ",$destination);
+                                    foreach($explode_orig as $item){
+                                        $origin_li.='<li>'.$item.'</li>';
+                                    }
+
+                                    foreach($explode_dest as $item){
+                                        $destination_li.='<li>'.$item.'</li>';
+                                    }
+                                ?>
                                 <tr>
-                                    <td ><span class="{{$quote->status->name}}">{{$quote->status->name }}</span></td>
+                                    <td >{{$id}}</td>
                                     <td>{{ date_format($quote->created_at, 'M d, Y H:i')}}</td>
-                                    @if($quote->origin_harbor)
-                                        <td>{{$quote->origin_harbor->name }}</td>
-                                    @else
-                                        <td>{{$quote->origin_address }}</td>
-                                    @endif
-                                    @if($quote->destination_harbor)
-                                        <td>{{$quote->destination_harbor->name }}</td>
-                                    @else
-                                        <td>{{$quote->destination_address }}</td>
-                                    @endif
-                                    <td>{{$quote->sub_total_origin+$quote->sub_total_freight+$quote->sub_total_destination}} {{$quote->currencies->alphacode}}</td>
+                                    <td>{!! $origin !!}</td>
+                                    <td>{!! $destination !!}</td>
                                     <td>
-                                        <a href="{{route('quotes.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
+                                        <a href="{{route('quotes-v2.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
                                             <i class="la la-eye"></i>
                                         </a>
-                                        <a href="{{route('quotes.edit',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Edit ">
-                                            <i class="la la-edit"></i>
-                                        </a>
-                                        <a href="{{route('quotes.duplicate',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
+                                        <a href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
                                             <i class="la la-plus"></i>
                                         </a>
                                         <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">

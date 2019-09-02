@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="title-quote"><b>Company:&nbsp;&nbsp;</b></label>
-                                    {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden']) }}
+                                    {{ Form::select('company_id',$companies,$quote->company_id,['class'=>'form-control company_id select2','hidden','placeholder'=>'Select an option']) }}
                                     <span class="company_span">{{@$quote->company->business_name}}</span>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                 <div class="col-md-4">
                                     <br>
                                     <label class="title-quote"><b>Contact:&nbsp;&nbsp;</b></label>
-                                    {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'form-control contact_id select2','hidden','id'=>'contact_id']) }}
+                                    {{ Form::select('contact_id',$contacts,$quote->contact_id,['class'=>'form-control contact_id select2','hidden','id'=>'contact_id','placeholder'=>'Select an option']) }}
                                     <span class="contact_id_span">{{@$quote->contact->first_name}} {{@$quote->contact->last_name}}</span>
                                 </div>
                             </div>
@@ -153,7 +153,7 @@
                                     <br>
                                     <label class="title-quote"><b>Price level:&nbsp;&nbsp;</b></label>
                                     <span class="price_level_span">{{@$quote->price->name}}</span>
-                                    {{ Form::select('price_id',$prices,@$quote->price_id,['class'=>'form-control price_id select2','hidden']) }}
+                                    {{ Form::select('price_id',$prices,@$quote->price_id,['class'=>'form-control price_id select2','hidden','placeholder'=>'Select an option']) }}
                                 </div>
                             </div>
                             <div class="row">
