@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        {!! Form::open(['route'=>'ImportationGlobalchargeFcl.create','method'=>'get'])!!} 
+        {!! Form::open(['route'=>'ImportationGlobalChargerLcl.create','method'=>'get'])!!} 
         <input type="hidden" name="statustypecurren" value="{{$statustypecurren}}">
 
         <div class="m-portlet__body">
