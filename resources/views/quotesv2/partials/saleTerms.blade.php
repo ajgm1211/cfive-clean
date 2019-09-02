@@ -12,8 +12,12 @@ $x=0;
                             <li class="m-width-150" style="border-left:none;">
 
                             </li>
+                            <li class="size-12px long-text m-width-150"><b>Type:</b> &nbsp;{{$item->type}}</li>
+                            @if($quote->type!='AIR')
                             <li class="size-12px long-text ">&nbsp;{{$item->port['name'].', '.$item->port['code']}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{@$item->country_code}}.svg"/></li>
-                            <li class="size-12px long-text"><b>Type:</b> &nbsp;{{$item->type}}</li>
+                            @else
+                            <li class="size-12px long-text ">&nbsp;{{$item->airport['name'].', '.$item->airport['code']}} &nbsp;</li>
+                            @endif
                             <li class="size-12px no-border-left d-flex justify-content-end m-width-100">
                                 <div onclick="show_hide_element('saleterms_{{$x}}')"><i class="fa fa-angle-down"></i></div>
                             </li>

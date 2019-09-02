@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div class="col-md-4" >
-                        <div  {{$quote->type=='AIR' ? 'hidden':''}}>
+                        <div {{$quote->type=='AIR' ? 'hidden':''}}>
                             <div class="origin_port hide">
                                 <label>Origin Port</label>
                                 {{ Form::select('port_id',$rate_origin_ports,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option']) }}
@@ -38,9 +38,15 @@
                                 {{ Form::select('port_id',$rate_destination_ports,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option']) }}
                             </div>
                         </div>
-                        <div id="origin_airport_label" {{$quote->type!='AIR' ? 'hidden':''}}>
-                            <label>Airport</label>
-                            <select id="origin_airport_create" name="airport_id" class="form-control"></select>
+                        <div {{$quote->type!='AIR' ? 'hidden':''}}>
+                            <div class="origin_airport hide">
+                                <label>Origin Airport</label>
+                                {{ Form::select('airport_id',$rate_origin_airports,null,['class'=>'m-select2-general form-control origin_airport_select','placeholder'=>'Select an option']) }}
+                            </div>                        
+                            <div class="destination_airport hide">
+                                <label>Destination Airport</label>
+                                {{ Form::select('airport_id',$rate_destination_airports,null,['class'=>'m-select2-general form-control destination_airport_select','placeholder'=>'Select an option']) }}
+                            </div>
                         </div>
                     </div>
                     <!--<div class="col-md-4" class="" id="carrier_label" {{$quote->type=='AIR' ? 'hidden':''}}> 
