@@ -74,8 +74,9 @@
                 </span>
             </div>
         </div>
-        @if($quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
+        @if($quote->incoterm!='' || $quote->kind_of_cargo!='' || $quote->commodity!='' || $quote->risk_level!='')
             <div style="margin-top: 25px;">
+                @if($quote->incoterm_id!='')<p><span class="title" >Incoterm: </span>{{$quote->incoterm->name}}</p>@endif
                 <p {{$quote->pdf_option->language=='English' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Kind of cargo:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Commodity:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Risk level:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
                 <p {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercancía:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nivel de riesgo:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
                 <p {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>@if($quote->kind_of_cargo!='')<span class="title" >Tipo de carga:</span> {{$quote->kind_of_cargo}} @endif @if($quote->commodity!='')| <span class="title" >Mercadoria:</span> {{$quote->commodity}}@endif @if($quote->risk_level!='')| <span class="title" >Nível de risco:</span> {{$quote->risk_level}}@endif @if($quote->kind_of_cargo=='Pharma' && $quote->gdp==1) <img src="{{asset('images/logogdp.jpg')}}" class="img img-responsive" width="50" height="auto"> @endif</p>
@@ -131,11 +132,19 @@
                 <table border="0" cellspacing="1" cellpadding="1">
                   <thead class="title-quote text-center header-table">
                     <tr>
-                      <th class="unit"><b>Cargo type</b></th>
-                      <th class="unit"><b>Total quantity</b></th>
-                      <th class="unit"><b>Total weight</b></th>
-                      <th class="unit"><b>Total volume</b></th>
-                      <th class="unit"><b>Chargeable weight</b></th>
+                        <th class="unit"><b>Cargo type</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total quantity</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Cantidad total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Quantidade total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total weight</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Peso total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Peso total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total volume</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Volumen total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Volume total</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Chargeable weight</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Peso tasable</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Peso carregável</b></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -174,8 +183,12 @@
         @endif
             <thead class="title-quote text-center header-table">
                 <tr >
-                    <th class="unit"><b>POL</b></th>
-                    <th class="unit"><b>POD</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POL</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de embarque</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POL</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POD</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de descarga</b></th>
+                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POD</b></th>
                     @if($quote->type=='LCL')
                         <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                     @else
@@ -184,7 +197,9 @@
                     <th ><b>W/M</b></th>
                     <th ><b>Total</b></th>
                     @if($quote->pdf_option->show_schedules==1)
-                        <th ><b>Type</b></th>
+                        <th {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                        <th {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                        <th {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
                         <th ><b>TT</b></th>
                         <th ><b>Via</b></th>
                     @endif
@@ -234,7 +249,17 @@
                         <td >{{number_format((float)(@$total_freight+@$total_origin+@$total_destination)/$quote->chargeable_weight, 4, '.', '')}}</td>
                         <td >{{number_format((float)@$total_freight+@$total_origin+@$total_destination+@$total_inland, 2, '.', '')}}</td>
                         @if($quote->pdf_option->show_schedules==1)
-                            <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                            @if($quote->pdf_option->language=='Spanish')
+                                @if($rate->schedule_type=='Transfer')
+                                    <td>Transbordo</td>
+                                @elseif($rate->schedule_type=='Direct')
+                                    <td>Directo</td>
+                                @else
+                                    <td>-</td>
+                                @endif
+                            @else
+                                <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                            @endif                            
                             <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                             <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                         @endif
@@ -245,6 +270,7 @@
             <tfoot>
         </table>
         <br>
+
         <!-- Freight charges all in -->
         @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
             <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
@@ -256,14 +282,29 @@
             <table border="0" cellspacing="1" cellpadding="1" >
                 <thead class="title-quote text-center header-table">
                     <tr >
-                        <th class="unit"><b>POL</b></th>
-                        <th class="unit"><b>POD</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POL</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de embarque</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POL</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POD</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de descarga</b></th>
+                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POD</b></th>
                         @if($quote->type=='LCL')
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                         @else
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
                         @endif
                         <th ><b>Total</b></th>
+                        @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>TT</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Via</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Vía</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Via</b></th>   
+                        @endif                        
                         <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                         <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                         <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -310,6 +351,21 @@
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                     @endif
                                     <td >{{@$total_freight}}</td>
+                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->show_schedules==0)
+                                        @if($quote->pdf_option->language=='Spanish')
+                                            @if($rate->schedule_type=='Transfer')
+                                                <td>Transbordo</td>
+                                            @elseif($rate->schedule_type=='Direct')
+                                                <td>Directo</td>
+                                            @else
+                                                <td>-</td>
+                                            @endif
+                                        @else
+                                            <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                        @endif  
+                                        <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
+                                        <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
+                                    @endif                                    
                                     <td >{{$currency_cfg->alphacode}}</td>
                                 </tr>
                             @endforeach
@@ -333,8 +389,12 @@
                         <table border="0" cellspacing="1" cellpadding="1" >
                             <thead class="title-quote text-center header-table">
                                 <tr >
-                                    <th class="unit"><b>Charge</b></th>
-                                    <th class="unit"><b>Detail</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
+                                    <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detalhe</b></th>
                                     @if($quote->type=='LCL')
                                         <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                     @else
@@ -347,6 +407,17 @@
                                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tarifa</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Taxa</b></th>
                                     <th ><b>Total</b></th>
+                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Via</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Vía</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Via</b></th>   
+                                    @endif                                    
                                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -370,7 +441,13 @@
                                                     <td>{{$quote->type=='LCL' ? 'Ocean Freight':'Freight'}}</td>
                                                 @endif
                                                 @if($v->surcharge_id!='')
-                                                    <td>{{$v->calculation_type->name}}</td>
+                                                    <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                        @php
+                                                            echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                        @endphp
+                                                    </td>
+                                                    <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                                    <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                                 @else
                                                     <td>TON/M3</td>
                                                 @endif
@@ -382,6 +459,21 @@
                                                 <td >{{$v->units}}</td>
                                                 <td >{{$v->rate}}</td>
                                                 <td >{{$v->units*$v->rate}}</td>
+                                                @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                                    @if($quote->pdf_option->language=='Spanish')
+                                                        @if($rate->schedule_type=='Transfer')
+                                                            <td>Transbordo</td>
+                                                        @elseif($rate->schedule_type=='Direct')
+                                                            <td>Directo</td>
+                                                        @else
+                                                            <td>-</td>
+                                                        @endif
+                                                    @else
+                                                        <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                    @endif  
+                                                    <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
+                                                    <td>{{$r->via!='' ? $r->via:'-'}}</td>
+                                                @endif                                                
                                                 <td>{{$v->currency->alphacode}}</td>
                                             </tr>
                                         @endif
@@ -389,7 +481,9 @@
                                 @endforeach
                             @endforeach
                             <tr>
-                                <td><b>Total local charges</b></td>
+                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
+                                <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos de flete</b></td>
+                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -411,14 +505,29 @@
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit"><b>POL</b></th>
-                            <th class="unit"><b>POD</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POL</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de embarque</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POL</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>POD</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Puerto de descarga</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>POD</b></th>
                             @if($quote->type=='LCL')
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                             @else
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
                             @endif
                             <th ><b>Total</b></th>
+                            @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>TT</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Via</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Vía</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Via</b></th>   
+                            @endif                             
                             <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                             <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                             <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -476,6 +585,21 @@
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                         @endif
                                         <td >{{@$total_freight}}</td>
+                                        @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                            @if($quote->pdf_option->language=='Spanish')
+                                                @if($rate->schedule_type=='Transfer')
+                                                    <td>Transbordo</td>
+                                                @elseif($rate->schedule_type=='Direct')
+                                                    <td>Directo</td>
+                                                @else
+                                                    <td>-</td>
+                                                @endif
+                                            @else
+                                                <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                            @endif  
+                                            <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
+                                            <td>{{$r->via!='' ? $r->via:'-'}}</td>
+                                        @endif                                         
                                         @if($quote->pdf_option->grouped_freight_charges==1)
                                             <td>{{$quote->pdf_option->freight_charges_currency}}</td>
                                         @else
@@ -497,14 +621,16 @@
             <br>
                 <div>
                     <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen - {{$origin}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
                     <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit" colspan="2"><b>Charge</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                             @if($quote->type=='LCL')
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                             @else
@@ -562,15 +688,19 @@
                 @foreach($value as $carrier => $item)
                     <div>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de origen - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-center header-table">
                             <tr >
-                                <th class="unit"><b>Charge</b></th>
-                                <th class="unit"><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detalhe</b></th>
                                 @if($quote->type=='LCL')
                                     <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                 @else
@@ -602,7 +732,13 @@
                                         ?>
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
-                                            <td>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                @php
+                                                    echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                @endphp
+                                            </td>
+                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                             @if($quote->type=='LCL')
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             @else
@@ -645,7 +781,9 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td><b>Total local charges</b></td>
+                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
+                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en origen</b></td>
+                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -702,14 +840,16 @@
             @foreach($destination_charges_grouped as $destination=>$detail)
                 <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
                     <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
+                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
                     <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit" colspan="2"><b>Charge</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
                             @if($quote->type=='LCL')
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                             @else
@@ -767,15 +907,19 @@
                 @foreach($value as $carrier => $item)
                     <div>
                         <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos de destino - {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
                         <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-center header-table">
                             <tr >
-                                <th class="unit"><b>Charge</b></th>
-                                <th class="unit"><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
+                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detalhe</b></th>
                                 @if($quote->type=='LCL')
                                     <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
                                 @else
@@ -807,7 +951,13 @@
                                         ?>
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
-                                            <td>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
+                                                @php
+                                                    echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                @endphp
+                                            </td>
+                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
                                             @if($quote->type=='LCL')
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             @else
@@ -852,7 +1002,9 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td><b>Total local charges</b></td>
+                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
+                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos de destino</b></td>
+                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -918,7 +1070,7 @@
         @if($i>0)
             <br>
             <div class="clearfix">
-            <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+            <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                 <thead class="title-quote header-table">
                     <tr>
                         <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Remarks</b></th>
@@ -943,7 +1095,7 @@
         <br>
         @if($quote->terms_and_conditions!='')
              <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
                         <tr>
                             <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Terms and conditions</b></th>
@@ -964,7 +1116,7 @@
         <br>      
         @if($quote->payment_conditions!='')
             <div class="clearfix">
-                <table class="table-border" border="0" cellspacing="0" cellpadding="0">
+                <table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
                     <thead class="title-quote header-table">
                         <tr>
                             <th class="unit text-left" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>&nbsp;&nbsp;&nbsp;Payments conditions</b></th>

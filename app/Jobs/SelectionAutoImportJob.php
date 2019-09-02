@@ -37,7 +37,7 @@ class SelectionAutoImportJob implements ShouldQueue
      */
     public function handle()
     {
-        if($this->selector == 'fcl'){
+        if(strnatcasecmp($this->selector,'fcl') == 0){
             $req_id = $this->id_req;
             $request_cont = NewContractRequest::find($req_id);
             $request_cont = $request_cont->load('Requestcarriers');
