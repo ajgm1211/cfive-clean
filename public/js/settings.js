@@ -8,12 +8,25 @@ $(document).on('change', '#logo', function (e) {
         $("#default-currency-submit").prop("disabled", false);
     }
 });
-
+$('#email_from').blur(function() {
+    var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+    if ($('#email_from').val()!='' && !testEmail.test($('#email_from').val())){
+        $('#email_from_error').removeClass('hide');
+    }else{
+        $('#email_from_error').addClass('hide');
+    }
+});
 //Guardar settings
 $(document).on('click', '#default-currency-submit', function () {
     var id = $('#company_id').val();
     var form = $('#default-currency');
-    //event.preventDefault();
+    var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+    var email_from_format = '';
+    
+    if ($('#email_from').val()!='' && testEmail.test($('#email_from').val())){
+        var email_from_format = $('#email_from').val();
+    }
+    
     if($('#company_id').val()!=''&&$('#name').val()!=''&&$('#phone').val()&&$('#address').val()) {
         swal({
             title: 'Are you sure?',
@@ -31,7 +44,7 @@ $(document).on('click', '#default-currency-submit', function () {
                 var data = new FormData($("#default-currency")[0]);
                 data.append("footer_text_content", footer_text);
                 data.append("signature_text_content", signature_text);
-
+                data.append("email_from_format", email_from_format);
                 // disabled the submit button
                 $("#default-currency-submit").prop("disabled", true);
 
