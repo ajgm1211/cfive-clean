@@ -392,7 +392,7 @@
 @section('js')
     @parent
     <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
-    <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotes.js" type="text/javascript"></script>
+    <script src="/assets/demo/default/custom/components/datatables/base/html-table-company-quotes.js" type="text/javascript"></script>
     <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('js/companies.js')}}"></script>
