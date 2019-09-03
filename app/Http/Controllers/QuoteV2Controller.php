@@ -1202,7 +1202,7 @@ class QuoteV2Controller extends Controller
             if($email_settings->email_signature_type=='text'){
                 $sign = $email_settings->email_signature_text;
             }else{
-                $sign = '<img src="'.$email_settings->email_signature_image.'" width=100>';
+                $sign = $email_settings->email_signature_image;
             }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
