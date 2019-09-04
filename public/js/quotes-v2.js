@@ -1500,7 +1500,7 @@ $(document).on('click', '.store_charge_lcl', function () {
                 total_currency = total_currency.toFixed(2);
             }
         });*/
-        total_currency = currencyRateAlphacode(currency, currency_cfg, value);
+        total_currency = currencyRateAlphacode(currency, currency_cfg, sub_total);
         sum += parseFloat(total_currency);
     });
 
