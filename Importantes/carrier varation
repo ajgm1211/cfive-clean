@@ -1,0 +1,8 @@
+        $all =  Carrier::all();
+        foreach($all as $one){
+            $json = [];
+            $json['type'] = [$one->name];
+            $one->varation = json_encode($json);
+            $one->update();
+            
+        }
