@@ -275,7 +275,7 @@ class PdfV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -489,7 +489,7 @@ class PdfV2Controller extends Controller
 
             return $item;
         });
-        
+
         $origin_charges_grouped = collect($origin_charges);
 
         $origin_charges_grouped = $origin_charges_grouped->groupBy([
