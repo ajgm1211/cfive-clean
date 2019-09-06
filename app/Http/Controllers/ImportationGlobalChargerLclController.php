@@ -20,6 +20,7 @@ use App\CalculationTypeLcl;
 use Illuminate\Http\Request;
 use App\GlobalCharCarrierLcl;
 use App\GlobalCharCountryLcl;
+use App\FailedGlobalchargerLcl;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\Storage;
@@ -452,10 +453,6 @@ class ImportationGlobalChargerLclController extends Controller
                                     $currencyReadVal        = $read[$requestobj[$currency]];
                                 } 
 
-                                if($requestobj['existorigin'] != 1){
-                                    $differentiatorValTw    = null;
-                                }
-
                                 if($requestobj['existorigin'] != 1 && $requestobj['existdestiny'] != 1){
                                     $randons    = [];
                                 }
@@ -697,7 +694,7 @@ class ImportationGlobalChargerLclController extends Controller
                                     if(count($amountArr) > 1){
                                         $currencyValAmount = str_replace($caracteres,'',$amountArr[1]);
                                     } else {
-                                        $currencyValAmount = '';
+                                        $currencyValAmount = '_E_E';
                                     }
 
                                     $currencAmount = Currency::where('alphacode','=',$currencyValAmount)->first();
@@ -718,7 +715,7 @@ class ImportationGlobalChargerLclController extends Controller
                                     if(count($minimunArr) > 1){
                                         $currencResulMin = str_replace($caracteres,'',$minimunArr[1]);
                                     } else{
-                                        $currencResulMin = '';
+                                        $currencResulMin = '_E_E';
                                     }
 
                                     $currencMinimun = Currency::where('alphacode','=',$currencResulMin)->first();
@@ -732,6 +729,20 @@ class ImportationGlobalChargerLclController extends Controller
                                         } else {
                                             $currencyValMinimun = '_E_E';
                                         }
+                                    }
+
+                                    if($curreExiAmountBol == false && $curreExiMinimunBol == true){
+                                        $curreExiAmountBol = true;
+                                        $currencyValAmount = $currencyValMinimun;
+                                    } elseif($curreExiAmountBol == true && $curreExiMinimunBol == false){
+                                        $curreExiMinimunBol = true;
+                                        $currencyValMinimun = $currencyValAmount;
+                                    }
+
+                                    if($curreExiAmountBol){
+                                        $currencyVal = $currencyValAmount;
+                                    } else {
+                                        $currencyVal = $currencyValMinimun;
                                     }
 
                                     if($curreExiAmountBol == true && $curreExiMinimunBol == true){
@@ -766,7 +777,7 @@ class ImportationGlobalChargerLclController extends Controller
                                     $calculationtypeExiBol  = true;
                                     $calculationtypeVal     = $calculationtype['id'];
                                 } else{
-                                    $calculationtypeVal     = $calculationvalvaration.' Fila Excel '.$i.'_E_E';
+                                    $calculationtypeVal     = $calculationvalvaration.' ROW Excel '.$i.' _E_E';
                                 }
 
                                 //------------------ TYPE -------------------------------------------------------------
@@ -819,7 +830,6 @@ class ImportationGlobalChargerLclController extends Controller
                                     '$validityfromVal'           => $validityfromVal,
                                     '$validitytoVal'             => $validitytoVal,
                                     '$differentiatorVal'         => $differentiatorVal,
-                                    '$differentiatorValTw'       => $differentiatorValTw,
                                     '$originVal'                 => $originVal,
                                     '$destinyVal'                => $destinyVal,                 
                                     '$typedestinyVal'            => $typedestinyVal,
@@ -892,7 +902,7 @@ class ImportationGlobalChargerLclController extends Controller
                                                 'typedestiny_id'     						=> $typedestinyVal,
                                                 'account_imp_gclcl_id'                      => $account_idVal,
                                                 'company_user_id'    						=> $companyUserIdVal,
-                                                'calculationtypelcl_id' 						=> $calculationtypeVal,
+                                                'calculationtypelcl_id' 					=> $calculationtypeVal,
                                                 'ammount'            						=> $amountVal,
                                                 'minimum'            						=> $minimunVal,
                                                 'validity' 									=> $validityfromVal,
@@ -985,11 +995,8 @@ class ImportationGlobalChargerLclController extends Controller
                                     //dd('primer registro');
 
                                 } else {
-                                    dd($prueba);
-                                    dd('llega a fail');
-
+                                    //dd($prueba);
                                     // van los fallidos
-
                                     //---------------------------- TYPE DESTINY  ----------------------------------------------------
 
                                     if($typedestinyExitBol == true){
@@ -1038,27 +1045,17 @@ class ImportationGlobalChargerLclController extends Controller
                                     }
 
                                     if( $variantecurrency == true){
-                                        if($requestobj[$statustypecurren] == 2){
-
-                                            $currencyTWobj   = Currency::find($currencyValAmount);
-                                            $currencyValAmount = $currencyTWobj['alphacode'];
-
-                                            $currencyobjMin     = Currency::find($currencyValMinimun);
-                                            $currencyValMinimun = $currencyobjMin['alphacode'];
-
-                                        } else {
-                                            $currencyobj = Currency::find($currencyVal);
-                                            $currencyVal = $currencyobj['alphacode'];
-                                        }
+                                        $currencyobj = Currency::find($currencyVal);
+                                        $currencyVal = $currencyobj['alphacode'];
                                     } 
 
                                     //---------------------------- CALCULATION TYPE -------------------------------------------------
 
                                     if($calculationtypeExiBol == true){
-                                        $calculationType = CalculationType::find($calculationtypeVal);
+                                        $calculationType = CalculationTypeLcl::find($calculationtypeVal);
                                         $calculationtypeVal = $calculationType['name'];
                                     } 
-                                    
+
                                     //---------------------------- TYPE -------------------------------------------------------------
 
                                     if($typeExiBol == true){
@@ -1094,22 +1091,19 @@ class ImportationGlobalChargerLclController extends Controller
                                                 }
                                             }
 
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValAmount;
-                                            }
-
-                                            if($ammount != 0 || $ammount != 0.0){
+                                            if($amountVal != 0 || $amountVal != 0.00){
                                                 $extgc = null;
-                                                $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                $extgc = FailedGlobalchargerLcl::where('surcharge',$surchargeVal)
                                                     ->where('origin',$originVal)
                                                     ->where('destiny',$destinyVal)
                                                     ->where('typedestiny',$typedestinyVal)
-                                                    ->where('calculationtype',$calculationtypeValfail)
-                                                    ->where('ammount',$ammount)
+                                                    ->where('calculationtypelcl',$calculationtypeVal)
+                                                    ->where('ammount',$amountVal)
+                                                    ->where('minimum',$minimunVal)
                                                     ->where('currency',$currencyVal)
                                                     ->where('carrier',$carrierVal)
-                                                    ->where('validityto',$validitytoVal)
-                                                    ->where('validityfrom',$validityfromVal)
+                                                    ->where('expire',$validitytoVal)
+                                                    ->where('validity',$validityfromVal)
                                                     ->where('port',true)
                                                     ->where('country',false)
                                                     ->where('company_user_id',$companyUserIdVal)
@@ -1117,22 +1111,23 @@ class ImportationGlobalChargerLclController extends Controller
                                                     ->get();
 
                                                 if(count($extgc) == 0){
-                                                    FailedGlobalcharge::create([
-                                                        'surcharge'       	=> $surchargeVal,
-                                                        'origin'          	=> $originVal,
-                                                        'destiny'          	=> $destinyVal,
-                                                        'typedestiny'     	=> $typedestinyVal,
-                                                        'calculationtype'	=> $calculationtypeValfail,  //////
-                                                        'ammount'           => $ammount, //////
-                                                        'currency'		    => $currencyVal, //////
-                                                        'carrier'	        => $carrierVal,
-                                                        'validityto'	    => $validitytoVal,
-                                                        'validityfrom'      => $validityfromVal,
-                                                        'port'        		=> true,// por defecto
-                                                        'country'        	=> false,// por defecto
-                                                        'company_user_id'   => $companyUserIdVal,
-                                                        'account_id'        => $account_idVal,
-                                                        'differentiator'   => $differentiatorVal
+                                                    FailedGlobalchargerLcl::create([
+                                                        'surcharge'             => $surchargeVal,
+                                                        'origin'          	    => $originVal,
+                                                        'destiny'          	    => $destinyVal,
+                                                        'typedestiny'     	    => $typedestinyVal,
+                                                        'calculationtypelcl'    => $calculationtypeVal,  //////
+                                                        'ammount'               => $amountVal, //////
+                                                        'minimum'               => $minimunVal, //////
+                                                        'currency'		        => $currencyVal, //////
+                                                        'carrier'	            => $carrierVal,
+                                                        'expire'	            => $validitytoVal,
+                                                        'validity'              => $validityfromVal,
+                                                        'port'        		    => true,// por defecto
+                                                        'country'        	    => false,// por defecto
+                                                        'company_user_id'       => $companyUserIdVal,
+                                                        'account_imp_gclcl_id'  => $account_idVal,
+                                                        'differentiator'        => $differentiatorVal
                                                     ]);
                                                     //$ratescollection->push($ree);                    
                                                 }
@@ -1160,21 +1155,20 @@ class ImportationGlobalChargerLclController extends Controller
                                             }
                                         }
 
-                                        if($requestobj[$statustypecurren] == 2){
-                                            $currencyVal = $currencyValtwen;
-                                        }
-                                        if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
+
+                                        if($amountVal != 0 || $amountVal != 0.00){
                                             $extgc = null;
-                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                            $extgc = FailedGlobalchargerLcl::where('surcharge',$surchargeVal)
                                                 ->where('origin',$originVal)
                                                 ->where('destiny',$destinyVal)
                                                 ->where('typedestiny',$typedestinyVal)
-                                                ->where('calculationtype',$calculationtypeValfail)
-                                                ->where('ammount',$twentyVal)
+                                                ->where('calculationtypelcl',$calculationtypeVal)
+                                                ->where('ammount',$amountVal)
+                                                ->where('minimum',$minimunVal)
                                                 ->where('currency',$currencyVal)
                                                 ->where('carrier',$carrierVal)
-                                                ->where('validityto',$validitytoVal)
-                                                ->where('validityfrom',$validityfromVal)
+                                                ->where('expire',$validitytoVal)
+                                                ->where('validity',$validityfromVal)
                                                 ->where('port',true)
                                                 ->where('country',false)
                                                 ->where('company_user_id',$companyUserIdVal)
@@ -1182,29 +1176,28 @@ class ImportationGlobalChargerLclController extends Controller
                                                 ->get();
 
                                             if(count($extgc) == 0){
-                                                FailedGlobalcharge::create([
-                                                    'surcharge'       	=> $surchargeVal,
-                                                    'origin'          	=> $originVal,
-                                                    'destiny'          	=> $destinyVal,
-                                                    'typedestiny'     	=> $typedestinyVal,
-                                                    'calculationtype'	=> $calculationtypeValfail,  //////
-                                                    'ammount'           => $twentyVal, //////
-                                                    'currency'		    => $currencyVal, //////
-                                                    'carrier'	        => $carrierVal,
-                                                    'validityto'	    => $validitytoVal,
-                                                    'validityfrom'      => $validityfromVal,
-                                                    'port'        		=> true,// por defecto
-                                                    'country'        	=> false,// por defecto
-                                                    'company_user_id'   => $companyUserIdVal,
-                                                    'account_id'        => $account_idVal,
-                                                    'differentiator'   => $differentiatorVal
+                                                FailedGlobalchargerLcl::create([
+                                                    'surcharge'             => $surchargeVal,
+                                                    'origin'          	    => $originVal,
+                                                    'destiny'          	    => $destinyVal,
+                                                    'typedestiny'     	    => $typedestinyVal,
+                                                    'calculationtypelcl'	=> $calculationtypeVal,  //////
+                                                    'ammount'               => $amountVal, //////
+                                                    'minimum'               => $minimunVal, //////
+                                                    'currency'		        => $currencyVal, //////
+                                                    'carrier'	            => $carrierVal,
+                                                    'expire'	            => $validitytoVal,
+                                                    'validity'              => $validityfromVal,
+                                                    'port'        		    => true,// por defecto
+                                                    'country'        	    => false,// por defecto
+                                                    'company_user_id'       => $companyUserIdVal,
+                                                    'account_imp_gclcl_id'  => $account_idVal,
+                                                    'differentiator'        => $differentiatorVal
                                                 ]);
                                                 //  $ratescollection->push($ree);
                                             }
                                         }
                                     }
-
-
 
                                     $falli++;
                                     //echo $i;
@@ -1218,7 +1211,7 @@ class ImportationGlobalChargerLclController extends Controller
                     $i++;
                 }
 
-                //dd('Todo se cargo, surcharges o rates fallidos: '.$falli);
+                dd('Todo se cargo');
             });
     }
 
