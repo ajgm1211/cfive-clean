@@ -1500,7 +1500,7 @@ $(document).on('click', '.store_charge_lcl', function () {
                 total_currency = total_currency.toFixed(2);
             }
         });*/
-        total_currency = currencyRateAlphacode(currency, currency_cfg, value);
+        total_currency = currencyRateAlphacode(currency, currency_cfg, sub_total);
         sum += parseFloat(total_currency);
     });
 
@@ -2805,6 +2805,7 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
 $(document).on('change', '#saleterm_type', function () {
     if($('#saleterm_type').val()=='origin'){
         $(".origin_port").removeClass('hide');
+
         $(".origin_airport").removeClass('hide');
         $(".destination_port").addClass('hide');
         $(".destination_airport").addClass('hide');
