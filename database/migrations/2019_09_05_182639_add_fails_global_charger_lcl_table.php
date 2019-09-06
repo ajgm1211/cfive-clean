@@ -13,7 +13,7 @@ class AddFailsGlobalChargerLclTable extends Migration
      */
     public function up()
     {
-        Schema::create('fails_globalcharger_lcl', function (Blueprint $table) {
+        Schema::create('failed_globalcharger_lcl', function (Blueprint $table) {
             $table->increments('id');
             $table->string('surcharge');
             $table->string('origin');
@@ -28,9 +28,11 @@ class AddFailsGlobalChargerLclTable extends Migration
             $table->boolean('port')->default(true);
             $table->boolean('country')->default(false);
             $table->string('carrier');
-            $table->integer('company_user_id');
-            $table->integer('account_imp_gclcl_id');
-            $table->string('differentiator');
+            $table->integer('company_user_id')->unsigned();
+            $table->integer('account_imp_gclcl_id')->unsigned();
+            $table->integer('differentiator');
+            $table->foreign('account_imp_gclcl_id')->references('id')->on('account_importation_global_charger_lcls')->onDelete('cascade');
+            $table->foreign('company_user_id')->references('id')->on('company_users');
             $table->timestamps();
         });
     }
