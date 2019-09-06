@@ -194,8 +194,8 @@ class QuoteV2Controller extends Controller
         return DataTables::of($colletions)
 
             ->addColumn('action',function($colletion){
-            return
-                '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                return
+                    '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -221,7 +221,7 @@ class QuoteV2Controller extends Controller
           </span>
           </a>
           </div>';
-        })->editColumn('id', '{{$id}}')->make(true);
+            })->editColumn('id', '{{$id}}')->make(true);
     }
 
     /**
