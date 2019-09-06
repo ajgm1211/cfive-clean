@@ -181,7 +181,7 @@
                                         $sum_total45+=$total_45;
                                     }
                                 }
-                                if(!in_array(1, $array)){
+                                /*if(!in_array(1, $array)){
                                     foreach($sale_terms_origin_grouped as $sale_origin){
                                         foreach($sale_origin->charge as $v){
                                             $sum_total20 += $v->sum20;
@@ -202,7 +202,7 @@
                                             $sum_total45 += $v->sum45;
                                         }
                                     }
-                                }
+                                }*/
                                 if(!$rate->inland->isEmpty()){
                                     foreach($rate->inland as $inland){
                                         if($rate->inland->where('port_id', $inland->port_id)->count()==1){

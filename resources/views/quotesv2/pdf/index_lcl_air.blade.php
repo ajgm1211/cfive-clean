@@ -215,7 +215,9 @@
                         $total_origin= 0;
                         $total_destination= 0;
                         $total_inland= 0;
+                        $array = array();
                         foreach($rate->charge_lcl_air as $value){
+                            array_push($array, $value->type_id);
                             if($quote->pdf_option->show_type!='charges'){
                                 $total_freight+=$value->total_freight;
                             }
@@ -225,20 +227,7 @@
                         foreach($rate->automaticInlandLclAir as $inland){
                             $total_inland+=$inland->total_inland;
                         }
-                        if(!in_array(1, $array)){
-                            foreach($sale_terms_origin_grouped as $sale_origin){
-                                foreach($sale_origin->charge as $v){
-                                    $total_origin += $v->total_sale_origin;  
-                                }
-                            }
-                        }
-                        if(!in_array(2, $array)){
-                            foreach($sale_terms_destination_grouped as $sale_destination){
-                                foreach($sale_destination->charge as $v){
-                                   $total_destination += $v->total_sale_destination;
-                                }
-                            }
-                        }                
+                                        
                     ?>
                     <tr class="text-center color-table"> 
                         <td >
