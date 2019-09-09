@@ -762,6 +762,10 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     Route::resource('ImportationGlobalChargerLcl','ImportationGlobalChargerLclController');
     Route::get('AccountGCLcl/','ImportationGlobalChargerLclController@indexAccount')->name('index.Account.import.gc.lcl');
     Route::PUT('UploadFileGlobalchargesLcl','ImportationGlobalChargerLclController@UploadFileNewContract')->name('Upload.File.Globalcharges.Lcl');
+    Route::get('DownloadAccountgcLcl/{id}','ImportationGlobalChargerLclController@Download')->name('Download.Account.gclcl');
+    //Failed and Good GCLCL
+    Route::get('FailedGlobalchargerslcl/{id}/{tab}','ImportationGlobalChargerLclController@showviewfailedandgood')->name('showview.globalcharge.lcl');
+    Route::get('/FailglobalchargeLoadlcl/{id}/{selector}','ImportationGlobalChargerLclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.lcl');
 });
 
 // REQUEST IMPORTATION GLOBALCHARGE LCL
