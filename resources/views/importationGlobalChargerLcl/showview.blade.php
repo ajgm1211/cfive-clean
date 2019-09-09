@@ -119,8 +119,8 @@
                                         <th> Minimum </th>
                                         <th> Currency </th>
                                         <th> Carrier </th>
-                                        <th> Validity To </th>
                                         <th> Validity From </th>
+                                        <th> Validity To </th>
                                         <th> Options </th>
                                     </tr>
                                 </thead>
@@ -170,8 +170,8 @@
                                             <th> Ammount </th>
                                             <th> Currency </th>
                                             <th> Carrier </th>
-                                            <th> Validity To </th>
                                             <th> Validity From </th>
+                                            <th> Validity To </th>
                                             <th> Options </th>
                                         </tr>
                                     </thead>
@@ -261,8 +261,8 @@
                         { data: 'minimum', name: "minimum" },
                         { data: 'currencylb', name: 'currencylb' },
                         { data: 'carrierlb', name: 'carrierlb' },
-                        { data: 'validitytolb', name: 'validitytolb' },
                         { data: 'validityfromlb', name: 'validityfromlb' },
+                        { data: 'validitytolb', name: 'validitytolb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -290,8 +290,8 @@
                         { data: 'ammount', name: "ammount" },
                         { data: 'currencylb', name: 'currencylb' },
                         { data: 'carrierlb', name: 'carrierlb' },
-                        { data: 'validitytolb', name: 'validitytolb' },
                         { data: 'validityfromlb', name: 'validityfromlb' },
+                        { data: 'validitytolb', name: 'validitytolb' },
                         { data: 'action', name: 'action', orderable: false, searchable: false },
                     ],
                     "lengthChange": false,
@@ -307,9 +307,9 @@
                 }); 
             });
 
-         /*   function showModalsavetoglobalcharge(id,operation){
+            function showModalsavetoglobalcharge(id,operation){
                 if(operation == 1){
-                    var url = '{{ route("ImportationGlobalchargeFcl.edit", ":id") }}';
+                    var url = '{{ route("ImportationGlobalChargerLcl.edit", ":id") }}';
                     url = url.replace(':id', id);
                     $('.modal-body').load(url,function(){
                         $('#modalGlobalcharge').modal();
@@ -322,7 +322,7 @@
                     });
                 }
             }
-
+/*
             $(document).on('click','#delete-Fail-global',function(){
                 var id = $(this).attr('data-id-failglobal');
                 var elemento = $(this);
