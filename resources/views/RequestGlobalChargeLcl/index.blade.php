@@ -307,7 +307,7 @@
             });
 
         });
-        /*    $(document).on('click','.eliminaracount',function(e){
+        $(document).on('click','.eliminaracount',function(e){
             var id = $(this).attr('data-id-acount');
             var elemento = $(this);
             swal({
@@ -320,7 +320,7 @@
                 reverseButtons: true
             }).then(function(result){
                 if (result.value) {
-                    url='{!! route("delete.Accounts.Globalcharges.Fcl",[":id",2]) !!}';
+                    url='{!! route("delete.Accounts.Globalcharges.Lcl",[":id",2]) !!}';
                     url = url.replace(':id', id);
                     // $(this).closest('tr').remove();
                     $.ajax({
@@ -331,7 +331,7 @@
                                 if(data.success == 1){
                                     swal(
                                         'Deleted!',
-                                        'The Request has been deleted.',
+                                        'The Account has been deleted.',
                                         'success'
                                     )
                                     //$(elemento).closest('tr').remove();
@@ -356,7 +356,7 @@
             });
 
         });
-        */
+        
     </script>
 
     @stop
