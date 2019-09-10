@@ -766,6 +766,13 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     //Failed and Good GCLCL
     Route::get('FailedGlobalchargerslcl/{id}/{tab}','ImportationGlobalChargerLclController@showviewfailedandgood')->name('showview.globalcharge.lcl');
     Route::get('/FailglobalchargeLoadlcl/{id}/{selector}','ImportationGlobalChargerLclController@FailglobalchargeLoad')->name('Fail.Load.globalcharge.lcl');
+    Route::get('saveTofailToGoddGCLCL/{id}','ImportationGlobalChargerLclController@saveFailToGood')->name('save.fail.good.globalcharge.lcl');
+    Route::get('DestroyglobalchargeFailLcl/{id}','ImportationGlobalChargerLclController@DestroyGlobalchargeF')->name('Destroy.globalcharge.Fail.lcl');
+    Route::get('DestroyglobalchargeGoodLcl/{id}','ImportationGlobalChargerLclController@DestroyGlobalchargeG')->name('Destroy.globalcharge.good.lcl');
+    Route::get('editGlobalChargeMDLCL/{id}','ImportationGlobalChargerLclController@editGlobalChar')->name('edit.globalcharge.modal.lcl');
+    Route::put('updateGlobalChargeMDLCL/{id}','ImportationGlobalChargerLclController@updateGlobalChar')->name('update.globalcharge.modal.lcl');
+    Route::get('RedirectProcessedInformationLcl/{id}','ImportationGlobalChargerLclController@redirectProcessedInformation')->name('redirect.Processed.Information.lcl');
+    Route::get('DeleteAccountsGlobalchargesLcl/{id}/{select}','ImportationGlobalChargerLclController@deleteAccounts')->name('delete.Accounts.Globalcharges.Lcl'); 
 });
 
 // REQUEST IMPORTATION GLOBALCHARGE LCL

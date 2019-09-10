@@ -20,7 +20,7 @@ $portRadio = false;
 
 <div class="m-portlet">
 
-    {{ Form::model($failglobal, array('route' => array('save.fail.good.globalcharge.fcl', $failglobal['id']), 'method' => 'GET', 'id' => 'frmSurcharges')) }}
+    {{ Form::model($failglobal, array('route' => array('save.fail.good.globalcharge.lcl', $failglobal['id']), 'method' => 'GET', 'id' => 'frmSurcharges')) }}
     <div class="m-portlet__body">
         <div class="form-group m-form__group row">
             <div class="col-lg-12">

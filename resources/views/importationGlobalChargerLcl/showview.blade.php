@@ -13,7 +13,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Global Charge
+                        Global Charge LCL
                     </h3><br>
 
                 </div>
@@ -55,26 +55,26 @@
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Global Charge 
+                                Fail Global Charge LCL
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Global Charge
+                                Good Global Charge LCL
                             </a>
                         </li>
                         @else
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link " data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
-                                Fail Global Charge 
+                                Fail Global Charge LCL
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
-                                Good Global Charge
+                                Good Global Charge LCL
                             </a>
                         </li>
                         @endif
@@ -168,6 +168,7 @@
                                             <th> Type Destiny </th>
                                             <th> Type Calculation </th>
                                             <th> Ammount </th>
+                                            <th> Minimum </th>
                                             <th> Currency </th>
                                             <th> Carrier </th>
                                             <th> Validity From </th>
@@ -288,6 +289,7 @@
                         { data: 'typedestinylb', name: "typedestinylb" },
                         { data: 'calculationtypelb', name: 'calculationtypelb' },
                         { data: 'ammount', name: "ammount" },
+                        { data: 'minimum', name: "minimum" },
                         { data: 'currencylb', name: 'currencylb' },
                         { data: 'carrierlb', name: 'carrierlb' },
                         { data: 'validityfromlb', name: 'validityfromlb' },
@@ -315,14 +317,14 @@
                         $('#modalGlobalcharge').modal();
                     });
                 }else if(operation == 2){
-                    var url = '{{ route("edit.globalcharge.modal.fcl",":id") }}';
+                    var url = '{{ route("edit.globalcharge.modal.lcl",":id") }}';
                     url = url.replace(':id', id);
                     $('.modal-body').load(url,function(){
                         $('#modalGlobalcharge').modal({show:true});
                     });
                 }
             }
-/*
+
             $(document).on('click','#delete-Fail-global',function(){
                 var id = $(this).attr('data-id-failglobal');
                 var elemento = $(this);
@@ -337,7 +339,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.globalcharge.Fail.fcl",":id") !!}';
+                        url='{!! route("Destroy.globalcharge.Fail.lcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -384,7 +386,7 @@
                 }).then(function(result){
                     if (result.value) {
 
-                        url='{!! route("Destroy.globalcharge.good.fcl",":id") !!}';
+                        url='{!! route("Destroy.globalcharge.good.lcl",":id") !!}';
                         url = url.replace(':id', id);
                         // $(this).closest('tr').remove();
                         $.ajax({
@@ -415,7 +417,7 @@
                         )
                     }
                 });
-            });*/
+            });
 
         </script>
 
