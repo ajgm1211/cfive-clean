@@ -1052,10 +1052,10 @@ class ImportationGlobalChargerLclController extends Controller
                         <a href="'.route('Download.Account.gclcl',$account->id).'" class="">
                             <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E" title="Download"></samp>
                         </a>
-                        <!--&nbsp; &nbsp; 
+                        &nbsp; &nbsp; 
                         <a href="#" class="eliminaracount" data-id-acount="'.$account->id.'"  title="Delete" >
                             <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
-                        </a>-->';
+                        </a>';
             })
             ->editColumn('id', '{{$id}}')->toJson();
     }
@@ -1084,12 +1084,11 @@ class ImportationGlobalChargerLclController extends Controller
     public function deleteAccounts($id,$select){
         //try{
         $data = PrvValidation::AcountWithJob($id);
-        dd($data);
         if($data['bool'] == false){
             $account = AccountImportationGlobalChargerLcl::find($id);
             if(count($account)>0){
-                if(Storage::disk('GCRequestLcl')->exists($Ncontract->namefile)){
-                    Storage::disk('GCAccountLcl')->delete($account->FileTmp->name_file);
+                if(Storage::disk('GCRequestLcl')->exists($account->namefile)){
+                    Storage::disk('GCAccountLcl')->delete($account->namefile);
                 }
                 $account->delete();
             }
