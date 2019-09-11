@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\SaleTermV2;
 use App\SaleTermV2Charge;
+use App\Charge;
+use App\AutomaticRate;
 
 class SaleTermV2Controller extends Controller
 {
@@ -106,6 +108,7 @@ class SaleTermV2Controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        SaleTermV2::where('id',$id)->delete();
+        return response()->json(['message' => 'Ok']);
     }
 }
