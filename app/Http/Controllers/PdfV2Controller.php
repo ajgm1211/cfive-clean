@@ -188,17 +188,9 @@ class PdfV2Controller extends Controller
 
         /* Arrays de puertos incluidos en los Saleterms */
 
-        $origin_ports = array();
+        $origin_ports = $this->getPortsInArray($sale_terms_origin_grouped);
 
-        foreach($sale_terms_origin_grouped as $value){
-            $origin_ports["port_id"]=$value->port_id;
-        }
-
-        $destination_ports = array();
-
-        foreach($sale_terms_destination_grouped as $value){
-            $destination_ports["port_id"]=$value->port_id;
-        }
+        $destination_ports = $this->getPortsInArray($sale_terms_destination_grouped);
 
         /* Fin arrays */
 
@@ -384,7 +376,7 @@ class PdfV2Controller extends Controller
 
         foreach($sale_terms_origin_grouped as $sale_origin){
             foreach($sale_origin->charge as $sale_origin_charge){
-                if($item->currency_id!=''){
+                if($sale_origin_charge->currency_id!=''){
                     if($quote->pdf_option->grouped_total_currency==1){
                         $typeCurrency =  $quote->pdf_option->total_in_currency;
                     }else{
@@ -413,57 +405,72 @@ class PdfV2Controller extends Controller
             }
         }
 
-        foreach($sale_terms_origin as $sale_origin){
-            foreach($sale_origin->charge as $sale_origin_charge){
-                if($item->currency_id!=''){
-                    if($quote->pdf_option->grouped_origin_charges==1){
-                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                    }else{
-                        $typeCurrency =  $currency_cfg->alphacode;
-                    }
+        $sale_terms_origin = collect($sale_terms_origin);
 
-                    $currency_rate=$this->ratesCurrency($sale_origin_charge->currency_id,$typeCurrency);
-                    $sale_origin_charge->total_sale_origin=number_format($sale_origin_charge->total/$currency_rate, 2, '.', '');
+        $sale_terms_origin = $sale_terms_origin->groupBy([   
+            function ($item) {
+                return $item['port']['name'].', '.$item['port']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_origin as $value){
+            foreach($value as $origin_sale){
+                foreach($origin_sale->charge as $origin_charge){
+
+                    if($origin_charge->currency_id!=''){
+                        if($quote->pdf_option->grouped_origin_charges==1){
+                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
+
+                        $origin_charge->total_sale_origin=number_format($origin_charge->total/$currency_rate, 2, '.', '');
+                    }
                 }
             }
         }
 
-        foreach($sale_terms_destination as $sale_destination){
-            foreach($sale_destination->charge as $sale_destination_charge){
+        $sale_terms_destination = collect($sale_terms_destination);
 
-                if($sale_destination_charge->currency_id!=''){
-                    if($quote->pdf_option->grouped_destination_charges==1){
-                        $typeCurrency =  $quote->pdf_option->destination_charges_currency;
-                    }else{
-                        $typeCurrency =  $currency_cfg->alphacode;
+        $sale_terms_destination = $sale_terms_destination->groupBy([   
+            function ($item) {
+                return $item['port']['name'].', '.$item['port']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_destination as $destination_sale){
+            foreach($destination_sale as $value){
+                foreach($value->charge as $item){
+                    if($item->currency_id!=''){
+                        if($quote->pdf_option->grouped_destination_charges==1){
+                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                        $item->total_sale_destination=number_format($item->total/$currency_rate, 2, '.', '');
                     }
-                    $currency_rate=$this->ratesCurrency($sale_destination_charge->currency_id,$typeCurrency);
-
-                    $sale_destination_charge->total_sale_destination=number_format($sale_destination_charge->total/$currency_rate, 2, '.', '');
                 }
             }
         }
 
-        $origin_sales = $sale_terms_origin->map(function ($origin) {
-            return collect($origin->toArray())
-                ->only(['port_id'])
-                ->all();
-        });
+        /* Arrays de puertos incluidos en los Saleterms */
 
-        $destination_sales = $sale_terms_destination->map(function ($origin) {
-            return collect($origin->toArray())
-                ->only(['port_id'])
-                ->all();
-        });
+        $origin_ports = $this->getPortsInArray($sale_terms_origin_grouped);
+
+        $destination_ports = $this->getPortsInArray($sale_terms_destination_grouped);
+
+        /* Fin arrays */
 
         $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
             $query->where('type_id', 3);
         })->where('quote_id',$quote->id)->get();
 
-        $origin_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
+        $origin_charges = AutomaticRate::whereNotIn('destination_port_id',$origin_ports)->where('quote_id',$quote->id)
             ->ChargeLclAir(1,'Origin')->get();
 
-        $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_sales)->where('quote_id',$quote->id)
+        $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_ports)->where('quote_id',$quote->id)
             ->ChargeLclAir(2,'Destination')->get();
 
         $contact_email = Contact::find($quote->contact_id);
@@ -525,39 +532,64 @@ class PdfV2Controller extends Controller
 
         }
 
-
-        $origin_sales = $origin_sales->toArray();
-        $destination_sales = $destination_sales->toArray();
-        $origin_sales = array_column($origin_sales, 'port_id');
-        $destination_sales = array_column($destination_sales, 'port_id');
-
-        $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_sales, $destination_sales, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
-            if(in_array($item->origin_port_id,$origin_sales)){
-                $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
-                    if($value->type_id==1){
-                        $value->total_origin=0;
-                        $sale_terms_origin_grouped->map(function ($a) use($item, $value) {
-                            if($item->origin_port_id == $a->port_id){
-                                $a->charge->map(function ($charge) use($value){
-                                    $value->total_origin = $charge->total_sale_origin;
-                                });
-                            }
+        $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
+            if(in_array($item->origin_port_id,$origin_ports)){
+                if(!$item->charge->whereIn('type_id',1)->isEmpty()){
+                    $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
+                        if($value->type_id==1){
+                            $value->total_origin=0;
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 1;
+                            $charge->total_origin = $x->total_sale_origin;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
                         });
-                    }
-                });
+                    });
+                }else{
+
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 1;
+                            $charge->total_origin = $x->total_sale_origin;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
+                        });
+                    });
+                }
             }
-            if(in_array($item->destination_port_id,$destination_sales)){
+            if(in_array($item->destination_port_id,$destination_ports)){
                 $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
                     if($value->type_id==2){
                         $value->total_destination=0;
-                        $sale_terms_destination_grouped->map(function ($a) use($item, $value) {
-                            if($item->destination_port_id == $a->port_id){
-                                $a->charge->map(function ($charge) use($value){
-                                    $value->total_destination = $charge->total_sale_destination;
-                                });
-                            }
-                        });
                     }
+                });
+                //Añadimos los saleterms a la colección de Rates
+                $sale_terms_destination_grouped->map(function ($a) use($item) {
+                    $a->charge->map(function ($x) use($item) {
+                        $charge = new ChargeLclAir();
+                        $charge->type_id = 2;
+                        $charge->total_destination = $x->total_sale_destination;
+                        $charge->currency_id = $x->currency_id;
+                        $item->charge_lcl_air->push($charge);
+                    });
+                });
+            }else{
+                //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                $sale_terms_destination_grouped->map(function ($a) use($item) {
+                    $a->charge->map(function ($x) use($item) {
+                        $charge = new ChargeLclAir();
+                        $charge->type_id = 2;
+                        $charge->total_destination = $x->total_sale_destination;
+                        $charge->currency_id = $x->currency_id;
+                        $item->charge_lcl_air->push($charge);
+                    });
                 });
             }
 
@@ -876,57 +908,72 @@ class PdfV2Controller extends Controller
                 }
             }
 
-            foreach($sale_terms_origin as $sale_origin){
-                foreach($sale_origin->charge as $sale_origin_charge){
-                    if($sale_origin_charge->currency_id!=''){
-                        if($quote->pdf_option->grouped_origin_charges==1){
-                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                        }else{
-                            $typeCurrency =  $currency_cfg->alphacode;
-                        }
+            $sale_terms_origin = collect($sale_terms_origin);
 
-                        $currency_rate=$this->ratesCurrency($sale_origin_charge->currency_id,$typeCurrency);
-                        $sale_origin_charge->total_sale_origin=number_format($sale_origin_charge->total/$currency_rate, 2, '.', '');
+            $sale_terms_origin = $sale_terms_origin->groupBy([   
+                function ($item) {
+                    return $item['port']['name'].', '.$item['port']['code'];
+                },     
+            ], $preserveKeys = true);
+
+            foreach($sale_terms_origin as $value){
+                foreach($value as $origin_sale){
+                    foreach($origin_sale->charge as $origin_charge){
+
+                        if($origin_charge->currency_id!=''){
+                            if($quote->pdf_option->grouped_origin_charges==1){
+                                $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                            }else{
+                                $typeCurrency =  $currency_cfg->alphacode;
+                            }
+                            $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
+
+                            $origin_charge->total_sale_origin=number_format($origin_charge->total/$currency_rate, 2, '.', '');
+                        }
                     }
                 }
             }
 
-            foreach($sale_terms_destination as $sale_destination){
-                foreach($sale_destination->charge as $sale_destination_charge){
+            $sale_terms_destination = collect($sale_terms_destination);
 
-                    if($sale_destination_charge->currency_id!=''){
-                        if($quote->pdf_option->grouped_destination_charges==1){
-                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
-                        }else{
-                            $typeCurrency =  $currency_cfg->alphacode;
+            $sale_terms_destination = $sale_terms_destination->groupBy([   
+                function ($item) {
+                    return $item['port']['name'].', '.$item['port']['code'];
+                },     
+            ], $preserveKeys = true);
+
+            foreach($sale_terms_destination as $destination_sale){
+                foreach($destination_sale as $value){
+                    foreach($value->charge as $item){
+                        if($item->currency_id!=''){
+                            if($quote->pdf_option->grouped_destination_charges==1){
+                                $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                            }else{
+                                $typeCurrency =  $currency_cfg->alphacode;
+                            }
+                            $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                            $item->total_sale_destination=number_format($item->total/$currency_rate, 2, '.', '');
                         }
-                        $currency_rate=$this->ratesCurrency($sale_destination_charge->currency_id,$typeCurrency);
-
-                        $sale_destination_charge->total_sale_destination=number_format($sale_destination_charge->total/$currency_rate, 2, '.', '');
                     }
                 }
             }
 
-            $origin_sales = $sale_terms_origin->map(function ($origin) {
-                return collect($origin->toArray())
-                    ->only(['airport_id'])
-                    ->all();
-            });
+            /* Arrays de puertos incluidos en los Saleterms */
 
-            $destination_sales = $sale_terms_destination->map(function ($origin) {
-                return collect($origin->toArray())
-                    ->only(['airport_id'])
-                    ->all();
-            });
+            $origin_airports = $this->getAirportsInArray($sale_terms_origin_grouped);
+
+            $destination_airports = $this->getAirportsInArray($sale_terms_destination_grouped);
+
+            /* Fin arrays */
 
             $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
                 $query->where('type_id', 3);
             })->where('quote_id',$quote->id)->get();
 
-            $origin_charges = AutomaticRate::whereNotIn('origin_airport_id',$origin_sales)->where('quote_id',$quote->id)
+            $origin_charges = AutomaticRate::whereNotIn('origin_airport_id',$origin_airports)->where('quote_id',$quote->id)
                 ->ChargeLclAir(1,'Origin')->get();
 
-            $destination_charges = AutomaticRate::whereNotIn('destination_airport_id',$destination_sales)->where('quote_id',$quote->id)
+            $destination_charges = AutomaticRate::whereNotIn('destination_airport_id',$destination_airports)->where('quote_id',$quote->id)
                 ->ChargeLclAir(2,'Destination')->get();
 
             $contact_email = Contact::find($quote->contact_id);
@@ -980,44 +1027,70 @@ class PdfV2Controller extends Controller
                 }
             }
 
-            $origin_sales = $origin_sales->toArray();
-
-            $destination_sales = $destination_sales->toArray();
-            $origin_sales = array_column($origin_sales, 'airport_id');
-            $destination_sales = array_column($destination_sales, 'airport_id');
-
-            $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_sales, $destination_sales, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
-                if(in_array($item->origin_airport_id,$origin_sales)){
-                    $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
-                        if($value->type_id==1){
-                            $value->total_origin=0;
-                            $sale_terms_origin_grouped->map(function ($a) use($item, $value) {
-                                if($item->origin_airport_id == $a->airport_id){
-                                    $a->charge->map(function ($charge) use($value){
-                                        $value->total_origin = $charge->total_sale_origin;
-                                    });
-                                }
+            $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
+                if(in_array($item->origin_port_id,$origin_ports)){
+                    if(!$item->charge->whereIn('type_id',1)->isEmpty()){
+                        $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
+                            if($value->type_id==1){
+                                $value->total_origin=0;
+                            }
+                        });
+                        //Añadimos los saleterms a la colección de Rates
+                        $sale_terms_origin_grouped->map(function ($a) use($item) {
+                            $a->charge->map(function ($x) use($item) {
+                                $charge = new ChargeLclAir();
+                                $charge->type_id = 1;
+                                $charge->total_origin = $x->total_sale_origin;
+                                $charge->currency_id = $x->currency_id;
+                                $item->charge_lcl_air->push($charge);
                             });
-                        }
-                    });
+                        });
+                    }else{
+
+                        //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                        $sale_terms_origin_grouped->map(function ($a) use($item) {
+                            $a->charge->map(function ($x) use($item) {
+                                $charge = new ChargeLclAir();
+                                $charge->type_id = 1;
+                                $charge->total_origin = $x->total_sale_origin;
+                                $charge->currency_id = $x->currency_id;
+                                $item->charge_lcl_air->push($charge);
+                            });
+                        });
+                    }
                 }
-                if(in_array($item->destination_port_id,$destination_sales)){
+                if(in_array($item->destination_port_id,$destination_ports)){
                     $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
                         if($value->type_id==2){
                             $value->total_destination=0;
-                            $sale_terms_destination_grouped->map(function ($a) use($item, $value) {
-                                if($item->destination_airport_id == $a->airport_id){
-                                    $a->charge->map(function ($charge) use($value){
-                                        $value->total_destination = $charge->total_sale_destination;
-                                    });
-                                }
-                            });
                         }
                     });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 2;
+                            $charge->total_destination = $x->total_sale_destination;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
+                        });
+                    });
+                }else{
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 2;
+                            $charge->total_destination = $x->total_sale_destination;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
+                        });
+                    });
                 }
+
                 return $item;
             });
-            //dd($rates_lcl_air);
+
             $origin_charges_grouped = collect($origin_charges);
 
             $origin_charges_grouped = $origin_charges_grouped->groupBy([

@@ -65,7 +65,6 @@ $x=0;
                                                     <a href="#" class="editable-saleterms td-a" data-type="text" data-name="charge" data-value="{{$v->charge}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="Charge" data-emptyText="-"></a>
                                                 </td>
                                                 <td class="tds">
-                                                    
                                                     <a href="#" class="editable-saleterms td-a" data-type="text" data-name="detail" data-value="{{$v->detail}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="Detail" data-emptyText="-"></a>
                                                 </td>
                                                 <td class="tds" {{ @$equipmentHides['20'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c20" data-value="{{$v->c20}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="20"></a></td>
@@ -76,7 +75,13 @@ $x=0;
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="units" data-value="{{$v->units}}" data-pk="{{$v->id}}" data-title="units"></a></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="rate" data-value="{{$v->rate}}" data-pk="{{$v->id}}" data-title="rate"></a></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="total" data-value="{{$v->total}}" data-pk="{{$v->id}}" data-title="total"></a></td>
-                                                <td class="tds"><a href="#" class="editable-saleterms td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$v->currency_id}}" data-pk="{{$v->id}}" data-title="Select currency" data-emptyText="-"></a></td>
+                                                <td class="tds"><a href="#" class="editable-saleterms td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$v->currency_id}}" data-pk="{{$v->id}}" data-title="Select currency" data-emptyText="-"></a>
+                                                &nbsp;
+                                                <input type="hidden" name="saleterm_charge_id" class="form-control saleterm_charge_id" value="{{$v->id}}"/>
+                                                <a class="delete-saleterm-charge" style="cursor: pointer;" title="Delete">
+                                                    <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                </a>
+                                                </td>
                                             </tr>
                                             @endforeach
                                             <tr class="hide" id="sale_charges_{{$x}}">
@@ -92,6 +97,9 @@ $x=0;
                                                 <td class="tds" {{ @$equipmentHides['40hc'] }}><input type="number" class="form-control c40hc" name="c40hc" placeholder="40' HC"/></td>
                                                 <td class="tds" {{ @$equipmentHides['40nor'] }}><input type="number" class="form-control c40nor" name="c40nor" placeholder="40' NOR"/></td>
                                                 <td class="tds" {{ @$equipmentHides['45'] }}><input type="number" class="form-control c45" name="c45" placeholder="45'"/></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control rate" name="rate" placeholder="Units"/></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control units" name="units" placeholder="Rate"/></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control total" name="total" placeholder="Total"/></td>
                                                 <td class="tds">
                                                     <div class="input-group">
                                                         <div class="input-group-btn">

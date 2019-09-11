@@ -1598,4 +1598,24 @@ trait QuoteV2Trait {
         }
         return $rateC;
     }
+
+    public function getPortsInArray($collection){
+        $array = array();
+        
+        foreach($collection as $value){
+            $array["port_id"]=$value->port_id;
+        }
+        
+        return $array;
+    }    
+    
+    public function getAirportsInArray($collection){
+        $array = array();
+        
+        foreach($collection as $value){
+            $array["airport_id"]=$value->airport_id;
+        }
+        
+        return $array;
+    }
 }
