@@ -111,4 +111,10 @@ class SaleTermV2Controller extends Controller
         SaleTermV2::where('id',$id)->delete();
         return response()->json(['message' => 'Ok']);
     }
+
+    public function destroyCharge($id)
+    {
+        SaleTermV2Charge::where('id',$id)->delete();
+        return response()->json(['message' => 'Ok']);
+    }
 }

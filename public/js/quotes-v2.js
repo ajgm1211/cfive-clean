@@ -1578,6 +1578,9 @@ $(document).on('click', '.store_sale_charge', function () {
     var c40hc = $(this).closest("tr").find(".c40hc").val();
     var c40nor = $(this).closest("tr").find(".c40nor").val();
     var c45 = $(this).closest("tr").find(".c45").val();
+    var units = $(this).closest("tr").find(".units").val();
+    var rate = $(this).closest("tr").find(".rate").val();
+    var total = $(this).closest("tr").find(".total").val();
     var currency_id = $(this).closest("tr").find(".currency_id").val();
     $.ajax({
         type: 'POST',
@@ -1591,6 +1594,9 @@ $(document).on('click', '.store_sale_charge', function () {
             "c40hc":c40hc,
             "c40nor":c40nor,
             "c45":c45,
+            "units":units,
+            "rate":rate,
+            "total":total,
             "currency_id":currency_id,
         },
         success: function(data) {
@@ -2220,6 +2226,36 @@ $(document).on('click', '.delete-charge', function () {
     });
 });
 
+//Borrar cargos SaleTerms
+$(document).on('click', '.delete-saleterm-charge', function () {
+    var id=$(this).closest('tr').find('.saleterm_charge_id').val();
+    var theElement = $(this);
+    swal({
+        title: 'Are you sure?',
+        text: "Please confirm!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, I am sure!'
+    }).then(function (result) {
+        if (result.value) {
+            $.ajax({
+                type: 'GET',
+                url: '/v2/quotes/delete/saleterm/charge/'+id,
+                success: function(data) {
+                    if(data.message=='Ok'){
+                        swal(
+                            'Updated!',
+                            'The charge has been deleted.',
+                            'success'
+                        )
+                    }
+                    $(theElement).closest('tr').remove();
+                }
+            });
+        }
+    });
+});
+
 //Borrar cargo LCL/AIR
 $(document).on('click', '.delete-charge-lcl', function () {
     var id=$(this).closest('tr').find('.charge_id').val();
@@ -2799,6 +2835,34 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
             'error'
         )
     }
+});
+
+//Calculando el total de un cargo en Saleterm
+
+$(document).on("change keyup keydown", ".units, .rate", function() {
+    var sum = 0;
+    var total_amount = 0;
+    var sum_total = 0;
+    var sum_total_2 = 0;
+    var total_2 = 0;
+    var markup = 0;
+    var total=0;
+    var self = this;
+    var data = '';
+    var currency_cfg = $("#currency_id").val();
+    $(".rate").each(function(){
+        $( this).each(function() {
+            var quantity = $(this).closest('tr').find('.units').val();
+
+            if(quantity > 0) {
+                total_amount = quantity * $(this).val();
+                $(this).closest('tr').find('.total').val(total_amount);
+            }else{
+                total_amount = 0;
+                $(this).closest('tr').find('.total').val(total_amount);
+            }
+        });
+    });
 });
 
 //Mostrar y ocultar puertos en Sale Terms
