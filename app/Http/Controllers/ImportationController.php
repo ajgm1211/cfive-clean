@@ -30,10 +30,12 @@ use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\ContractFclFile;
 use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
+use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
@@ -657,7 +659,7 @@ class ImportationController extends Controller
                 $contract->direction_id     = $direction_id;
                 $contract->status           = 'incomplete';
                 $contract->company_user_id  = $CompanyUserId;
-                $contract->account_id  = $account->id;
+                $contract->account_id       = $account->id;
                 $contract->save();
 
                 foreach($request->carrierM as $carrierVal){
@@ -673,6 +675,17 @@ class ImportationController extends Controller
             $fileTmp->contract_id = $Contract_id;
             $fileTmp->name_file   = $nombre;
             $fileTmp->save(); //*/
+
+            if(!empty($request_id)){
+                $requestFile    = NewContractRequest::find($request_id);
+                if(!empty($requestFile->id)){
+                    $contractFile   =  new ContractFclFile();
+                    $contractFile->contract_id  = $Contract_id;
+                    $contractFile->namefile     = $requestFile->namefile;
+                    $contractFile->save();
+                }
+            }
+
         } else {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error storage:link!!');
