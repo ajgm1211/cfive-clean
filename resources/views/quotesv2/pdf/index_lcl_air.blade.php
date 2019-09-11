@@ -684,16 +684,17 @@
                     @endforeach
                 @empty
                     @if($sale_terms_origin->count()>0)
-                        @foreach($sale_terms_origin as $value)
+                        @foreach($sale_terms_origin as $origin=>$sale_origin)
+                        @foreach($sale_origin as $value)
                             <div>
                                @if($quote->type=='AIR')
-                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->airport->code}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->airport->code}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->airport->name.', '.$value->airport->code}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                                 @else
-                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->port->code}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->port->code}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->port->name.', '.$value->port->code}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
+                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                                 @endif
                                 <br>
                             </div>
@@ -723,6 +724,7 @@
                                         @php
                                             $total_origin += $item->total_sale_origin;
                                         @endphp
+                                    @endforeach
                                         <tr class="text-left color-table">
                                             <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total origin charges</td>
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en origen</td>
@@ -735,9 +737,9 @@
                                                 <td >{{$currency_cfg->alphacode}}</td>
                                             @endif
                                         </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
+                        @endforeach
                         @endforeach
                     @endif
                 @endforelse
@@ -745,16 +747,17 @@
         
         @if($quote->pdf_option->grouped_origin_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
             @if($sale_terms_origin->count()>0)
-                @foreach($sale_terms_origin as $value)
+                @foreach($sale_terms_origin as $origin=>$sale_origin)
+                @foreach($sale_origin as $value)
                     <div>
                         @if($quote->type=='AIR')
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->airport->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->airport->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->airport->name.', '.$value->airport->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                         @else
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$value->airport->name.', '.$value->port->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$value->airport->name.', '.$value->port->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$value->port->name.', '.$value->port->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
                         @endif
                         <br>
                     </div>
@@ -801,6 +804,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                @endforeach
                 @endforeach
             @endif
         @endif
@@ -1023,11 +1027,12 @@
                 @endforeach
             @empty
             @if($sale_terms_destination->count()>0)
-                    @foreach($sale_terms_destination as $value)
+                    @foreach($sale_terms_destination as $destination=>$sale_destination)
+                        @foreach($sale_destination as $value)
                             <div>
-                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$value->port->name.', '.$value->port->code}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$value->port->name.', '.$value->port->code}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$value->port->name.', '.$value->port->code}}</p>
+                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
+                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
+                                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
                                 <br>
                             </div>
 
@@ -1056,6 +1061,7 @@
                                         @php
                                             $total_destination += $item->total_sale_destination;
                                         @endphp
+                                    @endforeach
                                         <tr class="text-left color-table">
                                             <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total destination charges</td>
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
@@ -1068,22 +1074,23 @@
                                                 <td >{{$currency_cfg->alphacode}}</td>
                                             @endif
                                         </tr>
-                                    @endforeach
                                 </tbody>
                             </table>
                             @endforeach
-                        @endif
+                        @endforeach
+                    @endif
             @endforelse
             <br>
         @endif
                 
         @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
             @if($sale_terms_destination->count()>0)
-                @foreach($sale_terms_destination as $value)
+                @foreach($sale_terms_destination as $destination=>$sale_destination)
+                @foreach($sale_destination as $value)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$value->port->name.', '.$value->port->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$value->port->name.', '.$value->port->code}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$value->port->name.', '.$value->port->code}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
+                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
@@ -1144,6 +1151,7 @@
                         </tr>
                     </tbody>
                 </table>
+                @endforeach
                 @endforeach
             @endif
         @endif
