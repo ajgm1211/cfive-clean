@@ -45,6 +45,7 @@ class UserConfigurationsController extends Controller
         $nrifcl     = true;
         $nrilcl     = true;
         $nrigcfcl   = true;
+        $nrigclcl   = true;
         
         if($request->input('notifications-request-importation-fcl') == null){
             $nrifcl = false;
@@ -64,10 +65,17 @@ class UserConfigurationsController extends Controller
             $nrigcfcl = true;
         }
         
+        if($request->input('notifications-request-importation-gclcl') == null){
+            $nrigclcl = false;
+        } else {
+            $nrigclcl = true;
+        }
+        
         //dd($request->all());
         $json['notifications']['request-importation-fcl']   = $nrifcl;
         $json['notifications']['request-importation-lcl']   = $nrilcl;
         $json['notifications']['request-importation-gcfcl'] = $nrigcfcl;
+        $json['notifications']['request-importation-gclcl'] = $nrigclcl;
         
         $conf = UserConfiguration::where('user_id',$id)->first();
         $conf->paramerters = json_encode($json);

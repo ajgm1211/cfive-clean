@@ -71,14 +71,14 @@ class SendEmailRequestGcJob implements ShouldQueue
                 foreach ($usersCompa as $userCmp) {
                     if($userCmp->id != $Ncontract->user_id){
                         $json = PrvUserConfigurations::allData($userCmp->id);
-                        if($json['notifications']['request-importation-gcfcl']){
+                        if($json['notifications']['request-importation-gclcl']){
                             \Mail::to($userCmp->email)->send(new NewRequestGlobalChargeLclToAdminMail($userCmp->toArray(),$Ncontract->toArray()));
                         }
                     }
                 }
 
                 $json = PrvUserConfigurations::allData($usercreador['id']);
-                if($json['notifications']['request-importation-gcfcl']){
+                if($json['notifications']['request-importation-gclcl']){
                     \Mail::to($usercreador['email'])->send(new NewRequestGlobalChargeLclToUsernMail($usercreador,
                                                                                                 $Ncontract->toArray()));
                 }
