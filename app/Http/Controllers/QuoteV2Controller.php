@@ -197,8 +197,8 @@ class QuoteV2Controller extends Controller
         return DataTables::of($colletions)
 
             ->addColumn('action',function($colletion){
-            return
-                '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                return
+                    '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -224,7 +224,7 @@ class QuoteV2Controller extends Controller
           </span>
           </a>
           </div>';
-        })->editColumn('id', '{{$id}}')->make(true);
+            })->editColumn('id', '{{$id}}')->make(true);
     }
 
     /**
@@ -319,7 +319,7 @@ class QuoteV2Controller extends Controller
         $port_destination_ids = explode(",",$port_destination_ids);
         $rate_origin_ports = Harbor::whereIn('id',$port_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
         $rate_destination_ports = Harbor::whereIn('id',$port_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
-        
+
         //Airports when saleterms
         $airport_origin_ids = $rates->implode('origin_airport_id', ', ');
         $airport_origin_ids = explode(",",$airport_origin_ids);
@@ -1827,16 +1827,6 @@ class QuoteV2Controller extends Controller
     }
 
     /**
-   * Destroy sale terms
-   * @param  integer $id
-   * @return array json
-   */
-    public function deleteSaleTerm($id){
-        SaleTermV2::where('id',$id)->delete();
-        return response()->json(['message' => 'Ok']);
-    }
-
-    /**
    * Destroy automatic rates
    * @param  integer $id
    * @return array json
@@ -2132,9 +2122,27 @@ class QuoteV2Controller extends Controller
         $charge->c45=$request->c45;
         $charge->currency_id=$request->currency_id;
         $charge->save();
+        
+        $data = SaleTermV2::find($request->sale_term_id);
 
-        //$charge = SaleTermV2Charge::find($charge->id);
-        //$total=$charge->c20+$charge->c40+$charge->c40hc+$charge->c40nor+$charge->c45;
+        $quote = QuoteV2::find($data->quote_id);
+        
+        if($data->type=='Origin'){
+            $rate = AutomaticRate::where('quote_id',$quote->id)->where('origin_port_id', $data->port_id)->first();
+        }else{
+            $rate = AutomaticRate::where('quote_id',$quote->id)->where('destination_port_id', $data->port_id)->first();   
+        }
+        
+        $charge = new Charge();
+        $charge->automatic_rate_id=$rate->id;
+        if($data->type=='Origin'){
+            $charge->type_id=1;   
+        }else{
+            $charge->type_id=2;
+        }
+        $charge->currency_id=149;
+        $charge->saleterm=1;
+        $charge->save();
 
         return response()->json(['message' => 'Ok']);
     }
