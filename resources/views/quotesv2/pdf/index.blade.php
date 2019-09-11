@@ -505,7 +505,7 @@
                                                                     <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                                     <td>{{$r->via!='' ? $r->via:'-'}}</td>
                                                                 @endif
-                                                                <td>{{$v->currency->alphacode}}</td>
+                                                                <td >{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @endif
                                                     @endif
