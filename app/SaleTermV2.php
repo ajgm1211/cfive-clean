@@ -22,4 +22,5 @@ class SaleTermV2 extends Model
     {
         return $this->hasMany('App\SaleTermV2Charge','sale_term_id','id');
     }
+
 }
