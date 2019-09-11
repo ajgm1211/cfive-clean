@@ -794,10 +794,10 @@ class ImportationGlobalchargerLclJob implements ShouldQueue
                                     //---------------------------- TYPE DESTINY  ----------------------------------------------------
 
                                     if($typedestinyExitBol == true){
-                                        if($typedestinyBol == true){
+                                        //if($typedestinyBol == true){
                                             $typedestinyobj = TypeDestiny::find($typedestinyVal);
                                             $typedestinyVal = $typedestinyobj->description;
-                                        }
+                                        //}
                                     }
 
                                     //---------------------------- CARRIER  ---------------------------------------------------------

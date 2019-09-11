@@ -99,7 +99,7 @@
                                 <input type="hidden" value="{{$countfailglobal}}" id="strfailinput" />
                             </label>
                             &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="{{route('Reprocesar.globalcharge.fcl',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                            <a href="{{route('Reprocesar.globalcharge.lcl',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
                             <br>
 
                         </div>
