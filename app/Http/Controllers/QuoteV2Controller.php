@@ -112,14 +112,8 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
-            /*$quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->get();*/
             $quotes = ViewQuoteV2::where('user_id',\Auth::user()->id)->orderBy('created_at', 'desc')->get();
         }else{
-            /*$quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->get();*/
             $quotes = ViewQuoteV2::where('company_user_id',$company_user_id)->orderBy('created_at', 'desc')->get();
         }
 
@@ -162,26 +156,46 @@ class QuoteV2Controller extends Controller
                 $destination_li.='<li>'.$item.'</li>';
             }
 
+            if($quote->business_name!=''){
+                $company = $quote->business_name;
+            }else{
+                $company = '---';
+            }
+
+            if($quote->contact!=''){
+                $contact = $quote->contact;
+            }else{
+                $contact = '---';
+            }
+
             $data = [
                 'id'            => $id,
                 'idSet'         => setearRouteKey($quote->id),
-                'client'        => $quote->business_name,
+                'client'        => $company,
+                'contact'       => $contact,
+                'user'          => $quote->owner,                
                 'created'       => date_format($quote->created_at, 'M d, Y H:i'),
-                'user'          => $quote->owner,
-                'origin'        => '<ul>'.$origin_li.'</ul>',
-                'destination'   => '<ul>'.$destination_li.'</ul>',
+                'origin'        => '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  See origins
+                                  </button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                  <small>'.$origin_li.'</small>
+                                  </div>',
+                'destination'   => '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  See destinations
+                                  </button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
+                                  <small>'.$destination_li.'</small>
+                                  </div>',
                 'type'          => $quote->type,
-                'img'          => $img,
             ];
             $colletions->push($data);
         }
         return DataTables::of($colletions)
 
-            ->addColumn('type', function ($colletion) {
-                return '<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-            })->addColumn('action',function($colletion){
-            return
-                '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            ->addColumn('action',function($colletion){
+                return
+                    '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -207,7 +221,7 @@ class QuoteV2Controller extends Controller
           </span>
           </a>
           </div>';
-        })->editColumn('id', '{{$id}}')->make(true);
+            })->editColumn('id', '{{$id}}')->make(true);
     }
 
     /**
@@ -694,7 +708,11 @@ class QuoteV2Controller extends Controller
         }
 
         $owner=$quote->user->name.' '.$quote->user->lastname;
-        $company_name=$quote->company->business_name;
+        if($quote->company_id!=''){
+            $company_name=$quote->company->business_name;   
+        }else{
+            $company_name = '';
+        }
 
         return response()->json(['message'=>'Ok','quote'=>$quote,'contact_name'=>$contact_name,'owner'=>$owner,'price_name'=>$price_name,'gdp'=>$gdp,'company_name'=>$company_name]);
     }
@@ -1184,7 +1202,7 @@ class QuoteV2Controller extends Controller
             if($email_settings->email_signature_type=='text'){
                 $sign = $email_settings->email_signature_text;
             }else{
-                $sign = '<img src="'.$email_settings->email_signature_image.'" width=100>';
+                $sign = $email_settings->email_signature_image;
             }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
@@ -2828,21 +2846,27 @@ class QuoteV2Controller extends Controller
       });
     })->get();*/
 
-        $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
-            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+
+        $language_id = $company->companyUser->pdf_language;
+
+
+
+        $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->where('language_id',$language_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
                 $b->wherein('carrier_id',$rem_carrier_id);
             });
         })->get();
 
 
-        $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id)  {
-            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->where('language_id',$language_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
                 $b->wherein('carrier_id',$rem_carrier_id);
             });
         })->get();
 
-        $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id) {
-            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id,$language_id) {
+            $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->where('language_id',$language_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
                 $b->wherein('carrier_id',$rem_carrier_id);
             });
         })->get();
@@ -2855,18 +2879,18 @@ class QuoteV2Controller extends Controller
         foreach($remarks_all as $remAll){
             $rems .="<br>";
             $remarkA = $origin_port->name." / ".$carrier->name;
-            $remarkA .=  "<br>".$remAll->remark->export."<br>";
+            $remarkA .=  "<br>".$remAll->remark->export;
         }
 
         foreach($remarks_origin as $remOrig){
             $rems .="<br>";
             $remarkO = $origin_port->name." / ".$carrier->name;
-            $remarkO .=  "<br>".$remOrig->remark->export."<br>";
+            $remarkO .=  "<br>".$remOrig->remark->export;
         }
         foreach($remarks_destination as $remDest){
             $rems .="<br>";
             $remarkD = $destiny_port->name." / ".$carrier->name;
-            $remarkD .=  "<br>".$remDest->remark->export."<br>";
+            $remarkD .=  "<br>".$remDest->remark->export;
         }
         $rems = $remarkO." ".$remarkD." ".$remarkA ; 
         return $rems;
@@ -3179,7 +3203,7 @@ class QuoteV2Controller extends Controller
                             $inlandDest = new AutomaticInland();
                             $inlandDest->quote_id= $quote->id;
                             $inlandDest->automatic_rate_id = $rate->id;
-                            $inlandDest->provider =  $inlandDestiny->providerName;
+                            $inlandDest->provider =  "Inland ".$form->destination_address;
                             $inlandDest->distance =  $inlandDestiny->km;
                             $inlandDest->contract = $info_D->contract->id;
                             $inlandDest->port_id = $inlandDestiny->port_id;
@@ -3223,7 +3247,7 @@ class QuoteV2Controller extends Controller
                             $inlandOrig = new AutomaticInland();
                             $inlandOrig->quote_id= $quote->id;
                             $inlandOrig->automatic_rate_id = $rate->id;
-                            $inlandOrig->provider =  $inlandOrigin->providerName;
+                            $inlandOrig->provider = "Inland ". $form->origin_address;
                             $inlandOrig->distance =  $inlandOrigin->km;
                             $inlandOrig->contract = $info_D->contract->id;
                             $inlandOrig->port_id = $inlandOrigin->port_id;
@@ -3345,16 +3369,16 @@ class QuoteV2Controller extends Controller
                     $chargeFreight->total =  $arregloMarkupsF;
                     $chargeFreight->save();
                 }
-
-
-
             }  
 
             // Terminos Automatica
+            $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+            $language_id = $company->companyUser->pdf_language;
+
             $modo  =  $request->input('mode');
             $companyUser = CompanyUser::All();
             $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-            $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->with('language')->get();
+            $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->where('language_id',$language_id)->with('language')->get();
 
             $terminos="";
             //Export
@@ -4253,6 +4277,24 @@ class QuoteV2Controller extends Controller
 
         }
 
+        // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
+
+        if(in_array('20',$equipment)){
+            $arreglo->where('twuenty' , '!=' , "0");
+        }
+        if(in_array('40',$equipment)){
+            $arreglo->where('forty' , '!=' , "0");
+        }
+        if(in_array('40HC',$equipment)){
+            $arreglo->where('fortyhc' , '!=' , "0");
+        }
+        if(in_array('40NOR',$equipment)){
+            $arreglo->where('fortynor' , '!=' , "0");
+        }
+        if(in_array('45',$equipment)){
+            $arreglo->where('fortyfive' , '!=' , "0"); 
+        }
+
 
         $arreglo = $arreglo->get();
 
@@ -5037,6 +5079,9 @@ class QuoteV2Controller extends Controller
             if($data->contract->remarks != "")
                 $remarks = $data->contract->remarks."<br>";
 
+
+
+
             $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
             $remarks = trim($remarks);
 
@@ -5273,12 +5318,20 @@ class QuoteV2Controller extends Controller
 
 
 
+
         foreach($collection as $item){
+            $total = count($item['99']);
+            $fin = array();
+
+            foreach($item['99'] as $test){  
+                $fin[] = $test['currency_id'];
+            }
+            $resultado = array_unique($fin); 
             foreach($item as $items){
                 $totalPadres = count($item['99']);
-                $totalhijos = count($items);
+                // $totalhijos = count($items);
 
-                if($totalPadres >= 2 ){
+                if($totalPadres >= 2 && count($resultado) > 1  ){
                     foreach($items as $itemsDetail){
 
                         $monto += $itemsDetail['monto']; 
@@ -5295,38 +5348,45 @@ class QuoteV2Controller extends Controller
                     $montoMarkup = 0;
                     $totalMarkup = 0;
 
-                }else if($totalhijos > 1 ){
-                    foreach($items as $itemsDetail){
+                }/*else if($totalhijos > 1 ){
+          foreach($items as $itemsDetail){
 
-                        $monto += $itemsDetail['monto']; 
-                        $montoMarkup += $itemsDetail['montoMarkup']; 
-                        $totalMarkup += $itemsDetail['markupConvert']; 
-                    }
-                    $itemsDetail['monto'] = number_format($monto, 2, '.', '');
-                    $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
-                    $itemsDetail['markup'] =  number_format($totalMarkup, 2, '.', '');
-                    $itemsDetail['currency'] = $itemsDetail['typecurrency'];
-                    $itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
-                    $collect->push($itemsDetail);
-                    $monto = 0;
-                    $montoMarkup = 0;
-                    $totalMarkup = 0;
+            $monto += $itemsDetail['monto']; 
+            $montoMarkup += $itemsDetail['montoMarkup']; 
+            $totalMarkup += $itemsDetail['markupConvert']; 
+          }
+          $itemsDetail['monto'] = number_format($monto, 2, '.', '');
+          $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', ''); 
+          $itemsDetail['markup'] =  number_format($totalMarkup, 2, '.', '');
+          $itemsDetail['currency'] = $itemsDetail['typecurrency'];
+          $itemsDetail['currency_id'] = $itemsDetail['currency_orig_id'];
+          $collect->push($itemsDetail);
+          $monto = 0;
+          $montoMarkup = 0;
+          $totalMarkup = 0;
 
-                }
+        }*/
                 else{
+                    $monto = 0;
+                    $montoMarkup = 0;
+                    $markup = 0;
+
                     foreach($items as $itemsDetail){//aca
-                        $itemsDetail['monto'] = number_format($itemsDetail['montoOrig'], 2, '.', ''); 
-                        $itemsDetail['montoMarkup'] = number_format($itemsDetail['montoMarkupO'], 2, '.', '');
-                        $itemsDetail['markup'] = number_format($itemsDetail['markupConvert'], 2, '.', '');
-                        $test[] =  $itemsDetail['currency_id'] ;
-                        $collect->push($itemsDetail); 
-                        $monto = 0;
-                        $montoMarkup = 0;
-                        $totalMarkup = 0;
-                    }
+
+                        $monto += $itemsDetail['montoOrig']; 
+                        $montoMarkup += $itemsDetail['montoMarkupO'];
+                        $markup += $itemsDetail['markupConvert'];
+                    }  
+                    $itemsDetail['monto'] = number_format($monto, 2, '.', ''); 
+                    $itemsDetail['montoMarkup'] = number_format($montoMarkup, 2, '.', '');
+                    $itemsDetail['markup'] = number_format($markup, 2, '.', '');
+
+                    $collect->push($itemsDetail); 
+
                 }
             }
         }
+
 
 
         $collect = $collect->groupBy([
