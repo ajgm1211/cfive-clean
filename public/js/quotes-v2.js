@@ -2259,6 +2259,7 @@ $(document).on('click', '.delete-saleterm-charge', function () {
 //Borrar cargo LCL/AIR
 $(document).on('click', '.delete-charge-lcl', function () {
     var id=$(this).closest('tr').find('.charge_id').val();
+    var type=$(this).closest('tr').find('.type').val();
     var theElement = $(this);
     swal({
         title: 'Are you sure?',
@@ -2270,6 +2271,9 @@ $(document).on('click', '.delete-charge-lcl', function () {
         if (result.value) {
             $.ajax({
                 type: 'GET',
+                data: {
+                    'type': type,
+                },
                 url: '/v2/quotes/lcl/delete/charge/'+id,
                 success: function(data) {
                     if(data.message=='Ok'){
@@ -2282,7 +2286,7 @@ $(document).on('click', '.delete-charge-lcl', function () {
                     if(data.type==1){
                         $(theElement).closest('tr').remove();
                     }else{
-                        setTimeout(location.reload.bind(location), 3000); 
+                        //setTimeout(location.reload.bind(location), 3000); 
                     }
                 }
             });
@@ -3030,7 +3034,7 @@ $( document ).ready(function() {
     if($( "select[name='company_id']" ).val()==''){
         $('select[name="contact_id"]').empty(); 
     }
-       
+
     $( "select[name='company_id']" ).on('change', function() {
         var company_id = $(this).val();
         if(company_id) {
