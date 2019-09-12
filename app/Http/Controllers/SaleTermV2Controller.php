@@ -7,6 +7,7 @@ use App\SaleTermV2;
 use App\SaleTermV2Charge;
 use App\Charge;
 use App\AutomaticRate;
+use App\User;
 
 class SaleTermV2Controller extends Controller
 {
@@ -39,9 +40,12 @@ class SaleTermV2Controller extends Controller
     public function store(Request $request)
     {
         $sale_term = SaleTermV2::create($request->all());
+        
+        $company_user = User::where('id',\Auth::id())->first();
 
         $sale_charge = new SaleTermV2Charge();
         $sale_charge->sale_term_id = $sale_term->id;
+        $sale_charge->currency_id = $company_user->companyUser->currency_id;
         $sale_charge->save();
 
         $notification = array(
