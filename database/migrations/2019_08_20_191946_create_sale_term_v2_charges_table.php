@@ -19,11 +19,11 @@ class CreateSaleTermV2ChargesTable extends Migration
             $table->foreign('sale_term_id')->references('id')->on('sale_term_v2s')->onDelete('cascade');
             $table->string('charge')->nullable();
             $table->string('detail')->nullable();
-            $table->float('20')->nullable();
-            $table->float('40')->nullable();
-            $table->float('40hc')->nullable();
-            $table->float('40nor')->nullable();
-            $table->float('45')->nullable();
+            $table->float('c20')->nullable();
+            $table->float('c40')->nullable();
+            $table->float('c40hc')->nullable();
+            $table->float('c40nor')->nullable();
+            $table->float('c45')->nullable();
             $table->float('units')->nullable();
             $table->float('rate')->nullable();
             $table->float('markup')->nullable();
