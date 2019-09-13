@@ -194,8 +194,8 @@ class QuoteV2Controller extends Controller
         return DataTables::of($colletions)
 
             ->addColumn('action',function($colletion){
-            return
-                '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                return
+                    '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
@@ -221,7 +221,7 @@ class QuoteV2Controller extends Controller
           </span>
           </a>
           </div>';
-        })->editColumn('id', '{{$id}}')->make(true);
+            })->editColumn('id', '{{$id}}')->make(true);
     }
 
     /**
@@ -1104,21 +1104,26 @@ class QuoteV2Controller extends Controller
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $email_from = \Auth::user()->email;
+        $sign = '';
+        $sign_type = '';
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-            if($email_settings->email_signature_type=='text'){
-                $sign = $email_settings->email_signature_text;
-                $sign_type = 'text';
-            }else{
-                $sign = $email_settings->email_signature_image;
-                $sign_type = 'image';
-            }
-            if($email_settings->email_from!=''){
-                $email_from = $email_settings->email_from;   
-            }else{
-                $email_from = \Auth::user()->email;
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                    $sign_type = 'text';
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                    $sign_type = 'image';
+                }
+                if($email_settings->email_from!=''){
+                    $email_from = $email_settings->email_from;   
+                }else{
+                    $email_from = \Auth::user()->email;
+                }
             }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
@@ -1145,7 +1150,9 @@ class QuoteV2Controller extends Controller
                 $send_quote->subject = $subject;
                 $send_quote->body = $body;
                 $send_quote->quote_id = $quote->id;
-                $send_quote->sign_type = $sign_type;
+                if($sign_type!=''){
+                    $send_quote->sign_type = $sign_type;
+                }
                 $send_quote->sign = $sign;
                 $send_quote->status = 0;
                 $send_quote->save();
@@ -1157,7 +1164,9 @@ class QuoteV2Controller extends Controller
             $send_quote->subject = $subject;
             $send_quote->body = $body;
             $send_quote->quote_id = $quote->id;
-            $send_quote->sign_type = $sign_type;
+            if($sign_type!=''){
+                $send_quote->sign_type = $sign_type;
+            }
             $send_quote->sign = $sign;
             $send_quote->status = 0;
             $send_quote->save();
@@ -1434,19 +1443,24 @@ class QuoteV2Controller extends Controller
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $email_from = \Auth::user()->email;
+        $sign = '';
+        $sign_type = '';
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-            if($email_settings->email_signature_type=='text'){
-                $sign = $email_settings->email_signature_text;
-            }else{
-                $sign = $email_settings->email_signature_image;
-            }
-            if($email_settings->email_from!=''){
-                $email_from = $email_settings->email_from;   
-            }else{
-                $email_from = \Auth::user()->email;
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                }
+                if($email_settings->email_from!=''){
+                    $email_from = $email_settings->email_from;   
+                }else{
+                    $email_from = \Auth::user()->email;
+                }
             }
             $currency_cfg = Currency::find($company_user->currency_id);
         }
@@ -1473,6 +1487,9 @@ class QuoteV2Controller extends Controller
                 $send_quote->subject = $subject;
                 $send_quote->body = $body;
                 $send_quote->quote_id = $quote->id;
+                if($sign_type!=''){
+                    $send_quote->sign_type = $sign_type;
+                }
                 $send_quote->sign = $sign;
                 $send_quote->status = 0;
                 $send_quote->save();
@@ -1484,6 +1501,9 @@ class QuoteV2Controller extends Controller
             $send_quote->subject = $subject;
             $send_quote->body = $body;
             $send_quote->quote_id = $quote->id;
+            if($sign_type!=''){
+                $send_quote->sign_type = $sign_type;
+            }
             $send_quote->sign = $sign;
             $send_quote->status = 0;
             $send_quote->save();
