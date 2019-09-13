@@ -646,11 +646,24 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php
+                        $total_sale_terms_origin = 0;
+                    ?>
+                    @if($sale_terms_origin->count()>0)
+                        @foreach($sale_terms_origin as $v)
+                            @foreach($v as $value)
+                                @foreach($value->charge as $item)
+                                @php
+                                    $total_sale_terms_origin += $item->total_sale_origin;
+                                @endphp
+                                @endforeach
+                            @endforeach
+                        @endforeach
+                    @endif
                     @foreach($detail as $v)
                         @foreach($v as $item)
                             <?php
                                 $total_origin = 0;
-                                $total_sale_terms_origin = 0;
                                 $total_origin_units = 0;
                                 $total_origin_rates = 0;
                                 $total_origin_markups = 0;
@@ -675,7 +688,7 @@
                                 @else
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                 @endif
-                                <td >{{@$total_origin}}</td>
+                                <td >{{@$total_origin+@$total_sale_terms_origin}}</td>
                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                             </tr>
                             @endforeach
@@ -990,6 +1003,20 @@
                         </tr>
                     </thead>
                     <tbody>
+                    <?php
+                        $total_sale_terms_destination = 0;
+                    ?>
+                    @if($sale_terms_destination->count()>0)
+                        @foreach($sale_terms_destination as $v)
+                            @foreach($v as $value)
+                                @foreach($value->charge as $item)
+                                @php
+                                    $total_sale_terms_destination += $item->total_sale_destination;
+                                @endphp
+                                @endforeach
+                            @endforeach
+                        @endforeach
+                    @endif                        
                     @foreach($detail as $v)
                         @foreach($v as $item)
                             <?php
@@ -1018,7 +1045,7 @@
                                 @else
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                 @endif
-                                <td >{{@$total_destination}}</td>
+                                <td >{{@$total_destination+@$total_sale_terms_destination}}</td>
                                 <td >{{$quote->pdf_option->destination_charges_currency}}</td>
                             </tr>
                         @endforeach

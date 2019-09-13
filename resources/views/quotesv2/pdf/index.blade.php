@@ -773,7 +773,8 @@
                                 $sum_sale45 = 0;
                                 @endphp
                                 @if($sale_terms_origin->count()>0)
-                                @foreach($sale_terms_origin as $value)
+                                @foreach($sale_terms_origin as $v)
+                                @foreach($v as $value)
                                 @foreach($value->charge as $item)
                                 @php
                                     $sum_sale20 += $item->c20;
@@ -782,6 +783,7 @@
                                     $sum_sale40nor += $item->c40nor;
                                     $sum_sale45 += $item->c45;
                                 @endphp
+                                @endforeach
                                 @endforeach
                                 @endforeach
                                 @endif
@@ -1134,15 +1136,17 @@
                                 $sum_sale45 = 0;
                             @endphp
                             @if($sale_terms_destination->count()>0)
-                                @foreach($sale_terms_destination as $value)
-                                    @foreach($value->charge as $item)
-                                        @php
-                                            $sum_sale20 += $item->c20;
-                                            $sum_sale40 += $item->c40;
-                                            $sum_sale40hc += $item->c40hc;
-                                            $sum_sale40nor += $item->c40nor;
-                                            $sum_sale45 += $item->c45;
-                                        @endphp
+                                @foreach($sale_terms_destination as $v)
+                                    @foreach($v as $value)
+                                        @foreach($value->charge as $item)
+                                            @php
+                                                $sum_sale20 += $item->c20;
+                                                $sum_sale40 += $item->c40;
+                                                $sum_sale40hc += $item->c40hc;
+                                                $sum_sale40nor += $item->c40nor;
+                                                $sum_sale45 += $item->c45;
+                                            @endphp
+                                        @endforeach
                                     @endforeach
                                 @endforeach
                             @endif
