@@ -63,8 +63,8 @@ class AutomaticRate extends Model
     {
         return $this->hasOne('App\Harbor','id','destination_port_id');
     }
-  
-      public function origin_airport()
+
+    public function origin_airport()
     {
         return $this->hasOne('App\Airport','id','origin_airport_id');
     }
@@ -87,5 +87,32 @@ class AutomaticRate extends Model
     public function charge_lcl_air()
     {
         return $this->hasMany('App\ChargeLclAir','automatic_rate_id');
-    }    
+    }
+
+    public function scopeCharge($query, $type_id, $type)
+    {
+        $query->whereHas('charge', function ($query) use($type_id) {
+            $query->where('type_id', $type_id);
+        })->orWhereHas('inland', function($query) use($type)  {
+            $query->where('type', $type);
+        });
+
+        return $query;
+    }
+
+    public function scopeChargeNotSale($query)
+    {
+        return $query->whereHas('charge', function ($query) {
+            $query->where('saleterm', 0);
+        });
+    }
+
+    public function scopeChargeLclAir($query, $type_id, $type)
+    {
+        return $query->whereHas('charge_lcl_air', function ($query) use($type_id) {
+            $query->where('type_id', $type_id);
+        })->orWhereHas('automaticInlandLclAir', function($query) use($type) {
+            $query->where('type', $type);
+        });
+    }
 }
