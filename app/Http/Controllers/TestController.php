@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Harbor;
 use App\Country;
+use Goutte\Client;
 use GuzzleHttp\Psr7;
+use GuzzleHttp\Cookie;
 use App\Jobs\TestJob;
-use GuzzleHttp\Client;
 use App\AutoImportation;
 use App\RequetsCarrierFcl;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\Jobs\SendEmailAutoImporJob;
 use App\Jobs\SelectionAutoImportJob;
+use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Exception\RequestException;
+
 
 class TestController extends Controller
 {
@@ -24,7 +27,38 @@ class TestController extends Controller
      */
     public function index(Request $request)
     {
-        return view('testings.index');
+
+        $client = new Client();
+        $crawler = $client->request('GET', 'https://auth.cma-cgm.com/idp/prp.wsf?wa=wsignin1.0&wtrealm=https%3A%2F%2Fwww.cma-cgm.com&wctx=rm%3d0%26id%3dpassive%26ru%3d%26Language%3den-US%26Site%3dcmacgm');
+        $client->followRedirects();
+
+        $form = $crawler->selectButton('Sign In')->form();
+        $crawler = $client->submit($form, array('pf.username' => 'sebastian@cargofive.com', 'pf.pass' => 'Brenda27$'));
+        //$crawler = $client->click($crawler->selectLink('Sign In')->link());
+        $status_code = $client->getResponse()->getStatus();
+        if($status_code==200){
+            //$button = $crawler->selectButton('')->button();
+           $ff = $crawler->filter('form')->form();
+            /*$thearray = (array)$ff;
+            $i=0;
+            //dd($thearray);
+            foreach($thearray as $cc){
+                if($i == 1){
+                dd($cc);
+                    
+                }
+                $i++;
+            }*/
+            $crawler = $client->submit();
+            //$client->click($button);
+            //$client->getCookieJar();
+
+            /*$response = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $client->getCookieJar()]);*/
+
+            dd($crawler);
+        }
+
+        //return view('testings.index');
         //dd($dataGen);
     }
 
