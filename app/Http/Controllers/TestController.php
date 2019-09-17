@@ -37,29 +37,18 @@ class TestController extends Controller
         //$crawler = $client->click($crawler->selectLink('Sign In')->link());
         $status_code = $client->getResponse()->getStatus();
         if($status_code==200){
-            //$button = $crawler->selectButton('')->button();
-           $ff = $crawler->filter('form')->form();
-            /*$thearray = (array)$ff;
-            $i=0;
-            //dd($thearray);
-            foreach($thearray as $cc){
-                if($i == 1){
-                dd($cc);
-                    
-                }
-                $i++;
-            }*/
-            $crawler = $client->submit();
-            //$client->click($button);
-            //$client->getCookieJar();
+            $button = $crawler->selectButton('Submit')->form();
+            $crawler = $client->submit($button);
+            $var = $client->getCookieJar();
 
-            /*$response = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $client->getCookieJar()]);*/
+            $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $var]);
 
+            //dd($wa.'\n'.$wresult.'\n'.$wctx);
+            $crawler = $client->getResponse()->getContent();
             dd($crawler);
         }
 
         //return view('testings.index');
-        //dd($dataGen);
     }
 
     /**
