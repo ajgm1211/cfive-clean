@@ -7,6 +7,7 @@ use App\Country;
 use Goutte\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Cookie;
+use GuzzleHttp\Cookie\FileCookieJar;
 use App\Jobs\TestJob;
 use App\AutoImportation;
 use App\RequetsCarrierFcl;
@@ -39,13 +40,20 @@ class TestController extends Controller
         if($status_code==200){
             $button = $crawler->selectButton('Submit')->form();
             $crawler = $client->submit($button);
-            $var = $client->getCookieJar();
+            $cookieJar = $client->getCookieJar();
+            /*$cookieJarReloaded = new FileCookieJar('/var/www/html/cargofive/storage/app/public/cookies2.json');
+            $cookies = $var->all();
+            if ($cookies) {
+                file_put_contents('/var/www/html/cargofive/storage/app/public/cookies.json', serialize($cookies));
+            }*/
+            file_put_contents('/var/www/html/cargofive/storage/app/public/cookies.txt', serialize( $cookieJar ));
 
-            $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $var]);
+            /*$crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $data]);
 
             //dd($wa.'\n'.$wresult.'\n'.$wctx);
             $crawler = $client->getResponse()->getContent();
-            dd($crawler);
+            dd($crawler);*/
+            return 'revisa';
         }
 
         //return view('testings.index');
@@ -58,12 +66,20 @@ class TestController extends Controller
      */
     public function create(Request $request)
     {
+        $client = new Client();
+        
+        $cookieJar = unserialize(file_get_contents( '/var/www/html/cargofive/storage/app/public/cookies.txt'));
+        $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $cookieJar]);
 
-        SelectionAutoImportJob::dispatch($request->text1,'fcl');
+        //dd($wa.'\n'.$wresult.'\n'.$wctx);
+        $crawler = $client->getResponse()->getContent();
+        dd($crawler);
+
+        /*SelectionAutoImportJob::dispatch($request->text1,'fcl');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'OK');
 
-        return back();
+        return back();*/
     }
 
     /**
