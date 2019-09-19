@@ -56,6 +56,17 @@
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </a>
+                                    <a href="{{route('RequestsGlobalchargersLcl.create')}}">
+
+                                        <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                            <span>
+                                                <span>
+                                                    Import New Globalcharger &nbsp;
+                                                </span>
+                                                <i class="la la-clipboard"></i>
+                                            </span>
+                                        </button>
+                                    </a>
                                     <button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                         <span>
                                             <span>
