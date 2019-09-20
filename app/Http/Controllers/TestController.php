@@ -7,6 +7,7 @@ use App\Country;
 use Goutte\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Cookie;
+use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\FileCookieJar;
 use App\Jobs\TestJob;
 use App\AutoImportation;
@@ -30,29 +31,28 @@ class TestController extends Controller
     {
 
         $client = new Client();
+        $jar = new \GuzzleHttp\Cookie\CookieJar;
         $crawler = $client->request('GET', 'https://auth.cma-cgm.com/idp/prp.wsf?wa=wsignin1.0&wtrealm=https%3A%2F%2Fwww.cma-cgm.com&wctx=rm%3d0%26id%3dpassive%26ru%3d%26Language%3den-US%26Site%3dcmacgm');
         $client->followRedirects();
-
         $form = $crawler->selectButton('Sign In')->form();
-        $crawler = $client->submit($form, array('pf.username' => 'sebastian@cargofive.com', 'pf.pass' => 'Brenda27$'));
+        $crawler = $client->submit($form, array('pf.username' => 'sebastian@cargofive.com',
+                                                'pf.pass' => 'Brenda27$'));
         //$crawler = $client->click($crawler->selectLink('Sign In')->link());
         $status_code = $client->getResponse()->getStatus();
         if($status_code==200){
             $button = $crawler->selectButton('Submit')->form();
             $crawler = $client->submit($button);
             $cookieJar = $client->getCookieJar();
-            /*$cookieJarReloaded = new FileCookieJar('/var/www/html/cargofive/storage/app/public/cookies2.json');
-            $cookies = $var->all();
-            if ($cookies) {
-                file_put_contents('/var/www/html/cargofive/storage/app/public/cookies.json', serialize($cookies));
-            }*/
-            file_put_contents('/var/www/html/cargofive/storage/app/public/cookies.txt', serialize( $cookieJar ));
+            //$path = '/var/www/html/cargofive/storage/app/public/cookies.json';
+            //$jar = new CookieJar(false,$client->getCookieJar());
+            dd($cookieJar->all());
+            //$cookFi = new FileCookieJar($path,true);
+            //$cookFi->save($path);
 
-            /*$crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $data]);
-
-            //dd($wa.'\n'.$wresult.'\n'.$wctx);
+            $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE');
             $crawler = $client->getResponse()->getContent();
-            dd($crawler);*/
+            dd($crawler);
+            dd($cookieJar->all());
             return 'revisa';
         }
 
@@ -66,10 +66,11 @@ class TestController extends Controller
      */
     public function create(Request $request)
     {
-        $client = new Client();
-        
-        $cookieJar = unserialize(file_get_contents( '/var/www/html/cargofive/storage/app/public/cookies.txt'));
-        $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE', ['cookies' =>  $cookieJar]);
+        $client = new Client(['cookies' => true]);
+        $path = '/var/www/html/cargofive/storage/app/public/cookies.json';
+        $cookFi = new FileCookieJar($path,true);
+        //$cookFi->save($path);
+        $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE',['cookies' => $cookFi]);
 
         //dd($wa.'\n'.$wresult.'\n'.$wctx);
         $crawler = $client->getResponse()->getContent();
