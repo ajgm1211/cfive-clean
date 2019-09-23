@@ -71,7 +71,7 @@
                                    FCL Contract Imported
                                 </label>
                             </div>
-                            <div class="col-2">
+                            <div class="col-1">
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-fcl'])
@@ -88,7 +88,7 @@
                                     LCL Contract Imported
                                 </label>
                             </div>
-                            <div class="col-2">
+                            <div class="col-1">
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-lcl'])
@@ -102,16 +102,33 @@
                             </div>
                             <div class="col-2">
                                 <label class=" col-form-label">
-                                    Global Charges Imported
+                                    Global Charges FCL Imported
                                 </label>
                             </div>
-                            <div class="col-2">
+                            <div class="col-1">
                                 <span class="m-switch m-switch--icon">
                                     <label>
                                         @if($json['notifications']['request-importation-gcfcl'])
                                         <input type="checkbox" checked="checked" name="notifications-request-importation-gcfcl">
                                         @else
                                         <input type="checkbox" name="notifications-request-importation-gcfcl">
+                                        @endif
+                                        <span></span>
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="col-2">
+                                <label class=" col-form-label">
+                                    Global Charges LCL Imported
+                                </label>
+                            </div>
+                            <div class="col-1">
+                                <span class="m-switch m-switch--icon">
+                                    <label>
+                                        @if($json['notifications']['request-importation-gclcl'])
+                                        <input type="checkbox" checked="checked" name="notifications-request-importation-gclcl">
+                                        @else
+                                        <input type="checkbox" name="notifications-request-importation-gclcl">
                                         @endif
                                         <span></span>
                                     </label>
