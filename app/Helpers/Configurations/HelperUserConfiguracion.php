@@ -45,14 +45,13 @@ class HelperUserConfiguracion {
 
     public static function syncronize_json($user_id){
         $json = json_decode(self::arrays(),true);
-
+        $user_found = null;
         foreach($json as $arreglo => $keys){
             foreach($keys as $key => $all){
-
                 $userConf = UserConfiguration::where('user_id',$user_id)->where('paramerters->'.$arreglo,'like','%'.$key.'%')->first();
                 if(count($userConf) == 0){
 
-                    $userConf_up = UserConfiguration::find($user_id);
+                    $userConf_up = UserConfiguration::where('user_id',$user_id)->first();
                     $josn_user = json_decode($userConf_up->paramerters,true);
                     foreach($josn_user as $arreglo_u => $keys_u){
 
@@ -73,15 +72,16 @@ class HelperUserConfiguracion {
                             $userConf_up->paramerters = json_encode($josn_user);
                             $userConf_up->update();
                         }
+                    $user_found = $userConf_up;
                     }
 
                 } else{
-                    //dd('existe');
+                    $user_found = $userConf;
                 }
             }
 
         }
-        return $userConf->paramerters;
+        return $user_found->paramerters;
     }
 
 }
