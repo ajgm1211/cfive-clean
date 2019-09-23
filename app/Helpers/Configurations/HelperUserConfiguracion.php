@@ -12,7 +12,8 @@ class HelperUserConfiguracion {
         $json['notifications'] = [
             'request-importation-fcl'   => true,
             'request-importation-lcl'   => true,
-            'request-importation-gcfcl' => true
+            'request-importation-gcfcl' => true,
+            'request-importation-gclcl' => true
         ];
 
         /*$json['colors'] = [
