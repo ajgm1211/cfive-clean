@@ -53,9 +53,23 @@
                 {!! Form::open(['route'=> 'TestApp.create','method' => 'get'])!!}
                 <div class="form-group row ">
 
-
+                    <h5>Request Auto-Import</h5>
                     <div class="col-md-6">
-                        <label class="form-control-label">Campo</label>
+                        <label class="form-control-label">Campo ID Request </label>
+                        <input type="text" class="form-control" name="text1" value="" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-control-label"><br></label>
+                        <input type="submit" class=" form-control btn btn-success" value="test">
+                    </div>
+                </div>
+                {!! Form::close()!!}
+                {!! Form::open(['route'=> ['TestApp.edit',1],'method' => 'get'])!!}
+                 <div class="form-group row ">
+
+                    <h5>Edit 1</h5>
+                    <div class="col-md-6">
+                        <label class="form-control-label">Campo ID Request </label>
                         <input type="text" class="form-control" name="text1" value="" >
                     </div>
                     <div class="col-md-2">

@@ -115,7 +115,7 @@ class SettingController extends Controller
 
             $email_settings = new EmailSetting();
             $email_settings->company_user_id = $company->id;
-            $email_settings->email_from = $request->email_from;
+            $email_settings->email_from = $request->email_from_format;
             $email_settings->email_signature_type = $request->email_signature_type;
             $email_settings->email_signature_text = $request->signature_text_content;
             if($signature_image!=""){
@@ -141,7 +141,7 @@ class SettingController extends Controller
 
             $email_settings = EmailSetting::where('company_user_id',$request->company_id)->first();
             if($email_settings){
-                $email_settings->email_from = $request->email_from;
+                $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
                 if($signature_image!=""){
@@ -151,7 +151,7 @@ class SettingController extends Controller
             }else{
                 $email_settings = new EmailSetting();
                 $email_settings->company_user_id = $company->id;
-                $email_settings->email_from = $request->email_from;
+                $email_settings->email_from = $request->email_from_format;
                 $email_settings->email_signature_type = $request->email_signature_type;
                 $email_settings->email_signature_text = $request->signature_text_content;
                 if($signature_image!=""){

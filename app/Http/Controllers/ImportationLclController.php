@@ -16,8 +16,10 @@ use App\FailRateLcl;
 use App\CompanyUser;
 use App\ContractLcl;
 use App\ScheduleType;
+use App\ContractLclFile;
 use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
+use App\NewContractRequestLcl;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
@@ -335,6 +337,17 @@ class ImportationLclController extends Controller
             }
             $contract->load('carriers');
             $Contract_id = $contract->id;
+
+            if(!empty($request_id)){
+                $requestFile    = NewContractRequestLcl::find($request_id);
+                if(!empty($requestFile->id)){
+                    $contractFile   =  new ContractLclFile();
+                    $contractFile->contractlcl_id   = $Contract_id;
+                    $contractFile->namefile         = $requestFile->namefile;
+                    $contractFile->save();
+                }
+            }
+
         }
 
         $statustypecurren = $request->valuesCurrency;
