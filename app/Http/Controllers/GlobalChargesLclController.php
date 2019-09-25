@@ -295,10 +295,13 @@ class GlobalChargesLclController extends Controller
 
     // CRUD Administarator -----------------------------------------------------------------------------------------------------
 
-    public function indexAdm(){
+    public function indexAdm(Request $request){
         $companies = CompanyUser::pluck('name','id');
-        $carriers = Carrier::pluck('name','id');        
-        return view('globalchargesLclAdm.index',compact('companies','carriers'));
+        $carriers = Carrier::pluck('name','id');
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
+        return view('globalchargesLclAdm.index',compact('companies','carriers','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function createAdm(Request $request){
@@ -353,23 +356,28 @@ class GlobalChargesLclController extends Controller
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
-    public function addAdm(){
-
-        $countries = Country::pluck('name','id');
-        $calculationT = CalculationTypeLcl::all()->pluck('name','id');
-        $typedestiny = TypeDestiny::all()->pluck('description','id');
-        $surcharge = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
-        $harbor = Harbor::all()->pluck('display_name','id');
-        $carrier = Carrier::all()->pluck('name','id');
-        $currency = Currency::all()->pluck('alphacode','id');
-        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-        $currency_cfg = Currency::find($company_user->currency_id);
-        $company_usersO = CompanyUser::all();
-        $company_users  = ['null'=>'Please Select'];
+    public function addAdm(Request $request){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
+        $countries              = Country::pluck('name','id');
+        $calculationT           = CalculationTypeLcl::all()->pluck('name','id');
+        $typedestiny            = TypeDestiny::all()->pluck('description','id');
+        $surcharge              = Surcharge::where('company_user_id','=',Auth::user()->company_user_id)->pluck('name','id');
+        $harbor                 = Harbor::all()->pluck('display_name','id');
+        $carrier                = Carrier::all()->pluck('name','id');
+        $currency               = Currency::all()->pluck('alphacode','id');
+        $company_user           = CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg           = Currency::find($company_user->currency_id);
+        $company_usersO         = CompanyUser::all();
+        $company_users          = ['null'=>'Please Select'];
         foreach($company_usersO as $d){
             $company_users[$d['id']]=$d->name;
         }
-        return view('globalchargesLclAdm.add', compact('harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries','currency_cfg'));
+        return view('globalchargesLclAdm.add', compact('harbor','carrier','company_users','currency',
+                                                       'calculationT','typedestiny','surcharge',
+                                                       'countries','currency_cfg','company_user_id_selec',
+                                                       'carrier_id_selec','reload_DT'));
     }
 
     public function typeChargeAdm(Request $request,$id){
@@ -384,9 +392,11 @@ class GlobalChargesLclController extends Controller
     }
 
     public function storeAdm(Request $request){
-        $detailscharges = $request->input('type');
-        $calculation_type = $request->input('calculationtype');
-
+        $detailscharges         = $request->input('type');
+        $calculation_type       = $request->input('calculationtype');
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
 
         //$changetype = $type->find($request->input('changetype.'.$key2))->toArray();
         foreach($calculation_type as $ct => $ctype)
@@ -450,11 +460,13 @@ class GlobalChargesLclController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this contract.');
-        return redirect()->action('GlobalChargesLclController@indexAdm');
+        return redirect()->route('gclcladm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
-    public function showAdm($id){
-
+    public function showAdm(Request $request,$id){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
         $globalcharges  = GlobalChargeLcl::find($id);
         $countries      = Country::pluck('name','id');
         $calculationT   = CalculationTypeLcl::all()->pluck('name','id');
@@ -466,10 +478,14 @@ class GlobalChargesLclController extends Controller
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
         $company_users   = CompanyUser::pluck('name','id');
-        return view('globalchargesLclAdm.edit', compact('globalcharges','harbor','carrier','currency','calculationT','company_users','typedestiny','surcharge','countries'));
+        return view('globalchargesLclAdm.edit', compact('globalcharges','harbor','carrier','currency','calculationT','company_users','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function updateAdm(Request $request, $id){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
+
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
         $currency       = Currency::pluck('alphacode','id');
@@ -534,10 +550,13 @@ class GlobalChargesLclController extends Controller
             $detailcarrier->save();
         }
         $global->update();
-        return redirect()->route('gclcladm.index');
+        return redirect()->route('gclcladm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
-    public function duplicateAdm($id){
+    public function duplicateAdm(Request $request,$id){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
 
         $countries          = Country::pluck('name','id');
         $calculationT       = CalculationTypeLcl::all()->pluck('name','id');
@@ -550,25 +569,33 @@ class GlobalChargesLclController extends Controller
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $company_users      = CompanyUser::pluck('name','id');
         $globalcharges->setAttribute('validation_expire',$validation_expire);
-        return view('globalchargesLclAdm.duplicate', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
+        return view('globalchargesLclAdm.duplicate', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function duplicateArrAdm(Request $request){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
+
         $company_users      = CompanyUser::pluck('name','id');
         $globals_id_array   = $request->input('id');
         $count = count($globals_id_array);
         //$global             = $global->toArray();
         //dd($globals_id_array);
-        return view('globalchargesLclAdm.duplicateArray',compact('count','company_users','globals_id_array'));
+        return view('globalchargesLclAdm.duplicateArray',compact('count','company_users','globals_id_array','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function storeArrayAdm(Request $request){
         //dd($request->all());
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
         $requestJob = $request->all();
         GCDplFclLcl::dispatch($requestJob,'lcl');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this contract.');
-        return redirect()->route('gclcladm.index');
+        return redirect()->route('gclcladm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
+
 }
