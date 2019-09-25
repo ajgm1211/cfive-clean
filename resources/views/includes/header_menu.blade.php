@@ -384,6 +384,14 @@ Terms & Conditions
                                                 </span>
                                             </a>
                                         </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('RequestsGlobalchargersLcl.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon flaticon-folder-3"></i>
+                                                <span class="m-menu__link-text">
+                                                    Request Importation G.C-LCL
+                                                </span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>

@@ -237,6 +237,7 @@
                                                             ?>
                                                             <tr style="height:40px;">
                                                                 <td class="tds" style="padding-left: 30px">
+                                                                    <input name="type" value="1" class="form-control type" type="hidden" />
                                                                     <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 
@@ -375,6 +376,7 @@
 
                                                             <tr style="height:40px;">
                                                                 <td class="tds" style="padding-left: 30px">
+                                                                    <input name="type" value="1" class="form-control type" type="hidden" />
                                                                     <input name="charge_id" value="{{@$item->id}}" class="form-control charge_id" type="hidden" style="max-width: 50px;"/>
 
 

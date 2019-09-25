@@ -383,7 +383,6 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     $validityfromVal = $validityfromVal.'_E_E';
                                 }
 
-
                                 //------------------ VALIDITY TO --------------------------------------------------------				
 
                                 try{
@@ -392,7 +391,6 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                 } catch (\Exception $err){
                                     $validitytoVal = $validitytoVal.'_E_E';
                                 }
-
 
                                 //--------------- Type Destiny ------------------------------------------------------------
 
@@ -810,6 +808,8 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                     $calculationvalvaration = 'Per TON';
                                 } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_BL') == 0){
                                     $calculationvalvaration = 'Per BL';
+                                }else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TEU') == 0){
+                                    $calculationvalvaration = 'Per TEU';
                                 } else{
                                     $calculationvalvaration = $read[$requestobj[$CalculationType]];
                                 }
@@ -2168,92 +2168,122 @@ class ImportationGlobalchargeJob implements ShouldQueue
 
                                         }
 
-                                    } 
-                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
-                                        //per_shipment
-                                        if($twentyVal != 0 || $twentyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValtwen;
-                                            } 
-                                            $ammount = $twentyVal;
-
-                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValfor;
-                                            } 
-                                            $ammount = $fortyVal;
-
-                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
-
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValforHC;
-                                            } 
-                                            $ammount = $fortyhcVal;
-
-                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
-                                            if($statusexistfortynor == 1){
+                                    } else{
+                                        if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_BL') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TON') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TEU') == 0){
+                                            //per_shipment
+                                            if($twentyVal != 0 || $twentyVal != 0.0){
                                                 if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValfornor;
+                                                    $currencyVal = $currencyValtwen;
                                                 } 
-                                            }
-                                            $ammount = $fortynorVal;
+                                                $ammount = $twentyVal;
 
-                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                            if($statusexistfortyfive == 1){
+                                            } else if ($fortyVal != 0 || $fortyVal != 0.0){
                                                 if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValforfive;
+                                                    $currencyVal = $currencyValfor;
                                                 } 
-                                            }
-                                            $ammount = $fortyfiveVal;
-                                        }
+                                                $ammount = $fortyVal;
 
+                                            }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
 
-                                        if($ammount != 0 || $ammount != 0.0){
-                                            $globalChargePERArreG = null;
-                                            $globalChargePERArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
-                                                ->where('typedestiny_id',$typedestinyVal)
-                                                ->where('company_user_id',$companyUserIdVal)
-                                                ->where('calculationtype_id',$calculationtypeVal)
-                                                ->where('ammount',$ammount)
-                                                ->where('validity',$validityfromVal)
-                                                ->where('expire',$validitytoVal)
-                                                ->where('currency_id',$currencyVal)
-                                                ->has($typeplace)
-                                                ->first();
+                                                if($requestobj[$statustypecurren] == 2){
+                                                    $currencyVal = $currencyValforHC;
+                                                } 
+                                                $ammount = $fortyhcVal;
 
-                                            if(count($globalChargePERArreG) == 0){
-                                                $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                    'surcharge_id'       						=> $surchargeVal,
-                                                    'typedestiny_id'     						=> $typedestinyVal,
-                                                    'account_importation_globalcharge_id'       => $account_idVal,
-                                                    'company_user_id'    						=> $companyUserIdVal,
-                                                    'calculationtype_id' 						=> $calculationtypeVal,
-                                                    'ammount'            						=> $ammount,
-                                                    'validity' 									=> $validityfromVal,
-                                                    'expire'					 				=> $validitytoVal,
-                                                    'currency_id'        						=> $currencyVal
-                                                ]);
+                                            }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
+                                                if($statusexistfortynor == 1){
+                                                    if($requestobj[$statustypecurren] == 2){
+                                                        $currencyVal = $currencyValfornor;
+                                                    } 
+                                                }
+                                                $ammount = $fortynorVal;
+
+                                            }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
+                                                if($statusexistfortyfive == 1){
+                                                    if($requestobj[$statustypecurren] == 2){
+                                                        $currencyVal = $currencyValforfive;
+                                                    } 
+                                                }
+                                                $ammount = $fortyfiveVal;
                                             }
 
-                                            $exitGCCPC = null;
-                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
-                                                ->where('globalcharge_id',$globalChargePERArreG->id)->first();
-                                            if(count($exitGCCPC) == 0){
-                                                GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                    'carrier_id'      => $carrierVal,
-                                                    'globalcharge_id' => $globalChargePERArreG->id
-                                                ]);
-                                            }
 
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        $originVal = $rando;
-                                                    } else {
-                                                        $destinyVal = $rando;
-                                                    }
+                                            if($ammount != 0 || $ammount != 0.0){
+                                                $globalChargePERArreG = null;
+                                                $globalChargePERArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
+                                                    ->where('typedestiny_id',$typedestinyVal)
+                                                    ->where('company_user_id',$companyUserIdVal)
+                                                    ->where('calculationtype_id',$calculationtypeVal)
+                                                    ->where('ammount',$ammount)
+                                                    ->where('validity',$validityfromVal)
+                                                    ->where('expire',$validitytoVal)
+                                                    ->where('currency_id',$currencyVal)
+                                                    ->has($typeplace)
+                                                    ->first();
 
+                                                if(count($globalChargePERArreG) == 0){
+                                                    $globalChargePERArreG = GlobalCharge::create([ // tabla GlobalCharge
+                                                        'surcharge_id'       						=> $surchargeVal,
+                                                        'typedestiny_id'     						=> $typedestinyVal,
+                                                        'account_importation_globalcharge_id'       => $account_idVal,
+                                                        'company_user_id'    						=> $companyUserIdVal,
+                                                        'calculationtype_id' 						=> $calculationtypeVal,
+                                                        'ammount'            						=> $ammount,
+                                                        'validity' 									=> $validityfromVal,
+                                                        'expire'					 				=> $validitytoVal,
+                                                        'currency_id'        						=> $currencyVal
+                                                    ]);
+                                                }
+
+                                                $exitGCCPC = null;
+                                                $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
+                                                    ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                if(count($exitGCCPC) == 0){
+                                                    GlobalCharCarrier::create([ // tabla GlobalCharCarrier
+                                                        'carrier_id'      => $carrierVal,
+                                                        'globalcharge_id' => $globalChargePERArreG->id
+                                                    ]);
+                                                }
+
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            $originVal = $rando;
+                                                        } else {
+                                                            $destinyVal = $rando;
+                                                        }
+
+                                                        if($differentiatorBol == false){
+                                                            $exgcpt = null;
+                                                            $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
+                                                                ->where('typedestiny_id',$typedestinyVal)
+                                                                ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                            if(count($exgcpt) == 0){
+                                                                GlobalCharPort::create([ // tabla GlobalCharPort
+                                                                    'port_orig'      	=> $originVal,
+                                                                    'port_dest'      	=> $destinyVal,
+                                                                    'typedestiny_id' 	=> $typedestinyVal,
+                                                                    'globalcharge_id'   => $globalChargePERArreG->id
+                                                                ]);
+                                                            }
+                                                        } else {
+                                                            $exgcct = null;
+                                                            $exgcct = GlobalCharCountry::where('country_orig',$originVal)
+                                                                ->where('country_dest',$destinyVal)
+                                                                ->where('globalcharge_id',$globalChargePERArreG->id)->first();
+                                                            if(count($exgcct) == 0){
+                                                                GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
+                                                                    'country_orig'      => $originVal,
+                                                                    'country_dest'      => $destinyVal,
+                                                                    'globalcharge_id'   => $globalChargePERArreG->id
+                                                                ]);
+                                                            }
+                                                        }
+                                                    } 
+
+                                                } else {
+                                                    // fila por puerto, sin expecificar origen ni destino manualmente
                                                     if($differentiatorBol == false){
                                                         $exgcpt = null;
                                                         $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
@@ -2280,331 +2310,11 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                             ]);
                                                         }
                                                     }
-                                                } 
-
-                                            } else {
-                                                // fila por puerto, sin expecificar origen ni destino manualmente
-                                                if($differentiatorBol == false){
-                                                    $exgcpt = null;
-                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                        ->where('typedestiny_id',$typedestinyVal)
-                                                        ->where('globalcharge_id',$globalChargePERArreG->id)->first();
-                                                    if(count($exgcpt) == 0){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargePERArreG->id
-                                                        ]);
-                                                    }
-                                                } else {
-                                                    $exgcct = null;
-                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
-                                                        ->where('country_dest',$destinyVal)
-                                                        ->where('globalcharge_id',$globalChargePERArreG->id)->first();
-                                                    if(count($exgcct) == 0){
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargePERArreG->id
-                                                        ]);
-                                                    }
                                                 }
                                             }
+                                            // echo $i;
+                                            // dd($globalChargePERArreG);
                                         }
-                                        // echo $i;
-                                        // dd($globalChargePERArreG);
-                                    }
-                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_BL') == 0){
-                                        //per_shipment
-                                        if($twentyVal != 0 || $twentyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValtwen;
-                                            } 
-                                            $ammount = $twentyVal;
-
-                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValfor;
-                                            } 
-                                            $ammount = $fortyVal;
-
-                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
-
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValforHC;
-                                            } 
-                                            $ammount = $fortyhcVal;
-
-                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
-                                            if($statusexistfortynor == 1){
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValfornor;
-                                                } 
-                                            }
-                                            $ammount = $fortynorVal;
-
-                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                            if($statusexistfortyfive == 1){
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValforfive;
-                                                } 
-                                            }
-                                            $ammount = $fortyfiveVal;
-                                        }
-
-
-                                        if($ammount != 0 || $ammount != 0.0){
-                                            $globalChargeBLArreG = null;
-                                            $globalChargeBLArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
-                                                ->where('typedestiny_id',$typedestinyVal)
-                                                ->where('company_user_id',$companyUserIdVal)
-                                                ->where('calculationtype_id',$calculationtypeVal)
-                                                ->where('ammount',$ammount)
-                                                ->where('validity',$validityfromVal)
-                                                ->where('expire',$validitytoVal)
-                                                ->where('currency_id',$currencyVal)
-                                                ->has($typeplace)
-                                                ->first();
-
-                                            if(count($globalChargeBLArreG) == 0){
-                                                $globalChargeBLArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                    'surcharge_id'       						=> $surchargeVal,
-                                                    'typedestiny_id'     						=> $typedestinyVal,
-                                                    'account_importation_globalcharge_id'       => $account_idVal,
-                                                    'company_user_id'    						=> $companyUserIdVal,
-                                                    'calculationtype_id' 						=> $calculationtypeVal,
-                                                    'ammount'            						=> $ammount,
-                                                    'validity' 									=> $validityfromVal,
-                                                    'expire'					 				=> $validitytoVal,
-                                                    'currency_id'        						=> $currencyVal
-                                                ]);
-                                            }
-
-                                            $exitGCCPC = null;
-                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
-                                                ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
-                                            if(count($exitGCCPC) == 0){
-                                                GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                    'carrier_id'      => $carrierVal,
-                                                    'globalcharge_id' => $globalChargeBLArreG->id
-                                                ]);
-                                            }
-
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        $originVal = $rando;
-                                                    } else {
-                                                        $destinyVal = $rando;
-                                                    }
-
-                                                    if($differentiatorBol == false){
-                                                        $exgcpt = null;
-                                                        $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                            ->where('typedestiny_id',$typedestinyVal)
-                                                            ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
-                                                        if(count($exgcpt) == 0){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeBLArreG->id
-                                                            ]);
-                                                        }
-                                                    } else {
-                                                        $exgcct = null;
-                                                        $exgcct = GlobalCharCountry::where('country_orig',$originVal)
-                                                            ->where('country_dest',$destinyVal)
-                                                            ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
-                                                        if(count($exgcct) == 0){
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeBLArreG->id
-                                                            ]);
-                                                        }
-                                                    }
-                                                } 
-
-                                            } else {
-                                                // fila por puerto, sin expecificar origen ni destino manualmente
-                                                if($differentiatorBol == false){
-                                                    $exgcpt = null;
-                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                        ->where('typedestiny_id',$typedestinyVal)
-                                                        ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
-                                                    if(count($exgcpt) == 0){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargeBLArreG->id
-                                                        ]);
-                                                    }
-                                                } else {
-                                                    $exgcct = null;
-                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
-                                                        ->where('country_dest',$destinyVal)
-                                                        ->where('globalcharge_id',$globalChargeBLArreG->id)->first();
-                                                    if(count($exgcct) == 0){
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargeBLArreG->id
-                                                        ]);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        // echo $i;
-                                        // dd($globalChargeBLArreG);
-                                    }
-                                    else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_TON') == 0){
-                                        //per_shipment
-                                        if($twentyVal != 0 || $twentyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValtwen;
-                                            } 
-                                            $ammount = $twentyVal;
-
-                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValfor;
-                                            } 
-                                            $ammount = $fortyVal;
-
-                                        }else if ($fortyhcVal != 0 || $fortyhcVal != 0.0){
-
-                                            if($requestobj[$statustypecurren] == 2){
-                                                $currencyVal = $currencyValforHC;
-                                            } 
-                                            $ammount = $fortyhcVal;
-
-                                        }else if ($fortynorVal != 0 || $fortynorVal != 0.0){
-                                            if($statusexistfortynor == 1){
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValfornor;
-                                                } 
-                                            }
-                                            $ammount = $fortynorVal;
-
-                                        }else if ($fortyfiveVal != 0 || $fortyfiveVal != 0.0){
-                                            if($statusexistfortyfive == 1){
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValforfive;
-                                                } 
-                                            }
-                                            $ammount = $fortyfiveVal;
-                                        }
-
-
-                                        if($ammount != 0 || $ammount != 0.0){
-                                            $globalChargeTONArreG = null;
-                                            $globalChargeTONArreG = GlobalCharge::where('surcharge_id',$surchargeVal)
-                                                ->where('typedestiny_id',$typedestinyVal)
-                                                ->where('company_user_id',$companyUserIdVal)
-                                                ->where('calculationtype_id',$calculationtypeVal)
-                                                ->where('ammount',$ammount)
-                                                ->where('validity',$validityfromVal)
-                                                ->where('expire',$validitytoVal)
-                                                ->where('currency_id',$currencyVal)
-                                                ->has($typeplace)
-                                                ->first();
-
-                                            if(count($globalChargeTONArreG) == 0){
-                                                $globalChargeTONArreG = GlobalCharge::create([ // tabla GlobalCharge
-                                                    'surcharge_id'       						=> $surchargeVal,
-                                                    'typedestiny_id'     						=> $typedestinyVal,
-                                                    'account_importation_globalcharge_id'       => $account_idVal,
-                                                    'company_user_id'    						=> $companyUserIdVal,
-                                                    'calculationtype_id' 						=> $calculationtypeVal,
-                                                    'ammount'            						=> $ammount,
-                                                    'validity' 									=> $validityfromVal,
-                                                    'expire'					 				=> $validitytoVal,
-                                                    'currency_id'        						=> $currencyVal
-                                                ]);
-                                            }
-                                            $exitGCCPC = null;
-                                            $exitGCCPC = GlobalCharCarrier::where('carrier_id',$carrierVal)
-                                                ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
-                                            if(count($exitGCCPC) == 0){
-                                                GlobalCharCarrier::create([ // tabla GlobalCharCarrier
-                                                    'carrier_id'      => $carrierVal,
-                                                    'globalcharge_id' => $globalChargeTONArreG->id
-                                                ]);
-                                            }
-
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        $originVal = $rando;
-                                                    } else {
-                                                        $destinyVal = $rando;
-                                                    }
-
-                                                    if($differentiatorBol == false){
-                                                        $exgcpt = null;
-                                                        $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                            ->where('typedestiny_id',$typedestinyVal)
-                                                            ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
-                                                        if(count($exgcpt) == 0){
-                                                            GlobalCharPort::create([ // tabla GlobalCharPort
-                                                                'port_orig'      	=> $originVal,
-                                                                'port_dest'      	=> $destinyVal,
-                                                                'typedestiny_id' 	=> $typedestinyVal,
-                                                                'globalcharge_id'   => $globalChargeTONArreG->id
-                                                            ]);
-                                                        }
-                                                    } else {
-                                                        $exgcct = null;
-                                                        $exgcct = GlobalCharCountry::where('country_orig',$originVal)
-                                                            ->where('country_dest',$destinyVal)
-                                                            ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
-                                                        if(count($exgcct) == 0){
-                                                            GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                                'country_orig'      => $originVal,
-                                                                'country_dest'      => $destinyVal,
-                                                                'globalcharge_id'   => $globalChargeTONArreG->id
-                                                            ]);
-                                                        }
-                                                    }
-                                                } 
-
-                                            } else {
-                                                // fila por puerto, sin expecificar origen ni destino manualmente
-                                                if($differentiatorBol == false){
-                                                    $exgcpt = null;
-                                                    $exgcpt = GlobalCharPort::where('port_orig',$originVal)->where('port_dest',$destinyVal)
-                                                        ->where('typedestiny_id',$typedestinyVal)
-                                                        ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
-                                                    if(count($exgcpt) == 0){
-                                                        GlobalCharPort::create([ // tabla GlobalCharPort
-                                                            'port_orig'      	=> $originVal,
-                                                            'port_dest'      	=> $destinyVal,
-                                                            'typedestiny_id' 	=> $typedestinyVal,
-                                                            'globalcharge_id'   => $globalChargeTONArreG->id
-                                                        ]);
-                                                    }
-                                                } else {
-                                                    $exgcct = null;
-                                                    $exgcct = GlobalCharCountry::where('country_orig',$originVal)
-                                                        ->where('country_dest',$destinyVal)
-                                                        ->where('globalcharge_id',$globalChargeTONArreG->id)->first();
-                                                    if(count($exgcct) == 0){
-                                                        GlobalCharCountry::create([ // tabla GlobalCharCountry harbor
-                                                            'country_orig'      => $originVal,
-                                                            'country_dest'      => $destinyVal,
-                                                            'globalcharge_id'   => $globalChargeTONArreG->id
-                                                        ]);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        // echo $i;
-                                        // dd($globalChargeTONArreG);
                                     }
 
                                 } else {
@@ -3420,449 +3130,159 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                             }
 
                                         } 
-                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 
-                                                 || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
-                                            // es una sola carga Per Shipment
+                                        else{
+                                            if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_BL') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TON') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TEU') == 0){
 
-                                            // multiples puertos o por seleccion
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        if($differentiatorBol){
-                                                            $originerr = Country::find($rando);
-                                                        } else {
-                                                            $originerr = Harbor::find($rando);
-                                                        }
-                                                        $originVal = $originerr['name'];
-                                                        if($destiExitBol == true){    
-                                                            $destinyVal = $read[$requestobj[$destinyExc]];
-                                                        }
-                                                    } else {
-                                                        if($differentiatorBol){
-                                                            $destinyerr = Country::find($rando);
-                                                        } else {
-                                                            $destinyerr = Harbor::find($rando);
-                                                        }
-                                                        $destinyVal = $destinyerr['name'];
-                                                        if($origExiBol == true){
-                                                            $originVal = $read[$requestobj[$originExc]];                                      
-                                                        }
-                                                    }
-
+                                                if(strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0 || strnatcasecmp($read[$requestobj[$CalculationType]],'Per Shipment') == 0){
                                                     $calculationtypeValfail = 'Per Shipment';
-
-                                                    if($requestobj[$statustypecurren] == 2){
-                                                        $currencyVal = $currencyValtwen;
-                                                    }
-
-                                                    if($twentyVal != 0 || $twentyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValtwen;
-                                                        } 
-                                                        $ammount = $twentyVal;
-
-                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValfor;
-                                                        } 
-                                                        $ammount = $fortyVal;
-
-                                                    }else if($fortyhcVal != 0 ||$fortyhcVal != 0.0){
-
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValforHC;
-                                                        } 
-                                                        $ammount = $fortyhcVal;
-
-                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
-
-                                                        if($statusexistfortynor == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValfornor;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortynorVal;
-
-                                                    }else {
-                                                        if($statusexistfortyfive == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValforfive;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortyfiveVal;
-                                                    }
-
-                                                    if($ammount != 0 || $ammount != 0.0){
-                                                        $extgc = null;
-                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
-                                                            ->where('origin',$originVal)
-                                                            ->where('destiny',$destinyVal)
-                                                            ->where('typedestiny',$typedestinyVal)
-                                                            ->where('calculationtype',$calculationtypeValfail)
-                                                            ->where('ammount',$ammount)
-                                                            ->where('currency',$currencyVal)
-                                                            ->where('carrier',$carrierVal)
-                                                            ->where('validityto',$validitytoVal)
-                                                            ->where('validityfrom',$validityfromVal)
-                                                            ->where('port',true)
-                                                            ->where('country',false)
-                                                            ->where('company_user_id',$companyUserIdVal)
-                                                            ->where('differentiator',$differentiatorVal)
-                                                            ->get();
-
-                                                        if(count($extgc) == 0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $ammount, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
-                                                            //$ratescollection->push($ree);                    
-                                                        }
-                                                    }
-
-                                                }
-                                            } else {
-                                                // puertos leidos del excel
-                                                if($origExiBol == true){
-                                                    if($differentiatorBol == true){
-                                                        $originExits = Country::find($originVal);
-                                                        $originVal = $originExits['name'];     
-                                                    } else {
-                                                        $originExits = Harbor::find($originVal);
-                                                        $originVal = $originExits->name;                                       
-                                                    }
-                                                }
-                                                if($destiExitBol == true){ 
-                                                    if($differentiatorBol == true){
-                                                        $destinyExits = Country::find($destinyVal);
-                                                        $destinyVal = $destinyExits['name'];
-                                                    } else {
-                                                        $destinyExits = Harbor::find($destinyVal);
-                                                        $destinyVal = $destinyExits->name;
-                                                    }
-                                                }
-
-                                                $calculationtypeValfail = 'Per Shipment';
-
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValtwen;
-                                                }
-                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    $extgc = null;
-                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
-                                                        ->where('origin',$originVal)
-                                                        ->where('destiny',$destinyVal)
-                                                        ->where('typedestiny',$typedestinyVal)
-                                                        ->where('calculationtype',$calculationtypeValfail)
-                                                        ->where('ammount',$twentyVal)
-                                                        ->where('currency',$currencyVal)
-                                                        ->where('carrier',$carrierVal)
-                                                        ->where('validityto',$validitytoVal)
-                                                        ->where('validityfrom',$validityfromVal)
-                                                        ->where('port',true)
-                                                        ->where('country',false)
-                                                        ->where('company_user_id',$companyUserIdVal)
-                                                        ->where('differentiator',$differentiatorVal)
-                                                        ->get();
-
-                                                    if(count($extgc) == 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //  $ratescollection->push($ree);
-                                                    }
-                                                }
-                                            }
-
-                                        }
-                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'Per_BL') == 0){
-                                            // es una sola carga Per Shipment
-
-                                            // multiples puertos o por seleccion
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        if($differentiatorBol){
-                                                            $originerr = Country::find($rando);
-                                                        } else {
-                                                            $originerr = Harbor::find($rando);
-                                                        }
-                                                        $originVal = $originerr['name'];
-                                                        if($destiExitBol == true){    
-                                                            $destinyVal = $read[$requestobj[$destinyExc]];
-                                                        }
-                                                    } else {
-                                                        if($differentiatorBol){
-                                                            $destinyerr = Country::find($rando);
-                                                        } else {
-                                                            $destinyerr = Harbor::find($rando);
-                                                        }
-                                                        $destinyVal = $destinyerr['name'];
-                                                        if($origExiBol == true){
-                                                            $originVal = $read[$requestobj[$originExc]];                                      
-                                                        }
-                                                    }
-
+                                                } else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_BL') == 0 ){
                                                     $calculationtypeValfail = 'Per BL';
-
-                                                    if($requestobj[$statustypecurren] == 2){
-                                                        $currencyVal = $currencyValtwen;
-                                                    }
-
-                                                    if($twentyVal != 0 || $twentyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValtwen;
-                                                        } 
-                                                        $ammount = $twentyVal;
-
-                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValfor;
-                                                        } 
-                                                        $ammount = $fortyVal;
-
-                                                    }else if($fortyhcVal != 0 || $fortyhcVal != 0.0){
-
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValforHC;
-                                                        } 
-                                                        $ammount = $fortyhcVal;
-
-                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
-
-                                                        if($statusexistfortynor == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValfornor;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortynorVal;
-
-                                                    }else {
-                                                        if($statusexistfortyfive == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValforfive;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortyfiveVal;
-                                                    }
-
-                                                    if($ammount != 0 || $ammount != 0.0){
-                                                        $extgc = null;
-                                                        $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
-                                                            ->where('origin',$originVal)
-                                                            ->where('destiny',$destinyVal)
-                                                            ->where('typedestiny',$typedestinyVal)
-                                                            ->where('calculationtype',$calculationtypeValfail)
-                                                            ->where('ammount',$ammount)
-                                                            ->where('currency',$currencyVal)
-                                                            ->where('carrier',$carrierVal)
-                                                            ->where('validityto',$validitytoVal)
-                                                            ->where('validityfrom',$validityfromVal)
-                                                            ->where('port',true)
-                                                            ->where('country',false)
-                                                            ->where('company_user_id',$companyUserIdVal)
-                                                            ->where('differentiator',$differentiatorVal)
-                                                            ->get();
-
-                                                        if(count($extgc) == 0){
-                                                            FailedGlobalcharge::create([
-                                                                'surcharge'       	=> $surchargeVal,
-                                                                'origin'          	=> $originVal,
-                                                                'destiny'          	=> $destinyVal,
-                                                                'typedestiny'     	=> $typedestinyVal,
-                                                                'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $ammount, //////
-                                                                'currency'		    => $currencyVal, //////
-                                                                'carrier'	        => $carrierVal,
-                                                                'validityto'	    => $validitytoVal,
-                                                                'validityfrom'      => $validityfromVal,
-                                                                'port'        		=> true,// por defecto
-                                                                'country'        	=> false,// por defecto
-                                                                'company_user_id'   => $companyUserIdVal,
-                                                                'account_id'        => $account_idVal,
-                                                                'differentiator'   => $differentiatorVal
-                                                            ]);
-                                                            //$ratescollection->push($ree);                    
-                                                        }
-                                                    }
-
-                                                }
-                                            } else {
-                                                // puertos leidos del excel
-                                                if($origExiBol == true){
-                                                    if($differentiatorBol == true){
-                                                        $originExits = Country::find($originVal);
-                                                        $originVal = $originExits['name'];     
-                                                    } else {
-                                                        $originExits = Harbor::find($originVal);
-                                                        $originVal = $originExits->name;                                       
-                                                    }
-                                                }
-                                                if($destiExitBol == true){ 
-                                                    if($differentiatorBol == true){
-                                                        $destinyExits = Country::find($destinyVal);
-                                                        $destinyVal = $destinyExits['name'];
-                                                    } else {
-                                                        $destinyExits = Harbor::find($destinyVal);
-                                                        $destinyVal = $destinyExits->name;
-                                                    }
-                                                }
-
-                                                $calculationtypeValfail = 'Per BL';
-
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValtwen;
-                                                }
-                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    $extgc = null;
-                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
-                                                        ->where('origin',$originVal)
-                                                        ->where('destiny',$destinyVal)
-                                                        ->where('typedestiny',$typedestinyVal)
-                                                        ->where('calculationtype',$calculationtypeValfail)
-                                                        ->where('ammount',$twentyVal)
-                                                        ->where('currency',$currencyVal)
-                                                        ->where('carrier',$carrierVal)
-                                                        ->where('validityto',$validitytoVal)
-                                                        ->where('validityfrom',$validityfromVal)
-                                                        ->where('port',true)
-                                                        ->where('country',false)
-                                                        ->where('company_user_id',$companyUserIdVal)
-                                                        ->where('differentiator',$differentiatorVal)
-                                                        ->get();
-
-                                                    if(count($extgc) == 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-                                                        //  $ratescollection->push($ree);
-                                                    }
-                                                }
-                                            }
-
-                                        }
-                                        else if (strnatcasecmp($read[$requestobj[$CalculationType]],'Per_TON') == 0){
-                                            // es una sola carga Per Shipment
-
-                                            // multiples puertos o por seleccion
-                                            if($originBol == true || $destinyBol == true){
-                                                foreach($randons as  $rando){
-                                                    //insert por arreglo de puerto
-                                                    if($originBol == true ){
-                                                        if($differentiatorBol){
-                                                            $originerr = Country::find($rando);
-                                                        } else {
-                                                            $originerr = Harbor::find($rando);
-                                                        }
-                                                        $originVal = $originerr['name'];
-                                                        if($destiExitBol == true){    
-                                                            $destinyVal = $read[$requestobj[$destinyExc]];
-                                                        }
-                                                    } else {
-                                                        if($differentiatorBol){
-                                                            $destinyerr = Country::find($rando);
-                                                        } else {
-                                                            $destinyerr = Harbor::find($rando);
-                                                        }
-                                                        $destinyVal = $destinyerr['name'];
-                                                        if($origExiBol == true){
-                                                            $originVal = $read[$requestobj[$originExc]];                                      
-                                                        }
-                                                    }
-
+                                                } else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_TON') == 0){
                                                     $calculationtypeValfail = 'Per TON';
+                                                } else if(strnatcasecmp($read[$requestobj[$CalculationType]],'Per_TEU') == 0){
+                                                    $calculationtypeValfail = 'Per TEU';
+                                                }
+
+                                                // multiples puertos o por seleccion
+                                                if($originBol == true || $destinyBol == true){
+                                                    foreach($randons as  $rando){
+                                                        //insert por arreglo de puerto
+                                                        if($originBol == true ){
+                                                            if($differentiatorBol){
+                                                                $originerr = Country::find($rando);
+                                                            } else {
+                                                                $originerr = Harbor::find($rando);
+                                                            }
+                                                            $originVal = $originerr['name'];
+                                                            if($destiExitBol == true){    
+                                                                $destinyVal = $read[$requestobj[$destinyExc]];
+                                                            }
+                                                        } else {
+                                                            if($differentiatorBol){
+                                                                $destinyerr = Country::find($rando);
+                                                            } else {
+                                                                $destinyerr = Harbor::find($rando);
+                                                            }
+                                                            $destinyVal = $destinyerr['name'];
+                                                            if($origExiBol == true){
+                                                                $originVal = $read[$requestobj[$originExc]];                                      
+                                                            }
+                                                        }
+
+                                                        if($requestobj[$statustypecurren] == 2){
+                                                            $currencyVal = $currencyValtwen;
+                                                        }
+
+                                                        if($twentyVal != 0 || $twentyVal != 0.0){
+                                                            if($requestobj[$statustypecurren] == 2){
+                                                                $currencyVal = $currencyValtwen;
+                                                            } 
+                                                            $ammount = $twentyVal;
+
+                                                        } else if ($fortyVal != 0 || $fortyVal != 0.0){
+                                                            if($requestobj[$statustypecurren] == 2){
+                                                                $currencyVal = $currencyValfor;
+                                                            } 
+                                                            $ammount = $fortyVal;
+
+                                                        }else if($fortyhcVal != 0 ||$fortyhcVal != 0.0){
+
+                                                            if($requestobj[$statustypecurren] == 2){
+                                                                $currencyVal = $currencyValforHC;
+                                                            } 
+                                                            $ammount = $fortyhcVal;
+
+                                                        }else if($fortynorVal != 0 || $fortynorVal != 0.0){
+
+                                                            if($statusexistfortynor == 1){
+                                                                if($requestobj[$statustypecurren] == 2){
+                                                                    $currencyVal = $currencyValfornor;
+                                                                } 
+                                                            }
+                                                            $ammount = $fortynorVal;
+
+                                                        }else {
+                                                            if($statusexistfortyfive == 1){
+                                                                if($requestobj[$statustypecurren] == 2){
+                                                                    $currencyVal = $currencyValforfive;
+                                                                } 
+                                                            }
+                                                            $ammount = $fortyfiveVal;
+                                                        }
+
+                                                        if($ammount != 0 || $ammount != 0.0){
+                                                            $extgc = null;
+                                                            $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
+                                                                ->where('origin',$originVal)
+                                                                ->where('destiny',$destinyVal)
+                                                                ->where('typedestiny',$typedestinyVal)
+                                                                ->where('calculationtype',$calculationtypeValfail)
+                                                                ->where('ammount',$ammount)
+                                                                ->where('currency',$currencyVal)
+                                                                ->where('carrier',$carrierVal)
+                                                                ->where('validityto',$validitytoVal)
+                                                                ->where('validityfrom',$validityfromVal)
+                                                                ->where('port',true)
+                                                                ->where('country',false)
+                                                                ->where('company_user_id',$companyUserIdVal)
+                                                                ->where('differentiator',$differentiatorVal)
+                                                                ->get();
+
+                                                            if(count($extgc) == 0){
+                                                                FailedGlobalcharge::create([
+                                                                    'surcharge'       	=> $surchargeVal,
+                                                                    'origin'          	=> $originVal,
+                                                                    'destiny'          	=> $destinyVal,
+                                                                    'typedestiny'     	=> $typedestinyVal,
+                                                                    'calculationtype'	=> $calculationtypeValfail,  //////
+                                                                    'ammount'           => $ammount, //////
+                                                                    'currency'		    => $currencyVal, //////
+                                                                    'carrier'	        => $carrierVal,
+                                                                    'validityto'	    => $validitytoVal,
+                                                                    'validityfrom'      => $validityfromVal,
+                                                                    'port'        		=> true,// por defecto
+                                                                    'country'        	=> false,// por defecto
+                                                                    'company_user_id'   => $companyUserIdVal,
+                                                                    'account_id'        => $account_idVal,
+                                                                    'differentiator'   => $differentiatorVal
+                                                                ]);
+                                                                //$ratescollection->push($ree);                    
+                                                            }
+                                                        }
+
+                                                    }
+                                                } else {
+                                                    // puertos leidos del excel
+                                                    if($origExiBol == true){
+                                                        if($differentiatorBol == true){
+                                                            $originExits = Country::find($originVal);
+                                                            $originVal = $originExits['name'];     
+                                                        } else {
+                                                            $originExits = Harbor::find($originVal);
+                                                            $originVal = $originExits->name;                                       
+                                                        }
+                                                    }
+                                                    if($destiExitBol == true){ 
+                                                        if($differentiatorBol == true){
+                                                            $destinyExits = Country::find($destinyVal);
+                                                            $destinyVal = $destinyExits['name'];
+                                                        } else {
+                                                            $destinyExits = Harbor::find($destinyVal);
+                                                            $destinyVal = $destinyExits->name;
+                                                        }
+                                                    }
 
                                                     if($requestobj[$statustypecurren] == 2){
                                                         $currencyVal = $currencyValtwen;
                                                     }
-
-                                                    if($twentyVal != 0 || $twentyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValtwen;
-                                                        } 
-                                                        $ammount = $twentyVal;
-
-                                                    } else if ($fortyVal != 0 || $fortyVal != 0.0){
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValfor;
-                                                        } 
-                                                        $ammount = $fortyVal;
-
-                                                    }else if($fortyhcVal != 0 || $fortyhcVal != 0.0){
-
-                                                        if($requestobj[$statustypecurren] == 2){
-                                                            $currencyVal = $currencyValforHC;
-                                                        } 
-                                                        $ammount = $fortyhcVal;
-
-                                                    }else if($fortynorVal != 0 || $fortynorVal != 0.0){
-
-                                                        if($statusexistfortynor == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValfornor;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortynorVal;
-
-                                                    }else {
-                                                        if($statusexistfortyfive == 1){
-                                                            if($requestobj[$statustypecurren] == 2){
-                                                                $currencyVal = $currencyValforfive;
-                                                            } 
-                                                        }
-                                                        $ammount = $fortyfiveVal;
-                                                    }
-
-                                                    if($ammount != 0 || $ammount != 0.0){
+                                                    if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
                                                         $extgc = null;
                                                         $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
                                                             ->where('origin',$originVal)
                                                             ->where('destiny',$destinyVal)
                                                             ->where('typedestiny',$typedestinyVal)
                                                             ->where('calculationtype',$calculationtypeValfail)
-                                                            ->where('ammount',$ammount)
+                                                            ->where('ammount',$twentyVal)
                                                             ->where('currency',$currencyVal)
                                                             ->where('carrier',$carrierVal)
                                                             ->where('validityto',$validitytoVal)
@@ -3880,7 +3300,7 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 'destiny'          	=> $destinyVal,
                                                                 'typedestiny'     	=> $typedestinyVal,
                                                                 'calculationtype'	=> $calculationtypeValfail,  //////
-                                                                'ammount'           => $ammount, //////
+                                                                'ammount'           => $twentyVal, //////
                                                                 'currency'		    => $currencyVal, //////
                                                                 'carrier'	        => $carrierVal,
                                                                 'validityto'	    => $validitytoVal,
@@ -3891,80 +3311,12 @@ class ImportationGlobalchargeJob implements ShouldQueue
                                                                 'account_id'        => $account_idVal,
                                                                 'differentiator'   => $differentiatorVal
                                                             ]);
-
-                                                            //$ratescollection->push($ree);                    
+                                                            //  $ratescollection->push($ree);
                                                         }
                                                     }
-
-                                                }
-                                            } else {
-                                                // puertos leidos del excel
-                                                if($origExiBol == true){
-                                                    if($differentiatorBol == true){
-                                                        $originExits = Country::find($originVal);
-                                                        $originVal = $originExits['name'];     
-                                                    } else {
-                                                        $originExits = Harbor::find($originVal);
-                                                        $originVal = $originExits->name;                                       
-                                                    }
-                                                }
-                                                if($destiExitBol == true){ 
-                                                    if($differentiatorBol == true){
-                                                        $destinyExits = Country::find($destinyVal);
-                                                        $destinyVal = $destinyExits['name'];
-                                                    } else {
-                                                        $destinyExits = Harbor::find($destinyVal);
-                                                        $destinyVal = $destinyExits->name;
-                                                    }
                                                 }
 
-                                                $calculationtypeValfail = 'Per TON';
-
-                                                if($requestobj[$statustypecurren] == 2){
-                                                    $currencyVal = $currencyValtwen;
-                                                }
-                                                if($twentyArr[0] != 0 || $twentyArr[0] != 0.0){
-                                                    $extgc = null;
-                                                    $extgc = FailedGlobalcharge::where('surcharge',$surchargeVal)
-                                                        ->where('origin',$originVal)
-                                                        ->where('destiny',$destinyVal)
-                                                        ->where('typedestiny',$typedestinyVal)
-                                                        ->where('calculationtype',$calculationtypeValfail)
-                                                        ->where('ammount',$twentyVal)
-                                                        ->where('currency',$currencyVal)
-                                                        ->where('carrier',$carrierVal)
-                                                        ->where('validityto',$validitytoVal)
-                                                        ->where('validityfrom',$validityfromVal)
-                                                        ->where('port',true)
-                                                        ->where('country',false)
-                                                        ->where('company_user_id',$companyUserIdVal)
-                                                        ->where('differentiator',$differentiatorVal)
-                                                        ->get();
-
-                                                    if(count($extgc) == 0){
-                                                        FailedGlobalcharge::create([
-                                                            'surcharge'       	=> $surchargeVal,
-                                                            'origin'          	=> $originVal,
-                                                            'destiny'          	=> $destinyVal,
-                                                            'typedestiny'     	=> $typedestinyVal,
-                                                            'calculationtype'	=> $calculationtypeValfail,  //////
-                                                            'ammount'           => $twentyVal, //////
-                                                            'currency'		    => $currencyVal, //////
-                                                            'carrier'	        => $carrierVal,
-                                                            'validityto'	    => $validitytoVal,
-                                                            'validityfrom'      => $validityfromVal,
-                                                            'port'        		=> true,// por defecto
-                                                            'country'        	=> false,// por defecto
-                                                            'company_user_id'   => $companyUserIdVal,
-                                                            'account_id'        => $account_idVal,
-                                                            'differentiator'   => $differentiatorVal
-                                                        ]);
-
-                                                        //  $ratescollection->push($ree);
-                                                    }
-                                                }
                                             }
-
                                         }
                                     } else{
                                         // se deconoce si es PER_CONTAINER O PER_DOC
