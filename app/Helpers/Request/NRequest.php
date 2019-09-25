@@ -14,6 +14,8 @@ class NRequest {
             $direction      = null;
             $carrier        = null;
             $time_elapsed   = null;
+            $time_star      = null;
+            $time_end       = null;
 
             if(empty($Nrequest->direction) == true){
                 $direction = " -------- ";
@@ -27,6 +29,18 @@ class NRequest {
                 $carrier = " -------- ";
             }
 
+            if(empty($Nrequest->time_star) != true){
+                $time_star = $Nrequest->time_star;
+            } else {
+                $time_star = '--------';
+            }
+            
+            if(empty($Nrequest->updated) != true){
+                $time_end = $Nrequest->updated;
+            } else {
+                $time_end = '--------';
+            }
+            
             if(empty($Nrequest->time_total) != true){
                 $time_elapsed = $Nrequest->time_total;
             } else {
@@ -34,6 +48,7 @@ class NRequest {
             }
 
             $arreglo = [
+                'id'            => $Nrequest->id,
                 'company'       => $Nrequest->companyuser->name,
                 'reference'     => $Nrequest->namecontract,
                 'direction'     => $direction,
@@ -42,6 +57,8 @@ class NRequest {
                 'date'          => $Nrequest->created,
                 'user'          => $Nrequest->user->name,
                 'username_load' => $Nrequest->username_load,
+                'time_start'    => $time_star,
+                'time_end'      => $time_end,
                 'time_elapsed'  => $time_elapsed,
                 'status'        => $Nrequest->status
             ];
@@ -60,6 +77,8 @@ class NRequest {
             $direction      = null;
             $carrier        = null;
             $time_elapsed   = null;
+            $time_star      = null;
+            $time_end       = null;
 
             if(empty($Nrequest->direction) == true){
                 $direction = " -------- ";
@@ -72,7 +91,19 @@ class NRequest {
             } else {
                 $carrier = " -------- ";
             }
+            
+            if(empty($Nrequest->time_star) != true){
+                $time_star = $Nrequest->time_star;
+            } else {
+                $time_star = '--------';
+            }
 
+            if(empty($Nrequest->updated) != true){
+                $time_end = $Nrequest->updated;
+            } else {
+                $time_end = '--------';
+            }
+            
             if(empty($Nrequest->time_total) != true){
                 $time_elapsed = $Nrequest->time_total;
             } else {
@@ -80,6 +111,7 @@ class NRequest {
             }
 
             $arreglo = [
+                'id'            => $Nrequest->id,
                 'company'       => $Nrequest->companyuser->name,
                 'reference'     => $Nrequest->namecontract,
                 'direction'     => $direction,
@@ -88,6 +120,8 @@ class NRequest {
                 'date'          => $Nrequest->created,
                 'user'          => $Nrequest->user->name,
                 'username_load' => $Nrequest->username_load,
+                'time_start'    => $time_star,
+                'time_end'      => $time_end,
                 'time_elapsed'  => $time_elapsed,
                 'status'        => $Nrequest->status
             ];

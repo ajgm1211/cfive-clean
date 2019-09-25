@@ -18,6 +18,7 @@ class GlobalChargeLcl extends Model
                            'contractlcl_id',
                            'typedestiny_id',
                            'company_user_id',
+                           'account_imp_gclcl_id',
                            'calculationtypelcl_id',
                            'created_at','updated_at'];
     public function companyUser()

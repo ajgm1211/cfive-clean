@@ -1,5 +1,5 @@
 <div class="m-portlet">
-    {!! Form::open(['route' => 'gcadm.store', 'method' => 'post','class' => 'form-group m-form__group']) !!}
+    {!! Form::open(['route' => 'gcadm.store', 'method' => 'post','class' => 'form-group m-form__group','id' => 'frmSurcharges']) !!}
     <div class="m-portlet__body">
         <div class="form-group m-form__group row">
             <div class="col-lg-12">
@@ -135,10 +135,14 @@
         </div>
         <br>
     </div>
+<input type="hidden" name="company_user_id_selec" value="{{$company_user_id_selec}}">
+    <input type="hidden" name="carrier_id_selec" value="{{$carrier_id_selec}}">
+    <input type="hidden" name="reload_DT" value="{{$reload_DT}}">
     {!! Form::close() !!}
 </div>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/globalcharges.js"></script>
+
 <script>
 
     $('.m-select2-general').select2({
