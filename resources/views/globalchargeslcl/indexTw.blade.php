@@ -61,7 +61,7 @@
                                         <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                             <span>
                                                 <span>
-                                                    Import New Globalcharger &nbsp;
+                                                    Import Global Charges &nbsp;
                                                 </span>
                                                 <i class="la la-clipboard"></i>
                                             </span>
