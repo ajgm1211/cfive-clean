@@ -77,10 +77,10 @@
                         <br>
                         <div class="row" style="margin-bottom:30px;">
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
-                                {!! Form::select('company_user',@$companies,null,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
+                                {!! Form::select('company_user',@$companies,@$company_user_id_selec,['class'=>'m-select2-general form-control','id'=>'company_user','placeholder'=>'Select company'])!!}
                             </div>
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
-                                {!! Form::select('carrier',@$carriers,null,['class'=>'m-select2-general form-control','id'=>'carrier','placeholder'=>'Select company'])!!}
+                                {!! Form::select('carrier',@$carriers,@$carrier_id_selec,['class'=>'m-select2-general form-control','id'=>'carrier','placeholder'=>'Select company'])!!}
                             </div>
                             <div class="col-md-3 order-1 order-xl-2 m--align-left">
                                 <button id="search" class="btn btn-primary">Search</button>
@@ -149,35 +149,41 @@
 <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 
 <script src="/js/globalcharges.js"></script>
+
 <script>
 
+
     function AbrirModal(action,id){
+
+        var company_user_id_selec = $('#company_user').val();
+        var carrier_id_selec = $('#carrier').val();
+
+        data = {company_user_id_selec:company_user_id_selec,carrier_id_selec:carrier_id_selec,reload_DT:true}
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
         if(action == "editGlobalCharge"){
             var url = '{{ route("gcadm.show", ":id") }}';
             url = url.replace(':id', id);
-            $('#global-body').load(url,function(){
+            $('#global-body').load(url,data,function(){
                 $('#global-modal').modal({show:true});
             });
         }
         if(action == "addGlobalCharge"){
             var url = '{{ route("gcadm.add")}}';
-            $('#global-body').load(url,function(){
+            $('#global-body').load(url,data,function(){
                 $('#global-modal').modal({show:true});
             });
         }
         if(action == "duplicateGlobalCharge"){
             var url = '{{ route("gcadm.dupicate", ":id") }}';
             url = url.replace(':id', id);
-            $('#global-body').load(url,function(){
+            $('#global-body').load(url,data,function(){
                 $('#global-modal').modal({show:true});
             });
         }
+        //$('#frmSurcharges').text('<input type="hidden" name="company_user_id" value="">');
     }
 
-    $(document).on('click', '#search', function(){
-        var company_id=$('#company_user').val();
-        var carrier=$('#carrier').val();
-
+    function loadDatatable(company_id,carrier){
         table = $('#requesttable').DataTable({
             dom: 'Bfrtip',
             processing: true,
@@ -247,6 +253,12 @@
             "paging": true
         });
         table.clear();
+    }
+
+    $(document).on('click', '#search', function(){
+        var company_id=$('#company_user').val();
+        var carrier=$('#carrier').val();
+        loadDatatable(company_id,carrier);
     });
 
 
@@ -256,6 +268,8 @@
 
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
+        var company_user_id_selec = $('#company_user').val();
+        var carrier_id_selec = $('#carrier').val();
         swal({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -313,7 +327,9 @@
     $(document).on('click', '#bulk_duplicate', function(){
         var id = [];
         var oTable = $("#requesttable").dataTable();
-        var length=table.rows('.selected').data().length;                
+        var length=table.rows('.selected').data().length;
+        var company_user_id_selec = $('#company_user').val();
+        var carrier_id_selec = $('#carrier').val();
 
         if(length > 0)
         {
@@ -324,7 +340,11 @@
             url = url.replace(':id', id);
             var token = $("meta[name='csrf-token']").attr("content");
             url = url.replace(':id', id);
-            $('#global-body').load(url,{id:id,_token:token},function(){
+            data = {id:id,_token:token,
+                    company_user_id_selec:company_user_id_selec,
+                    carrier_id_selec:carrier_id_selec,
+                    reload_DT:true};
+            $('#global-body').load(url,data,function(){
                 $('#global-modal').modal({show:true});
             });
         }
@@ -336,6 +356,14 @@
 
 
 </script>
+@if($reload_DT)
+<script>
+    $(function(){
+        loadDatatable('{{$company_user_id_selec}}','{{$carrier_id_selec}}');
+    });
+
+</script>
+@endif
 
 @if(session('globalchar'))
 <script>

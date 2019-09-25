@@ -106,12 +106,12 @@ Route::prefix('globalcharges')->group(function () {
 
     Route::get('indexAdm','GlobalChargesController@indexAdm')->name('gcadm.index')->middleware(['auth','role:administrator|data_entry']);
     Route::get('createAdm','GlobalChargesController@createAdm_proc')->name('gcadm.create')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('addAdm','GlobalChargesController@addAdm')->name('gcadm.add')->middleware(['auth','role:administrator|data_entry']);
     Route::get('typeChargeAdm/{id}','GlobalChargesController@typeChargeAdm')->name('gcadm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreAdm','GlobalChargesController@storeAdm')->name('gcadm.store')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('ShowAdm/{id}','GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('ShowAdm/{id}','GlobalChargesController@showAdm')->name('gcadm.show')->middleware(['auth','role:administrator|data_entry']);
     Route::PUT('UpdateAdm/{id}','GlobalChargesController@updateAdm')->name('gcadm.update')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('DupicateAdm/{id}','GlobalChargesController@dupicateAdm')->name('gcadm.dupicate')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('ArrDupicateAdm/','GlobalChargesController@dupicateArrAdm')->name('gcadm.dupicate.Array')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator|data_entry']);
 });
@@ -660,12 +660,12 @@ Route::prefix('globalchargeslcl')->group(function () {
 
     Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator|data_entry']);
     Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
     Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator|data_entry']);
     Route::PUT('UpdateLclAdm/{id}','GlobalChargesLclController@updateAdm')->name('gclcladm.update')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('ArrLclDuplicateAdm/','GlobalChargesLclController@duplicateArrAdm')->name('gclcladm.duplicate.Array')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('StoreLclArrayDupicateAdm/','GlobalChargesLclController@storeArrayAdm')->name('gclcladm.store.array')->middleware(['auth','role:administrator|data_entry']);
 });

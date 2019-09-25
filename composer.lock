@@ -148,16 +148,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.112.6",
+            "version": "3.112.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "8dac6904e89d8fb7dcaf8044b964c7e77f332289"
+                "reference": "2a2f2bb0e05c2756573155353648521a9a08f5b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8dac6904e89d8fb7dcaf8044b964c7e77f332289",
-                "reference": "8dac6904e89d8fb7dcaf8044b964c7e77f332289",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2a2f2bb0e05c2756573155353648521a9a08f5b3",
+                "reference": "2a2f2bb0e05c2756573155353648521a9a08f5b3",
                 "shasum": ""
             },
             "require": {
@@ -227,7 +227,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-23 18:11:10"
+            "time": "2019-09-25 18:23:09"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -1805,7 +1805,7 @@
             "time": "2019-06-13 18:30:56"
         },
         {
-            "name": "jeremeamia/superclosure",
+            "name": "jeremeamia/SuperClosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -2162,16 +2162,16 @@
         },
         {
             "name": "laravel/passport",
-            "version": "v7.4.1",
+            "version": "v7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "cc39dc6a36ebf5926906eb5ad3c62dba50c9bbd0"
+                "reference": "663e720a6d15e8ec70bf5309f774439a110efc89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/cc39dc6a36ebf5926906eb5ad3c62dba50c9bbd0",
-                "reference": "cc39dc6a36ebf5926906eb5ad3c62dba50c9bbd0",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/663e720a6d15e8ec70bf5309f774439a110efc89",
+                "reference": "663e720a6d15e8ec70bf5309f774439a110efc89",
                 "shasum": ""
             },
             "require": {
@@ -2229,7 +2229,7 @@
                 "oauth",
                 "passport"
             ],
-            "time": "2019-09-10 19:55:34"
+            "time": "2019-09-24 20:59:35"
         },
         {
             "name": "laravel/tinker",
@@ -4684,9 +4684,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
-                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be"
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
                 }
             ],
             "description": "Dump databases",
@@ -4932,9 +4932,9 @@
             "authors": [
                 {
                     "name": "Alex Vanderbist",
+                    "role": "Developer",
                     "email": "alex@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
+                    "homepage": "https://spatie.be"
                 }
             ],
             "description": "Easily create, use and destroy temporary directories",
@@ -7143,8 +7143,8 @@
             "authors": [
                 {
                     "name": "Filipe Dobreira",
-                    "homepage": "https://github.com/filp",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "homepage": "https://github.com/filp"
                 }
             ],
             "description": "php error handling for cool kids",
@@ -8917,8 +8917,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
