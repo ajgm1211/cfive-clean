@@ -757,11 +757,6 @@ Route::group(['prefix' => 'CarrierImportation','middleware' => ['auth','role:adm
     route::get('test','CarriersImportationController@test')->name('test.carrier.autoimport');
 });
 
-// Test Controller 
-Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
-    route::resource('TestApp','TestController');
-});
-
 // IMPORTATION GLOBALCHARGE LCL
 Route::middleware(['auth','role:administrator|data_entry'])->prefix('ImportationGlobalChargerLcl')->group(function () {
     Route::get('RequestProccessGCLCL/{id}','ImportationGlobalChargerLclController@indexRequest')->name('process.request.gc.lcl')
@@ -827,3 +822,9 @@ $router->get('/APP_ENV', function() {
     return env('APP_ENV');
     //return App\User::where('email','admin@example.com')->first();
 })->middleware(['auth','role:administrator|company|subuser']);
+
+// Test Controller 
+Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
+    route::resource('TestApp','TestController');
+    route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+});
