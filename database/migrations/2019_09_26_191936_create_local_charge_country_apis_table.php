@@ -19,7 +19,7 @@ class CreateLocalChargeCountryApisTable extends Migration
 			$table->integer('localcharge_id')->unsigned();
 			$table->foreign('country_orig')->references('id')->on('countries');
 			$table->foreign('country_dest')->references('id')->on('countries');
-			$table->foreign('localcharge_id')->references('id')->on('localcharges')->onDelete('cascade');
+			$table->foreign('localcharge_id')->references('id')->on('local_charge_apis')->onDelete('cascade');
         });
     }
 
