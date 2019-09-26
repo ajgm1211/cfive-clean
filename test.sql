@@ -1,73 +1,61 @@
-SELECT 
-        `gc`.`id` AS `id`,
-        `sr`.`name` AS `charge`,
-        `td`.`description` AS `charge_type`,
-        `ctype`.`name` AS `calculation_type`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `har`.`code`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharport` `gcP`
-                JOIN `harbors` `har` ON ((`har`.`id` = `gcP`.`port_orig`)))
-            WHERE
-                (`gcP`.`globalcharge_id` = `gc`.`id`)) AS `origin_port`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `har`.`code`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharport` `gcP`
-                JOIN `harbors` `har` ON ((`har`.`id` = `gcP`.`port_dest`)))
-            WHERE
-                (`gcP`.`globalcharge_id` = `gc`.`id`)) AS `destination_port`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `coun`.`name`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharcountry` `gcCO`
-                JOIN `countries` `coun` ON ((`coun`.`id` = `gcCO`.`country_orig`)))
-            WHERE
-                (`gcCO`.`globalcharge_id` = `gc`.`id`)) AS `origin_country`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `counD`.`name`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharcountry` `gcCD`
-                JOIN `countries` `counD` ON ((`counD`.`id` = `gcCD`.`country_dest`)))
-            WHERE
-                (`gcCD`.`globalcharge_id` = `gc`.`id`)) AS `destination_country`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `carr`.`name`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharcarrier` `gcC`
-                JOIN `carriers` `carr` ON ((`carr`.`id` = `gcC`.`carrier_id`)))
-            WHERE
-                (`gcC`.`globalcharge_id` = `gc`.`id`)) AS `carrier`,
-        (SELECT 
-                GROUP_CONCAT(DISTINCT `carr`.`uncode`
-                        SEPARATOR ', ')
-            FROM
-                (`globalcharcarrier` `gcC`
-                JOIN `carriers` `carr` ON ((`carr`.`id` = `gcC`.`carrier_id`)))
-            WHERE
-                (`gcC`.`globalcharge_id` = `gc`.`id`)) AS `carriers`,
-        `gc`.`ammount` AS `amount`,
-        `cur`.`alphacode` AS `currency_code`,
-        `gc`.`validity` AS `valid_from`,
-        `gc`.`expire` AS `valid_until`,
-        `gc`.`company_user_id` AS `company_user_id`,
-        `cmpu`.`name` AS `company_user`
-    FROM
-        (((((`globalcharges` `gc`
-        JOIN `surcharges` `sr` ON ((`sr`.`id` = `gc`.`surcharge_id`)))
-        JOIN `typedestiny` `td` ON ((`td`.`id` = `gc`.`typedestiny_id`)))
-        JOIN `currency` `cur` ON ((`cur`.`id` = `gc`.`currency_id`)))
-        JOIN `calculationtype` `ctype` ON ((`ctype`.`id` = `gc`.`calculationtype_id`)))
-        JOIN `company_users` `cmpu` ON ((`cmpu`.`id` = `gc`.`company_user_id`)))
-        
-        
-        
-        
-        
-        CREATE DEFINER=`cargofive`@`%` PROCEDURE `select_globalcharge_adm`(IN comp_id int)
-SELECT gb.id, (SELECT GROUP_CONCAT(DISTINCT(har.display_name) SEPARATOR ', ') FROM globalcharport gbp INNER JOIN harbors har on har.id = gbp.port_orig WHERE gbp.globalcharge_id = gb.id ) as port_orig , (SELECT GROUP_CONCAT(DISTINCT(har.display_name) SEPARATOR ', ') FROM globalcharport gbp INNER JOIN harbors har on har.id = gbp.port_dest WHERE gbp.globalcharge_id = gb.id ) as port_dest, (SELECT GROUP_CONCAT(DISTINCT(coun.name) SEPARATOR ', ') FROM globalcharcountry gbCD INNER JOIN countries coun on coun.id = gbCD.country_orig WHERE gbCD.globalcharge_id = gb.id ) as country_orig , (SELECT GROUP_CONCAT(DISTINCT(counD.name) SEPARATOR ', ') FROM globalcharcountry gbCD INNER JOIN countries counD on counD.id = gbCD.country_dest WHERE gbCD.globalcharge_id = gb.id ) as country_dest , (SELECT GROUP_CONCAT(DISTINCT(carr.name) SEPARATOR ', ') FROM globalcharcarrier gbC INNER JOIN carriers carr on carr.id = gbC.carrier_id WHERE gbC.globalcharge_id = gb.id ) as carrier, sg.name as surcharges, td.description as typedestiny, ct.name as calculationtype, gb.ammount, gb.validity,gb.expire, cy.alphacode AS currency, cmpu.name as company_user, gb.account_importation_globalcharge_id FROM globalcharges gb INNER JOIN surcharges sg ON gb.surcharge_id = sg.id INNER JOIN typedestiny td ON gb.typedestiny_id = td.id INNER JOIN calculationtype ct ON gb.calculationtype_id = ct.id INNER JOIN currency cy ON gb.currency_id = cy.id INNER JOIN company_users cmpu ON gb.company_user_id = cmpu.id WHERE gb.account_importation_globalcharge_id = account_id
+
+
+CREATE TABLE `rates_apis` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `origin_port` int(10) UNSIGNED NOT NULL,
+  `destiny_port` int(10) UNSIGNED NOT NULL,
+  `carrier_id` int(10) UNSIGNED NOT NULL,
+  `contract_id` int(10) UNSIGNED NOT NULL,
+  `twuenty` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `forty` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fortyhc` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fortynor` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fortyfive` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency_id` int(10) UNSIGNED NOT NULL,
+  `schedule_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `transit_time` int(10) UNSIGNED DEFAULT NULL,
+  `via` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `rates_apis`
+--
+ALTER TABLE `rates_apis`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `rates_apis_origin_port_foreign` (`origin_port`),
+  ADD KEY `rates_apis_destiny_port_foreign` (`destiny_port`),
+  ADD KEY `rates_apis_carrier_id_foreign` (`carrier_id`),
+  ADD KEY `rates_apis_contract_id_foreign` (`contract_id`),
+  ADD KEY `rates_apis_currency_id_foreign` (`currency_id`),
+  ADD KEY `rates_apis_schedule_type_id_foreign` (`schedule_type_id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `rates_apis`
+--
+ALTER TABLE `rates_apis`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `rates_apis`
+--
+ALTER TABLE `rates_apis`
+  ADD CONSTRAINT `rates_apis_carrier_id_foreign` FOREIGN KEY (`carrier_id`) REFERENCES `carriers` (`id`),
+  ADD CONSTRAINT `rates_apis_contract_id_foreign` FOREIGN KEY (`contract_id`) REFERENCES `contracts_apis` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `rates_apis_currency_id_foreign` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`),
+  ADD CONSTRAINT `rates_apis_destiny_port_foreign` FOREIGN KEY (`destiny_port`) REFERENCES `harbors` (`id`),
+  ADD CONSTRAINT `rates_apis_origin_port_foreign` FOREIGN KEY (`origin_port`) REFERENCES `harbors` (`id`),
+  ADD CONSTRAINT `rates_apis_schedule_type_id_foreign` FOREIGN KEY (`schedule_type_id`) REFERENCES `schedule_type` (`id`) ON DELETE SET NULL;
