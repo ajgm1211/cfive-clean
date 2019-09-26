@@ -653,12 +653,12 @@ Route::prefix('globalchargeslcl')->group(function () {
 
     Route::get('indexLclAdm','GlobalChargesLclController@indexAdm')->name('gclcladm.index')->middleware(['auth','role:administrator|data_entry']);
     Route::get('createLclAdm','GlobalChargesLclController@createAdm')->name('gclcladm.create')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('addLclAdm','GlobalChargesLclController@addAdm')->name('gclcladm.add')->middleware(['auth','role:administrator|data_entry']);
     Route::get('typeChargeLclAdm/{id}','GlobalChargesLclController@typeChargeAdm')->name('gclcladm.typeCharge')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreLclAdm','GlobalChargesLclController@storeAdm')->name('gclcladm.store')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('ShowLclAdm/{id}','GlobalChargesLclController@showAdm')->name('gclcladm.show')->middleware(['auth','role:administrator|data_entry']);
     Route::PUT('UpdateLclAdm/{id}','GlobalChargesLclController@updateAdm')->name('gclcladm.update')->middleware(['auth','role:administrator|data_entry']);
-    Route::get('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
+    Route::post('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('ArrLclDuplicateAdm/','GlobalChargesLclController@duplicateArrAdm')->name('gclcladm.duplicate.Array')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('StoreLclArrayDupicateAdm/','GlobalChargesLclController@storeArrayAdm')->name('gclcladm.store.array')->middleware(['auth','role:administrator|data_entry']);
 });

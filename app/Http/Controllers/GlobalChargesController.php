@@ -355,11 +355,11 @@ class GlobalChargesController extends Controller
     // CRUD Administarator -----------------------------------------------------------------------------------------------------
 
     public function indexAdm(Request $request){
-        $companies          = CompanyUser::pluck('name','id');
-        $carriers           = Carrier::pluck('name','id');
+        $companies              = CompanyUser::pluck('name','id');
+        $carriers               = Carrier::pluck('name','id');
         $company_user_id_selec  = $request->input('company_user_id_selec');
         $carrier_id_selec       = $request->input('carrier_id_selec');
-        $reload_DT      = $request->input('reload_DT');
+        $reload_DT              = $request->input('reload_DT');
 
         return view('globalchargesAdm.index',compact('companies','carriers','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
