@@ -46,6 +46,9 @@
         </div>
         <br>
     </div>
+    <input type="hidden" name="company_user_id_selec" value="{{$company_user_id_selec}}">
+    <input type="hidden" name="carrier_id_selec" value="{{$carrier_id_selec}}">
+    <input type="hidden" name="reload_DT" value="{{$reload_DT}}">
     {!! Form::close() !!}
 
 </div>
