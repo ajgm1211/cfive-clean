@@ -17,7 +17,7 @@ class CreateLocalChargeCarrierApisTable extends Migration
       $table->integer('carrier_id')->unsigned();
       $table->integer('localcharge_id')->unsigned();
       $table->foreign('carrier_id')->references('id')->on('carriers');
-      $table->foreign('localcharge_id')->references('id')->on('localcharges')->onDelete('cascade');
+      $table->foreign('localcharge_id')->references('id')->on('local_charge_apis')->onDelete('cascade');
     });
   }
 
