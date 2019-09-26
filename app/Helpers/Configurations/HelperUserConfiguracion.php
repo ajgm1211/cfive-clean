@@ -48,8 +48,9 @@ class HelperUserConfiguracion {
         $user_found = null;
         foreach($json as $arreglo => $keys){
             foreach($keys as $key => $all){
+                //dd([$arreglo,$key]);
                 $userConf = UserConfiguration::where('user_id',$user_id)->where('paramerters->'.$arreglo,'like','%'.$key.'%')->first();
-                if(count($userConf) == 0){
+                if(empty($userConf->id) == true){
 
                     $userConf_up = UserConfiguration::where('user_id',$user_id)->first();
                     $josn_user = json_decode($userConf_up->paramerters,true);
