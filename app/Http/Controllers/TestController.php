@@ -12,9 +12,11 @@ use GuzzleHttp\Cookie\FileCookieJar;
 use App\Jobs\TestJob;
 use App\AutoImportation;
 use App\RequetsCarrierFcl;
+use PrvUserConfigurations;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\Jobs\SendEmailAutoImporJob;
+use App\Jobs\SendEmailRequestFclJob;
 use App\Jobs\SelectionAutoImportJob;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Exception\RequestException;
@@ -30,7 +32,7 @@ class TestController extends Controller
     public function index(Request $request)
     {
 
-        $client = new Client();
+        /*$client = new Client();
         $jar = new \GuzzleHttp\Cookie\CookieJar;
         $crawler = $client->request('GET', 'https://auth.cma-cgm.com/idp/prp.wsf?wa=wsignin1.0&wtrealm=https%3A%2F%2Fwww.cma-cgm.com&wctx=rm%3d0%26id%3dpassive%26ru%3d%26Language%3den-US%26Site%3dcmacgm');
         $client->followRedirects();
@@ -54,8 +56,8 @@ class TestController extends Controller
             dd($crawler);
             dd($cookieJar->all());
             return 'revisa';
-        }
-
+        }*/
+        return $json = PrvUserConfigurations::allData(1);
         //return view('testings.index');
     }
 
@@ -64,6 +66,9 @@ class TestController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function sendJob($user_id,$request){
+         SendEmailRequestFclJob::dispatch($user_id,$id);
+    }
     public function create(Request $request)
     {
         $client = new Client(['cookies' => true]);
