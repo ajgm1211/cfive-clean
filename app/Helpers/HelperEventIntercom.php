@@ -17,11 +17,7 @@ class Intercom{
   // EVENTOS RATES
   public static function event_selectRate(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "SELECT RATE",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -32,11 +28,7 @@ class Intercom{
   }
   public static function event_searchRate(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "SEARCH RATE",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -48,11 +40,7 @@ class Intercom{
   //EVENTOS QUOTE 
   public static function event_quoteEmail(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-  /*  $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "QUOTE SEND EMAIL",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -63,11 +51,7 @@ class Intercom{
   }
   public static function event_quotePdf(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "QUOTE PDF",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -101,11 +85,7 @@ class Intercom{
 
   public static function event_quoteManualFcl(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-  /*  $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "QUOTE MANUAL FCL",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -141,11 +121,7 @@ class Intercom{
   // EVENTOS CONTRACTS
   public static function event_contractFcl(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
-=======
     /*$users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
->>>>>>> origin/QA
     foreach ($users as $u) {
       $obj->events->create([
         "event_name" => "CONTRACT FCL",
@@ -174,11 +150,7 @@ class Intercom{
   // EVENTOS GLOBAL CHARGES
   public static function event_globalChargesFcl(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
-=======
     /*$users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
->>>>>>> origin/QA
     foreach ($users as $u) {
       $obj->events->create([
         "event_name" => "GLOBALCHARGES FCL",
@@ -192,11 +164,7 @@ class Intercom{
   }
   public static function event_globalChargesLcl(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
-=======
     /*$users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
->>>>>>> origin/QA
     foreach ($users as $u) {
       $obj->events->create([
         "event_name" => "GLOBALCHARGES LCL",
@@ -254,11 +222,7 @@ class Intercom{
 
   public static function event_pricing(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "PRICING",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -272,11 +236,7 @@ class Intercom{
 
   public static function event_requestDone($idUser){
     $usercreador = User::find($idUser);
-<<<<<<< HEAD
-   /* $obj  = self::$client;    
-=======
     /*$obj  = self::$client;    
->>>>>>> origin/QA
     $users = User::all()->where('company_user_id','=', $usercreador->company_user_id);
     foreach ($users as $u) {
       $obj->events->create([
@@ -292,11 +252,7 @@ class Intercom{
 
   public static function event_newRequest(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "NEW REQUEST",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -307,11 +263,7 @@ class Intercom{
   }
   public static function event_newRequestLCL(){
     $obj  = self::$client;    
-<<<<<<< HEAD
-   /* $obj->events->create([
-=======
     /*$obj->events->create([
->>>>>>> origin/QA
       "event_name" => "NEW REQUEST LCL",
       "created_at" => strtotime("now"),
       "email" =>  \Auth::user()->email,
@@ -320,4 +272,10 @@ class Intercom{
       ]
     ]);*/
   }
+
+
+
+
+
+
 }
