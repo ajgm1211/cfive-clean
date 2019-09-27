@@ -816,6 +816,13 @@ $router->get('/APP_ENV', function() {
     //return App\User::where('email','admin@example.com')->first();
 })->middleware(['auth','role:administrator|company|subuser']);
 
+// Grupos de Sruchargers 
+Route::group(['prefix' => 'GruopSurcharger','middleware' => ['auth','role:administrator']],function(){
+    route::resource('gruopSurcharger','GroupSurchargerController');
+    //route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+    route::post('GSSAdd','GroupSurchargerController@showAdd')->name('group.surcharger.showAdd');
+});
+
 // Test Controller 
 Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
     route::resource('TestApp','TestController');
