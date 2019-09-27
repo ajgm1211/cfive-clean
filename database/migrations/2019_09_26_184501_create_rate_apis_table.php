@@ -25,16 +25,15 @@ class CreateRateApisTable extends Migration
       $table->string('fortynor')->nullable();
       $table->string('fortyfive')->nullable();
       $table->integer('currency_id')->unsigned();
-      $table->string('remarks')->nullable();
-      $table->string('schedule_type')->nullable();
-      $table->integer('transit_time')->nullable();
+      $table->integer('schedule_type_id')->unsigned()->nullable();
+      $table->integer('transit_time')->nullable();;
       $table->string('via')->nullable();
-      $table->softDeletes();
       $table->foreign('origin_port')->references('id')->on('harbors');
       $table->foreign('destiny_port')->references('id')->on('harbors');
       $table->foreign('carrier_id')->references('id')->on('carriers');
       $table->foreign('contract_id')->references('id')->on('contract_apis')->onDelete('cascade');
       $table->foreign('currency_id')->references('id')->on('currency');
+      $table->foreign('schedule_type_id')->references('id')->on('schedules');
       $table->timestamps();
     });
   }

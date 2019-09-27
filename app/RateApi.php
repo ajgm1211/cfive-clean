@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RateApi extends Model
 {
 
+  protected $table    = "rate_apis";
   protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contract_id','twuenty','forty','fortyhc','fortynor','fortyfive', 'currency_id','schedule_type_id','transit_time','via'];
   public function contract()
   {
