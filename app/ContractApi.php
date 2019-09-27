@@ -14,7 +14,7 @@ class ContractApi extends Model
   }
 
   public function localchargesApi(){
-    //return $this->hasManyThrough('App\LocalCharCarrier', 'App\LocalCharge');
+    
     return $this->hasMany('App\LocalChargeApi');
   }
 

@@ -11,7 +11,7 @@ class LocalChargeCarrierApi extends Model
   public function localchargeapi()
   {
 
-    return $this->belongsTo('App\LocalChargeApi');
+    return $this->belongsTo('App\LocalChargeApi','localcharge_id');
   }
   public function carrier(){
 
