@@ -28,18 +28,18 @@ class LocalChargeApi extends Model
     return $this->belongsTo('App\Surcharge');
 
   }
-  public function localcharportsapi(){
+  public function localcharports(){
 
-    return $this->hasMany('App\LocalCharPortApi','localcharge_id');
-
-  }
-  public function localcharcountriesapi(){
-
-    return $this->hasMany('App\LocalCharCountryApi','localcharge_id');
+    return $this->hasMany('App\LocalChargePortApi','localcharge_id');
 
   }
-  public function localcharcarriersapi(){
-    return $this->hasMany('App\LocalCharCarrierApi','localcharge_id');
+  public function localcharcountries(){
+
+    return $this->hasMany('App\LocalChargeCountryApi','localcharge_id');
+
+  }
+  public function localcharcarriers(){
+    return $this->hasMany('App\LocalChargeCarrierApi','localcharge_id');
 
   }
   public function typedestiny(){
