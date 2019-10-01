@@ -354,10 +354,14 @@ class GlobalChargesController extends Controller
 
     // CRUD Administarator -----------------------------------------------------------------------------------------------------
 
-    public function indexAdm(){
-        $companies = CompanyUser::pluck('name','id');
-        $carriers = Carrier::pluck('name','id');
-        return view('globalchargesAdm.index',compact('companies','carriers'));
+    public function indexAdm(Request $request){
+        $companies              = CompanyUser::pluck('name','id');
+        $carriers               = Carrier::pluck('name','id');
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
+
+        return view('globalchargesAdm.index',compact('companies','carriers','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function createAdm(Request $request){
@@ -416,18 +420,18 @@ class GlobalChargesController extends Controller
 
     public function createAdm_proc(Request $request){
         /*  $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);*/
-        
+
         $co=0;
         $ca=0;
-        
+
         if($request->company_id){
-           $co = $request->company_id; 
+            $co = $request->company_id; 
         }
-        
+
         if($request->carrier){
             $ca =  $request->carrier;
         }
-        
+
         $data1 = \DB::select(\DB::raw('call select_globalcharge_adm('.$co.','.$ca.')'));
         $globalcharges = new Collection;
         for ($i = 0; $i < count($data1); $i++) {
@@ -503,8 +507,10 @@ class GlobalChargesController extends Controller
             ->editColumn('id', '{{$id}}')->toJson();
     }
 
-    public function addAdm(){
-
+    public function addAdm(Request $request){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
         $countries      = Country::pluck('name','id');
         $calculationT   = CalculationType::pluck('name','id');
         $typedestiny    = TypeDestiny::pluck('description','id');
@@ -517,7 +523,7 @@ class GlobalChargesController extends Controller
         foreach($company_usersO as $d){
             $company_users[$d['id']]=$d->name;
         }
-        return view('globalchargesAdm.add', compact('harbor','carrier','currency','calculationT','company_users','typedestiny','countries','currency_cfg'));
+        return view('globalchargesAdm.add', compact('harbor','carrier','currency','calculationT','company_users','typedestiny','countries','currency_cfg','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function typeChargeAdm(Request $request,$id){
@@ -533,6 +539,10 @@ class GlobalChargesController extends Controller
 
     public function storeAdm(Request $request){
         //dd($request);
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
+
         $detailscharges = $request->input('type');
         $calculation_type = $request->input('calculationtype');
 
@@ -597,13 +607,17 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this contract.');
-        return redirect()->route('gcadm.index');
+
+        return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
-    public function showAdm($id){
+    public function showAdm(Request $request,$id){
 
         $objsurcharge = new Surcharge();
-        $countries = Country::pluck('name','id');
+        $countries          = Country::pluck('name','id');
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
 
         $globalcharges      = GlobalCharge::find($id);
         $calculationT       = CalculationType::pluck('name','id');
@@ -615,16 +629,21 @@ class GlobalChargesController extends Controller
         $company_users      = CompanyUser::pluck('name','id');
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
-        return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries'));
+        return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function updateAdm(Request $request, $id){
+        //dd($request->all()) ;
 
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
         $currency       = Currency::pluck('alphacode','id');
         $calculationT   = CalculationType::pluck('name','id');
         $typedestiny    = TypeDestiny::pluck('description','id');
+
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
 
         $global                     = GlobalCharge::find($id);
         $validation                 = explode('/',$request->validation_expire);
@@ -637,7 +656,7 @@ class GlobalChargesController extends Controller
         $global->currency_id        = $request->input('currency_id');
         $global->company_user_id    = $request->input('company_user_id');
 
-        $carrier        = $request->input('carrier_id');
+        $carrierInp     = $request->input('carrier_id');
         $deleteCarrier  = GlobalCharCarrier::where("globalcharge_id",$id);
         $deleteCarrier->delete();
         $deletePort     = GlobalCharPort::where("globalcharge_id",$id);
@@ -678,7 +697,7 @@ class GlobalChargesController extends Controller
             }
         }
 
-        foreach($carrier as $key)
+        foreach($carrierInp as $key)
         {
             $detailcarrier = new GlobalCharCarrier();
             $detailcarrier->carrier_id      = $key;
@@ -691,11 +710,14 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully updated this contract.');
-        return redirect()->route('gcadm.index');
+        return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
-    public function dupicateAdm($id){
+    public function dupicateAdm(Request $request,$id){
 
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT          = $request->input('reload_DT');
         $globalcharges      = GlobalCharge::find($id);
         $harbor             = Harbor::pluck('display_name','id');
         $carrier            = Carrier::pluck('name','id');
@@ -708,26 +730,33 @@ class GlobalChargesController extends Controller
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
 
-        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries'));
+        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function dupicateArrAdm(Request $request){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
+
         $company_users      = CompanyUser::pluck('name','id');
         $globals_id_array   = $request->input('id');
         $count = count($globals_id_array);
         //$global             = $global->toArray();
         //dd($globals_id_array);
-        return view('globalchargesAdm.duplicateArray',compact('count','company_users','globals_id_array'));
+        return view('globalchargesAdm.duplicateArray',compact('count','company_users','globals_id_array','company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 
     public function storeArrayAdm(Request $request){
         //dd($request->all());
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
         $requestJob = $request->all();
         GCDplFclLcl::dispatch($requestJob,'fcl');
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this contract.');
-        return redirect()->route('gcadm.index');
+        return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
 }
