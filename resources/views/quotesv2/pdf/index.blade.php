@@ -376,7 +376,11 @@
                                                 <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                                                 <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
                                             @endif
-                                            <td >{{$currency_cfg->alphacode}}</td>
+                                            @if($quote->pdf_option->grouped_freight_charges==1)
+                                                <td >{{$quote->pdf_option->freight_charges_currency}}</td>
+                                            @else
+                                                <td >{{$currency_cfg->alphacode}}</td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @endforeach

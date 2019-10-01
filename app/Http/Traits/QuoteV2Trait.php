@@ -1380,15 +1380,15 @@ trait QuoteV2Trait {
 
                         foreach ($rate->charge as $amounts) {
                             if($amounts->type_id==3){
-                                if($freight_charges_grouped->count()>1){
+                                /*if($freight_charges_grouped->count()>1){
                                     $typeCurrency =  $currency_cfg->alphacode;
-                                }else{
+                                }else{*/
                                     if($quote->pdf_option->grouped_freight_charges==1){
                                         $typeCurrency = $quote->pdf_option->freight_charges_currency;
                                     }else{
                                         $typeCurrency = $currency_cfg->alphacode;   
                                     }
-                                }
+                                //}
                                 $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
                                 $array_amounts = json_decode($amounts->amount,true);
                                 $array_markups = json_decode($amounts->markups,true);
