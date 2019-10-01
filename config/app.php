@@ -185,6 +185,7 @@ return [
     App\Providers\RouteServiceProvider::class,
     App\Providers\RequetsProvider::class,
     App\Providers\ValidationsProvider::class,
+    Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
 
 
 
@@ -254,7 +255,7 @@ return [
     'PrvUserConfigurations' => App\Helpers\Configurations\HelperUserConfiguracion::class,
     'PrvRequest' => App\Helpers\Request\NRequest::class,
     'PrvValidation' => App\Helpers\HelperValidations::class,
-
+    'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
   ],
