@@ -83,6 +83,8 @@ use App\SearchRate;
 use App\SearchPort;
 use App\ViewQuoteV2;
 
+
+
 class QuoteV2Controller extends Controller
 {
   /**
@@ -3768,10 +3770,11 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = 'true';
     $chargeDestination= 'true';
     $chargeFreight= 'true';
+    $chargeAPI= false;
     $form['equipment'] = array('20','40','40HC');
     $form['company_id_quote'] ='';
 
-    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','form'));
+    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','form'));
 
 
   }
@@ -3796,6 +3799,8 @@ class QuoteV2Controller extends Controller
     $chargesOrigin = $request->input('chargeOrigin');
     $chargesDestination = $request->input('chargeDestination');
     $chargesFreight = $request->input('chargeFreight');
+    $chargesAPI = $request->input('chargeAPI');
+
 
     $form  = $request->all();
     $incoterm = Incoterm::pluck('name','id');
@@ -4388,11 +4393,22 @@ class QuoteV2Controller extends Controller
     // ************************* CONSULTA RATE API ****************************** 
 
 
-    $arreglo2 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-      $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
-    });
 
- 
+    if($chargesAPI != null){
+
+      $client = new Client();
+
+      foreach($origin_port as $orig){
+        foreach($destiny_port as $dest){
+          $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+        }
+      }
+      $arreglo2 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+        $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil);
+      });
+    }
+
+
     //ACA
 
 
@@ -4418,11 +4434,15 @@ class QuoteV2Controller extends Controller
 
 
     $arreglo = $arreglo->get();
-    $arreglo2 = $arreglo2->get();
 
- 
+    if($chargesAPI != null){
+      $arreglo2 = $arreglo2->get();
+          $arreglo = $arreglo->merge($arreglo2);
+    }
 
-    $arreglo = $arreglo->merge($arreglo2);
+
+
+
     //  dd($arreglo);
 
 
@@ -5169,7 +5189,7 @@ class QuoteV2Controller extends Controller
             }
           }
         }
-      
+
       }// fin if contract Api
       // ############################ Fin global charges ######################
 
@@ -5292,6 +5312,7 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
     $chargeFreight = ($chargesFreight != null ) ? true : false;
+    $chargeAPI = ($chargesAPI != null ) ? true : false;
 
 
 
@@ -5308,7 +5329,7 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total45');
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI'));
 
   }
 
@@ -5588,6 +5609,7 @@ class QuoteV2Controller extends Controller
     $chargesOrigin = $request->input('chargeOrigin');
     $chargesDestination = $request->input('chargeDestination');
     $chargesFreight = $request->input('chargeFreight');
+    $chargesAPI = $request->input('chargeAPI');
 
     $form  = $request->all();
     $incoterm = Incoterm::pluck('name','id');
@@ -7397,6 +7419,7 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
     $chargeFreight = ($chargesFreight != null ) ? true : false;
+    $chargeAPI = ($chargesAPI != null ) ? true : false;
 
     $hideO = 'hide';
     $hideD = 'hide';
@@ -7405,7 +7428,7 @@ class QuoteV2Controller extends Controller
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
 
-    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight'));
+    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight','chargeAPI'));
 
   }
 
