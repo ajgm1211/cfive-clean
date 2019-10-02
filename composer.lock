@@ -148,16 +148,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.112.7",
+            "version": "3.112.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5167704e39f4e139152906b3d962aa15692bff07"
+                "reference": "0326ba62f6ee0bb075f2b875631ec4abee93bee1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5167704e39f4e139152906b3d962aa15692bff07",
-                "reference": "5167704e39f4e139152906b3d962aa15692bff07",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0326ba62f6ee0bb075f2b875631ec4abee93bee1",
+                "reference": "0326ba62f6ee0bb075f2b875631ec4abee93bee1",
                 "shasum": ""
             },
             "require": {
@@ -227,7 +227,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-09-24 18:13:32"
+            "time": "2019-10-02 18:39:21"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -1805,7 +1805,7 @@
             "time": "2019-06-13 18:30:56"
         },
         {
-            "name": "jeremeamia/SuperClosure",
+            "name": "jeremeamia/superclosure",
             "version": "2.4.0",
             "source": {
                 "type": "git",
@@ -4684,9 +4684,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
+                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
+                    "homepage": "https://spatie.be"
                 }
             ],
             "description": "Dump databases",
@@ -4932,9 +4932,9 @@
             "authors": [
                 {
                     "name": "Alex Vanderbist",
-                    "role": "Developer",
                     "email": "alex@spatie.be",
-                    "homepage": "https://spatie.be"
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
                 }
             ],
             "description": "Easily create, use and destroy temporary directories",
@@ -7143,8 +7143,8 @@
             "authors": [
                 {
                     "name": "Filipe Dobreira",
-                    "role": "Developer",
-                    "homepage": "https://github.com/filp"
+                    "homepage": "https://github.com/filp",
+                    "role": "Developer"
                 }
             ],
             "description": "php error handling for cool kids",
@@ -7431,16 +7431,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031"
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/4eff936d83eb809bde2c57a3cea0ee9643769031",
-                "reference": "4eff936d83eb809bde2c57a3cea0ee9643769031",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/b3453f75fd23d9fd41685f2148f4abeacabc6405",
+                "reference": "b3453f75fd23d9fd41685f2148f4abeacabc6405",
                 "shasum": ""
             },
             "require": {
@@ -7454,7 +7454,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -7492,7 +7492,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2019-08-07 15:01:07"
+            "time": "2019-09-30 08:30:27"
         },
         {
             "name": "myclabs/deep-copy",
@@ -8917,8 +8917,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
