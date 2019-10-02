@@ -378,7 +378,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
-//Pricees
+//Prices
 Route::middleware(['auth'])->prefix('prices')->group(function () {
     Route::get('add', 'PriceController@add')->name('prices.add');
     Route::get('delete/{company_id}', 'PriceController@delete')->name('prices.delete');
@@ -464,15 +464,18 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
-    Route::get('/pdf/{quote_id}', 'QuoteV2Controller@pdf')->name('quotes-v2.pdf');
-    Route::get('/lcl/air/pdf/{quote_id}', 'QuoteV2Controller@pdfLclAir')->name('quotes-v2.pdf.lcl.air');
-    Route::get('/air/pdf/{quote_id}', 'QuoteV2Controller@pdfAir')->name('quotes-v2.pdf.air');
+    Route::get('/pdf/{quote_id}', 'PdfV2Controller@pdf')->name('quotes-v2.pdf');
+    Route::get('/lcl/air/pdf/{quote_id}', 'PdfV2Controller@pdfLclAir')->name('quotes-v2.pdf.lcl.air');
+    Route::get('/air/pdf/{quote_id}', 'PdfV2Controller@pdfAir')->name('quotes-v2.pdf.air');
     Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
     Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
+    Route::get('delete/saleterm/{id}', 'SaleTermV2Controller@destroy')->name('quotes-v2.delete.saleterm');
+    Route::get('delete/saleterm/charge/{id}', 'SaleTermV2Controller@destroyCharge')->name('quotes-v2.delete.saleterm.charge');
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
     Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
     Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');
     Route::post('store/charge', 'QuoteV2Controller@storeCharge')->name('quotes-v2.store.charge');
+    Route::post('store/sale/charge', 'QuoteV2Controller@storeSaleCharge')->name('quotes-v2.store.sale.charge');
     Route::post('lcl/store/charge', 'QuoteV2Controller@storeChargeLclAir')->name('quotes-v2.store.charge.lcl');
     Route::post('lcl/inland/charge/update', 'QuoteV2Controller@updateInlandChargeLcl')->name('quotes-v2.update.inland.charge.lcl');
     Route::post('inland/update', 'QuoteV2Controller@updateInlandCharges')->name('quotes-v2.update.charge.inland');
@@ -490,6 +493,10 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
     Route::get('excel/{id}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
     Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
+    Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
+    Route::post('sale/charges/update', 'SaleTermV2Controller@updateSaleCharges')->name('quotes-v2.saleterm.update.charges');
+    Route::get('sale/edit/{sale_id}', 'SaleTermV2Controller@editSaleTerm')->name('quotes-v2.saleterm.edit');
+    Route::post('sale/update', 'SaleTermV2Controller@updateSaleTerm')->name('quotes-v2.saleterm.update');
     //LCL 
     Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
 
