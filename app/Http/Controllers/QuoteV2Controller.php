@@ -347,7 +347,7 @@ class QuoteV2Controller extends Controller
     }
     $calculation_types = CalculationType::pluck('name','id');
     $calculation_types_lcl_air = CalculationTypeLcl::pluck('name','id');
-    $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
+    $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->orwhere('company_user_id',NULL)->pluck('name','id');
     $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
     $hideO = 'hide';
     $hideD = 'hide';
