@@ -52,8 +52,8 @@ class SendQuotes extends Command
                 Mail::to($item->to)->bcc($item->from)->send(new SendQuotePdf($item->subject,$item->body,$quote,$item->from,$item->sign,$item->sign_type));
             }
         } catch(\Exception $e){
-            $e->getMessage();
+            return $this->info($e->getMessage());
         }
-        $this->info('Command Send Quotes executed successfully!');
+        return $this->info('Command Send Quotes executed successfully!');
     }
 }
