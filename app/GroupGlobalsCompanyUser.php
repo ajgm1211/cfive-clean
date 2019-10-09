@@ -13,5 +13,7 @@ class GroupGlobalsCompanyUser extends Model
                            'n_global'
                           ];
     
-
+    public function status(){
+        return $this->belongsTo('App\StatusAlert','status_alert_id');
+    }
 }
