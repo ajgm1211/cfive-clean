@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Globalchargers Duplicateds - ALERTS')
+@section('title', 'Globalchargers Duplicateds - GROUPS')
 @section('css')
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -15,7 +15,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Manage Alerts Globalchargers Duplicateds - ALERTS
+                        Globalchargers Duplicateds - <strong style="color: #1638ef">{{$alertCmp->company_user->name}}</strong> - GROUPS
                     </h3>
                 </div>
             </div>
@@ -67,9 +67,7 @@
                         <thead >
                             <tr>
                                 <th style="width:3%">ID</th>
-                                <th style="width:7%">Date</th>
-                                <th style="width:7%">N° Duplicateds</th>
-                                <th style="width:7%">N° Companies</th>
+                                <th style="width:7%">N° Globals Duplicateds</th>
                                 <th style="width:7%">Status</th>
                                 <th style="width:5%">Options</th>
                             </tr>
@@ -79,27 +77,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade bd-example-modal-lg" id="addModal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">
-                            Status
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">
-                                &times;
-                            </span>
-                        </button>
-                    </div>
-                    <div id="modal-body" class="modal-body">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
     </div>
 </div>
@@ -117,26 +94,14 @@
 
     });
 
-    function showModal(id){
-        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-        var url = '{{ route("change.status.alert.dp",":id") }}';
-        url = url.replace(':id',id);
-        $('#modal-body').load(url,function(){
-            $('#addModal').modal();
-        });
-
-    }
-
     $(function() {
         $('#myatest').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! route("globalsduplicated.create") !!}',
+            ajax: '{!! route("groupglobalsduplicated.edit",$id) !!}',
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'date', name: 'date' },
-                { data: 'n_duplicate', name: "n_duplicate" },
-                { data: 'n_company', name: "n_company" },
+                { data: 'n_global', name: "n_global" },
                 { data: 'status', name: "status" },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
