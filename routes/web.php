@@ -830,6 +830,13 @@ Route::group(['prefix' => 'GruopSurcharger','middleware' => ['auth','role:admini
     route::post('GSSAdd','GroupSurchargerController@showAdd')->name('group.surcharger.showAdd');
 });
 
+// Alertas de Globals Duplicados
+Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:administrator']],function(){
+    route::resource('globalsduplicated','AlertsDuplicatedsGlobalFclController');
+    //route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+    //route::post('GSSAdd','GroupSurchargerController@showAdd')->name('group.surcharger.showAdd');
+});
+
 // Test Controller 
 Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
     route::resource('TestApp','TestController');
