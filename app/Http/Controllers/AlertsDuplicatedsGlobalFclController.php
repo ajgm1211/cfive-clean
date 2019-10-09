@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\StatusAlert;
 use App\AlertCompanyUser;
 use App\AlertDuplicateGcFcl;
 use Illuminate\Http\Request;
@@ -22,7 +23,22 @@ class AlertsDuplicatedsGlobalFclController extends Controller
         //dd($alerts);
         return DataTables::of($alerts)
             ->addColumn('status', function ($alerts){ 
-                return $alerts->status->name;
+                $color='';
+                if(strnatcasecmp($alerts->status->name,'pending')==0){
+                    //$color = 'color:#031B4E';
+                    $color = 'color:#f81538';
+                } else if(strnatcasecmp($alerts->status->name,'false')==0){
+                    $color = 'color:#5527f0';
+                } else if(strnatcasecmp($alerts->status->name,'solved')==0){
+                    $color = 'color:#e07000';
+                } else {
+                    $color = 'color:#04950f';
+                }
+
+                return '<a href="#" onclick="showModal('.$alerts->id.')"style="'.$color.'">'.$alerts->status->name.'</a>
+                &nbsp;
+                <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
+                
             })
             ->addColumn('action', function ( $alerts) {
                 return '
@@ -49,8 +65,7 @@ class AlertsDuplicatedsGlobalFclController extends Controller
     public function edit($id)
     {
         $alertsCmp = AlertCompanyUser::where('alert_dp_id',$id)->with('alert','company_user')->get();
-
-
+        
         return DataTables::of($alertsCmp)
             ->addColumn('company', function ($alertsCmp){ 
                 return $alertsCmp->company_user->name;
@@ -60,7 +75,7 @@ class AlertsDuplicatedsGlobalFclController extends Controller
             })
             ->addColumn('action', function ( $alertsCmp) {
                 return '
-                    <a href="'.route('globalsduplicated.show',$alertsCmp->id).'"   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Companies G.C. Duplicateds " ">
+                    <a href="'.route('groupglobalsduplicated.show',$alertsCmp->id).'"   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Companies G.C. Duplicateds " ">
                         <i style="color:#036aa0" class="la la-eye"></i>
 				    </a>';
             })
@@ -68,6 +83,12 @@ class AlertsDuplicatedsGlobalFclController extends Controller
             ->toJson();
     }
 
+    public function updateStatus($id){
+        $status = StatusAlert::pluck('name','id');
+        $alert  = AlertDuplicateGcFcl::find($id);
+        dd($alert,$status);
+    }
+    
     public function update(Request $request, $id)
     {
         //
