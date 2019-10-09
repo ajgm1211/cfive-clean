@@ -35,7 +35,7 @@
 
         <main>
             <div id="details" class="clearfix details">
-                <div class="client" style="line-height: 10px;">
+                <div class="client" style="line-height: 10px; width:300px;">
                     <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>From:</p>
                     <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
                     <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
@@ -363,18 +363,18 @@
                                             <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_freight_45, 2, '.', '')}}</td>
                                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                                 @if($quote->pdf_option->language=='Spanish')
-                                                    @if($rate->schedule_type=='Transfer')
+                                                    @if(@$rate->schedule_type=='Transfer')
                                                     <td>Transbordo</td>
-                                                    @elseif($rate->schedule_type=='Direct')
+                                                    @elseif(@$rate->schedule_type=='Direct')
                                                     <td>Directo</td>
                                                     @else
                                                     <td>-</td>
                                                     @endif
                                                 @else
-                                                    <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                    <td>{{@$rate->schedule_type!='' ? @$rate->schedule_type:'-'}}</td>
                                                 @endif
-                                                <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
-                                                <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
+                                                <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
+                                                <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
                                             @endif
                                             @if($quote->pdf_option->grouped_freight_charges==1)
                                                 <td >{{$quote->pdf_option->freight_charges_currency}}</td>
