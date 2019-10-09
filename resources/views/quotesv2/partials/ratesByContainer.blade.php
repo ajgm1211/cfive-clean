@@ -342,7 +342,7 @@ $v=0;
                                             $sum_origin_m45=0;
                                             @endphp
                                             @foreach($rate->charge as $item)
-                                            @if($item->type_id==1)
+                                            @if($item->type_id==1  && $item->saleterm==0)
                                             <?php
                                             $rate_id=$item->automatic_rate_id;
                                             $origin_amounts = json_decode($item->amount,true);
@@ -601,7 +601,7 @@ $v=0;
                                             @endphp
 
                                             @foreach($rate->charge as $item)
-                                            @if($item->type_id==2)
+                                            @if($item->type_id==2 && $item->saleterm==0)
                                             <?php
                                             $rate_id=$item->automatic_rate_id;
                                             $destination_amounts = json_decode($item->amount,true);

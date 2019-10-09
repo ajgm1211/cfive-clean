@@ -10,13 +10,11 @@ class GroupSurchargerController extends Controller
 {
     protected $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
 
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         return view('groupsurcharger.index');
     }
 
-    public function create()
-    {
+    public function create(){
         $groups = GroupSurcharger::all();
         return Datatables::of($groups)
             ->addColumn('varation', function ($group) {
@@ -36,8 +34,7 @@ class GroupSurchargerController extends Controller
         return view('groupsurcharger.Body-Modals.add');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $caracteres = $this->caracteres;
         //dd($request->all());
         foreach($request->varation as $varation){
@@ -56,21 +53,18 @@ class GroupSurchargerController extends Controller
         return back();
     }
 
-    public function show($id)
-    {
+    public function show($id){
         $group = GroupSurcharger::find($id);
         $decodejosn = json_decode($group->varation,true);
         $decodejosn = $decodejosn['type'];
         return  view('groupsurcharger.Body-Modals.edit',compact('group','decodejosn'));
     }
 
-    public function edit($id)
-    {
+    public function edit($id){
         //
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $caracteres = $this->caracteres;
         foreach($request->varation as $varation){
             $arreglo[] =  str_replace($caracteres,'',trim(strtolower($varation)));
@@ -89,8 +83,7 @@ class GroupSurchargerController extends Controller
         return back();
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         try{
             $group = GroupSurcharger::find($id);
             $group->delete();
