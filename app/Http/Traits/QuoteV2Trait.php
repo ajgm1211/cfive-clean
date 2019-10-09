@@ -37,18 +37,6 @@ trait QuoteV2Trait {
             $item->currency_usd = $currency->rates;
             $item->currency_eur = $currency->rates_eur;
 
-            $sum_inland20 = 0;
-            $sum_inland40 = 0;
-            $sum_inland40hc = 0;
-            $sum_inland40nor = 0;
-            $sum_inland45 = 0;
-
-            $total_inland_markup20 = 0;
-            $total_inland_markup40 = 0;
-            $total_inland_markup40hc = 0;
-            $total_inland_markup40nor = 0;
-            $total_inland_markup45 = 0;
-
             //Charges
             foreach ($item->charge as $value) {
 
@@ -134,6 +122,17 @@ trait QuoteV2Trait {
 
             //Inland
             foreach ($item->inland as $inland) {
+                $sum_inland20 = 0;
+                $sum_inland40 = 0;
+                $sum_inland40hc = 0;
+                $sum_inland40nor = 0;
+                $sum_inland45 = 0;
+
+                $total_inland_markup20 = 0;
+                $total_inland_markup40 = 0;
+                $total_inland_markup40hc = 0;
+                $total_inland_markup40nor = 0;
+                $total_inland_markup45 = 0;
                 if($quote->pdf_option->grouped_total_currency==1){
                     $typeCurrency =  $quote->pdf_option->total_in_currency;
                 }else{
@@ -241,18 +240,6 @@ trait QuoteV2Trait {
             $item->currency_usd = $currency->rates;
             $item->currency_eur = $currency->rates_eur;
 
-            $sum_inland20 = 0;
-            $sum_inland40 = 0;
-            $sum_inland40hc = 0;
-            $sum_inland40nor = 0;
-            $sum_inland45 = 0;
-
-            $total_inland_markup20 = 0;
-            $total_inland_markup40 = 0;
-            $total_inland_markup40hc = 0;
-            $total_inland_markup40nor = 0;
-            $total_inland_markup45 = 0;
-
             //Charges
             foreach ($item->charge as $value) {
 
@@ -338,6 +325,17 @@ trait QuoteV2Trait {
 
             //Inland
             foreach ($item->inland as $inland) {
+                $sum_inland20 = 0;
+                $sum_inland40 = 0;
+                $sum_inland40hc = 0;
+                $sum_inland40nor = 0;
+                $sum_inland45 = 0;
+
+                $total_inland_markup20 = 0;
+                $total_inland_markup40 = 0;
+                $total_inland_markup40hc = 0;
+                $total_inland_markup40nor = 0;
+                $total_inland_markup45 = 0;                
                 if($quote->pdf_option->grouped_total_currency==1){
                     $typeCurrency =  $quote->pdf_option->total_in_currency;
                 }else{
@@ -460,11 +458,6 @@ trait QuoteV2Trait {
                             $total40hc=0;
                             $total40nor=0;
                             $total45=0;
-                            $inland20= 0;
-                            $inland40= 0;
-                            $inland40hc= 0;
-                            $inland40nor= 0;
-                            $inland45= 0;
                             if($amounts->type_id==1){
                                 if($quote->pdf_option->grouped_origin_charges==1){
                                     $typeCurrency =  $quote->pdf_option->origin_charges_currency;
@@ -672,11 +665,6 @@ trait QuoteV2Trait {
                     $sum40hc= 0;
                     $sum40nor= 0;
                     $sum45= 0;
-                    $inland20= 0;
-                    $inland40= 0;
-                    $inland40hc= 0;
-                    $inland40nor= 0;
-                    $inland45= 0;
 
                     foreach($rate->charge as $value){
 
@@ -907,11 +895,6 @@ trait QuoteV2Trait {
                     $sum40hc= 0;
                     $sum40nor= 0;
                     $sum45= 0;
-                    $inland20= 0;
-                    $inland40= 0;
-                    $inland40hc= 0;
-                    $inland40nor= 0;
-                    $inland45= 0;
 
                     foreach($rate->charge as $value){
 
@@ -1146,12 +1129,7 @@ trait QuoteV2Trait {
                             $total20=0;
                             $total40hc=0;
                             $total40nor=0;
-                            $total45=0;
-                            $inland20= 0;
-                            $inland40= 0;
-                            $inland40hc= 0;
-                            $inland40nor= 0;
-                            $inland45= 0;          
+                            $total45=0;        
                             if($amounts->type_id==2){
                                 //dd($quote->pdf_option->destination_charges_currency);
                                 if($quote->pdf_option->grouped_destination_charges==1){
@@ -1225,12 +1203,17 @@ trait QuoteV2Trait {
                             }
                         }
                         if(!$value->inland->isEmpty()){
-                            $inland20=0;
-                            $inland40=0;
-                            $inland40hc=0;
-                            $inland40nor=0;
-                            $inland45=0;                            
                             foreach($value->inland as $value){
+                                $inland20=0;
+                                $inland40=0;
+                                $inland40hc=0;
+                                $inland40nor=0;
+                                $inland45=0;
+                                $total_inland20=0;
+                                $total_inland40=0;
+                                $total_inland40nor=0;
+                                $total_inland40hc=0;
+                                $total_inland45=0;
                                 if($quote->pdf_option->grouped_destination_charges==1){
                                     $typeCurrency =  $quote->pdf_option->destination_charges_currency;
                                 }else{
@@ -1242,76 +1225,76 @@ trait QuoteV2Trait {
                                 if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
                                     $amount20=$array_amounts['c20'];
                                     $markup20=$array_markups['m20'];
-                                    $total20=($amount20+$markup20)/$currency_rate;
-                                    $inland20 += number_format($total20, 2, '.', '');
+                                    $total_inland20=($amount20+$markup20)/$currency_rate;
+                                    $inland20 = number_format($total_inland20, 2, '.', '');
                                 }else if(isset($array_amounts['c20']) && !isset($array_markups['m20'])){
                                     $amount20=$array_amounts['c20'];
-                                    $total20=$amount20/$currency_rate;
-                                    $inland20 += number_format($total20, 2, '.', ''); 
+                                    $total_inland20=$amount20/$currency_rate;
+                                    $inland20 = number_format($total_inland20, 2, '.', ''); 
                                 }else if(!isset($array_amounts['c20']) && isset($array_markups['m20'])){
                                     $markup20=$array_markups['m20'];
-                                    $total20=$markup20/$currency_rate;
-                                    $inland20 += number_format($total20, 2, '.', '');
+                                    $total_inland20=$markup20/$currency_rate;
+                                    $inland20 = number_format($total_inland20, 2, '.', '');
                                 }
 
                                 if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
                                     $amount40=$array_amounts['c40'];
                                     $markup40=$array_markups['m40'];
-                                    $total40=($amount40+$markup40)/$currency_rate;
-                                    $inland40 += number_format($total40, 2, '.', '');
+                                    $total_inland40=($amount40+$markup40)/$currency_rate;
+                                    $inland40 = number_format($total_inland40, 2, '.', '');
                                 }else if(isset($array_amounts['c40']) && !isset($array_markups['m40'])){
                                     $amount40=$array_amounts['c40'];
-                                    $total40=$amount40/$currency_rate;
-                                    $inland40 += number_format($total40, 2, '.', ''); 
+                                    $total_inland40=$amount40/$currency_rate;
+                                    $inland40 = number_format($total_inland40, 2, '.', ''); 
                                 }else if(!isset($array_amounts['c40']) && isset($array_markups['m40'])){
                                     $markup40=$array_markups['m40'];
-                                    $total40=$markup40/$currency_rate;
-                                    $inland40 += number_format($total40, 2, '.', '');
+                                    $total_inland40=$markup40/$currency_rate;
+                                    $inland40 = number_format($total_inland40, 2, '.', '');
                                 }
 
                                 if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
                                     $amount40hc=$array_amounts['c40hc'];
                                     $markup40hc=$array_markups['m40hc'];
-                                    $total40hc=($amount40hc+$markup40hc)/$currency_rate;
-                                    $inland40hc += number_format($total40hc, 2, '.', '');
+                                    $total_inland40hc=($amount40hc+$markup40hc)/$currency_rate;
+                                    $inland40hc = number_format($total_inland40hc, 2, '.', '');
                                 }else if(isset($array_amounts['c40hc']) && !isset($array_markups['m40hc'])){
                                     $amount40hc=$array_amounts['c40hc'];
-                                    $total40hc=$amount40hc/$currency_rate;
-                                    $inland40hc += number_format($total40hc, 2, '.', ''); 
+                                    $total_inland40hc=$amount40hc/$currency_rate;
+                                    $inland40hc = number_format($total_inland40hc, 2, '.', ''); 
                                 }else if(!isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
                                     $markup40hc=$array_markups['m40hc'];
-                                    $total40hc=$markup40hc/$currency_rate;
-                                    $inland40hc += number_format($total40hc, 2, '.', '');
+                                    $total_inland40hc=$markup40hc/$currency_rate;
+                                    $inland40hc = number_format($total_inland40hc, 2, '.', '');
                                 }
 
                                 if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
                                     $amount40nor=$array_amounts['c40nor'];
                                     $markup40nor=$array_markups['m40nor'];
-                                    $total40nor=($amount40nor+$markup40nor)/$currency_rate;
-                                    $inland40nor += number_format($total40nor, 2, '.', '');
+                                    $total_inland40nor=($amount40nor+$markup40nor)/$currency_rate;
+                                    $inland40nor = number_format($total_inland40nor, 2, '.', '');
                                 }else if(isset($array_amounts['c40nor']) && !isset($array_markups['m40nor'])){
                                     $amount40nor=$array_amounts['c40nor'];
-                                    $total40nor=$amount40nor/$currency_rate;
-                                    $inland40nor += number_format($total40nor, 2, '.', ''); 
+                                    $total_inland40nor=$amount40nor/$currency_rate;
+                                    $inland40nor = number_format($total_inland40nor, 2, '.', ''); 
                                 }else if(!isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
                                     $markup40nor=$array_markups['m40nor'];
-                                    $total40nor=$markup40nor/$currency_rate;
-                                    $inland40nor += number_format($total40nor, 2, '.', '');
+                                    $total_inland40nor=$markup40nor/$currency_rate;
+                                    $inland40nor = number_format($total_inland40nor, 2, '.', '');
                                 }
 
                                 if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
                                     $amount45=$array_amounts['c45'];
                                     $markup45=$array_markups['m45'];
-                                    $total45=($amount45+$markup45)/$currency_rate;
-                                    $inland45 += number_format($total45, 2, '.', '');
+                                    $total_inland45=($amount45+$markup45)/$currency_rate;
+                                    $inland45 = number_format($total_inland45, 2, '.', '');
                                 }else if(isset($array_amounts['c45']) && !isset($array_markups['m45'])){
                                     $amount45=$array_amounts['c45'];
-                                    $total45=$amount45/$currency_rate;
-                                    $inland45 += number_format($total45, 2, '.', ''); 
+                                    $total_inland45=$amount45/$currency_rate;
+                                    $inland45 = number_format($total_inland45, 2, '.', ''); 
                                 }else if(!isset($array_amounts['c45']) && isset($array_markups['m45'])){
                                     $markup45=$array_markups['m45'];
-                                    $total45=$markup45/$currency_rate;
-                                    $inland45 += number_format($total45, 2, '.', '');
+                                    $total_inland45=$markup45/$currency_rate;
+                                    $inland45 = number_format($total_inland45, 2, '.', '');
                                 }
                                 $value->total_20=number_format($inland20, 2, '.', '');
                                 $value->total_40=number_format($inland40, 2, '.', '');
@@ -1383,11 +1366,11 @@ trait QuoteV2Trait {
                                 /*if($freight_charges_grouped->count()>1){
                                     $typeCurrency =  $currency_cfg->alphacode;
                                 }else{*/
-                                    if($quote->pdf_option->grouped_freight_charges==1){
-                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
-                                    }else{
-                                        $typeCurrency = $currency_cfg->alphacode;   
-                                    }
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                }else{
+                                    $typeCurrency = $currency_cfg->alphacode;   
+                                }
                                 //}
                                 $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
                                 $array_amounts = json_decode($amounts->amount,true);
@@ -1601,21 +1584,21 @@ trait QuoteV2Trait {
 
     public function getPortsInArray($collection){
         $array = array();
-        
+
         foreach($collection as $value){
             $array["port_id"]=$value->port_id;
         }
-        
+
         return $array;
     }    
-    
+
     public function getAirportsInArray($collection){
         $array = array();
-        
+
         foreach($collection as $value){
             $array["airport_id"]=$value->airport_id;
         }
-        
+
         return $array;
     }
 }
