@@ -78,6 +78,34 @@
             </div>
         </div>
 
+        <div class="modal fade bd-example-modal-lg" id="addModal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">
+                            Status
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
+                            Load
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -93,6 +121,16 @@
     $('.m-select2-general').select2({
 
     });
+
+    function showModal(id){
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        var url = '{{ route("show.status.alert.group",":id") }}';
+        url = url.replace(':id',id);
+        $('#modal-body').load(url,function(){
+            $('#addModal').modal();
+        });
+
+    }
 
     $(function() {
         $('#myatest').DataTable({
@@ -116,6 +154,51 @@
         });
 
     });
+
+
+    function DestroyGroup(id){
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
+        url='{!! route("groupglobalsduplicated.destroy",":id") !!}';
+        url = url.replace(':id',id);
+                
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {      
+                $.ajax({
+            url:url,
+            method:'Delete',
+            success: function(data){
+                //alert(data.data + data.status);
+                if(data.data == 1){
+                    $('#myatest').DataTable().ajax.reload();
+                    swal(
+                        'Deleted!',
+                        'Your Group has been Deleted.',
+                        'success'
+                    );
+                }else if(data.data == 2){
+                    swal("Error!", "An internal error occurred!", "error");
+                }
+            }
+        });                
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your GloblaCharger is safe :)',
+                    'error'
+                )
+            }
+        });
+        
+    }
 
 
 </script>
