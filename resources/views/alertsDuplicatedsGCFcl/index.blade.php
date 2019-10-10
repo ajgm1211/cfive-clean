@@ -96,6 +96,14 @@
                     <div id="modal-body" class="modal-body">
 
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
+                            Load
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,7 +127,7 @@
 
     function showModal(id){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-        var url = '{{ route("change.status.alert.dp",":id") }}';
+        var url = '{{ route("show.status.alert.dp",":id") }}';
         url = url.replace(':id',id);
         $('#modal-body').load(url,function(){
             $('#addModal').modal();
