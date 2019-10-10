@@ -35,10 +35,10 @@ class AlertsDuplicatedsGlobalFclController extends Controller
                     $color = 'color:#04950f';
                 }
 
-                return '<a href="#" onclick="showModal('.$alerts->id.')"style="'.$color.'">'.$alerts->status->name.'</a>
+                return '<a href="#" onclick="showModal('.$alerts->id.')" id="statusHrf'.$alerts->id.'" class="statusHrf'.$alerts->id.'" style="'.$color.'">'.$alerts->status->name.'</a>
                 &nbsp;
-                <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
-                
+                <span class="la la-pencil-square-o" for="" id="statusSamp'.$alerts->id.'" class="statusHrf'.$alerts->id.'" style="font-size:15px;'.$color.'"></span>';
+
             })
             ->addColumn('action', function ( $alerts) {
                 return '
@@ -65,7 +65,7 @@ class AlertsDuplicatedsGlobalFclController extends Controller
     public function edit($id)
     {
         $alertsCmp = AlertCompanyUser::where('alert_dp_id',$id)->with('alert','company_user')->get();
-        
+
         return DataTables::of($alertsCmp)
             ->addColumn('company', function ($alertsCmp){ 
                 return $alertsCmp->company_user->name;
@@ -89,12 +89,28 @@ class AlertsDuplicatedsGlobalFclController extends Controller
         //dd($alert,$status);
         return view('alertsDuplicatedsGCFcl.Body-Modals.edit',compact('status','alert'));
     }
-    
+
     public function updateStatus(Request $request,$id){
-        //$alert  = AlertDuplicateGcFcl::find($id);
-        return $request->status_id;
+        try{
+            $alert  = AlertDuplicateGcFcl::find($id);
+            $alert->status_alert_id = $request->status_id;
+            $alert->update();
+            $alert  = AlertDuplicateGcFcl::with('status')->find($id);
+            if(strnatcasecmp($alert->status->name,'pending')==0){
+                $color = '#f81538';
+            } else if(strnatcasecmp($alert->status->name,'false')==0){
+                $color = '#5527f0';
+            } else if(strnatcasecmp($alert->status->name,'solved')==0){
+                $color = '#e07000';
+            } else {
+                $color = '#04950f';
+            }
+            return response()->json(['data'=> 1,'status' => $alert->status->name,'color'=> $color]);
+        } catch(\Exception $e){
+            return response()->json(['data'=> 2]);            
+        }
     }
-    
+
     public function update(Request $request, $id)
     {
         //
