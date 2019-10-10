@@ -83,10 +83,16 @@ class AlertsDuplicatedsGlobalFclController extends Controller
             ->toJson();
     }
 
-    public function updateStatus($id){
+    public function showStatus($id){
         $status = StatusAlert::pluck('name','id');
         $alert  = AlertDuplicateGcFcl::find($id);
-        dd($alert,$status);
+        //dd($alert,$status);
+        return view('alertsDuplicatedsGCFcl.Body-Modals.edit',compact('status','alert'));
+    }
+    
+    public function updateStatus(Request $request,$id){
+        //$alert  = AlertDuplicateGcFcl::find($id);
+        return $request->status_id;
     }
     
     public function update(Request $request, $id)
