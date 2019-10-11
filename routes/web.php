@@ -830,7 +830,7 @@ Route::group(['prefix' => 'GruopSurcharger','middleware' => ['auth','role:admini
     route::post('GSSAdd','GroupSurchargerController@showAdd')->name('group.surcharger.showAdd');
 });
 
-// Alertas de Globals Duplicados
+// Alertas Y Grupos de Globals Duplicados
 Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:administrator']],function(){
     route::resource('globalsduplicated','AlertsDuplicatedsGlobalFclController');
     route::get('showStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@showStatus')->name('show.status.alert.dp');
@@ -841,6 +841,9 @@ Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:admin
     route::get('showStatusGroup/{id}','GroupGlobalsCompanyUserController@showStatus')->name('show.status.alert.group');
     route::post('updateStatusAGroup/{id}','GroupGlobalsCompanyUserController@updateStatus')->name('change.status.alert.group');
     //route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+    
+    //Groups
+    route::resource('GlobalsDuplicatedEspecific','GlobalsDuplicatedFclController');
 });
 
 // Test Controller 
