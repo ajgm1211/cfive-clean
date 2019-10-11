@@ -183,13 +183,13 @@ class QuoteV2Controller extends Controller
         'contact'       => $contact,
         'user'          => $quote->owner,                
         'created'       => date_format($quote->created_at, 'M d, Y H:i'),
-        'origin'        => '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        'origin'        => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   See origins
                                   </button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
                                   <small>'.$origin_li.'</small>
                                   </div>',
-        'destination'   => '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        'destination'   => '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   See destinations
                                   </button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding:20px;">
@@ -203,7 +203,7 @@ class QuoteV2Controller extends Controller
 
       ->addColumn('action',function($colletion){
         return
-          '<button class="btn btn-outline-light  dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          '<button class="btn dropdown-toggle quote-options" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Options
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
