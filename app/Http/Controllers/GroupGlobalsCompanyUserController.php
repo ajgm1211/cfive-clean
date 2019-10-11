@@ -61,9 +61,9 @@ class GroupGlobalsCompanyUserController extends Controller
             })
             ->addColumn('action', function ( $groupsCmp) {
                 return '
-                    <!--<a href="'.route('groupglobalsduplicated.show',$groupsCmp->id).'"   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Companies G.C. Duplicateds " ">
+                    <a href="'.route('GlobalsDuplicatedEspecific.show',$groupsCmp->id).'"   class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Companies G.C. Duplicateds " ">
                         <i style="color:#036aa0" class="la la-eye"></i>
-				    </a>-->
+				    </a>
                     &nbsp;&nbsp;
                     <a href="#" onclick="DestroyGroup('.$groupsCmp->id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Detele " ">
                         <i style="color:#036aa0" class="la la-trash"></i>
