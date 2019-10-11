@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "laravel-echo": "^1.4.0",
-    "pusher-js": "^4.2.2"
+    "pusher-js": "^4.2.2",
+    "vue-nav-tabs": "^0.5.7"
   }
 }
