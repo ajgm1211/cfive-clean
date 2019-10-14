@@ -844,6 +844,7 @@ Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:admin
     
     //Groups
     route::resource('GlobalsDuplicatedEspecific','GlobalsDuplicatedFclController');
+    route::get('GCDPESPShow/{id}/{grupo_id}','GlobalsDuplicatedFclController@showAdm')->name('gc.duplicated.especific.show');
 });
 
 // Test Controller 

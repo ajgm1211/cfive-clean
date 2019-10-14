@@ -59,18 +59,89 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    dd
+                <div class="col-md-12">
+                    <div class="form-group m-form__group row">
+                        <div class="col-lg-1">
+                            <label>
+                                {!! Form::label('Surcharge', 'Surcharge',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('Surcharge', $data['surcharge']) !!}
+                        </div>
+                        <div class="col-lg-1">
+                            <label>
+                                {!! Form::label('currency', 'Currency',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('currency', $data['currency']) !!}
+                        </div>
+                        <div class="col-lg-5">
+                            <label class="">
+                                {!! Form::label('Origin', 'Origin',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('Origin',$data['origin']) !!}
+                        </div>
+                        <div class="col-lg-5">
+                            <label>
+                                {!! Form::label('Destiny', 'Destiny',['style' =>'color:#031B4E']) !!}
+                            </label> <br>
+                            {{ Form::label('destiny',$data['destiny']) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group m-form__group row">
+                        <div class="col-lg-2">
+                            <label>
+                                {!! Form::label('Typedestiny', 'Type Destiny',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('typedestiny', $data['typedestiny']) !!}
+                        </div>
+                        <div class="col-lg-1">
+                            <label>
+                                {!! Form::label('amount', 'Amount',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('amount', $data['amount']) !!}
+                        </div>
+                        <div class="col-lg-2">
+                            <label>
+                                {!! Form::label('validity', 'Validity',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('validity', $data['validity']) !!}
+                        </div>
+
+                        <div class="col-lg-2">
+                            <label>
+                                {!! Form::label('expire', 'Expire',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('expire', $data['expire']) !!}
+                        </div>
+
+                        <div class="col-lg-4">
+                            <label>
+                                {!! Form::label('carrier', 'Carrier',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('carrier', $data['carrier']) !!}
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="#" onclick="showModal({{$data['id']}})"  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Edit G.C. Duplicated">
+                                <i style="color:#036aa0" class="la la-edit"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <br>
                 <div class="table-responsive">
                     <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                         <thead >
                             <tr>
-                                <th style="width:3%">ID</th>
-                                <th style="width:7%">N° Globals Duplicateds</th>
-                                <th style="width:7%">Status</th>
-                                <th style="width:5%">Options</th>
+                                <th>Type</th>
+                                <th>Origin</th>
+                                <th>Destination</th>
+                                <th>Charge type</th>
+                                <th>Calculation type</th>
+                                <th>Currency</th>
+                                <th>Carrier</th>
+                                <th>Amount</th>
+                                <th>Validity</th>
+                                <th>Options</th>
                             </tr>
                         </thead>
 
@@ -79,12 +150,12 @@
             </div>
         </div>
 
-        <div class="modal fade bd-example-modal-lg" id="addModal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade bd-example-modal-lg" id="global-modal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">
-                            Status
+                            Global Charges
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -92,16 +163,9 @@
                             </span>
                         </button>
                     </div>
-                    <div id="modal-body" class="modal-body">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="SaveStatusModal()">
-                            Load
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
+                    <div class="modal-body" id="global-body">
+                        <div class="m-scrollable"  data-scrollbar-shown="true" data-scrollable="true" data-max-height="200">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,26 +187,33 @@
 
     });
 
-    /*function showModal(id){
+    function showModal(id){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-        var url = '{{ route("show.status.alert.group",":id") }}';
-        url = url.replace(':id',id);
-        $('#modal-body').load(url,function(){
-            $('#addModal').modal();
+        var url = '{{ route("gc.duplicated.especific.show", [":global_id",$id]) }}';
+        url = url.replace(':global_id', id);
+        $('#global-body').load(url,function(){
+            $('#global-modal').modal({show:true});
         });
 
     }
+
 
     $(function() {
         $('#myatest').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! route("groupglobalsduplicated.edit",$id) !!}',
+            ajax: '{!! route("GlobalsDuplicatedEspecific.edit",$id) !!}',
             columns: [
-                { data: 'id', name: 'id' },
-                { data: 'n_global', name: "n_global" },
-                { data: 'status', name: "status" },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
+                { data: 'surcharges', name: 'surcharges' },
+                { data: 'origin', name: 'origin' },
+                { data: 'destiny', name: 'destiny' },
+                { data: 'typedestiny', name: 'typedestiny' },
+                { data: 'calculationtype', name: 'calculationtype' },
+                { data: 'currency', name: 'currency' },
+                { data: 'carrier', name: 'carrier' },
+                { data: 'ammount', name: 'ammount' },
+                { data: 'validitylb', name: 'validitylb' },
+                { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
             "lengthChange": false,
             "searching": true,
@@ -156,13 +227,13 @@
 
     });
 
-
+    /*
     function DestroyGroup(id){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
         url='{!! route("groupglobalsduplicated.destroy",":id") !!}';
         url = url.replace(':id',id);
-                
+
         swal({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -198,7 +269,7 @@
                 )
             }
         });
-        
+
     }*/
 
 
