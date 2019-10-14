@@ -113,10 +113,10 @@ class GlobalsDuplicatedFclController extends Controller
                     <a href="#" onclick="showModal('.$globals_dp->global_duplicated_id.')"  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Edit G.C. Duplicated">
                         <i style="color:#036aa0" class="la la-edit"></i>
 				    </a>
-                    &nbsp;&nbsp;<!--
+                    &nbsp;&nbsp;
                     <a href="#" onclick="DestroyGroup('.$globals_dp->global_duplicated_id.')" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Detele " ">
                         <i style="color:#036aa0" class="la la-trash"></i>
-				    </a>-->
+				    </a>
                     ';
             })
             //->editColumn('id', '{{$alerts->id}}')->toJson();
@@ -222,6 +222,12 @@ class GlobalsDuplicatedFclController extends Controller
 
     public function destroy($id)
     {
-        //
+        try{
+            $groupsCmp  = GlobalCharge::find($id);
+            $groupsCmp->delete();
+            return response()->json(['data'=> 1]);
+        } catch(\Exception $e){
+            return response()->json(['data'=> 2]);            
+        }
     }
 }
