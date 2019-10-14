@@ -227,11 +227,11 @@
 
     });
 
-    /*
+    
     function DestroyGroup(id){
         $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
-        url='{!! route("groupglobalsduplicated.destroy",":id") !!}';
+        url='{!! route("GlobalsDuplicatedEspecific.destroy",":id") !!}';
         url = url.replace(':id',id);
 
         swal({
@@ -253,7 +253,7 @@
                     $('#myatest').DataTable().ajax.reload();
                     swal(
                         'Deleted!',
-                        'Your Group has been Deleted.',
+                        'Your GloblaCharger has been Deleted.',
                         'success'
                     );
                 }else if(data.data == 2){
@@ -270,7 +270,7 @@
             }
         });
 
-    }*/
+    }
 
 
 </script>
