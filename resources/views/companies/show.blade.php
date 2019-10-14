@@ -14,6 +14,7 @@
     <script src="/assets/plugins/button-dropdown/js/jquery3.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="/assets/plugins/button-dropdown/js/bootstrap.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
 @endsection
 @section('content')
     <div class="m-content">
@@ -301,80 +302,40 @@
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <table class="m-datatable text-center" id="html_table" >
-                            <thead>
-                            <tr>
-                                <th title="Status">
-                                    Id
-                                </th>
-                                <th title="Created">
-                                    Created
-                                </th>
-                                <th title="Origin">
-                                    Origin
-                                </th>
-                                <th title="Destination">
-                                    Destination
-                                </th>
-                                <th title="Options">
-                                    Options
-                                </th>
-                            </tr>
+                        <table class="table tableData" id="tablequote" width="100%">
+                            <thead >
+                                <tr class="title-quote">
+                                    <th title="id">
+                                        Id
+                                    </th>
+                                    <th title="Client">
+                                        Client Company
+                                    </th>
+                                    <!--<th title="Contact">
+                                        Client Contact
+                                    </th>-->
+                                    <th title="User">
+                                        User
+                                    </th>
+                                    <th title="Created">
+                                        Created
+                                    </th>
+                                    <th title="Origin">
+                                        Origin
+                                    </th>
+                                    <th title="Destination">
+                                        Destination
+                                    </th>
+                                    <th title="Type">
+                                        Type
+                                    </th>
+                                    <th title="Options">
+                                        Options
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @php
-                                $origin_li='';
-                                $destination_li='';
-                            @endphp
-                            @foreach ($quotes as $quote)
-                                <?php
-                                    if(isset($quote->company)){
-                                        $company_name  = $quote->company->business_name;
-                                    }
-                                    if($quote->custom_quote_id!=''){
-                                        $id  = $quote->custom_quote_id;
-                                    }else{
-                                        $id = $quote->quote_id;
-                                    }
 
-                                    if($quote->type=='AIR'){
-                                        $origin=$quote->origin_airport;
-                                        $destination=$quote->destination_airport;
-                                        $img='<img src="/images/plane-blue.svg" class="img img-responsive" width="25">';
-                                    }else{
-                                        $origin=$quote->origin_port;
-                                        $destination=$quote->destination_port;
-                                        $img='<img src="/images/logo-ship-blue.svg" class="img img-responsive" width="25">';
-                                    }
-                                    
-                                    $explode_orig = explode("| ",$origin);
-                                    $explode_dest = explode("| ",$destination);
-                                    foreach($explode_orig as $item){
-                                        $origin_li.='<li>'.$item.'</li>';
-                                    }
-
-                                    foreach($explode_dest as $item){
-                                        $destination_li.='<li>'.$item.'</li>';
-                                    }
-                                ?>
-                                <tr>
-                                    <td >{{$id}}</td>
-                                    <td>{{ date_format($quote->created_at, 'M d, Y H:i')}}</td>
-                                    <td>{!! $origin !!}</td>
-                                    <td>{!! $destination !!}</td>
-                                    <td>
-                                        <a href="{{route('quotes-v2.show',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Show ">
-                                            <i class="la la-eye"></i>
-                                        </a>
-                                        <a href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Duplicate ">
-                                            <i class="la la-plus"></i>
-                                        </a>
-                                        <button id="delete-quote" data-quote-id="{{$quote->id}}" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  title="Delete ">
-                                            <i class="la la-eraser"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -391,8 +352,9 @@
 
 @section('js')
     @parent
+    <script type="text/javascript" charset="utf8" src="{{ asset('/assets/datatable/jquery.dataTables.js')}}"></script>
+    <script src="{{ asset('/assets/demo/default/custom/components/datatables/base/html-table-quotes.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/base.js')}}" type="text/javascript"></script>
-    <script src="/assets/demo/default/custom/components/datatables/base/html-table-company-quotes.js" type="text/javascript"></script>
     <script src="{{asset('js/tinymce/jquery.tinymce.min.js')}}"></script>
     <script src="{{asset('js/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('js/companies.js')}}"></script>
@@ -464,6 +426,99 @@
             }
 
         }
+        
+        $(function() {
+            $('#tablequote').DataTable({
+                ordering: true,
+                searching: true,
+                processing: false,
+                serverSide: false,
+                order: [[ 0, "desc" ]],
+                ajax:  "{{ route('quotes-v2.index.datatable') }}",
+                "columnDefs": [
+                    { "width": "5%", "targets": 0 },
+                    { "width": "25%", "targets": 1 },
+                    { "width": "12%", "targets": [2,3] },
+                    { "width": "15%", "targets": [4,5] },
+                    { "width": "10%", "targets": 6 },
+                    { "type": "date", "targets": 2 },
+                ],
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'client', name: 'client'},
+                    //{data: 'contact', name: 'contact'},
+                    {data: 'user', name: 'user'},
+                    {data: 'created', name: 'created'},
+                    {data: 'origin', name: 'origin', className: 'details-control'},
+                    {data: 'destination', name: 'destination'},
+                    {data: 'type', name: 'type'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false },
+                ] ,
+                "autoWidth": true,
+                'overflow':false,
+                "paging":true,
+                "sScrollY": "490px",
+                "bPaginate": false,
+                "bJQueryUI": true,
+                buttons: [
+                    {
+                        extend: 'copyHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3]
+                        }
+                    }
+                ]
+            });
+
+            // Add event listener for opening and closing details
+            $('#tablequote tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row( tr );
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    row.child( format(row.data()) ).show();
+                    tr.addClass('shown');
+                }
+            } );
+        });
+
+
+        /* Formatting function for row details - modify as you need */
+        function format ( d ) {
+            // `d` is the original data object for the row
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+                '<tr>'+
+                '<td>Full name:</td>'+
+                '<td>'+d.name+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td>Extension number:</td>'+
+                '<td>'+d.extn+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td>Extra info:</td>'+
+                '<td>And any further details here (images etc)...</td>'+
+                '</tr>'+
+                '</table>';
+        }        
 
     </script>
 @stop
