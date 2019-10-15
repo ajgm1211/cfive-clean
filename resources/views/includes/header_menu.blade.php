@@ -92,6 +92,9 @@
                         </ul>
                     </div>
                 </li>
+                
+                @role('administrator|company')
+                
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -170,6 +173,9 @@
                         </ul>
                     </div>
                 </li>
+                
+                @endrole
+                
                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                     <a  href="#" class="m-menu__link m-menu__toggle">
                         <span class="m-menu__link-title">
@@ -230,7 +236,7 @@
                     <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
                         <span class="m-menu__arrow m-menu__arrow--adjust"></span>
                         <ul class="m-menu__subnav">
-                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company' || \Auth::user()->type=='subuser')
+                            @role('administrator|company|subuser')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('prices.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon la la-sellsy"></i>
@@ -247,8 +253,8 @@
                                     </span>
                                 </a>
                             </li>
-                            @endif
-                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company')
+                            @endrole
+                            @role('administrator|company')
 
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('settings.index') }}" class="m-menu__link ">
@@ -258,15 +264,6 @@
                                     </span>
                                 </a>
                             </li>
-                            <!--
-<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{ route('terms.list') }}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-warning-sign"></i>
-<span class="m-menu__link-text">
-Terms & Conditions
-</span>
-</a>
-</li>-->
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('termsv2.list') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-warning-sign"></i>
@@ -316,8 +313,8 @@ Terms & Conditions
                                     </ul>
                                 </div>
                             </li>
-                            @endif
-                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='company' || \Auth::user()->type=='subuser')
+                            @endrole
+                            @role('administrator|company|subuser')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('templates.index') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon fa fa-envelope-square"></i>
@@ -334,7 +331,8 @@ Terms & Conditions
                                     </span>
                                 </a>
                             </li>
-                            @endif
+                            @endrole
+                            @role('administrator|company')
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{ route('users.home') }}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-users"></i>
@@ -343,7 +341,8 @@ Terms & Conditions
                                     </span>
                                 </a>
                             </li>
-                            @if(\Auth::user()->type=='admin' || \Auth::user()->type=='data_entry')
+                            @endrole
+                            @role('administrator|data_entry')
 
                             <!-- Sub- Menus --------------------------------------------------------------- -->
 
@@ -517,7 +516,7 @@ Terms & Conditions
                                     </span>
                                 </a>
                             </li>
-                            @endif
+                            @endrole
                             @if(Session::has('impersonate'))
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
