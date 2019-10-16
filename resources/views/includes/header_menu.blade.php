@@ -424,6 +424,14 @@
                                                 </span>
                                             </a>
                                         </li>
+                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                            <a  href="{{ route('globalsduplicated.index') }}" class="m-menu__link ">
+                                                <i class="m-menu__link-icon la la-copy"></i>
+                                                <span class="m-menu__link-text">
+                                                    Alerts Duplicateds FCL
+                                                </span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -481,6 +489,14 @@
                                     <i class="m-menu__link-icon la la-dropbox"></i>
                                     <span class="m-menu__link-text">
                                         Carrier Auto Importation
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('gruopSurcharger.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-dropbox"></i>
+                                    <span class="m-menu__link-text">
+                                        Group Surchargers
                                     </span>
                                 </a>
                             </li>
