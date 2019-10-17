@@ -863,6 +863,7 @@
                         @foreach($item as $rate)
                             <?php
                                 $total_origin = 0;
+                                $total_inland_origin = 0;
                                 $show_inland = 'hide';
                             ?>
                             @foreach($rate as $r)
@@ -1223,7 +1224,8 @@
                         <tbody>
                         @foreach($item as $rate)
                             <?php
-                                $total_destination= 0;
+                                $total_destination = 0;
+                                $total_inland = 0;
                                 $show_inland = 'hide';
                             ?>
                             @foreach($rate as $r)
