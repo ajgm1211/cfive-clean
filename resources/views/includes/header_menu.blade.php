@@ -428,7 +428,7 @@
                                             <a  href="{{ route('globalsduplicated.index') }}" class="m-menu__link ">
                                                 <i class="m-menu__link-icon la la-copy"></i>
                                                 <span class="m-menu__link-text">
-                                                    Alerts Duplicateds FCL
+                                                    Duplicates FCL
                                                 </span>
                                             </a>
                                         </li>
