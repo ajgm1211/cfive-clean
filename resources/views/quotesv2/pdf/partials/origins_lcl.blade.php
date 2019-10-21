@@ -241,11 +241,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                        <?php
+                            $total_origin = 0;
+                            $total_inland_origin = 0;
+                            $show_inland = 'hide';
+                        ?>
                         @foreach($item as $rate)
-                            <?php
-                                $total_origin = 0;
-                                $show_inland = 'hide';
-                            ?>
                             @foreach($rate as $r)
                                 @foreach($r->charge_lcl_air as $v)
                                     @if($v->type_id==1)
