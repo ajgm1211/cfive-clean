@@ -3505,21 +3505,37 @@ class QuoteV2Controller extends Controller
       $modo  =  $request->input('mode');
       $companyUser = CompanyUser::All();
       $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->where('language_id',$language_id)->with('language')->get();
+      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->with('language')->get();
 
-      $terminos="";
+
+      $terminos_english="";
+      $terminos_spanish="";
+      $terminos_portuguese="";
       //Export
       foreach($terms as $term){
         if($modo == '1'){
-          $terminos .=$term->export."<br>";
+          if($term->language_id == '1')
+            $terminos_english .=$term->export."<br>";
+          if($term->language_id == '2')
+            $terminos_spanish .=$term->export."<br>";
+          if($term->language_id == '3')
+            $terminos_portuguese .=$term->export."<br>";
         }else{ // import
 
-          $terminos .=$term->import."<br>";
+          if($term->language_id == '1')
+            $terminos_english .=$term->import."<br>";
+          if($term->language_id == '2')
+            $terminos_spanish .=$term->import."<br>";
+          if($term->language_id == '3')
+            $terminos_portuguese .=$term->import."<br>";
         }
       }
 
       $quoteEdit = QuoteV2::find($quote->id);
-      $quoteEdit->terms_and_conditions = $terminos;
+      $quoteEdit->terms_english= $terminos_english;
+      $quoteEdit->terms_and_conditions = $terminos_spanish;
+      $quoteEdit->terms_portuguese = $terminos_portuguese;
+
       $quoteEdit->update();
     }
 
@@ -6089,8 +6105,11 @@ class QuoteV2Controller extends Controller
         if(in_array($local->calculationtypelcl_id, $arraytonM3)){
 
           //ROUNDED
+
           if($local->calculationtypelcl_id == '11'){
             $ton_weight =   ceil($weight);
+          }else{
+            $ton_weight =   $weight;
           }
           $cantidadT = $ton_weight;
 
@@ -6380,11 +6399,11 @@ class QuoteV2Controller extends Controller
 
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   //$totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'origin', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount );
+                  $arregloOrig =  array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'calculation_id'=> $local->calculationtypelcl->id,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'origin', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'currency_id' => $local->currency->id,'montoOrig' =>$totalAmmount );
                   $arregloOrig = array_merge($arregloOrig,$markupTONM3);
                   $dataOrig[] = $arregloOrig;
 
-                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency,'cantidad' => $unidades );
+                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id,'currency_orig_id' => $idCurrency,'cantidad' => $unidades );
 
                   $dataOrig[] = $arregloOrigin;
                   //$collectionOrig->push($arregloOrigin);
@@ -6427,7 +6446,7 @@ class QuoteV2Controller extends Controller
 
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'destination', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades  ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'calculation_id'=> $local->calculationtypelcl->id,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'destination', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades  ,'typecurrency' => $typeCurrency  ,'currency_id' => $local->currency->id,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
                   $arregloDest = array_merge($arregloDest,$markupTONM3);
                   $dataDest[] = $arregloDest;
 
@@ -6482,7 +6501,7 @@ class QuoteV2Controller extends Controller
                   $subtotal_local =  number_format($subtotal_local, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
 
-                  $arregloPC = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
+                  $arregloPC = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount , 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'calculation_id'=> $local->calculationtypelcl->id,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades ,'typecurrency' => $typeCurrency  ,'currency_id' => $local->currency->id,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
                   $arregloPC = array_merge($arregloPC,$markupTONM3);
                   $dataFreight[] = $arregloPC;
 
@@ -6760,6 +6779,8 @@ class QuoteV2Controller extends Controller
           //ROUNDED
           if($local->calculationtypelcl_id == '11'){
             $ton_weight =   ceil($weight);
+          }else{
+            $ton_weight =   $weight;
           }
           $cantidadT = $ton_weight;
 
@@ -7035,7 +7056,7 @@ class QuoteV2Controller extends Controller
 
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  $arregloOrig = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'origin'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloOrig = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'calculation_id'=> $global->calculationtypelcl->id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'origin'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'currency_id' => $global->currency->id   ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloOrig = array_merge($arregloOrig,$markupTONM3);
                   $dataGOrig[] = $arregloOrig;
 
@@ -7084,7 +7105,7 @@ class QuoteV2Controller extends Controller
 
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'calculation_id'=> $global->calculationtypelcl->id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'currency_id' => $global->currency->id   ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDest = array_merge($arregloDest,$markupTONM3);
                   $dataGDest[] = $arregloDest;
 
@@ -7135,7 +7156,7 @@ class QuoteV2Controller extends Controller
 
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  $arregloFreight =  array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloFreight =  array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'calculation_id'=> $global->calculationtypelcl->id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'currency_id' => $global->currency->id   ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloFreight = array_merge($arregloFreight,$markupTONM3);
                   $dataGFreight[] = $arregloFreight;
 
@@ -7787,10 +7808,12 @@ class QuoteV2Controller extends Controller
 
 
         // CHARGES DESTINY 
+        //dd($info_D->localDest);
         foreach($info_D->localDest as $localdestiny){
 
           foreach($localdestiny as $localD){
             foreach($localD as $local){
+              
               $price_per_unit =  $local->monto / $local->cantidad;
               $chargeDestiny = new ChargeLclAir();
               $chargeDestiny->automatic_rate_id= $rate->id;
@@ -7841,19 +7864,34 @@ class QuoteV2Controller extends Controller
       $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
       $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','LCL')->with('language')->get();
 
-      $terminos="";
+
+      $terminos_english="";
+      $terminos_spanish="";
+      $terminos_portuguese="";
       //Export
       foreach($terms as $term){
         if($modo == '1'){
-          $terminos .=$term->export."<br>";
+          if($term->language_id == '1')
+            $terminos_english .=$term->export."<br>";
+          if($term->language_id == '2')
+            $terminos_spanish .=$term->export."<br>";
+          if($term->language_id == '3')
+            $terminos_portuguese .=$term->export."<br>";
         }else{ // import
 
-          $terminos .=$term->import."<br>";
+          if($term->language_id == '1')
+            $terminos_english .=$term->import."<br>";
+          if($term->language_id == '2')
+            $terminos_spanish .=$term->import."<br>";
+          if($term->language_id == '3')
+            $terminos_portuguese .=$term->import."<br>";
         }
       }
 
       $quoteEdit = QuoteV2::find($quote->id);
-      $quoteEdit->terms_and_conditions = $terminos;
+      $quoteEdit->terms_english= $terminos_english;
+      $quoteEdit->terms_and_conditions = $terminos_spanish;
+      $quoteEdit->terms_portuguese = $terminos_portuguese;
       $quoteEdit->update();
     }
 
