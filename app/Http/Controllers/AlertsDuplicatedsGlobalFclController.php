@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\StatusAlert;
+use GuzzleHttp\Client;
 use App\AlertCompanyUser;
 use App\AlertDuplicateGcFcl;
 use Illuminate\Http\Request;
@@ -11,7 +13,7 @@ use Yajra\Datatables\Datatables;
 class AlertsDuplicatedsGlobalFclController extends Controller
 {
     // CARGA LA VISTA LAS COMPAÑIAS CON G.C DUPLICADOS
-    public function index()
+    public function index(Request $request)
     {
         return view('alertsDuplicatedsGCFcl.index');
     }
@@ -119,5 +121,37 @@ class AlertsDuplicatedsGlobalFclController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchDuplicateds(Request $request){
+        $user_adm_rq = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
+    
+        if(env('APP_ENV') == 'local'){
+            $client = new Client(['base_uri' => 'http://duplicate-gc/DuplicateGCFCL/']);                           
+        }else if(env('APP_ENV') == 'developer'){
+            $client = new Client(['base_uri' => 'http://duplicateds-globalchargers-dev.eu-central-1.elasticbeanstalk.com/DuplicateGCFCL/']);                           
+        }else{
+            $client = new Client(['base_uri' => 'http://prod.duplicatedscg.cargofive.com/DuplicateGCFCL/']);
+        }
+
+        $response = $client->request('GET','DGCFCL-Create', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$user_adm_rq->api_token,
+                'Accept'        => 'application/json',
+            ]
+        ]);
+        $dataGen = json_decode($response->getBody()->getContents(),true);
+
+        if($dataGen['Success'] == 1){
+            $request->session()->flash('message.content', 'Job - Duplicateds Active. Please wait a few minutes and refresh the page' );
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            return redirect()->route('globalsduplicated.index'); 
+        } else {
+            $request->session()->flash('message.content', 'Job - Duplicateds Not Active' );
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.title', 'Well done!');
+            return redirect()->route('globalsduplicated.index'); 
+        }
     }
 }

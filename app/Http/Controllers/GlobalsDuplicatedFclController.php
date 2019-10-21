@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Harbor;
 use App\Country;
 use App\Carrier;
@@ -10,6 +11,7 @@ use App\Surcharge;
 use App\CompanyUser;
 use App\TypeDestiny;
 use App\GlobalCharge;
+use GuzzleHttp\Client;
 use App\GlobalCharPort;
 use App\CalculationType;
 use App\GlobalCharCountry;
@@ -94,7 +96,12 @@ class GlobalsDuplicatedFclController extends Controller
                 } elseif(empty($globals_dp->country_orig) != true){
                     $origin     = $globals_dp->country_orig;
                 } 
-                return $origin;
+                if(strnatcasecmp($origin,'ALL') == 0){
+                    $color = '#ff0d24';
+                } else{
+                    $color = '#575962';                    
+                }
+                return '<p style="color:'.$color.'">'.$origin.'</p>';
             })
             ->addColumn('destiny', function ($globals_dp){ 
                 $destiny = null;
@@ -103,7 +110,13 @@ class GlobalsDuplicatedFclController extends Controller
                 } elseif(empty($globals_dp->country_dest) != true){
                     $destiny    = $globals_dp->country_dest;
                 } 
-                return $destiny;
+
+                if(strnatcasecmp($destiny,'ALL') == 0){
+                    $color = '#ff0d24';
+                } else{
+                    $color = '#575962';                    
+                }
+                return '<p style="color:'.$color.'">'.$destiny.'</p>';
             })
             ->addColumn('validitylb', function ($globals_dp){ 
                 return $globals_dp->validity.' / '.$globals_dp->expire;
