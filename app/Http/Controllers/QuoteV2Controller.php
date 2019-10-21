@@ -4206,7 +4206,7 @@ class QuoteV2Controller extends Controller
                 $km20 = true;
                 $km40 = true;
                 $km40hc = true;
-                $inlandDetailsOrig;
+                $inlandDetailsOrig = array();
                 foreach($inlandsValue->inlandports as $ports){
                     $monto = 0;
                     $temporal = 0;
