@@ -79,11 +79,16 @@
                             </label><br>
                             {!! Form::label('Origin',$data['origin']) !!}
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                             <label>
                                 {!! Form::label('Destiny', 'Destiny',['style' =>'color:#031B4E']) !!}
                             </label> <br>
                             {{ Form::label('destiny',$data['destiny']) }}
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="#" onclick="showModal({{$data['id']}})"  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Edit G.C. Duplicated">
+                                <i style="color:#036aa0" class="la la-edit"></i>
+                            </a>
                         </div>
                     </div>
 
@@ -93,6 +98,12 @@
                                 {!! Form::label('Typedestiny', 'Type Destiny',['style' =>'color:#031B4E']) !!}
                             </label><br>
                             {!! Form::label('typedestiny', $data['typedestiny']) !!}
+                        </div>
+                        <div class="col-lg-2">
+                            <label>
+                                {!! Form::label('calculationtype', 'Calculation Type',['style' =>'color:#031B4E']) !!}
+                            </label><br>
+                            {!! Form::label('calculationtype', $data['calculationtype']) !!}
                         </div>
                         <div class="col-lg-1">
                             <label>
@@ -114,17 +125,13 @@
                             {!! Form::label('expire', $data['expire']) !!}
                         </div>
 
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <label>
                                 {!! Form::label('carrier', 'Carrier',['style' =>'color:#031B4E']) !!}
                             </label><br>
                             {!! Form::label('carrier', $data['carrier']) !!}
                         </div>
-                        <div class="col-lg-1">
-                            <a href="#" onclick="showModal({{$data['id']}})"  class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill test"   title="Edit G.C. Duplicated">
-                                <i style="color:#036aa0" class="la la-edit"></i>
-                            </a>
-                        </div>
+                        
                     </div>
                 </div>
                 <br>
