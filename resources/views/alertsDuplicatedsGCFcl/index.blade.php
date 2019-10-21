@@ -48,20 +48,31 @@
         </div>
         @endif
 
-
-
         <div class="m-portlet__body">
             <!--begin: Search Form -->
             <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                 <div class="row align-items-center">
                     <div class="new col-xl-12 order-1 order-xl-2 m--align-right">
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
+                        <div class="col-xl-12 order-1 order-xl-2 m--align-right">
+                            <a href="{{route('search.alert.dp')}}">
+                                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                    <span>
+                                        <span>
+                                           Search Duplicateds&nbsp;
+                                        </span>
+                                        <i class="la la-cloud-upload"></i>
+                                    </span>
+                                </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
                 </div>
                 <br>
+
                 <div class="table-responsive">
                     <table class="table m-table m-table--head-separator-primary"  id="myatest" >
                         <thead >

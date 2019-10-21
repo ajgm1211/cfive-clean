@@ -835,6 +835,7 @@ Route::group(['prefix' => 'GruopSurcharger','middleware' => ['auth','role:admini
 Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:administrator']],function(){
     route::resource('globalsduplicated','AlertsDuplicatedsGlobalFclController');
     route::get('showStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@showStatus')->name('show.status.alert.dp');
+    route::get('SearchDupicatedAlert/','AlertsDuplicatedsGlobalFclController@searchDuplicateds')->name('search.alert.dp');
     route::post('updateStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@updateStatus')->name('change.status.alert.dp');
     
     //Groups
