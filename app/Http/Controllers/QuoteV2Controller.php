@@ -347,7 +347,7 @@ class QuoteV2Controller extends Controller
         }
         $calculation_types = CalculationType::pluck('name','id');
         $calculation_types_lcl_air = CalculationTypeLcl::pluck('name','id');
-        $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->orwhere('company_user_id',NULL)->pluck('name','id');
+        $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->orwhere('company_user_id',NULL)->orderBy('name','Asc')->pluck('name','id');
         $email_templates = EmailTemplate::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
         $hideO = 'hide';
         $hideD = 'hide';
@@ -605,16 +605,18 @@ class QuoteV2Controller extends Controller
             }); 
         }
 
-        foreach ($sale_terms as $v) {
-            $sale_terms->map(function ($v) {
-                if($v->port_id!='' ){
-                    $v['country_code'] = strtolower(substr($v->port->code, 0, 2));
-                }else{
-                    $v['country_code'] = strtolower($v->airport->code);
-                }
+        if($sale_terms->count()>0){
+            foreach ($sale_terms as $v) {
+                $sale_terms->map(function ($v) {
+                    if($v->port_id!='' ){
+                        $v['country_code'] = strtolower(substr(@$v->port->code, 0, 2));
+                    }else{
+                        $v['country_code'] = strtolower(@$v->airport->code);
+                    }
 
-                return $v;
-            }); 
+                    return $v;
+                }); 
+            }
         }
 
         $emaildimanicdata = json_encode([
