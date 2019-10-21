@@ -34,7 +34,7 @@
     </header>
     <main>
         <div id="details" class="clearfix details">
-            <div class="client" style="line-height: 10px;">
+            <div class="client" style="line-height: 10px; width:300px;">
                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>From:</p>
                 <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>De:</p>
                 <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>A partir de:</p>
@@ -354,7 +354,7 @@
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                     @endif
                                     <td >{{@$total_freight}}</td>
-                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->show_schedules==0)
+                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                         @if($quote->pdf_option->language=='Spanish')
                                             @if($rate->schedule_type=='Transfer')
                                                 <td>Transbordo</td>
@@ -464,15 +464,15 @@
                                                 <td >{{$v->units*$v->rate}}</td>
                                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                                     @if($quote->pdf_option->language=='Spanish')
-                                                        @if($rate->schedule_type=='Transfer')
+                                                        @if($r->schedule_type=='Transfer')
                                                             <td>Transbordo</td>
-                                                        @elseif($rate->schedule_type=='Direct')
+                                                        @elseif($r->schedule_type=='Direct')
                                                             <td>Directo</td>
                                                         @else
                                                             <td>-</td>
                                                         @endif
                                                     @else
-                                                        <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
+                                                        <td>{{$r->schedule_type!='' ? $r->schedule_type:'-'}}</td>
                                                     @endif  
                                                     <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
                                                     <td>{{$r->via!='' ? $r->via:'-'}}</td>
@@ -863,6 +863,7 @@
                         @foreach($item as $rate)
                             <?php
                                 $total_origin = 0;
+                                $total_inland_origin = 0;
                                 $show_inland = 'hide';
                             ?>
                             @foreach($rate as $r)
@@ -1223,7 +1224,8 @@
                         <tbody>
                         @foreach($item as $rate)
                             <?php
-                                $total_destination= 0;
+                                $total_destination = 0;
+                                $total_inland = 0;
                                 $show_inland = 'hide';
                             ?>
                             @foreach($rate as $r)

@@ -142,6 +142,21 @@ $(document).ready(function() {
         }
     });
 
+    $('.editable-quote-info').editable({
+        url:'/v2/quotes/info/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            setTimeout(location.reload.bind(location), 3000);
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
     //Edición en línea para montos/markups en LCL/AIR
     $('.editable-lcl-air').editable({
         url:'/v2/quotes/lcl/charges/update',

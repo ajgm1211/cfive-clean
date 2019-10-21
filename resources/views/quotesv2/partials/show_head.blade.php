@@ -303,16 +303,16 @@
                                           <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
                                       </div>
                                       <div class="col-md-2">
-                                          <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> {{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</div>
+                                          <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_quantity" data-value="{{$quote->total_quantity}}" data-pk="{{@$quote->id}}" data-title="Total Quantity"></a></div>
                                       </div>
                                       <div class="col-md-2">
-                                          <div id="cargo_details_total_weight_p"><b>Total weight: </b> {{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</div>
+                                          <div id="cargo_details_total_weight_p"><b>Total weight: </b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_weight" data-value="{{$quote->total_weight}}" data-pk="{{@$quote->id}}" data-title="Total Weight"></a> kg</div>
                                       </div>
                                       <div class="col-md-2">
-                                          <p id="cargo_details_total_volume_p"><b>Total volume: </b> {!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</p>
+                                          <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume"></a> m<sup>3</sup></p>
                                       </div>
                                       <div class="col-md-2">
-                                          <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b> {!!$quote->chargeable_weight != '' ? $quote->chargeable_weight.' kg' : ''!!}</p>
+                                          <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><a href="#" class="editable-quote-info" data-type="text" data-name="chargeable_weight" data-value="{{$quote->chargeable_weight}}" data-pk="{{@$quote->id}}" data-title="Chargeable Weight"></a> Kg</p>
                                       </div>
                                     </div>
                                 @endif

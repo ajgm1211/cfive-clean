@@ -451,6 +451,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('delete/{id}', 'QuoteV2Controller@destroy')->name('quotes-v2.destroy');
     Route::post('/update/{id}', 'QuoteV2Controller@update')->name('quotes-v2.update');
     Route::post('/charges/update', 'QuoteV2Controller@updateQuoteCharges')->name('quotes-v2.update.charges');
+    Route::post('/info/update', 'QuoteV2Controller@updateQuoteInfo')->name('quotes-v2.update.info');
     Route::post('rate/charges/update', 'QuoteV2Controller@updateRateCharges')->name('quotes-v2.update.rate.charges');
     Route::post('lcl/charges/update', 'QuoteV2Controller@updateQuoteChargesLcl')->name('quotes-v2.update.charges.lcl');
     Route::post('/update/payments/{id}', 'QuoteV2Controller@updatePaymentConditions')->name('quotes-v2.update.payments');
@@ -822,6 +823,31 @@ $router->get('/APP_ENV', function() {
     return env('APP_ENV');
     //return App\User::where('email','admin@example.com')->first();
 })->middleware(['auth','role:administrator|company|subuser']);
+
+// Grupos de Sruchargers 
+Route::group(['prefix' => 'GruopSurcharger','middleware' => ['auth','role:administrator']],function(){
+    route::resource('gruopSurcharger','GroupSurchargerController');
+    //route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+    route::post('GSSAdd','GroupSurchargerController@showAdd')->name('group.surcharger.showAdd');
+});
+
+// Alertas Y Grupos de Globals Duplicados
+Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:administrator']],function(){
+    route::resource('globalsduplicated','AlertsDuplicatedsGlobalFclController');
+    route::get('showStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@showStatus')->name('show.status.alert.dp');
+    route::get('SearchDupicatedAlert/','AlertsDuplicatedsGlobalFclController@searchDuplicateds')->name('search.alert.dp');
+    route::post('updateStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@updateStatus')->name('change.status.alert.dp');
+    
+    //Groups
+    route::resource('groupglobalsduplicated','GroupGlobalsCompanyUserController');
+    route::get('showStatusGroup/{id}','GroupGlobalsCompanyUserController@showStatus')->name('show.status.alert.group');
+    route::post('updateStatusAGroup/{id}','GroupGlobalsCompanyUserController@updateStatus')->name('change.status.alert.group');
+    //route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
+    
+    //Groups
+    route::resource('GlobalsDuplicatedEspecific','GlobalsDuplicatedFclController');
+    route::get('GCDPESPShow/{id}/{grupo_id}','GlobalsDuplicatedFclController@showAdm')->name('gc.duplicated.especific.show');
+});
 
 // Test Controller 
 Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator']],function(){
