@@ -94,7 +94,12 @@ class GlobalsDuplicatedFclController extends Controller
                 } elseif(empty($globals_dp->country_orig) != true){
                     $origin     = $globals_dp->country_orig;
                 } 
-                return $origin;
+                if(strnatcasecmp($origin,'ALL') == 0){
+                    $color = '#ff0d24';
+                } else{
+                    $color = '#575962';                    
+                }
+                return '<p style="color:'.$color.'">'.$origin.'</p>';
             })
             ->addColumn('destiny', function ($globals_dp){ 
                 $destiny = null;
@@ -103,7 +108,13 @@ class GlobalsDuplicatedFclController extends Controller
                 } elseif(empty($globals_dp->country_dest) != true){
                     $destiny    = $globals_dp->country_dest;
                 } 
-                return $destiny;
+                
+                if(strnatcasecmp($destiny,'ALL') == 0){
+                    $color = '#ff0d24';
+                } else{
+                    $color = '#575962';                    
+                }
+                return '<p style="color:'.$color.'">'.$destiny.'</p>';
             })
             ->addColumn('validitylb', function ($globals_dp){ 
                 return $globals_dp->validity.' / '.$globals_dp->expire;
