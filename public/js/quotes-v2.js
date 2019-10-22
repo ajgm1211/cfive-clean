@@ -1497,11 +1497,14 @@ $(document).on('click', '.store_charge_lcl', function () {
     var theElement = $(this);
     var sum = 0;
 
-    $(this).closest("table").find('.total-amount').each(function(){
-        var sub_total = parseFloat($(this).html());
-        var currency=$(this).closest('tr').find('.local_currency').html();
-        var currency_cfg = $("#currency_id").val();
-        /*$.ajax({
+    if(surcharge_id=='' || calculation_type_id=='' || units=='' || price_per_unit==''){
+        notification('There are empty fields. Please verify and try again', 'error');
+    }else{
+        $(this).closest("table").find('.total-amount').each(function(){
+            var sub_total = parseFloat($(this).html());
+            var currency=$(this).closest('tr').find('.local_currency').html();
+            var currency_cfg = $("#currency_id").val();
+            /*$.ajax({
             url: '/api/currency/alphacode/'+currency,
             dataType: 'json',
             async: false,
@@ -1515,72 +1518,73 @@ $(document).on('click', '.store_charge_lcl', function () {
                 total_currency = total_currency.toFixed(2);
             }
         });*/
-        total_currency = currencyRateAlphacode(currency, currency_cfg, sub_total);
-        sum += parseFloat(total_currency);
-    });
+            total_currency = currencyRateAlphacode(currency, currency_cfg, sub_total);
+            sum += parseFloat(total_currency);
+        });
 
-    //Subtotal dinámico
-    $(this).closest('table').find('.td_sum_total').html(sum+parseFloat(total));
+        //Subtotal dinámico
+        $(this).closest('table').find('.td_sum_total').html(sum+parseFloat(total));
 
-    $.ajax({
-        type: 'POST',
-        url: '/v2/quotes/lcl/store/charge',
-        data:{
-            "automatic_rate_id":id,
-            "surcharge_id":surcharge_id,
-            "calculation_type_id":calculation_type_id,
-            "units":units,
-            "price_per_unit":price_per_unit,
-            "total":total,
-            "markup":markup,
-            "type_id":type_id,
-            "currency_id":currency_id
-        },
-        success: function(data) {
-            if(data.message=='Ok'){
-                swal(
-                    'Done!',
-                    'Charge saved successfully',
-                    'success'
-                )
-                $(theElement).closest('tr').remove();
-                //Agregar nuevo tr en freight
-                if(data.type==3){
-                    $('<tr style="height:40px;">'+
-                      '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
-                      '</tr>').insertBefore('.total_freight_'+number);
-                }else if(data.type==2){ //Agregar nuevo tr en destination
-                    $('<tr style="height:40px;">'+
-                      '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
-                      '</tr>').insertBefore('.total_destination_'+number);
-                }else if(data.type==1){ //Agregar nuevo tr en origin
-                    $('<tr style="height:40px;">'+
-                      '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                      '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
-                      '</tr>').insertBefore('.total_origin_'+number);
+        $.ajax({
+            type: 'POST',
+            url: '/v2/quotes/lcl/store/charge',
+            data:{
+                "automatic_rate_id":id,
+                "surcharge_id":surcharge_id,
+                "calculation_type_id":calculation_type_id,
+                "units":units,
+                "price_per_unit":price_per_unit,
+                "total":total,
+                "markup":markup,
+                "type_id":type_id,
+                "currency_id":currency_id
+            },
+            success: function(data) {
+                if(data.message=='Ok'){
+                    swal(
+                        'Done!',
+                        'Charge saved successfully',
+                        'success'
+                    )
+                    $(theElement).closest('tr').remove();
+                    //Agregar nuevo tr en freight
+                    if(data.type==3){
+                        $('<tr style="height:40px;">'+
+                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '</tr>').insertBefore('.total_freight_'+number);
+                    }else if(data.type==2){ //Agregar nuevo tr en destination
+                        $('<tr style="height:40px;">'+
+                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '</tr>').insertBefore('.total_destination_'+number);
+                    }else if(data.type==1){ //Agregar nuevo tr en origin
+                        $('<tr style="height:40px;">'+
+                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '</tr>').insertBefore('.total_origin_'+number);
+                    }
+
                 }
-
+                //setTimeout(location.reload.bind(location), 3000);
             }
-            //setTimeout(location.reload.bind(location), 3000);
-        }
-    });
+        });
+    }
 });
 
 $(document).on('click', '.store_sale_charge', function () {
@@ -4504,4 +4508,36 @@ function currencyRateAlphacode(currency, currency_cfg, value){
     });
 
     return parseFloat(total_currency);
+}
+
+function notification(message, type){
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-center",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "0",
+        "hideDuration": "0",
+        "timeOut": "0",
+        "extendedTimeOut": "0",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    switch(type) {
+        case "error":
+            toastr.error(message,'ERROR');
+            break;
+        case "success":
+            toastr.success(message,'SUCCESS');
+            break;
+        default:
+            toastr.info(message,'IMPORTANT MESSAGE');
+    }
 }
