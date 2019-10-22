@@ -250,6 +250,7 @@
                         @foreach($item as $rate)
                             <?php
                                 $total_destination= 0;
+                                $total_inland= 0;
                                 $show_inland = 'hide';
                             ?>
                             @foreach($rate as $r)
