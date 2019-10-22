@@ -990,7 +990,7 @@
                             <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
                           </div>
                           <div class="wth" >
-                            <span class="bg-rates"> {{ $localorigin['monto'] /   $localorigin['cantidad'] }} </span> 
+                            <span class="bg-rates"> {{ number_format($localorigin['monto'] /   $localorigin['cantidad'], 2, '.', '') }} </span> 
                           </div>
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
@@ -1086,7 +1086,7 @@
                           </div>
 
                           <div class="wth" >
-                            <span class="bg-rates"> {{ $localfreight['monto'] /  $localfreight['cantidad']  }} </span> 
+                            <span class="bg-rates"> {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}  </span> 
                           </div> 
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
@@ -1151,7 +1151,7 @@
                             <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
                           </div>
                           <div class="wth" >
-                            <span class="bg-rates"> {{ $localdestiny['monto'] / $localdestiny['cantidad'] }} </span> 
+                            <span class="bg-rates">  {{ number_format($localdestiny['monto'] /   $localdestiny['cantidad'], 2, '.', '') }}  </span> 
                           </div> 
                           <div class="wth" >
                             <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
