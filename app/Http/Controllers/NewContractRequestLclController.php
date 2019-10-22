@@ -420,11 +420,19 @@ class NewContractRequestLclController extends Controller
                         $Ncontract->time_total = 'It did not go through the processing state';
                     } else{
                         $fechaStar = Carbon::parse($Ncontract->time_star);
-                        $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                        $Ncontract->time_total = $fechaEnd->diffInMinutes($fechaStar).' minutes';
                     }
                 }
 
             } elseif($Ncontract->status == 'Done'){
+
+                if($Ncontract->time_manager == null){
+                    $fechaEnd = Carbon::parse($now2);
+                    $fechaStar = Carbon::parse($Ncontract->created);
+                    $time_manager = number_format($fechaEnd->diffInMinutes($fechaStar)/60,2);
+                    $Ncontract->time_manager = $time_manager.' hours';
+                    //$Ncontract->time_manager = $fechaEnd->diffInHours($fechaStar).' hours';
+                }
 
                 if($Ncontract->sentemail == false){
                     $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
@@ -495,6 +503,8 @@ class NewContractRequestLclController extends Controller
         $dateEnd    = trim($dates[1]);
         $now        = new \DateTime();
         $now        = $now->format('dmY_His');
+        $dateEnd    = \Carbon\Carbon::parse($dateEnd);
+        $dateEnd    = $dateEnd->addDay()->format('Y-m-d');
         $countNRq   = NewContractRequestLcl::whereBetween('created',[$dateStart.' 00:00:00',$dateEnd.' 23:59:59'])->count();
 
         if($countNRq <= 100){
@@ -506,7 +516,7 @@ class NewContractRequestLclController extends Controller
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
                 $excel->sheet('REQUEST_LCL', function($sheet) use($data) {
-                    $sheet->cells('A1:M1', function($cells) {
+                    $sheet->cells('A1:N1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
@@ -525,7 +535,8 @@ class NewContractRequestLclController extends Controller
                         'J'     =>  25,
                         'K'     =>  25,
                         'L'     =>  15,
-                        'M'     =>  15
+                        'M'     =>  15,
+                        'N'     =>  15
                     ));
 
                     $sheet->row(1, array(
@@ -541,6 +552,7 @@ class NewContractRequestLclController extends Controller
                         "Time Start",
                         "Time End",
                         "Time Elapsed",
+                        "Management Time",
                         "Status"
                     ));
                     $i= 2;
@@ -562,14 +574,15 @@ class NewContractRequestLclController extends Controller
                                 "Time Start"        => $nrequest['time_start'],
                                 "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Management Time"   => $nrequest['time_manager'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:M'.$i, 'thin');
+                            $sheet->setBorder('A1:N'.$i, 'thin');
 
                             $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('G'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
