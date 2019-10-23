@@ -2391,11 +2391,35 @@ $(document).on('click', '#edit-terms', function () {
     $("#update_terms").removeAttr('hidden');
 });
 
+$(document).on('click', '#edit-terms-english', function () {
+    $(".terms_and_conditions_english_span").attr('hidden','true');
+    $(".terms_and_conditions_english_textarea").removeAttr('hidden');
+    $("#update_terms_english").removeAttr('hidden');
+});
+
+$(document).on('click', '#edit-terms-portuguese', function () {
+    $(".terms_and_conditions_portuguese_span").attr('hidden','true');
+    $(".terms_and_conditions_portuguese_textarea").removeAttr('hidden');
+    $("#update_terms_portuguese").removeAttr('hidden');
+});
+
 //Cancelar editar terms
 $(document).on('click', '#cancel-terms', function () {
     $(".terms_and_conditions_span").removeAttr('hidden');
     $(".terms_and_conditions_textarea").attr('hidden','true');
     $("#update_terms").attr('hidden','true');
+});
+
+$(document).on('click', '#cancel-terms-english', function () {
+    $(".terms_and_conditions_english_span").removeAttr('hidden');
+    $(".terms_and_conditions_english_textarea").attr('hidden','true');
+    $("#update_terms_english").attr('hidden','true');
+});
+
+$(document).on('click', '#cancel-terms-portuguese', function () {
+    $(".terms_and_conditions_portuguese_span").removeAttr('hidden');
+    $(".terms_and_conditions_portuguese_textarea").attr('hidden','true');
+    $("#update_terms_portuguese").attr('hidden','true');
 });
 
 //Actualizar terms
@@ -2406,6 +2430,7 @@ $(document).on('click', '#update-terms', function () {
         type: 'POST',
         url: '/v2/quotes/update/terms/'+id,
         data: {
+            'name': 'terms_and_conditions',
             'terms': terms,
         },
         success: function(data) {
@@ -2420,6 +2445,61 @@ $(document).on('click', '#update-terms', function () {
                 $(".terms_and_conditions_span").removeAttr('hidden');
                 $(".terms_and_conditions_textarea").attr('hidden','true');
                 $("#update_terms").attr('hidden','true');
+            }
+        }
+    });
+});
+
+$(document).on('click', '#update-terms-english', function () {
+    var id=$(".id").val();
+    var terms = tinymce.get("terms_and_conditions_english").getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/terms/'+id,
+        data: {
+            'name': 'terms_english',
+            'terms': terms,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The terms and conditions has been updated.',
+                    'success'
+                )
+
+                $(".terms_and_conditions_english_span").html(data.quote['terms_english']);
+                $(".terms_and_conditions_english_span").removeAttr('hidden');
+                $(".terms_and_conditions_english_textarea").attr('hidden','true');
+                $("#update_terms_english").attr('hidden','true');
+            }
+        }
+    });
+});
+
+
+$(document).on('click', '#update-terms-portuguese', function () {
+    var id=$(".id").val();
+    var terms = tinymce.get("terms_and_conditions_portuguese").getContent();
+    $.ajax({
+        type: 'POST',
+        url: '/v2/quotes/update/terms/'+id,
+        data: {
+            'name': 'terms_portuguese',
+            'terms': terms,
+        },
+        success: function(data) {
+            if(data.message=='Ok'){
+                swal(
+                    'Updated!',
+                    'The terms and conditions has been updated.',
+                    'success'
+                )
+
+                $(".terms_and_conditions_portuguese_span").html(data.quote['terms_portuguese']);
+                $(".terms_and_conditions_portuguese_span").removeAttr('hidden');
+                $(".terms_and_conditions_portuguese_textarea").attr('hidden','true');
+                $("#update_terms_portuguese").attr('hidden','true');
             }
         }
     });
