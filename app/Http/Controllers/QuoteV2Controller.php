@@ -6778,7 +6778,7 @@ class QuoteV2Controller extends Controller
 
         if(in_array($global->calculationtypelcl_id, $arraytonM3)){
           //ROUNDED
-          if($local->calculationtypelcl_id == '11'){
+          if($global->calculationtypelcl_id == '11'){
             $ton_weight =   ceil($weight);
           }else{
             $ton_weight =   $weight;
@@ -6899,7 +6899,7 @@ class QuoteV2Controller extends Controller
             if($carrierGlobal->carrier_id == $data->carrier_id  || $carrierGlobal->carrier_id ==  $carrier_all){
 
               //ROUNDED
-              if($local->calculationtypelcl_id == '10'){
+              if($global->calculationtypelcl_id == '10'){
                 $totalW =   ceil($totalW);
               }
               if($chargesOrigin != null){
