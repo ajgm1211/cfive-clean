@@ -18,6 +18,7 @@ class NewContractRequest extends Model
                            'created_at',
                            'time_star',
                            'time_total',
+                           'time_manager',
                            'time_star_one',
                            'sentemail',
                            'contract_id',
