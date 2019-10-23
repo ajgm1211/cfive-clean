@@ -1,3 +1,4 @@
+<script src="/js/globalcharges.js"></script>
 @if(!$globalcharges->globalcharport->isEmpty())
 @php
 $portRadio = true; 
@@ -164,7 +165,6 @@ $portRadio = false;
     </div>
     {!! Form::close() !!}
 </div>
-<script src="/js/globalcharges.js"></script>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script>
     $('.m-select2-general').select2({
