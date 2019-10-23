@@ -48,7 +48,7 @@ class ExportRequestsJob implements ShouldQueue
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
                 $excel->sheet('REQUEST_FCL', function($sheet) use($data) {
-                    $sheet->cells('A1:M1', function($cells) {
+                    $sheet->cells('A1:N1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
@@ -67,7 +67,8 @@ class ExportRequestsJob implements ShouldQueue
                         'J'     =>  25,
                         'K'     =>  25,
                         'L'     =>  15,
-                        'M'     =>  15
+                        'M'     =>  15,
+                        'N'     =>  15
                     ));
 
                     $sheet->row(1, array(
@@ -83,6 +84,7 @@ class ExportRequestsJob implements ShouldQueue
                         "Time Start",
                         "Time End",
                         "Time Elapsed",
+                        "Management Time",
                         "Status"
                     ));
                     $i= 2;
@@ -104,22 +106,23 @@ class ExportRequestsJob implements ShouldQueue
                                 "Time Start"        => $nrequest['time_start'],
                                 "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Management Time"   => $nrequest['time_manager'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:M'.$i, 'thin');
+                            $sheet->setBorder('A1:N'.$i, 'thin');
 
                             $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('K'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('J'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $i++;
                         }
                     }
@@ -131,10 +134,11 @@ class ExportRequestsJob implements ShouldQueue
         } else if(strnatcasecmp($selector,'lcl') == 0){
             $nameFile   = 'Request_Lcl_'.$now;
             $data       = PrvRequest::RequestLclBetween($dateStart,$dateEnd);
+            
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
                 $excel->sheet('REQUEST_LCL', function($sheet) use($data) {
-                    $sheet->cells('A1:M1', function($cells) {
+                    $sheet->cells('A1:N1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
@@ -153,7 +157,8 @@ class ExportRequestsJob implements ShouldQueue
                         'J'     =>  25,
                         'K'     =>  25,
                         'L'     =>  15,
-                        'M'     =>  15
+                        'M'     =>  15,
+                        'N'     =>  15
                     ));
 
                     $sheet->row(1, array(
@@ -169,6 +174,7 @@ class ExportRequestsJob implements ShouldQueue
                         "Time Start",
                         "Time End",
                         "Time Elapsed",
+                        "Management Time",
                         "Status"
                     ));
                     $i= 2;
@@ -190,14 +196,15 @@ class ExportRequestsJob implements ShouldQueue
                                 "Time Start"        => $nrequest['time_start'],
                                 "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Management Time"   => $nrequest['time_manager'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:M'.$i, 'thin');
+                            $sheet->setBorder('A1:N'.$i, 'thin');
 
                             $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('G'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });

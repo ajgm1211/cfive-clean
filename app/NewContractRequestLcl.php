@@ -17,6 +17,7 @@ class NewContractRequestLcl extends Model
                            'updated',
                            'time_star',
                            'time_total',
+                           'time_manager',
                            'time_star_one',
                            'created',
                            'created_at',
