@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use PrvValidation;
 use App\StatusAlert;
 use GuzzleHttp\Client;
 use App\AlertCompanyUser;
@@ -153,5 +154,9 @@ class AlertsDuplicatedsGlobalFclController extends Controller
             $request->session()->flash('message.title', 'Well done!');
             return redirect()->route('globalsduplicated.index'); 
         }
+    }
+    
+    public function test(){
+        dd(PrvValidation::SearchDuplicatedWithJob());
     }
 }
