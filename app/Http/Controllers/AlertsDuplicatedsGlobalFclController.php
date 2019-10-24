@@ -16,7 +16,13 @@ class AlertsDuplicatedsGlobalFclController extends Controller
     // CARGA LA VISTA LAS COMPAÑIAS CON G.C DUPLICADOS
     public function index(Request $request)
     {
-        return view('alertsDuplicatedsGCFcl.index');
+        $searchdp = PrvValidation::SearchDuplicatedWithJob();
+        if($searchdp['bool']){
+            $display = 'style="display:none"';
+        } else {
+            $display = '';            
+        }
+        return view('alertsDuplicatedsGCFcl.index',compact('display'));
     }
 
     // MUESTRA LAS ALERTAS QUE TIENEN G.C DUPLICADOS
@@ -126,7 +132,7 @@ class AlertsDuplicatedsGlobalFclController extends Controller
 
     public function searchDuplicateds(Request $request){
         $user_adm_rq = User::where('email','admin@example.com')->orWhere('email','info@cargofive.com')->first();
-    
+
         if(env('APP_ENV') == 'local'){
             $client = new Client(['base_uri' => 'http://duplicate-gc/DuplicateGCFCL/']);                           
         }else if(env('APP_ENV') == 'developer'){
@@ -155,7 +161,7 @@ class AlertsDuplicatedsGlobalFclController extends Controller
             return redirect()->route('globalsduplicated.index'); 
         }
     }
-    
+
     public function test(){
         dd(PrvValidation::SearchDuplicatedWithJob());
     }

@@ -55,7 +55,7 @@
                     <div class="new col-xl-12 order-1 order-xl-2 m--align-right">
                         <div class="m-separator m-separator--dashed d-xl-none"></div>
                         <div class="col-xl-12 order-1 order-xl-2 m--align-right">
-                            <a href="{{route('search.alert.dp')}}">
+                            <a href="{{route('search.alert.dp')}}" {!!$display!!}>
                                 <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
                                     <span>
                                         <span>
