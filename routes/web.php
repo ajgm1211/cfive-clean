@@ -837,6 +837,7 @@ Route::group(['prefix' => 'GlobalDuplicated','middleware' => ['auth','role:admin
     route::get('showStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@showStatus')->name('show.status.alert.dp');
     route::get('SearchDupicatedAlert/','AlertsDuplicatedsGlobalFclController@searchDuplicateds')->name('search.alert.dp');
     route::post('updateStatusAlert/{id}','AlertsDuplicatedsGlobalFclController@updateStatus')->name('change.status.alert.dp');
+    route::get('testAlert/','AlertsDuplicatedsGlobalFclController@test')->name('tets.alert.dp');
     
     //Groups
     route::resource('groupglobalsduplicated','GroupGlobalsCompanyUserController');

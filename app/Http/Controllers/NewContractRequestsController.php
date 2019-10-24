@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\NewRequestToAdminMail;
 use App\Mail\NotificationAutoImport;
 use App\Jobs\SendEmailRequestFclJob;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use GuzzleHttp\Exception\RequestException;
@@ -156,15 +157,15 @@ class NewContractRequestsController extends Controller
         $now2   = $time->format('Y-m-d H:i:s');
         $file   = $request->file('file');
         $ext    = strtolower($file->getClientOriginalExtension());
-        /* $validator = \Validator::make(
-                array('ext' => $ext),
-                array('ext' => 'in:xls,xlsx,csv')
-            );
-            if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('Requestimporfcl');
-            }*/
+        /*$validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv,pdf')
+        );
+        if ($validator->fails()) {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'just archive with extension xlsx, xls, csv and pdf.');
+            return redirect()->route('Requestimporfcl');
+        }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
@@ -710,17 +711,9 @@ class NewContractRequestsController extends Controller
     public function test(){
         //2019-10-22 15:11:23
 
-        $Ncontract = NewContractRequest::find(6);
-        $time   = new \DateTime();
-        $now2   = $time->format('Y-m-d H:i:s');
-        $fechaEnd = Carbon::parse($now2);
-        $fechaStar = Carbon::parse($Ncontract->time_star);
-        $Ncontract->time_total = $fechaEnd->diffInMinutes($fechaStar).' minutes';
-        $Ncontract->update();
-
-        $fechaStar = Carbon::parse('2019-10-21 15:11:23');
-        dd($fechaStar->diffInMinutes('2019-10-22 15:11:23'),$fechaStar->diffInHours('2019-10-22 15:11:23'),$Ncontract->time_total);
-
+        $file       = File::get(storage_path('app/public/Request/Fcl/04072019_135948_Captura de pantalla de 2019-05-30 15-00-05.png'));
+        $extension = pathinfo(storage_path('app/public/Request/Fcl/08072019_181438_2812-Lantia Maritima_03-07-19-FLC.xlsx'), PATHINFO_EXTENSION);
+        dd($extension);
         //$Ncontract->time_total = str_replace('after','',$fechaEnd->diffInMinutes($fechaStar));
         //dd(PrvRequest::RequestFclBetween('2019-08-26','2019-08-26'));
     }
