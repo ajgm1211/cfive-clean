@@ -47,9 +47,9 @@ class ProcessContractFile implements ShouldQueue
     public function handle()
     {
         $classification = $this->classification;
-            
+
         if(strnatcasecmp($classification,'request') == 0){
-            
+
             if(strnatcasecmp($this->type,'fcl') == 0){
 
                 $Ncontracts = NewContractRequest::find($this->id);
@@ -59,7 +59,12 @@ class ProcessContractFile implements ShouldQueue
                 //$file       = \Storage::disk('FclRequest')->get($file);
                 $file       = File::get(storage_path('app/public/Request/Fcl/'.$name));
                 $s3->put('Request/FCL/'.$filePath, $file, 'public');
-                SelectionAutoImportJob::dispatch($this->id,$this->type);
+                $extension  = pathinfo(storage_path('app/public/Request/Fcl/'.$name),PATHINFO_EXTENSION);
+                if(strnatcasecmp($extension,'xls') == 0 ||
+                   strnatcasecmp($extension,'xlsx') == 0 ||
+                   strnatcasecmp($extension,'csv') == 0 ){
+                    SelectionAutoImportJob::dispatch($this->id,$this->type);
+                }
 
             } elseif(strnatcasecmp($this->type,'gcfcl') == 0){
 
@@ -93,7 +98,7 @@ class ProcessContractFile implements ShouldQueue
 
             }
         } elseif(strnatcasecmp($classification,'account') == 0){
-            
+
             if(strnatcasecmp($this->type,'fcl') == 0){
 
                 $Ncontracts = AccountFcl::find($this->id);
