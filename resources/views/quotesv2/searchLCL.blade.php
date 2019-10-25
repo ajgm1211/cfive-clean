@@ -435,10 +435,10 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-                        <div class="col-lg-2">
-            <label>Direction</label>
-            {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-          </div>
+              <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
 
             </div><br>
             <div class="row">
@@ -502,11 +502,11 @@
               <div class="col-lg-2 for-check" >
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label></div>
-                <div class="col-lg-2 for-check" >
-              {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
-              <label for="mode3" class="label-check">Include freight charges</label></div>
+              <div class="col-lg-2 for-check" >
+                {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
+                <label for="mode3" class="label-check">Include freight charges</label></div>
             </div>
-            
+
           </div>
         </div><br>
         <div class="row">
@@ -931,414 +931,415 @@
                         </div>
                         @endif
                         <div class="col-lg-3 no-padding d-flex justify-content-end">
-                          @if($arr->excelRequest !="")
-                          <div class="btn-detail__quotes btn-d downexcel" style="margin-right: 10px; white-space: nowrap">
-                            <a  id='excel_l{{$loop->iteration}}' href="/RequestsLcl/RequestImportationLcl/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
-                              <span class="workgreen"><i class="icon-excel"></i></span>  
+                          @if($arr->excelRequest !="0" && $arr->excelRequestLCL !="0" )
+                          <div class="downexcel" style="margin-right: 10px;">
+                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excelLcl/{{ $arr->excelRequest }}/{{ $arr->excelRequestLCL }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>
-                              </div>
-                            @endif
-                            <div class="btn-detail__quotes btn-d">
-                              <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
-                                <span class="workblue">Detailed Cost</span>  
-                                <i  class="la la-angle-down blue"></i></a>
-                            </div>
+                            </a>
+                          </div>
+                          @endif
+                          <div class="btn-detail__quotes btn-d">
+                            <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l detailed-cost"  title="Cancel" >
+                              <span class="workblue">Detailed Cost</span>  
+                              <i  class="la la-angle-down blue"></i></a>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- Termina tarjeta de cotifzacion -->
+              </div>
+              <!-- Termina tarjeta de cotifzacion -->
 
-                <!-- Gastos Origen-->
-
-
-                @if(!$arr->localOrig->isEmpty())
-
-                <div class="row no-margin margin-card" id='origin{{$loop->iteration}}' hidden='true' >
-                  <div class="col-lg-12">
-                    <div class="row">
-                      <span class="darkblue cabezeras">Origin</span><br><br>
-                    </div>
-
-                    <div class="row bg-light">
-                      <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                      <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode">Units</span></div>
-                          <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
-                          <div class="wth"><span class="portalphacode">Ammount</span></div>
-                          <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Currency</span></div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
-                    </div>
-
-                    @foreach($arr->localOrig as $localO)   
-                    @foreach($localO as $localorig)
-                    @foreach($localorig as $localorigin)
-                    <div class="row data-rates">
-                      <div class="col-lg-2 colorphacode">{{ $localorigin['surcharge_name']}}</div>
-                      <div class="col-lg-2 colorphacode">{{ $localorigin['calculation_name']}}</div>
-                      <div class="col-lg-7 colorphacode">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
-                          </div>
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ number_format($localorigin['monto'] /   $localorigin['cantidad'], 2, '.', '') }} </span> 
-                          </div>
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
-                          </div>
-
-                          <div class="wth" >  
-                            <span class="bg-rates">{{ $localorigin['markup']}} </span>
-                          </div>
-                          <div class="wth" >     
-                            <span class="bg-rates"> {{ $localorigin['currency']}} </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['montoMarkup']}}</span></div>
-
-                    </div>
-                    @endforeach
-                    @endforeach
-                    @endforeach
-                    <div class="row bg-light">
-                      <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges: </span> {{ $arr->totalOrigin  }} {{ $arr->quoteCurrency }}</div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode"> </span></div>
-
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode"></span></div>
-                    </div>
-                  </div>
-                </div>
-                @endif
-                <!-- Gastos Freight-->
-                <div class="row no-margin margin-card" id='freight{{$loop->iteration}}'  hidden='true' >
-                  <div class="col-lg-12">
-                    <div class="row">
-                      <span class="darkblue cabezeras">Freight</span><br><br>
-                    </div>
-                    <div class="row bg-light">
-                      <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                      <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode">Units</span></div>
-                          <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
-                          <div class="wth"><span class="portalphacode">Ammount</span></div>
-                          <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Currency</span></div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
-                    </div>
-                    @foreach($arr->rates as $rates)
-                    <div class="row data-rates">
-                      <div class="col-lg-2 colorphacode">{{ $rates['type'] }}  </div>
-                      <div class="col-lg-2 colorphacode"> {{ $rates['detail'] }} </div>
-                      <div class="col-lg-7 colorphacode">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" >
-                            <span class="bg-rates">  {{ $rates['cantidad'] }}</span> 
-                          </div>
-                          <div class="wth" >
-                            <span class="bg-rates">  {{ $rates['price'] }}</span> 
-                          </div>
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $rates['subtotal'] }} </span> 
-                          </div>
-
-                          <div class="wth" >  
-                            <span class="bg-rates">{{ $rates['markup'] }}  </span>
-                          </div>
-                          <div class="wth" >     
-                            <span class="bg-rates"> {{ $rates['currency'] }} </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="colorphacode"> {{ $rates['total'] }}</span></div>
-
-                    </div>
-                    @endforeach
-
-                    @if(!$arr->localFreight->isEmpty())
-                    @foreach($arr->localFreight as $localF)   
-                    @foreach($localF as $localfre)
-                    @foreach($localfre as $localfreight)
-                    <div class="row data-rates">
-                      <div class="col-lg-2 colorphacode">{{ $localfreight['surcharge_name']}}</div>
-                      <div class="col-lg-2 colorphacode">{{ $localfreight['calculation_name']}}</div>
-                      <div class="col-lg-7 colorphacode">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localfreight['cantidad']}} </span> 
-                          </div>
-
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}  </span> 
-                          </div> 
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
-                          </div>
-
-                          <div class="wth" >  
-                            <span class="bg-rates">{{ $localfreight['markup']}} </span>
-                          </div>
-                          <div class="wth" >     
-                            <span class="bg-rates"> {{ $localfreight['currency']}} </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['montoMarkup']}}</span></div>
-                    </div>
-                    @endforeach
-                    @endforeach
-                    @endforeach
-                    @endif
-                    <div class="row bg-light">
-                      <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges :  </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode"></span></div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Gastos Destino-->
-                @if(!$arr->localDest->isEmpty())
-                <div class="row no-margin margin-card" id='destiny{{$loop->iteration}}'  hidden='true' >
-                  <div class="col-lg-12">
-                    <div class="row">
-                      <span class="darkblue cabezeras">Destination</span><br><br>
-                    </div>
-                    <div class="row bg-light">
-                      <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
-                      <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode">Units</span></div>
-                          <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
-                          <div class="wth"><span class="portalphacode">Ammount</span></div>
-                          <div class="wth"><span class="portalphacode">Markup</span></div>
-                          <div class="wth"><span class="portalphacode">Currency</span></div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
-                    </div>
-                    @foreach($arr->localDest as $local)   
-                    @foreach($local as $localA)
-                    @foreach($localA as $localdestiny)
-                    <div class="row data-rates">
-                      <div class="col-lg-2 colorphacode">{{ $localdestiny['surcharge_name']}}</div>
-                      <div class="col-lg-2 colorphacode">{{ $localdestiny['calculation_name']}}</div>
-                      <div class="col-lg-7 colorphacode">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
-                          </div>
-                          <div class="wth" >
-                            <span class="bg-rates">  {{ number_format($localdestiny['monto'] /   $localdestiny['cantidad'], 2, '.', '') }}  </span> 
-                          </div> 
-                          <div class="wth" >
-                            <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
-                          </div>
-
-                          <div class="wth" >  
-                            <span class="bg-rates">{{ $localdestiny['markup']}} </span>
-                          </div>
-                          <div class="wth" >     
-                            <span class="bg-rates"> {{ $localdestiny['currency']}} </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['montoMarkup']}}</span></div>
-
-                    </div>
-                    @endforeach
-                    @endforeach
-                    @endforeach
+              <!-- Gastos Origen-->
 
 
-                    <div class="row bg-light">
-                      <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges: </span> {{ $arr->totalDestiny  }} {{ $arr->quoteCurrency }}</div>
-                      <div class="col-lg-7">
-                        <div class="d-flex justify-content-between">
-                          <div class="wth" ><span class="portalphacode"> </span></div>
+              @if(!$arr->localOrig->isEmpty())
 
-                        </div>
-                      </div>
-                      <div class="col-lg-1" ><span class="portalphacode"></span></div>
-                    </div>
-                  </div>
-                </div>
-                @endif
-
-
-                @if(isset($arr->remarks))
-                <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
-                  <div class="col-lg-12">
-                    <div class="row">
-                      <span class="darkblue cabezeras">Remarks</span><br><br>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} </span></div>
-
-                    </div>
+              <div class="row no-margin margin-card" id='origin{{$loop->iteration}}' hidden='true' >
+                <div class="col-lg-12">
+                  <div class="row">
+                    <span class="darkblue cabezeras">Origin</span><br><br>
                   </div>
 
+                  <div class="row bg-light">
+                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
+                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode">Units</span></div>
+                        <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
+                        <div class="wth"><span class="portalphacode">Ammount</span></div>
+                        <div class="wth"><span class="portalphacode">Markup</span></div>
+                        <div class="wth"><span class="portalphacode">Currency</span></div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
+                  </div>
+
+                  @foreach($arr->localOrig as $localO)   
+                  @foreach($localO as $localorig)
+                  @foreach($localorig as $localorigin)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localorigin['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localorigin['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ number_format($localorigin['monto'] /   $localorigin['cantidad'], 2, '.', '') }} </span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
+                        </div>
+
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localorigin['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localorigin['currency']}} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['montoMarkup']}}</span></div>
+
+                  </div>
+                  @endforeach
+                  @endforeach
+                  @endforeach
+                  <div class="row bg-light">
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Origin Charges: </span> {{ $arr->totalOrigin  }} {{ $arr->quoteCurrency }}</div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode"> </span></div>
+
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
+                  </div>
                 </div>
+              </div>
+              @endif
+              <!-- Gastos Freight-->
+              <div class="row no-margin margin-card" id='freight{{$loop->iteration}}'  hidden='true' >
+                <div class="col-lg-12">
+                  <div class="row">
+                    <span class="darkblue cabezeras">Freight</span><br><br>
+                  </div>
+                  <div class="row bg-light">
+                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
+                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode">Units</span></div>
+                        <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
+                        <div class="wth"><span class="portalphacode">Ammount</span></div>
+                        <div class="wth"><span class="portalphacode">Markup</span></div>
+                        <div class="wth"><span class="portalphacode">Currency</span></div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
+                  </div>
+                  @foreach($arr->rates as $rates)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $rates['type'] }}  </div>
+                    <div class="col-lg-2 colorphacode"> {{ $rates['detail'] }} </div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates">  {{ $rates['cantidad'] }}</span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates">  {{ $rates['price'] }}</span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $rates['subtotal'] }} </span> 
+                        </div>
 
-                @endif
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $rates['markup'] }}  </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $rates['currency'] }} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode"> {{ $rates['total'] }}</span></div>
 
+                  </div>
+                  @endforeach
+
+                  @if(!$arr->localFreight->isEmpty())
+                  @foreach($arr->localFreight as $localF)   
+                  @foreach($localF as $localfre)
+                  @foreach($localfre as $localfreight)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localfreight['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localfreight['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localfreight['cantidad']}} </span> 
+                        </div>
+
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}  </span> 
+                        </div> 
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
+                        </div>
+
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localfreight['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localfreight['currency']}} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['montoMarkup']}}</span></div>
+                  </div>
+                  @endforeach
+                  @endforeach
+                  @endforeach
+                  @endif
+                  <div class="row bg-light">
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Freight Charges :  </span>{{ $arr->totalFreight  }} {{ $arr->quoteCurrency }}</div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode"></span></div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gastos Destino-->
+              @if(!$arr->localDest->isEmpty())
+              <div class="row no-margin margin-card" id='destiny{{$loop->iteration}}'  hidden='true' >
+                <div class="col-lg-12">
+                  <div class="row">
+                    <span class="darkblue cabezeras">Destination</span><br><br>
+                  </div>
+                  <div class="row bg-light">
+                    <div class="col-lg-2"><span class="portalphacode">Charge</span></div>
+                    <div class="col-lg-2"><span class="portalphacode">Detail</span></div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode">Units</span></div>
+                        <div class="wth" ><span class="portalphacode">Price Per Units</span></div>
+                        <div class="wth"><span class="portalphacode">Ammount</span></div>
+                        <div class="wth"><span class="portalphacode">Markup</span></div>
+                        <div class="wth"><span class="portalphacode">Currency</span></div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode">Total</span></div>
+                  </div>
+                  @foreach($arr->localDest as $local)   
+                  @foreach($local as $localA)
+                  @foreach($localA as $localdestiny)
+                  <div class="row data-rates">
+                    <div class="col-lg-2 colorphacode">{{ $localdestiny['surcharge_name']}}</div>
+                    <div class="col-lg-2 colorphacode">{{ $localdestiny['calculation_name']}}</div>
+                    <div class="col-lg-7 colorphacode">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
+                        </div>
+                        <div class="wth" >
+                          <span class="bg-rates">  {{ number_format($localdestiny['monto'] /   $localdestiny['cantidad'], 2, '.', '') }}  </span> 
+                        </div> 
+                        <div class="wth" >
+                          <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
+                        </div>
+
+                        <div class="wth" >  
+                          <span class="bg-rates">{{ $localdestiny['markup']}} </span>
+                        </div>
+                        <div class="wth" >     
+                          <span class="bg-rates"> {{ $localdestiny['currency']}} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['montoMarkup']}}</span></div>
+
+                  </div>
+                  @endforeach
+                  @endforeach
+                  @endforeach
+
+
+                  <div class="row bg-light">
+                    <div class="col-lg-4 col-lg-offset-" ><span class="portalphacode">Subtotal Destination Charges: </span> {{ $arr->totalDestiny  }} {{ $arr->quoteCurrency }}</div>
+                    <div class="col-lg-7">
+                      <div class="d-flex justify-content-between">
+                        <div class="wth" ><span class="portalphacode"> </span></div>
+
+                      </div>
+                    </div>
+                    <div class="col-lg-1" ><span class="portalphacode"></span></div>
+                  </div>
+                </div>
+              </div>
+              @endif
+
+
+              @if(isset($arr->remarks))
+              <div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
+                <div class="col-lg-12">
+                  <div class="row">
+                    <span class="darkblue cabezeras">Remarks</span><br><br>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} </span></div>
+
+                  </div>
+                </div>
 
               </div>
-              @endforeach
-            </div>      
-          </div>
+
+              @endif
+
+
+            </div>
+            @endforeach
+          </div>      
         </div>
       </div>
-
     </div>
 
-    {!! Form::close() !!}
   </div>
-  @endif
-  @endif
+
+  {!! Form::close() !!}
+</div>
+@endif
+@endif
 
 
-  @include('contacts.partials.contactsModal')
-  @include('companies.partials.companiesModal')
+@include('contacts.partials.contactsModal')
+@include('companies.partials.companiesModal')
 
-  @endsection
-
-
-  @section('js')
-  @parent
+@endsection
 
 
-  <script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
-  @if(empty($arreglo))
-  <script>
-
-    $('select[name="contact_id"]').prop("disabled",true);
-    $("select[name='company_id_quote']").val('');
-    $('#select2-m_select2_2_modal-container').text('Please an option');
-  </script>
-  @else
-
-  <script>
-    precargar();
-    precargarLCL();
-  </script>
+@section('js')
+@parent
 
 
-  @endif
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
-  <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
-  <script>
-    $('.selected').on('click', function(){
-      $(this).toggleClass('selected-class');
+<script src="{{asset('js/quotes-v2.js')}}" type="text/javascript"></script>
+@if(empty($arreglo))
+<script>
 
-      if($('.selected').hasClass('selected-class') ) {
-        $('.create-manual').prop( "disabled", true );
-      }else{
-        $('.create-manual').prop( "disabled", false );
+  $('select[name="contact_id"]').prop("disabled",true);
+  $("select[name='company_id_quote']").val('');
+  $('#select2-m_select2_2_modal-container').text('Please an option');
+</script>
+@else
+
+<script>
+  precargar();
+  precargarLCL();
+</script>
+
+
+@endif
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-touchspin.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/forms/widgets/ion-range-slider.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
+<script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+  $('.selected').on('click', function(){
+    $(this).toggleClass('selected-class');
+
+    if($('.selected').hasClass('selected-class') ) {
+      $('.create-manual').prop( "disabled", true );
+    }else{
+      $('.create-manual').prop( "disabled", false );
+    }
+  });
+
+  $(document).ready(function() {
+    var divRow = document.getElementsByClassName('data-rates');
+    var numDivRow = divRow.length;
+    var count = 0;
+    //console.log(numDivRow);
+
+    for(var i = 1; i < numDivRow; i++){
+      if(i%2 == 1){
+        var clase = divRow[i];
+        //console.log(clase);
+        $(clase).css({
+          'background-color' : '#fafafa'
+        });      
+        //console.log(clase);
       }
-    });
-
-    $(document).ready(function() {
-      var divRow = document.getElementsByClassName('data-rates');
-      var numDivRow = divRow.length;
-      var count = 0;
-      //console.log(numDivRow);
-
-      for(var i = 1; i < numDivRow; i++){
-        if(i%2 == 1){
-          var clase = divRow[i];
-          //console.log(clase);
-          $(clase).css({
-            'background-color' : '#fafafa'
-          });      
-          //console.log(clase);
-        }
-      }
-
-    });
-
-
-    /*** GOOGLE MAPS API ***/
-
-    var autocomplete;
-    function initAutocomplete() {
-      var geocoder = new google.maps.Geocoder();
-      var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
-      var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
-      //autocomplete.addListener('place_changed', fillInAddress);
     }
 
-    function codeAddress(address) {
-      var geocoder;
-      geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == 'OK') {
-          alert(results[0].geometry.location);
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
+  });
+
+
+  /*** GOOGLE MAPS API ***/
+
+  var autocomplete;
+  function initAutocomplete() {
+    var geocoder = new google.maps.Geocoder();
+    var autocomplete = new google.maps.places.Autocomplete((document.getElementById('origin_address')));
+    var autocomplete_destination = new google.maps.places.Autocomplete((document.getElementById('destination_address')));
+    //autocomplete.addListener('place_changed', fillInAddress);
+  }
+
+  function codeAddress(address) {
+    var geocoder;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == 'OK') {
+        alert(results[0].geometry.location);
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }
+
+  $valor =   $('#date_hidden').val();
+
+  if($valor != 0){
+    $('#m_datepicker_2').val($valor);
+  }
+  function setdateinput(){
+    var date = $('#m_datepicker_2').val();
+    $('#date_hidden').val(date);
+  }
+
+
+  $('.m-select3-general').select2();
+
+  $('.select2-selection__arrow').remove();
+
+
+
+  function AbrirModal(action,id){
+
+    if(action == "add"){
+      var url = '{{ route("companies.addM") }}';
+      $('#modal-body').load(url,function(){
+        $('#companyModal').modal({show:true});
+      });
+    }
+    if(action == "addContact"){
+      var url = '{{ route("contacts.addCM") }}';
+      $('.modal-body').load(url,function(){
+        $('#contactModal').modal({show:true});
       });
     }
 
-    $valor =   $('#date_hidden').val();
+  }
 
-    if($valor != 0){
-      $('#m_datepicker_2').val($valor);
-    }
-    function setdateinput(){
-      var date = $('#m_datepicker_2').val();
-      $('#date_hidden').val(date);
-    }
+</script>
 
-
-    $('.m-select3-general').select2();
-
-    $('.select2-selection__arrow').remove();
-
-
-
-    function AbrirModal(action,id){
-
-      if(action == "add"){
-        var url = '{{ route("companies.addM") }}';
-        $('#modal-body').load(url,function(){
-          $('#companyModal').modal({show:true});
-        });
-      }
-      if(action == "addContact"){
-        var url = '{{ route("contacts.addCM") }}';
-        $('.modal-body').load(url,function(){
-          $('#contactModal').modal({show:true});
-        });
-      }
-
-    }
-
-  </script>
-
-  @stop
+@stop
