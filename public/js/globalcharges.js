@@ -175,6 +175,11 @@ $(document).on('click', '.cancel', function () {
   $('#buttons').attr('hidden','true');
 });
 
+function hola(hi){
+  
+  alert(hi);
+}
+
 function activarCountry(act){
   var divCountry = $( ".divcountry");
   var divport = $( ".divport");
