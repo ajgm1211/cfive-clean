@@ -19,11 +19,11 @@
                 <span></span>
               </label>
               <label class="m-radio">
-                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry')"  name="typeroute" value="country"> Port to Country
+                <input type="radio" id="rdroutePC" onclick="activarCountry('divportcountry')"  name="typeroute" value="portcountry"> Port to Country
                 <span></span>
               </label>
               <label class="m-radio">
-                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport')"  name="typeroute" value="country"> Country to Port
+                <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport')"  name="typeroute" value="countryport"> Country to Port
                 <span></span>
               </label>
 
