@@ -264,7 +264,29 @@ class GlobalChargesController extends Controller
     $globalcharges = GlobalCharge::find($id);
     $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
     $globalcharges->setAttribute('validation_expire',$validation_expire);
-    return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+
+    $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+    
+    if(!$globalcharges->globalcharcountry->isEmpty()){
+      $activacion['rdrouteC'] = true;
+      $activacion['act'] = 'divcountry';
+    }
+    if(!$globalcharges->globalcharportcountry->isEmpty()){
+      $activacion['rdroutePC'] = true;
+      $activacion['act'] = 'divportcountry';
+    }
+    if(!$globalcharges->globalcharcountryport->isEmpty()){
+      $activacion['rdrouteCP'] = true;
+      $activacion['act'] = 'divcountryport';
+    }
+    if(!$globalcharges->globalcharport->isEmpty()){
+      $activacion['rdrouteP'] = true;
+      $activacion['act'] = 'divport';
+    }
+    
+    //dd($activacion);
+    
+    return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion'));
   }
 
   public function addGlobalChar(){
@@ -308,7 +330,7 @@ class GlobalChargesController extends Controller
   public function show($id)
   {
     $globalcharges = DB::select('call  select_for_company_globalcharger('.$id.')');
-   
+
     return DataTables::of($globalcharges)
       ->editColumn('surchargelb', function ($globalcharges){ 
         return $globalcharges->surcharges;
