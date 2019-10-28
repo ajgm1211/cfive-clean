@@ -5302,7 +5302,7 @@ class QuoteV2Controller extends Controller
       }else{
         $excelRequestId = "0";
       }
-    }
+    
 
     // Valores
     $data->setAttribute('excelRequest',$excelRequestId);
@@ -5345,11 +5345,8 @@ class QuoteV2Controller extends Controller
     $data->setAttribute('idCurrency',$idCurrency);
 
 
-
-
-
-
   }
+
   $chargeOrigin = ($chargesOrigin != null ) ? true : false;
   $chargeDestination = ($chargesDestination != null ) ? true : false;
   $chargeFreight = ($chargesFreight != null ) ? true : false;
