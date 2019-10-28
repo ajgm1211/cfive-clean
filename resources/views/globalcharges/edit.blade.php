@@ -1,20 +1,20 @@
 @if(!$globalcharges->globalcharport->isEmpty())
-  @php
-  $portRadio = true; 
-  $countryRadio = false; 
-  @endphp
-  <script>
-    activarCountry('divport');
-  </script>
+@php
+$portRadio = true; 
+$countryRadio = false; 
+@endphp
+<script>
+  activarCountry('divport');
+</script>
 @endif
 @if(!$globalcharges->globalcharcountry->isEmpty())
-  @php
-  $countryRadio = true; 
-  $portRadio = false; 
-  @endphp
-  <script>
-    activarCountry('divcountry');
-  </script>
+@php
+$countryRadio = true; 
+$portRadio = false; 
+@endphp
+<script>
+  activarCountry('divcountry');
+</script>
 @endif
 
 <div class="m-portlet" style="box-shadow:none">
@@ -24,7 +24,7 @@
     <div class="form-group m-form__group row">
       <div class="col-lg-12">
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-8">
             <label>
               <i class="la la-road icon__modal"  style="position: relative; bottom:-2px"></i>{!! Form::label('Type Route', 'Type Route') !!}
             </label>
@@ -35,6 +35,14 @@
               </label>
               <label class="m-radio">
                 {{ Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
+                <span></span>
+              </label>
+              <label class="m-radio">
+                {{ Form::radio('typeroute', 'country', null ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\')' ]) }} Port to Country
+                <span></span>
+              </label>
+              <label class="m-radio">
+                {{ Form::radio('typeroute', 'country', null ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\')' ]) }}  Country to Port
                 <span></span>
               </label>
             </div>
@@ -57,9 +65,21 @@
         </div>
         <div class="divcountry" hidden="true">
 
-         <i class="la la-anchor icon__modal"></i> {!! Form::label('origC', 'Origin Country') !!}
+          <i class="la la-anchor icon__modal"></i> {!! Form::label('origC', 'Origin Country') !!}
           {{ Form::select('country_orig[]', $countries,
           $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
+
+        </div>
+        <div class="divportcountry" hidden="true">
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('origPC', 'Origin Port') !!}
+          {{ Form::select('portcountry_orig[]', $harbor,[],['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+
+        </div>
+        <div class="divcountryport" hidden="true">
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('origCP', 'Origin Country') !!}
+          {{ Form::select('countryport_orig[]', $countries,[],['id' => 'countryport_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
 
         </div>
       </div>
@@ -80,6 +100,16 @@
           <i class="la la-anchor icon__modal"></i>{!! Form::label('destC', 'Destination Country') !!}
           {{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
+        <div class="divportcountry" hidden="true" >
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('destPC', 'Destination Country') !!}
+          {{ Form::select('portcountry_dest[]',$countries,[],[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
+
+        </div>
+        <div class="divcountryport" hidden="true" >
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('destCP', 'Destination Port') !!}
+          {{ Form::select('countryport_dest[]', $harbor,[],['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+        </div>
       </div>
     </div>
     <div class="form-group m-form__group row">
@@ -94,7 +124,7 @@
 
 
       <div class="col-lg-4">
-       <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i> {!! Form::label('calculationt', 'Calculation Type') !!}
+        <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i> {!! Form::label('calculationt', 'Calculation Type') !!}
         <div class="m-input-icon m-input-icon--right">
           {{ Form::select('calculationtype_id', $calculationT,$globalcharges->calculationtype_id,['id' => 'calculationtype','class'=>'m-select2-general form-control ','required' => 'required']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -108,7 +138,7 @@
     </div>
     <div class="form-group m-form__group row">
       <div class="col-lg-4">
-       <i class="la la-ship icon__modal"></i> {!! Form::label('carrierL', 'Carrier') !!}
+        <i class="la la-ship icon__modal"></i> {!! Form::label('carrierL', 'Carrier') !!}
         <div class="m-input-icon m-input-icon--right">
           {{ Form::select('carrier_id[]', $carrier,$globalcharges->globalcharcarrier->pluck('carrier_id'),['id' => 'localcarrier','class'=>'m-select2-general form-control','multiple' => 'multiple','required' => 'required']) }}
           <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -151,8 +181,8 @@
     <div class="m-form__actions m-form__actions" style="text-align:center">
       {!! Form::submit('Update', ['class'=> 'btn btn-primary btn-save__modal']) !!}
       <!-- <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">Cancel</span>
-      </button> -->
+<span aria-hidden="true">Cancel</span>
+</button> -->
     </div>
   </div>
   {!! Form::close() !!}

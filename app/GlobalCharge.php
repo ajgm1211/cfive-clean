@@ -56,11 +56,7 @@ class GlobalCharge extends Model implements Auditable
     return $this->hasMany('App\GlobalCharPortCountry','globalcharge_id');
 
   }
-  public function globalcharcountry(){
 
-    return $this->hasMany('App\GlobalCharCountry','globalcharge_id');
-
-  }
   public function globalcharcarrier(){
     return $this->hasMany('App\GlobalCharCarrier','globalcharge_id');
 
