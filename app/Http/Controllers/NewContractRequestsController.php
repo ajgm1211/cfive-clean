@@ -28,9 +28,11 @@ use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Mail\NewRequestToAdminMail;
 use App\Mail\NotificationAutoImport;
 use App\Jobs\SendEmailRequestFclJob;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
 use GuzzleHttp\Exception\RequestException;
@@ -152,18 +154,18 @@ class NewContractRequestsController extends Controller
         $fileBoll = false;
         $time   = new \DateTime();
         $now    = $time->format('dmY_His');
-        $now2   = $time->format('Y-m-d');
+        $now2   = $time->format('Y-m-d H:i:s');
         $file   = $request->file('file');
         $ext    = strtolower($file->getClientOriginalExtension());
-        /* $validator = \Validator::make(
-                array('ext' => $ext),
-                array('ext' => 'in:xls,xlsx,csv')
-            );
-            if ($validator->fails()) {
-                $request->session()->flash('message.nivel', 'danger');
-                $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('Requestimporfcl');
-            }*/
+        /*$validator = \Validator::make(
+            array('ext' => $ext),
+            array('ext' => 'in:xls,xlsx,csv,pdf')
+        );
+        if ($validator->fails()) {
+            $request->session()->flash('message.nivel', 'danger');
+            $request->session()->flash('message.content', 'just archive with extension xlsx, xls, csv and pdf.');
+            return redirect()->route('Requestimporfcl');
+        }*/
         //obtenemos el nombre del archivo
         $nombre = $file->getClientOriginalName();
         $nombre = $now.'_'.$nombre;
@@ -463,10 +465,18 @@ class NewContractRequestsController extends Controller
                         $Ncontract->time_total = 'It did not go through the processing state';
                     } else{
                         $fechaStar = Carbon::parse($Ncontract->time_star);
-                        $Ncontract->time_total = str_replace('after','',$fechaEnd->diffForHumans($fechaStar));
+                        $Ncontract->time_total = $fechaEnd->diffInMinutes($fechaStar).' minutes';
                     }
                 }
             } elseif($Ncontract->status == 'Done'){
+
+                if($Ncontract->time_manager == null){
+                    $fechaEnd = Carbon::parse($now2);
+                    $fechaStar = Carbon::parse($Ncontract->created);
+                    $time_manager = number_format($fechaEnd->diffInMinutes($fechaStar)/60,2);
+                    $Ncontract->time_manager = $time_manager.' hours';
+                    //$Ncontract->time_manager = $fechaEnd->diffInHours($fechaStar).' hours';
+                }
 
                 if($Ncontract->sentemail == false){
                     $users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
@@ -475,7 +485,6 @@ class NewContractRequestsController extends Controller
 
                         $user->notify(new N_general(\Auth::user(),$message));
                     }
-
                     // Intercom SEARCH
                     $event = new  EventIntercom();
                     $event->event_requestDone($Ncontract->user_id);
@@ -484,7 +493,6 @@ class NewContractRequestsController extends Controller
                     $message = "The importation ".$Ncontract->id." was completed";
                     $usercreador->notify(new SlackNotification($message));
                     SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);
-
                 }
             }
 
@@ -586,7 +594,10 @@ class NewContractRequestsController extends Controller
         $dateEnd    = trim($dates[1]);
         $now        = new \DateTime();
         $now        = $now->format('dmY_His');
-        $countNRq   = NewContractRequest::whereBetween('created',[$dateStart,$dateEnd])->count();
+        $dateEnd    = \Carbon\Carbon::parse($dateEnd);
+        $dateEnd    = $dateEnd->addDay()->format('Y-m-d');
+
+        $countNRq   = NewContractRequest::whereBetween('created',[$dateStart.' 00:00:00',$dateEnd.' 23:59:59'])->count();
 
         if($countNRq <= 100){
             $nameFile   = 'Request_Fcl_'.$now;
@@ -597,7 +608,7 @@ class NewContractRequestsController extends Controller
             $myFile = Excel::create($nameFile, function($excel) use($data) {
 
                 $excel->sheet('REQUEST_FCL', function($sheet) use($data) {
-                    $sheet->cells('A1:M1', function($cells) {
+                    $sheet->cells('A1:N1', function($cells) {
                         $cells->setBackground('#2525ba');
                         $cells->setFontColor('#ffffff');
                         //$cells->setValignment('center');
@@ -616,7 +627,8 @@ class NewContractRequestsController extends Controller
                         'J'     =>  25,
                         'K'     =>  25,
                         'L'     =>  15,
-                        'M'     =>  15
+                        'M'     =>  15,
+                        'N'     =>  15
                     ));
 
                     $sheet->row(1, array(
@@ -632,6 +644,7 @@ class NewContractRequestsController extends Controller
                         "Time Start",
                         "Time End",
                         "Time Elapsed",
+                        "Management Time",
                         "Status"
                     ));
                     $i= 2;
@@ -653,22 +666,23 @@ class NewContractRequestsController extends Controller
                                 "Time Start"        => $nrequest['time_start'],
                                 "Time End"          => $nrequest['time_end'],
                                 "Time Elapsed"      => $nrequest['time_elapsed'],
+                                "Management Time"   => $nrequest['time_manager'],
                                 "Status"            => $nrequest['status']
                             ));
-                            $sheet->setBorder('A1:M'.$i, 'thin');
+                            $sheet->setBorder('A1:N'.$i, 'thin');
 
                             $sheet->cells('F'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('K'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $sheet->cells('J'.$i, function($cells) {
                                 $cells->setAlignment('center');
                             });
-                            
+
                             $i++;
                         }
                     }
@@ -695,7 +709,12 @@ class NewContractRequestsController extends Controller
 
     // TEST Request Importation ----------------------------------------------------------
     public function test(){
-        
-        dd(PrvRequest::RequestFclBetween('2019-08-26','2019-08-26'));
+        //2019-10-22 15:11:23
+
+        $file       = File::get(storage_path('app/public/Request/Fcl/04072019_135948_Captura de pantalla de 2019-05-30 15-00-05.png'));
+        $extension = pathinfo(storage_path('app/public/Request/Fcl/08072019_181438_2812-Lantia Maritima_03-07-19-FLC.xlsx'), PATHINFO_EXTENSION);
+        dd($extension);
+        //$Ncontract->time_total = str_replace('after','',$fechaEnd->diffInMinutes($fechaStar));
+        //dd(PrvRequest::RequestFclBetween('2019-08-26','2019-08-26'));
     }
 }
