@@ -16,6 +16,7 @@ class NRequest {
             $time_elapsed   = null;
             $time_star      = null;
             $time_end       = null;
+            $time_manager   = null;
 
             if(empty($Nrequest->direction) == true){
                 $direction = " -------- ";
@@ -34,17 +35,23 @@ class NRequest {
             } else {
                 $time_star = '--------';
             }
-            
+
             if(empty($Nrequest->updated) != true){
                 $time_end = $Nrequest->updated;
             } else {
                 $time_end = '--------';
             }
-            
+
             if(empty($Nrequest->time_total) != true){
                 $time_elapsed = $Nrequest->time_total;
             } else {
                 $time_elapsed = '--------';
+            }
+
+            if(empty($Nrequest->time_manager) != true){
+                $time_manager = $Nrequest->time_manager;
+            } else {
+                $time_manager = '--------';
             }
 
             $arreglo = [
@@ -60,6 +67,7 @@ class NRequest {
                 'time_start'    => $time_star,
                 'time_end'      => $time_end,
                 'time_elapsed'  => $time_elapsed,
+                'time_manager'  => $time_manager,
                 'status'        => $Nrequest->status
             ];
             $collection->push($arreglo);
@@ -79,6 +87,7 @@ class NRequest {
             $time_elapsed   = null;
             $time_star      = null;
             $time_end       = null;
+            $time_manager   = null;
 
             if(empty($Nrequest->direction) == true){
                 $direction = " -------- ";
@@ -91,7 +100,7 @@ class NRequest {
             } else {
                 $carrier = " -------- ";
             }
-            
+
             if(empty($Nrequest->time_star) != true){
                 $time_star = $Nrequest->time_star;
             } else {
@@ -103,11 +112,17 @@ class NRequest {
             } else {
                 $time_end = '--------';
             }
-            
+
             if(empty($Nrequest->time_total) != true){
                 $time_elapsed = $Nrequest->time_total;
             } else {
                 $time_elapsed = '--------';
+            }
+
+            if(empty($Nrequest->time_manager) != true){
+                $time_manager = $Nrequest->time_manager;
+            } else {
+                $time_manager = '--------';
             }
 
             $arreglo = [
@@ -123,6 +138,7 @@ class NRequest {
                 'time_start'    => $time_star,
                 'time_end'      => $time_end,
                 'time_elapsed'  => $time_elapsed,
+                'time_manager'  => $time_manager,
                 'status'        => $Nrequest->status
             ];
             $collection->push($arreglo);

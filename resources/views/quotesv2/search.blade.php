@@ -519,13 +519,13 @@
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
-              <!--
+              
               <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include route CMA-CGM</label>
               </div>
               
-              -->
+              
 
             </div><br>
             <div class="row">
@@ -956,9 +956,9 @@
                         </div>
                         @endif
                         <div class="col-lg-2 no-padding d-flex justify-content-end align-items-center">
-                          @if($arr->excelRequest !="")
+                          @if($arr->excelRequest !="0" && $arr->excelRequestFCL !="0" )
                           <div class="downexcel" style="margin-right: 10px;">
-                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excel/{{ $arr->excelRequest }}"  class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excel/{{ $arr->excelRequest }}/{{ $arr->excelRequestFCL }}"  class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>
