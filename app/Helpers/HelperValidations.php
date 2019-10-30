@@ -79,4 +79,21 @@ class HelperValidations {
         $data = ['bool' => $bool,'job_id' => $job_id];
         return $data;
     }
+
+    // VALIDATE IF A JOB EXISTS IN THE TABLE O EXECUTE
+    public static function SearchDuplicatedWithJob(){
+        $result = false;    
+        $jobs   = ImportationJob::where('queue','duplicateGCFCL')->get();
+        foreach($jobs as $job){
+            $poscion    = null;
+            $json       = json_decode($job['payload']);
+            $poscion    = strripos($json->{'displayName'},'SplitToScriptDuplicatedsGCFCLJob');
+            if(count($poscion) == 1 && $poscion != 0){
+                $result = true;
+                break;
+            }
+        }
+        $data = ['bool' => $result];
+        return $data;
+    }
 }
