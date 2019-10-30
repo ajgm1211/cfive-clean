@@ -492,8 +492,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
   Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
   Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
   Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
-  Route::get('excel/{id}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
-  Route::get('excelLcl/{id}', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
+  Route::get('excel/{id}/{id2}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
+  Route::get('excelLcl/{id2}/', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
   Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
   Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
   Route::post('sale/charges/update', 'SaleTermV2Controller@updateSaleCharges')->name('quotes-v2.saleterm.update.charges');
