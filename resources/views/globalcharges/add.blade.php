@@ -57,7 +57,7 @@
 
           <i class="la la-anchor icon__modal"></i>{!! Form::label('orig', 'Origin Port') !!}
           {{ Form::select('portcountry_orig[]', $harbor,
-          null,['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ,'required' => 'true' ]) }}
+          null,['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
 
         </div>
         <div class="divcountryport" hidden="true">
@@ -98,7 +98,7 @@
           <i class="la la-anchor icon__modal"></i>{!! Form::label('dest', 'Destination Port') !!}
 
           {{ Form::select('countryport_dest[]', $harbor,
-          null,['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple','required' => 'true' ]) }}
+          null,['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
 
         </div>
 
