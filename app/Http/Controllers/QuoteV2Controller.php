@@ -7496,7 +7496,7 @@ public function processSearchLCL(Request $request)
 
     // EXCEL REQUEST 
 
-    $excelRequestLCL = ContractLclFile::where('contract_id',$data->contract->id)->first();
+    $excelRequestLCL = ContractLclFile::where('contractlcl_id',$data->contract->id)->first();
     if(!empty($excelRequestLCL)){
       $excelRequestIdLCL = $excelRequestLCL->id;
     }else{
