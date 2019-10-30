@@ -931,7 +931,7 @@
                         </div>
                         @endif
                         <div class="col-lg-3 no-padding d-flex justify-content-end">
-                          @if($arr->excelRequest !="0" && $arr->excelRequestLCL !="0" )
+                          @if(($arr->excelRequest  !="0") || ($arr->excelRequestLCL !="0") )
                           <div class="downexcel" style="margin-right: 10px;">
                             <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excelLcl/{{ $arr->excelRequest }}/{{ $arr->excelRequestLCL }}"  class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
