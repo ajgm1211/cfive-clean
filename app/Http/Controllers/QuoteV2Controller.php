@@ -4957,15 +4957,35 @@ class QuoteV2Controller extends Controller
 
       if($contractStatus != 'api'){ 
 
-        $globalChar = GlobalCharge::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function($q) use($carrier) {
+       $globalChar = GlobalCharge::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function($q) use($carrier) {
           $q->whereIn('carrier_id', $carrier);
         })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
           $query->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
             $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
           })->orwhereHas('globalcharcountry', function($q) use($origin_country,$destiny_country) {
             $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharportcountry', function($q) use($orig_port,$destiny_country) {
+            $q->whereIn('port_orig', $orig_port)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharcountryport', function($q) use($origin_country,$dest_port) {
+            $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
           });
         })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+        
+        
+        $globalChar = GlobalCharge::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function($q) use($carrier) {
+          $q->whereIn('carrier_id', $carrier);
+        })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
+          $query->orwhereHas('globalcharport', function($q) use($orig_port,$dest_port) {
+            $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
+          })->orwhereHas('globalcharcountry', function($q) use($origin_country,$destiny_country) {
+            $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharportcountry', function($q) use($orig_port,$destiny_country) {
+            $q->whereIn('port_orig', $orig_port)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharcountryport', function($q) use($origin_country,$dest_port) {
+            $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
+          });
+        })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+        
 
 
         foreach($globalChar as $global){
