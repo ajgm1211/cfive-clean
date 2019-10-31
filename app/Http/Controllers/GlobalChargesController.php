@@ -192,10 +192,10 @@ class GlobalChargesController extends Controller
     $deleteCountryPort = GlobalCharCountryPort::where("globalcharge_id",$id);
     $deleteCountryPort->delete();
 
-    
-      
 
-      $typerate =  $request->input('typeroute');
+
+
+    $typerate =  $request->input('typeroute');
     if($typerate == 'port'){
       $port_orig = $request->input('port_orig');
       $port_dest = $request->input('port_dest');
@@ -362,7 +362,25 @@ class GlobalChargesController extends Controller
     $globalcharges = GlobalCharge::find($id);
     $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
     $globalcharges->setAttribute('validation_expire',$validation_expire);
-    return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+    $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+
+    if(!$globalcharges->globalcharcountry->isEmpty()){
+      $activacion['rdrouteC'] = true;
+      $activacion['act'] = 'divcountry';
+    }
+    if(!$globalcharges->globalcharportcountry->isEmpty()){
+      $activacion['rdroutePC'] = true;
+      $activacion['act'] = 'divportcountry';
+    }
+    if(!$globalcharges->globalcharcountryport->isEmpty()){
+      $activacion['rdrouteCP'] = true;
+      $activacion['act'] = 'divcountryport';
+    }
+    if(!$globalcharges->globalcharport->isEmpty()){
+      $activacion['rdrouteP'] = true;
+      $activacion['act'] = 'divport';
+    }
+    return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion'));
   }
 
   public function show($id)
