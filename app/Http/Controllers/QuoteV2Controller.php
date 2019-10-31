@@ -247,6 +247,12 @@ class QuoteV2Controller extends Controller
     $equipmentHides = '';
 
     //Retrieving all data
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    if(count($company_user->companyUser)>0) {
+      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+    }else{
+      $currency_name = '';
+    }
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
     $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
@@ -254,18 +260,11 @@ class QuoteV2Controller extends Controller
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
     $harbors = Harbor::get()->pluck('display_name','id');
     $countries = Country::pluck('name','id');
-    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-    if(count($company_user->companyUser)>0) {
-      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-    }else{
-      $currency_name = '';
-    }
     $currency_cfg = Currency::find($company_user->currency_id);
     $sale_terms = SaleTermV2::where('quote_id',$quote->id)->get();
     $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
     $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
-    //if($sale_terms_origin->count()>0){
     foreach($sale_terms_origin as $value){
       foreach($value->charge as $item){
         if($item->currency_id!=''){
@@ -283,10 +282,7 @@ class QuoteV2Controller extends Controller
         }
       }
     }
-    //}
 
-
-    //if($sale_terms_destination->count()>0){
     foreach($sale_terms_destination as $value){
       foreach($value->charge as $item){
         if($item->currency_id!=''){
@@ -304,7 +300,6 @@ class QuoteV2Controller extends Controller
         }
       }
     }
-    //}
 
     $origin_sales = $sale_terms_origin->map(function ($origin) {
       return collect($origin->toArray())
@@ -317,6 +312,7 @@ class QuoteV2Controller extends Controller
         ->only(['port_id'])
         ->all();
     });
+
     //Ports when saleterms
     $port_origin_ids = $rates->implode('origin_port_id', ', ');
     $port_origin_ids = explode(",",$port_origin_ids);
@@ -333,7 +329,6 @@ class QuoteV2Controller extends Controller
     $rate_origin_airports = Airport::whereIn('id',$airport_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
     $rate_destination_airports = Airport::whereIn('id',$airport_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
 
-    $prices = Price::pluck('name','id');
     $carrierMan = Carrier::pluck('name','id');
     $airlines = Airline::pluck('name','id');
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
@@ -747,15 +742,6 @@ class QuoteV2Controller extends Controller
     $charge->$name=$request->value;
     $charge->update();
     return response()->json(['success'=>'Ok']);
-  }
-
-  //Actualiza opciones del PDF
-  public function updatePdfFeature(Request $request){
-    $name=$request->name;
-    $pdf = PdfOption::where('quote_id',$request->id)->first();
-    $pdf->$name=$request->value;
-    $pdf->update();
-    return response()->json(['message'=>'Ok']);
   }
 
   /**
