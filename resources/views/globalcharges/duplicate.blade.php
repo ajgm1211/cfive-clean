@@ -1,21 +1,6 @@
-@if(!$globalcharges->globalcharport->isEmpty())
-@php
-$portRadio = true; 
-$countryRadio = false; 
-@endphp
 <script>
-  activarCountry('divport');
+  activarCountry('{{ $activacion['act'] }}');
 </script>
-@endif
-@if(!$globalcharges->globalcharcountry->isEmpty())
-@php
-$countryRadio = true; 
-$portRadio = false; 
-@endphp
-<script>
-  activarCountry('divcountry');
-</script>
-@endif
 <div class="m-portlet">
 
   {{ Form::model($globalcharges, array('route' => array('globalcharges.store', $globalcharges->id), 'id' => 'frmSurcharges')) }}
@@ -23,17 +8,25 @@ $portRadio = false;
     <div class="form-group m-form__group row">
       <div class="col-lg-12">
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-lg-8">
             <label>
               {!! Form::label('Type Route', 'Type of route') !!}
             </label>
             <div class="m-radio-inline">
               <label class="m-radio">
-                {{ Form::radio('typeroute', 'port', $portRadio ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }} Port
+                {{ Form::radio('typeroute', 'port', $activacion['rdrouteP'] ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }} Port
                 <span></span>
               </label>
               <label class="m-radio">
-                {{ Form::radio('typeroute', 'country', $countryRadio ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
+                {{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
+                <span></span>
+              </label>
+              <label class="m-radio">
+                {{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\')' ]) }} Port to Country
+                <span></span>
+              </label>
+              <label class="m-radio">
+                {{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\')' ]) }}  Country to Port
                 <span></span>
               </label>
             </div>
@@ -59,6 +52,19 @@ $portRadio = false;
           $globalcharges->globalcharcountry->pluck('countryOrig')->unique()->pluck('id'),['id' => 'country_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple']) }}
 
         </div>
+        <div class="divportcountry" hidden="true">
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('origPC', 'Origin Port') !!}
+          {{ Form::select('portcountry_orig[]', $harbor,$globalcharges->globalcharportcountry->pluck('portOrig')->unique()->pluck('id'),['id' => 'portcountry_orig','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
+
+        </div>
+        <div class="divcountryport" hidden="true">
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('origCP', 'Origin Country') !!}
+          {{ Form::select('countryport_orig[]', $countries,$globalcharges->globalcharcountryport->pluck('countryOrig')->unique()->pluck('id'),['id' => 'countryport_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
+
+        </div>
+  
       </div>
       <div class="col-lg-4">
         <div class="divport" >
@@ -75,6 +81,16 @@ $portRadio = false;
         <div class="divcountry" hidden="true">
           {!! Form::label('destC', 'Destination Country') !!}
           {{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
+        </div>
+              <div class="divportcountry" hidden="true" >
+
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('destPC', 'Destination Country') !!}
+          {{ Form::select('portcountry_dest[]',$countries,$globalcharges->globalcharportcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
+
+        </div>
+        <div class="divcountryport" hidden="true" >
+          <i class="la la-anchor icon__modal"></i>{!! Form::label('destCP', 'Destination Port') !!}
+          {{ Form::select('countryport_dest[]', $harbor,$globalcharges->globalcharcountryport->pluck('portDest')->unique()->pluck('id'),['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
         </div>
       </div>
     </div>

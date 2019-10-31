@@ -113,10 +113,10 @@ New \ Status Import  &nbsp;
                                         Type
                                     </th>
                                     <th>
-                                        Origin Port
+                                        Origin 
                                     </th>
                                     <th>
-                                        Destination Port
+                                        Destination 
                                     </th>
                                     <th>
                                         Charge Type
