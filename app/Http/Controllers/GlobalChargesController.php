@@ -575,6 +575,13 @@ class GlobalChargesController extends Controller
         'origin_country' =>   $data1[$i]->origin_country,
         'destination_port' =>  $data1[$i]->destination_port,
         'destination_country' =>   $data1[$i]->destination_country,
+
+        'portcountry_orig' =>  $data1[$i]->portcountry_orig,
+        'portcountry_dest' =>   $data1[$i]->portcountry_dest,
+
+        'countryport_orig' =>  $data1[$i]->countryport_orig,
+        'countryport_dest' =>   $data1[$i]->countryport_dest,
+
         'carrier' => $data1[$i]->carrier,
         'amount' =>   $data1[$i]->amount,
         'currency_code' =>   $data1[$i]->currency_code,
@@ -597,12 +604,22 @@ class GlobalChargesController extends Controller
         } else if(empty($globalcharges['origin_country']) != true) {
           return $globalcharges['origin_country']; 
         }
+        else if(empty($globalcharges['portcountry_orig']) != true) {
+          return $globalcharges['portcountry_orig']; 
+        }
+        else if(empty($globalcharges['countryport_orig']) != true) {
+          return $globalcharges['countryport_orig']; 
+        }
       })
       ->addColumn('destiny_portLb', function ($globalcharges){ 
         if(empty($globalcharges['destination_port']) != true){
           return $globalcharges['destination_port'];
         } else if(empty($globalcharges['destination_country']) != true) {
           return $globalcharges['destination_country']; 
+        }else if(empty($globalcharges['portcountry_dest']) != true) {
+          return $globalcharges['portcountry_dest']; 
+        }else if(empty($globalcharges['countryport_dest']) != true) {
+          return $globalcharges['countryport_dest']; 
         }
       })
       ->addColumn('typedestinylb', function ($globalcharges){ 
