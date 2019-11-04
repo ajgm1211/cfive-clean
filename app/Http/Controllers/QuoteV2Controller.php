@@ -6052,7 +6052,7 @@ class QuoteV2Controller extends Controller
 
       $arrayBlHblShip = array('1','2','3'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL
       $arraytonM3 = array('4','11'); //  calculation type 4 = Per ton/m3
-      $arraytonCompli = array('6','7'); //  calculation type 4 = Per ton/m3
+      $arraytonCompli = array('6','7','12','13'); //  calculation type 4 = Per ton/m3
       $arrayPerTon = array('5','10'); //  calculation type 5 = Per  TON 
       $arrayPerKG = array('9'); //  calculation type 5 = Per  TON 
 
@@ -6437,7 +6437,12 @@ class QuoteV2Controller extends Controller
 
               if($chargesOrigin != null){
                 if($local->typedestiny_id == '1'){
-                  if($local->calculationtypelcl_id == '7'){
+                  if($local->calculationtypelcl_id == '7' || $local->calculationtypelcl_id == '13' ){
+
+                    if($local->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
+
                     $subtotal_local =  $totalV * $local->ammount;
                     $totalAmmount =  ( $totalV * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -6450,6 +6455,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($local->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -6487,7 +6495,10 @@ class QuoteV2Controller extends Controller
 
               if($chargesDestination != null){
                 if($local->typedestiny_id == '2'){
-                  if($local->calculationtypelcl_id == '7'){
+                  if($local->calculationtypelcl_id == '7' || $local->calculationtypelcl_id == '13'){
+                    if($local->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
                     $subtotal_local =  $totalV * $local->ammount;
                     $totalAmmount =  ( $totalV * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -6500,6 +6511,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($local->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -6539,7 +6553,10 @@ class QuoteV2Controller extends Controller
 
               if($chargesFreight != null){
                 if($local->typedestiny_id == '3'){
-                  if($local->calculationtypelcl_id == '7'){
+                  if($local->calculationtypelcl_id == '7' || $local->calculationtypelcl_id == '13'){
+                    if($local->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
                     $subtotal_local =  $totalV * $local->ammount;
                     $totalAmmount =  ( $totalV * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -6552,6 +6569,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($local->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_local =  $totalW * $local->ammount;
                     $totalAmmount =  ( $totalW * $local->ammount)  / $rateMount;
                     $mont = $local->ammount;
@@ -7096,7 +7116,10 @@ class QuoteV2Controller extends Controller
               if($chargesOrigin != null){
                 if($global->typedestiny_id == '1'){
 
-                  if($global->calculationtypelcl_id == '7'){
+                  if($global->calculationtypelcl_id == '7' || $global->calculationtypelcl_id == '13'){
+                    if($global->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
                     $subtotal_global =  $totalV * $global->ammount;
                     $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7109,6 +7132,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($global->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7146,7 +7172,10 @@ class QuoteV2Controller extends Controller
 
               if($chargesDestination != null){
                 if($global->typedestiny_id == '2'){
-                  if($global->calculationtypelcl_id == '7'){
+                  if($global->calculationtypelcl_id == '7' || $global->calculationtypelcl_id == '13'){
+                    if($global->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
                     $subtotal_global =  $totalV * $global->ammount;
                     $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7159,6 +7188,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($global->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7196,7 +7228,10 @@ class QuoteV2Controller extends Controller
               if($chargesFreight != null){
                 if($global->typedestiny_id == '3'){
 
-                  if($global->calculationtypelcl_id == '7'){
+                  if($global->calculationtypelcl_id == '7' || $global->calculationtypelcl_id == '13'){
+                    if($global->calculationtypelcl_id == '13'){
+                      $totalV = ceil($totalV);
+                    }
                     $subtotal_global =  $totalV * $global->ammount;
                     $totalAmmount =  ( $totalV * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7209,6 +7244,9 @@ class QuoteV2Controller extends Controller
 
                     }
                   }else{
+                    if($global->calculationtypelcl_id == '12'){
+                      $totalW = ceil($totalW);
+                    }
                     $subtotal_global =  $totalW * $global->ammount;
                     $totalAmmount =  ( $totalW * $global->ammount)  / $rateMountG;
                     $mont = $global->ammount;
@@ -7561,8 +7599,8 @@ class QuoteV2Controller extends Controller
 
 
     }
-    
-          $arreglo  =  $arreglo->sortBy('totalQuote');
+
+    $arreglo  =  $arreglo->sortBy('totalQuote');
 
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
