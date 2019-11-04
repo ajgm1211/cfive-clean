@@ -7561,6 +7561,8 @@ class QuoteV2Controller extends Controller
 
 
     }
+    
+          $arreglo  =  $arreglo->sortBy('totalQuote');
 
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
