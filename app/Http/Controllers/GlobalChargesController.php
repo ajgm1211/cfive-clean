@@ -759,4 +759,39 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.content', 'You successfully add this contract.');
         return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
+
+    public function editDateArrAdm(Request $request){
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT      = $request->input('reload_DT');
+
+        $company_users      = CompanyUser::pluck('name','id');
+        $globals_id_array   = $request->input('idAr');
+        $count = count($globals_id_array);
+        //$global             = $global->toArray();
+        return view('globalchargesAdm.EditDatesArray',compact('count','company_users','globals_id_array','company_user_id_selec','carrier_id_selec','reload_DT'));
+    }
+
+    public function updateDateArrAdm(Request $request){
+        //dd($request->all());
+        $date = explode('/',$request->validation_expire);
+        $date_start = trim($date[0]);
+        $date_end   = trim($date[1]);
+        foreach($request->idArray as $global){
+            $globalObj = null;
+            $globalObj = GlobalCharge::find($global);
+            $globalObj->validity    = $date_start;
+            $globalObj->expire      = $date_end;
+            $globalObj->update();
+        }
+
+        $company_user_id_selec  = $request->input('company_user_id_selec');
+        $carrier_id_selec       = $request->input('carrier_id_selec');
+        $reload_DT              = $request->input('reload_DT');
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        $request->session()->flash('message.content', 'You successfully updated.');
+        return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
+    }
 }
