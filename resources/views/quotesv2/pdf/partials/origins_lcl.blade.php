@@ -257,11 +257,12 @@
                                             <td>{{$v->surcharge->name}}</td>
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
                                                 @php
-                                                    echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                    //echo str_replace("Per", "Por", $v->calculation_type->name); 
                                                 @endphp
+                                                {{@$v->calculation_type->display_name}}
                                             </td>
-                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
-                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             @if($quote->type=='LCL')
                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                             @else

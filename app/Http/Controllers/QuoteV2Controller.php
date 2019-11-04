@@ -2881,7 +2881,7 @@ class QuoteV2Controller extends Controller
       $sum_total_45+=number_format($total_45, 2, '.', '');
     }
 
-    return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode,'sum_total_20'=>$sum_total_20,'sum_total_40'=>$sum_total_40,'sum_total_40hc'=>$sum_total_40hc,'sum_total_40nor'=>$sum_total_40nor,'sum_total_45'=>$sum_total_45]);
+    return response()->json(['message' => 'Ok','amount20'=>$amount20,'markup20'=>$markup20,'total_20'=>$total_20,'amount40'=>$amount40,'markup40'=>$markup40,'total_40'=>$total_40,'amount40hc'=>$amount40hc,'markup40hc'=>$markup40hc,'total_40hc'=>$total_40hc,'amount40nor'=>$amount40nor,'markup40nor'=>$markup40nor,'total_40nor'=>$total_40nor,'amount45'=>$amount45,'markup45'=>$markup45,'total_45'=>$total_45,'surcharge'=>$surcharge->name,'calculation_type'=>$calculation_type->name,'currency'=>$currency_charge->alphacode,'sum_total_20'=>$sum_total_20,'sum_total_40'=>$sum_total_40,'sum_total_40hc'=>$sum_total_40hc,'sum_total_40nor'=>$sum_total_40nor,'sum_total_45'=>$sum_total_45,'id'=>$charge->id]);
 
   }
 
@@ -2902,7 +2902,7 @@ class QuoteV2Controller extends Controller
     $charge = ChargeLclAir::find($charge->id);
     $total=($charge->units*$charge->price_per_unit)+$charge->markup;
 
-    return response()->json(['message' => 'Ok','surcharge'=>$charge->surcharge->name,'calculation_type'=>$charge->calculation_type->name,'units'=>$charge->units,'rate'=>$charge->price_per_unit,'markup'=>$charge->markup,'total'=>$total,'currency'=>$charge->currency->alphacode,'type'=>$charge->type_id]);
+    return response()->json(['message' => 'Ok','surcharge'=>$charge->surcharge->name,'calculation_type'=>$charge->calculation_type->name,'units'=>$charge->units,'rate'=>$charge->price_per_unit,'markup'=>$charge->markup,'total'=>$total,'currency'=>$charge->currency->alphacode,'type'=>$charge->type_id,'id'=>$charge->id]);
 
   }
 
