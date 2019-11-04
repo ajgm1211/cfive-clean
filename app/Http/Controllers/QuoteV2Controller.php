@@ -248,6 +248,12 @@ class QuoteV2Controller extends Controller
     $equipmentHides = '';
 
     //Retrieving all data
+    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+    if(count($company_user->companyUser)>0) {
+      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+    }else{
+      $currency_name = '';
+    }
     $company_user_id = \Auth::user()->company_user_id;
     $quote = QuoteV2::findOrFail($id);
     $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
@@ -255,18 +261,11 @@ class QuoteV2Controller extends Controller
     $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
     $harbors = Harbor::get()->pluck('display_name','id');
     $countries = Country::pluck('name','id');
-    $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-    if(count($company_user->companyUser)>0) {
-      $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
-    }else{
-      $currency_name = '';
-    }
     $currency_cfg = Currency::find($company_user->currency_id);
     $sale_terms = SaleTermV2::where('quote_id',$quote->id)->get();
     $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
     $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
-    //if($sale_terms_origin->count()>0){
     foreach($sale_terms_origin as $value){
       foreach($value->charge as $item){
         if($item->currency_id!=''){
@@ -284,10 +283,7 @@ class QuoteV2Controller extends Controller
         }
       }
     }
-    //}
 
-
-    //if($sale_terms_destination->count()>0){
     foreach($sale_terms_destination as $value){
       foreach($value->charge as $item){
         if($item->currency_id!=''){
@@ -305,7 +301,6 @@ class QuoteV2Controller extends Controller
         }
       }
     }
-    //}
 
     $origin_sales = $sale_terms_origin->map(function ($origin) {
       return collect($origin->toArray())
@@ -318,6 +313,7 @@ class QuoteV2Controller extends Controller
         ->only(['port_id'])
         ->all();
     });
+
     //Ports when saleterms
     $port_origin_ids = $rates->implode('origin_port_id', ', ');
     $port_origin_ids = explode(",",$port_origin_ids);
@@ -334,7 +330,6 @@ class QuoteV2Controller extends Controller
     $rate_origin_airports = Airport::whereIn('id',$airport_origin_ids)->whereNotIn('id',$origin_sales)->pluck('display_name','id');
     $rate_destination_airports = Airport::whereIn('id',$airport_destination_ids)->whereNotIn('id',$destination_sales)->pluck('display_name','id');
 
-    $prices = Price::pluck('name','id');
     $carrierMan = Carrier::pluck('name','id');
     $airlines = Airline::pluck('name','id');
     $companies = Company::where('company_user_id',$company_user_id)->pluck('business_name','id');
@@ -748,15 +743,6 @@ class QuoteV2Controller extends Controller
     $charge->$name=$request->value;
     $charge->update();
     return response()->json(['success'=>'Ok']);
-  }
-
-  //Actualiza opciones del PDF
-  public function updatePdfFeature(Request $request){
-    $name=$request->name;
-    $pdf = PdfOption::where('quote_id',$request->id)->first();
-    $pdf->$name=$request->value;
-    $pdf->update();
-    return response()->json(['message'=>'Ok']);
   }
 
   /**
@@ -3025,6 +3011,48 @@ class QuoteV2Controller extends Controller
 
   }
 
+  function saveTerms($quoteId,$type,$modo){
+
+    $companyUser = CompanyUser::All();
+    $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
+    $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type',$type)->with('language')->get();
+
+
+    $terminos_english="";
+    $terminos_spanish="";
+    $terminos_portuguese="";
+
+    //Export
+    foreach($terms as $term){
+      if($modo == '1'){
+        if($term->language_id == '1')
+          $terminos_english .=$term->export."<br>";
+        if($term->language_id == '2')
+          $terminos_spanish .=$term->export."<br>";
+        if($term->language_id == '3')
+          $terminos_portuguese .=$term->export."<br>";
+      }else{ // import
+
+        if($term->language_id == '1')
+          $terminos_english .=$term->import."<br>";
+        if($term->language_id == '2')
+          $terminos_spanish .=$term->import."<br>";
+        if($term->language_id == '3')
+          $terminos_portuguese .=$term->import."<br>";
+      }
+    }
+
+    $quoteEdit = QuoteV2::find($quoteId);
+    $quoteEdit->terms_english= $terminos_english;
+    $quoteEdit->terms_and_conditions = $terminos_spanish;
+    $quoteEdit->terms_portuguese = $terminos_portuguese;
+
+    $quoteEdit->update();
+
+
+  }
+
+
   public function store(Request $request){
     if(!empty($request->input('form'))){
       $form =  json_decode($request->input('form'));
@@ -3133,7 +3161,7 @@ class QuoteV2Controller extends Controller
       }
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=> $typeText,'delivery_type'=>$delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id ,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' , 'date_issued'=>$since ,'payment_conditions' => $payments ,'price_id' => $priceId ]);
       $quote= QuoteV2::create($request->all());
-
+      $modo  =  $request->input('mode');
       // FCL
       if($typeText == 'FCL' ){
         foreach($request->input('originport') as $origP){
@@ -3162,6 +3190,8 @@ class QuoteV2Controller extends Controller
 
           }
         }
+
+        $this->saveTerms($quote->id,'FCL',$modo);
       }
       if($typeText == 'LCL'){
         foreach($request->input('originport') as $origP){
@@ -3193,6 +3223,8 @@ class QuoteV2Controller extends Controller
 
           }
         }
+
+        $this->saveTerms($quote->id,'LCL',$modo);
       }
       if($typeText == 'AIR' ){
 
@@ -3263,12 +3295,16 @@ class QuoteV2Controller extends Controller
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
       $pdf_option->save();
+
+
+
       // MANUAL RATE
     }
 
-    //AUTOMATIC QUOTE
+    //CONDICION PARA GUARDAR AUTOMATIC QUOTE
     if(!empty($info)){
       $terms = '';
+
       foreach($info as $infoA){
         $info_D = json_decode($infoA);
 
@@ -3497,47 +3533,13 @@ class QuoteV2Controller extends Controller
           $chargeFreight->total =  $arregloMarkupsF;
           $chargeFreight->save();
         }
+
       }  
 
       // Terminos Automatica
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $language_id = $company->companyUser->pdf_language;
-
-      $modo  =  $request->input('mode');
-      $companyUser = CompanyUser::All();
-      $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-      $terms = TermAndConditionV2::where('company_user_id', Auth::user()->company_user_id)->where('type','FCL')->with('language')->get();
-
-
-      $terminos_english="";
-      $terminos_spanish="";
-      $terminos_portuguese="";
-      //Export
-      foreach($terms as $term){
-        if($modo == '1'){
-          if($term->language_id == '1')
-            $terminos_english .=$term->export."<br>";
-          if($term->language_id == '2')
-            $terminos_spanish .=$term->export."<br>";
-          if($term->language_id == '3')
-            $terminos_portuguese .=$term->export."<br>";
-        }else{ // import
-
-          if($term->language_id == '1')
-            $terminos_english .=$term->import."<br>";
-          if($term->language_id == '2')
-            $terminos_spanish .=$term->import."<br>";
-          if($term->language_id == '3')
-            $terminos_portuguese .=$term->import."<br>";
-        }
-      }
-
-      $quoteEdit = QuoteV2::find($quote->id);
-      $quoteEdit->terms_english= $terminos_english;
-      $quoteEdit->terms_and_conditions = $terminos_spanish;
-      $quoteEdit->terms_portuguese = $terminos_portuguese;
-
-      $quoteEdit->update();
+      $this->saveTerms($quote->id,'FCL',$form->mode);
     }
 
     //$request->session()->flash('message.nivel', 'success');
@@ -4957,15 +4959,22 @@ class QuoteV2Controller extends Controller
 
       if($contractStatus != 'api'){ 
 
+
+
         $globalChar = GlobalCharge::where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->whereHas('globalcharcarrier', function($q) use($carrier) {
           $q->whereIn('carrier_id', $carrier);
         })->where(function ($query) use($orig_port,$dest_port,$origin_country,$destiny_country){
-          $query->whereHas('globalcharport', function($q) use($orig_port,$dest_port) {
+          $query->orwhereHas('globalcharport', function($q) use($orig_port,$dest_port) {
             $q->whereIn('port_orig', $orig_port)->whereIn('port_dest', $dest_port);
           })->orwhereHas('globalcharcountry', function($q) use($origin_country,$destiny_country) {
             $q->whereIn('country_orig', $origin_country)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharportcountry', function($q) use($orig_port,$destiny_country) {
+            $q->whereIn('port_orig', $orig_port)->whereIn('country_dest', $destiny_country);
+          })->orwhereHas('globalcharcountryport', function($q) use($origin_country,$dest_port) {
+            $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
           });
         })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+
 
 
         foreach($globalChar as $global){
@@ -7552,6 +7561,8 @@ class QuoteV2Controller extends Controller
 
 
     }
+    
+          $arreglo  =  $arreglo->sortBy('totalQuote');
 
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
