@@ -70,7 +70,7 @@
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->airline->name}}</td>
                                 @endif
                                 <td >{{@$total_origin+@$total_sale_terms_origin}}</td>
-                                <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+                                <td >{{$quote->pdf_option->origin_charges_currency!="" ? $quote->pdf_option->origin_charges_currency:$currency_cfg->alphacode}}</td>
                             </tr>
                             @endforeach
                             </tbody>
