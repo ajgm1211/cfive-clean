@@ -64,7 +64,7 @@
           {{ Form::select('countryport_orig[]', $countries,$globalcharges->globalcharcountryport->pluck('countryOrig')->unique()->pluck('id'),['id' => 'countryport_orig','class'=>'m-select2-general form-control col-lg-12','multiple' => 'multiple' ]) }}
 
         </div>
-  
+
       </div>
       <div class="col-lg-4">
         <div class="divport" >
@@ -82,7 +82,7 @@
           {!! Form::label('destC', 'Destination Country') !!}
           {{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
         </div>
-              <div class="divportcountry" hidden="true" >
+        <div class="divportcountry" hidden="true" >
 
           <i class="la la-anchor icon__modal"></i>{!! Form::label('destPC', 'Destination Country') !!}
           {{ Form::select('portcountry_dest[]',$countries,$globalcharges->globalcharportcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'portcountry_dest','class'=>'m-select2-general form-control' ,'multiple' => 'multiple'   ]) }}
@@ -92,6 +92,7 @@
           <i class="la la-anchor icon__modal"></i>{!! Form::label('destCP', 'Destination Port') !!}
           {{ Form::select('countryport_dest[]', $harbor,$globalcharges->globalcharcountryport->pluck('portDest')->unique()->pluck('id'),['id' => 'countryport_dest','class'=>'m-select2-general form-control ','multiple' => 'multiple' ]) }}
         </div>
+        
       </div>
     </div>
     <div class="form-group m-form__group row">
