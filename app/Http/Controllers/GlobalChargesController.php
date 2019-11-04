@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
 use Illuminate\Support\Collection as Collection;
+use App\GlobalCharCountryPort;
+use App\GlobalCharPortCountry;
 
 class GlobalChargesController extends Controller
 {
@@ -70,6 +72,8 @@ class GlobalChargesController extends Controller
                 $detailcarrier->save();
             }
             $typerate =  $request->input('typeroute');
+
+
             if($typerate == 'port'){
                 $detailport = $request->input('port_orig');
                 $detailportDest = $request->input('port_dest');
@@ -100,7 +104,39 @@ class GlobalChargesController extends Controller
                     }
                 }
 
+            }elseif($typerate == 'portcountry'){
+                $detailPortCountrytOrig =$request->input('portcountry_orig');
+                $detailPortCountryDest = $request->input('portcountry_dest');
+                foreach($detailPortCountrytOrig as $p => $valuePCorig)
+                {
+                    foreach($detailPortCountryDest as $dest => $valuePCdest)
+                    {
+                        $detail = new GlobalCharPortCountry();
+                        $detail->port_orig = $valuePCorig;
+                        $detail->country_dest =  $valuePCdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
+                }
+
+            }elseif($typerate == 'countryport'){
+                $detailCountryPortOrig =$request->input('countryport_orig');
+                $detailCountryPortDest = $request->input('countryport_dest');
+                foreach($detailCountryPortOrig as $p => $valueCPorig)
+                {
+                    foreach($detailCountryPortDest as $dest => $valueCPdest)
+                    {
+                        $detail = new GlobalCharCountryPort();
+                        $detail->country_orig = $valueCPorig;
+                        $detail->port_dest =  $valueCPdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
+                }
+
             }
+
+
         }
         // EVENTO INTERCOM 
         $event = new  EventIntercom();
@@ -150,6 +186,15 @@ class GlobalChargesController extends Controller
         $deleteCountry = GlobalCharCountry::where("globalcharge_id",$id);
         $deleteCountry->delete();
 
+        $deletePortCountry = GlobalCharPortCountry::where("globalcharge_id",$id);
+        $deletePortCountry->delete();
+
+        $deleteCountryPort = GlobalCharCountryPort::where("globalcharge_id",$id);
+        $deleteCountryPort->delete();
+
+
+
+
         $typerate =  $request->input('typeroute');
         if($typerate == 'port'){
             $port_orig = $request->input('port_orig');
@@ -181,6 +226,36 @@ class GlobalChargesController extends Controller
                     $detailcountry->save();
                 }
             }
+        }elseif($typerate == 'portcountry'){
+            $detailPortCountrytOrig =$request->input('portcountry_orig');
+            $detailPortCountryDest = $request->input('portcountry_dest');
+            foreach($detailPortCountrytOrig as $p => $valuePCorig)
+            {
+                foreach($detailPortCountryDest as $dest => $valuePCdest)
+                {
+                    $detail = new GlobalCharPortCountry();
+                    $detail->port_orig = $valuePCorig;
+                    $detail->country_dest =  $valuePCdest;
+                    $detail->globalcharge()->associate($global);
+                    $detail->save();
+                }
+            }
+
+        }elseif($typerate == 'countryport'){
+            $detailCountryPortOrig =$request->input('countryport_orig');
+            $detailCountryPortDest = $request->input('countryport_dest');
+            foreach($detailCountryPortOrig as $p => $valueCPorig)
+            {
+                foreach($detailCountryPortDest as $dest => $valueCPdest)
+                {
+                    $detail = new GlobalCharCountryPort();
+                    $detail->country_orig = $valueCPorig;
+                    $detail->port_dest =  $valueCPdest;
+                    $detail->globalcharge()->associate($global);
+                    $detail->save();
+                }
+            }
+
         }
 
 
@@ -227,7 +302,29 @@ class GlobalChargesController extends Controller
         $globalcharges = GlobalCharge::find($id);
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
-        return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+
+        $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+
+        if(!$globalcharges->globalcharcountry->isEmpty()){
+            $activacion['rdrouteC'] = true;
+            $activacion['act'] = 'divcountry';
+        }
+        if(!$globalcharges->globalcharportcountry->isEmpty()){
+            $activacion['rdroutePC'] = true;
+            $activacion['act'] = 'divportcountry';
+        }
+        if(!$globalcharges->globalcharcountryport->isEmpty()){
+            $activacion['rdrouteCP'] = true;
+            $activacion['act'] = 'divcountryport';
+        }
+        if(!$globalcharges->globalcharport->isEmpty()){
+            $activacion['rdrouteP'] = true;
+            $activacion['act'] = 'divport';
+        }
+
+        //dd($activacion);
+
+        return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion'));
     }
 
     public function addGlobalChar(){
@@ -265,7 +362,25 @@ class GlobalChargesController extends Controller
         $globalcharges = GlobalCharge::find($id);
         $validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
-        return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries'));
+        $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+
+        if(!$globalcharges->globalcharcountry->isEmpty()){
+            $activacion['rdrouteC'] = true;
+            $activacion['act'] = 'divcountry';
+        }
+        if(!$globalcharges->globalcharportcountry->isEmpty()){
+            $activacion['rdroutePC'] = true;
+            $activacion['act'] = 'divportcountry';
+        }
+        if(!$globalcharges->globalcharcountryport->isEmpty()){
+            $activacion['rdrouteCP'] = true;
+            $activacion['act'] = 'divcountryport';
+        }
+        if(!$globalcharges->globalcharport->isEmpty()){
+            $activacion['rdrouteP'] = true;
+            $activacion['act'] = 'divport';
+        }
+        return view('globalcharges.duplicate', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion'));
     }
 
     public function show($id)
@@ -281,6 +396,10 @@ class GlobalChargesController extends Controller
                     return $globalcharges->port_orig;
                 } else if(empty($globalcharges->country_orig) != true) {
                     return $globalcharges->country_orig; 
+                }else if(empty($globalcharges->portcountry_orig) != true) {
+                    return $globalcharges->portcountry_orig; 
+                }else if(empty($globalcharges->countryport_orig) != true) {
+                    return $globalcharges->countryport_orig; 
                 }
             })
             ->editColumn('destiny_portLb', function ($globalcharges){ 
@@ -288,6 +407,10 @@ class GlobalChargesController extends Controller
                     return $globalcharges->port_dest;
                 } else if(empty($globalcharges->country_dest) != true) {
                     return $globalcharges->country_dest; 
+                }else if(empty($globalcharges->portcountry_dest) != true) {
+                    return $globalcharges->portcountry_dest; 
+                }else if(empty($globalcharges->countryport_dest) != true) {
+                    return $globalcharges->countryport_dest; 
                 }
             })
             ->editColumn('typedestinylb', function ($globalcharges){ 
@@ -365,7 +488,7 @@ class GlobalChargesController extends Controller
     }
 
     public function createAdm(Request $request){
-        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user'])->companyUser($request->company_id)->carrier($request->carrier);
+        $globalcharges = ViewGlobalCharge::select(['id','charge','charge_type','calculation_type','origin_port','origin_country','destination_port','destination_country','carrier','amount','currency_code','valid_from','valid_until','company_user','portcountry_orig','portcountry_dest','countryport_orig','countryport_dest'])->companyUser($request->company_id)->carrier($request->carrier);
 
         return DataTables::of($globalcharges)
             ->editColumn('surchargelb', function ($globalcharges){ 
@@ -376,6 +499,10 @@ class GlobalChargesController extends Controller
                     return $globalcharges->origin_port;
                 } else if(empty($globalcharges->origin_country) != true) {
                     return $globalcharges->origin_country; 
+                }else if(empty($globalcharges->portcountry_orig) != true) {
+                    return $globalcharges->portcountry_orig; 
+                }else if(empty($globalcharges->countryport_orig) != true) {
+                    return $globalcharges->countryport_orig; 
                 }
             })
             ->editColumn('destiny_portLb', function ($globalcharges){ 
@@ -383,6 +510,10 @@ class GlobalChargesController extends Controller
                     return $globalcharges->destination_port;
                 } else if(empty($globalcharges->destination_country) != true) {
                     return $globalcharges->destination_country; 
+                }else if(empty($globalcharges->portcountry_dest) != true) {
+                    return $globalcharges->portcountry_dest; 
+                }else if(empty($globalcharges->countryport_dest) != true) {
+                    return $globalcharges->countryport_dest; 
                 }
             })
             ->editColumn('typedestinylb', function ($globalcharges){ 
@@ -444,6 +575,13 @@ class GlobalChargesController extends Controller
                 'origin_country' =>   $data1[$i]->origin_country,
                 'destination_port' =>  $data1[$i]->destination_port,
                 'destination_country' =>   $data1[$i]->destination_country,
+
+                'portcountry_orig' =>  $data1[$i]->portcountry_orig,
+                'portcountry_dest' =>   $data1[$i]->portcountry_dest,
+
+                'countryport_orig' =>  $data1[$i]->countryport_orig,
+                'countryport_dest' =>   $data1[$i]->countryport_dest,
+
                 'carrier' => $data1[$i]->carrier,
                 'amount' =>   $data1[$i]->amount,
                 'currency_code' =>   $data1[$i]->currency_code,
@@ -466,12 +604,22 @@ class GlobalChargesController extends Controller
                 } else if(empty($globalcharges['origin_country']) != true) {
                     return $globalcharges['origin_country']; 
                 }
+                else if(empty($globalcharges['portcountry_orig']) != true) {
+                    return $globalcharges['portcountry_orig']; 
+                }
+                else if(empty($globalcharges['countryport_orig']) != true) {
+                    return $globalcharges['countryport_orig']; 
+                }
             })
             ->addColumn('destiny_portLb', function ($globalcharges){ 
                 if(empty($globalcharges['destination_port']) != true){
                     return $globalcharges['destination_port'];
                 } else if(empty($globalcharges['destination_country']) != true) {
                     return $globalcharges['destination_country']; 
+                }else if(empty($globalcharges['portcountry_dest']) != true) {
+                    return $globalcharges['portcountry_dest']; 
+                }else if(empty($globalcharges['countryport_dest']) != true) {
+                    return $globalcharges['countryport_dest']; 
                 }
             })
             ->addColumn('typedestinylb', function ($globalcharges){ 
@@ -601,6 +749,36 @@ class GlobalChargesController extends Controller
                     }
                 }
 
+            }elseif($typerate == 'portcountry'){
+                $detailPortCountrytOrig =$request->input('portcountry_orig');
+                $detailPortCountryDest = $request->input('portcountry_dest');
+                foreach($detailPortCountrytOrig as $p => $valuePCorig)
+                {
+                    foreach($detailPortCountryDest as $dest => $valuePCdest)
+                    {
+                        $detail = new GlobalCharPortCountry();
+                        $detail->port_orig = $valuePCorig;
+                        $detail->country_dest =  $valuePCdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
+                }
+
+            }elseif($typerate == 'countryport'){
+                $detailCountryPortOrig =$request->input('countryport_orig');
+                $detailCountryPortDest = $request->input('countryport_dest');
+                foreach($detailCountryPortOrig as $p => $valueCPorig)
+                {
+                    foreach($detailCountryPortDest as $dest => $valueCPdest)
+                    {
+                        $detail = new GlobalCharCountryPort();
+                        $detail->country_orig = $valueCPorig;
+                        $detail->port_dest =  $valueCPdest;
+                        $detail->globalcharge()->associate($global);
+                        $detail->save();
+                    }
+                }
+
             }
         }
 
@@ -629,7 +807,27 @@ class GlobalChargesController extends Controller
         $company_users      = CompanyUser::pluck('name','id');
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
-        return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
+
+        $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+
+        if(!$globalcharges->globalcharcountry->isEmpty()){
+            $activacion['rdrouteC'] = true;
+            $activacion['act'] = 'divcountry';
+        }
+        if(!$globalcharges->globalcharportcountry->isEmpty()){
+            $activacion['rdroutePC'] = true;
+            $activacion['act'] = 'divportcountry';
+        }
+        if(!$globalcharges->globalcharcountryport->isEmpty()){
+            $activacion['rdrouteCP'] = true;
+            $activacion['act'] = 'divcountryport';
+        }
+        if(!$globalcharges->globalcharport->isEmpty()){
+            $activacion['rdrouteP'] = true;
+            $activacion['act'] = 'divport';
+        }
+
+        return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
     }
 
     public function updateAdm(Request $request, $id){
@@ -663,6 +861,11 @@ class GlobalChargesController extends Controller
         $deletePort->delete();
         $deleteCountry  = GlobalCharCountry::where("globalcharge_id",$id);
         $deleteCountry->delete();
+        $deletePortCountry = GlobalCharPortCountry::where("globalcharge_id",$id);
+        $deletePortCountry->delete();
+
+        $deleteCountryPort = GlobalCharCountryPort::where("globalcharge_id",$id);
+        $deleteCountryPort->delete();
 
         $typerate =  $request->input('typeroute');
         if($typerate == 'port'){
@@ -695,6 +898,36 @@ class GlobalChargesController extends Controller
                     $detailcountry->save();
                 }
             }
+        }elseif($typerate == 'portcountry'){
+            $detailPortCountrytOrig =$request->input('portcountry_orig');
+            $detailPortCountryDest = $request->input('portcountry_dest');
+            foreach($detailPortCountrytOrig as $p => $valuePCorig)
+            {
+                foreach($detailPortCountryDest as $dest => $valuePCdest)
+                {
+                    $detail = new GlobalCharPortCountry();
+                    $detail->port_orig = $valuePCorig;
+                    $detail->country_dest =  $valuePCdest;
+                    $detail->globalcharge()->associate($global);
+                    $detail->save();
+                }
+            }
+
+        }elseif($typerate == 'countryport'){
+            $detailCountryPortOrig =$request->input('countryport_orig');
+            $detailCountryPortDest = $request->input('countryport_dest');
+            foreach($detailCountryPortOrig as $p => $valueCPorig)
+            {
+                foreach($detailCountryPortDest as $dest => $valueCPdest)
+                {
+                    $detail = new GlobalCharCountryPort();
+                    $detail->country_orig = $valueCPorig;
+                    $detail->port_dest =  $valueCPdest;
+                    $detail->globalcharge()->associate($global);
+                    $detail->save();
+                }
+            }
+
         }
 
         foreach($carrierInp as $key)
@@ -730,7 +963,26 @@ class GlobalChargesController extends Controller
         $validation_expire  = $globalcharges->validity ." / ". $globalcharges->expire ;
         $globalcharges->setAttribute('validation_expire',$validation_expire);
 
-        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT'));
+        $activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
+
+        if(!$globalcharges->globalcharcountry->isEmpty()){
+            $activacion['rdrouteC'] = true;
+            $activacion['act'] = 'divcountry';
+        }
+        if(!$globalcharges->globalcharportcountry->isEmpty()){
+            $activacion['rdroutePC'] = true;
+            $activacion['act'] = 'divportcountry';
+        }
+        if(!$globalcharges->globalcharcountryport->isEmpty()){
+            $activacion['rdrouteCP'] = true;
+            $activacion['act'] = 'divcountryport';
+        }
+        if(!$globalcharges->globalcharport->isEmpty()){
+            $activacion['rdrouteP'] = true;
+            $activacion['act'] = 'divport';
+        }
+
+        return view('globalchargesAdm.duplicate', compact('globalcharges','harbor','carrier','company_users','currency','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
     }
 
     public function dupicateArrAdm(Request $request){

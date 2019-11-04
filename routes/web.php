@@ -467,13 +467,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
     Route::post('/storeLCL', 'QuoteV2Controller@storeLCL')->name('quotes-v2.storeLCL');
-    Route::get('/pdf/{quote_id}', 'PdfV2Controller@pdf')->name('quotes-v2.pdf');
-    Route::get('/lcl/air/pdf/{quote_id}', 'PdfV2Controller@pdfLclAir')->name('quotes-v2.pdf.lcl.air');
-    Route::get('/air/pdf/{quote_id}', 'PdfV2Controller@pdfAir')->name('quotes-v2.pdf.air');
-    Route::post('feature/pdf/update', 'QuoteV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
     Route::get('delete/rate/{id}', 'QuoteV2Controller@delete')->name('quotes-v2.pdf.delete.rate');
-    Route::get('delete/saleterm/{id}', 'SaleTermV2Controller@destroy')->name('quotes-v2.delete.saleterm');
-    Route::get('delete/saleterm/charge/{id}', 'SaleTermV2Controller@destroyCharge')->name('quotes-v2.delete.saleterm.charge');
     Route::get('delete/charge/{id}', 'QuoteV2Controller@deleteCharge')->name('quotes-v2.pdf.delete.charge');
     Route::get('lcl/delete/charge/{id}', 'QuoteV2Controller@deleteChargeLclAir')->name('quotes-v2.pdf.delete.charge.lcl');
     Route::get('delete/inland/{id}', 'QuoteV2Controller@deleteInland')->name('quotes-v2.pdf.delete.inland');
@@ -489,21 +483,30 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('lcl/inlands/edit/{id}', 'QuoteV2Controller@editInlandsLcl')->name('quotes-v2.inlands.lcl.edit');
     Route::post('inlands/update/{id}', 'QuoteV2Controller@updateInlands')->name('quotes-v2.inlands.update');
     Route::post('inlands/store', 'QuoteV2Controller@storeInlands')->name('quotes-v2.inlands.store');
-    Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
-    Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
-    Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
-    Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
     Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
     Route::get('excel/{id}/{id2}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
     Route::get('excelLcl/{id2}/', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
     Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
+    //Sale terms
     Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
     Route::post('sale/charges/update', 'SaleTermV2Controller@updateSaleCharges')->name('quotes-v2.saleterm.update.charges');
     Route::get('sale/edit/{sale_id}', 'SaleTermV2Controller@editSaleTerm')->name('quotes-v2.saleterm.edit');
     Route::post('sale/update', 'SaleTermV2Controller@updateSaleTerm')->name('quotes-v2.saleterm.update');
+    Route::get('delete/saleterm/{id}', 'SaleTermV2Controller@destroy')->name('quotes-v2.delete.saleterm');
+    Route::get('delete/saleterm/charge/{id}', 'SaleTermV2Controller@destroyCharge')->name('quotes-v2.delete.saleterm.charge');
     //LCL 
     Route::post('processSearchLCL', 'QuoteV2Controller@processSearchLCL')->name('quotes-v2.processSearchLCL');
-
+    //PDF
+    Route::get('/pdf/{quote_id}', 'PdfV2Controller@pdf')->name('quotes-v2.pdf');
+    Route::get('/lcl/air/pdf/{quote_id}', 'PdfV2Controller@pdfLclAir')->name('quotes-v2.pdf.lcl.air');
+    Route::get('/air/pdf/{quote_id}', 'PdfV2Controller@pdfAir')->name('quotes-v2.pdf.air');
+    Route::post('feature/pdf/update', 'PdfV2Controller@updatePdfFeature')->name('quotes-v2.pdf.update.feature');
+    Route::get('html/pdf/{quote_id}', 'PdfController@test')->name('pdf.html');
+    //Company
+    Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes-v2.companies');
+    //Contacts
+    Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
+    Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
 });
 
 //Settings
