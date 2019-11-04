@@ -39,29 +39,33 @@ class updateCurrenciesEur extends Command
      */
     public function handle()
     {
-        // set API Endpoint and access key (and any options of your choice)
-        $endpoint = 'live';
-        $access_key = 'a0a9f774999e3ea605ee13ee9373e755';
+		try{
+			// set API Endpoint and access key (and any options of your choice)
+			$endpoint = 'live';
+			$access_key = 'a0a9f774999e3ea605ee13ee9373e755';
 
-        // Initialize CURL:
-        $ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source=EUR');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			// Initialize CURL:
+			$ch = curl_init('http://apilayer.net/api/'.$endpoint.'?access_key='.$access_key.'&source=EUR');
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        // Store the data:
-        $json = curl_exec($ch);
-        curl_close($ch);
+			// Store the data:
+			$json = curl_exec($ch);
+			curl_close($ch);
 
-        // Decode JSON response:
-        $exchangeRates = json_decode($json, true);
+			// Decode JSON response:
+			$exchangeRates = json_decode($json, true);
 
-        foreach($exchangeRates['quotes'] as $key=>$value){
-            $currency=Currency::where('api_code_eur',$key)->first();
-            if(isset($currency)){
-                if($currency->rates_eur!=$value){
-                    Currency::where('id',$currency->id)
-                        ->update(['api_code_eur' => $key, 'rates_eur' => $value]);
-                }
-            }
+			foreach($exchangeRates['quotes'] as $key=>$value){
+				$currency=Currency::where('api_code_eur',$key)->first();
+				if(isset($currency)){
+					if($currency->rates_eur!=$value){
+						Currency::where('id',$currency->id)
+							->update(['api_code_eur' => $key, 'rates_eur' => $value]);
+					}
+				}
+			}
+		} catch(\Exception $e){
+            return $this->info($e->getMessage());
         }
 
         $this->info('Command Update EUR Currencies executed successfully!');
