@@ -32,32 +32,23 @@ class TestController extends Controller
     public function index(Request $request)
     {
 
-        /*$client = new Client();
-        $jar = new \GuzzleHttp\Cookie\CookieJar;
-        $crawler = $client->request('GET', 'https://auth.cma-cgm.com/idp/prp.wsf?wa=wsignin1.0&wtrealm=https%3A%2F%2Fwww.cma-cgm.com&wctx=rm%3d0%26id%3dpassive%26ru%3d%26Language%3den-US%26Site%3dcmacgm');
-        $client->followRedirects();
-        $form = $crawler->selectButton('Sign In')->form();
-        $crawler = $client->submit($form, array('pf.username' => 'sebastian@cargofive.com',
-                                                'pf.pass' => 'Brenda27$'));
-        //$crawler = $client->click($crawler->selectLink('Sign In')->link());
-        $status_code = $client->getResponse()->getStatus();
-        if($status_code==200){
-            $button = $crawler->selectButton('Submit')->form();
-            $crawler = $client->submit($button);
-            $cookieJar = $client->getCookieJar();
-            //$path = '/var/www/html/cargofive/storage/app/public/cookies.json';
-            //$jar = new CookieJar(false,$client->getCookieJar());
-            dd($cookieJar->all());
-            //$cookFi = new FileCookieJar($path,true);
-            //$cookFi->save($path);
+         $client = new \GuzzleHttp\Client();
+        $url    =  'https://www.maersk.com/webuser-rest-war/loginwithusernamepassword';
+        $array  = [
+             'body' => 'userName=juanfrag&password=Gencomex18%24&skipCustCodeSelect=N&timestamp=1567673525531'
+        ];
 
-            $crawler = $client->request('GET', 'https://www.cma-cgm.com/ebusiness/my-prices/GetQuoteLines/0005926016/ST/2019-09-20/CNSHA/ARBUE');
-            $crawler = $client->getResponse()->getContent();
-            dd($crawler);
-            dd($cookieJar->all());
-            return 'revisa';
-        }*/
-        return $json = PrvUserConfigurations::allData(1);
+        $response = $client->request('POST',$url, [
+            'body' => 'userName=juanfrag&password=Gencomex18%24&skipCustCodeSelect=N&timestamp=1567673525531',
+            'headers' => [
+                'Content-Type'     => 'application/x-www-form-urlencoded',
+            ]
+        ]);/*
+        $client = new \GuzzleHttp\Client(["base_uri" => "https://www.maersk.com"]);
+        $response = $client->post("/webuser-rest-war/loginwithusernamepassword");*/
+        $body = $response->getBody();
+        dd($body);
+        //return $json = PrvUserConfigurations::allData(1);
         //return view('testings.index');
     }
 
