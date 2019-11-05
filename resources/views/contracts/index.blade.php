@@ -200,6 +200,14 @@
                                             </span>
                                         </button>
                                     </a>
+                                    <button type="button" onclick="resetSelects()" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                            <span>
+                                                <span>
+                                                    Reset Selects &nbsp;
+                                                </span>
+                                                <i class="la la-clipboard"></i>
+                                            </span>
+                                        </button>
                                     <div class="m-separator m-separator--dashed d-xl-none"></div>
                                 </div>
                             </div>
@@ -349,6 +357,12 @@
 
 </script>
 <script>
+    
+    function resetSelects(){
+
+        $('#originS').select2("val", null);
+    }
+    
     $(document).on('click','.tabrates',function(e){
         //console.log($(window).width());
         //$('.tableRatesTH').css('width',$(window).width() );
