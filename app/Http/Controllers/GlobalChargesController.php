@@ -1046,4 +1046,5 @@ class GlobalChargesController extends Controller
         $request->session()->flash('message.content', 'You successfully updated.');
         return redirect()->route('gcadm.index',compact('company_user_id_selec','carrier_id_selec','reload_DT'));
     }
+
 }

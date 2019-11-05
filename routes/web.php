@@ -675,6 +675,11 @@ Route::prefix('globalchargeslcl')->group(function () {
     Route::post('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('ArrLclDuplicateAdm/','GlobalChargesLclController@duplicateArrAdm')->name('gclcladm.duplicate.Array')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('StoreLclArrayDupicateAdm/','GlobalChargesLclController@storeArrayAdm')->name('gclcladm.store.array')->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::POST('LclEditDateAdm/','GlobalChargesLclController@editDateArrAdm')->name('gclcladm.edit.dates.Array')->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::POST('ArrUpdateDateAdmLcl/','GlobalChargesLclController@updateDateArrAdm')->name('gclcladm.update.dates.Array')->middleware(['auth','role:administrator|data_entry']);
+    
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 
