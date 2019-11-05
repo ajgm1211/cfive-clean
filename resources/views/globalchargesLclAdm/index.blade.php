@@ -70,6 +70,14 @@
                                             <i class="la la-copy"></i>
                                         </span>
                                     </button>
+                                    <button type="button" name="bulk_delete" id="bulk_update_dates" onclick="AbrirModal('editDatesGC',0)" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <span>
+                                            <span>
+                                                Edit Date Selected &nbsp;
+                                            </span>
+                                            <i class="la la-copy"></i>
+                                        </span>
+                                    </button>
                                 </div>
 
                             </div>
@@ -202,6 +210,30 @@
             $('.modal-body-add').load(url,data,function(){
                 $('#modalGlobalchargeAdd').modal({show:true});
             });
+        }
+
+        if(action == 'editDatesGC'){
+            var idAr = [];
+            var oTable = $("#requesttable").dataTable();
+            var length=table.rows('.selected').data().length;
+
+            if(length > 0)
+            {
+                for (var i = 0; i < length; i++) { 
+                    idAr.push(table.rows('.selected').data()[i].id);
+                }
+
+                var url = '{{ route("gclcladm.edit.dates.Array") }}';
+                //url = url.replace(':id', idAr);
+                data2 = {idAr:idAr,company_user_id_selec:company_user_id_selec,carrier_id_selec:carrier_id_selec,reload_DT:true}
+                $('.modal-body').load(url,data2,function(){
+                    $('#modalGlobalcharge').modal({show:true});
+                });
+
+            } else {
+                swal("Error!", "Please select at least one record", "error");
+            }
+
         }
     }
 
