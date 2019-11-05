@@ -5703,6 +5703,36 @@ class QuoteV2Controller extends Controller
   }
 
 
+  // Funcion para Traer cantidad de Paquete y pallets 
+
+  public function totalPalletPackage($total_quantity,$cargo_type,$type_load_cargo,$quantity){
+
+    $cantidad_pack_pallet = array();
+
+    if($total_quantity != null ){
+      if($cargo_type ==  '1'){//Pallet
+        $cantidad_pack_pallet = array('pallet' => ['cantidad' =>$total_quantity ],'package' => ['cantidad' =>0 ] );
+      }else{
+        $cantidad_pack_pallet = array('pallet' => ['cantidad' =>0 ],'package' => ['cantidad' =>$total_quantity ] ); 
+      }
+    }else{
+      $cantidadPallet = 0;
+      $cantidadPackage = 0;
+      $type_load_cargo = array_values( array_filter($type_load_cargo));
+      $quantity = array_values( array_filter($quantity));
+      $count = count($type_load_cargo);
+      for($i = 0; $i < $count ; $i++){     
+        if($type_load_cargo[$i] ==  '1'){//Pallet
+          $cantidadPallet += $quantity[$i];
+        }else{
+          $cantidadPackage += $quantity[$i];
+        }   
+      }
+      $cantidad_pack_pallet = array('pallet' => ['cantidad' =>$cantidadPallet ],'package' => ['cantidad' =>$cantidadPackage ] );
+    }
+
+    return $cantidad_pack_pallet;
+  }
   /*  **************************  LCL  ******************************************** */
   public function processSearchLCL(Request $request)
   {
@@ -5718,6 +5748,14 @@ class QuoteV2Controller extends Controller
     $chargesAPI = $request->input('chargeAPI');
 
     $form  = $request->all();
+
+
+    // Traer cantidad total de paquetes y pallet segun sea el caso 
+    $package_pallet = $this->totalPalletPackage($request->input('total_quantity'),$request->input('cargo_type'),$request->input('type_load_cargo'),$request->input('quantity'));
+    
+    
+    //dd($package_pallet);
+
     $incoterm = Incoterm::pluck('name','id');
     if(\Auth::user()->hasRole('subuser')){
       $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function($q)  {
@@ -6055,6 +6093,7 @@ class QuoteV2Controller extends Controller
       $arraytonCompli = array('6','7','12','13'); //  calculation type 4 = Per ton/m3
       $arrayPerTon = array('5','10'); //  calculation type 5 = Per  TON 
       $arrayPerKG = array('9'); //  calculation type 5 = Per  TON 
+      $arrayPerPack = array('14'); //  calculation type 5 = Per  TON 
 
       // Local charges 
       $localChar = LocalChargeLcl::where('contractlcl_id','=',$data->contractlcl_id)->whereHas('localcharcarrierslcl', function($q) use($carrier) {
@@ -6736,6 +6775,131 @@ class QuoteV2Controller extends Controller
           }
         }
 
+        if(in_array($local->calculationtypelcl_id, $arrayPerPack)){
+
+          foreach($local->localcharcarrierslcl as $carrierGlobal){
+            if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
+              $package_cantidad =  $package_pallet['package']['cantidad'];
+              if($chargesOrigin != null && $package_cantidad != 0){
+                if($local->typedestiny_id == '1'){
+
+                  $subtotal_local = $package_cantidad * $local->ammount;
+                  $totalAmmount =  ( $package_cantidad * $local->ammount)  / $rateMount;
+                  $mont = $local->ammount;
+                  $unidades = $package_cantidad;
+
+
+                  if($subtotal_local < $local->minimum){
+                    $subtotal_local = $local->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_local)  / $rateMount;
+                    $unidades = $subtotal_local / $package_cantidad;
+
+                  }
+
+
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  $totalOrigin += $totalAmmount ;
+                  $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+
+                  $arregloOrigpack =  array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'origin', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades  ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
+                  $arregloOrigpack = array_merge($arregloOrigpack,$markupKG);
+                  $collectionOrig->push($arregloOrigpack);
+
+                  // ARREGLO GENERAL 99 
+
+
+                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency, 'cantidad' => $unidades );
+
+
+                  $collectionOrig->push($arregloOrigin);
+
+
+                }
+              }
+
+              if($chargesDestination != null  && $package_cantidad != 0){
+                if($local->typedestiny_id == '2'){
+                  $subtotal_local =  $package_cantidad * $local->ammount;
+                  $totalAmmount =  ( $package_cantidad * $local->ammount)  / $rateMount;
+                  $mont = $local->ammount;
+                  $unidades = $package_cantidad;
+
+                  if($subtotal_local < $local->minimum){
+                    $subtotal_local = $local->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_local)  / $rateMount;
+                    $unidades = $subtotal_local / $package_cantidad;
+
+                  }
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  $totalDestiny += $totalAmmount;
+                  $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $arregloDestPack = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades, 'monto' => $totalAmmount, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id ,'type'=>'destination', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades  ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
+                  $arregloDestPack = array_merge($arregloDestPack,$markupKG);
+
+                  $collectionDest->push($arregloDestPack);
+
+
+                  // ARREGLO GENERAL 99 
+
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency, 'cantidad' => $unidades );
+
+
+                  $collectionDest->push($arregloDest);
+                }
+              }
+
+              if($chargesFreight != null  && $package_cantidad != 0 ){
+                if($local->typedestiny_id == '3'){
+
+                  $subtotal_local =  $package_cantidad * $local->ammount;
+                  $totalAmmount =  ( $package_cantidad * $local->ammount)  / $rateMount;
+                  $mont = $local->ammount;
+                  $unidades = $package_cantidad;
+
+                  if($subtotal_local < $local->minimum){
+                    $subtotal_local = $local->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_local)  / $rateMount;
+                    $unidades = $subtotal_local / $package_cantidad;
+
+                  }
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  //$totalAmmount =  $local->ammout  / $rateMount;
+                  $subtotal_local =  number_format($subtotal_local, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $totalFreight += $totalAmmount;
+                  $FreightCharges += $totalAmmount;
+                  $arregloFreightPack = array('surcharge_terms' => $terminos,'surcharge_name' => $local->surcharge->name,'cantidad' => $unidades , 'monto' => $mont, 'currency' => $local->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_local' => $subtotal_local  , 'cantidadT' => $unidades  ,'typecurrency' => $typeCurrency  ,'idCurrency' => $local->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount  );
+                  $arregloFreightPack = array_merge($arregloFreightPack,$markupKG);
+
+                  $collectionFreight->push($arregloFreightPack);
+                  // ARREGLO GENERAL 99 
+
+
+                  $arregloFreightPack = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $local->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $local->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency,  'cantidad' => $unidades);
+
+
+                  $collectionFreight->push($arregloFreightPack);
+                }
+              }
+
+            }
+          }
+        }
+
       }// Fin del calculo de los local charges
 
 
@@ -7353,6 +7517,8 @@ class QuoteV2Controller extends Controller
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
                   $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDestKg = array_merge($arregloDestKg,$markupKG);
                   $collectionDest->push($arregloDestKg);
                   // ARREGLO GENERAL 99 
@@ -7406,6 +7572,129 @@ class QuoteV2Controller extends Controller
           }
 
         }
+
+        if(in_array($global->calculationtypelcl_id, $arrayPerPack)){
+
+          foreach($global->globalcharcarrierslcl as $carrierGlobal){
+            if($carrierGlobal->carrier_id == $data->carrier_id  || $carrierGlobal->carrier_id ==  $carrier_all){
+              $package_cantidad =  $package_pallet['package']['cantidad'];
+              if($chargesOrigin != null && $package_cantidad != '0' ){
+                if($global->typedestiny_id == '1'){
+
+                  $subtotal_global =  $package_cantidad * $global->ammount;
+                  $totalAmmount =  ( $package_cantidad * $global->ammount)  / $rateMountG;
+                  $mont = "";
+                  $unidades = $package_cantidad;
+
+                  if($subtotal_global < $global->minimum){
+                    $subtotal_global = $global->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_global)  / $rateMountG;
+                    $unidades = $subtotal_global / $package_cantidad;
+
+                  }
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  $totalOrigin += $totalAmmount ;
+                  $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $arregloOrigPack = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'origin'  , 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades,'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloOrigPack = array_merge($arregloOrigPack,$markupKG);
+
+                  $collectionOrig->push($arregloOrigPack);
+
+                  // ARREGLO GENERAL 99 
+
+
+                  $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency,'cantidad' => $unidades  );
+
+
+                  $collectionOrig->push($arregloOrigin);
+
+                }
+              }
+
+              if($chargesDestination != null && $package_cantidad != '0'){
+                if($global->typedestiny_id == '2'){
+
+                  $subtotal_global =  $package_cantidad * $global->ammount;
+                  $totalAmmount =  ( $package_cantidad * $global->ammount)  / $rateMountG;
+                  $mont = "";
+                  $unidades = $package_cantidad;
+
+                  if($subtotal_global < $global->minimum){
+                    $subtotal_global = $global->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_global)  / $rateMountG;
+                    $unidades = $subtotal_global / $package_cantidad;
+
+                  }
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  $totalDestiny += $totalAmmount;
+                  $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $arregloDestPack = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloDestPack = array_merge($arregloDestPack,$markupKG);
+                  $collectionDest->push($arregloDestPack);
+                  // ARREGLO GENERAL 99 
+
+
+                  $arregloDest = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contractlcl_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=> $global->calculationtypelcl->id  , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' => $unidades);
+
+
+                  $collectionDest->push($arregloDest);
+                }
+              }
+
+              if($chargesFreight != null && $package_cantidad != '0'){
+                if($global->typedestiny_id == '3'){
+
+                  $subtotal_global =  $package_cantidad * $global->ammount;
+                  $totalAmmount =  ( $package_cantidad * $global->ammount)  / $rateMountG;
+                  $mont = "";
+                  $unidades = $package_cantidad;
+
+                  if($subtotal_global < $global->minimum){
+                    $subtotal_global = $global->minimum;
+                    $totalAmmount =   ( $package_cantidad * $subtotal_global)  / $rateMountG;
+                    $unidades = $subtotal_global / $package_cantidad;
+
+                  }
+                  $totalAmmount = number_format($totalAmmount, 2, '.', '');
+
+                  // MARKUP
+                  $markupKG = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
+
+                  $totalFreight += $totalAmmount;
+                  $FreightCharges += $totalAmmount;
+                  $subtotal_global =  number_format($subtotal_global, 2, '.', '');
+                  $totalAmmount =  number_format($totalAmmount, 2, '.', '');
+                  $arregloFreightPack =  array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'freight', 'subtotal_global' => $subtotal_global , 'cantidadT' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
+                  $arregloFreightPack = array_merge($arregloFreightPack,$markupKG);
+                  $collectionFreight->push($arregloFreightPack);
+
+                  // ARREGLO GENERAL 99 
+
+                  $arregloFreight = array('surcharge_terms' => $terminos,'surcharge_id' => $global->surcharge->id,'surcharge_name' => $global->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'currency' => $global->currency->alphacode, 'calculation_name' => $global->calculationtypelcl->name,'contract_id' => $data->contract_id,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'99' ,'rate_id' => $data->id ,'calculation_id'=> $global->calculationtypelcl->id , 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency,'currency_id' => $global->currency->id   ,'currency_orig_id' => $idCurrency ,'cantidad' => $unidades );
+
+
+                  $collectionFreight->push($arregloFreight);
+
+                }
+              }
+
+            }
+          }
+
+        }
+
 
       }
 
