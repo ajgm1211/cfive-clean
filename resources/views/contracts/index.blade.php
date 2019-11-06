@@ -338,6 +338,26 @@
             </div>
         </div>
     </div>
+    <div class="modal fade bd-example-modal-lg" id="global-modal"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Contracts
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body" id="global-body">
+                    <div class="m-scrollable"  data-scrollbar-shown="true" data-scrollable="true" data-max-height="200">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -359,7 +379,6 @@
 <script>
 
     function resetSelects(){
-
         $('#originS').val(null).trigger('change');
         $('#select2-originS-container').text('Select option');
         $('#destinationS').val(null).trigger('change');
@@ -368,7 +387,17 @@
         $('#select2-carrierM-container').text('Select option');
         $('#statusS').val(null).trigger('change');
         $('#select2-statusS-container').text('Select option');
+    }
 
+    function AbrirModal(action,id){
+
+        if(action == "DuplicatedContract"){
+            var url = '{{ route("contract.duplicated", ":id") }}';
+            url = url.replace(':id', id);
+            $('#global-body').load(url,function(){
+                $('#global-modal').modal({show:true});
+            });
+        }
     }
 
     $(document).on('click','.tabrates',function(e){
