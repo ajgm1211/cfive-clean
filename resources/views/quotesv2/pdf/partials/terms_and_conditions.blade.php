@@ -11,6 +11,9 @@
             @case("Spanish")
                 <span class="color-title text-left"><b>Términos y condiciones</b><br><br/></span><br/>
                 @break
+            @default
+                <span class="color-title text-left"><b>Terms and conditions</b><br><br/></span><br/>
+                @break
         @endswitch
         
         @switch($quote->pdf_option->language)
