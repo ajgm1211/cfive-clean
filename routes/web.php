@@ -149,6 +149,9 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('eloquent/object-rate/{id}', 'ContractsController@dataRates')->name('rate.table');
     Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
     Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
+    
+    // Duplicated contracts
+    Route::get('duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractShow')->name('contract.duplicated');
 
 });
 
