@@ -318,14 +318,15 @@
                                                             $sum_destination_45+=$v->total_45;
                                                         ?>
                                                         <tr class="text-left color-table">
-                                                            <td>{{$v->surcharge->name}}</td>
+                                                            <td>{{@$v->surcharge->name}}</td>
                                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
                                                                 @php
-                                                                    echo str_replace("Per", "Por", $v->calculation_type->name); 
+                                                                    //echo str_replace("Per", "Por", @$v->calculation_type->display_name); 
                                                                 @endphp
+                                                                {{@$v->calculation_type->display_name}}
                                                             </td>
-                                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
-                                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{$v->calculation_type->name}}</td>
+                                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+                                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
                                                             <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
                                                             <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>

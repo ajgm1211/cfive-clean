@@ -1550,33 +1550,33 @@ $(document).on('click', '.store_charge_lcl', function () {
                     //Agregar nuevo tr en freight
                     if(data.type==3){
                         $('<tr style="height:40px;">'+
-                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<input name="type" value="1" class="form-control type" type="hidden" /><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge-lcl" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td></span></td>'+
                           '</tr>').insertBefore('.total_freight_'+number);
                     }else if(data.type==2){ //Agregar nuevo tr en destination
                         $('<tr style="height:40px;">'+
-                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<input name="type" value="1" class="form-control type" type="hidden" /><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge-lcl" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td></td></span></td>'+
                           '</tr>').insertBefore('.total_destination_'+number);
                     }else if(data.type==1){ //Agregar nuevo tr en origin
                         $('<tr style="height:40px;">'+
-                          '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                          '<td class="tds" style="padding-left: 30px"><input name="type" value="1" class="form-control type" type="hidden" /><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><span class="td-a">'+data.surcharge+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a">'+data.calculation_type+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a units">'+data.units+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a price_per_unit">'+data.rate+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a markup">'+data.markup+'</span></td>'+
                           '<td class="tds"><span class="editable-lcl-air td-a total-amount">'+data.total+'</span></td>'+
-                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span></td>'+
+                          '<td class="tds"><span class="editable-lcl-air td-a local_currency">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge-lcl" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>'+
                           '</tr>').insertBefore('.total_origin_'+number);
                     }
 
@@ -1696,14 +1696,14 @@ $(document).on('click', '.store_charge', function () {
             line_total_45=parseFloat(data.amount45)+parseFloat(data.markup45);
             if(type_id==3){
                 $('<tr style="height:40px;">'+
-                  '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                  '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><span class="td-a">'+data.surcharge+'</span></td>'+
                   '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
                   '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
                   '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
                   '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
                   '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
                   '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
-                  '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                  '<td class="tds"><span class="td-a">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>'+
                   '</tr>').insertBefore('.total_freight_'+number);
                 $('.total_freight_'+number).find('.total_freight_20').html('');
                 $('.total_freight_'+number).find('.total_freight_20').html(data.sum_total_20);
@@ -1834,14 +1834,14 @@ $(document).on('click', '.store_charge', function () {
             }
             if(type_id==2){
                 $('<tr style="height:40px;">'+
-                  '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                  '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><span class="td-a">'+data.surcharge+'</span></td>'+
                   '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
                   '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_20+'</td>'+
                   '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40+'</td>'+
                   '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40hc+'</td>'+
                   '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_40nor+'</td>'+
                   '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+line_total_45+'</td>'+
-                  '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                  '<td class="tds"><span class="td-a">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>'+
                   '</tr>').insertBefore('.total_destination_'+number);
                 $('.total_destination_'+number).find('.total_destination_20').html('');
                 $('.total_destination_'+number).find('.total_destination_20').html(data.sum_total_20);
@@ -1973,14 +1973,14 @@ $(document).on('click', '.store_charge', function () {
             }
             if(type_id==1){
                 $('<tr style="height:40px;">'+
-                  '<td class="tds" style="padding-left: 30px"><span class="td-a">'+data.surcharge+'</span></td>'+
+                  '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="'+data.id+'" class="form-control charge_id" type="hidden" /><span class="td-a">'+data.surcharge+'</span></td>'+
                   '<td class="tds"><span class="td-a">'+data.calculation_type+'</span></td>'+
                   '<td '+hide_20+' class="tds"><span class="td-a">'+data.amount20+'</span> + <span class="td-a">'+data.markup20+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_20+'</td>'+
                   '<td '+hide_40+' class="tds"><span class="td-a">'+data.amount40+'</span> + <span class="td-a">'+data.markup40+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40+'</td>'+
                   '<td '+hide_40hc+' class="tds"><span class="td-a">'+data.amount40hc+'</span> + <span class="td-a">'+data.markup40hc+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40hc+'</td>'+
                   '<td '+hide_40nor+' class="tds"><span class="td-a">'+data.amount40nor+'</span> + <span class="td-a">'+data.markup40nor+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_40nor+'</td>'+
                   '<td '+hide_45+' class="tds"><span class="td-a">'+data.amount45+'</span> + <span class="td-a">'+data.markup45+'</span> <i class="la la-caret-right arrow-down"></i> '+data.total_45+'</td>'+
-                  '<td class="tds"><span class="td-a">'+data.currency+'</span></td>'+
+                  '<td class="tds"><span class="td-a">'+data.currency+'</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>'+
                   '</tr>').insertBefore('.total_origin_'+number);
                 $('.total_origin_'+number).find('.total_origin_20').html('');
                 $('.total_origin_'+number).find('.total_origin_20').html(data.sum_total_20);
