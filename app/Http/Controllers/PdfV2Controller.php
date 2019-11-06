@@ -1349,4 +1349,13 @@ class PdfV2Controller extends Controller
 
         }
     }
+
+    //Actualiza opciones del PDF
+    public function updatePdfFeature(Request $request){
+        $name=$request->name;
+        $pdf = PdfOption::where('quote_id',$request->id)->first();
+        $pdf->$name=$request->value;
+        $pdf->update();
+        return response()->json(['message'=>'Ok']);
+    }
 }
