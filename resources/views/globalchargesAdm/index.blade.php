@@ -10,6 +10,8 @@
 @section('title', 'GlobalCharges Adm.')
 @section('content')
 
+
+
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
         <div class="m-portlet__head">
@@ -34,7 +36,32 @@
                     </ul>
                 </div>
             </div>
+            @if (count($errors) > 0)
+            <div id="notificationError" class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
 
+            @if(Session::has('message.nivel'))
+            <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+                <div class="m-alert__icon">
+                    <i class="la la-warning"></i>
+                </div>
+                <div class="m-alert__text">
+                    <strong>
+                        {{ session('message.title') }}
+                    </strong>
+                    {{ session('message.content') }}
+                </div>
+                <div class="m-alert__close">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+            @endif
             <div class="m-portlet__body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="m_tabs_6_1" role="tabpanel">
@@ -66,6 +93,14 @@
                                         <span>
                                             <span>
                                                 Duplicate Selected &nbsp;
+                                            </span>
+                                            <i class="la la-copy"></i>
+                                        </span>
+                                    </button>
+                                    <button type="button" name="bulk_delete" id="bulk_update_dates" onclick="AbrirModal('editDatesGC',0)" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+                                        <span>
+                                            <span>
+                                                Edit Date Selected &nbsp;
                                             </span>
                                             <i class="la la-copy"></i>
                                         </span>
@@ -180,6 +215,31 @@
                 $('#global-modal').modal({show:true});
             });
         }
+
+        if(action == 'editDatesGC'){
+            var idAr = [];
+            var oTable = $("#requesttable").dataTable();
+            var length=table.rows('.selected').data().length;
+
+            if(length > 0)
+            {
+                for (var i = 0; i < length; i++) { 
+                    idAr.push(table.rows('.selected').data()[i].id);
+                }
+                //console.log();
+                var url = '{{ route("gcadm.edit.dates.Array") }}';
+                //url = url.replace(':id', idAr);
+                data2 = {idAr:idAr,company_user_id_selec:company_user_id_selec,carrier_id_selec:carrier_id_selec,reload_DT:true}
+                $('#global-body').load(url,data2,function(){
+                    $('#global-modal').modal({show:true});
+                });
+
+            } else {
+                swal("Error!", "Please select at least one record", "error");
+            }
+
+        }
+
         //$('#frmSurcharges').text('<input type="hidden" name="company_user_id" value="">');
     }
 
@@ -353,6 +413,38 @@
             swal("Error!", "Please select at least one record", "error");
         }
     });
+
+
+
+    /* $(document).on('click', '#bulk_update_dates', function(){
+        var id = [];
+        var oTable = $("#requesttable").dataTable();
+        var length=table.rows('.selected').data().length;
+        var company_user_id_selec = $('#company_user').val();
+        var carrier_id_selec = $('#carrier').val();
+        if(length > 0)
+        {
+            for (var i = 0; i < length; i++) { 
+                id.push(table.rows('.selected').data()[i].id);
+            }
+            console.log(id);
+            url='{!! route("gcadm.dupicate.Array",":id") !!}';
+            url = url.replace(':id', id);
+            var token = $("meta[name='csrf-token']").attr("content");
+            url = url.replace(':id', id);
+            data = {id:id,_token:token,
+                    company_user_id_selec:company_user_id_selec,
+                    carrier_id_selec:carrier_id_selec,
+                    reload_DT:true};
+            $('#global-body').load(url,data,function(){
+                $('#global-modal').modal({show:true});
+            });
+        }
+        else
+        {
+            swal("Error!", "Please select at least one record", "error");
+        }
+    });*/
 
 
 </script>
