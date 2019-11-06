@@ -1360,9 +1360,148 @@ class ContractsController extends Controller
                                                                  'id'
                                                                 )); //*/
     }
-    
+
     public function duplicatedContractShow($id){
-        dd($id);
+        $carrier    = Carrier::pluck('name','id');
+        $directions = Direction::pluck('name','id');
+        $contract   = Contract::find($id);
+        $contract->load('carriers');
+        //dd($contract);
+        return view('contracts.Body-Modals.Duplicatedscontracts',compact('contract','carrier','directions'));
+    }
+
+    public function duplicatedContractStore(Request $requets, $id){
+        $requestArray           = $requets->all();
+        $contract               = Contract::find($id);
+        $contract_original_id   = $contract->id;
+        $contract->load('rates',
+                        'localcharges',
+                        'addons',
+                        'contract_company_restriction',
+                        'contract_user_restriction');
+        dd($contract);
+        $dates      = explode(' / ',$requestArray['validation_expire']);
+        $validity   = trim($dates[0]);
+        $expire     = trim($dates[1]);
+
+        /*$contract_new   = new Contract();
+        $contract_new->name             = $requestArray['reference'];
+        $contract_new->direction_id     = $requestArray['direction_id'];
+        $contract_new->company_user_id  = $requestArray['company_user_id'];
+        $contract_new->validity         = $validity;
+        $contract_new->expire           = $expire;
+        $contract_new->status           = 'publish';
+        $contract_new->save();
+        $contract_new_id                = $contract_new->id;
+
+        foreach($requestArray['carrier_id'] as $carrier_id){
+            $carrier_contract               = new ContractCarrier();
+            $carrier_contract->carrier_id   = $carrier_id;
+            $carrier_contract->contract_id  = $contract_new_id;
+            $carrier_contract->save();
+        }*/
+
+        $rates = Rate::where('contract_id',$contract_original_id)->with()->get();
+
+        foreach($rates as $rate_original){
+            $rate_new = new Rate();
+            $rate_new->origin_port      = $rate_original->origin_port;
+            $rate_new->destiny_port     = $rate_original->destiny_port;
+            $rate_new->carrier_id       = $rate_original->carrier_id;
+            $rate_new->contract_id      = $contract_new_id;
+            $rate_new->twuenty          = $rate_original->twuenty;
+            $rate_new->forty            = $rate_original->forty;
+            $rate_new->fortyhc          = $rate_original->fortyhc;
+            $rate_new->fortynor         = $rate_original->fortynor;
+            $rate_new->fortyfive        = $rate_original->fortyfive;
+            $rate_new->currency_id      = $rate_original->currency_id;
+            $rate_new->schedule_type_id = $rate_original->schedule_type_id;
+            $rate_new->transit_time     = $rate_original->transit_time;
+            $rate_new->via              = $rate_original->via;
+            $rate_new->save();
+
+        }
+
+        $addons_originals = ContractAddons::where('contract_id'$contract_original_id)->get();
+
+        foreach($addons_originals as $addons_original){
+            $addons_new = new ContractAddons();
+            $addons_new->base_port          = $addons_original->base_port;
+            $addons_new->port               = $addons_original->port;
+            $addons_new->carrier_id         = $addons_original->carrier_id;
+            $addons_new->contract_id        = $contract_new_id;
+            $addons_new->twuenty_addons     = $addons_original->twuenty_addons;
+            $addons_new->forty_addons       = $addons_original->forty_addons;
+            $addons_new->fortyhc_addons     = $addons_original->fortyhc_addons;
+            $addons_new->fortynor_addons    = $addons_original->fortynor_addons;
+            $addons_new->fortyfive_addons   = $addons_original->fortyfive_addons;
+            $addons_new->currency_id        = $addons_original->currency_id;
+            $addons_new->save();
+        }
+
+        $companyRestrictions = ContractLclCompanyRestriction::where('contract_id',$contract_original_id)->get();
+        
+        foreach($companyRestrictions as $companyRestriction_original){
+            $companyRestriction_new = new ContractLclCompanyRestriction();
+            $companyRestriction_new->company_id     = $companyRestriction_original->company_id;
+            $companyRestriction_new->contract_id    = $contract_new_id;
+            $companyRestriction_new->save();
+        }
+
+        $userRestrictions = ContractUserRestriction::where('contract_id',$contract_original_id)->get();
+        foreach($companyRestrictions as $companyRestriction_original){
+        $companyRestriction_new  = new ContractUserRestriction();
+            $companyRestriction_new->user_id        = $companyRestriction_original->user_id;
+            $companyRestriction_new->contract_id    = $contract_new_id;
+            $companyRestriction_new->save();
+        }
+        /*$localchargers = LocalCharge::where('contract_id',$contract_original_id)->with('localcharports','localcharcountries','localcharcarriers')->get();
+
+        foreach($localchargers as $localcharger){
+
+            $localcharger_new = new LocalCharge();
+            $localcharger_new->surcharge_id         = $localcharger->surcharge_id;
+            $localcharger_new->typedestiny_id       = $localcharger->typedestiny_id;
+            $localcharger_new->contract_id          = $contract_new_id;
+            $localcharger_new->calculationtype_id   = $localcharger->calculationtype_id;
+            $localcharger_new->ammount              = $localcharger->ammount;
+            $localcharger_new->currency_id          = $localcharger->currency_id;
+            $localcharger_new->save();
+            $localcharger_new_id                    = $localcharger_new->id;
+
+            if(count($localcharger->localcharports) >= 1 ){
+                foreach($localcharger->localcharports as $localcharger_port_original){
+                    $localcharger_port_new = new LocalCharPort();
+                    $localcharger_port_new->port_orig       = $localcharger_port_original->port_orig;
+                    $localcharger_port_new->port_dest       = $localcharger_port_original->port_dest;
+                    $localcharger_port_new->localcharge_id  = $localcharger_new_id;
+                    $localcharger_port_new->save();
+
+                }
+            }
+
+            if(count($localcharger->localcharcountries) >= 1){
+                foreach($localcharger->localcharcountries as $localcharger_country_original){
+                    $localcharger_country_new = new LocalCharCountry();
+                    $localcharger_country_new->country_orig     = $localcharger_country_original->country_orig;
+                    $localcharger_country_new->country_dest     = $localcharger_country_original->country_dest;
+                    $localcharger_country_new->localcharge_id   = $localcharger_new_id;
+                    $localcharger_country_new->save();
+                }
+            }
+
+            if(count($localcharger->localcharcarriers) >= 1){
+                foreach($localcharger->localcharcarriers as $localcharger_carrier_original){
+                    $localcharger_carrier_new = new LocalCharCarrier();
+                    $localcharger_carrier_new->carrier_id       = $localcharger_carrier_original->carrier_id;
+                    $localcharger_carrier_new->localcharge_id   = $localcharger_new_id;
+                    $localcharger_carrier_new->save();
+                }
+            }
+
+        }*/
+
+        dd($requestArray,$id,$contract,$rates);
     }
 
 

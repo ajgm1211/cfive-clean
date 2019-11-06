@@ -152,6 +152,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     
     // Duplicated contracts
     Route::get('duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractShow')->name('contract.duplicated');
+    Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
 
 });
 
