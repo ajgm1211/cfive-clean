@@ -359,14 +359,16 @@
 <script>
 
     function resetSelects(){
-        /*$("#originS").select2("val",null);
-        $("#originS").select2({
-            placeholder: "Select a customer",
-            initSelection: function(element, callback) {                   
-            }
-        });*/
-        
+
         $('#originS').val(null).trigger('change');
+        $('#select2-originS-container').text('Select option');
+        $('#destinationS').val(null).trigger('change');
+        $('#select2-destinationS-container').text('Select option');
+        $('#carrierM').val(null).trigger('change');
+        $('#select2-carrierM-container').text('Select option');
+        $('#statusS').val(null).trigger('change');
+        $('#select2-statusS-container').text('Select option');
+
     }
 
     $(document).on('click','.tabrates',function(e){
