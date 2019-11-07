@@ -150,6 +150,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('eloquent/object-contract', 'ContractsController@contractRates')->name('contract.table');
     Route::get('eloquent/object-contractG', 'ContractsController@contractTable')->name('contract.tableG');
 
+    // Duplicated contracts
+    Route::get('duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractShow')->name('contract.duplicated');
+    Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
+
 });
 
 Route::prefix('Requests')->group(function () {
@@ -576,7 +580,9 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
     Route::get('eloquent/object-contractlcl', 'ContractsLclController@contractLclRates')->name('contractlcl.table');
     Route::get('eloquent/object-ratelcl/{id}', 'ContractsLclController@dataRatesLcl')->name('ratelcl.table');
     Route::get('eloquent/object-datalcl/{id}', 'ContractsLclController@dataLcl')->name('localcharlcl.table');
-
+    // Duplicateds
+    Route::get('duplicated/contract-lcl/{id}', 'ContractsLclController@duplicatedContractShow')->name('contractlcl.duplicated');
+    Route::post('Store-duplicated/contract-lcl/{id}', 'ContractsLclController@duplicatedContractStore')->name('contractlcl.duplicated.store');
 
 });
 
@@ -675,11 +681,11 @@ Route::prefix('globalchargeslcl')->group(function () {
     Route::post('DuplicateLclAdm/{id}','GlobalChargesLclController@duplicateAdm')->name('gclcladm.duplicate')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('ArrLclDuplicateAdm/','GlobalChargesLclController@duplicateArrAdm')->name('gclcladm.duplicate.Array')->middleware(['auth','role:administrator|data_entry']);
     Route::POST('StoreLclArrayDupicateAdm/','GlobalChargesLclController@storeArrayAdm')->name('gclcladm.store.array')->middleware(['auth','role:administrator|data_entry']);
-    
+
     Route::POST('LclEditDateAdm/','GlobalChargesLclController@editDateArrAdm')->name('gclcladm.edit.dates.Array')->middleware(['auth','role:administrator|data_entry']);
-    
+
     Route::POST('ArrUpdateDateAdmLcl/','GlobalChargesLclController@updateDateArrAdm')->name('gclcladm.update.dates.Array')->middleware(['auth','role:administrator|data_entry']);
-    
+
 });
 Route::resource('globalchargeslcl', 'GlobalChargesLclController')->middleware('auth');
 
