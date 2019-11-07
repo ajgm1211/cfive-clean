@@ -387,6 +387,7 @@
         $('#select2-carrierM-container').text('Select option');
         $('#statusS').val(null).trigger('change');
         $('#select2-statusS-container').text('Select option');
+        $('#tableRates').DataTable().clear().draw();
     }
 
     function AbrirModal(action,id){
