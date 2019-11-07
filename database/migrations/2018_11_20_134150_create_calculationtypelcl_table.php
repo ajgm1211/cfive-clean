@@ -16,6 +16,7 @@ class CreateCalculationtypelclTable extends Migration
     Schema::create('calculationtypelcl', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
+      $table->string('display_name')->nullable();
       $table->string('code');
       $table->timestamps();
     });
