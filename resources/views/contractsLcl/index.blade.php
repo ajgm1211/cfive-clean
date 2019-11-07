@@ -151,30 +151,7 @@ New \ Status Import  &nbsp;
                             <tbody>
                             </tbody>
                         </table>
-                        <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">
-                                            Contracts
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">
-                                                &times;
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="tab-pane " id="m_tabs_6_2" role="tabpanel">
@@ -291,33 +268,34 @@ New \ Status Import  &nbsp;
                             </thead>
                             <tbody></tbody>
                         </table>
-                        <div class="modal fade" id="m_select2_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">
-                                            Contracts
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">
-                                                &times;
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+
                     </div>
 
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade bd-example-modal-lg" id="m_select2_modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Contracts
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+       
             </div>
         </div>
     </div>
@@ -329,6 +307,18 @@ New \ Status Import  &nbsp;
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script src="/js/contractsLcl.js"></script>
 <script>
+
+    function AbrirModal(action,id){
+        if(action == "DuplicatedContract"){
+            var url = '{{ route("contractlcl.duplicated", ":id") }}';
+            url = url.replace(':id', id);
+            $('.modal-body').load(url,function(){
+                $('#m_select2_modal').modal({show:true});
+            });
+        }
+    }
+
+
     $('#btnFiterSubmitSearch').click(function(){
         var carrier=$('#carrierM').val();
         var origin = $('#originS').val();
