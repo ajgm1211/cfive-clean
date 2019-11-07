@@ -25,6 +25,7 @@ use App\LocalCharge;
 use App\ScheduleType;
 use App\FailSurCharge;
 use App\LocalCharPort;
+use App\ContractAddons;
 use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
@@ -48,7 +49,7 @@ use Illuminate\Support\Collection as Collection;
 class ContractsController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
         /*
@@ -1370,21 +1371,21 @@ class ContractsController extends Controller
         return view('contracts.Body-Modals.Duplicatedscontracts',compact('contract','carrier','directions'));
     }
 
-    public function duplicatedContractStore(Request $requets, $id){
-        $requestArray           = $requets->all();
+    public function duplicatedContractStore(Request $request, $id){
+        $requestArray           = $request->all();
         $contract               = Contract::find($id);
         $contract_original_id   = $contract->id;
-        $contract->load('rates',
+        /*$contract->load('rates',
                         'localcharges',
                         'addons',
                         'contract_company_restriction',
-                        'contract_user_restriction');
-        dd($contract);
+                        'contract_user_restriction');*/
+        //dd($contract);
         $dates      = explode(' / ',$requestArray['validation_expire']);
         $validity   = trim($dates[0]);
         $expire     = trim($dates[1]);
 
-        /*$contract_new   = new Contract();
+        $contract_new   = new Contract();
         $contract_new->name             = $requestArray['reference'];
         $contract_new->direction_id     = $requestArray['direction_id'];
         $contract_new->company_user_id  = $requestArray['company_user_id'];
@@ -1399,9 +1400,9 @@ class ContractsController extends Controller
             $carrier_contract->carrier_id   = $carrier_id;
             $carrier_contract->contract_id  = $contract_new_id;
             $carrier_contract->save();
-        }*/
+        }
 
-        $rates = Rate::where('contract_id',$contract_original_id)->with()->get();
+        $rates = Rate::where('contract_id',$contract_original_id)->get();
 
         foreach($rates as $rate_original){
             $rate_new = new Rate();
@@ -1422,7 +1423,7 @@ class ContractsController extends Controller
 
         }
 
-        $addons_originals = ContractAddons::where('contract_id'$contract_original_id)->get();
+        $addons_originals = ContractAddons::where('contract_id',$contract_original_id)->get();
 
         foreach($addons_originals as $addons_original){
             $addons_new = new ContractAddons();
@@ -1439,8 +1440,8 @@ class ContractsController extends Controller
             $addons_new->save();
         }
 
-        $companyRestrictions = ContractLclCompanyRestriction::where('contract_id',$contract_original_id)->get();
-        
+        $companyRestrictions = ContractCompanyRestriction::where('contract_id',$contract_original_id)->get();
+
         foreach($companyRestrictions as $companyRestriction_original){
             $companyRestriction_new = new ContractLclCompanyRestriction();
             $companyRestriction_new->company_id     = $companyRestriction_original->company_id;
@@ -1450,12 +1451,12 @@ class ContractsController extends Controller
 
         $userRestrictions = ContractUserRestriction::where('contract_id',$contract_original_id)->get();
         foreach($companyRestrictions as $companyRestriction_original){
-        $companyRestriction_new  = new ContractUserRestriction();
+            $companyRestriction_new  = new ContractUserRestriction();
             $companyRestriction_new->user_id        = $companyRestriction_original->user_id;
             $companyRestriction_new->contract_id    = $contract_new_id;
             $companyRestriction_new->save();
         }
-        /*$localchargers = LocalCharge::where('contract_id',$contract_original_id)->with('localcharports','localcharcountries','localcharcarriers')->get();
+        $localchargers = LocalCharge::where('contract_id',$contract_original_id)->with('localcharports','localcharcountries','localcharcarriers')->get();
 
         foreach($localchargers as $localcharger){
 
@@ -1499,9 +1500,12 @@ class ContractsController extends Controller
                 }
             }
 
-        }*/
+        }
+        //dd($requestArray,$id,$contract,$rates);
 
-        dd($requestArray,$id,$contract,$rates);
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The contract is doubling');
+        return redirect()->route('contracts.index');
     }
 
 
