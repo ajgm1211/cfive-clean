@@ -17,12 +17,14 @@ class ContractObserver
     public function created(Contract $contract)
     {
         $userLogin  = auth()->user();
-        $idCompany = $contract->company_user_id;
+        if(empty($userLogin) != true){
+            $idCompany = $contract->company_user_id;
 
-        $users = User::all()->where('company_user_id','=',$idCompany);
-        $message = 'created the contract ' . $contract->name ;
-        foreach ($users as $user) {
-            $user->notify(new N_general($userLogin,$message));
+            $users = User::all()->where('company_user_id','=',$idCompany);
+            $message = 'created the contract ' . $contract->name ;
+            foreach ($users as $user) {
+                $user->notify(new N_general($userLogin,$message));
+            }
         }
 
     }
@@ -34,24 +36,24 @@ class ContractObserver
      * @return void
      */
 
-  public function updated(Contract $contract)
-  {
+    public function updated(Contract $contract)
+    {
 
-    if(auth()->user() != null ){
-      $userLogin  = auth()->user();
-      $idCompany = $contract->company_user_id;
-      $users = User::all()->where('company_user_id','=',$idCompany);
-      $message = ' updated the contract ' . $contract->name ;
+        if(auth()->user() != null ){
+            $userLogin  = auth()->user();
+            $idCompany = $contract->company_user_id;
+            $users = User::all()->where('company_user_id','=',$idCompany);
+            $message = ' updated the contract ' . $contract->name ;
 
-      foreach ($users as $user) {
-        $user->notify(new N_general($userLogin,$message));
-      }
+            foreach ($users as $user) {
+                $user->notify(new N_general($userLogin,$message));
+            }
+
+        }
+
+
 
     }
-
-
-
-  }
 
     /**
      * Handle the contract "deleted" event.
