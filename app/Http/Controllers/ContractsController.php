@@ -26,6 +26,7 @@ use App\ScheduleType;
 use App\FailSurCharge;
 use App\LocalCharPort;
 use App\ContractAddons;
+use App\Jobs\GeneralJob;
 use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
