@@ -16,7 +16,7 @@ class ContractObserver
      */
     public function created(Contract $contract)
     {
-        $userLogin  = auth()->user();
+        $userLogin  = \Auth::user();
         if(empty($userLogin) != true){
             $idCompany = $contract->company_user_id;
 
