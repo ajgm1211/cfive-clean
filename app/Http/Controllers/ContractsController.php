@@ -25,6 +25,8 @@ use App\LocalCharge;
 use App\ScheduleType;
 use App\FailSurCharge;
 use App\LocalCharPort;
+use App\ContractAddons;
+use App\Jobs\GeneralJob;
 use App\ContractCarrier;
 use App\CalculationType;
 use App\LocalCharCountry;
@@ -48,7 +50,7 @@ use Illuminate\Support\Collection as Collection;
 class ContractsController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
 
         /*
@@ -543,11 +545,12 @@ class ContractsController extends Controller
                 return "      <a href='contracts/".setearRouteKey($contractG->id)."/edit' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Edit '>
                       <i class='la la-edit'></i>
                     </a>
+                    <a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContract\",".($contractG->id).")'  title='Duplicate '>
+                      <i class='la la-copy'></i>
+                    </a>
                     <a  id='delete-contract' data-contract-id='$contractG->id' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill'  title='Delete'>
                       <i class='la la-eraser'></i>
-                    </a>
-
-        ";
+                    </a>";
             }) ->setRowId('id')->rawColumns(['options'])->make(true);
 
     }
@@ -1358,6 +1361,25 @@ class ContractsController extends Controller
                                                                  'calculationtypeselect',
                                                                  'id'
                                                                 )); //*/
+    }
+
+    public function duplicatedContractShow($id){
+        $carrier    = Carrier::pluck('name','id');
+        $directions = Direction::pluck('name','id');
+        $contract   = Contract::find($id);
+        $contract->load('carriers');
+        //dd($contract);
+        return view('contracts.Body-Modals.Duplicatedscontracts',compact('contract','carrier','directions'));
+    }
+
+    public function duplicatedContractStore(Request $request, $id){
+        $requestArray   = $request->all();
+        $data           = ['id'=> $id,'data' => $requestArray];
+        GeneralJob::dispatch('duplicated_fcl',$data);
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'The contract is duplicating, please do not delete it');
+        return redirect()->route('contracts.index');
     }
 
 
