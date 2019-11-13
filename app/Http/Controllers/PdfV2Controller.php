@@ -912,7 +912,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_origin = $sale_terms_origin->groupBy([   
                 function ($item) {
-                    return $item['port']['name'].', '.$item['port']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },     
             ], $preserveKeys = true);
 
@@ -938,7 +938,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_destination = $sale_terms_destination->groupBy([   
                 function ($item) {
-                    return $item['port']['name'].', '.$item['port']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },     
             ], $preserveKeys = true);
 
