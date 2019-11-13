@@ -519,14 +519,11 @@
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
-              
-             <!-- <div class="col-lg-2 for-check">
+
+              <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include route CMA-CGM</label>
-              </div>-->
-              
-              
-
+              </div>
             </div><br>
             <div class="row">
 

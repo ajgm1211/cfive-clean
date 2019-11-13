@@ -3271,7 +3271,8 @@ class QuoteV2Controller extends Controller
             $package_load->large = $large[$key];
             $package_load->weight = $weight[$key];
             $package_load->total_weight = $weight[$key]*$quantity[$key];
-            if(!empty($volume)){
+            // if(!empty($volume)){
+            if(!empty($volume[$key]) && $volume[$key] != null){
               $package_load->volume = $volume[$key];
             }else{
               $package_load->volume = 0.01;
@@ -5752,8 +5753,8 @@ class QuoteV2Controller extends Controller
 
     // Traer cantidad total de paquetes y pallet segun sea el caso 
     $package_pallet = $this->totalPalletPackage($request->input('total_quantity'),$request->input('cargo_type'),$request->input('type_load_cargo'),$request->input('quantity'));
-    
-    
+
+
     //dd($package_pallet);
 
     $incoterm = Incoterm::pluck('name','id');
@@ -6778,7 +6779,7 @@ class QuoteV2Controller extends Controller
         }
 
         if(in_array($local->calculationtypelcl_id, $arrayPerPack)){
-          
+
           foreach($local->localcharcarrierslcl as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id || $carrierGlobal->carrier_id ==  $carrier_all ){
               $package_cantidad =  $package_pallet['package']['cantidad'];
@@ -6834,7 +6835,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_local < $local->minimum){
                     $subtotal_local = $local->minimum;
                     $totalAmmount =   ( $package_cantidad * $subtotal_local)  / $rateMount;
-                    
+
 
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -6901,7 +6902,7 @@ class QuoteV2Controller extends Controller
             }
           }
         }
-        
+
         if(in_array($local->calculationtypelcl_id, $arrayPerPallet)){
 
           foreach($local->localcharcarrierslcl as $carrierGlobal){
@@ -6919,7 +6920,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_local < $local->minimum){
                     $subtotal_local = $local->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_local)  / $rateMount;
-                  
+
 
                   }
 
@@ -6959,7 +6960,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_local < $local->minimum){
                     $subtotal_local = $local->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_local)  / $rateMount;
-                    
+
 
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -6996,7 +6997,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_local < $local->minimum){
                     $subtotal_local = $local->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_local)  / $rateMount;
-                 
+
 
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -7023,8 +7024,8 @@ class QuoteV2Controller extends Controller
             }
           }
         }
-        
-        
+
+
 
       }// Fin del calculo de los local charges
 
@@ -7820,13 +7821,13 @@ class QuoteV2Controller extends Controller
           }
 
         }
-        
+
         if(in_array($global->calculationtypelcl_id, $arrayPerPallet)){
 
           foreach($global->globalcharcarrierslcl as $carrierGlobal){
             if($carrierGlobal->carrier_id == $data->carrier_id  || $carrierGlobal->carrier_id ==  $carrier_all){
               $pallet_cantidad =  $package_pallet['pallet']['cantidad'];
-              
+
               if($chargesOrigin != null && $pallet_cantidad != '0' ){
                 if($global->typedestiny_id == '1'){
 
@@ -7838,7 +7839,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_global)  / $rateMountG;
-                 
+
 
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -7876,7 +7877,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_global)  / $rateMountG;
-                  
+
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
@@ -7886,7 +7887,7 @@ class QuoteV2Controller extends Controller
                   $totalDestiny += $totalAmmount;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  
+
                   $arregloDestPallet = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
@@ -7913,7 +7914,7 @@ class QuoteV2Controller extends Controller
                   if($subtotal_global < $global->minimum){
                     $subtotal_global = $global->minimum;
                     $totalAmmount =   ( $pallet_cantidad * $subtotal_global)  / $rateMountG;
-                    
+
 
                   }
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
@@ -8158,7 +8159,7 @@ class QuoteV2Controller extends Controller
 
 
 
-/**
+  /**
   * Ordena las colleciones LCL 
   * @method function
   * @param {Object} recibe el objeto coleccion destino , origen o freight 
@@ -8299,7 +8300,7 @@ class QuoteV2Controller extends Controller
           $package_load->large = $large[$key];
           $package_load->weight = $weight[$key];
           $package_load->total_weight = $weight[$key]*$quantity[$key];
-          if(!empty($volume)){
+          if(!empty($volume[$key]) && $volume[$key] != null){
             $package_load->volume = $volume[$key];
           }else{
             $package_load->volume = 0.01;
