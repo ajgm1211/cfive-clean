@@ -3142,13 +3142,13 @@ class QuoteV2Controller extends Controller
       $fcompany_id = null;
       $fcontact_id  = null;
       $payments = null;
-      if(isset($form->company_id_quote )){
+    //  if(isset($request->input('company_id_quote'))){
         if($request->input('company_id_quote')!= "0" && $request->input('company_id_quote') != null ){
           $payments = $this->getCompanyPayments($request->input('company_id_quote'));
           $fcompany_id = $request->input('company_id_quote');
           $fcontact_id  = $request->input('contact_id');
         }
-      }
+    //  }
 
 
 
@@ -8252,6 +8252,8 @@ class QuoteV2Controller extends Controller
           $priceId = null;
         }
       }
+      
+
       $fcompany_id = null;
       $fcontact_id  = null;
       $payments = null;
