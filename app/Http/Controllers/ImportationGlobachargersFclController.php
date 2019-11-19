@@ -1149,10 +1149,13 @@ class ImportationGlobachargersFclController extends Controller
 
         foreach($carrier as $key)
         {
-            $detailcarrier = new GlobalCharCarrier();
-            $detailcarrier->carrier_id      = $key;
-            $detailcarrier->globalcharge_id = $id;
-            $detailcarrier->save();
+            $find_carrier   = GlobalCharCarrier::where('carrier_id',$key)->where('globalcharge_id',$id)->get();
+            if(count($find_carrier) == 0){
+                $detailcarrier = new GlobalCharCarrier();
+                $detailcarrier->carrier_id      = $key;
+                $detailcarrier->globalcharge_id = $id;
+                $detailcarrier->save();
+            }
         }
 
         $failglobal->delete();
