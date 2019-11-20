@@ -3806,7 +3806,7 @@ class QuoteV2Controller extends Controller
     $chargeOrigin = 'true';
     $chargeDestination= 'true';
     $chargeFreight= 'true';
-    $chargeAPI= false;
+    $chargeAPI= 'true';
     $form['equipment'] = array('20','40','40HC');
     $form['company_id_quote'] ='';
 
@@ -4974,7 +4974,9 @@ class QuoteV2Controller extends Controller
           })->orwhereHas('globalcharcountryport', function($q) use($origin_country,$dest_port) {
             $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
           });
-        })->where('company_user_id','=',$company_user_id)->with('globalcharport.portOrig','globalcharport.portDest','globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+        })->where('company_user_id','=',$company_user_id)->with('globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
+        
+
 
 
 
