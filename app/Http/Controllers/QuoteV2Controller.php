@@ -86,6 +86,7 @@ use App\ContractFclFile;
 use App\ContractLclFile;
 use Illuminate\Support\Facades\Log;
 
+
 class QuoteV2Controller extends Controller
 {
   /**
@@ -3142,13 +3143,13 @@ class QuoteV2Controller extends Controller
       $fcompany_id = null;
       $fcontact_id  = null;
       $payments = null;
-    //  if(isset($request->input('company_id_quote'))){
-        if($request->input('company_id_quote')!= "0" && $request->input('company_id_quote') != null ){
-          $payments = $this->getCompanyPayments($request->input('company_id_quote'));
-          $fcompany_id = $request->input('company_id_quote');
-          $fcontact_id  = $request->input('contact_id');
-        }
-    //  }
+      //  if(isset($request->input('company_id_quote'))){
+      if($request->input('company_id_quote')!= "0" && $request->input('company_id_quote') != null ){
+        $payments = $this->getCompanyPayments($request->input('company_id_quote'));
+        $fcompany_id = $request->input('company_id_quote');
+        $fcontact_id  = $request->input('contact_id');
+      }
+      //  }
 
 
 
@@ -3827,7 +3828,14 @@ class QuoteV2Controller extends Controller
 
   public function processSearch(Request $request){
 
+
+    $event = new  EventIntercom();
+    $event->event_selectRate();
+
     //Variables del usuario conectado
+
+
+
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
 
@@ -4437,7 +4445,7 @@ class QuoteV2Controller extends Controller
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
           $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-        //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
       $arreglo2 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
@@ -4975,7 +4983,7 @@ class QuoteV2Controller extends Controller
             $q->whereIn('country_orig', $origin_country)->whereIn('port_dest', $dest_port);
           });
         })->where('company_user_id','=',$company_user_id)->with('globalcharcarrier.carrier','currency','surcharge.saleterm')->get();
-        
+
 
 
 
@@ -8254,7 +8262,7 @@ class QuoteV2Controller extends Controller
           $priceId = null;
         }
       }
-      
+
 
       $fcompany_id = null;
       $fcontact_id  = null;
