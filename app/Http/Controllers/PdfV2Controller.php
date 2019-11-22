@@ -912,7 +912,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_origin = $sale_terms_origin->groupBy([   
                 function ($item) {
-                    return $item['port']['name'].', '.$item['port']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },     
             ], $preserveKeys = true);
 
@@ -938,7 +938,7 @@ class PdfV2Controller extends Controller
 
             $sale_terms_destination = $sale_terms_destination->groupBy([   
                 function ($item) {
-                    return $item['port']['name'].', '.$item['port']['code'];
+                    return $item['airport']['name'].', '.$item['airport']['code'];
                 },     
             ], $preserveKeys = true);
 
@@ -1027,8 +1027,8 @@ class PdfV2Controller extends Controller
                 }
             }
 
-            $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
-                if(in_array($item->origin_port_id,$origin_ports)){
+            $rates_lcl_air = $rates_lcl_air->map(function ($item, $key) use($origin_airports, $destination_airports, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
+                if(in_array($item->origin_airport_id,$origin_airports)){
                     if(!$item->charge->whereIn('type_id',1)->isEmpty()){
                         $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
                             if($value->type_id==1){
@@ -1059,7 +1059,7 @@ class PdfV2Controller extends Controller
                         });
                     }
                 }
-                if(in_array($item->destination_port_id,$destination_ports)){
+                if(in_array($item->destination_airport_id,$destination_airports)){
                     $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
                         if($value->type_id==2){
                             $value->total_destination=0;
