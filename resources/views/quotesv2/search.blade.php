@@ -886,7 +886,7 @@
                         </div>
                         <div class="col-lg-4 d-flex flex-column justify-content-center">
                           <div class="progress m-progress--sm">
-                            <div class="progress-bar " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar {{ $arr->contract->status == 'api' ? 'bg-danger'   : '' }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>

@@ -379,13 +379,13 @@
 <script>
 
     function resetSelects(){
-        $('#originS').val(null).trigger('change');
+        $('#originS').val("null").trigger('change');
         $('#select2-originS-container').text('Select option');
-        $('#destinationS').val(null).trigger('change');
+        $('#destinationS').val("null").trigger('change');
         $('#select2-destinationS-container').text('Select option');
-        $('#carrierM').val(null).trigger('change');
+        $('#carrierM').val("null").trigger('change');
         $('#select2-carrierM-container').text('Select option');
-        $('#statusS').val(null).trigger('change');
+        $('#statusS').val("null").trigger('change');
         $('#select2-statusS-container').text('Select option');
         $('#tableRates').DataTable().clear().draw();
     }
