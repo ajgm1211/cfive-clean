@@ -87,7 +87,8 @@ class UsersController extends Controller
 
             // INTERCOM CLIENTE
 
-            $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=');
+            $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
+          
             $client->users->create([
                 "email" => $user->email,
                 "user_id" => $user->id,

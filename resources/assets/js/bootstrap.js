@@ -90,10 +90,10 @@ $(document).ready(function() {
 
     });
     // NOTIFICACIONES LEIDAS 
-        $.get('/users/notifications_read', function (read) {
+    $.get('/users/notifications_read', function (read) {
       if(read.length > 0 ){
         addNotifications_old(read);
-      
+
       }
 
 
@@ -150,16 +150,33 @@ function addNotifications_old(data) {
 
 $(document).on('click', '#notifications', function () {
 
+  var geturl = getUrl();
+  if(geturl != "")
+    geturl = geturl + 'users/updatenot/';
+  else
+    geturl = '/users/updatenot/';
+
   var theElement = $(this);
   $.ajax({
     type: 'get',
-    url: '/users/updatenot/',
+    url: geturl,
     success: function(data) {  
-        $( ".newNotification" ).attr('hidden','true');
-        $( ".noNotification" ).removeAttr('hidden');
+      $( ".newNotification" ).attr('hidden','true');
+      $( ".noNotification" ).removeAttr('hidden');
     }
 
   });
 
 
 });
+
+function getUrl(){
+  var url ='';
+  if (location.protocol == 'http:' && location.hostname == 'app.cargofive.com')
+    url = "https://app.cargofive.com/";
+  else
+    url = "";
+
+  return  url;
+
+}
