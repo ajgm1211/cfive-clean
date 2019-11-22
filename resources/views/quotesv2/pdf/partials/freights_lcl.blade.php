@@ -177,7 +177,7 @@
                                                     <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                     <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                 @else
-                                                    <td>TON/M3</td>
+                                                    <td>{{$quote->type=='LCL' ? 'TON/M3':'CW'}}</td>
                                                 @endif
                                                 @if($quote->type=='LCL')
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
