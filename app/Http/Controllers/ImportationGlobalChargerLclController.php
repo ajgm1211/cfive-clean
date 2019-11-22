@@ -149,7 +149,7 @@ class ImportationGlobalChargerLclController extends Controller
 
                     //  Amount ---------------------------------------------------------------------------------
                     $amountV    = floatval($ammountEX[0]);
-                    
+
                     //  Minimum --------------------------------------------------------------------------------
                     $minimumV   = floatval($minimumEX[0]);
 
@@ -303,7 +303,7 @@ class ImportationGlobalChargerLclController extends Controller
             return redirect()->route('showview.globalcharge.lcl',[$id,'0']);
         }
     }
-    
+
     public function index(){
         $harbor         = Harbor::all()->pluck('display_name','id');
         $country        = Country::all()->pluck('name','id');
@@ -1152,10 +1152,13 @@ class ImportationGlobalChargerLclController extends Controller
 
         foreach($carrier as $key)
         {
-            $detailcarrier = new GlobalCharCarrierLcl();
-            $detailcarrier->carrier_id      = $key;
-            $detailcarrier->globalchargelcl_id = $id;
-            $detailcarrier->save();
+            $find_carrier   = GlobalCharCarrierLcl::where('carrier_id',$key)->where('globalchargelcl_id',$id)->get();
+            if(count($find_carrier) == 0){
+                $detailcarrier = new GlobalCharCarrierLcl();
+                $detailcarrier->carrier_id      = $key;
+                $detailcarrier->globalchargelcl_id = $id;
+                $detailcarrier->save();
+            }
         }
 
         if(empty($detailcountry->globalchargelcl_id) != true){
