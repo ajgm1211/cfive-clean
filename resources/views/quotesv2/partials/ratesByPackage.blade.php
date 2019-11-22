@@ -107,7 +107,7 @@
                                                                     @if($item->surcharge_id!='')
                                                                     <a href="#" class="editable-lcl-air td-a" data-source="{{$calculation_types_lcl_air}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{@$item->id}}" data-title="Select calculation type"></a>
                                                                     @else
-                                                                    TON/M3
+                                                                    {{$quote->type=='LCL' ? 'TON/M3':'CW'}}
                                                                     @endif
                                                                 </td>
                                                                 <td class="tds">
