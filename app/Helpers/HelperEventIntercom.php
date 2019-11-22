@@ -35,7 +35,8 @@ class Intercom{
 
   // EVENTOS RATES
   public static function event_selectRate(){
-    $obj  = self::$client;    
+    $obj  = self::$client;   
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "SELECT RATE",
@@ -47,9 +48,11 @@ class Intercom{
       ]);
 
     }
+    */
   }
   public static function event_searchRate(){
     $obj  = self::$client;   
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "SEARCH RATE",
@@ -59,7 +62,7 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
   //EVENTOS QUOTE 
   public static function event_quoteEmail(){
@@ -86,6 +89,7 @@ class Intercom{
   }
   public static function event_quoteAutomaticFcl(){
     $obj  = self::$client;    
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "QUOTE AUTOMATIC FCL",
@@ -95,10 +99,11 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
   public static function event_quoteAutomaticLcl(){
-    $obj  = self::$client;    
+    $obj  = self::$client;
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "QUOTE AUTOMATIC LCL",
@@ -109,10 +114,12 @@ class Intercom{
         ]
       ]);
     }
+       */
   }
 
   public static function event_quoteManualFcl(){
-    $obj  = self::$client;    
+    $obj  = self::$client;   
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "QUOTE MANUAL FCL",
@@ -122,11 +129,12 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
 
   public static function event_quoteManualLcl(){
     $obj  = self::$client; 
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "QUOTE MANUAL LCL",
@@ -136,11 +144,12 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }*/
   }
 
   public static function event_quoteManualAir(){
     $obj  = self::$client; 
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "QUOTE MANUAL AIR",
@@ -150,11 +159,12 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
   // EVENTOS CONTRACTS
   public static function event_contractFcl(){
     $obj  = self::$client;    
+    /*
     $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
     foreach ($users as $u) {
       if(self::isExist($u->email)){
@@ -168,9 +178,11 @@ class Intercom{
         ]);
       }
     }
+       */
   }
   public static function event_contractLcl(){
     $obj  = self::$client;    
+    /*
     $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
     foreach ($users as $u) {
       if(self::isExist($u->email)){
@@ -183,11 +195,12 @@ class Intercom{
           ]
         ]);
       }
-    }
+    }   */
   }
   // EVENTOS GLOBAL CHARGES
   public static function event_globalChargesFcl(){
     $obj  = self::$client;    
+    /*
     $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
     foreach ($users as $u) {
       if(self::isExist($u->email)){
@@ -200,10 +213,11 @@ class Intercom{
           ]
         ]);
       }
-    }
+    }   */
   }
   public static function event_globalChargesLcl(){
-    $obj  = self::$client;    
+    $obj  = self::$client;   
+    /*
     $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
     foreach ($users as $u) {
       if(self::isExist($u->email)){
@@ -216,12 +230,13 @@ class Intercom{
           ]
         ]);
       }
-    }
+    }   */
   }
   // INLANDS
 
   public static function event_inlands(){
     $obj  = self::$client;    
+    /*
     $users = User::all()->where('company_user_id','=', \Auth::user()->company_user_id);
     foreach ($users as $u) {
       if(self::isExist($u->email)){
@@ -234,11 +249,12 @@ class Intercom{
           ]
         ]);
       }
-    }
+    }   */
   }
 
   // COMPAÑIAS y CONTACTOS
   public static function event_companies(){
+    /*
     $obj  = self::$client;    
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
@@ -249,10 +265,11 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
   public static function event_contacts(){
     $obj  = self::$client;    
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "CONTACTS",
@@ -262,7 +279,7 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
 
   // PRICING 
@@ -270,6 +287,7 @@ class Intercom{
 
   public static function event_pricing(){
     $obj  = self::$client;
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "PRICING",
@@ -279,13 +297,14 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
 
   // REQUEST CONTRACT 
 
   public static function event_requestDone($idUser){
     $usercreador = User::find($idUser);
+    /*
     $obj  = self::$client;    
     $users = User::all()->where('company_user_id','=', $usercreador->company_user_id);
     foreach ($users as $u) {
@@ -299,11 +318,12 @@ class Intercom{
           ]
         ]);
       }
-    }
+    }   */
   }
 
   public static function event_newRequest(){
     $obj  = self::$client;    
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "NEW REQUEST",
@@ -313,10 +333,11 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
   public static function event_newRequestLCL(){
     $obj  = self::$client;  
+    /*
     if(self::isExist(\Auth::user()->email)){
       $obj->events->create([
         "event_name" => "NEW REQUEST LCL",
@@ -326,7 +347,7 @@ class Intercom{
           "order_date" => strtotime("now")
         ]
       ]);
-    }
+    }   */
   }
 
 }
