@@ -16,7 +16,7 @@ class AddScrapersTokensTable extends Migration
         Schema::create('scrapers_tokens', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('token');
+            $table->string('token',2000);
             $table->timestamps();
         });
     }
