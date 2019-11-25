@@ -44,10 +44,9 @@ class LoginController extends Controller
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
-    IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
+    $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
     $client->users->create([
       "email" => $user->email,
-      "user_id" => $user->id,
       "name" => $user->name,
     ]);
     // Crear hash id del usuario logueado 
