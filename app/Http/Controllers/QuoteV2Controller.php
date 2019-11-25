@@ -885,6 +885,8 @@ class QuoteV2Controller extends Controller
     $quote_duplicate->status=$quote->status;
     $quote_duplicate->date_issued=$quote->date_issued;
     $quote_duplicate->terms_and_conditions=$quote->terms_and_conditions;
+    $quote_duplicate->terms_english=$quote->terms_english;
+    $quote_duplicate->terms_portuguese=$quote->terms_portuguese;
     $quote_duplicate->payment_conditions=$quote->payment_conditions;
     if($quote->origin_address){
       $quote_duplicate->origin_address=$quote->origin_address;
