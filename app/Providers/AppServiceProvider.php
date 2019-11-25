@@ -12,26 +12,26 @@ use App\Quote;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
+  /**
      * Bootstrap any application services.
      *
      * @return void
      */
 
-    public function boot(UrlGenerator $url){
-        Schema::defaultStringLength(191);
-        Contract::observe(ContractObserver::class);
-        Quote::observe(QuoteObserver::class);
-      /*
-        if(env('APP_ENV') !== 'local') {
-            $url->forceScheme('https');
-        }*/
-    }
+  public function boot(UrlGenerator $url){
+    Schema::defaultStringLength(191);
+    Contract::observe(ContractObserver::class);
+    Quote::observe(QuoteObserver::class);
 
-    public function register(){
-        // Dusk, if env is appropiate
-        /*if ($this->app->environment('local', 'testing')) {
+    if(env('APP_ENV') !== 'local') {
+      $url->forceScheme('https');
+    }
+  }
+
+  public function register(){
+    // Dusk, if env is appropiate
+    /*if ($this->app->environment('local', 'testing')) {
                 $this->app->register(DuskServiceProvider::class);
               }*/
-    }
+  }
 }
