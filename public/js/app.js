@@ -14374,7 +14374,7 @@ $(document).on('click', '#notifications', function () {
 
 function getUrl() {
   var url = '';
-  if (location.hostname == 'app.cargofive.com') url = "https://app.cargofive.com/";else url = "";
+  if (location.hostname == 'app.cargofive.com/') url = "https://app.cargofive.com/";else url = "";
 
   return url;
 }
