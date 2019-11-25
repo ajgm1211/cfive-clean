@@ -11,6 +11,8 @@ use App\GlobalCharCarrier;
 use App\GlobalCharCountry;
 use App\GlobalCharCarrierLcl;
 use App\GlobalCharCountryLcl;
+use App\GlobalCharCountryPort;
+use App\GlobalCharPortCountry;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -47,9 +49,20 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
             foreach($request['idArray'] as $gb){
 
                 $globalOfAr = GlobalCharge::find($gb);
-                $globalOfAr->load('surcharge','globalcharcarrier','globalcharport.portOrig','globalcharport.portDest','globalcharcountry.countryOrig','globalcharcountry.countryDest');
+                $globalOfAr->load('surcharge',
+                                  'globalcharcarrier',
+                                  'globalcharport.portOrig',
+                                  'globalcharport.portDest',
+                                  'globalcharcountry.countryOrig',
+                                  'globalcharcountry.countryDest',
+                                  'globalcharcountryport.countryOrig',
+                                  'globalcharcountryport.portDest',
+                                  'globalcharportcountry.portOrig',
+                                  'globalcharportcountry.countryDest'
+                                 );
                 $surchName  =  $globalOfAr->surcharge->name;
                 $surcharger = Surcharge::where('name',$surchName)->where('company_user_id',$company_user)->first();
+
                 if(count($surcharger) >= 1){
                     $surcharger = $surcharger->id;
                 } else {
@@ -66,7 +79,13 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                     $place = 'globalcharport';
                 } elseif(count($globalOfAr->globalcharcountry) >= 1){
                     $place = 'globalcharcountry';                    
+                } elseif(count($globalOfAr->globalcharportcountry) >= 1){
+                    $place = 'globalcharportcountry';                    
+                } elseif(count($globalOfAr->globalcharcountryport) >= 1){
+                    $place = 'globalcharcountryport';                    
                 }
+
+
                 $global = GlobalCharge::where('validity',$globalOfAr->validity)
                     ->where('expire',$globalOfAr->expire)
                     ->where('surcharge_id',$surcharger)
@@ -103,6 +122,7 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                         $detailcarrier->save();
                     }
                 }
+
                 if(count($globalOfAr->globalcharport) >= 1){
                     $detailport     = $globalOfAr->globalcharport->pluck('portOrig')->pluck('id');
                     $detailportDest = $globalOfAr->globalcharport->pluck('portDest')->pluck('id');
@@ -145,7 +165,51 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                             }
                         }
                     }
+                } elseif(count($globalOfAr->globalcharportcountry) >= 1){
+
+                    $detailPortOrig     = $globalOfAr->globalcharportcountry->pluck('port_orig');
+                    $detailCountryDest  = $globalOfAr->globalcharportcountry->pluck('country_dest');
+                    foreach($detailPortOrig as $p => $valueC)
+                    {
+                        foreach($detailCountryDest as $dest => $valuedestC)
+                        {
+                            $countgbcont = GlobalCharPortCountry::where('port_orig',$valueC)
+                                ->where('country_dest',$valuedestC)
+                                ->where('globalcharge_id',$global)
+                                ->get();
+                            if(count($countgbcont) == 0){
+                                $detailPortCountry = new GlobalCharPortCountry();
+                                $detailPortCountry->port_orig       = $valueC;
+                                $detailPortCountry->country_dest    = $valuedestC;
+                                $detailPortCountry->globalcharge_id = $global;
+                                $detailPortCountry->save();
+                            }
+                        }
+                    }
+                } elseif(count($globalOfAr->globalcharcountryport) >= 1){
+
+                    $detailCountryOrig     = $globalOfAr->globalcharcountryport->pluck('country_orig');
+                    $detailPortDest        = $globalOfAr->globalcharcountryport->pluck('port_dest');
+                    foreach($detailCountryOrig as $p => $valueC)
+                    {
+                        foreach($detailPortDest as $dest => $valuedestC)
+                        {
+                            $countgbcont = GlobalCharCountryPort::where('country_orig',$valueC)
+                                ->where('port_dest',$valuedestC)
+                                ->where('globalcharge_id',$global)
+                                ->get();
+                            if(count($countgbcont) == 0){
+                                $detailcountryPort = new GlobalCharCountryPort();
+                                $detailcountryPort->country_orig    = $valueC;
+                                $detailcountryPort->port_dest       = $valuedestC;
+                                $detailcountryPort->globalcharge_id = $global;
+                                $detailcountryPort->save();
+                            }
+                        }
+                    }
                 }
+
+
             }
         } elseif(strnatcasecmp($selector,'lcl') == 0){
             $company_user = $request['company_user_id'];
@@ -237,13 +301,13 @@ class GlobalchargerDuplicateFclLclJob implements ShouldQueue
                                 ->where('country_dest',$valuedestC)
                                 ->where('globalchargelcl_id',$global)
                                 ->get();
-                                if(count($countgbcont) == 0){
-                                    $detailcountry = new GlobalCharCountryLcl();
-                                    $detailcountry->country_orig        = $valueC;
-                                    $detailcountry->country_dest        = $valuedestC;
-                                    $detailcountry->globalchargelcl_id  = $global;
-                                    $detailcountry->save();
-                                }
+                            if(count($countgbcont) == 0){
+                                $detailcountry = new GlobalCharCountryLcl();
+                                $detailcountry->country_orig        = $valueC;
+                                $detailcountry->country_dest        = $valuedestC;
+                                $detailcountry->globalchargelcl_id  = $global;
+                                $detailcountry->save();
+                            }
                         }
                     }
                 }
