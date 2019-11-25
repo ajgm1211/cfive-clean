@@ -412,7 +412,7 @@ Route::middleware(['auth'])->prefix('inlands')->group(function () {
 Route::resource('inlands', 'InlandsController')->middleware('auth');
 
 //Quotes
-Route::middleware(['auth'])->prefix('quotes')->group(function () {
+Route::middleware(['auth'])->prefix('cot')->group(function () {
 
     Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
     Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
@@ -448,7 +448,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
 
 });
-Route::resource('quotes', 'QuoteController')->middleware('auth');
+Route::resource('cot', 'QuoteController')->middleware('auth');
 
 //Quotes V2
 Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
