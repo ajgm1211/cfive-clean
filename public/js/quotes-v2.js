@@ -3282,7 +3282,7 @@ $(document).on('change', '#quoteType', function (e) {
                 }
                 $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
             }else if($('#quoteType').val()==3){
-                total_volume=total_volume*166;
+                total_volume=total_volume*166.67;
                 if(total_volume>weight){
                     chargeable_weight=total_volume;
                 }else{
@@ -3367,7 +3367,7 @@ $(document).on('change', '#quoteType', function (e) {
                 }
                 $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
             }else if($('#quoteType').val()==3){
-                total_volume=total_volume*166;
+                total_volume=total_volume*166.67;
                 if(total_volume>total_weight){
                     chargeable_weight=total_volume;
                 }else{
@@ -3383,7 +3383,7 @@ $(document).on('change', '#quoteType', function (e) {
                 sum_vol = $('#total_volume_pkg_input').val();
                 weight = $('#total_weight_pkg_input').val();
 
-                total_vol_chargeable = sum_vol * 166;
+                total_vol_chargeable = sum_vol * 166.67;
                 if (total_vol_chargeable > weight) {
                     chargeable_weight = total_vol_chargeable;
                 } else {
@@ -3869,7 +3869,7 @@ $(document).on("change keydown keyup", ".weight_input", function(){
         }
         $("#chargeable_weight_pkg").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
     }else if($('#quoteType').val()==3){
-        total_vol_chargeable=sum_vol*166;
+        total_vol_chargeable=sum_vol*166.67;
         if(total_vol_chargeable>weight){
             chargeable_weight=total_vol_chargeable;
         }else{
@@ -3904,7 +3904,7 @@ $(document).on('change keyup keydown', '#total_volume, #total_weight', function 
             $("#chargeable_weight_total").html(parseFloat(chargeable_weight).toFixed(2)+" m<sup>3</sup>");
         }else  if($("#quoteType").val()==3){
 
-            total_volume=total_volume*166;
+            total_volume=total_volume*166.67;
             if(total_volume>total_weight){
                 chargeable_weight=total_volume;
             }else{
