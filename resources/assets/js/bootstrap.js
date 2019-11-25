@@ -172,7 +172,7 @@ $(document).on('click', '#notifications', function () {
 
 function getUrl(){
   var url ='';
-  if (location.protocol == 'http:' && location.hostname == 'app.cargofive.com')
+  if (location.hostname == 'app.cargofive.com/')
     url = "https://app.cargofive.com/";
   else
     url = "";

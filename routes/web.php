@@ -414,29 +414,29 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
-    Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
-    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
-    Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
+ //   Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
+  //  Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+  //  Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
     Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
     Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes.contacts');
     Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes.contacts.company');
-    Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
-    Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
-    Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
-    Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
-    Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
-    Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
-    Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
-    Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
-    Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
-    Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
-    Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
-    Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
-    Route::get('quoteSchedules/{carrier?}/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
-    Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
-    Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
+  //  Route::post('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
+    //Route::get('listRate', 'QuoteAutomaticController@listRate')->name('quotes.listRate');
+    //Route::get('pdf/{quote_id}', 'PdfController@quote')->name('quotes.pdf');
+    //Route::get('pdf/new/{quote_id}', 'PdfController@quote_2')->name('quotes.pdf.2');
+    //Route::get('automatic', 'QuoteAutomaticController@automatic')->name('quotes.automatic');
+    //Route::get('duplicate/{id}', 'QuoteController@duplicate')->name('quotes.duplicate');
+    //Route::post('send/pdf', 'PdfController@send_pdf_quote')->name('quotes.send_pdf');
+    //Route::post('test', 'QuoteAutomaticController@test')->name('quotes.test');
+    //Route::get('terms/{harbor_id}', 'QuoteController@getQuoteTerms')->name('quotes.terms');
+    //Route::get('terms/{origin_harbor}/{destination_harbor}', 'QuoteController@getQuoteTermsDual')->name('quotes.terms.dual');
+    //Route::post('update/status/{quote_id}', 'QuoteController@updateStatus')->name('quotes.update.status');
+    //Route::get('change/status/{id}', 'QuoteController@changeStatus')->name('quotes.change_status');
+    //Route::get('quoteSchedules/{carrier?}/{orig_port?}/{dest_port?}/{date_pick?}','QuoteController@scheduleManual')->name('quotes.schedule');
+    //Route::post('store/email', 'QuoteController@storeWithEmail')->name('quotes.store.email');
+    /*Route::post('store/pdf', 'QuoteController@storeWithPdf')->name('quotes.store.pdf');
     Route::get('show/pdf/{id}', 'QuoteController@showWithPdf')->name('quotes.show.pdf');
     Route::get('airports/find', 'QuoteController@searchAirports')->name('quotes.show.airports');
     Route::get('payments/{company_id}', 'QuoteController@getCompanyPayments')->name('quotes.show.payments');
@@ -445,10 +445,10 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::post('carrier/visibility', ['uses' => 'QuoteController@updateCarrierVisibility', 'as' => 'quotes.carrier.visibility']);
     Route::get('export', 'QuoteController@downloadQuotes')->name('quotes.download');
     // LCL
-    Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
+    Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');*/
 
 });
-Route::resource('quotes', 'QuoteController')->middleware('auth');
+Route::resource('cot', 'QuoteController')->middleware('auth');
 
 //Quotes V2
 Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
