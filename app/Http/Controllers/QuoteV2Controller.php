@@ -6102,7 +6102,7 @@ class QuoteV2Controller extends Controller
       array_push($destiny_country,250);
 
       //Calculation type 
-      $arrayBlHblShip = array('1','2','3'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL
+      $arrayBlHblShip = array('1','2','3','16'); // id  calculation type 1 = HBL , 2=  Shipment , 3 = BL , 16 per set
       $arraytonM3 = array('4','11'); //  calculation type 4 = Per ton/m3
       $arraytonCompli = array('6','7','12','13'); //  calculation type 4 = Per ton/m3
       $arrayPerTon = array('5','10'); //  calculation type 5 = Per  TON 
