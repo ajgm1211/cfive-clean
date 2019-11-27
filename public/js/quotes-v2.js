@@ -3174,6 +3174,10 @@ $(document).on('change', '#quoteType', function (e) {
 
   if($(this).val()==1){
 
+
+    $('#mode4').prop('checked', true);
+    $("#cmadiv").show();
+
     $("#total_quantity").removeAttr( "required");
     $("#total_weight").removeAttr( "required");
     $("#total_volume").removeAttr( "required");
@@ -3227,6 +3231,8 @@ $(document).on('change', '#quoteType', function (e) {
     $("#total_weight").prop( "required", true );
     $("#total_volume").prop( "required", true );
 
+    $('#mode4').prop('checked', false);
+    $("#cmadiv").hide();
 
     $(".infocheck").val('');
     //$(".quote_search").hide();
@@ -3324,6 +3330,10 @@ $(document).on('change', '#quoteType', function (e) {
     $(".quote_search").hide();
     $(".formu").val('');
     $(".search").hide();
+
+
+
+    $('#mode4').prop('checked', false);
 
 
     $("#origin_harbor").prop( "disabled", true );
