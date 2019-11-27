@@ -40,7 +40,7 @@ class SaleTermV2Controller extends Controller
     public function store(Request $request)
     {
         $sale_term = SaleTermV2::create($request->all());
-        
+
         $company_user = User::where('id',\Auth::id())->first();
 
         $sale_charge = new SaleTermV2Charge();
@@ -119,6 +119,25 @@ class SaleTermV2Controller extends Controller
     public function destroyCharge($id)
     {
         SaleTermV2Charge::where('id',$id)->delete();
+        return response()->json(['message' => 'Ok']);
+    }
+
+    public function storeSaleCharge(Request $request)
+    {
+        $sale_charge = new SaleTermV2Charge();
+        $sale_charge->sale_term_id = $request->sale_term_id;
+        $sale_charge->detail = $request->detail;
+        $sale_charge->c20 = $request->c20;
+        $sale_charge->c40 = $request->c40;
+        $sale_charge->c40hc = $request->c40hc;
+        $sale_charge->c40nor = $request->c40nor;
+        $sale_charge->c45 = $request->c45;
+        $sale_charge->units = $request->units;
+        $sale_charge->rate = $request->rate;
+        $sale_charge->total = $request->total;
+        $sale_charge->currency_id = $request->currency_id;
+        $sale_charge->save();
+
         return response()->json(['message' => 'Ok']);
     }
 }
