@@ -1622,7 +1622,7 @@ $(document).on('click', '.store_sale_charge', function () {
             if(data.message=='Ok'){
                 swal(
                     'Updated!',
-                    'The payment conditions has been updated.',
+                    'The record has been created.',
                     'success'
                 )
             }
