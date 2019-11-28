@@ -65,6 +65,9 @@
             <th title="description">
               Pick Up Date
             </th>
+            <th title="description">
+              Search Date
+            </th>
             <th>
               Origin Port
             </th>
@@ -79,7 +82,7 @@
           <tr>
             <td>{{ $search->user->name }}</td>
             <td>{{ $search->pick_up_date }}</td>
-
+            <td>{{ $search->created_at }}</td>
             <td>
               {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portOrig')->unique()->pluck('name') ) !!}
             </td>
