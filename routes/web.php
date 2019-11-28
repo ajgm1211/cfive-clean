@@ -461,8 +461,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::post('/update/remarks/{id}', 'QuoteV2Controller@updateRemarks')->name('quotes-v2.update.remarks');
     Route::get('/duplicate/{id}', 'QuoteV2Controller@duplicate')->name('quotes-v2.duplicate');
     Route::get('datatable', 'QuoteV2Controller@LoadDatatableIndex')->name('quotes-v2.index.datatable');
-    Route::post('send', 'QuoteV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
-    Route::post('send/lcl', 'QuoteV2Controller@send_pdf_quote_lcl_air')->name('quotes-v2.send_pdf_lcl');
+    Route::post('send', 'PdfV2Controller@send_pdf_quote')->name('quotes-v2.send_pdf');
+    Route::post('send/lcl', 'PdfV2Controller@send_pdf_quote_lcl_air')->name('quotes-v2.send_pdf_lcl');
     Route::get('search', 'QuoteV2Controller@search')->name('quotes-v2.search');
     Route::post('processSearch', 'QuoteV2Controller@processSearch')->name('quotes-v2.processSearch');
     Route::post('/store', 'QuoteV2Controller@store')->name('quotes-v2.store');
