@@ -21,11 +21,10 @@ use Intercom\IntercomClient;
 
 class UsersController extends Controller
 {
-  /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
+
+
   public function index()
   {
     //
@@ -210,6 +209,9 @@ class UsersController extends Controller
   {
     $user = User::find($id);
     $user->delete();
+    $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
+    $cliente =  $client->users->getUsers(["email" => $user->email]);
+    $client->users->archiveUser($cliente->id);
     return $user;
   }
   public function destroyUser(Request $request,$id)
