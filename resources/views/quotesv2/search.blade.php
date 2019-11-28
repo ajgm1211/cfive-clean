@@ -522,7 +522,7 @@
 
               <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
-                <label for="mode4" class="label-check">Include route CMA-CGM</label>
+                <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
             </div><br>
             <div class="row">
