@@ -2145,6 +2145,37 @@ $(document).on('click', '#delete-quote-v2', function () {
   });
 });
 
+
+$(document).on('click', '#delete-quote-show', function () {
+  var id = $(this).attr('data-quote-show-id');
+  var theElement = $(this);
+
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: '/v2/quotes/delete/' + id,
+        success: function(data) {
+          swal(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+            window.location.href = '../' ;
+        }
+      });
+
+    }
+  });
+});
+
 //Borrar rates
 $(document).on('click', '.delete-rate', function () {
   var id=$(this).attr('data-rate-id');
