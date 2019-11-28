@@ -3,9 +3,22 @@
             <br>
             @forelse($destination_charges_grouped as $destination=>$detail)
                 <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
+                    @switch($quote->pdf_option->language)
+                        @case("English")
+                            <p class="title">Destination charges - {{$destination}}</p>
+                            @break
+
+                        @case("Portuguese")
+                            <p class="title">Encargos de destino - {{$destination}}</p>
+                            @break
+
+                        @case("Spanish")
+                            <p class="title">Costos en destino - {{$destination}}</p>
+                            @break
+
+                        @default
+                            <p class="title">Destination charges - {{$destination}}</p>
+                    @endswitch                    
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
@@ -80,9 +93,22 @@
                     @foreach($sale_terms_destination as $destination=>$sale_destination)
                         @foreach($sale_destination as $value)
                             <div>
-                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
+                                @switch($quote->pdf_option->language)
+                                    @case("English")
+                                        <p class="title">Destination charges - {{$destination}}</p>
+                                        @break
+
+                                    @case("Portuguese")
+                                        <p class="title">Encargos de destino - {{$destination}}</p>
+                                        @break
+
+                                    @case("Spanish")
+                                        <p class="title">Costos en destino - {{$destination}}</p>
+                                        @break
+
+                                    @default
+                                        <p class="title">Destination charges - {{$destination}}</p>
+                                @endswitch                    
                                 <br>
                             </div>
 
@@ -138,9 +164,22 @@
                 @foreach($sale_terms_destination as $destination=>$sale_destination)
                 @foreach($sale_destination as $value)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
+                        @switch($quote->pdf_option->language)
+                            @case("English")
+                                <p class="title">Destination charges - {{$destination}}</p>
+                                @break
+
+                            @case("Portuguese")
+                                <p class="title">Encargos de destino - {{$destination}}</p>
+                                @break
+
+                            @case("Spanish")
+                                <p class="title">Costos en destino - {{$destination}}</p>
+                                @break
+
+                            @default
+                                <p class="title">Destination charges - {{$destination}}</p>
+                        @endswitch                    
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
@@ -215,9 +254,22 @@
             @foreach($destination_charges_grouped as $destination => $value)
                 @foreach($value as $carrier => $item)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Destination charges - {{$destination}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en destino - {{$destination}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de destino - {{$destination}}</p>
+                        @switch($quote->pdf_option->language)
+                            @case("English")
+                                <p class="title">Destination charges - {{$destination}}</p>
+                                @break
+
+                            @case("Portuguese")
+                                <p class="title">Encargos de destino - {{$destination}}</p>
+                                @break
+
+                            @case("Spanish")
+                                <p class="title">Costos en destino - {{$destination}}</p>
+                                @break
+
+                            @default
+                                <p class="title">Destination charges - {{$destination}}</p>
+                        @endswitch                    
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
