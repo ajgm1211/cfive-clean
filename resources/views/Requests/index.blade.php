@@ -258,7 +258,7 @@
           { data: 'name', name: 'name' },
           { data: 'date', name: 'date' },
           { data: 'status', name: 'status' },
-          { data: 'company_user_id', name: "company_user_id" },
+          { data: 'company_name', name: "company_name" },
           { data: 'action', name: 'action', orderable: false, searchable: false },
         ],
         "order": [[0, 'desc']],
