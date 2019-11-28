@@ -448,7 +448,7 @@ Route::middleware(['auth'])->prefix('quotes')->group(function () {
     Route::post('listRateLcl', 'QuoteAutomaticLclController@index')->name('quotes.listRateLcl');
 
 });
-Route::resource('cot', 'QuoteController')->middleware('auth');
+Route::resource('quotes', 'QuoteController')->middleware('auth');
 
 //Quotes V2
 Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
