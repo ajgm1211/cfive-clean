@@ -1343,7 +1343,7 @@ class PdfV2Controller extends Controller
 
             return $pdf->stream('quote-'.$quote->quote_id.'-'.date('Ymd').'.pdf');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            //dd($e->getMessage());
 
             return false;
 
@@ -1587,14 +1587,14 @@ class PdfV2Controller extends Controller
    * @param Request $request 
    * @return Json
    */
-  public function send_pdf_quote_lcl_air(Request $request)
+  public function send_pdf_quote_lcl(Request $request)
   {
     $sign = null;
     $sign_type = null;
     $equipmentHides = null;
 
     $quote = QuoteV2::findOrFail($request->id);
-    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
     $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
       $query->where('type_id', 1);
     })->where('quote_id',$quote->id)->get();
@@ -1998,6 +1998,478 @@ class PdfV2Controller extends Controller
             },
             function ($item) {
                 return $item['destination_port']['name'].', '.$item['destination_port']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },
+
+        ], $preserveKeys = true);
+
+        foreach($freight_charges_grouped as $freight){
+            foreach($freight as $detail){
+                foreach($detail as $item){
+                    foreach($item as $rate){
+                        foreach ($rate->charge_lcl_air as $v_freight) {
+                            if($v_freight->type_id==3){
+                                if($freight_charges_grouped->count()>1){
+                                    $typeCurrency = $currency_cfg->alphacode;
+                                }else{
+                                    if($quote->pdf_option->grouped_freight_charges==1){
+                                        $typeCurrency = $quote->pdf_option->freight_charges_currency;
+                                    }else{
+                                        $typeCurrency = $currency_cfg->alphacode;
+                                    }
+                                }
+                                $currency_rate=$this->ratesCurrency($v_freight->currency_id,$typeCurrency);
+
+                                //$value->price_per_unit=number_format(($value->price_per_unit/$currency_rate), 2, '.', '');
+                                //$value->markup=number_format(($value->markup/$currency_rate), 2, '.', '');
+                                if($v_freight->units>0){
+                                    $v_freight->rate=number_format((($v_freight->units*$v_freight->price_per_unit)+$v_freight->markup)/$v_freight->units, 2, '.', '');
+                                }else{
+                                    $v_freight->rate=0;
+                                }
+                                $v_freight->total_freight=number_format((($v_freight->units*$v_freight->price_per_unit)+$v_freight->markup)/$currency_rate, 2, '.', '');
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
+
+    // EVENTO INTERCOM 
+    //$event = new  EventIntercom();
+    //$event->event_quoteEmail();
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+
+    $subject = $request->subject;
+    $body = $request->body;
+    $to = $request->to;
+
+    $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
+    //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+
+    $quote->status='Sent';
+    $quote->update();
+    return response()->json(['message' => 'Ok']);
+  }
+
+  public function send_pdf_quote_air(Request $request){
+
+    $sign = null;
+    $sign_type = null;
+    $equipmentHides = null;
+
+    $quote = QuoteV2::findOrFail($request->id);
+    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
+    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 1);
+    })->where('quote_id',$quote->id)->get();
+    $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 3);
+    })->where('quote_id',$quote->id)->get();
+    $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
+      $query->where('type_id', 2);
+    })->where('quote_id',$quote->id)->get();
+    $contact_email = Contact::find($quote->contact_id);
+    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
+    $email_from = \Auth::user()->email;
+    $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('airport_id');
+    $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+    $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+    $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+    $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+
+    if($quote->equipment!=''){
+      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+    }
+
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+      if($email_settings){
+        if($email_settings->email_signature_type=='text'){
+          $sign = $email_settings->email_signature_text;
+        }else{
+          $sign = $email_settings->email_signature_image;
+        }
+        if($email_settings->email_from!=''){
+          $email_from = $email_settings->email_from;   
+        }else{
+          $email_from = \Auth::user()->email;
+        }
+      }
+      $type=$company_user->type_pdf;
+      $ammounts_type=$company_user->pdf_ammounts;
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }
+
+        foreach($sale_terms_origin_grouped as $sale_origin){
+            foreach($sale_origin->charge as $sale_origin_charge){
+                if($sale_origin_charge->currency_id!=''){
+                    if($quote->pdf_option->grouped_total_currency==1){
+                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+
+                    $currency_rate=$this->ratesCurrency($sale_origin_charge->currency_id,$typeCurrency);
+                    $sale_origin_charge->total_sale_origin=number_format($sale_origin_charge->total/$currency_rate, 2, '.', '');
+                }
+            }
+        }
+
+        foreach($sale_terms_destination_grouped as $sale_destination){
+            foreach($sale_destination->charge as $sale_destination_charge){
+
+                if($sale_destination_charge->currency_id!=''){
+                    if($quote->pdf_option->grouped_total_currency==1){
+                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($sale_destination_charge->currency_id,$typeCurrency);
+
+                    $sale_destination_charge->total_sale_destination=number_format($sale_destination_charge->total/$currency_rate, 2, '.', '');
+                }
+            }
+        }
+
+        $sale_terms_origin = collect($sale_terms_origin);
+
+        $sale_terms_origin = $sale_terms_origin->groupBy([   
+            function ($item) {
+                return $item['airport']['name'].', '.$item['airport']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_origin as $value){
+            foreach($value as $origin_sale){
+                foreach($origin_sale->charge as $origin_charge){
+
+                    if($origin_charge->currency_id!=''){
+                        if($quote->pdf_option->grouped_origin_charges==1){
+                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
+
+                        $origin_charge->total_sale_origin=number_format($origin_charge->total/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+        }
+
+        $sale_terms_destination = collect($sale_terms_destination);
+
+        $sale_terms_destination = $sale_terms_destination->groupBy([   
+            function ($item) {
+                return $item['airport']['name'].', '.$item['airport']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_destination as $destination_sale){
+            foreach($destination_sale as $value){
+                foreach($value->charge as $item){
+                    if($item->currency_id!=''){
+                        if($quote->pdf_option->grouped_destination_charges==1){
+                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                        $item->total_sale_destination=number_format($item->total/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+        }
+
+        /* Arrays de puertos incluidos en los Saleterms */
+
+        $origin_airports = $this->getAirportsInArray($sale_terms_origin_grouped);
+
+        $destination_airports = $this->getAirportsInArray($sale_terms_destination_grouped);
+
+        /* Fin arrays */
+
+        $freight_charges = AutomaticRate::whereHas('charge_lcl_air', function ($query) {
+            $query->where('type_id', 3);
+        })->where('quote_id',$quote->id)->get();
+
+        $origin_charges = AutomaticRate::whereNotIn('destination_airport_id',$origin_airports)->where('quote_id',$quote->id)
+            ->ChargeLclAir(1,'Origin')->get();
+
+        $destination_charges = AutomaticRate::whereNotIn('destination_airport_id',$destination_airports)->where('quote_id',$quote->id)
+            ->ChargeLclAir(2,'Destination')->get();
+
+        foreach ($rates_lcl_air as $item) {
+
+            foreach ($item->charge_lcl_air as $value) {
+
+                if($quote->pdf_option->grouped_total_currency==1){
+                    $typeCurrency = $quote->pdf_option->total_in_currency;
+                }else{
+                    $typeCurrency =  $currency_cfg->alphacode;
+                }
+
+                $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+                if($value->type_id==3){
+                    if($value->units>0){
+                        $value->total_freight=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+
+                    }
+                }elseif($value->type_id==1){
+                    if($value->units>0){
+                        $value->total_origin=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+
+                    }
+                }else{
+                    if($value->units>0){
+                        $value->total_destination=number_format((($value->units*$value->price_per_unit)+$value->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+            if(!$item->automaticInlandLclAir->isEmpty()){
+                foreach($item->automaticInlandLclAir as $inland){
+                    if($quote->pdf_option->grouped_origin_charges==1){
+                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
+                    if($inland->units>0){
+                        $inland->total_inland=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+                    }
+                }
+            }
+            foreach ($item->inland as $inland) {
+                $currency_charge = Currency::find($inland->currency_id);
+                $inland->currency_usd = $currency_charge->rates;
+                $inland->currency_eur = $currency_charge->rates_eur;
+            }
+
+
+        }
+
+        $rates_lcl_air = $this->addSaleTermToRateLcl($rates_lcl_air, $origin_airports, $destination_airports,$sale_terms_origin_grouped, $sale_terms_destination_grouped);
+
+        $origin_charges_grouped = collect($origin_charges);
+
+        $origin_charges_grouped = $origin_charges_grouped->groupBy([
+
+            function ($item) {
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },      
+            function ($item) {
+                return $item['destination_airport']['name'];
+            },
+        ], $preserveKeys = true);
+
+        foreach($origin_charges_grouped as $origin=>$detail){
+            foreach($detail as $item){
+                foreach($item as $v){
+                    foreach($v as $rate){
+                        foreach($rate->charge_lcl_air as $v_origin){
+
+                            if($v_origin->type_id==1){
+                                if($quote->pdf_option->grouped_origin_charges==1){
+                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                }else{
+                                    $typeCurrency =  $currency_cfg->alphacode;
+                                }
+
+                                $currency_rate=$this->ratesCurrency($v_origin->currency_id,$typeCurrency);
+                                if($v_origin->units>0){
+                                    $v_origin->rate=number_format((($v_origin->units*$v_origin->price_per_unit)+$v_origin->markup)/$v_origin->units, 2, '.', '');
+                                }else{
+                                    $v_origin->rate=0;
+                                }
+                                $v_origin->total_origin=number_format((($v_origin->units*$v_origin->price_per_unit)+$v_origin->markup)/$currency_rate, 2, '.', '');
+                            }
+                        }
+
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $inland){
+                                if($inland->type=='Origin'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($inland->currency_id,$typeCurrency);
+                                    if($inland->units>0){
+                                        $inland->rate_amount=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$inland->units, 2, '.', '');
+                                    }else{
+                                        $inland->rate_amount=0;
+                                    }
+                                    $inland->total_inland_origin=number_format((($inland->units*$inland->price_per_unit)+$inland->markup)/$currency_rate, 2, '.', '');
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*** DESTINATION CHARGES ***/
+
+        $destination_charges_grouped = collect($destination_charges);
+
+        $destination_charges_grouped = $destination_charges_grouped->groupBy([
+
+            function ($item) {
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },
+            function ($item) {
+                return $item['origin_airort']['name'];
+            },
+
+        ], $preserveKeys = true);
+        foreach($destination_charges_grouped as $origin=>$detail){
+            foreach($detail as $item){
+                foreach($item as $v){
+                    foreach($v as $rate){
+                        foreach($rate->charge_lcl_air as $v_destination){
+
+                            if($v_destination->type_id==2){
+
+                                if($quote->pdf_option->grouped_destination_charges==1){
+                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                }else{
+                                    $typeCurrency =  $currency_cfg->alphacode;
+                                }
+                                $currency_rate=$this->ratesCurrency($v_destination->currency_id,$typeCurrency);
+                                if($v_destination->units>0){
+                                    $v_destination->rate=number_format((($v_destination->units*$v_destination->price_per_unit)+$v_destination->markup)/$v_destination->units, 2, '.', '');
+                                }else{
+                                    $v_destination->rate=0;
+                                }
+                                $v_destination->total_destination=number_format((($v_destination->units*$v_destination->price_per_unit)+$v_destination->markup)/$currency_rate, 2, '.', '');
+                            }
+                        }
+                        if(!$rate->automaticInlandLclAir->isEmpty()){
+                            foreach($rate->automaticInlandLclAir as $v_destination_inland){
+                                if($v_destination_inland->type=='Destination'){
+                                    if($quote->pdf_option->grouped_origin_charges==1){
+                                        $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                    }else{
+                                        $typeCurrency =  $currency_cfg->alphacode;
+                                    }
+                                    $currency_rate=$this->ratesCurrency($v_destination_inland->currency_id,$typeCurrency);
+                                    if($v_destination_inland->units>0){
+                                        $v_destination_inland->rate_amount=number_format((($v_destination_inland->units*$v_destination_inland->price_per_unit)+$v_destination_inland->markup)/$v_destination_inland->units, 2, '.', '');
+                                    }else{
+                                        $v_destination_inland->rate_amount=0;
+                                    }
+                                    $v_destination_inland->total_inland_destination=number_format((($v_destination_inland->units*$v_destination_inland->price_per_unit)+$v_destination_inland->markup)/$currency_rate, 2, '.', '');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /** FREIGHT CHARGES **/
+
+        $freight_charges_detailed = collect($freight_charges);
+
+        $freight_charges_detailed = $freight_charges_detailed->groupBy([   
+            function ($item) {
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+            },
+            function ($item) {
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
+            },
+            function ($item) {
+                return $item['carrier']['name'];
+            },      
+        ], $preserveKeys = true);
+
+        foreach($freight_charges_detailed as $origin=>$item){
+            foreach($item as $destination=>$items){
+                foreach($items as $carrier=>$itemsDetail){
+                    foreach ($itemsDetail as $value) {     
+                        foreach ($value->charge as $amounts) {
+                            if($amounts->type_id==3){
+                                $sum_freight_20=0;
+                                $sum_freight_40=0;
+                                $sum_freight_40hc=0;
+                                $sum_freight_40nor=0;
+                                $sum_freight_45=0;
+                                $total_freight_40=0;
+                                $total_freight_20=0;
+                                $total_freight_40hc=0;
+                                $total_freight_40nor=0;
+                                $total_freight_45=0;
+                                //dd($quote->pdf_option->destination_charges_currency);
+                                if($quote->pdf_option->grouped_freight_charges==1){
+                                    $typeCurrency =  $quote->pdf_option->freight_charges_currency;
+                                }else{
+                                    $typeCurrency =  $currency_cfg->alphacode;
+                                }
+                                $currency_rate=$this->ratesCurrency($amounts->currency_id,$typeCurrency);
+                                $array_amounts = json_decode($amounts->amount,true);
+                                $array_markups = json_decode($amounts->markups,true);
+                                if(isset($array_amounts['c20']) && isset($array_markups['m20'])){
+                                    $sum_freight_20=$array_amounts['c20']+$array_markups['m20'];
+                                    $total_freight_20=$sum_freight_20/$currency_rate;
+                                }
+                                if(isset($array_amounts['c40']) && isset($array_markups['m40'])){
+                                    $sum_freight_40=$array_amounts['c40']+$array_markups['m40'];
+                                    $total_freight_40=$sum_freight_40/$currency_rate;
+                                }
+                                if(isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])){
+                                    $sum_freight_40hc=$array_amounts['c40hc']+$array_markups['m40hc'];
+                                    $total_freight_40hc=$sum_freight_40hc/$currency_rate;
+                                }
+                                if(isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])){
+                                    $sum_freight_40nor=$array_amounts['c40nor']+$array_markups['m40nor'];
+                                    $total_freight_40nor=$sum_freight_40nor/$currency_rate;
+                                }
+                                if(isset($array_amounts['c45']) && isset($array_markups['m45'])){
+                                    $sum_freight_45=$array_amounts['c45']+$array_markups['m45'];
+                                    $total_freight_45=$sum_freight_45/$currency_rate;
+                                }            
+
+                                $amounts->total_20 = number_format($total_freight_20, 2, '.', '');
+                                $amounts->total_40 = number_format($total_freight_40, 2, '.', '');
+                                $amounts->total_40hc = number_format($total_freight_40hc, 2, '.', '');
+                                $amounts->total_40nor = number_format($total_freight_40nor, 2, '.', '');
+                                $amounts->total_45 = number_format($total_freight_45, 2, '.', '');
+                            }
+                        }
+                    }
+                } 
+            }
+        }
+
+        $freight_charges_grouped = collect($freight_charges);
+
+        $freight_charges_grouped = $freight_charges_grouped->groupBy([
+
+            function ($item) {
+                return $item['origin_airport']['name'].', '.$item['origin_airport']['code'];
+            },
+            function ($item) {
+                return $item['destination_airport']['name'].', '.$item['destination_airport']['code'];
             },
             function ($item) {
                 return $item['carrier']['name'];
