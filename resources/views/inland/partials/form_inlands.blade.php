@@ -6,7 +6,7 @@
     </div>
     <div class="col-lg-3">
       {!! Form::label('ports', 'Port') !!}
-      {{ Form::select('irelandports[]', $harbor,null,['class'=>'m-select2-general form-control port','multiple' => 'multiple']) }}
+      {{ Form::select('irelandports[]', $harbor,null,['class'=>'m-select2-general form-control port','multiple' => 'multiple','required' => 'required' ]) }}
     </div>
     <div class="col-lg-3">
       {!! Form::label('validation_expire', 'Validity') !!}
