@@ -2536,6 +2536,48 @@ $(document).on('click', '#update-terms-portuguese', function () {
   });
 });
 
+//Mostrar inputs Origin/Destination address
+$(document).on('change', '.delivery_type', function (e) {
+
+  if($(this).val()==1){
+    $(".origin_address_label").addClass('hide');
+    $(".origin_address_span").addClass('hide');
+    $("#origin_address").attr('hidden',true);
+    $(".destination_address_label").addClass('hide');
+    $(".destination_address_span").addClass('hide');
+    $("#destination_address").attr('hidden',true);
+    $("#origin_address").val('');
+    $("#destination_address").val('');
+  }
+  if($(this).val()==2){
+
+    $(".origin_address_label").addClass('hide');
+    $(".origin_address_span").addClass('hide');
+    $("#origin_address").attr('hidden',true);
+    $(".destination_address_label").removeClass('hide');
+    $(".destination_address_span").removeClass('hide');
+    $("#destination_address").removeAttr('hidden');
+    $("#origin_address").val('');
+  }
+  if($(this).val()==3){
+    $(".origin_address_label").removeClass('hide');
+    $(".origin_address_span").removeClass('hide');
+    $("#origin_address").removeAttr('hidden');
+    $(".destination_address_label").addClass('hide');
+    $(".destination_address_span").addClass('hide');
+    $("#destination_address").attr('hidden',true);
+    $("#destination_address").val('');
+  }
+  if($(this).val()==4){
+    $(".origin_address_label").removeClass('hide');
+    $(".origin_address_span").removeClass('hide');
+    $("#origin_address").removeAttr('hidden');
+    $(".destination_address_label").removeClass('hide');
+    $(".destination_address_span").removeClass('hide');
+    $("#destination_address").removeAttr('hidden');
+  }
+});
+
 //Habilitar edicion campos de la cotizacion
 $(document).on('click', '#edit-quote', function () {
   $(".quote_id_span").attr('hidden','true');
