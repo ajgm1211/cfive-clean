@@ -57,6 +57,15 @@ class InlandsController extends Controller
     //
   }
 
+  public function changeNull($valor){
+    if($valor == null)
+      return 0;
+    else
+      return $valor;
+
+
+  }
+
   /**
      * Store a newly created resource in storage.
      *
@@ -77,10 +86,12 @@ class InlandsController extends Controller
     $inland->save();
     // ADITIONAL KM 
 
+
     $inlandKM = new InlandAdditionalKm();
-    $inlandKM->km_20 = $request->input('km_20');
-    $inlandKM->km_40 = $request->input('km_40');
-    $inlandKM->km_40hc = $request->input('km_40hc');
+    $inlandKM->km_20 = $this->changeNull( $request->input('km_20'));
+
+    $inlandKM->km_40 =  $this->changeNull($request->input('km_40')); 
+    $inlandKM->km_40hc = $this->changeNull($request->input('km_40hc')); 
     $inlandKM->currency_id = $request->input('chargecurrencykm');
     $inlandKM->inland()->associate($inland);
     $inlandKM->save();
@@ -236,9 +247,9 @@ class InlandsController extends Controller
 
 
     $inlandKM = InlandAdditionalKm::where("inland_id",$id)->first();
-    $inlandKM->km_20 = $request->input('km_20');
-    $inlandKM->km_40 = $request->input('km_40');
-    $inlandKM->km_40hc = $request->input('km_40hc');
+    $inlandKM->km_20 =$this->changeNull( $request->input('km_20'));
+    $inlandKM->km_40 = $this->changeNull($request->input('km_40'));
+    $inlandKM->km_40hc =$this->changeNull( $request->input('km_40hc'));
     $inlandKM->currency_id = $request->input('chargecurrencykm');
     $inlandKM->update();
 
