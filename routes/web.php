@@ -414,9 +414,9 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
-    Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
-    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
-    Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
+   Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
+   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+   Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
     Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');

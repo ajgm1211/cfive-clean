@@ -5273,9 +5273,12 @@ class ImportationController extends Controller
     // Account Importation --------------------------------------------------------------
 
     public function indexAccount(){
-        $account = AccountFcl::with('contract','companyuser')->get();
+      
+      
+       $account = \DB::select('call  proc_account_fcl');
+       
         return DataTables::of($account)
-            ->addColumn('status', function ( $account) {
+          /*  ->addColumn('status', function ( $account) {
                 if(empty($account->contract->status)!=true){
                     return  $account->contract->status;
                 }else{
@@ -5292,22 +5295,22 @@ class ImportationController extends Controller
                 } else {
                     return 'Manual';
                 }
-            })
+            })*/
             ->addColumn('action', function ( $account) {
-                if(empty($account->contract->status)!=true){
+                if($account->status != 'Contract erased'){
                     return '
-                <a href="/Importation/fcl/rate/'.$account->contract['id'].'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
+                <a href="/Importation/fcl/rate/'.$account->contract_id.'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
                 &nbsp;
-                <a href="/Importation/fcl/surcharge/'.$account->contract['id'].'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
+                <a href="/Importation/fcl/surcharge/'.$account->contract_id.'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
                 &nbsp;
-                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                <a href="/Importation/DownloadAccountcfcl/'.$account->id.'" class=""><i class="la la-cloud-download" title="Download"></i></a>
                 &nbsp;
-                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account->id.'" class=""><i class="la la-remove" title="Delete"></i></a>';
                 }else{
                     return '
-                <a href="/Importation/DownloadAccountcfcl/'.$account['id'].'" class=""><i class="la la-cloud-download" title="Download"></i></a>
+                <a href="/Importation/DownloadAccountcfcl/'.$account->id.'" class=""><i class="la la-cloud-download" title="Download"></i></a>
                 &nbsp;
-                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account['id'].'" class=""><i class="la la-remove" title="Delete"></i></a>';
+                <a href="#" id="delete-account-cfcl" data-id-account-cfcl="'.$account->id.'" class=""><i class="la la-remove" title="Delete"></i></a>';
                 }
             })
             ->editColumn('id', '{{$id}}')->toJson();

@@ -18,13 +18,13 @@ use App\ViewGlobalCharge;
 use App\GlobalCharCarrier;
 use App\GlobalCharCountry;
 use Illuminate\Http\Request;
+use App\GlobalCharCountryPort;
+use App\GlobalCharPortCountry;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
 use Illuminate\Support\Collection as Collection;
-use App\GlobalCharCountryPort;
-use App\GlobalCharPortCountry;
+use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
 
 class GlobalChargesController extends Controller
 {
