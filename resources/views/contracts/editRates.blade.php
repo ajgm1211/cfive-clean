@@ -32,18 +32,18 @@
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('twuenty', 'Rate 20 \' ') !!}
-                {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Please enter the 20','class' => 'form-control m-input' ]) !!} 
+                {!! Form::number('twuenty', $rates->twuenty, ['id' => 'twuenty','placeholder' => 'Default value zero','class' => 'form-control m-input' ,'required'=>'true'  ]) !!} 
             </div>
 
 
             <div class="col-lg-4">
                 <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('forty', 'Rates 40  \' ') !!}
-                {!! Form::number('forty', $rates->forty, ['id' => 'forty','placeholder' => 'Please enter the 40','class' => 'form-control m-input' ]) !!} 
+                {!! Form::number('forty', $rates->forty, ['id' => 'forty','placeholder' => 'Default value zero','class' => 'form-control m-input' ,'required'=>'true'  ]) !!} 
 
             </div>
             <div class="col-lg-4">
                 <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortyhc', 'Rates 40 HC \' ') !!}
-                {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => '40HC','class' => 'form-control ']) !!}
+                {!! Form::number('fortyhc', $rates->fortyhc, ['id' => 'fortyhc','placeholder' => 'Default value zero','class' => 'form-control ' ,'required'=>'true'  ]) !!}
 
             </div>
 
@@ -51,13 +51,13 @@
         <div class="form-group m-form__group row">
             <div class="col-lg-4">
                 <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortynor', 'Rates 40 NOR \' ') !!}
-                {!! Form::number('fortynor', $rates->fortynor, ['id' => 'fortynor','placeholder' => 'Please enter the 40 NOR','class' => 'form-control m-input' ]) !!} 
+                {!! Form::number('fortynor', $rates->fortynor, ['id' => 'fortynor','placeholder' => 'Default value zero','class' => 'form-control m-input' ,'required'=>'true'  ]) !!} 
 
             </div>
             <div class="col-lg-4">
 
                 <i class="la la-database icon__modal" style="transform: rotate(90deg); position: relative; bottom:-2px"></i>{!! Form::label('fortyfive', 'Rates 45 \' ') !!}
-                {!! Form::number('fortyfive', $rates->fortyfive, ['id' => 'fortyfive','placeholder' => '45','class' => 'form-control ']) !!}
+                {!! Form::number('fortyfive', $rates->fortyfive, ['id' => 'fortyfive','placeholder' => 'Default value zero','class' => 'form-control ' ,'required'=>'true'  ]) !!}
 
             </div>
             <div class="col-lg-4">
