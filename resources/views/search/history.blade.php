@@ -79,6 +79,9 @@
                   <th title="description">
                     Pick Up Date
                   </th>
+                  <th title="search">
+                    Search Date
+                  </th>
                   <th>
                     Origin Port
                   </th>
@@ -103,6 +106,7 @@
                   <td>{{ $search->user->name }}</td>
                   <td>{!! str_replace(["[","]","\""], ' ', $search->equipment) !!} </td>
                   <td>{{ $search->pick_up_date }}</td>
+                  <td>{{ $search->created_at }}</td>
                   <td>
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portOrig')->unique()->pluck('name') ) !!}
                   </td>
@@ -110,7 +114,7 @@
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
                   <td>{{ $search->pick_up_date }}</td>
-                 
+
                   <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
                   <td>{{ $search->company->name }}</td>
                 </tr>
@@ -130,6 +134,9 @@
                   <th title="description">
                     Pick Up Date
                   </th>
+                  <th title="search">
+                    Search Date
+                  </th>
                   <th>
                     Origin Port
                   </th>
@@ -140,7 +147,7 @@
                   <th title="delivery">
                     Delivery Type
                   </th>
-           
+
                   <th title="direction">
                     Direction
                   </th>
@@ -153,8 +160,10 @@
                 @foreach ($searchRatesLCL as $search)
                 <tr>
                   <td>{{ $search->user->name }}</td>
-                  
+
                   <td>{{ $search->pick_up_date }}</td>
+                  <td>{{ $search->created_at }}</td>
+                  
                   <td>
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portOrig')->unique()->pluck('name') ) !!}
                   </td>
@@ -162,7 +171,7 @@
                     {!! str_replace(["[","]","\""], ' ', $search->search_ports->pluck('portDest')->unique()->pluck('name') ) !!}
                   </td>
                   <td>{{ $search->pick_up_date }}</td>
-                  
+
                   <td>{{ ($search->direction == 1) ? 'export' : 'import' }}</td>
                   <td>{{ $search->company->name }}</td>
                 </tr>
@@ -182,11 +191,11 @@
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 <script>
 
-		$('#html_table').DataTable({         
-        });
-  
-		$('#otro').DataTable({         
-        });
+  $('#html_table').DataTable({         
+  });
+
+  $('#otro').DataTable({         
+  });
 
 </script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-surcharge.js" type="text/javascript"></script>
