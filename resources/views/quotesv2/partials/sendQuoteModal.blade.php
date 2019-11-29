@@ -49,8 +49,10 @@
                 <div class="form-group m-form__group">
                     @if($quote->type=='FCL')
                         <button id="send-pdf-quotev2" class="btn btn-success">Send</button>
-                    @else
+                    @elseif($quote->type=='LCL')
                         <button id="send-pdf-quotev2-lcl-air" class="btn btn-success">Send</button>
+                    @else
+                        <button id="send-pdf-quotev2-air" class="btn btn-success">Send</button>
                     @endif
                     <button id="send-pdf-quote-sending" class="btn btn-success" style="display:none" disabled><i class="fa fa-spinner fa-spin"></i> &nbsp; Sending</button>
                     <button data-toggle="modal" data-target="#SendQuoteModal" class="btn btn-danger">Cancel</button>
