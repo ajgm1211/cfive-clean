@@ -11,6 +11,8 @@ use App\AutomaticInland;
 use App\AutomaticInlandLclAir;
 use App\Charge;
 use App\ChargeLclAir;
+use App\Jobs\SendQuotes;
+use App\SendQuote;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait {
@@ -1600,5 +1602,215 @@ trait QuoteV2Trait {
         }
 
         return $array;
+    }
+
+    public function addSaleTermToRate($rates, $origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
+        $rates = $rates->map(function ($item, $key) use($origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
+            if(in_array($item->origin_port_id,$origin_ports)){
+                if(!$item->charge->whereIn('type_id',1)->isEmpty()){
+                    $item->charge->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
+                        if($value->type_id==1){
+                            //Seteamos valores de los charges originales a 0
+                            $value->total_20=0;
+                            $value->total_40=0;
+                            $value->total_40hc=0;
+                            $value->total_40nor=0;
+                            $value->total_45=0;
+                            $value->total_markup20=0;
+                            $value->total_markup40=0;
+                            $value->total_markup40hc=0;
+                            $value->total_markup40nor=0;
+                            $value->total_markup45=0;
+
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 1;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }else{
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 1;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }
+            }
+            if(in_array($item->destination_port_id,$destination_ports)){
+                if(!$item->charge->whereIn('type_id',2)->isEmpty()){
+                    $item->charge->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
+                        if($value->type_id==2){
+                            //Seteamos valores de los charges originales a 0
+                            $value->total_20=0;
+                            $value->total_40=0;
+                            $value->total_40hc=0;
+                            $value->total_40nor=0;
+                            $value->total_45=0;
+                            $value->total_markup20=0;
+                            $value->total_markup40=0;
+                            $value->total_markup40hc=0;
+                            $value->total_markup40nor=0;
+                            $value->total_markup45=0;
+
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 2;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }else{
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 2;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }
+            }
+
+            return $item;       
+
+        });
+
+        return $rates;
+    }
+
+
+    public function addSaleTermToRateLcl($rates, $origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
+        $rates = $rates->map(function ($item, $key) use($origin_ports, $destination_ports, $sale_terms_origin_grouped, $sale_terms_destination_grouped){
+            if(in_array($item->origin_port_id,$origin_ports)){
+                if(!$item->charge->whereIn('type_id',1)->isEmpty()){
+                    $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
+                        if($value->type_id==1){
+                            $value->total_origin=0;
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 1;
+                            $charge->total_origin = $x->total_sale_origin;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
+                        });
+                    });
+                }else{
+
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new ChargeLclAir();
+                            $charge->type_id = 1;
+                            $charge->total_origin = $x->total_sale_origin;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge_lcl_air->push($charge);
+                        });
+                    });
+                }
+            }
+            if(in_array($item->destination_port_id,$destination_ports)){
+                $item->charge_lcl_air->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
+                    if($value->type_id==2){
+                        $value->total_destination=0;
+                    }
+                });
+                //Añadimos los saleterms a la colección de Rates
+                $sale_terms_destination_grouped->map(function ($a) use($item) {
+                    $a->charge->map(function ($x) use($item) {
+                        $charge = new ChargeLclAir();
+                        $charge->type_id = 2;
+                        $charge->total_destination = $x->total_sale_destination;
+                        $charge->currency_id = $x->currency_id;
+                        $item->charge_lcl_air->push($charge);
+                    });
+                });
+            }else{
+                //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                $sale_terms_destination_grouped->map(function ($a) use($item) {
+                    $a->charge->map(function ($x) use($item) {
+                        $charge = new ChargeLclAir();
+                        $charge->type_id = 2;
+                        $charge->total_destination = $x->total_sale_destination;
+                        $charge->currency_id = $x->currency_id;
+                        $item->charge_lcl_air->push($charge);
+                    });
+                });
+            }
+
+            return $item;
+        });
+
+        return $rates;
+    }
+
+    public function saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email){
+        if($to!=''){
+          $explode=explode(';',$to);
+          foreach($explode as $item) {
+            $send_quote = new SendQuote();
+            $send_quote->to = trim($item);
+            $send_quote->from = $email_from;
+            $send_quote->subject = $subject;
+            $send_quote->body = $body;
+            $send_quote->quote_id = $quote->id;
+            if($sign_type!=''){
+              $send_quote->sign_type = $sign_type;
+            }
+            $send_quote->sign = $sign;
+            $send_quote->status = 0;
+            $send_quote->save();
+          }
+        }else{
+          $send_quote = new SendQuote();
+          $send_quote->to = $contact_email->email;
+          $send_quote->from = $email_from;
+          $send_quote->subject = $subject;
+          $send_quote->body = $body;
+          $send_quote->quote_id = $quote->id;
+          if($sign_type!=''){
+            $send_quote->sign_type = $sign_type;
+          }
+          $send_quote->sign = $sign;
+          $send_quote->status = 0;
+          $send_quote->save();
+        }
     }
 }

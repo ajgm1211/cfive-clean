@@ -126,6 +126,7 @@ class SaleTermV2Controller extends Controller
     {
         $sale_charge = new SaleTermV2Charge();
         $sale_charge->sale_term_id = $request->sale_term_id;
+        $sale_charge->charge = $request->charge;
         $sale_charge->detail = $request->detail;
         $sale_charge->c20 = $request->c20;
         $sale_charge->c40 = $request->c40;

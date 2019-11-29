@@ -45,6 +45,7 @@ class Kernel extends ConsoleKernel
     // Comandos para backups
     // $schedule->command('backup:clean')->daily()->at('01:40');
     //$schedule->command('backup:run')->daily()->at('02:00');
+
   }
 
   /**
