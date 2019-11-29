@@ -2888,7 +2888,7 @@ $(document).on('click', '#send-pdf-quotev2', function () {
     }
 });
 
-//Enviando cotizaciones LCL/AIR
+//Enviando cotizaciones LCL
 $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
     var id = $('#quote-id').val();
     var email = $('#quote_email').val();
@@ -2909,6 +2909,58 @@ $(document).on('click', '#send-pdf-quotev2-lcl-air', function () {
             success: function(data) {
                 $('#spin').hide();
                 $('#send-pdf-quotev2-lcl-air').show();
+                $('#send-pdf-quote-sending').hide();
+                if(data.message=='Ok'){
+                    $('#SendQuoteModal').modal('toggle');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    $('#subject-box').html('');
+                    $('.editor').html('');
+                    $('#textarea-box').hide();
+                    swal(
+                        'Done!',
+                        'Your message has been sent.',
+                        'success'
+                    )
+                }else{
+                    swal(
+                        'Error!',
+                        'Your message has not been sent.',
+                        'error'
+                    )
+                }
+            }
+        });
+    }else{
+        swal(
+            '',
+            'Please complete all fields',
+            'error'
+        )
+    }
+});
+
+//Enviando cotizaciones AIR
+$(document).on('click', '#send-pdf-quotev2-air', function () {
+    var id = $('#quote-id').val();
+    var email = $('#quote_email').val();
+    var to = $('#addresse').val();
+    var email_template_id = $('#email_template').val();
+    var email_subject = $('#email-subject').val();
+    var email_body = $('#email-body').val();
+
+    if(email_template_id!=''&&to!=''){
+        $.ajax({
+            type: 'POST',
+            url: '/v2/quotes/send/air',
+            data:{"email_template_id":email_template_id,"id":id,"subject":email_subject,"body":email_body,"to":to},
+            beforeSend: function () {
+                $('#send-pdf-quotev2-air').hide();
+                $('#send-pdf-quote-sending').show();
+            },
+            success: function(data) {
+                $('#spin').hide();
+                $('#send-pdf-quotev2-air').show();
                 $('#send-pdf-quote-sending').hide();
                 if(data.message=='Ok'){
                     $('#SendQuoteModal').modal('toggle');
