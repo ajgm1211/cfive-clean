@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     Schema::defaultStringLength(191);
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
-
+    
     if(env('APP_ENV') !== 'local') {
       $url->forceScheme('https');
     }
@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
   public function register(){
     // Dusk, if env is appropiate
     /*if ($this->app->environment('local', 'testing')) {
-                $this->app->register(DuskServiceProvider::class);
-              }*/
+        $this->app->register(DuskServiceProvider::class);
+      }*/
   }
 }
