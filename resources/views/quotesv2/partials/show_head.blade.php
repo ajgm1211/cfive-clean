@@ -89,54 +89,58 @@
               {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
               <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
             </div>
-            <div class="col-md-4" {{$quote->type!='AIR' ? '':'hidden'}}>
-              <br>
-              <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
-              {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
-              <span class="delivery_type_span">
-                  @switch($quote->delivery_type)
-                    @case(1)
-                        Port to Port
-                        @break
-                    @case(2)
-                        Port to Door
-                        @break
-                    @case(3)
-                        Door to Port
-                        @break
-                    @case(4)
-                        Door to Door
-                        @break
-                    @default
-                        Port to Port
-                        @break
-                  @endswitch
-              </span>
-            </div>
-            <div class="col-md-4" {{$quote->type=='AIR' ? '':'hidden'}}>
-              <br>
-              <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
-              {{ Form::select('status',[1=>'Airport to Airport',2=>'Airport to Door',3=>'Door to Airport',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
-              <span class="delivery_type_span">
-                  @switch($quote->delivery_type)
-                    @case(1)
-                        Airport to Airport
-                        @break
-                    @case(2)
-                        Airport to Door
-                        @break
-                    @case(3)
-                        Door to Airport
-                        @break
-                    @case(4)
-                        Door to Door
-                        @break
-                    @default
-                        Airport to Airport
-                        @break
-                  @endswitch
-              </span>
-            </div>
+            @if($quote->type!='AIR')
+                <div class="col-md-4">
+                  <br>
+                  <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
+                  {{ Form::select('status',[1=>'Port to Port',2=>'Port to Door',3=>'Door to Port',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
+                  <span class="delivery_type_span">
+                      @switch($quote->delivery_type)
+                        @case(1)
+                            Port to Port
+                            @break
+                        @case(2)
+                            Port to Door
+                            @break
+                        @case(3)
+                            Door to Port
+                            @break
+                        @case(4)
+                            Door to Door
+                            @break
+                        @default
+                            Port to Port
+                            @break
+                      @endswitch
+                  </span>
+                </div>
+            @endif
+            @if($quote->type=='AIR')
+                <div class="col-md-4">
+                  <br>
+                  <label class="title-quote"><b>Destination type:&nbsp;&nbsp;</b></label>
+                  {{ Form::select('status',[1=>'Airport to Airport',2=>'Airport to Door',3=>'Door to Airport',4=>'Door to Door'],$quote->delivery_type,['class'=>'form-control delivery_type select2','hidden','']) }}
+                  <span class="delivery_type_span">
+                      @switch($quote->delivery_type)
+                        @case(1)
+                            Airport to Airport
+                            @break
+                        @case(2)
+                            Airport to Door
+                            @break
+                        @case(3)
+                            Door to Airport
+                            @break
+                        @case(4)
+                            Door to Door
+                            @break
+                        @default
+                            Airport to Airport
+                            @break
+                      @endswitch
+                  </span>
+                </div>
+            @endif
             <div class="col-md-4">
               <br>
               <label class="title-quote"><b>Contact:&nbsp;&nbsp;</b></label>
