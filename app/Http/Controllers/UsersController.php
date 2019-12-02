@@ -88,16 +88,29 @@ class UsersController extends Controller
 
       $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
       $this->intercom($client,$user);
-      $client->users->create([
-        "email" => $user->email,
-        "user_id" => $user->id,
-        "name" => $user->name,
-        "companies" => [
-          [
-            "company_id" => $user->company_user_id,
+
+      if($user->company_user_id != ''){
+        
+        $client->users->create([
+          "email" => $user->email,
+          "user_id" => $user->id,
+          "name" => $user->name,
+          "companies" => [
+            [
+              "company_id" => $user->company_user_id,
+            ]
           ]
-        ]
-      ]);
+        ]);
+
+      }else{
+
+        $client->users->create([
+          "email" => $user->email,
+          "user_id" =>$user->id,
+          "name" => $user->name,
+        ]);
+      }
+
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
