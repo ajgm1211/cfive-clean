@@ -41,8 +41,9 @@ use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
-use App\Jobs\ImportationRatesFclJob;
+use Illuminate\Support\Facades\DB;
 use App\Jobs\SynchronImgCarrierJob;
+use App\Jobs\ImportationRatesFclJob;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
@@ -4215,23 +4216,25 @@ class ImportationController extends Controller
         $failrates = collect([]);
 
         if($selector == 1){
-            $failratesFor = FailRate::where('contract_id','=',$id)->get();
+            $failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
+
+            //$failratesFor = FailRate::where('contract_id','=',$id)->get();
             foreach( $failratesFor as $failrate){
                 $carrAIn;
                 $pruebacurre = "";
-                $originA        = explode("_",$failrate['origin_port']);
-                $destinationA   = explode("_",$failrate['destiny_port']);
-                $carrierA       = explode("_",$failrate['carrier_id']);
-                $currencyA      = explode("_",$failrate['currency_id']);
-                $twuentyA       = explode("_",$failrate['twuenty']);
-                $fortyA         = explode("_",$failrate['forty']);
-                $fortyhcA       = explode("_",$failrate['fortyhc']);
-                $fortynorA      = explode("_",$failrate['fortynor']);
-                $fortyfiveA     = explode("_",$failrate['fortyfive']);
+                $originA        = explode("_",$failrate->origin_port);
+                $destinationA   = explode("_",$failrate->destiny_port);
+                $carrierA       = explode("_",$failrate->carrier_id);
+                $currencyA      = explode("_",$failrate->currency_id);
+                $twuentyA       = explode("_",$failrate->twuenty);
+                $fortyA         = explode("_",$failrate->forty);
+                $fortyhcA       = explode("_",$failrate->fortyhc);
+                $fortynorA      = explode("_",$failrate->fortynor);
+                $fortyfiveA     = explode("_",$failrate->fortyfive);
 
-                $schedule_typeA = explode("_",$failrate['schedule_type']);
-                $transit_timeA  = explode("_",$failrate['transit_time']);
-                $viaA           = explode("_",$failrate['via']);
+                $schedule_typeA = explode("_",$failrate->schedule_type);
+                $transit_timeA  = explode("_",$failrate->transit_time);
+                $viaA           = explode("_",$failrate->via);
 
                 $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
@@ -4408,7 +4411,9 @@ class ImportationController extends Controller
             $harbor                = $objharbor->all()->pluck('display_name','id');
             $currency              = $objcurrency->all()->pluck('alphacode','id');
             $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-            $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
+            
+            $failsurchargeS   = DB::select('call  proc_fails_surchargers_fcl('.$id.')');
+            //$failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
             $failsurchargecoll = collect([]);
             foreach($failsurchargeS as $failsurcharge){
                 $classdorigin           =  'color:green';
@@ -4419,14 +4424,14 @@ class ImportationController extends Controller
                 $classcalculationtype   =  'color:green';
                 $classammount           =  'color:green';
                 $classcurrency          =  'color:green';
-                $surchargeA         =  explode("_",$failsurcharge['surcharge_id']);
-                $originA            =  explode("_",$failsurcharge['port_orig']);
-                $destinationA       =  explode("_",$failsurcharge['port_dest']);
-                $calculationtypeA   =  explode("_",$failsurcharge['calculationtype_id']);
-                $ammountA           =  explode("_",$failsurcharge['ammount']);
-                $currencyA          =  explode("_",$failsurcharge['currency_id']);
-                $carrierA           =  explode("_",$failsurcharge['carrier_id']);
-                $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
+                $surchargeA         =  explode("_",$failsurcharge->surcharge_id);
+                $originA            =  explode("_",$failsurcharge->port_orig);
+                $destinationA       =  explode("_",$failsurcharge->port_dest);
+                $calculationtypeA   =  explode("_",$failsurcharge->calculationtype_id);
+                $ammountA           =  explode("_",$failsurcharge->ammount);
+                $currencyA          =  explode("_",$failsurcharge->currency_id);
+                $carrierA           =  explode("_",$failsurcharge->carrier_id);
+                $typedestinyA       =  explode("_",$failsurcharge->typedestiny_id);
 
                 // -------------- ORIGIN -------------------------------------------------------------
                 if($failsurcharge->differentiator == 1){
