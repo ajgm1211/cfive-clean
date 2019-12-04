@@ -2771,10 +2771,12 @@ $(document).on('click', '#update', function () {
                     incoterm='CIP';
                 }else if(incoterm==8){
                     incoterm='DAT';
-                }else if(incoterm==9){
+                }else if(incoterm==10){
                     incoterm='DAP';
-                }else{
+                }else if(incoterm==11){
                     incoterm='DDP';
+                }else{
+                    incoterm='DDU';
                 }
 
                 if(delivery_type==1 && (type=='FCL' || type=='LCL')){
