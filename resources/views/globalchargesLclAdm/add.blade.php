@@ -34,7 +34,7 @@
                 <label>
                     {!! Form::label('type', 'Type') !!}
                 </label>
-                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ']) }}
+                {{ Form::select('type', $surcharge,null,['id' => 'type','class'=>'m-select2-general form-control ' ,'required' => 'true']) }}
             </div>
             <div class="col-lg-4">
                 <div class="divport" >
