@@ -4371,7 +4371,7 @@ class ImportationController extends Controller
                 &nbsp;
                 <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-remove"></i></a>';
             })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
+                ->editColumn('id', '{{$id}}')->toJson();
 
 
 
@@ -4393,9 +4393,47 @@ class ImportationController extends Controller
                 &nbsp;
                 <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-remove"></i></a>';
                 })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
+                ->editColumn('id', '{{$id}}')->toJson();
         }
     }
+
+    public function EdicionRatesMultiples(Request $request){
+        $harbor     = Harbor::pluck('display_name','id');
+        $arreglo    = $request->idAr;
+        //dd($harbor,$arreglo);
+        return view('importation.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo'));
+    }
+    public function StoreFailRatesMultiples(Request $request){
+        dd($request->all());
+        foreach($request->idAr as $rateF){
+            $failrate = FailRate::find($rateF);
+
+
+            $carrierArr       = explode("_",$failrate['carrier_id']);
+            $currencyArr      = explode("_",$failrate['currency_id']);
+            $twuentyArr       = explode("_",$failrate['twuenty']);
+            $fortyArr         = explode("_",$failrate['forty']);
+            $fortyhcArr       = explode("_",$failrate['fortyhc']);
+            $fortynorArr      = explode("_",$failrate['fortynor']);
+            $fortyfiveArr     = explode("_",$failrate['fortyfive']);
+            $schedueleTArr    = explode("_",$failrate['schedule_type']);
+            dd($failrate);
+
+            $carrierEX     = count($carrierArr);
+            $twuentyEX     = count($twentyArr);
+            $fortyEX       = count($fortyArr);
+            $fortyhcEX     = count($fortyhcArr);
+            $currencyEX    = count($currencyArr);
+
+            if( $twuentyEX  <= 1 &&
+               $fortyEX     <= 1 &&  
+               $fortyhcEX   <= 1 &&
+               $currencyEX  <= 1 ){
+            }
+        }
+
+    }
+
     public function FailSurchargeLoad($id,$selector){
 
         if($selector == 1){
@@ -4411,7 +4449,7 @@ class ImportationController extends Controller
             $harbor                = $objharbor->all()->pluck('display_name','id');
             $currency              = $objcurrency->all()->pluck('alphacode','id');
             $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-            
+
             $failsurchargeS   = DB::select('call  proc_fails_surchargers_fcl('.$id.')');
             //$failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
             $failsurchargecoll = collect([]);
@@ -5278,12 +5316,12 @@ class ImportationController extends Controller
     // Account Importation --------------------------------------------------------------
 
     public function indexAccount(){
-      
-      
-       $account = \DB::select('call  proc_account_fcl');
-       
+
+
+        $account = \DB::select('call  proc_account_fcl');
+
         return DataTables::of($account)
-          /*  ->addColumn('status', function ( $account) {
+            /*  ->addColumn('status', function ( $account) {
                 if(empty($account->contract->status)!=true){
                     return  $account->contract->status;
                 }else{
