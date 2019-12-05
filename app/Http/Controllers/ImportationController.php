@@ -30,6 +30,7 @@ use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\Jobs\GeneralJob;
 use App\ContractFclFile;
 use App\ContractCarrier;
 use App\CalculationType;
@@ -1143,6 +1144,26 @@ class ImportationController extends Controller
             $requestobj->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
+    }
+
+    public function EdicionRatesMultiples(Request $request){
+        $harbor         = Harbor::pluck('display_name','id');
+        $arreglo        = $request->idAr;
+        $contract_id    = $request->contract_id;
+        //dd($harbor,$arreglo);
+        return view('importation.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo','contract_id'));
+    }
+    public function StoreFailRatesMultiples(Request $request){
+        //dd($request->all());
+        $id = $request->contract_id;
+        $dataArr = ['id' => $id,'data' => $request->toArray()];
+        //dd($dataArr);
+        GeneralJob::dispatch('edit_mult_rates_fcl',$dataArr);
+
+        $request->session()->flash('message.content', 'Updating Rate' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,1]);
     }
 
     public function EditRatesGood($id){
@@ -4397,42 +4418,6 @@ class ImportationController extends Controller
         }
     }
 
-    public function EdicionRatesMultiples(Request $request){
-        $harbor     = Harbor::pluck('display_name','id');
-        $arreglo    = $request->idAr;
-        //dd($harbor,$arreglo);
-        return view('importation.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo'));
-    }
-    public function StoreFailRatesMultiples(Request $request){
-        dd($request->all());
-        foreach($request->idAr as $rateF){
-            $failrate = FailRate::find($rateF);
-
-
-            $carrierArr       = explode("_",$failrate['carrier_id']);
-            $currencyArr      = explode("_",$failrate['currency_id']);
-            $twuentyArr       = explode("_",$failrate['twuenty']);
-            $fortyArr         = explode("_",$failrate['forty']);
-            $fortyhcArr       = explode("_",$failrate['fortyhc']);
-            $fortynorArr      = explode("_",$failrate['fortynor']);
-            $fortyfiveArr     = explode("_",$failrate['fortyfive']);
-            $schedueleTArr    = explode("_",$failrate['schedule_type']);
-            dd($failrate);
-
-            $carrierEX     = count($carrierArr);
-            $twuentyEX     = count($twentyArr);
-            $fortyEX       = count($fortyArr);
-            $fortyhcEX     = count($fortyhcArr);
-            $currencyEX    = count($currencyArr);
-
-            if( $twuentyEX  <= 1 &&
-               $fortyEX     <= 1 &&  
-               $fortyhcEX   <= 1 &&
-               $currencyEX  <= 1 ){
-            }
-        }
-
-    }
 
     public function FailSurchargeLoad($id,$selector){
 
