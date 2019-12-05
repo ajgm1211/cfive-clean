@@ -105,7 +105,7 @@
                                     &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="{{route('Reprocesar.Rates',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
                                     &nbsp; &nbsp;
-<!--                                    <a href="#" onclick="showModalsavetorate(1,'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>-->
+                                    <a href="#" onclick="showModalsavetorate({{$id}},'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>
                                 </div>
                             </div>
                             <br>
@@ -368,7 +368,7 @@
                         //console.log();
                         var url = "{{route('Edicion.Multiples.Rates.Fcl')}}";
                         //url = url.replace(':id', idAr);
-                        data2 = {idAr:idAr}
+                        data2 = {idAr:idAr,contract_id:id}
                         $('#edit-modal-body').load(url,data2,function(){
                             $('#modaleditRate').modal({show:true});
                         });
