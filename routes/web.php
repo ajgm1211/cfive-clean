@@ -347,6 +347,12 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
     Route::resource('ImportationLCL','ImportationLclController');
     Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
+    
+    Route::post('EditMultFailRatesLCL/','ImportationLclController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::post('StoreMultFailRatesLCL/','ImportationLclController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 
 });
 
