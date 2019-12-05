@@ -8,12 +8,12 @@
         <div class="form-group m-form__group row"> 
             <div class="col-lg-6">
                 {!! Form::label('origin_port', 'Origin Port') !!}
-                {{ Form::select('origin_id', $harbor,null,['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;','multiple']) }} 
+                {{ Form::select('origin_id', $harbor,null,['id' => 'm_select2_1_modal','class'=>'m-select2-general form-control', 'style' => 'width:100%;','required']) }} 
             </div>
             <div class="col-lg-6">
                 {!! Form::label('destination_port', 'Destination Port') !!}
                 <div class="m-input-icon m-input-icon--right">
-                    {{ Form::select('destiny_id', $harbor,null,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;','multiple']) }}
+                    {{ Form::select('destiny_id', $harbor,null,['id' => 'destiny','class'=>'m-select2-general form-control' ,'style' => 'width:100%;','required']) }}
                     <span class="m-input-icon__icon m-input-icon__icon--right">
                         <span>
                             <i class="la la-info-circle"></i>
@@ -24,6 +24,7 @@
             <div class="form-group m-form__group row">
 
                 <div class="col-lg-12">
+                    <input type="hidden" value="{{$contract_id}}" name="contract_id" id="contract_id" />
                     @foreach($arreglo as $ids)
                     <input type="hidden" value="{{$ids}}" name="arreglo[]" id="arreglo_id" />
                     @endforeach
