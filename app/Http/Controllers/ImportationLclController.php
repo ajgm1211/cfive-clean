@@ -17,6 +17,7 @@ use App\CompanyUser;
 use App\ContractLcl;
 use App\ScheduleType;
 use App\ContractLclFile;
+use App\Jobs\GeneralJob;
 use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
 use App\NewContractRequestLcl;
@@ -866,20 +867,20 @@ class ImportationLclController extends Controller
         //dd($contract_id,$arreglo);
         return view('ImportationLcl.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo','contract_id'));
     }
-    
+
     public function StoreFailRatesMultiples(Request $request){
-        dd($request->all());
+        //dd($request->all());
         $id = $request->contract_id;
         $dataArr = ['id' => $id,'data' => $request->toArray()];
         //dd($dataArr);
-        GeneralJob::dispatch('edit_mult_rates_fcl',$dataArr);
-
+        GeneralJob::dispatch('edit_mult_rates_lcl',$dataArr);
+        
         $request->session()->flash('message.content', 'Updating Rate' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,1]);
+        return redirect()->route('Failed.Rates.lcl.view',[$id,1]);
     }
-    
+
     // Rates view
     public function FailedRatesView($id,$tab){
         //$id se refiere al id del contracto
@@ -1364,7 +1365,6 @@ class ImportationLclController extends Controller
             return Storage::disk('LclAccount')->download($account->namefile,$name);
         }
     }
-
 
     //********************************************************************
     public function store(Request $request)
