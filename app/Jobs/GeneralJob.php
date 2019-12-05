@@ -19,6 +19,7 @@ use App\ContractUserRestriction;
 use App\ContractCompanyRestriction;
 // LCL
 use App\RateLcl;
+use App\FailRateLcl;
 use App\ContractLcl;
 use App\LocalChargeLcl;
 use App\LocalCharPortLcl;
@@ -482,11 +483,143 @@ class GeneralJob implements ShouldQueue
                             ]);
                         }
                         $failrate->forceDelete();
-
                     } 
-
                 }
             }
+        } else if(strnatcasecmp($this->accion,'edit_mult_rates_lcl') == 0){ 
+
+            $id           = $requestArrayD['id'];
+            $requestArray = $requestArrayD['data'];
+            foreach($requestArray['arreglo'] as $failrate_id){
+
+                $failrate = FailRateLcl::find($failrate_id);
+                $carrierEX          = null;
+                $wmEX               = null;
+                $minimunEX          = null;
+                $currencyEX         = null;
+                $originResul        = null;
+                $originExits        = null;
+                $originV            = null;
+                $destinResul        = null;
+                $destinationExits   = null;
+                $destinationV       = null;
+                $originEX           = null;
+                $destinyEX          = null;
+                $wmVal              = null;
+                $minimunVal         = null;
+                $carrierVal         = null;
+                $carrierArr         = null;
+                $wmArr              = null;
+                $minimunArr         = null;
+                $scheduleTVal       = null;
+
+                $curreExitBol       = false;
+                $originB            = false;
+                $destinyB           = false;
+                $wmExiBol           = false;
+                $minimunExiBol      = false;
+                $values             = true;
+                $carriExitBol       = false;
+                $scheduleTBol       = false;
+
+                $originEX       = explode('_',$failrate->origin_port);
+                $destinyEX      = explode('_',$failrate->destiny_port);
+                $carrierArr     = explode('_',$failrate->carrier_id);
+                $wmArr          = explode('_',$failrate->uom);
+                $minimunArr     = explode('_',$failrate->minimum);
+                $currencyArr    = explode('_',$failrate->currency_id);
+                $scheduleTArr   = explode('_',$failrate->schedule_type);
+
+                $carrierEX     = count($carrierArr);
+                $wmEX          = count($wmArr);
+                $minimunEX     = count($minimunArr);
+                $currencyEX    = count($currencyArr);
+
+                $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+
+                if($wmEX        <= 1 &&
+                   $minimunEX   <= 1 &&  $currencyEX  <= 1 ){
+
+                    $originV        = $requestArray['origin_id'];
+                    $destinationV   = $requestArray['destiny_id'];
+
+                    //---------------- Carrier ------------------------------------------------------------------
+                    $carrierArr      = PrvCarrier::get_carrier($carrierArr[0]);
+                    $carriExitBol    = $carrierArr['boolean'];
+                    $carrierVal      = $carrierArr['carrier'];
+
+                    //---------------- W/M ------------------------------------------------------------------
+                    if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
+                        $wmExiBol = true;
+                        $wmVal    = floatval($wmArr[0]);
+                    }
+
+                    //----------------- 40' -----------------------------------------------------------------
+                    if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
+                        $minimunExiBol = true;
+                        $minimunVal    = floatval($minimunArr[0]);
+                    }
+
+                    if($wmVal == 0 && $minimunVal == 0){
+                        $values = false;
+                    }
+                    //----------------- Currency -----------------------------------------------------------
+                    $currenct = Currency::where('alphacode','=',$currencyArr[0])->orWhere('id','=',$currencyArr[0])->first();
+
+                    if(empty($currenct->id) != true){
+                        $curreExitBol = true;
+                        $currencyVal =  $currenct->id;
+                    }
+
+                    //----------------- Currency -----------------------------------------------------------
+                    if(empty($scheduleT->id) != true || $scheduleTArr[0] == null){
+                        $scheduleTBol = true;
+                        if($scheduleTArr[0] != null){
+                            $scheduleTVal =  $scheduleT->id;
+                        } else {
+                            $scheduleTVal = null;
+                        }
+                    }
+
+                    // Validacion de los datos en buen estado ----------------------------------------------
+                    if($wmExiBol   == true && $minimunExiBol    == true &&
+                       $scheduleTBol == true && $carriExitBol   == true &&
+                       $curreExitBol   == true){
+                        $collecciont = '';
+                        if($values){
+                            $exists = null;
+                            $exists = RateLcl::where('origin_port',$originV)
+                                ->where('destiny_port',$destinationV)
+                                ->where('carrier_id',$carrierVal)
+                                ->where('contractlcl_id',$id)
+                                ->where('uom',$wmVal)
+                                ->where('minimum',$minimunVal)
+                                ->where('currency_id',$currencyVal)
+                                ->where('schedule_type_id',$scheduleTVal)
+                                ->where('transit_time',(int)$failrate['transit_time'])
+                                ->where('via',$failrate['via'])
+                                ->first();
+                            if(count($exists) == 0){
+                                $collecciont = RateLcl::create([
+                                    'origin_port'       => $originV,
+                                    'destiny_port'      => $destinationV,
+                                    'carrier_id'        => $carrierVal,                            
+                                    'contractlcl_id'    => $id,
+                                    'uom'               => $wmVal,
+                                    'minimum'           => $minimunVal,
+                                    'currency_id'       => $currencyVal,
+                                    'schedule_type_id'  => $scheduleTVal,
+                                    'transit_time'      => (int)$failrate['transit_time'],
+                                    'via'               => $failrate['via']
+                                ]);
+                            }
+                            $failrate->forceDelete();
+                        }
+
+                    } 
+                }
+            }
+            //*****************************************************************************************
         }
     }
 }
