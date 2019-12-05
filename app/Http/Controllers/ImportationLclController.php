@@ -60,7 +60,6 @@ class ImportationLclController extends Controller
                 $minimunArr         = '';
                 $scheduleTVal       = null;
 
-
                 $curreExitBol       = false;
                 $originB            = false;
                 $destinyB           = false;
@@ -859,6 +858,28 @@ class ImportationLclController extends Controller
 
     }
 
+    // Edicion de rates multiples
+    public function EdicionRatesMultiples(Request $request){
+        $harbor         = Harbor::pluck('display_name','id');
+        $arreglo        = $request->idAr;
+        $contract_id    = $request->contract_id;
+        //dd($contract_id,$arreglo);
+        return view('ImportationLcl.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo','contract_id'));
+    }
+    
+    public function StoreFailRatesMultiples(Request $request){
+        dd($request->all());
+        $id = $request->contract_id;
+        $dataArr = ['id' => $id,'data' => $request->toArray()];
+        //dd($dataArr);
+        GeneralJob::dispatch('edit_mult_rates_fcl',$dataArr);
+
+        $request->session()->flash('message.content', 'Updating Rate' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,1]);
+    }
+    
     // Rates view
     public function FailedRatesView($id,$tab){
         //$id se refiere al id del contracto
@@ -1013,7 +1034,7 @@ class ImportationLclController extends Controller
                 &nbsp;
                 <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-remove"></i></a>';
                 })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
+                ->editColumn('id', '{{$id}}')->toJson();
 
 
 
