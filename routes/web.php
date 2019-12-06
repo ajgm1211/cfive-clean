@@ -885,3 +885,7 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
     route::resource('TestApp','TestController');
     route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
 });
+
+Route::get('/testRoute',function(){
+    dd(explode(',',env('LOGGING_CHANNELS')));
+})->name('test.route');
