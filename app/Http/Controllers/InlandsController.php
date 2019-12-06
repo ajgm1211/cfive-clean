@@ -109,7 +109,7 @@ class InlandsController extends Controller
     }
     foreach($detailstwuenty as $t => $value)
     {
-      if(!empty($request->input('ammounttwuenty.'.$t))) {
+      if(!empty($request->input('ammounttwuenty.'.$t)) && !empty($request->input('lowertwuenty.'.$t)) && !empty($request->input('uppertwuenty.'.$t))  ) {
         $inlandtwuenty = new InlandDetail();
         $inlandtwuenty->lower = $request->input('lowertwuenty.'.$t);
         $inlandtwuenty->upper = $request->input('uppertwuenty.'.$t);
@@ -122,7 +122,7 @@ class InlandsController extends Controller
     }
     foreach($detailsforty as $t => $value)
     {
-      if(!empty($request->input('ammountforty.'.$t))) {
+      if(!empty($request->input('ammountforty.'.$t)) && !empty($request->input('lowerforty.'.$t)) && !empty($request->input('upperforty.'.$t))) {
         $inlandforty= new InlandDetail();
         $inlandforty->lower = $request->input('lowerforty.'.$t);
         $inlandforty->upper = $request->input('upperforty.'.$t);
@@ -136,7 +136,7 @@ class InlandsController extends Controller
 
     foreach($detailsfortyhc as $t => $value)
     {
-      if(!empty($request->input('ammountfortyhc.'.$t))) {
+      if(!empty($request->input('ammountfortyhc.'.$t)) && !empty($request->input('lowerfortyhc.'.$t)) && !empty($request->input('upperfortyhc.'.$t)) ) {
         $inlandfortyhc = new InlandDetail();
         $inlandfortyhc->lower = $request->input('lowerfortyhc.'.$t);
         $inlandfortyhc->upper = $request->input('upperfortyhc.'.$t);
