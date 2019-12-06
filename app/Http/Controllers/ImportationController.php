@@ -685,7 +685,13 @@ class ImportationController extends Controller
                     $contractFile->contract_id  = $Contract_id;
                     $contractFile->namefile     = $requestFile->namefile;
                     $contractFile->save();
+                    
+                    if(empty($requestFile->contract_id)){
+                        $requestFile->contract_id = $Contract_id;
+                        $requestFile->update();
+                    }
                 }
+
             }
 
         } else {
