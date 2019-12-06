@@ -122,6 +122,8 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
+    Route::get('ShowContractEdit/{id}', 'ContractsController@showContractRequest')->name('show.contract.edit');
+    Route::put('UpdContractEdit/{id}', 'ContractsController@updateContractRequest')->name('update.contract.edit');
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
     Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
@@ -255,6 +257,12 @@ Route::prefix('Importation')->group(function () {
     // Datatable Rates Y Surchargers
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
         ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('StoreMultFailRatesFCL/','ImportationController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Fcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    Route::post('EditMultFailRatesFCL/','ImportationController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Fcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+
+
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
         ->middleware(['auth','role:administrator|data_entry']);
 
@@ -341,6 +349,12 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
     Route::resource('ImportationLCL','ImportationLclController');
     Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
+    
+    Route::post('EditMultFailRatesLCL/','ImportationLclController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::post('StoreMultFailRatesLCL/','ImportationLclController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 
 });
 
@@ -414,9 +428,9 @@ Route::resource('inlands', 'InlandsController')->middleware('auth');
 //Quotes
 Route::middleware(['auth'])->prefix('quotes')->group(function () {
 
-   Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
-   Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
-   Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
+    Route::get('delete/{id}', 'QuoteController@destroy')->name('quotes.destroy');
+    Route::get('get/harbor/id/{harbor_id}', 'QuoteController@getHarborName')->name('quotes.harbor_name');
+    Route::get('get/airport/id/{airport_id}', 'QuoteController@getAirportName')->name('quotes.airport_name');
     Route::get('company/price/id/{company_id}', 'CompanyController@getCompanyPrice')->name('quotes.company.price');
     Route::get('company/contact/id/{company_id}', 'CompanyController@getCompanyContact')->name('quotes.company.contact');
     Route::get('company/companies', 'CompanyController@getCompanies')->name('quotes.companies');
@@ -873,3 +887,7 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
     route::resource('TestApp','TestController');
     route::get('SendJob/{user}/{request}','TestController@sendJob')->name('send.job.testapp');
 });
+
+Route::get('/testRoute',function(){
+    dd(explode(',',env('LOGGING_CHANNELS')));
+})->name('test.route');

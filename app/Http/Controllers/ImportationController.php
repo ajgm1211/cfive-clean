@@ -30,6 +30,7 @@ use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\Jobs\GeneralJob;
 use App\ContractFclFile;
 use App\ContractCarrier;
 use App\CalculationType;
@@ -41,8 +42,9 @@ use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
-use App\Jobs\ImportationRatesFclJob;
+use Illuminate\Support\Facades\DB;
 use App\Jobs\SynchronImgCarrierJob;
+use App\Jobs\ImportationRatesFclJob;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
@@ -683,7 +685,13 @@ class ImportationController extends Controller
                     $contractFile->contract_id  = $Contract_id;
                     $contractFile->namefile     = $requestFile->namefile;
                     $contractFile->save();
+                    
+                    if(empty($requestFile->contract_id)){
+                        $requestFile->contract_id = $Contract_id;
+                        $requestFile->update();
+                    }
                 }
+
             }
 
         } else {
@@ -1142,6 +1150,26 @@ class ImportationController extends Controller
             $requestobj->session()->flash('message.content', 'There was an error loading the file');
             return redirect()->route('contracts.edit',$requestobj->contract_id);
         }
+    }
+
+    public function EdicionRatesMultiples(Request $request){
+        $harbor         = Harbor::pluck('display_name','id');
+        $arreglo        = $request->idAr;
+        $contract_id    = $request->contract_id;
+        //dd($harbor,$arreglo);
+        return view('importation.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo','contract_id'));
+    }
+    public function StoreFailRatesMultiples(Request $request){
+        //dd($request->all());
+        $id = $request->contract_id;
+        $dataArr = ['id' => $id,'data' => $request->toArray()];
+        //dd($dataArr);
+        GeneralJob::dispatch('edit_mult_rates_fcl',$dataArr);
+
+        $request->session()->flash('message.content', 'Updating Rate' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,1]);
     }
 
     public function EditRatesGood($id){
@@ -4215,23 +4243,25 @@ class ImportationController extends Controller
         $failrates = collect([]);
 
         if($selector == 1){
-            $failratesFor = FailRate::where('contract_id','=',$id)->get();
+            $failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
+
+            //$failratesFor = FailRate::where('contract_id','=',$id)->get();
             foreach( $failratesFor as $failrate){
                 $carrAIn;
                 $pruebacurre = "";
-                $originA        = explode("_",$failrate['origin_port']);
-                $destinationA   = explode("_",$failrate['destiny_port']);
-                $carrierA       = explode("_",$failrate['carrier_id']);
-                $currencyA      = explode("_",$failrate['currency_id']);
-                $twuentyA       = explode("_",$failrate['twuenty']);
-                $fortyA         = explode("_",$failrate['forty']);
-                $fortyhcA       = explode("_",$failrate['fortyhc']);
-                $fortynorA      = explode("_",$failrate['fortynor']);
-                $fortyfiveA     = explode("_",$failrate['fortyfive']);
+                $originA        = explode("_",$failrate->origin_port);
+                $destinationA   = explode("_",$failrate->destiny_port);
+                $carrierA       = explode("_",$failrate->carrier_id);
+                $currencyA      = explode("_",$failrate->currency_id);
+                $twuentyA       = explode("_",$failrate->twuenty);
+                $fortyA         = explode("_",$failrate->forty);
+                $fortyhcA       = explode("_",$failrate->fortyhc);
+                $fortynorA      = explode("_",$failrate->fortynor);
+                $fortyfiveA     = explode("_",$failrate->fortyfive);
 
-                $schedule_typeA = explode("_",$failrate['schedule_type']);
-                $transit_timeA  = explode("_",$failrate['transit_time']);
-                $viaA           = explode("_",$failrate['via']);
+                $schedule_typeA = explode("_",$failrate->schedule_type);
+                $transit_timeA  = explode("_",$failrate->transit_time);
+                $viaA           = explode("_",$failrate->via);
 
                 $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
                     ->first();
@@ -4368,7 +4398,7 @@ class ImportationController extends Controller
                 &nbsp;
                 <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-remove"></i></a>';
             })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
+                ->editColumn('id', '{{$id}}')->toJson();
 
 
 
@@ -4390,9 +4420,11 @@ class ImportationController extends Controller
                 &nbsp;
                 <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-remove"></i></a>';
                 })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
+                ->editColumn('id', '{{$id}}')->toJson();
         }
     }
+
+
     public function FailSurchargeLoad($id,$selector){
 
         if($selector == 1){
@@ -4408,7 +4440,9 @@ class ImportationController extends Controller
             $harbor                = $objharbor->all()->pluck('display_name','id');
             $currency              = $objcurrency->all()->pluck('alphacode','id');
             $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-            $failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
+
+            $failsurchargeS   = DB::select('call  proc_fails_surchargers_fcl('.$id.')');
+            //$failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
             $failsurchargecoll = collect([]);
             foreach($failsurchargeS as $failsurcharge){
                 $classdorigin           =  'color:green';
@@ -4419,14 +4453,14 @@ class ImportationController extends Controller
                 $classcalculationtype   =  'color:green';
                 $classammount           =  'color:green';
                 $classcurrency          =  'color:green';
-                $surchargeA         =  explode("_",$failsurcharge['surcharge_id']);
-                $originA            =  explode("_",$failsurcharge['port_orig']);
-                $destinationA       =  explode("_",$failsurcharge['port_dest']);
-                $calculationtypeA   =  explode("_",$failsurcharge['calculationtype_id']);
-                $ammountA           =  explode("_",$failsurcharge['ammount']);
-                $currencyA          =  explode("_",$failsurcharge['currency_id']);
-                $carrierA           =  explode("_",$failsurcharge['carrier_id']);
-                $typedestinyA       =  explode("_",$failsurcharge['typedestiny_id']);
+                $surchargeA         =  explode("_",$failsurcharge->surcharge_id);
+                $originA            =  explode("_",$failsurcharge->port_orig);
+                $destinationA       =  explode("_",$failsurcharge->port_dest);
+                $calculationtypeA   =  explode("_",$failsurcharge->calculationtype_id);
+                $ammountA           =  explode("_",$failsurcharge->ammount);
+                $currencyA          =  explode("_",$failsurcharge->currency_id);
+                $carrierA           =  explode("_",$failsurcharge->carrier_id);
+                $typedestinyA       =  explode("_",$failsurcharge->typedestiny_id);
 
                 // -------------- ORIGIN -------------------------------------------------------------
                 if($failsurcharge->differentiator == 1){
@@ -5273,12 +5307,12 @@ class ImportationController extends Controller
     // Account Importation --------------------------------------------------------------
 
     public function indexAccount(){
-      
-      
-       $account = \DB::select('call  proc_account_fcl');
-       
+
+
+        $account = \DB::select('call  proc_account_fcl');
+
         return DataTables::of($account)
-          /*  ->addColumn('status', function ( $account) {
+            /*  ->addColumn('status', function ( $account) {
                 if(empty($account->contract->status)!=true){
                     return  $account->contract->status;
                 }else{

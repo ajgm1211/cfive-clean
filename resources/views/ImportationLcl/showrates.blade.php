@@ -3,6 +3,8 @@
 @parent
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 <link rel="stylesheet" type="text/css" href="/assets/datatable/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
 @endsection
 @section('title', 'Failed Rates LCL '.$contract['id'].' - '.$contract['number'].' / '.$contract['name'])
 @section('content')
@@ -102,6 +104,8 @@
                                     </label>
                                     &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="{{route('Reprocesar.Rates.lcl',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                                    &nbsp; &nbsp;
+                                    <a href="#" onclick="showModalsavetorate({{$id}},'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>
                                 </div>
                             </div>
                             <br>
@@ -114,6 +118,7 @@
                             <table class="table tableData"  id="myatest" width="100%">
                                 <thead width="100%">
                                     <tr>
+                                        <th></th>
                                         <th>Origin</th>
                                         <th>Destiny</th>
                                         <th>Carrier</th>
@@ -225,13 +230,46 @@
 
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
         <script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
         <script>
             $(function() {
-                $('#myatest').DataTable({
+                table = $('#myatest').DataTable({
                     processing: true,
+                    columnDefs: [ {
+                        orderable: false,
+                        className: 'select-checkbox',
+                        targets:   0
+                    } ],
+                    select: {
+                        style:    'multi',
+                        selector: 'td:first-child'
+                    },
+                    buttons: [
+                        {
+                            text: 'Select all',
+                            action : function(e) {
+                                e.preventDefault();
+                                table.rows({ page: 'all'}).nodes().each(function() {
+                                    $(this).removeClass('selected')
+                                })
+                                table.rows({ search: 'applied'}).nodes().each(function() {
+                                    $(this).addClass('selected');        
+                                })
+                            }
+                        },
+                        {
+                            text: 'Select none',
+                            action: function () {
+                                table.rows().deselect();
+                            }
+                        }
+                    ],
                     //serverSide: true,
                     ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,1]) !!}',
                     columns: [
+                        { data: null, render:function(){return "";}},
                         { data: 'origin_portLb', name: 'origin_portLb' },
                         { data: 'destiny_portLb', name: 'destiny_portLb' },
                         { data: 'carrierLb', name: 'carrierLb' },
@@ -259,6 +297,7 @@
                 $('#myatest2').DataTable({
                     processing: true,
                     //serverSide: true,
+                    buttons: [],
                     ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,2]) !!}',
                     columns: [
                         { data: 'origin_portLb', name: 'origin_portLb' },
@@ -286,11 +325,8 @@
                 });
             });
 
-
-
-
             function showModalsavetorate(id,operation){
-
+                $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
                 if(operation == 1){
                     var url = '{{ route("Edit.Rates.Fail.Lcl", ":id") }}';
                     url = url.replace(':id', id);
@@ -303,6 +339,29 @@
                     $('#edit-modal-body').load(url,function(){
                         $('#modaleditRate').modal();
                     });
+                } else  if(operation == 'editMultRates'){
+
+                    var idAr = [];
+                    var oTable = $("#myatest").dataTable();
+                    var length=table.rows('.selected').data().length;
+
+                    if(length > 0)
+                    {
+                        for (var i = 0; i < length; i++) { 
+                            idAr.push(table.rows('.selected').data()[i].id);
+                        }
+                        //console.log();
+                        var url = "{{route('Edicion.Multiples.Rates.Lcl')}}";
+                        //url = url.replace(':id', idAr);
+                        data2 = {idAr:idAr,contract_id:id}
+                        $('#edit-modal-body').load(url,data2,function(){
+                            $('#modaleditRate').modal({show:true});
+                        });
+
+                    } else {
+                        swal("Error!", "Please select at least one record", "error");
+                    }
+
                 }
             }
 
