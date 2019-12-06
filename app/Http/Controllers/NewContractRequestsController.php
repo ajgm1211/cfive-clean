@@ -42,7 +42,7 @@ class NewContractRequestsController extends Controller
 {
 
 
-    public function index()
+    public function index(Request $request)
     {
         return view('Requests.index');
     }
@@ -129,7 +129,12 @@ class NewContractRequestsController extends Controller
                 if(empty($Ncontracts->contract) != true){
                     $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
-                    </a>';
+                    </a>
+                    &nbsp;&nbsp;
+                    <a href="#" title="Edit FCL Contract">
+                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
+                    </a>
+                    ';
                     $buttons = $butPrCt . $buttons;
                 } else{
                     $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
