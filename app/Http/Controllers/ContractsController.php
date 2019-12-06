@@ -376,6 +376,35 @@ class ContractsController extends Controller
 
     }
 
+    public function showContractRequest($id){
+        $contract   = Contract::with('companyuser','direction','carriers')->find($id);
+        $directions = Direction::pluck('name','id');
+        $carriers   = Carrier::pluck('name','id');
+        //dd($contract);
+        return view('Requests.Body-Modals.editContract',compact('contract','directions','carriers'));
+    }
+    public function updateContractRequest(Request $request,$id){
+        //dd($request->all()); 
+        $contract                   = Contract::find($id);
+        $contract->name             = $request->name;
+        $contract->company_user_id  = $request->company_user_id;
+        $validation                 = explode('/',$request->validation_expire);
+        $contract->direction_id     = $request->direction_id;
+        $contract->validity         = $validation[0];
+        $contract->expire           = $validation[1];
+        $contract->update();
+
+        foreach($request->carriers_id as $carrierFA){
+            ContractCarrier::create([
+                'carrier_id'    => $carrierFA,
+                'contract_id'   => $contract->id
+            ]);
+        }
+
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.content', 'Your contract was updated');
+        return redirect()->route('RequestImportation.index');
+    }
 
     public function show($id)
     {

@@ -122,6 +122,8 @@ Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
+    Route::get('ShowContractEdit/{id}', 'ContractsController@showContractRequest')->name('show.contract.edit');
+    Route::put('UpdContractEdit/{id}', 'ContractsController@updateContractRequest')->name('update.contract.edit');
     Route::get('addT', 'ContractsController@add')->name('contracts.add');
     Route::get('msg/{id}', 'ContractsController@destroymsg')->name('contracts.msg');
     Route::get('delete-rates/{rate_id}', ['uses' => 'ContractsController@destroyRates', 'as' => 'delete-rates']);
