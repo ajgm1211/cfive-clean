@@ -120,7 +120,6 @@ Route::prefix('globalcharges')->group(function () {
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
-
     //Route::get('add', 'ContractsController@add')->name('contracts.add');
     Route::get('ShowContractEdit/{id}', 'ContractsController@showContractRequest')->name('show.contract.edit');
     Route::put('UpdContractEdit/{id}', 'ContractsController@updateContractRequest')->name('update.contract.edit');
@@ -186,6 +185,7 @@ Route::prefix('Requests')->group(function () {
 
 
 Route::prefix('Importation')->group(function () {
+
     //Importar desde request
     Route::get('RequestProccessFCL/{id}/{selector}/{idrqex}','ImportationController@requestProccess')->name('process.request.fcl')
         ->middleware(['auth','role:administrator|data_entry']);
@@ -338,6 +338,7 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     Route::get('DestroyAccountclcl/{id}','ImportationLclController@DestroyAccount')->name('Destroy.account.clcl');
     Route::get('DownloadAccountclcl/{id}','ImportationLclController@Download')->name('Download.Account.clcl');
 
+
     //Rates 
     Route::get('EditRatesFailLcl/{id}','ImportationLclController@EditRatesFail')->name('Edit.Rates.Fail.Lcl');
     Route::PUT('CreateRatesFailLcl/{id}','ImportationLclController@CreateRates')->name('Create.Rates.Lcl');
@@ -349,10 +350,10 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
     Route::get('lclDT/rates/{id}/{ids}','ImportationLclController@FailedRatesDT')->name('Failed.Rates.Lcl.datatable');
     Route::resource('ImportationLCL','ImportationLclController');
     Route::get('/ReprocesarRatesLcl/{id}','ImportationLclController@reprocessRatesLcl')->name('Reprocesar.Rates.lcl');
-    
+
     Route::post('EditMultFailRatesLCL/','ImportationLclController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Lcl')
         ->middleware(['auth','role:administrator|data_entry']);
-    
+
     Route::post('StoreMultFailRatesLCL/','ImportationLclController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Lcl')
         ->middleware(['auth','role:administrator|data_entry']);
 
@@ -526,6 +527,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     //Contacts
     Route::get('contacts/contact', 'ContactController@getContacts')->name('quotes-v2.contacts');
     Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
+    //Chargeable weight
+    Route::post('update/chargeable/{id}', 'QuoteV2Controller@updateChargeable')->name('quotes-v2.update.chargeable');
 });
 
 //Settings
