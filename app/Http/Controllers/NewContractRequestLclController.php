@@ -116,7 +116,12 @@ class NewContractRequestLclController extends Controller
                     $butPrCt = '
                 <a href="/ImportationLCL/RequestProccessLCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess LCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
-                </a>';
+                </a>
+                &nbsp;&nbsp;
+                <a href="#" title="Edit LCL Contract">
+                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
+                </a>
+                    ';
                     $buttons = $butPrCt . $buttons;
                 } else {
                     $butPrRq = '
