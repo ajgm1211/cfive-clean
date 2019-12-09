@@ -538,7 +538,7 @@ class ImportationController extends Controller
         $carrier_exec = $carrier_exec->id;
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
-            $requestfcl->load('Requestcarriers');
+            @$requestfcl->load('Requestcarriers');
             //dd($requestfcl);
             if(count($requestfcl->Requestcarriers) == 1){
                 foreach($requestfcl->Requestcarriers as $carrier_uniq){
@@ -549,7 +549,7 @@ class ImportationController extends Controller
             }
         } elseif($selector == 2){
             $contract     = Contract::find($id);
-            $contract->load('carriers');
+            @$contract->load('carriers');
             //dd($contract);
             if(count($contract->carriers) == 1){
                 foreach($contract->carriers as $carrier_uniq){
