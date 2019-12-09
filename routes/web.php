@@ -572,6 +572,8 @@ Route::middleware(['auth'])->prefix('contractslcl')->group(function () {
     Route::get('addlcl', 'ContractsLclController@add')->name('contractslcl.add');
     Route::get('deleteContractlcl/{id}', ['uses' => 'ContractsLclController@deleteContract', 'as' => 'contractslcl.delete']);
     Route::get('destroyContractlcl/{id}', ['uses' => 'ContractsLclController@destroyContract', 'as' => 'contractslcl.destroyContract']);
+    Route::get('ShowContractEditLCL/{id}', 'ContractsLclController@showContractRequest')->name('show.contract.edit.lcl');
+    Route::put('UpdContractEditLCL/{id}', 'ContractsLclController@updateContractRequest')->name('update.contract.edit.lcl');
 
 
     //Rates 
