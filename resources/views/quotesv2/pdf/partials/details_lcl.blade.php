@@ -48,6 +48,13 @@
             </div>
         @endif      
         <br>
+        @if($quote->origin_address!='' || $quote->destination_address!='')
+            <div>
+                @if($quote->origin_address!='')<p><span class="title" >Origin Address: </span>{{@$quote->origin_address}}</p>@endif
+                @if($quote->destination_address!='')<p><span class="title" >Destination Address: </span>{{@$quote->destination_address}}</p>@endif
+            </div>
+        @endif
+        <br>
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
             <br>
