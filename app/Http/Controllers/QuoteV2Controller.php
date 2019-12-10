@@ -5277,6 +5277,7 @@ class QuoteV2Controller extends Controller
     $chargesDestination = $request->input('chargeDestination');
     $chargesFreight = $request->input('chargeFreight');
     $chargesAPI = $request->input('chargeAPI');
+    $chargesAPI_M = $request->input('chargeAPI_M');
 
     $form  = $request->all();
 
