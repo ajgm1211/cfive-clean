@@ -599,33 +599,36 @@ class QuoteV2Controller extends Controller
         //dd($rates);
         //Adding country codes to rates collection
 
-        foreach ($rates as $item) {
-            $rates->map(function ($item) {
-                if($item->origin_port_id!='' ){
-                    $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
-                }else{
-                    $item['origin_country_code'] = strtolower($item->origin_airport->code);
-                }
-                if($item->destination_port_id!='' ){
-                    $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
-                }else{
-                    $item['destination_country_code'] = strtolower($item->destination_airport->code); 
-                }
+        if(!$rates->isEmpty()){
+            foreach ($rates as $item) {
+                $rates->map(function ($item) {
+                    if($item->origin_port_id!='' ){
+                        $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
+                    }else{
+                        $item['origin_country_code'] = strtolower($item->origin_airport->code);
+                    }
+                    if($item->destination_port_id!='' ){
+                        $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
+                    }else{
+                        $item['destination_country_code'] = strtolower($item->destination_airport->code); 
+                    }
 
-                return $item;
-            }); 
+                    return $item;
+                }); 
+            }
         }
 
-        foreach ($sale_terms as $v) {
-            $sale_terms->map(function ($v) {
-                if($v->port_id!='' ){
-                    $v['country_code'] = strtolower(substr($v->port->code, 0, 2));
-                }else{
-                    $v['country_code'] = strtolower($v->airport->code);
-                }
-
-                return $v;
-            }); 
+        if(!$sale_terms->isEmpty()){
+            foreach ($sale_terms as $v) {
+                $sale_terms->map(function ($v) {
+                    if($v->port_id!='' ){
+                        $v['country_code'] = strtolower(substr(@$v->port->code, 0, 2));
+                    }else{
+                        $v['country_code'] = strtolower(@$v->airport->code);
+                    }
+                    return $v;
+                }); 
+            }
         }
 
         $emaildimanicdata = json_encode([
