@@ -24,28 +24,28 @@
                     <div class="col-md-4">
                         <label>Type</label>
                         <div class="input-group date">
-                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control','id'=>'saleterm_type']) }}
+                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control','id'=>'saleterm_type','id'=>'type']) }}
                         </div>
                     </div>
                     <div class="col-md-4" >
                         <div {{$quote->type=='AIR' ? 'hidden':''}}>
                             <div class="origin_port hide">
                                 <label>Origin Port</label>
-                                {{ Form::select('port_id',$rate_origin_ports,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('port_id',$rate_origin_ports,null,['class'=>'m-select2-general form-control origin_port_select','placeholder'=>'Select an option','id'=>'origin_port_select']) }}
                             </div>                        
                             <div class="destination_port hide">
                                 <label>Destination Port</label>
-                                {{ Form::select('port_id',$rate_destination_ports,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('port_id',$rate_destination_ports,null,['class'=>'m-select2-general form-control destination_port_select','placeholder'=>'Select an option','id'=>'destination_port_select']) }}
                             </div>
                         </div>
                         <div {{$quote->type!='AIR' ? 'hidden':''}}>
                             <div class="origin_airport hide">
                                 <label>Origin Airport</label>
-                                {{ Form::select('airport_id',$rate_origin_airports,null,['class'=>'m-select2-general form-control origin_airport_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('airport_id',$rate_origin_airports,null,['class'=>'m-select2-general form-control origin_airport_select','placeholder'=>'Select an option','id'=>'origin_airport_select']) }}
                             </div>                        
                             <div class="destination_airport hide">
                                 <label>Destination Airport</label>
-                                {{ Form::select('airport_id',$rate_destination_airports,null,['class'=>'m-select2-general form-control destination_airport_select','placeholder'=>'Select an option']) }}
+                                {{ Form::select('airport_id',$rate_destination_airports,null,['class'=>'m-select2-general form-control destination_airport_select','placeholder'=>'Select an option','id'=>'destination_airport_select']) }}
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                 <br>                
                 <hr>
                 <div class="form-group m-form__group">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" id="saveSaleTerm">Save</button>
                     <button data-toggle="modal" data-target="#createSaleTermModal" class="btn btn-danger" type="button">Cancel</button>
                 </div>
                 <br>
