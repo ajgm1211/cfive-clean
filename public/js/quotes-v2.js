@@ -2322,6 +2322,25 @@ $(document).on('click', '.delete-rate', function () {
     });
 });
 
+//Guardar Sale Terms
+
+    $('#saveSaleTerm').on('click',function(e){
+        e.preventDefault();
+        var origin_port=$("#origin_port_select").val();
+        var destination_port=$("#destination_port_select").val();
+        var origin_airport=$("#origin_airport_select").val();
+        var destination_airport=$("#destination_airport_select").val();
+
+        var form = $(this).parents('form');
+        
+        if(origin_port!='' || destination_port!='' || origin_airport!='' || destination_airport!=''){
+            form.submit();
+        }else{
+            notification('You must select a port/airport','error');
+        }
+
+    });
+
 //Borrar sale terms
 $(document).on('click', '.delete-sale-term', function () {
     var id=$(this).attr('data-saleterm-id');
