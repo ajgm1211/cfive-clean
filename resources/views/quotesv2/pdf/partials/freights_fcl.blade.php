@@ -314,6 +314,17 @@
                                     <th {{ @$equipmentHides['40hc'] }}><b>40' HC</b></th>
                                     <th {{ @$equipmentHides['40nor'] }}><b>40' NOR</b></th>
                                     <th {{ @$equipmentHides['45'] }}><b>45'</b></th>
+                                    @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Tipo</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>TT</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Via</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Vía</b></th>
+                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Via</b></th>                                
+                                    @endif
                                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
@@ -371,6 +382,21 @@
                                             <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$sum_freight_40hc, 2, '.', '')}}</td>
                                             <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$sum_freight_40nor, 2, '.', '')}}</td>
                                             <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_freight_45, 2, '.', '')}}</td>
+                                            @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                                @if($quote->pdf_option->language=='Spanish')
+                                                    @if(@$rate->schedule_type=='Transfer')
+                                                        <td>Transbordo</td>
+                                                    @elseif(@$rate->schedule_type=='Direct')
+                                                        <td>Directo</td>
+                                                    @else
+                                                        <td>-</td>
+                                                    @endif
+                                                @else
+                                                    <td>{{@$rate->schedule_type!='' ? @$rate->schedule_type:'-'}}</td>
+                                                @endif
+                                                <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
+                                                <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
+                                            @endif
                                             @if($quote->pdf_option->grouped_freight_charges==1)
                                                 <td >{{$quote->pdf_option->freight_charges_currency}}</td>
                                             @else
