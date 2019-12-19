@@ -137,7 +137,7 @@ $v=0;
                                                     +
                                                     <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_20 td-a">{{round(@$freight_amounts['c20']+@$freight_markups['m20'])}}</span>
+                                                    <span class="total_20 td-a">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40'] }} class="tds">
                                                     <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
@@ -145,14 +145,14 @@ $v=0;
                                                     <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40 td-a">{{round(@$freight_amounts['c40']+@$freight_markups['m40'])}}</span>
+                                                    <span class="total_40 td-a">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                     <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
                                                     +
                                                     <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40hc td-a">{{round(@$freight_amounts['c40hc']+@$freight_markups['m40hc'])}}</span>
+                                                    <span class="total_40hc td-a">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                     <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
@@ -160,7 +160,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40nor td-a">{{round(@$freight_amounts['c40nor']+@$freight_markups['m40nor'])}}</span>
+                                                    <span class="total_40nor td-a">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds">
                                                     <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
@@ -168,7 +168,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_45 td-a">{{round(@$freight_amounts['c45']+@$freight_markups['m45'])}}</span>
+                                                    <span class="total_45 td-a">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -272,11 +272,11 @@ $v=0;
                                             <tr class="total_freight_{{$v}}">
                                                 <td></td>
                                                 <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_freight_20">{{round(number_format(@$sum20+@$sum_m20, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_freight_40">{{round(number_format(@$sum40+@$sum_m40, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_freight_40hc">{{round(number_format(@$sum40hc+@$sum_m40hc, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{round(number_format(@$sum40nor+@$sum_m40nor, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{round(number_format(@$sum45+@$sum_m45, 2, '.', ''))}}</span></td>
+                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_freight_20">{{number_format(@$sum20+@$sum_m20, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_freight_40">{{number_format(@$sum40+@$sum_m40, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_freight_40hc">{{number_format(@$sum40hc+@$sum_m40hc, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
                                                 <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
@@ -395,7 +395,7 @@ $v=0;
                                                     +
                                                     <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$origin_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_20 td-a">{{round(@$origin_amounts['c20']+@$origin_markups['m20'])}}</span>
+                                                    <span class="total_20 td-a">{{@$origin_amounts['c20']+@$origin_markups['m20']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40'] }} class="tds">
                                                     <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$origin_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
@@ -403,14 +403,14 @@ $v=0;
                                                     <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$origin_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40 td-a">{{round(@$origin_amounts['c40']+@$origin_markups['m40'])}}</span>
+                                                    <span class="total_40 td-a">{{@$origin_amounts['c40']+@$origin_markups['m40']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                     <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$origin_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
                                                     +
                                                     <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$origin_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40hc td-a">{{round(@$origin_amounts['c40hc']+@$origin_markups['m40hc'])}}</span>
+                                                    <span class="total_40hc td-a">{{@$origin_amounts['c40hc']+@$origin_markups['m40hc']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                     <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$origin_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
@@ -418,7 +418,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$origin_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40nor td-a">{{round(@$origin_amounts['c40nor']+@$origin_markups['m40nor'])}}</span>
+                                                    <span class="total_40nor td-a">{{@$origin_amounts['c40nor']+@$origin_markups['m40nor']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds">
                                                     <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$origin_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
@@ -426,7 +426,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$origin_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="origin" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_45 td-a">{{round(@$origin_amounts['c45']+@$origin_markups['m45'])}}</span>
+                                                    <span class="total_45 td-a">{{@$origin_amounts['c45']+@$origin_markups['m45']}}</span>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -529,11 +529,11 @@ $v=0;
                                             <tr class="total_origin_{{$v}}">
                                                 <td></td>
                                                 <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_origin_20">{{round(number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_origin_40">{{round(number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_origin_40hc">{{round(number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_origin_40nor">{{round(number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_origin_45">{{round(number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', ''))}}</span></td>
+                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_origin_20">{{number_format(@$sum_origin_20+@$sum_origin_m20, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_origin_40">{{number_format(@$sum_origin_40+@$sum_origin_m40, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_origin_40hc">{{number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_origin_40nor">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_origin_45">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 <input type="hidden" name="subtotal_c20_origin" value="{{$sum_origin_20}}" class="subtotal_c20_origin"/>
                                                 <input type="hidden" name="subtotal_c40_origin" value="{{$sum_origin_40}}" class="subtotal_c40_origin"/>
@@ -657,7 +657,7 @@ $v=0;
                                                     +
                                                     <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$destination_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_20 td-a">{{round(@$destination_amounts['c20']+@$destination_markups['m20'])}}</span>
+                                                    <span class="total_20 td-a">{{@$destination_amounts['c20']+@$destination_markups['m20']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40'] }} class="tds">
                                                     <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$destination_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
@@ -665,14 +665,14 @@ $v=0;
                                                     <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$destination_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40 td-a">{{round(@$destination_amounts['c40']+@$destination_markups['m40'])}}</span>
+                                                    <span class="total_40 td-a">{{@$destination_amounts['c40']+@$destination_markups['m40']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds">
                                                     <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$destination_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
                                                     +
                                                     <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$destination_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40hc td-a">{{round(@$destination_amounts['c40hc']+@$destination_markups['m40hc'])}}</span>
+                                                    <span class="total_40hc td-a">{{@$destination_amounts['c40hc']+@$destination_markups['m40hc']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds">
                                                     <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$destination_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
@@ -680,7 +680,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$destination_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40nor td-a">{{round(@$destination_amounts['c40nor']+@$destination_markups['m40nor'])}}</span>
+                                                    <span class="total_40nor td-a">{{@$destination_amounts['c40nor']+@$destination_markups['m40nor']}}</span>
                                                 </td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds">
                                                     <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$destination_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
@@ -688,7 +688,7 @@ $v=0;
                                                     <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$destination_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="destination" data-title="Total"></a>
 
                                                     <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_45 td-a">{{round(@$destination_amounts['c45']+@$destination_markups['m45'])}}</span>
+                                                    <span class="total_45 td-a">{{@$destination_amounts['c45']+@$destination_markups['m45']}}</span>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
@@ -789,11 +789,11 @@ $v=0;
                                             <tr class="total_destination_{{$v}}">
                                                 <td></td>
                                                 <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_destination_20">{{round(number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_destination_40">{{round(number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_destination_40hc">{{round(number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_destination_40nor">{{round(number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', ''))}}</span></td>
-                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_destination_45">{{round(number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', ''))}}</span></td>
+                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_destination_20">{{number_format(@$sum_destination_20+@$sum_destination_m20, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_destination_40">{{number_format(@$sum_destination_40+@$sum_destination_m40, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_destination_40hc">{{number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_destination_40nor">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</span></td>
+                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_destination_45">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</span></td>
                                                 <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
                                                 
                                                 <input type="hidden" name="subtotal_c20_destination" value="{{$sum_destination_20}}" class="subtotal_c20_destination"/>
@@ -859,11 +859,11 @@ $v=0;
                                             $markup_40nor=number_format(@$sum_m40nor+@$sum_origin_m40nor+@$sum_destination_m40nor, 2, '.', '');
                                             $markup_45=number_format(@$sum_m45+@$sum_origin_m45+@$sum_destination_m45, 2, '.', '');
 
-                                            $amount_markup_20=round(number_format($amount_20+$markup_20, 2, '.', ''));
-                                            $amount_markup_40=round(number_format($amount_40+$markup_40, 2, '.', ''));
-                                            $amount_markup_40hc=round(number_format($amount_40hc+$markup_40hc, 2, '.', ''));
-                                            $amount_markup_40nor=round(number_format($amount_40nor+$markup_40nor, 2, '.', ''));
-                                            $amount_markup_45=round(number_format($amount_45+$markup_45, 2, '.', ''));
+                                            $amount_markup_20=number_format($amount_20+$markup_20, 2, '.', '');
+                                            $amount_markup_40=number_format($amount_40+$markup_40, 2, '.', '');
+                                            $amount_markup_40hc=number_format($amount_40hc+$markup_40hc, 2, '.', '');
+                                            $amount_markup_40nor=number_format($amount_40nor+$markup_40nor, 2, '.', '');
+                                            $amount_markup_45=number_format($amount_45+$markup_45, 2, '.', '');
                                             ?>
                                             <tr style="height:40px;">
                                                 <td class="title-quote size-12px tds" style="padding-left: 30px"><span class="td-a">Total</span></td>
