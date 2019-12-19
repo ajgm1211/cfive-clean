@@ -603,14 +603,14 @@ class QuoteV2Controller extends Controller
             foreach ($rates as $item) {
                 $rates->map(function ($item) {
                     if($item->origin_port_id!='' ){
-                        $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
+                        $item['origin_country_code'] = strtolower(substr(@$item->origin_port->code, 0, 2));
                     }else{
-                        $item['origin_country_code'] = strtolower($item->origin_airport->code);
+                        $item['origin_country_code'] = strtolower(@$item->origin_airport->code);
                     }
                     if($item->destination_port_id!='' ){
-                        $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
+                        $item['destination_country_code'] = strtolower(substr(@$item->destination_port->code, 0, 2));
                     }else{
-                        $item['destination_country_code'] = strtolower($item->destination_airport->code); 
+                        $item['destination_country_code'] = strtolower(@$item->destination_airport->code); 
                     }
 
                     return $item;
