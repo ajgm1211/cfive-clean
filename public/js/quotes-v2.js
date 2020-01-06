@@ -97,6 +97,7 @@ $(document).ready(function() {
     $("#total").html(sum_origin+sum_destination+sum_freight+" USD");   
 
 
+    //Edición en línea
     $('.editable').editable({
         url:'/v2/quotes/charges/update',
         emptytext:0,
@@ -147,6 +148,29 @@ $(document).ready(function() {
         emptytext:0,
         success: function(response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
+            var total_volume=parseFloat($('#total-volume').html());
+            var weight=parseFloat($('#total-weight').html());
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
             if(!response) {
                 return "Unknown error!";
             }
@@ -156,6 +180,97 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.editable-quote-weight').editable({
+        url:'/v2/quotes/info/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            
+            var total_volume=parseFloat($('#total-volume').html());
+            var weight=newValue;
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-quote-volume').editable({
+        url:'/v2/quotes/info/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            //setTimeout(location.reload.bind(location), 3000);
+            var total_volume=newValue;
+            var weight=parseFloat($('#total-weight').html());
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=newValue;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=newValue;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    function update_cw(chargeable_weight) {
+        var id = $('#quote-id').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/v2/quotes/update/chargeable/' + id,
+            data:{
+                "chargeable_weight":chargeable_weight,
+            },
+            success: function(data) {
+                //
+            }
+        });
+    };
 
     //Edición en línea para montos/markups en LCL/AIR
     $('.editable-lcl-air').editable({
@@ -2206,6 +2321,25 @@ $(document).on('click', '.delete-rate', function () {
         }
     });
 });
+
+//Guardar Sale Terms
+
+    $('#saveSaleTerm').on('click',function(e){
+        e.preventDefault();
+        var origin_port=$("#origin_port_select").val();
+        var destination_port=$("#destination_port_select").val();
+        var origin_airport=$("#origin_airport_select").val();
+        var destination_airport=$("#destination_airport_select").val();
+
+        var form = $(this).parents('form');
+        
+        if(origin_port!='' || destination_port!='' || origin_airport!='' || destination_airport!=''){
+            form.submit();
+        }else{
+            notification('You must select a port/airport','error');
+        }
+
+    });
 
 //Borrar sale terms
 $(document).on('click', '.delete-sale-term', function () {

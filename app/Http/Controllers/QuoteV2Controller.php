@@ -599,33 +599,36 @@ class QuoteV2Controller extends Controller
     //dd($rates);
     //Adding country codes to rates collection
 
-    foreach ($rates as $item) {
-      $rates->map(function ($item) {
-        if($item->origin_port_id!='' ){
-          $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
-        }else{
-          $item['origin_country_code'] = strtolower($item->origin_airport->code);
-        }
-        if($item->destination_port_id!='' ){
-          $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
-        }else{
-          $item['destination_country_code'] = strtolower($item->destination_airport->code); 
-        }
+    if(!$rates->isEmpty()){
+      foreach ($rates as $item) {
+        $rates->map(function ($item) {
+          if($item->origin_port_id!='' ){
+            $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
+          }else{
+            $item['origin_country_code'] = strtolower($item->origin_airport->code);
+          }
+          if($item->destination_port_id!='' ){
+            $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
+          }else{
+            $item['destination_country_code'] = strtolower($item->destination_airport->code); 
+          }
 
-        return $item;
-      }); 
+          return $item;
+        }); 
+      }
     }
 
-    foreach ($sale_terms as $v) {
-      $sale_terms->map(function ($v) {
-        if($v->port_id!='' ){
-          $v['country_code'] = strtolower(substr($v->port->code, 0, 2));
-        }else{
-          $v['country_code'] = strtolower($v->airport->code);
-        }
-
-        return $v;
-      }); 
+    if(!$sale_terms->isEmpty()){
+      foreach ($sale_terms as $v) {
+        $sale_terms->map(function ($v) {
+          if($v->port_id!='' ){
+            $v['country_code'] = strtolower(substr(@$v->port->code, 0, 2));
+          }else{
+            $v['country_code'] = strtolower(@$v->airport->code);
+          }
+          return $v;
+        }); 
+      }
     }
 
     $emaildimanicdata = json_encode([
@@ -5282,6 +5285,7 @@ class QuoteV2Controller extends Controller
     $form  = $request->all();
 
 
+
     // Traer cantidad total de paquetes y pallet segun sea el caso 
     $package_pallet = $this->totalPalletPackage($request->input('total_quantity'),$request->input('cargo_type'),$request->input('type_load_cargo'),$request->input('quantity'));
 
@@ -9605,5 +9609,19 @@ class QuoteV2Controller extends Controller
         }
       })->download('xlsx');
     });
+  }
+
+  /**
+   * Update chargeable weight quotes v2
+   * @param Request 
+   * @return json
+   */
+  public function updateChargeable(Request $request, $id){
+
+    $quote = QuoteV2::find($id);
+    $quote->chargeable_weight = $request->chargeable_weight;
+    $quote->update();
+
+    return response()->json(['message' => 'Ok']);
   }
 }

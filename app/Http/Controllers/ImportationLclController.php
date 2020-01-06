@@ -346,6 +346,11 @@ class ImportationLclController extends Controller
                     $contractFile->contractlcl_id   = $Contract_id;
                     $contractFile->namefile         = $requestFile->namefile;
                     $contractFile->save();
+
+                    if(empty($requestFile->contract_id)){
+                        $requestFile->contractlcl_id = $Contract_id;
+                        $requestFile->update();
+                    }
                 }
             }
 
@@ -874,7 +879,7 @@ class ImportationLclController extends Controller
         $dataArr = ['id' => $id,'data' => $request->toArray()];
         //dd($dataArr);
         GeneralJob::dispatch('edit_mult_rates_lcl',$dataArr);
-        
+
         $request->session()->flash('message.content', 'Updating Rate' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
