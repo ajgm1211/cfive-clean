@@ -109,9 +109,9 @@ class NewContractRequestsController extends Controller
                     $color = 'color:#04950f';
                 }
 
-                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'">'.$Ncontracts->status.'</a>
+                return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
                 &nbsp;
-                <samp class="la la-pencil-square-o" for="" style="font-size:15px;'.$color.'"></samp>';
+                <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
             })
             ->addColumn('action', function ($Ncontracts) {
 
@@ -500,11 +500,20 @@ class NewContractRequestsController extends Controller
                     SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);
                 }
             }
-
             $Ncontract->save();
-            return response()->json($data=['status'=>1,'data'=>$status]);
+			
+			if(strnatcasecmp($Ncontract->status,'Pending')==0){
+                $color = '#f81538';
+            } else if(strnatcasecmp($Ncontract->status,'Processing')==0){
+                $color = '#5527f0';
+            } else if(strnatcasecmp($Ncontract->status,'Review')==0){
+                $color = '#e07000';
+            } else if(strnatcasecmp($Ncontract->status,'Done')==0){
+                $color = '#04950f';
+            }
+            return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color]);
         } catch (\Exception $e){
-            return response()->json($data=['status'=>2]);;
+            return response()->json($data=['data'=>2]);;
         }
 
     }
