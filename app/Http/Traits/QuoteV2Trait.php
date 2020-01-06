@@ -151,7 +151,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_markups['m20'])){
                     $markup_inland20=$array_markups['m20'];
-                    $total_markup20=$markup20/$currency_rate;
+                    $total_markup20=$markup_inland20/$currency_rate;
                 }
 
                 if(isset($array_amounts['c40'])){
