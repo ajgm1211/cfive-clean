@@ -155,7 +155,8 @@
                                 <?php
                                     $total_freight= 0;
                                 ?>
-                                @foreach($rate as $r)
+                                
+                                @forelse($rate as $r)
                                     @foreach($r->charge_lcl_air as $v)
                                         @if($v->type_id==3)
                                             <?php
@@ -189,24 +190,26 @@
                                                 <td >{{$v->units*$v->rate}}</td>
                                                 @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                                     @if($quote->pdf_option->language=='Spanish')
-                                                        @if($r->schedule_type=='Transfer')
+                                                        @if(@$r->schedule_type=='Transfer')
                                                             <td>Transbordo</td>
-                                                        @elseif($r->schedule_type=='Direct')
+                                                        @elseif(@$r->schedule_type=='Direct')
                                                             <td>Directo</td>
                                                         @else
                                                             <td>-</td>
                                                         @endif
                                                     @else
-                                                        <td>{{$r->schedule_type!='' ? $r->schedule_type:'-'}}</td>
+                                                        <td>{{@$r->schedule_type!='' ? @$r->schedule_type:'-'}}</td>
                                                     @endif  
-                                                    <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
-                                                    <td>{{$r->via!='' ? $r->via:'-'}}</td>
+                                                    <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
+                                                    <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
                                                 @endif                                                
                                                 <td>{{$v->currency->alphacode}}</td>
                                             </tr>
                                         @endif
                                     @endforeach
-                                @endforeach
+                                @empty
+
+                                @endforelse
                             @endforeach
                             <tr>
                                 <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
@@ -325,8 +328,8 @@
                                             @else
                                                 <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
                                             @endif  
-                                            <td>{{$r->transit_time!='' ? $r->transit_time:'-'}}</td>
-                                            <td>{{$r->via!='' ? $r->via:'-'}}</td>
+                                            <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
+                                            <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
                                         @endif                                         
                                         @if($quote->pdf_option->grouped_freight_charges==1)
                                             <td>{{$quote->pdf_option->freight_charges_currency}}</td>
