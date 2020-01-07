@@ -511,7 +511,7 @@ class NewContractRequestsController extends Controller
             } else if(strnatcasecmp($Ncontract->status,'Done')==0){
                 $color = '#04950f';
             }
-            return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color]);
+            return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color,'request' => $Ncontract]);
         } catch (\Exception $e){
             return response()->json($data=['data'=>2]);;
         }
