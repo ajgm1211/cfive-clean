@@ -70,10 +70,11 @@
 					$('a#statusHrf'+idContract).css('color',data.color);
 					$('#statusSamp'+idContract).css('color',data.color);
 					$('#changeStatus').modal('hide');
-					swal('Deleted!','Your Status has been changed.','success');
-					toastr.success("New order has been placed!");
+					//swal('Deleted!','Your Status has been changed.','success');
+					toastr.success("Your Status has been changed. ID: "+data.request.id+" - "+data.request.namecontract, "Status. ID: "+data.request.id);
 				}else if(data.data == 2){
-					swal("Error!", "An internal error occurred!", "error");
+					//swal("Error!", "An internal error occurred!", "error");
+                    toastr.success("An internal error occurred!", "Error!");
 				}
 			}
 		});
