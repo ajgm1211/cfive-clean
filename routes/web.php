@@ -642,7 +642,7 @@ Route::prefix('RequestsGlobalchargers')->group(function () {
 
     Route::get('RGlobalCDestroy/{id}','NewGlobalchargeRequestControllerFcl@destroyRequest')->name('destroy.GlobalC')
         ->middleware(['auth','role:administrator|data_entry']);
-    Route::get('RequestGCStatus','NewGlobalchargeRequestControllerFcl@UpdateStatusRequest')->name('Request.GlobalC.status')
+    Route::get('RequestGCStatus','NewGlobalchargeRequestControllerFcl@UpdateStatusRequest')->name('Request.GlobalC.status.fcl')
         ->middleware(['auth','role:administrator|data_entry']);
 });
 
@@ -850,7 +850,7 @@ Route::prefix('RequestsGlobalchargersLcl')->group(function () {
 
     Route::get('RGlobalCDestroy/{id}','NewRequestGlobalChargerLclController@destroyRequest')->name('destroy.GlobalC.lcl')
         ->middleware(['auth','role:administrator|data_entry']);
-    Route::get('RequestGCStatusLcl','NewRequestGlobalChargerLclController@UpdateStatusRequest')->name('Request.GlobalC.status')
+    Route::get('RequestGCStatusLcl','NewRequestGlobalChargerLclController@UpdateStatusRequest')->name('Request.GlobalC.status.lcl')
         ->middleware(['auth','role:administrator|data_entry']);
 });
 
