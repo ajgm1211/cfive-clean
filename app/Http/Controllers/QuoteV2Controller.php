@@ -636,7 +636,7 @@ class QuoteV2Controller extends Controller
 
             return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports','rate_origin_airports','rate_destination_airports','destinationAddressHides','originAddressHides'));
         }
-
+    }
         /**
    * Update charges by rate
    * @param Request $request 
