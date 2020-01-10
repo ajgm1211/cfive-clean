@@ -114,7 +114,7 @@
                                         <th> Destiny </th>
                                         <th> Type Destiny </th>
                                         <th> Type Calculation </th>
-                                        <th> Ammount </th>
+                                        <th> Amount </th>
                                         <th> Currency </th>
                                         <th> Carrier </th>
                                         <th> Options </th>
