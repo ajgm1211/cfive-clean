@@ -48,7 +48,7 @@
             </div>
         @endif      
         <br>
-        @if($quote->origin_address!='' || $quote->destination_address!='')
+        @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
             <div>
                 @if($quote->origin_address!='')<p><span class="title" >Origin Address: </span>{{@$quote->origin_address}}</p>@endif
                 @if($quote->destination_address!='')<p><span class="title" >Destination Address: </span>{{@$quote->destination_address}}</p>@endif
