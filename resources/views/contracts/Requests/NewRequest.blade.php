@@ -43,10 +43,7 @@
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
 
-                        New import request for new contract
-                        <!--<small>
-new registration
-</small>-->
+                        New Import Request
                     </h3>
                 </div>
             </div>
