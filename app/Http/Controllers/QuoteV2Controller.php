@@ -595,52 +595,48 @@ class QuoteV2Controller extends Controller
         $inland->currency_eur = $currency_charge->rates_eur;
       }
 
-    }
-    //dd($rates);
-    //Adding country codes to rates collection
+      if(!$rates->isEmpty()){
+        foreach ($rates as $item) {
+          $rates->map(function ($item) {
+            if($item->origin_port_id!='' ){
+              $item['origin_country_code'] = strtolower(substr(@$item->origin_port->code, 0, 2));
+            }else{
+              $item['origin_country_code'] = strtolower(@$item->origin_airport->code);
+            }
+            if($item->destination_port_id!='' ){
+              $item['destination_country_code'] = strtolower(substr(@$item->destination_port->code, 0, 2));
+            }else{
+              $item['destination_country_code'] = strtolower(@$item->destination_airport->code); 
+            }
 
-    if(!$rates->isEmpty()){
-      foreach ($rates as $item) {
-        $rates->map(function ($item) {
-          if($item->origin_port_id!='' ){
-            $item['origin_country_code'] = strtolower(substr($item->origin_port->code, 0, 2));
-          }else{
-            $item['origin_country_code'] = strtolower($item->origin_airport->code);
-          }
-          if($item->destination_port_id!='' ){
-            $item['destination_country_code'] = strtolower(substr($item->destination_port->code, 0, 2));
-          }else{
-            $item['destination_country_code'] = strtolower($item->destination_airport->code); 
-          }
-
-          return $item;
-        }); 
+            return $item;
+          }); 
+        }
       }
-    }
 
-    if(!$sale_terms->isEmpty()){
-      foreach ($sale_terms as $v) {
-        $sale_terms->map(function ($v) {
-          if($v->port_id!='' ){
-            $v['country_code'] = strtolower(substr(@$v->port->code, 0, 2));
-          }else{
-            $v['country_code'] = strtolower(@$v->airport->code);
-          }
-          return $v;
-        }); 
+      if(!$sale_terms->isEmpty()){
+        foreach ($sale_terms as $v) {
+          $sale_terms->map(function ($v) {
+            if($v->port_id!='' ){
+              $v['country_code'] = strtolower(substr(@$v->port->code, 0, 2));
+            }else{
+              $v['country_code'] = strtolower(@$v->airport->code);
+            }
+            return $v;
+          }); 
+        }
       }
+
+      $emaildimanicdata = json_encode([
+        'quote_bool'   => 'true',
+        'company_id'   => '',
+        'contact_id'   => '',
+        'quote_id'     => $id
+      ]);
+
+      return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports','rate_origin_airports','rate_destination_airports','destinationAddressHides','originAddressHides'));
     }
-
-    $emaildimanicdata = json_encode([
-      'quote_bool'   => 'true',
-      'company_id'   => '',
-      'contact_id'   => '',
-      'quote_id'     => $id
-    ]);
-
-    return view('quotesv2/show', compact('quote','companies','incoterms','users','prices','contacts','currencies','currency_cfg','equipmentHides','freight_charges','origin_charges','destination_charges','calculation_types','calculation_types_lcl_air','rates','surcharges','email_templates','inlands','emaildimanicdata','package_loads','countries','harbors','prices','airlines','carrierMan','currency_name','hideO','hideD','sale_terms','rate_origin_ports','rate_destination_ports','rate_origin_airports','rate_destination_airports','destinationAddressHides','originAddressHides'));
   }
-
   /**
    * Update charges by rate
    * @param Request $request 
