@@ -1,6 +1,5 @@
         <!-- ALL in origin table -->
         @if($quote->pdf_option->grouped_origin_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
-            <br>
             @forelse($origin_charges_grouped as $origin=>$detail)
             <br>
                 <div>
@@ -184,7 +183,7 @@
                         <tbody>
                         @foreach($value->charge as $rate)
                             <?php
-                                $total_origin += @$rate->total_sale_origin;
+                                @$total_origin += @$rate->total_sale_origin;
                             ?>
                             <tr class="text-center color-table">
                                 <td>{{$rate->charge}}</td>
@@ -251,7 +250,7 @@
                                 @foreach($r->charge_lcl_air as $v)
                                     @if($v->type_id==1)
                                         <?php
-                                            $total_origin+=@$v->total_origin;
+                                            @$total_origin+=@$v->total_origin;
                                         ?>
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
