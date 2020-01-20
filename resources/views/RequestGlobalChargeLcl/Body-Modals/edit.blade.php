@@ -40,3 +40,38 @@
         {{ Form::select('status',$status_arr,$requests->status,['id' => 'statusSelectMD','class'=>'m-select2-general  form-control ','style' => 'width:100%;']) }}
     </div>
 </div>
+<script>
+
+	$('.m-select2-general').select2({
+
+	});
+
+	function SaveStatusModal(){
+		//$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
+		var status_id   = $('#statusSelectMD').val();
+		var idContract    = $('#idContract').val();
+		url='{!! route("Request.GlobalC.status.lcl") !!}';
+		$.ajax({
+			url:url,
+			method:'get',
+			data:{id:idContract,status:status_id},
+			success: function(data){
+				//alert(data.data + data.status);
+				if(data.data == 1){
+					$('a#statusHrf'+idContract).text(data.status);
+					$('a#statusHrf'+idContract).css('color',data.color);
+					$('#statusSamp'+idContract).css('color',data.color);
+					$('#changeStatus').modal('hide');
+					//swal('Deleted!','Your Status has been changed.','success');
+					toastr.success("Your Status has been changed. ID: "+data.request.id+" - "+data.request.name, "Status. ID: "+data.request.id);
+				}else if(data.data == 2){
+					//swal("Error!", "An internal error occurred!", "error");
+                    toastr.success("An internal error occurred!", "Error!");
+				}
+			}
+		});
+
+	}
+
+</script>

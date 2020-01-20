@@ -17,7 +17,7 @@
         $('#Loadstatus').modal();
     }
 
-    function SaveStatusModal(){
+   /* function SaveStatusModal(){
         var id = $('#idContract').val();
         var status = $('#statusSelectMD').val();
         
@@ -37,4 +37,4 @@
                 }
             }
         })
-    }
+    }*/
