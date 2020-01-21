@@ -96,7 +96,7 @@
                                         @endif  
                                         <td>{{$rate->transit_time!='' ? $rate->transit_time:'-'}}</td>
                                         <td>{{$rate->via!='' ? $rate->via:'-'}}</td>
-                                    @endif                                    
+                                    @endif
                                     <td >{{$currency_cfg->alphacode}}</td>
                                 </tr>
                             @endforeach
@@ -227,8 +227,20 @@
                                 <td></td>
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                <td ><b>{{number_format(@$total_freight, 2, '.', '')}}</b></td>
-                                <td><b>{{$currency_cfg->alphacode}}</b></td>  
+                                @if($quote->pdf_option->show_total_freight_in==1)
+                                    @if($quote->pdf_option->show_total_freight_in_currency=='USD')
+                                        <td ><b>{{@$total_freight/$freight_currency->rates_eur}}</b></td>
+                                    @else
+                                        <td ><b>{{number_format(@$total_freight/$freight_currency->rates, 2, '.', '')}}</b></td>
+                                    @endif
+                                @else
+                                    <td ><b>{{number_format(@$total_freight, 2, '.', '')}}</b></td>
+                                @endif
+                                @if($quote->pdf_option->show_total_freight_in==1)
+                                    <td >{{$quote->pdf_option->show_total_freight_in_currency}}</td>
+                                @else
+                                    <td><b>{{$currency_cfg->alphacode}}</b></td>
+                                @endif
                             </tr>
                         </tbody>
                     </table>

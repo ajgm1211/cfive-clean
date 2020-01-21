@@ -5,9 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Charge extends Model implements Auditable
+class Charge extends Model
 {
-    use OwenIt\Auditing\Auditable;
     
     protected $casts = [
         'amount' => 'array',
