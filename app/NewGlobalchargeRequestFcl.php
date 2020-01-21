@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class NewGlobalchargeRequestFcl extends Model
+class NewGlobalchargeRequestFcl extends Model implements Auditable
 {
+    use OwenIt\Auditing\Auditable;
+    
     protected $table = 'n_request_globalcharge';
     protected $fillable = ['name',
                            'numbercontract',
