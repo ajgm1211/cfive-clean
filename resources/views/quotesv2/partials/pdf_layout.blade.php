@@ -148,6 +148,15 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                    <span class="title-quote input_form"><b>Show Total Freight In:</b></span>
+                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -205,6 +214,15 @@
                                     <span class="form-check-label title-quote input_form" for="replace_total_title">
                                         Replace Total by TON/M3
                                     </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                    <span class="title-quote input_form"><b>Show Total Freight In:</b></span>
+                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
                                 </label>
                             </div>
                         </div>
@@ -279,6 +297,17 @@
                                     <span class="form-check-label title-quote input_form" for="replace_total_title">
                                         Replace Total by TON/M3
                                     </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                    <span class="title-quote input_form"><b>Show Total Freight In:</b></span>
+                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
                                 </label>
                             </div>
                         </div>
