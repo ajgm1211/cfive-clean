@@ -137,6 +137,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                        Replace Total by TON/M3
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="all" class="tabcontent {{$quote->pdf_option->show_type=='total in' ? '':'displayno'}}">
@@ -180,6 +192,18 @@
                                     <input class="form-check-input pdf-feature check" type="checkbox" name="show_logo" value="1" id="show_logo" data-quote-id="{{$quote->id}}" data-name="show_logo" data-type="checkbox" {{$quote->pdf_option->show_logo==1 ? 'checked':''}}>
                                     <span class="form-check-label title-quote input_form" for="show_logo">
                                         Show customer's logo
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                        Replace Total by TON/M3
                                     </span>
                                 </label>
                             </div>
@@ -238,24 +262,22 @@
                                 </label>
                             </div>
                         </div>
-
-                        <!--<div class="col-md-3 show_logo">
-<div class="form-check">
-<label>
-<input class="form-check-input pdf-feature check" type="checkbox" name="show_schedules" value="1" id="show_schedules" data-quote-id="{{$quote->id}}" data-name="show_schedules" data-type="checkbox" {{$quote->pdf_option->show_schedules==1 ? 'checked':''}}>
-<span class="form-check-label title-quote input_form" for="show_schedules">
-Show schedule's info
-</span>
-</label>
-</div>
-</div>-->
-
                         <div class="col-md-3 show_logo">
                             <div class="form-check">
                                 <label>
                                     <input class="form-check-input pdf-feature check" type="checkbox" name="show_logo" value="1" id="show_logo" data-quote-id="{{$quote->id}}" data-name="show_logo" data-type="checkbox" {{$quote->pdf_option->show_logo==1 ? 'checked':''}}>
                                     <span class="form-check-label title-quote input_form" for="show_logo">
                                         Show customer's logo
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <label>
+                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                        Replace Total by TON/M3
                                     </span>
                                 </label>
                             </div>

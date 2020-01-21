@@ -20,7 +20,11 @@
                         @else
                             <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
                         @endif
-                        <th ><b>Total</b></th>
+                        @if($quote->pdf_option->replace_total_title==1)
+                            <th ><b>TON/M3</b></th>
+                        @else
+                            <th ><b>Total</b></th>
+                        @endif
                         @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                             <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
                             <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
@@ -133,7 +137,11 @@
                                     <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Rate</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tarifa</b></th>
                                     <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Taxa</b></th>
-                                    <th ><b>Total</b></th>
+                                    @if($quote->pdf_option->replace_total_title==1)
+                                        <th ><b>TON/M3</b></th>
+                                    @else
+                                        <th ><b>Total</b></th>
+                                    @endif
                                     @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                         <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
                                         <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
@@ -247,7 +255,11 @@
                             @else
                                 <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
                             @endif
-                            <th ><b>Total</b></th>
+                            @if($quote->pdf_option->replace_total_title==1)
+                                <th ><b>TON/M3</b></th>
+                            @else
+                                <th ><b>Total</b></th>
+                            @endif
                             @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
                                 <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Type</b></th>
                                 <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Servicio</b></th>
