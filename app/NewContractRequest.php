@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class NewContractRequest extends Model
+class NewContractRequest extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    
     protected $table = 'newcontractrequests';
     protected $fillable = ['namecontract',
                            'numbercontract',
@@ -28,11 +31,11 @@ class NewContractRequest extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
-    
+
     public function direction(){
         return $this->belongsTo('App\Direction');
     }
-    
+
     public function Requestcarriers(){
         return $this->hasMany('App\RequetsCarrierFcl','request_id');
     }
