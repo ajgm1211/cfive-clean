@@ -5,9 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Contract extends Model implements Auditable
+class Contract extends Model
 {
-    use \OwenIt\Auditing\Auditable;
     protected $table    = "contracts";     
 
     protected $fillable = ['id', 'name','number','company_user_id','account_id','direction_id','validity','expire','status','remarks'];

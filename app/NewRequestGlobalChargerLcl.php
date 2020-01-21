@@ -5,9 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class NewRequestGlobalChargerLcl extends Model implements Auditable
+class NewRequestGlobalChargerLcl extends Model
 {
-    use OwenIt\Auditing\Auditable;
     
     protected $table = 'new_request_global_charger_lcls';
     protected $fillable = ['id',
