@@ -328,8 +328,8 @@
                                             @else
                                                 <td>{{$rate->schedule_type!='' ? $rate->schedule_type:'-'}}</td>
                                             @endif  
-                                            <td>{{@$r->transit_time!='' ? @$r->transit_time:'-'}}</td>
-                                            <td>{{@$r->via!='' ? @$r->via:'-'}}</td>
+                                            <td>{{@$rate->transit_time!='' ? @$rate->transit_time:'-'}}</td>
+                                            <td>{{@$rate->via!='' ? @$rate->via:'-'}}</td>
                                         @endif                                         
                                         @if($quote->pdf_option->grouped_freight_charges==1)
                                             <td>{{$quote->pdf_option->freight_charges_currency}}</td>
@@ -344,3 +344,4 @@
                 </table>                
             @endif
         @endif
+        <br>
