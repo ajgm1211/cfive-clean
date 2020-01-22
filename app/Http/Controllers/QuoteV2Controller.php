@@ -3942,7 +3942,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+        //  $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3957,7 +3957,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          /* $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));*/
+           $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));*/
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
