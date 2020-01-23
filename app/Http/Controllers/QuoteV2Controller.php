@@ -940,6 +940,7 @@ class QuoteV2Controller extends Controller
     $pdf_duplicate->origin_charges_currency=$pdf->origin_charges_currency;
     $pdf_duplicate->grouped_destination_charges=$pdf->grouped_destination_charges;
     $pdf_duplicate->destination_charges_currency=$pdf->destination_charges_currency;
+    $pdf_duplicate->show_total_freight_in_currency=$currency->alphacode;
     $pdf_duplicate->language=$pdf->language;
     $pdf_duplicate->show_carrier=$pdf->show_carrier;
     $pdf_duplicate->show_logo=$pdf->show_logo;
@@ -2599,6 +2600,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
@@ -2789,6 +2791,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
@@ -3942,7 +3945,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-        //  $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          //  $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3955,10 +3958,11 @@ class QuoteV2Controller extends Controller
 
       $client = new Client();
 
+
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          // $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-       $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          //$response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
 
@@ -3967,9 +3971,8 @@ class QuoteV2Controller extends Controller
       });
     }
 
+
     //ACA
-
-
 
 
     // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
@@ -7859,6 +7862,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
