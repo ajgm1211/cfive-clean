@@ -3962,7 +3962,7 @@ class QuoteV2Controller extends Controller
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
           $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-          //$response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+        //  $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
 
@@ -4003,6 +4003,7 @@ class QuoteV2Controller extends Controller
 
     if($chargesAPI_M != null){
       $arreglo3 = $arreglo3->get();
+
       $arreglo = $arreglo->merge($arreglo3);
     }
 
