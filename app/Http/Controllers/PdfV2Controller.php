@@ -359,6 +359,7 @@ class PdfV2Controller extends Controller
     {
         $id = obtenerRouteKey($id);
         $equipmentHides = null;
+        $freight_currency = null;
         $quote = QuoteV2::findOrFail($id);
         $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
         $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('port_id');
@@ -366,6 +367,9 @@ class PdfV2Controller extends Controller
         $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
         $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
         $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+        if($quote->pdf_option->show_total_freight_in_currency){
+            $freight_currency = Currency::where('alphacode',$quote->pdf_option->show_total_freight_in_currency)->first();
+        }
 
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
@@ -478,7 +482,7 @@ class PdfV2Controller extends Controller
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
         $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
-        if($quote->equipment!=''){
+        if($quote->equipment!=null){
             $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
 
@@ -843,7 +847,7 @@ class PdfV2Controller extends Controller
             }
         }
 
-        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
+        $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'freight_currency'=>$freight_currency]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
@@ -1364,55 +1368,55 @@ class PdfV2Controller extends Controller
    * @param Request $request 
    * @return Json
    */
-  public function send_pdf_quote(Request $request)
-  {
+    public function send_pdf_quote(Request $request)
+    {
 
-    $sign = null;
-    $sign_type = null;
-    $equipmentHides = null;
+        $sign = null;
+        $sign_type = null;
+        $equipmentHides = null;
 
-    $quote = QuoteV2::findOrFail($request->id);
-    $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
-    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 1);
-    })->where('quote_id',$quote->id)->get();
-    $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 3);
-    })->where('quote_id',$quote->id)->get();
-    $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 2);
-    })->where('quote_id',$quote->id)->get();
-    $contact_email = Contact::find($quote->contact_id);
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $email_from = \Auth::user()->email;
+        $quote = QuoteV2::findOrFail($request->id);
+        $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+        $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 1);
+        })->where('quote_id',$quote->id)->get();
+        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 3);
+        })->where('quote_id',$quote->id)->get();
+        $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 2);
+        })->where('quote_id',$quote->id)->get();
+        $contact_email = Contact::find($quote->contact_id);
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $email_from = \Auth::user()->email;
 
-    if($quote->equipment!=''){
-      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
-    }
-
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $currency_cfg = Currency::find($company_user->currency_id);
-      $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-      if($email_settings){
-        if($email_settings->email_signature_type=='text'){
-          $sign = $email_settings->email_signature_text;
-          $sign_type = 'text';
-        }else{
-          $sign = $email_settings->email_signature_image;
-          $sign_type = 'image';
+        if($quote->equipment!=''){
+            $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
-        if($email_settings->email_from!=''){
-          $email_from = $email_settings->email_from;   
-        }else{
-          $email_from = \Auth::user()->email;
-        }
-      }
-    }
 
-    /* Sale terms */
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $currency_cfg = Currency::find($company_user->currency_id);
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                    $sign_type = 'text';
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                    $sign_type = 'image';
+                }
+                if($email_settings->email_from!=''){
+                    $email_from = $email_settings->email_from;   
+                }else{
+                    $email_from = \Auth::user()->email;
+                }
+            }
+        }
+
+        /* Sale terms */
 
         $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
         $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
@@ -1522,7 +1526,7 @@ class PdfV2Controller extends Controller
 
         /* Fin arrays */
 
-    /* Consulta de charges relacionados al Rate */
+        /* Consulta de charges relacionados al Rate */
 
         $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_ports)->where('quote_id',$quote->id)
             ->Charge(1,'Origin')->with('charge')->get();
@@ -1559,86 +1563,86 @@ class PdfV2Controller extends Controller
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
 
-    $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
 
-    // EVENTO INTERCOM 
-    //$event = new  EventIntercom();
-    //$event->event_quoteEmail();
+        // EVENTO INTERCOM 
+        //$event = new  EventIntercom();
+        //$event->event_quoteEmail();
 
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-    $subject = $request->subject;
-    $body = $request->body;
-    $to = $request->to;
+        $subject = $request->subject;
+        $body = $request->body;
+        $to = $request->to;
 
-    $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
-    
-    //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+        $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
 
-    $quote->status='Sent';
-    $quote->update();
+        //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
 
-    return response()->json(['message' => 'Ok']);
-  }
+        $quote->status='Sent';
+        $quote->update();
 
-  /**
+        return response()->json(['message' => 'Ok']);
+    }
+
+    /**
    * Enviar cotizaciones vía email
    * @param Request $request 
    * @return Json
    */
-  public function send_pdf_quote_lcl(Request $request)
-  {
-    $sign = null;
-    $sign_type = null;
-    $equipmentHides = null;
+    public function send_pdf_quote_lcl(Request $request)
+    {
+        $sign = null;
+        $sign_type = null;
+        $equipmentHides = null;
 
-    $quote = QuoteV2::findOrFail($request->id);
-    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
-    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 1);
-    })->where('quote_id',$quote->id)->get();
-    $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 3);
-    })->where('quote_id',$quote->id)->get();
-    $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 2);
-    })->where('quote_id',$quote->id)->get();
-    $contact_email = Contact::find($quote->contact_id);
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
-    $email_from = \Auth::user()->email;
-    $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('port_id');
-    $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
-    $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
-    $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
-    $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+        $quote = QuoteV2::findOrFail($request->id);
+        $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
+        $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 1);
+        })->where('quote_id',$quote->id)->get();
+        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 3);
+        })->where('quote_id',$quote->id)->get();
+        $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 2);
+        })->where('quote_id',$quote->id)->get();
+        $contact_email = Contact::find($quote->contact_id);
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
+        $email_from = \Auth::user()->email;
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('port_id');
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+        $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
-    if($quote->equipment!=''){
-      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
-    }
-
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-      if($email_settings){
-        if($email_settings->email_signature_type=='text'){
-          $sign = $email_settings->email_signature_text;
-        }else{
-          $sign = $email_settings->email_signature_image;
+        if($quote->equipment!=''){
+            $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
-        if($email_settings->email_from!=''){
-          $email_from = $email_settings->email_from;   
-        }else{
-          $email_from = \Auth::user()->email;
+
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                }
+                if($email_settings->email_from!=''){
+                    $email_from = $email_settings->email_from;   
+                }else{
+                    $email_from = \Auth::user()->email;
+                }
+            }
+            $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
+            $currency_cfg = Currency::find($company_user->currency_id);
         }
-      }
-      $type=$company_user->type_pdf;
-      $ammounts_type=$company_user->pdf_ammounts;
-      $currency_cfg = Currency::find($company_user->currency_id);
-    }
 
         foreach($sale_terms_origin_grouped as $sale_origin){
             foreach($sale_origin->charge as $sale_origin_charge){
@@ -2040,77 +2044,77 @@ class PdfV2Controller extends Controller
 
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
 
-    // EVENTO INTERCOM 
-    //$event = new  EventIntercom();
-    //$event->event_quoteEmail();
+        // EVENTO INTERCOM 
+        //$event = new  EventIntercom();
+        //$event->event_quoteEmail();
 
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-    $subject = $request->subject;
-    $body = $request->body;
-    $to = $request->to;
+        $subject = $request->subject;
+        $body = $request->body;
+        $to = $request->to;
 
-    $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
-    //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+        $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
+        //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
 
-    $quote->status='Sent';
-    $quote->update();
-    return response()->json(['message' => 'Ok']);
-  }
-
-  public function send_pdf_quote_air(Request $request){
-
-    $sign = null;
-    $sign_type = null;
-    $equipmentHides = null;
-
-    $quote = QuoteV2::findOrFail($request->id);
-    $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
-    $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 1);
-    })->where('quote_id',$quote->id)->get();
-    $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 3);
-    })->where('quote_id',$quote->id)->get();
-    $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
-      $query->where('type_id', 2);
-    })->where('quote_id',$quote->id)->get();
-    $contact_email = Contact::find($quote->contact_id);
-    $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
-    $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
-    $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
-    $email_from = \Auth::user()->email;
-    $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('airport_id');
-    $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
-    $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
-    $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
-    $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
-
-    if($quote->equipment!=''){
-      $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+        $quote->status='Sent';
+        $quote->update();
+        return response()->json(['message' => 'Ok']);
     }
 
-    if(\Auth::user()->company_user_id){
-      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-      $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
-      if($email_settings){
-        if($email_settings->email_signature_type=='text'){
-          $sign = $email_settings->email_signature_text;
-        }else{
-          $sign = $email_settings->email_signature_image;
+    public function send_pdf_quote_air(Request $request){
+
+        $sign = null;
+        $sign_type = null;
+        $equipmentHides = null;
+
+        $quote = QuoteV2::findOrFail($request->id);
+        $rates_lcl_air = AutomaticRate::where('quote_id',$quote->id)->with('charge_lcl_air')->get();
+        $origin_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 1);
+        })->where('quote_id',$quote->id)->get();
+        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 3);
+        })->where('quote_id',$quote->id)->get();
+        $destination_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 2);
+        })->where('quote_id',$quote->id)->get();
+        $contact_email = Contact::find($quote->contact_id);
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
+        $email_from = \Auth::user()->email;
+        $sale_terms = SaleTermV2::where('quote_id',$quote->id)->with('charge')->select('airport_id');
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+        $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+
+        if($quote->equipment!=''){
+            $equipmentHides = $this->hideContainer($quote->equipment,'BD');
         }
-        if($email_settings->email_from!=''){
-          $email_from = $email_settings->email_from;   
-        }else{
-          $email_from = \Auth::user()->email;
+
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $email_settings = EmailSetting::where('company_user_id',$company_user->id)->first();
+            if($email_settings){
+                if($email_settings->email_signature_type=='text'){
+                    $sign = $email_settings->email_signature_text;
+                }else{
+                    $sign = $email_settings->email_signature_image;
+                }
+                if($email_settings->email_from!=''){
+                    $email_from = $email_settings->email_from;   
+                }else{
+                    $email_from = \Auth::user()->email;
+                }
+            }
+            $type=$company_user->type_pdf;
+            $ammounts_type=$company_user->pdf_ammounts;
+            $currency_cfg = Currency::find($company_user->currency_id);
         }
-      }
-      $type=$company_user->type_pdf;
-      $ammounts_type=$company_user->pdf_ammounts;
-      $currency_cfg = Currency::find($company_user->currency_id);
-    }
 
         foreach($sale_terms_origin_grouped as $sale_origin){
             foreach($sale_origin->charge as $sale_origin_charge){
@@ -2512,23 +2516,23 @@ class PdfV2Controller extends Controller
 
         $view = \View::make('quotesv2.pdf.index_lcl_air', ['quote'=>$quote,'rates'=>$rates_lcl_air,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'charges_type'=>$type,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'destination_charges_grouped'=>$destination_charges_grouped,'freight_charges_detailed'=>$freight_charges_detailed,'package_loads'=>$package_loads,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
 
-    // EVENTO INTERCOM 
-    //$event = new  EventIntercom();
-    //$event->event_quoteEmail();
+        // EVENTO INTERCOM 
+        //$event = new  EventIntercom();
+        //$event->event_quoteEmail();
 
-    $pdf = \App::make('dompdf.wrapper');
-    $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
 
-    $subject = $request->subject;
-    $body = $request->body;
-    $to = $request->to;
+        $subject = $request->subject;
+        $body = $request->body;
+        $to = $request->to;
 
-    $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
-    //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
+        $this->saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email);
+        //SendQuotes::dispatch($subject,$body,$to,$quote,$contact_email->email);
 
-    $quote->status='Sent';
-    $quote->update();
-    return response()->json(['message' => 'Ok']);
-  }
+        $quote->status='Sent';
+        $quote->update();
+        return response()->json(['message' => 'Ok']);
+    }
 
 }

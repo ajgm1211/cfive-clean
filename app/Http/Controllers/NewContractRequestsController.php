@@ -35,6 +35,7 @@ use App\Jobs\SendEmailRequestFclJob;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
+use Spatie\Permission\Models\Permission;
 use GuzzleHttp\Exception\RequestException;
 
 
@@ -55,7 +56,11 @@ class NewContractRequestsController extends Controller
         $Ncontracts = DB::select('call  select_request_fcl()');
         //        dd($Ncontracts);
         //dd($Ncontracts[0]['Requestcarriers']->pluck('carrier')->pluck('name'));
-
+		$permiso_eliminar = false;
+		$user  = \Auth::user();
+		if($user->hasAnyPermission([1])){
+			$permiso_eliminar = true;
+		}
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
                 return $Ncontracts->company_user;
@@ -113,19 +118,23 @@ class NewContractRequestsController extends Controller
                 &nbsp;
                 <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
             })
-            ->addColumn('action', function ($Ncontracts) {
+            ->addColumn('action', function ($Ncontracts) use($permiso_eliminar) {
 
                 $buttons = '
                 &nbsp;&nbsp;
                 <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
-                &nbsp;&nbsp;
+                &nbsp;&nbsp;';
+				$eliminiar_buton = '
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
 
-
+				if($permiso_eliminar){
+					$buttons = $buttons . $eliminiar_buton;
+				}
+				
                 if(empty($Ncontracts->contract) != true){
                     $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>

@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class NewContractRequestLcl extends Model
 {
+    
     protected $table = 'new_contract_request_lcl';
     protected $fillable = ['namecontract',
                            'numbercontract',
