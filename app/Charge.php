@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class Charge extends Model
 {
+    
     protected $casts = [
         'amount' => 'array',
         'markups' => 'array',
