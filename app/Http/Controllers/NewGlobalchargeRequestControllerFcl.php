@@ -16,6 +16,7 @@ use App\Jobs\SendEmailRequestGcJob;
 use App\AccountImportationGlobalcharge;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\SlackNotification;
+use Spatie\Permission\Models\Permission;
 use App\Mail\NewRequestGlobalChargeToUserMail;
 use App\Mail\NewRequestGlobalChargeToAdminMail;
 
@@ -81,7 +82,11 @@ class NewGlobalchargeRequestControllerFcl extends Controller
     public function create2(){
         $Ncontracts = NewGlobalchargeRequestFcl::with('user','companyuser')->orderBy('id', 'desc')->get();
         //dd($Ncontracts[0]['companyuser']['name']);
-
+		$permiso_eliminar = false;
+		$user  = \Auth::user();
+		if($user->hasAnyPermission([1])){
+			$permiso_eliminar = true;
+		}
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
                 return $Ncontracts->companyuser->name;
@@ -129,8 +134,8 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                 &nbsp;
                 <samp class="la la-pencil-square-o statusHrf'.$Ncontracts->id.'" id="statusSamp'.$Ncontracts->id.'"  for="" style="font-size:15px;'.$color.'"></samp>';
             })
-            ->addColumn('action', function ($Ncontracts) {
-                return '
+            ->addColumn('action', function ($Ncontracts) use($permiso_eliminar) {
+                $buttons = '
                 <a href="/ImportationGlobalchargesFcl/RequestProccessGC/'.$Ncontracts->id.'" title="Proccess GC Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
                 </a>
@@ -138,10 +143,17 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                 <a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
-                &nbsp;&nbsp;
+                &nbsp;&nbsp;';
+				$eliminiar_buton ='
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
+				
+				if($permiso_eliminar){
+					$buttons = $buttons . $eliminiar_buton;
+				}
+				
+				return $buttons;
             })
 
             ->make();
