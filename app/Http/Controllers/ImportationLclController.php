@@ -348,7 +348,7 @@ class ImportationLclController extends Controller
                     $contractFile->save();
 
                     if(empty($requestFile->contract_id)){
-                        $requestFile->contractlcl_id = $Contract_id;
+                        $requestFile->contract_id = $Contract_id;
                         $requestFile->update();
                     }
                 }
