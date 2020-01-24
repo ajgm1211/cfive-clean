@@ -8,6 +8,7 @@ use App\Carrier;
 use Carbon\Carbon;
 use App\CompanyUser;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationsJob;
 use Yajra\Datatables\Datatables;
 use App\Notifications\N_general;
 use App\Jobs\ProcessContractFile;
@@ -148,10 +149,17 @@ class NewRequestGlobalChargerLclController extends Controller
 			$user->notify(new SlackNotification($message));
 			$admins = User::where('type','admin')->get();
 			$message = 'has created an new request: '.$Ncontract->id;
+
+			NotificationsJob::dispatch('Request-Lcl-GC',[
+				'user' => $request->user,
+				'ncontract' => $Ncontract->toArray()
+			]);
+
 			foreach($admins as $userNotifique){
-				\Mail::to($userNotifique->email)->send(new NewRequestGlobalChargeLclToAdminMail($userNotifique->toArray(),
-																								$user->toArray(),
-																								$Ncontract->toArray()));
+				/*\Mail::to($userNotifique->email)->send(new NewRequestGlobalChargeLclToAdminMail(
+					$userNotifique->toArray(),
+					$user->toArray(),
+					$Ncontract->toArray()));*/
 				$userNotifique->notify(new N_general($user,$message));
 			}
 

@@ -15,6 +15,7 @@ use App\CompanyUser;
 use App\RequetsCarrierLcl;
 use App\ContractCarrierLcl;
 use Illuminate\Http\Request;
+use App\Jobs\NotificationsJob;
 use App\NewContractRequestLcl;
 use App\Jobs\ExportRequestsJob;
 use App\Notifications\N_general;
@@ -116,7 +117,7 @@ class NewContractRequestLclController extends Controller
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' References: '.$Ncontracts->namecontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
                 </a>';
-				
+
 				if($permiso_eliminar){
 					$buttons = $buttons . $eliminiar_buton;
 				}
@@ -234,45 +235,10 @@ class NewContractRequestLclController extends Controller
 		$typeVal = 1;
 		$arreglotype = '';
 
-		if($request->type == 2){
-			// Rate And Surcharger 
-			$typeVal    = 2;
-			$type = array('type'=>$typeVal,'values'=>$request->valuesCurrency);
-		} else {
-			$type = array('type'=>$typeVal);
-			$arreglotype = '"type":'.$typeVal;
-		}
+		
 
-		$origin  = [];
-		$destiny = [];
-		$carrier = [];
-
-		$DatOriBol = false;
-		$DatDesBol = false;
-		$DatCarBol = false;
-
-		if($request->DatOri == true){
-			$origin = $request->origin;
-			$DatOriBol = true;
-		}
-
-		if($request->DatDes == true){
-			$destiny = $request->destiny;
-			$DatDesBol = true;
-		}
-
-		if($request->DatCar == true){
-			$carrier = $request->carrier;
-			$DatCarBol = true;
-		}
-
-		$data = array('DatOri'  => $DatOriBol,
-					  'origin'  => $origin,
-					  'DatDes'  => $DatDesBol,
-					  'destiny' => $destiny,
-					  'DatCar'  => $DatCarBol,
-					  'carrier' => $carrier
-					 );
+		$data = '';
+		$type         = '';
 		$type         = json_encode($type);
 		$data         = json_encode($data);
 		if($fileBoll){
@@ -327,10 +293,15 @@ class NewContractRequestLclController extends Controller
 			$user->notify(new SlackNotification($message));
 			$admins = User::where('type','admin')->get();
 			$message = 'has created an new request: '.$Ncontract->id;
+			NotificationsJob::dispatch('Request-Lcl',[
+				'user' => $request->user,
+				'ncontract' => $Ncontract->toArray()
+			]);
 			foreach($admins as $userNotifique){
-				\Mail::to($userNotifique->email)->send(new NewRequestLclToAdminMail($userNotifique->toArray(),
-																					$user->toArray(),
-																					$Ncontract->toArray()));
+				/*\Mail::to($userNotifique->email)->send(new NewRequestLclToAdminMail(
+					$userNotifique->toArray(),
+					$user->toArray(),
+					$Ncontract->toArray()));*/
 				$userNotifique->notify(new N_general($user,$message));
 			}
 
