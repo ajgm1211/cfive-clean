@@ -196,5 +196,11 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
         ],     
+         'temporal' => [
+            'driver' => 'local',
+            'root' => storage_path('tmp/uploads'),
+            'url' => '/storage',
+            'visibility' => 'public',
+        ],
     ],
 ];
