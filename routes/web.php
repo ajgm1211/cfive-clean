@@ -141,6 +141,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
   Route::get('excel/{id}', 'ContractsController@getMediaSimple')->name('contracts.excel');
+  Route::get('excelzip/{id}', 'ContractsController@getMediaAll')->name('contracts.excelZip');
 
   //----- developer
 
