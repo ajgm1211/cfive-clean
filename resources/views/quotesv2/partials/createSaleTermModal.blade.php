@@ -24,7 +24,7 @@
                     <div class="col-md-4">
                         <label>Type</label>
                         <div class="input-group date">
-                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control','id'=>'saleterm_type','id'=>'type']) }}
+                            {{ Form::select('type',['origin'=>'Origin','destination'=>'Destination'],null,['placeholder'=>'Select an option','class'=>'m-select2-general form-control','id'=>'saleterm_type']) }}
                         </div>
                     </div>
                     <div class="col-md-4" >
