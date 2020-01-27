@@ -529,6 +529,8 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
     Route::get('contacts/contact/{company_id}', 'ContactController@getContactsByCompanyId')->name('quotes-v2.contacts.company');
     //Chargeable weight
     Route::post('update/chargeable/{id}', 'QuoteV2Controller@updateChargeable')->name('quotes-v2.update.chargeable');
+    //Cost page
+    Route::get('cost/page/{quote_id}', 'ExcelController@costPageQuote')->name('quotes-v2.cost.page');
 });
 
 //Settings
