@@ -196,9 +196,9 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
         ],     
-         'temporal' => [
+         'contractm' => [
             'driver' => 'local',
-            'root' => storage_path('tmp/uploads'),
+            'root' => storage_path('app/public/manual'),
             'url' => '/storage',
             'visibility' => 'public',
         ],

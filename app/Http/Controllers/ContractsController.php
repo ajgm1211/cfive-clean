@@ -46,6 +46,8 @@ use App\Jobs\ImportationRatesSurchargerJob;
 use App\Http\Requests\UploadFileRateRequest;
 use Illuminate\Support\Collection as Collection;
 use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaStream;
+
 
 
 class ContractsController extends Controller
@@ -198,25 +200,27 @@ class ContractsController extends Controller
     $id = Carrier::where('name','ALL')->first();
     return $id->id;
   }
+  public function getMedia(Media $mediaItem)
+  {
+    return $mediaItem;
+  }
+    public function getMediaAll($id){
+    
+    $contract = Contract::find($id);
+    $downloads = $contract->getMedia('document');
+
+    // Download the files associated with the media in a streamed way.
+    // No prob if your files are very large.
+    return MediaStream::create('my-contract.zip')->addMedia($downloads);
+  }
 
   public function getMediaSimple($id){
 
-    $Ncontract = Media::find($id);
 
-    try{
-      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->name,$Ncontract->file_name);
-    } catch(\Exception $e){
-      try{
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->name,$Ncontract->file_name);
-      } catch(\Exception $e){
-        try{
-          return Storage::disk('FclRequest')->download($Ncontract->name,$Ncontract->file_name);
-        } catch(\Exception $e){
-   
-          return Storage::disk('temporal')->download($Ncontract->file_name,$Ncontract->file_name);
-        }
-      }
-    }
+    $mediaItem = Media::find($id);
+    return $this->getMedia($mediaItem);
+    
+    
 
   }
 
@@ -411,7 +415,7 @@ class ContractsController extends Controller
 
 
     foreach ($request->input('document', []) as $file) {
-      $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document');
+      $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contractm');
     }
 
     //$request->session()->flash('message.nivel', 'success');
@@ -682,12 +686,21 @@ class ContractsController extends Controller
       $request->session()->flash('activeR', 'active');
     }
 
+    //Items
     $mediaItems = $contracts->getMedia('document');
+    $totalItems = count($mediaItems);
+    if($totalItems=='0'){
+      
+      $message =   'Do you want add files to this contract?';
+      
+    }else{
+      $message =   'Do you want edit o remove this files?';
+      
+    }
 
 
 
-
-    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','direction','mediaItems'));
+    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','direction','mediaItems','totalItems','message'));
   }
 
   public function update(Request $request, $id)
