@@ -451,8 +451,15 @@ class NewContractRequestsController extends Controller
 					if(empty($Ncontract->time_star) == true){
 						$Ncontract->time_total = 'It did not go through the processing state';
 					} else{
+						$time_exacto = '';
 						$fechaStar = Carbon::parse($Ncontract->time_star);
-						$Ncontract->time_total = $fechaEnd->diffInMinutes($fechaStar).' minutes';
+						$time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+						if($time_exacto == 0 || $time_exacto == '0'){
+							$time_exacto = '1 minute';
+						} else {
+							$time_exacto = $time_exacto.' minutes';							
+						}				
+						$Ncontract->time_total = $time_exacto;
 					}
 				}
 			} elseif($Ncontract->status == 'Done'){
@@ -639,8 +646,8 @@ class NewContractRequestsController extends Controller
 						"Username load",
 						"Time Start",
 						"Time End",
-						"Time Elapsed",
-						"Management Time",
+						"Time Elapsed. Minutes",
+						"Management Time. Hours",
 						"Status"
 					));
 					$i= 2;
