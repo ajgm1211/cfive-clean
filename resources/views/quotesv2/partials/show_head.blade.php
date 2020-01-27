@@ -29,6 +29,11 @@
                 @endif
             </li>
             <li class="nav-item m-tabs__item" >
+                <a class="btn btn-primary-v2" href="{{route('quotes-v2.cost.page',setearRouteKey($quote->id))}}">
+                    Excel &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
+                </a>
+            </li>
+            <li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}">
                     Duplicate &nbsp;&nbsp;<i class="fa fa-plus"></i>
                 </a>
@@ -39,8 +44,6 @@
                     Delete &nbsp;&nbsp;<i class="fa fa-eraser"></i>
                 </a>
             </li>
-
-
         </ul>
     </div>
     <!-- Quote details -->
@@ -98,20 +101,20 @@
                             <span class="delivery_type_span">
                                 @switch($quote->delivery_type)
                                 @case(1)
-                                    Port to Port
-                                    @break
+                                Port to Port
+                                @break
                                 @case(2)
-                                    Port to Door
-                                    @break
+                                Port to Door
+                                @break
                                 @case(3)
-                                    Door to Port
-                                    @break
+                                Door to Port
+                                @break
                                 @case(4)
-                                    Door to Door
-                                    @break
+                                Door to Door
+                                @break
                                 @default
-                                    Port to Port
-                                    @break
+                                Port to Port
+                                @break
                                 @endswitch
                             </span>
                         </div>
@@ -124,20 +127,20 @@
                             <span class="delivery_type_span">
                                 @switch($quote->delivery_type)
                                 @case(1)
-                                    Airport to Airport
-                                    @break
+                                Airport to Airport
+                                @break
                                 @case(2)
-                                    Airport to Door
-                                    @break
+                                Airport to Door
+                                @break
                                 @case(3)
-                                    Door to Airport
-                                    @break
+                                Door to Airport
+                                @break
                                 @case(4)
-                                    Door to Door
-                                    @break
+                                Door to Door
+                                @break
                                 @default
-                                    Airport to Airport
-                                    @break
+                                Airport to Airport
+                                @break
                                 @endswitch
                             </span>
                         </div>
@@ -164,16 +167,16 @@
                             <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                             <span class="equipment_span">
                                 @if($quote->type=='FCL')
-                                    @if($quote->equipment!='')
-                                        <?php
-                                            $equipment=json_decode($quote->equipment);
-                                        ?>
-                                        @foreach($equipment as $item)
-                                            {{$item}}@unless($loop->last),@endunless
-                                        @endforeach
-                                    @endif
+                                @if($quote->equipment!='')
+                                <?php
+                                $equipment=json_decode($quote->equipment);
+                                ?>
+                                @foreach($equipment as $item)
+                                {{$item}}@unless($loop->last),@endunless
+                                @endforeach
+                                @endif
                                 @else
-                                    N/A
+                                N/A
                                 @endif
                             </span>
                             {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
@@ -191,7 +194,7 @@
                             <label class="title-quote"><b>Validity:&nbsp;&nbsp;</b></label>
                             <span class="validity_span">{{$quote->validity_start}} / {{$quote->validity_end}}</span>
                             @php
-                                $validity = $quote->validity_start ." / ". $quote->validity_end;
+                            $validity = $quote->validity_start ." / ". $quote->validity_end;
                             @endphp
                             {!! Form::text('validity_date', $validity, ['placeholder' => 'Validity','class' => 'form-control m-input validity','readonly'=>true,'id'=>'m_daterangepicker_1','required' => 'required','hidden']) !!}
                         </div>
