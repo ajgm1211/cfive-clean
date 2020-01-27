@@ -140,6 +140,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('duplicateLocalCharge/{id}', ['uses' => 'ContractsController@duplicateLocalChar', 'as' => 'duplicate-local-charge']);
   Route::get('deleteContract/{id}', ['uses' => 'ContractsController@deleteContract', 'as' => 'contracts.delete']);
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
+  Route::get('excel/{id}', 'ContractsController@getMediaSimple')->name('contracts.excel');
 
   //----- developer
 
@@ -397,6 +398,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
   Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
   Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
   Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
+  
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 

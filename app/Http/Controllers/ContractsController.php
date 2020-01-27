@@ -45,6 +45,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Jobs\ImportationRatesSurchargerJob;
 use App\Http\Requests\UploadFileRateRequest;
 use Illuminate\Support\Collection as Collection;
+use Spatie\MediaLibrary\Models\Media;
 
 
 class ContractsController extends Controller
@@ -196,6 +197,27 @@ class ContractsController extends Controller
   function allCarrierid(){
     $id = Carrier::where('name','ALL')->first();
     return $id->id;
+  }
+
+  public function getMediaSimple($id){
+
+    $Ncontract = Media::find($id);
+
+    try{
+      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->name,$Ncontract->file_name);
+    } catch(\Exception $e){
+      try{
+        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->name,$Ncontract->file_name);
+      } catch(\Exception $e){
+        try{
+          return Storage::disk('FclRequest')->download($Ncontract->name,$Ncontract->file_name);
+        } catch(\Exception $e){
+   
+          return Storage::disk('temporal')->download($Ncontract->file_name,$Ncontract->file_name);
+        }
+      }
+    }
+
   }
 
   public function storeMedia(Request $request)
@@ -660,7 +682,12 @@ class ContractsController extends Controller
       $request->session()->flash('activeR', 'active');
     }
 
-    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','direction'));
+    $mediaItems = $contracts->getMedia('document');
+
+
+
+
+    return view('contracts.editT', compact('contracts','harbor','country','carrier','currency','calculationT','surcharge','typedestiny','company','companies','users','user','id','direction','mediaItems'));
   }
 
   public function update(Request $request, $id)
