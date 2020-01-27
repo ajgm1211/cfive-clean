@@ -318,15 +318,28 @@ Upload Surcharge
 
                                   <a href="/contracts/excel/{{$media->id}}"  class="m-list-search__result-item">
                                     <span class="m-list-search__result-item-icon">
-                                      <i class="flaticon-interface-3 m--font-warning"></i>
+                                      <i class="flaticon-list-2  m--font-warning"></i>
                                     </span>
                                     <span class="m-list-search__result-item-text">
                                       {{ $media->file_name }}
                                     </span>
                                   </a>
+
                                   @endforeach
+                                  @if($totalItems > 1)
+                                  <a href="/contracts/excelzip/{{$contracts->id}}"  class="m-list-search__result-item">
+                                    <span class="m-list-search__result-item-icon">
+                                      <i class="flaticon-folder m--font-success"></i>
+                                    </span>
+                                    <span class="m-list-search__result-item-text">
+                                      All files Zip
+                                    </span>
+                                  </a>
+                                  @endif
+
+
                                   <br>
-                                  Do you want edit o remove this files? &nbsp;&nbsp;  &nbsp;  <input type="radio" value="yes" class="buttonM" name="editf"> Yes &nbsp;&nbsp;  <input type="radio" class="buttonM"   value="no" checked name="editf"> No
+                                  {{$message}} &nbsp;&nbsp;  &nbsp;  <input type="radio" value="yes" class="buttonM" onclick="changeDrop({{$totalItems}})" name="editf"> Yes &nbsp;&nbsp;  <input type="radio" onclick="changeDrop({{$totalItems}})" class="buttonM"   value="no" checked name="editf"> No
                                   <hr>
 
                                   <div class="tabDrag hide">
@@ -759,36 +772,38 @@ Load
     });
   }
 
-  $( ".buttonM" ).click(function() {
-
+  function changeDrop(valor){
     if($('.buttonM:checked').val() == "no"){
       $(".tabDrag").addClass('hide');
 
     }else{
-      toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "0",
-        "hideDuration": "0",
-        "timeOut": "0",
-        "extendedTimeOut": "0",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      };
+      if(valor > 0){
+        toastr.options = {
+          "closeButton": true,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": false,
+          "positionClass": "toast-bottom-right",
+          "preventDuplicates": true,
+          "onclick": null,
+          "showDuration": "0",
+          "hideDuration": "0",
+          "timeOut": "0",
+          "extendedTimeOut": "0",
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        };
+        toastr.error('Remenber this action erased this file attach</b> </a>!','IMPORTANT MESSAGE!');
+      }
+
       $(".tabDrag").removeClass('hide');
-      toastr.error('Remenber this action erased this file attach</b> </a>!','IMPORTANT MESSAGE!');
+
     }
 
+  }
 
-
-  });
 
 
   var uploadedDocumentMap = {}
