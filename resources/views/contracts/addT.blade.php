@@ -281,40 +281,40 @@ $validation_expire = 'Please enter validity date';
               </div>
             </div>
             <div class="tab-pane" id="m_tabs_6_5" role="tabpanel">
-              <div class="form-group m-form__group row">
-                <label class="col-form-label col-lg-3 col-sm-12">
-                  <div class="m-dropzone__msg dz-message needsclick">
-                    <h5 class="m-dropzone__msg-title ">
-                      FILE UPLOAD CONTRACT
-                    </h5>
-                  </div>
 
-                </label>
-              </div>
-              <div class="form-group m-form__group row">
-                <div class="col-lg-8 col-md-9 col-sm-12">
+              <div class="row">
+                <div class="col-lg-12">
 
-                  <div class="form-group m-form__group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">
-                      File Type Validation
-                    </label>
-                  </div>
-                  <div class="form-group m-form__group row">
-                    <div class="col-lg-8 col-md-9 col-sm-12">
-                      <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
-                        <div class="m-dropzone__msg dz-message needsclick">
-                          <h3 class="m-dropzone__msg-title">
-                            Drop files here or click to upload.
-                          </h3>
-                          <span class="m-dropzone__msg-desc">
-                            Only image, pdf and psd files are allowed for upload
-                          </span>
+
+                  <div class="m-portlet__body">
+                    <!--begin::Section-->
+                    <div class="m-section m-section--last">
+                      <div class="m-section__content">
+                        <!--begin::Preview-->
+                        <div class="m-demo">
+                          <div class="m-demo__preview">
+
+
+
+                            <div class="col-lg-8 ">
+                              <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
+                                <div class="m-dropzone__msg dz-message needsclick">
+                                  <h3 class="m-dropzone__msg-title">
+                                    Drop files here or click to upload.
+                                  </h3>
+                                  <span class="m-dropzone__msg-desc">
+                                    Only image, pdf and psd files are allowed for upload
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>

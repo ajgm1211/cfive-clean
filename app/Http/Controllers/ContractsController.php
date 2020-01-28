@@ -200,12 +200,24 @@ class ContractsController extends Controller
     $id = Carrier::where('name','ALL')->first();
     return $id->id;
   }
+  public function deleteMedia($id,$contract_id)
+  {
+
+    $contract = Contract::find($contract_id);
+    $media = Media::find($id);
+    $contract->deleteMedia($media->id);
+
+
+
+    //    $media->delete();
+    return 'true';
+  }
   public function getMedia(Media $mediaItem)
   {
     return $mediaItem;
   }
-    public function getMediaAll($id){
-    
+  public function getMediaAll($id){
+
     $contract = Contract::find($id);
     $downloads = $contract->getMedia('document');
 
@@ -219,8 +231,8 @@ class ContractsController extends Controller
 
     $mediaItem = Media::find($id);
     return $this->getMedia($mediaItem);
-    
-    
+
+
 
   }
 
@@ -280,8 +292,8 @@ class ContractsController extends Controller
     foreach($details as $key => $value)
     {
 
-      $rateOrig           = $request->input('origin_id'.$contadorRate);
-      $rateDest           = $request->input('destiny_id'.$contadorRate);
+      $rateOrig  = $request->input('origin_id'.$contadorRate);
+      $rateDest  = $request->input('destiny_id'.$contadorRate);
 
       foreach($rateOrig as $Rorig => $Origvalue)
       {
@@ -690,12 +702,12 @@ class ContractsController extends Controller
     $mediaItems = $contracts->getMedia('document');
     $totalItems = count($mediaItems);
     if($totalItems=='0'){
-      
+
       $message =   'Do you want add files to this contract?';
-      
+
     }else{
       $message =   'Do you want edit o remove this files?';
-      
+
     }
 
 
@@ -823,13 +835,19 @@ class ContractsController extends Controller
       }
     }
 
+    foreach ($request->input('document', []) as $file) {
+      $contract->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('document','contractm');
+    }
+
 
 
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You successfully update this contract.');
-    return redirect()->action('ContractsController@index');
+    return redirect()->back()->with('editContract','true');
+
+    //return redirect()->action('ContractsController@index');
 
   }
 
