@@ -240,6 +240,7 @@
 	</div>
 </div>
 
+<div id="body-div-submit" ></div>
 <!--  end modal editar rate -->
 
 @endsection
@@ -412,8 +413,12 @@
 				var url = "{{route('load.arr.Rates.por.detalles.Fcl')}}";
 				//url = url.replace(':id', idAr);
 				data2 = {idAr:idAr,contract_id:id}
-				$('#edit-modal-body').load(url,data2,function(){
-					$('#modaleditRate').modal({show:true});
+//				$('#edit-modal-body').load(url,data2,function(){
+//					$('#modaleditRate').modal({show:true});
+//				});
+                
+                $('#body-div-submit').load(url,data2,function(response,status,jqxhr){
+					$('#frrRates').submit();
 				});
 
 			} else {
