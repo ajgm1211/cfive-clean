@@ -940,7 +940,7 @@ class QuoteV2Controller extends Controller
     $pdf_duplicate->origin_charges_currency=$pdf->origin_charges_currency;
     $pdf_duplicate->grouped_destination_charges=$pdf->grouped_destination_charges;
     $pdf_duplicate->destination_charges_currency=$pdf->destination_charges_currency;
-    $pdf_duplicate->show_total_freight_in_currency=$currency->alphacode;
+    $pdf_duplicate->show_total_freight_in_currency=$pdf->show_total_freight_in_currency;
     $pdf_duplicate->language=$pdf->language;
     $pdf_duplicate->show_carrier=$pdf->show_carrier;
     $pdf_duplicate->show_logo=$pdf->show_logo;

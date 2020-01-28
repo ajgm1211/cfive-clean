@@ -42,7 +42,7 @@ class MailResetPasswordNotification extends Notification
 
         return ( new MailMessage )
             ->view('emails.reset_password', ['token' => $this->token,'email'=>$notifiable->email,'name'=>$notifiable->name,'lastname'=>$notifiable->lastname])
-            ->from('info@example.com')
+            ->from('info@cargofive.com')
             ->subject( 'Reset your password' );
     }
     
