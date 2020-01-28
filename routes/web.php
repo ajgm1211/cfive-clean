@@ -269,6 +269,10 @@ Route::prefix('Importation')->group(function () {
 
 	Route::post('LoMulRatesFaByFCL/','ImportationController@loadArrayEditMult')->name('load.arr.Rates.por.detalles.Fcl')
         ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::post('StorMulRatesFaByFCL/','ImportationController@StoreFailRatesMultiplesByDetalls')->name('store.multi.rates.fails')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
         ->middleware(['auth','role:administrator|data_entry']);
 
