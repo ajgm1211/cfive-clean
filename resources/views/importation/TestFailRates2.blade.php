@@ -404,7 +404,7 @@
 			var oTable = $("#myatest").dataTable();
 			var length=table.rows('.selected').data().length;
 
-			if(length > 0)
+			if(length >= 2)
 			{
 				for (var i = 0; i < length; i++) { 
 					idAr.push(table.rows('.selected').data()[i].id);
@@ -413,16 +413,13 @@
 				var url = "{{route('load.arr.Rates.por.detalles.Fcl')}}";
 				//url = url.replace(':id', idAr);
 				data2 = {idAr:idAr,contract_id:id}
-//				$('#edit-modal-body').load(url,data2,function(){
-//					$('#modaleditRate').modal({show:true});
-//				});
-                
+                                
                 $('#body-div-submit').load(url,data2,function(response,status,jqxhr){
 					$('#frrRates').submit();
 				});
 
 			} else {
-				swal("Error!", "Please select at least one record", "error");
+				swal("Error!", "Please select at least two record", "error");
 			}
 		}
 	}
