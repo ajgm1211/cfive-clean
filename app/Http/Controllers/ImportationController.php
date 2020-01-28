@@ -4662,7 +4662,7 @@ class ImportationController extends Controller
                     return '
                 <a href="#" onclick="showModalsavetorate('.$ratescol['id'].','.$ratescol['operation'].')" class=""><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-trash"></i></a>';
                 })
                 ->editColumn('id', '{{$id}}')->toJson();
         }
