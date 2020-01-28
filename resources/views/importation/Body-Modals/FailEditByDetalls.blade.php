@@ -5,6 +5,7 @@
 <input type="hidden" name="idAr[]" value="{{$rate}}">
 
 @endforeach
+<input type="hidden" name="contract_id" value="{{$contract_id}}">
 
 
 {!! Form::close() !!}
