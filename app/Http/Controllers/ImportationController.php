@@ -685,7 +685,7 @@ class ImportationController extends Controller
                     $contractFile->contract_id  = $Contract_id;
                     $contractFile->namefile     = $requestFile->namefile;
                     $contractFile->save();
-                    
+
                     if(empty($requestFile->contract_id)){
                         $requestFile->contract_id = $Contract_id;
                         $requestFile->update();
@@ -1152,6 +1152,7 @@ class ImportationController extends Controller
         }
     }
 
+    //Edita solo el origen y destino para rates fallidos, solo se coloca una vez
     public function EdicionRatesMultiples(Request $request){
         $harbor         = Harbor::pluck('display_name','id');
         $arreglo        = $request->idAr;
@@ -1159,6 +1160,249 @@ class ImportationController extends Controller
         //dd($harbor,$arreglo);
         return view('importation.Body-Modals.storeFailRatesMultiples',compact('harbor','arreglo','contract_id'));
     }
+
+    //Carga la edicion multiple de rates fallidos, para todos los datos del Rate
+
+    public function loadArrayEditMult(Request $request){
+        $array = $request->idAr;
+        $array_count = count($array);
+        $contract_id = $request->contract_id;
+        return view('importation.Body-Modals.FailEditByDetalls',compact('array','array_count','contract_id'));
+    }
+
+    public function showRatesMultiplesPorDetalles(Request $request){
+        //dd($request->all());
+        $fail_rates_total = collect([]);
+        $contract_id      = $request->contract_id;
+
+        $harbor 		= Harbor::pluck('display_name','id');
+        $carrier 		= Carrier::pluck('name','id');
+        $currency 		= Currency::pluck('alphacode','id');
+        $schedulesT		= [null=>'Please Select'];
+        $scheduleTo		= ScheduleType::all();
+
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
+        foreach($request->idAr as $rate_fail_id){
+
+            $failrate = FailRate::find($rate_fail_id);
+
+            $originV			= null;
+            $destinationV		= null;
+            $carrierV			= null;
+            $currencyV			= null;
+            $originA			= null;
+            $destinationA		= null;
+            $carrierA			= null;
+            $currencyA			= null;
+            $twuentyA			= null;
+            $fortyA				= null;
+            $fortyhcA			= null;
+            $fortynorA			= null;
+            $fortyfiveA			= null;
+            $failrates			= [];
+
+            $carrAIn			= null;
+            $pruebacurre    	= null;
+            $classdorigin   	= 'color:green';
+            $classddestination  = 'color:green';
+            $classcarrier   	= 'color:green';
+            $classcurrency  	= 'color:green';
+            $classtwuenty   	= 'color:green';
+            $classforty     	= 'color:green';
+            $classfortyhc   	= 'color:green';
+            $classfortynor  	= 'color:green';
+            $classfortyfive 	= 'color:green';
+
+            $classscheduleT     = 'color:green';
+            $classtransittime   = 'color:green';
+            $classvia           = 'color:green';
+
+            $originA 			= explode("_",$failrate['origin_port']);
+            $destinationA   	= explode("_",$failrate['destiny_port']);
+            $carrierA       	= explode("_",$failrate['carrier_id']);
+            $currencyA      	= explode("_",$failrate['currency_id']);
+            $twuentyA       	= explode("_",$failrate['twuenty']);
+            $fortyA         	= explode("_",$failrate['forty']);
+            $fortyhcA       	= explode("_",$failrate['fortyhc']);
+            $fortynorA      	= explode("_",$failrate['fortynor']);
+            $fortyfiveA     	= explode("_",$failrate['fortyfive']);
+            $schedueleTA    	= explode("_",$failrate['schedule_type']);
+
+            if(count($schedueleTA) <= 1){
+                $schedueleTA = ScheduleType::where('name',$schedueleTA[0])->first();
+                $schedueleTA = $schedueleTA['id'];
+            } else{
+                $classscheduleT = 'color:red';
+            }
+
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            if(count($originA) <= 1){
+                $originV = $originOb['id'];
+            } else{
+                $classdorigin = 'color:red';
+            }
+
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            if(count($destinationA) <= 1 ){
+                $destinationV = $destinationOb['id'];
+            } else{
+                $classddestination = 'color:red';
+            }
+
+            if(count($twuentyA) <= 1){
+                $twuentyA = $twuentyA[0];
+            } else{
+                $twuentyA = $twuentyA[0].' (error)';
+                $classtwuenty='color:red';
+            }
+
+            if(count($fortyA) <= 1){
+                $fortyA = $fortyA[0];
+            } else{
+                $fortyA = $fortyA[0].' (error)';
+                $classforty='color:red';
+            }
+
+            if(count($fortyhcA) <= 1){
+                $fortyhcA = $fortyhcA[0];
+            } else{
+                $fortyhcA = $fortyhcA[0].' (error)';
+                $classfortyhc='color:red';
+            }
+
+            if(count($fortynorA) <= 1){
+                $fortynorA = $fortynorA[0];
+            } else{
+                $fortynorA = $fortynorA[0].' (error)';
+                $classfortynor ='color:red';
+            }
+
+            if(count($fortyfiveA) <= 1){
+                $fortyfiveA = $fortyfiveA[0];
+            } else{
+                $fortyfiveA = $fortyfiveA[0].' (error)';
+                $classfortyfive = 'color:red';
+            }
+
+            if(count($carrierA) <= 1){
+                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+                $carrierV  = $carrierOb['id'];
+            }else{
+                $classcarrier = 'color:red';
+            }
+
+            if(count($currencyA) <= 1){
+                $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+                $currencyV = $currenc['id'];
+            } else{
+                $classcurrency='color:red';
+            }
+
+            $failrates = ['rate_id'         =>  $failrate->id,
+                          'contract_id'     =>  $failrate->contract_id,
+                          'origin_port'     =>  $originV,   
+                          'destiny_port'    =>  $destinationV,     
+                          'carrierAIn'      =>  $carrierV,
+                          'twuenty'         =>  $twuentyA,      
+                          'forty'           =>  $fortyA,      
+                          'fortyhc'         =>  $fortyhcA,  
+                          'fortynor'        =>  $fortynorA,  
+                          'fortyfive'       =>  $fortyfiveA,  
+                          'currencyAIn'     =>  $currencyV,
+                          'transit_time'    =>  $failrate->transit_time,
+                          'via'             =>  $failrate->via,
+                          'schedueleT'      =>  $schedueleTA,
+                          'classtransittime'=>  $classtransittime,
+                          'classvia'        =>  $classvia,
+                          'classscheduleT'  =>  $classscheduleT,
+                          'classorigin'     =>  $classdorigin,
+                          'classdestiny'    =>  $classddestination,
+                          'classcarrier'    =>  $classcarrier,
+                          'classtwuenty'    =>  $classtwuenty,
+                          'classforty'      =>  $classforty,
+                          'classfortyhc'    =>  $classfortyhc,
+                          'classfortynor'   =>  $classfortyhc,
+                          'classfortyfive'  =>  $classfortyhc,
+                          'classcurrency'   =>  $classcurrency
+                         ];
+
+            $fail_rates_total->push($failrates);
+        }
+
+        //dd($fail_rates_total);
+        return view('importation.EditByDetallFailRates',compact('fail_rates_total','contract_id','schedulesT','harbor','carrier','currency'));
+
+    }
+
+    public function StoreFailRatesMultiplesByDetalls(Request $request){
+        //dd($request->all());
+        $contract_id        = $request->contract_id;
+        $data_rates         = $request->rate_fail_id;
+        $data_origins       = $request->origin_id;
+        $data_destinations  = $request->destiny_id;
+        $data_carrier       = $request->carrier_id;
+        $data_twuenty       = $request->twuenty;
+        $data_forty         = $request->forty;
+        $data_fortyhc       = $request->fortyhc;
+        $data_fortyhc       = $request->fortyhc;
+        $data_fortynor      = $request->fortynor;
+        $data_fortyfive     = $request->fortyfive;
+        $data_currency      = $request->currency_id;
+
+        foreach($data_rates as $key => $data_rate){
+            //dd($request->all(),$data_rate,$key);
+            foreach($data_origins[$key] as $origin){
+                foreach($data_destinations[$key] as $destiny){
+                   // dd($request->all(),$key,$origin,$destiny);
+                    if($origin != $destiny){
+                        $exists_rate = Rate::where('origin_port',$origin)
+                            ->where('destiny_port',$destiny)
+                            ->where('carrier_id',$data_carrier[$key])
+                            ->where('contract_id',$contract_id)
+                            ->where('twuenty',floatval($data_twuenty[$key]))
+                            ->where('forty',floatval($data_forty[$key]))
+                            ->where('fortyhc',floatval($data_fortyhc[$key]))
+                            ->where('fortynor',floatval($data_fortynor[$key]))
+                            ->where('fortyfive',floatval($data_fortyfive[$key]))
+                            ->where('currency_id',$data_currency[$key])
+                            ->first();
+                        if(count($exists_rate) == 0){
+                            $return = Rate::create([
+                                "origin_port"       => $origin,
+                                "destiny_port"      => $destiny,
+                                "carrier_id"        => $data_carrier[$key],
+                                "contract_id"       => $contract_id,
+                                "twuenty"           => floatval($data_twuenty[$key]),
+                                "forty"             => floatval($data_forty[$key]),
+                                "fortyhc"           => floatval($data_fortyhc[$key]),
+                                "fortynor"          => floatval($data_fortynor[$key]),
+                                "fortyfive"         => floatval($data_fortyfive[$key]),
+                                "currency_id"       => $data_currency[$key],
+                                "schedule_type_id"  => null,
+                                "transit_time"      => 0,
+                                "via"               => null
+                            ]);
+                        }                        
+                    }
+                }
+            }
+            $failrate = FailRate::find($data_rate);
+            $failrate->forceDelete();
+            //eliminar fail aqui
+        }
+
+        $request->session()->flash('message.content', 'Updated Rates' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$contract_id,1]);
+
+
+    }
+
     public function StoreFailRatesMultiples(Request $request){
         //dd($request->all());
         $id = $request->contract_id;
@@ -4396,7 +4640,7 @@ class ImportationController extends Controller
             return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
                 return '<a href="#" class="" onclick="showModalsavetorate('.$failrate['id'].','.$failrate['operation'].')"><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-trash"></i></a>';
             })
                 ->editColumn('id', '{{$id}}')->toJson();
 
@@ -4418,7 +4662,7 @@ class ImportationController extends Controller
                     return '
                 <a href="#" onclick="showModalsavetorate('.$ratescol['id'].','.$ratescol['operation'].')" class=""><i class="la la-edit"></i></a>
                 &nbsp;
-                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-remove"></i></a>';
+                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-trash"></i></a>';
                 })
                 ->editColumn('id', '{{$id}}')->toJson();
         }
