@@ -142,6 +142,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
   Route::get('destroyContract/{id}', ['uses' => 'ContractsController@destroyContract', 'as' => 'contracts.destroyContract']);
   Route::get('excel/{id}', 'ContractsController@getMediaSimple')->name('contracts.excel');
   Route::get('excelzip/{id}', 'ContractsController@getMediaAll')->name('contracts.excelZip');
+  Route::get('excel-delete/{id}/{id_contract}', ['uses' => 'ContractsController@deleteMedia', 'as' => 'contracts.exceldelete']);
 
   //----- developer
 
@@ -399,7 +400,7 @@ Route::middleware(['auth'])->prefix('companies')->group(function () {
   Route::get('update/details/pdf/{company_id}', 'CompanyController@updatePdfLanguage')->name('companies.update.pdf');
   Route::get('update/details/prices/{company_id}', 'CompanyController@updatePriceLevels')->name('companies.update.prices');
   Route::get('api', 'CompanyController@apiCompanies')->name('companies.api');
-  
+
 });
 Route::resource('companies', 'CompanyController')->middleware('auth');
 
