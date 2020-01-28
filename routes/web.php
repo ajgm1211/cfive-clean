@@ -261,8 +261,18 @@ Route::prefix('Importation')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
     Route::post('EditMultFailRatesFCL/','ImportationController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Fcl')
         ->middleware(['auth','role:administrator|data_entry']);
+	//editar rates fallidos por detalles y con opcion multiple
+	
 
+	Route::post('ShMulRatesFaByFCL/','ImportationController@showRatesMultiplesPorDetalles')->name('Show.Multiples.Rates.por.detalles.Fcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 
+	Route::post('LoMulRatesFaByFCL/','ImportationController@loadArrayEditMult')->name('load.arr.Rates.por.detalles.Fcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::post('StorMulRatesFaByFCL/','ImportationController@StoreFailRatesMultiplesByDetalls')->name('store.multi.rates.fails')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
     Route::get('FailedSurchargeFCDView/{id}/{ids}','ImportationController@FailSurchargeLoad')->name('Failed.Surcharge.V.F.C')
         ->middleware(['auth','role:administrator|data_entry']);
 
