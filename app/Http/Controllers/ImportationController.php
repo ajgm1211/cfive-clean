@@ -1237,17 +1237,17 @@ class ImportationController extends Controller
 			}
 
 			$originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-				->get();
-			if(count($originA) <= 1 && count($originOb) == 1){
-				$originV = $originOb[0]['id'];
+				->first();
+			if(count($originA) <= 1){
+				$originV = $originOb['id'];
 			} else{
 				$classdorigin = 'color:red';
 			}
 
 			$destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-				->get();
-			if(count($destinationA) <= 1 && count($destinationOb) == 0){
-				$destinationV = $destinationOb[0]['id'];
+				->first();
+			if(count($destinationA) <= 1 ){
+				$destinationV = $destinationOb['id'];
 			} else{
 				$classddestination = 'color:red';
 			}
