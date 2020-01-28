@@ -38,200 +38,35 @@ class ExcelController extends Controller
             ],
         ];
 
-        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(12);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(12);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(12);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(12);
-        $spreadsheet->getActiveSheet()->getStyle('B19:H19')->getAlignment()
-            ->setHorizontal('center');
-        $spreadsheet->getActiveSheet()->getStyle('G11')->getAlignment()
-            ->setHorizontal('left');
-        $spreadsheet->getActiveSheet()->getStyle('C15')->getAlignment()
-            ->setHorizontal('left');
+        $sheet->setCellValue('G5', 'CARTA DE INSTRUCCIONES INTERNA A OPERACIONES');
+        $sheet->setCellValue('H7', 'EMBARQUE MARÍTIMO');
 
-        //Add Logo
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        $drawing->setName('Logo');
-        $drawing->setDescription('Logo');
+        $sheet->setCellValue('A9', '1)');
+        $sheet->setCellValue('B9', 'Agente Corresponsal:');
+        $sheet->setCellValue('C9', $quote->company->business_name);
+        $sheet->setCellValue('L9', 'Fecha:');
+        $sheet->setCellValue('M9', $quote->date_issued);
+        $sheet->setCellValue('L10', 'Referencia:');
+        $sheet->setCellValue('M10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
 
-        $drawing->setPath('./images/logo.png');
-
-        $drawing->setCoordinates('B2');
-        $drawing->setHeight(36);
-        $drawing->setWorksheet($spreadsheet->getActiveSheet());
-
-        $sheet->setCellValue('E2', $quote->custom_quote_id!='' ? 'COTIZACIÓN '.$quote->custom_quote_id:'COTIZACIÓN '.$quote->quote_id);
-        $sheet->setCellValue('H2', $quote->created_at);
-
-        $validity = $quote->validity_start ." / ". $quote->validity_end;
-
-        $sheet->setCellValue('B5', 'Type: ');
-        $sheet->setCellValue('C5', $quote->type);
-        $sheet->setCellValue('B6', 'Quotation ID: ');
-        $sheet->setCellValue('C6', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
-        $sheet->setCellValue('B7', 'Status: ');
-        $sheet->setCellValue('C7', $quote->status);
-        $sheet->setCellValue('B8', 'Date issued: ');
-        $sheet->setCellValue('C8', $quote->date_issued);
-        $sheet->setCellValue('B9', 'Validity: ');
-        $sheet->setCellValue('C9', $validity);
-        $sheet->setCellValue('B10', 'Owner: ');
-        $sheet->setCellValue('C10', $quote->user->name.' '.$quote->user->lastname);
-        $sheet->setCellValue('B11', 'Equipments: ');
-        $sheet->setCellValue('C11', $quote->equipment);
-        $sheet->setCellValue('B12', 'Incoterm: ');
-        $sheet->setCellValue('C12', $quote->incoterm->name);
-
-
-        $sheet->setCellValue('F5', 'Destination type: ');
-        if($quote->type=='AIR'){
-            switch($quote->delivery_type){
-                case 1:
-                    $destination_type = 'Airport to Airport' ;
-                    break;
-                case 2:
-                    $destination_type = 'Airport to Door' ;
-                    break;
-                case 3:
-                    $destination_type = 'Door to Airport' ;
-                    break;
-                case 4:
-                    $destination_type = 'Door to Door' ;
-                    break;
-            } 
-        }else{
-            switch($quote->delivery_type){
-                case 1:
-                    $destination_type = 'Port to Port' ;
-                    break;
-                case 2:
-                    $destination_type = 'Port to Door' ;
-                    break;
-                case 3:
-                    $destination_type = 'Door to Port' ;
-                    break;
-                case 4:
-                    $destination_type = 'Door to Door' ;
-                    break;
-            }
-        }
-
-        $sheet->setCellValue('G5', $destination_type);
-        $sheet->setCellValue('F6', 'Origin Address: ');
-        $sheet->setCellValue('G6', $quote->origin_address);
-        $sheet->setCellValue('F7', 'Destination Address: ');
-        $sheet->setCellValue('G7', $quote->destination_address);
-        $sheet->setCellValue('F8', 'Company: ');
-        $sheet->setCellValue('G8', $quote->company->business_name);
-        $sheet->setCellValue('F9', 'Contact: ');
-        $sheet->setCellValue('G9', $quote->contact->first_name);
-        $sheet->setCellValue('F10', 'Commodity: ');
-        $sheet->setCellValue('G10', $quote->commodity);
-        $sheet->setCellValue('F11', 'Kind of cargo: ');
-        $sheet->setCellValue('G11', $quote->kind_of_cargo);
-        $sheet->setCellValue('F12', 'Price Level: ');
-        $sheet->setCellValue('G12', @$quote->price->name);
-
-        $equipmentHides = $this->hideContainer($quote->equipment,'BD');
-
-        $i=15;
-        foreach($rates as $rate){
-
-            $sheet->setCellValue('B'.$i, 'POL: '.$rate->origin_port->name.', '.$rate->origin_port->code);
-            $sheet->setCellValue('C'.$i, 'POD: '.$rate->destination_port->name.', '.$rate->destination_port->code);
-            $sheet->setCellValue('D'.$i, 'Contract: '.$rate->contract);
-            $sheet->setCellValue('E'.$i, 'Type: '.$rate->schedule_type);
-            $sheet->setCellValue('F'.$i, 'TT: '.$rate->transit_time);
-            $sheet->setCellValue('G'.$i, 'Via: '.$rate->via);
-
-            $sheet->setCellValue('B17', 'Freight Charges');
-            $sheet->setCellValue('B19', 'Charge');
-            $sheet->setCellValue('C19', 'Detail');
-            $sheet->setCellValue('D19', '20\'');
-            $sheet->setCellValue('E19', '40\'');
-            $sheet->setCellValue('F19', '40HC\'');
-            $sheet->setCellValue('G19', '40NOR\'');
-            $sheet->setCellValue('H19', '45\'');
-
-            $a=20;
-            $sum20=0;
-            $sum40=0;
-            $sum40hc=0;
-            $sum40nor=0;
-            $sum45=0;
-
-            $sum_m20=0;
-            $sum_m40=0;
-            $sum_m40hc=0;
-            $sum_m40nor=0;
-            $sum_m45=0;
-            foreach($rate->charge as $item){
-                if($item->type_id==3){
-                    $rate_id=$item->automatic_rate_id;
-
-                    $freight_amounts = json_decode($item->amount,true);
-                    $freight_markups = json_decode($item->markups,true);
-
-                    if(isset($freight_amounts['c20'])){
-                        $sum20+=$item->total_20;
-                    }
-                    if(isset($freight_amounts['c40'])){
-                        $sum40+=@$item->total_40;
-                    }
-                    if(isset($freight_amounts['c40hc'])){
-                        $sum40hc+=@$item->total_40hc;
-                    }
-                    if(isset($freight_amounts['c40nor'])){
-                        $sum40nor+=@$item->total_40nor;
-                    }
-                    if(isset($freight_amounts['c45'])){
-                        $sum45+=@$item->total_45;
-                    }
-
-                    if(isset($freight_markups['m20'])){
-                        $sum_m20+=$item->total_markup20;
-                    }
-                    if(isset($freight_markups['m40'])){
-                        $sum_m40+=@$item->total_markup40;
-                    }
-                    if(isset($freight_markups['m40hc'])){
-                        $sum_m40hc+=@$item->total_markup40hc;
-                    }
-                    if(isset($freight_markups['m40nor'])){
-                        $sum_m40nor+=@$item->total_markup40nor;
-                    }
-                    if(isset($freight_markups['m45'])){
-                        $sum_m45+=@$item->total_markup45;
-                    }
-
-                    $sheet->setCellValue('B'.$a, $item->surcharge_id !='' ? $item->surcharge_id:'Ocean Freight');
-                    $sheet->setCellValue('C'.$a, $item->surcharge_id !='' ? $item->surcharge_id:'Per Container');
-                    $sheet->setCellValue('D'.$a, @$freight_amounts['c20']+@$freight_markups['m20']);
-                    $sheet->setCellValue('E'.$a, @$freight_amounts['c40']+@$freight_markups['m40']);
-                    $sheet->setCellValue('F'.$a, @$freight_amounts['c40hc']+@$freight_markups['m40hc']);
-                    $sheet->setCellValue('G'.$a, @$freight_amounts['c40nor']+@$freight_markups['m40nor']);
-                    $sheet->setCellValue('H'.$a, @$freight_amounts['c45']+@$freight_markups['m45']);
-                }
-                $a++;
-            }
-
-            $i++;
-        }
+        $sheet->setCellValue('A12', '2)');
+        $sheet->setCellValue('B12', 'Tipo de carga:');
+        $sheet->setCellValue('C12', 'Carga General');
         
-        $end = $a+1;
+        $sheet->setCellValue('B13', 'Incoterm:');
+        $sheet->setCellValue('C13', $quote->incoterm->name);
         
-        $spreadsheet->getActiveSheet()->getStyle('B2:I'.$end)->applyFromArray($styleArray);
+        $sheet->setCellValue('F12', 'Embarque:');
+        $sheet->setCellValue('G12', $quote->type);
 
-        $spreadsheet->getActiveSheet()->getStyle('B2:I'.$end)->getFill()
+        $spreadsheet->getActiveSheet()->getStyle('A1:X61')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()->setARGB('FFFFFF');
 
-        $spreadsheet->getActiveSheet()->getStyle('B19:H19')->getFill()
+
+        $spreadsheet->getActiveSheet()->getStyle('A5:Q5')->getFill()
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-            ->getStartColor()->setARGB('D5D5D5');
+            ->getStartColor()->setARGB('E13B24');
 
         $writer = new Xlsx($spreadsheet);
         if($quote->custom_quote_id!=''){
