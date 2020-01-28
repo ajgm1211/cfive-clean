@@ -67,7 +67,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
     <div class="m-portlet__body">
 
 
-      {!! Form::model($contracts, ['route' => ['contracts.update', $contracts], 'method' => 'PUT','class' => 'form-group m-form__group']) !!}
+      {!! Form::model($contracts, ['route' => ['contracts.update', $contracts], 'method' => 'PUT','class' => 'form-group m-form__group','id'=>'formu']) !!}
       @include('contracts.partials.form_contractsT')
       <div class="m-portlet m-portlet--tabs">
         <div class="m-portlet__head">
@@ -294,78 +294,103 @@ Upload Surcharge
             </div>
             <div class="tab-pane" id="m_tabs_6_5" role="tabpanel">
               <div class="row">
-                <div class="col-lg-8">
-                  <div class="m-portlet">
-
-                    <div class="m-portlet__body">
-                      <!--begin::Section-->
-                      <div class="m-section m-section--last">
-                        <div class="m-section__content">
-                          <!--begin::Preview-->
-                          <div class="m-demo">
-                            <div class="m-demo__preview">
-                              <div class="m-list-search">
-                                <div class="m-list-search__results">
-                                  <span class="m-list-search__result-message m--hide">
-                                    No record found
-                                  </span>
-                                  <span class="m-list-search__result-category m-list-search__result-category--first">
-                                    Documents
-                                  </span>
-
-                                  @foreach($mediaItems as $media)
+                <div class="col-lg-12">
 
 
-                                  <a href="/contracts/excel/{{$media->id}}"  class="m-list-search__result-item">
-                                    <span class="m-list-search__result-item-icon">
-                                      <i class="flaticon-list-2  m--font-warning"></i>
-                                    </span>
-                                    <span class="m-list-search__result-item-text">
-                                      {{ $media->file_name }}
-                                    </span>
-                                  </a>
-
-                                  @endforeach
-                                  @if($totalItems > 1)
-                                  <a href="/contracts/excelzip/{{$contracts->id}}"  class="m-list-search__result-item">
-                                    <span class="m-list-search__result-item-icon">
-                                      <i class="flaticon-folder m--font-success"></i>
-                                    </span>
-                                    <span class="m-list-search__result-item-text">
-                                      All files Zip
-                                    </span>
-                                  </a>
-                                  @endif
+                  <div class="m-portlet__body">
+                    <!--begin::Section-->
+                    <div class="m-section m-section--last">
+                      <div class="m-section__content">
+                        <!--begin::Preview-->
+                        <div class="m-demo">
+                          <div class="m-demo__preview">
+                            <div class="m-list-search">
+                              <div class="m-list-search__results">
+                                <span class="m-list-search__result-message m--hide">
+                                  No record found
+                                </span>
+                                <span class="m-list-search__result-category m-list-search__result-category--first">
+                                  Documents
+                                </span>
 
 
-                                  <br>
-                                  {{$message}} &nbsp;&nbsp;  &nbsp;  <input type="radio" value="yes" class="buttonM" onclick="changeDrop({{$totalItems}})" name="editf"> Yes &nbsp;&nbsp;  <input type="radio" onclick="changeDrop({{$totalItems}})" class="buttonM"   value="no" checked name="editf"> No
-                                  <hr>
+                                @foreach($contracts->getMedia('document')->chunk(2) as $items)
+                                <div class="row " >
+                                  @foreach($items as $mediaI)
+                                  <div class="col-md-6 col-dad{{$mediaI->id}}">
+                                    <div class="row">
+                                      <div class="col-md-8">   {{ $mediaI->name }}</div>
+                                      <div class="col-md-1">   
+                                        <a href="/contracts/excel/{{$mediaI->id}}"  class="m-list-search__result-item">
+                                          <span class="m-list-search__result-item-icon">
+                                            <i class="flaticon-list-2  m--font-success"></i>
+                                          </span>
+                                        </a>
+                                      </div>
 
-                                  <div class="tabDrag hide">
-                                    <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone ">
-                                      <div class="m-dropzone__msg dz-message needsclick">
-                                        <h3 class="m-dropzone__msg-title">
-                                          Drop files here or click to upload.
-                                        </h3>
-                                        <span class="m-dropzone__msg-desc">
-                                          Only image, pdf and psd files are allowed for upload
-                                        </span>
+                                      <div class="col-md-1">
+                                        <a  media-id="{{$mediaI->id}}" contract-id="{{$contracts->id}}" class="m-list-search__result-item file-contract">
+                                          <span class="m-list-search__result-item-icon">
+                                            <i class="flaticon-circle  m--font-danger"></i>
+                                          </span>
+                                        </a>
                                       </div>
                                     </div>
                                   </div>
+                                  @endforeach
 
                                 </div>
+                                @endforeach
+                                <br>
+                                @if($totalItems > 1)
+
+                                <div class="row">
+                                  <div class="col-md-4">   
+                                    <span class="m-list-search__result-category m-list-search__result-category--first">
+                                      Files   Zip
+                                    </span>
+
+                                    <a href="/contracts/excelzip/{{$contracts->id}}"  class="m-list-search__result-item">
+                                      <span class="m-list-search__result-item-icon">
+                                        <i class="flaticon-folder m--font-success"></i>
+                                      </span>
+                                      <span class="m-list-search__result-item-text">
+                                        Download here
+                                      </span>
+                                    </a>
+                                  </div>
+                                </div>
+                                @endif
+
+
+                                <br>
+                                <!-- {{$message}} &nbsp;&nbsp;  &nbsp;  <input type="radio" value="yes" class="buttonM" onclick="changeDrop({{$totalItems}})" name="editf"> Yes &nbsp;&nbsp;  <input type="radio" onclick="changeDrop({{$totalItems}})" class="buttonM"   value="no" checked name="editf"> No
+<hr>-->
+
+                                <div class="tabDrag ">
+                                  <div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
+                                    <div class="m-dropzone__msg dz-message needsclick">
+                                      <h3 class="m-dropzone__msg-title">
+                                        Drop files here or click to upload.
+                                      </h3>
+                                      <span class="m-dropzone__msg-desc">
+                                        Only image, pdf and psd files are allowed for upload
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+
                               </div>
                             </div>
                           </div>
-
-
                         </div>
+
+
                       </div>
-                      <!--end::Section-->
                     </div>
+                    <!--end::Section-->
                   </div>
+
                 </div>
 
               </div>
@@ -772,7 +797,7 @@ Load
     });
   }
 
-  function changeDrop(valor){
+  /*function changeDrop(valor){
     if($('.buttonM:checked').val() == "no"){
       $(".tabDrag").addClass('hide');
 
@@ -802,7 +827,7 @@ Load
 
     }
 
-  }
+  }*/
 
 
 
@@ -831,13 +856,6 @@ Load
         $('#formu').find('input[name="document[]"][value="' + name + '"]').remove()
       },
         init: function () {
-          var mockFile = { 
-            name: "myimage.jpg", 
-            size: 12345, 
-            type: 'image/jpeg', 
-            status: Dropzone.ADDED, 
-            url: thumbnailUrls[i] 
-          };
           @if(isset($project) && $project->document)
           var files =
               {!! json_encode($project->document) !!}
@@ -1004,6 +1022,17 @@ Load
   }
 
 </script>
+
+@if(session('editContract'))
+<script>
+
+  swal(
+    'Done!',
+    'Contract updated.',
+    'success'
+  )
+</script>
+@endif
 
 @if(session('editRate'))
 <script>
