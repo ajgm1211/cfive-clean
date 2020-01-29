@@ -1357,7 +1357,7 @@ class ImportationController extends Controller
             //dd($request->all(),$data_rate,$key);
             foreach($data_origins[$key] as $origin){
                 foreach($data_destinations[$key] as $destiny){
-                   // dd($request->all(),$key,$origin,$destiny);
+                    // dd($request->all(),$key,$origin,$destiny);
                     if($origin != $destiny){
                         $exists_rate = Rate::where('origin_port',$origin)
                             ->where('destiny_port',$destiny)
@@ -1661,6 +1661,7 @@ class ImportationController extends Controller
         $rate->destiny_port     =  $request->destiny_id;
         $rate->carrier_id       =  $request->carrier_id;
         $rate->contract_id      =  $request->contract_id;
+        $rate->currency_id      =  $request->currency_id;
         $rate->twuenty          =  floatval($request->twuenty);
         $rate->forty            =  floatval($request->forty);
         $rate->fortyhc          =  floatval($request->fortyhc);

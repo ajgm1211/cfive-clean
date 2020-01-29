@@ -905,6 +905,196 @@ class ImportationLclController extends Controller
         return redirect()->route('Failed.Rates.lcl.view',[$id,1]);
     }
 
+    //Edicion Multiples Rates Por detalles
+    public function loadArrayEditMult(Request $request){
+        $array          = $request->idAr;
+        $array_count    = count($array);
+        $contractlcl_id = $request->contractlcl_id;
+        //dd($request->all(),$array,$contractlcl_id);
+        return view('ImportationLcl.Body-Modals.FailEditByDetalls',compact('array','array_count','contractlcl_id'));
+    }
+
+    public function showRatesMultiplesPorDetalles(Request $request){
+        //dd($request->all());
+        $fail_rates_total   = collect([]);
+        $contractlcl_id     = $request->contractlcl_id;
+        $harbor             = Harbor::pluck('display_name','id');
+        $carrier            = Carrier::pluck('name','id');
+        $currency           = Currency::pluck('alphacode','id');
+        $schedulesT         = [null=>'Please Select'];
+        $scheduleTo         = ScheduleType::all();
+
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
+        foreach($request->idAr as $rate_fail_id){
+            $failrate           = FailRateLcl::find($rate_fail_id);
+
+            $originV            = null;
+            $destinationV       = null;
+            $uomV               = null;
+            $minimumV           = null;
+            $carrierV           = null;
+            $currencyV          = null;
+
+            $pruebacurre        = '';
+            $classdorigin       = 'color:green';
+            $classddestination  = 'color:green';
+            $classcarrier       = 'color:green';
+            $classcurrency      = 'color:green';
+            $classuom           = 'color:green';
+            $classminimum       = 'color:green';
+            $classscheduleT     ='color:green';
+            $classtransittime   ='color:green';
+            $classvia           ='color:green';
+
+            $originA        = explode("_",$failrate['origin_port']);
+            $destinationA   = explode("_",$failrate['destiny_port']);
+            $carrierA       = explode("_",$failrate['carrier_id']);
+            $currencyA      = explode("_",$failrate['currency_id']);
+            $uomA           = explode("_",$failrate['uom']);
+            $minimumA       = explode("_",$failrate['minimum']);
+            $schedueleTA    = explode("_",$failrate['schedule_type']);
+
+            // --------------------------  SCHEDULES  ---------------------------------------------------------
+            if(count($schedueleTA) <= 1){
+                $schedueleTA = ScheduleType::where('name',$schedueleTA[0])->first();
+                $schedueleTA = $schedueleTA['id'];
+            } else{
+                $schedueleTA = '';
+                $classscheduleT='color:red';
+            }
+
+            // --------------------------  ORIGIN  ------------------------------------------------------------
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            if(count($originA) <= 1){
+                $originV = $originOb['id'];
+            } else{
+                $classdorigin='color:red';
+            }
+
+            // --------------------------  DESTINATIO  --------------------------------------------------------
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            if(count($destinationA) <= 1){
+                $destinationV = $destinationOb['id'];
+            } else{
+                $classddestination='color:red';
+            }
+
+            // --------------------------  W/M  ---------------------------------------------------------------
+            if(count($uomA) <= 1){
+                $uomV = $uomA[0];
+            } else{
+                $classuom   = 'color:red';
+            }
+
+            // --------------------------  MINIMUM  -----------------------------------------------------------
+            if(count($minimumA) <= 1){
+                $minimumV = $minimumA[0];
+            } else{
+                $classminimum   = 'color:red';
+            }
+
+            // --------------------------  CARRIER  -----------------------------------------------------------
+            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+            if(count($carrierA) <= 1){
+                $carrierV       = $carrierOb['id'];
+            } else{
+                $classcarrier   = 'color:red';
+            }
+
+            // --------------------------  CURRENCY  ----------------------------------------------------------
+            if(count($currencyA) <= 1){
+                $currenc        = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+                $currencyV      = $currenc['id'];
+            } else{
+                $classcurrency  = 'color:red';
+            }        
+
+            $failrates = ['rate_lcl_id'     =>  $failrate->id,
+                          'origin_port'     =>  $originV,   
+                          'destiny_port'    =>  $destinationV,     
+                          'carrierAIn'      =>  $carrierV,
+                          'uom'             =>  $uomV,      
+                          'minimum'         =>  $minimumV,      
+                          'currencyAIn'     =>  $currencyV,
+                          'transit_time'    =>  $failrate->transit_time,
+                          'via'             =>  $failrate->via,
+                          'schedueleT'      =>  $schedueleTA,
+                          'classorigin'     =>  $classdorigin,
+                          'classdestiny'    =>  $classddestination,
+                          'classcarrier'    =>  $classcarrier,
+                          'classuom'        =>  $classuom,
+                          'classminimum'    =>  $classminimum,
+                          'classcurrency'   =>  $classcurrency,
+                          'classtransittime'=>  $classtransittime,
+                          'classvia'        =>  $classvia,
+                          'classscheduleT'  =>  $classscheduleT
+                         ];
+            $fail_rates_total->push($failrates);
+        }
+        //dd($fail_rates_total);
+        return view('ImportationLcl.EditByDetallFailRates',compact('fail_rates_total','contractlcl_id','schedulesT','harbor','carrier','currency'));
+    }
+
+    public function StoreFailRatesMultiplesByDetalls(Request $request){
+        //dd($request->all());
+        $contractlcl_id     = $request->contractlcl_id;
+        $data_rates         = $request->rate_fail_id;
+        $data_origins       = $request->origin_id;
+        $data_destinations  = $request->destiny_id;
+        $data_carrier       = $request->carrier_id;
+        $data_uom           = $request->uom;
+        $data_minimum       = $request->minimum;
+        $data_currency      = $request->currency_id;
+        foreach($data_rates as $key => $data_rate){
+            foreach($data_origins[$key] as $origin){
+                foreach($data_destinations[$key] as $destiny){
+                    if($origin != $destiny){
+                        $exists_rate = RateLcl::where('origin_port',$origin)
+                            ->where('destiny_port',$destiny)
+                            ->where('carrier_id',$data_carrier[$key])
+                            ->where('contractlcl_id',$contractlcl_id)
+                            ->where('uom',floatval($data_uom[$key]))
+                            ->where('minimum',floatval($data_minimum[$key]))
+                            ->where('currency_id',$data_currency[$key])
+                            ->first();
+                        if(count($exists_rate) == 0){
+                            $return = RateLcl::create([
+                                "origin_port"       => $origin,
+                                "destiny_port"      => $destiny,
+                                "carrier_id"        => $data_carrier[$key],
+                                "contractlcl_id"    => $contractlcl_id,
+                                "uom"               => floatval($data_uom[$key]),
+                                "minimum"           => floatval($data_minimum[$key]),
+                                "currency_id"       => $data_currency[$key],
+                                "schedule_type_id"  => null,
+                                "transit_time"      => 0,
+                                "via"               => null
+                            ]);
+
+                        }
+                    }
+                }
+            }
+            $failrate = FailRateLcl::find($data_rate);
+            $failrate->forceDelete();
+        }
+        $request->session()->flash('message.content', 'Updated Rate LCL' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request->contractlcl_id)->count();
+
+        if($countfailrates > 0){
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contractlcl_id,1]);
+        } else{
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contractlcl_id,0]);
+        }
+    }
+
     // Rates view
     public function FailedRatesView($id,$tab){
         //$id se refiere al id del contracto
