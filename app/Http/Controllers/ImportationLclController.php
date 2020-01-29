@@ -1086,7 +1086,7 @@ class ImportationLclController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
 
-        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request->contract_id)->count();
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request->contractlcl_id)->count();
 
         if($countfailrates > 0){
             return redirect()->route('Failed.Rates.lcl.view',[$request->contractlcl_id,1]);
