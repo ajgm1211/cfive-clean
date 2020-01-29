@@ -319,7 +319,7 @@ Upload Surcharge
                                   @foreach($items as $mediaI)
                                   <div class="col-md-6 col-dad{{$mediaI->id}}">
                                     <div class="row">
-                                      <div class="col-md-8">   {{ $mediaI->name }}</div>
+                                      <div class="col-md-8">   {{ extraerWith('_',$mediaI->name) }}</div>
                                       <div class="col-md-1">   
                                         <a href="/contracts/excel/{{$mediaI->id}}"  class="m-list-search__result-item">
                                           <span class="m-list-search__result-item-icon">
