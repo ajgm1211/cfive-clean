@@ -86,6 +86,8 @@ use App\ContractFclFile;
 use App\ContractLclFile;
 use App\Http\Traits\QuoteV2Trait;
 use Illuminate\Support\Facades\Log;
+use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaStream;
 
 
 class QuoteV2Controller extends Controller
@@ -4848,8 +4850,11 @@ class QuoteV2Controller extends Controller
         $excelRequestId = "0";
       }
 
-
-
+      $mediaItems = $data->contract->getMedia('document');
+      $totalItems = count($mediaItems);
+      $idContract = 0;
+      if($totalItems > 0)
+        $idContract = $data->contract->id;
 
 
       // Valores
@@ -4891,6 +4896,9 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('typeCurrency',$typeCurrency);
 
       $data->setAttribute('idCurrency',$idCurrency);
+      //Excel
+      $data->setAttribute('totalItems',$totalItems);
+      $data->setAttribute('idContract',$idContract);
 
 
     }
@@ -5158,42 +5166,60 @@ class QuoteV2Controller extends Controller
   }
 
 
-  public function excelDownload($id,$idFcl){
+  public function excelDownload($id,$idFcl,$idContract){
 
-    $Ncontract = NewContractRequest::find($id);
-    if(!empty($Ncontract)){
+    if($idContract == 0){
+      $Ncontract = NewContractRequest::find($id);
+      if(!empty($Ncontract)){
 
-      $time       = new \DateTime();
-      $now        = $time->format('d-m-y');
-      $company    = CompanyUser::find($Ncontract->company_user_id);
-      $extObj     = new \SplFileInfo($Ncontract->namefile);
-      $ext        = $extObj->getExtension();
-      $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($Ncontract->company_user_id);
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
 
-    }else{
-      $Ncontract = ContractFclFile::find($idFcl);
-      $time       = new \DateTime();
-      $now        = $time->format('d-m-y');
-      $extObj     = new \SplFileInfo($Ncontract->namefile);
-      $ext        = $extObj->getExtension();
-      $name       = $Ncontract->id.'-'.$now.'-FLC.'.$ext;
+      }else{
+        $Ncontract = ContractFclFile::find($idFcl);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $Ncontract->id.'-'.$now.'-FLC.'.$ext;
 
-    }
+      }
 
 
-    try{
-      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
-    } catch(\Exception $e){
       try{
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
       } catch(\Exception $e){
         try{
-          return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+          return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
-          return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+          try{
+            return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+          } catch(\Exception $e){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+          }
         }
       }
+    }else{
+      $contract = Contract::find($idContract);
+      $downloads = $contract->getMedia('document');
+      $total = count($downloads);
+      if($total > 1){
+        return MediaStream::create('my-contract.zip')->addMedia($downloads);
+
+      }else{
+        $media = $downloads->first();
+        $mediaItem = Media::find($media->id);
+        return $mediaItem;
+      }
+
+
+
     }
+
 
   }
 
