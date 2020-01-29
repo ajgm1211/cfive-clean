@@ -106,6 +106,8 @@
                                     <a href="{{route('Reprocesar.Rates.lcl',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
                                     &nbsp; &nbsp;
                                     <a href="#" onclick="showModalsavetorate({{$id}},'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>
+                                    &nbsp; &nbsp;
+                                    <a href="#" onclick="showModalsavetorate({{$id}},'editRatesByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a>
                                 </div>
                             </div>
                             <br>
@@ -220,245 +222,272 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+<div id="body-div-submit" ></div>
 
-        <!--  end modal editar rate -->
+<!--  end modal editar rate -->
 
-        @endsection
-        @section('js')
-        @parent
+@endsection
+@section('js')
+@parent
 
 
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-        <script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
-        <script>
-            $(function() {
-                table = $('#myatest').DataTable({
-                    processing: true,
-                    columnDefs: [ {
-                        orderable: false,
-                        className: 'select-checkbox',
-                        targets:   0
-                    } ],
-                    select: {
-                        style:    'multi',
-                        selector: 'td:first-child'
-                    },
-                    buttons: [
-                        {
-                            text: 'Select all',
-                            action : function(e) {
-                                e.preventDefault();
-                                table.rows({ page: 'all'}).nodes().each(function() {
-                                    $(this).removeClass('selected')
-                                })
-                                table.rows({ search: 'applied'}).nodes().each(function() {
-                                    $(this).addClass('selected');        
-                                })
-                            }
-                        },
-                        {
-                            text: 'Select none',
-                            action: function () {
-                                table.rows().deselect();
-                            }
-                        }
-                    ],
-                    //serverSide: true,
-                    ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,1]) !!}',
-                    columns: [
-                        { data: null, render:function(){return "";}},
-                        { data: 'origin_portLb', name: 'origin_portLb' },
-                        { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierLb', name: 'carrierLb' },
-                        { data: 'w/m', name: 'w/m' },
-                        { data: 'minimum', name: "minimum" },
-                        { data: 'currency_id', name: 'currency_id' },
-                        { data: 'schedule_type', name: 'schedule_type' },
-                        { data: 'transit_time', name: 'transit_time' },
-                        { data: 'via', name: 'via' },
-                        { data: 'action', name: 'action', orderable: false, searchable: false },
-                    ],
-                    //"scrollX": true,
-                    "lengthChange": false,
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "deferLoading": 57,
-                    "stateSave": true,
-                    "autoWidth": true,
-                    "processing": true,
-                    "dom": 'Bfrtip',
-                    "paging": true
-                });
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8"  src="js/Contracts/RatesAndFailForContract.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
+<script>
 
-                $('#myatest2').DataTable({
-                    processing: true,
-                    //serverSide: true,
-                    buttons: [],
-                    ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,2]) !!}',
-                    columns: [
-                        { data: 'origin_portLb', name: 'origin_portLb' },
-                        { data: 'destiny_portLb', name: 'destiny_portLb' },
-                        { data: 'carrierLb', name: 'carrierLb' },
-                        { data: 'w/m', name: 'w/m' },
-                        { data: 'minimum', name: "minimum" },
-                        { data: 'currency_id', name: 'currency_id' },
-                        { data: 'schedule_type_id', name: 'schedule_type_id' },
-                        { data: 'transit_time', name: 'transit_time' },
-                        { data: 'via', name: 'via' },
-                        { data: 'action', name: 'action', orderable: false, searchable: false },
-                    ],
-                    "lengthChange": false,
-                    "searching": true,
-                    "ordering": true,
-                    "info": true,
-                    "deferLoading": 57,
-                    "stateSave": true,
-                    "autoWidth": true,
-                    "processing": true,
-                    "dom": 'Bfrtip',
-                    "paging": true,
-                    //"scrollX": true
-                });
-            });
+    $('.m-select2-general').select2({});
 
-            function showModalsavetorate(id,operation){
-                $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-                if(operation == 1){
-                    var url = '{{ route("Edit.Rates.Fail.Lcl", ":id") }}';
-                    url = url.replace(':id', id);
-                    $('#edit-modal-body').load(url,function(){
-                        $('#modaleditRate').modal();
-                    });
-                }else if(operation == 2){
-                    var url = '{{ route("Edit.RatesG.Lcl", ":id") }}';
-                    url = url.replace(':id', id);
-                    $('#edit-modal-body').load(url,function(){
-                        $('#modaleditRate').modal();
-                    });
-                } else  if(operation == 'editMultRates'){
-
-                    var idAr = [];
-                    var oTable = $("#myatest").dataTable();
-                    var length=table.rows('.selected').data().length;
-
-                    if(length > 0)
-                    {
-                        for (var i = 0; i < length; i++) { 
-                            idAr.push(table.rows('.selected').data()[i].id);
-                        }
-                        //console.log();
-                        var url = "{{route('Edicion.Multiples.Rates.Lcl')}}";
-                        //url = url.replace(':id', idAr);
-                        data2 = {idAr:idAr,contract_id:id}
-                        $('#edit-modal-body').load(url,data2,function(){
-                            $('#modaleditRate').modal({show:true});
-                        });
-
-                    } else {
-                        swal("Error!", "Please select at least one record", "error");
+    $(function() {
+        table = $('#myatest').DataTable({
+            processing: true,
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'multi',
+                selector: 'td:first-child'
+            },
+            buttons: [
+                {
+                    text: 'Select all',
+                    action : function(e) {
+                        e.preventDefault();
+                        table.rows({ page: 'all'}).nodes().each(function() {
+                            $(this).removeClass('selected')
+                        })
+                        table.rows({ search: 'applied'}).nodes().each(function() {
+                            $(this).addClass('selected');        
+                        })
                     }
-
+                },
+                {
+                    text: 'Select none',
+                    action: function () {
+                        table.rows().deselect();
+                    }
                 }
+            ],
+            //serverSide: true,
+            ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,1]) !!}',
+            columns: [
+                { data: null, render:function(){return "";}},
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'carrierLb', name: 'carrierLb' },
+                { data: 'w/m', name: 'w/m' },
+                { data: 'minimum', name: "minimum" },
+                { data: 'currency_id', name: 'currency_id' },
+                { data: 'schedule_type', name: 'schedule_type' },
+                { data: 'transit_time', name: 'transit_time' },
+                { data: 'via', name: 'via' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            //"scrollX": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "deferLoading": 57,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true
+        });
+
+        $('#myatest2').DataTable({
+            processing: true,
+            //serverSide: true,
+            buttons: [],
+            ajax: '{!! route("Failed.Rates.Lcl.datatable",[$id,2]) !!}',
+            columns: [
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'carrierLb', name: 'carrierLb' },
+                { data: 'w/m', name: 'w/m' },
+                { data: 'minimum', name: "minimum" },
+                { data: 'currency_id', name: 'currency_id' },
+                { data: 'schedule_type_id', name: 'schedule_type_id' },
+                { data: 'transit_time', name: 'transit_time' },
+                { data: 'via', name: 'via' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "deferLoading": 57,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
+            //"scrollX": true
+        });
+    });
+
+    function showModalsavetorate(id,operation){
+        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+        if(operation == 1){
+            var url = '{{ route("Edit.Rates.Fail.Lcl", ":id") }}';
+            url = url.replace(':id', id);
+            $('#edit-modal-body').load(url,function(){
+                $('#modaleditRate').modal();
+            });
+        }else if(operation == 2){
+            var url = '{{ route("Edit.RatesG.Lcl", ":id") }}';
+            url = url.replace(':id', id);
+            $('#edit-modal-body').load(url,function(){
+                $('#modaleditRate').modal();
+            });
+        } else  if(operation == 'editMultRates'){
+
+            var idAr = [];
+            var oTable = $("#myatest").dataTable();
+            var length=table.rows('.selected').data().length;
+
+            if(length > 0)
+            {
+                for (var i = 0; i < length; i++) { 
+                    idAr.push(table.rows('.selected').data()[i].id);
+                }
+                //console.log();
+                var url = "{{route('Edicion.Multiples.Rates.Lcl')}}";
+                //url = url.replace(':id', idAr);
+                data2 = {idAr:idAr,contract_id:id}
+                $('#edit-modal-body').load(url,data2,function(){
+                    $('#modaleditRate').modal({show:true});
+                });
+
+            } else {
+                swal("Error!", "Please select at least one record", "error");
             }
+        } else  if(operation == 'editRatesByDetalls'){
+            var idAr = [];
+            var oTable = $("#myatest").dataTable();
+            var length=table.rows('.selected').data().length;
 
-            $(document).on('click','#delete-FailRate',function(){
-                var id = $(this).attr('data-id-failrate');
-                var elemento = $(this);
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then(function(result){
-                    if (result.value) {
+            if(length >= 2)
+            {
+                for (var i = 0; i < length; i++) { 
+                    idAr.push(table.rows('.selected').data()[i].id);
+                }
+                //console.log();
+                var url = "{{route('load.arr.Rates.por.detalles.lcl')}}";
+                //url = url.replace(':id', idAr);
+                data2 = {idAr:idAr,contractlcl_id:id}
 
-                        url='{!! route("Destroy.RatesF.Lcl",":id") !!}';
-                        url = url.replace(':id', id);
-                        // $(this).closest('tr').remove();
-                        $.ajax({
-                            url:url,
-                            method:'get',
-                            success: function(data){
-                                if(data == 1){
-                                    swal(
-                                        'Deleted!',
-                                        'Your rate has been deleted.',
-                                        'success'
-                                    )
-                                    $(elemento).closest('tr').remove();
-                                    var a = $('#strfailinput').val();
-                                    a--;
-                                    $('#strfail').text(a);
-                                    $('#strfailinput').attr('value',a);
-                                }else if(data == 2){
-                                    swal("Error!", "an internal error occurred!", "error");
-                                }
-                            }
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        swal(
-                            'Cancelled',
-                            'Your rate is safe :)',
-                            'error'
-                        )
+                $('#body-div-submit').load(url,data2,function(response,status,jqxhr){
+                    $('#frrRates').submit();
+                });
+
+            } else {
+                swal("Error!", "Please select at least two record", "error");
+            }
+        }
+    }
+
+    $(document).on('click','#delete-FailRate',function(){
+        var id = $(this).attr('data-id-failrate');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+
+                url='{!! route("Destroy.RatesF.Lcl",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your rate has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var a = $('#strfailinput').val();
+                            a--;
+                            $('#strfail').text(a);
+                            $('#strfailinput').attr('value',a);
+                        }else if(data == 2){
+                            swal("Error!", "an internal error occurred!", "error");
+                        }
                     }
                 });
-            });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
 
-            $(document).on('click','#delete-Rate',function(){
-                var id = $(this).attr('data-id-rate');
-                var elemento = $(this);
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    reverseButtons: true
-                }).then(function(result){
-                    if (result.value) {
+    $(document).on('click','#delete-Rate',function(){
+        var id = $(this).attr('data-id-rate');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
 
-                        url='{!! route("Destroy.RatesG.Lcl",":id") !!}';
-                        url = url.replace(':id', id);
-                        // $(this).closest('tr').remove();
-                        $.ajax({
-                            url:url,
-                            method:'get',
-                            success: function(data){
-                                if(data == 1){
-                                    swal(
-                                        'Deleted!',
-                                        'Your rate has been deleted.',
-                                        'success'
-                                    )
-                                    $(elemento).closest('tr').remove();
-                                    var b = $('#strgoodinput').val();
-                                    b--;
-                                    $('#strgood').text(b);
-                                    $('#strgoodinput').attr('value',b);
-                                }else if(data == 2){
-                                    swal("Error!", "an internal error occurred!", "error");
-                                }
-                            }
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        swal(
-                            'Cancelled',
-                            'Your rate is safe :)',
-                            'error'
-                        )
+                url='{!! route("Destroy.RatesG.Lcl",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your rate has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var b = $('#strgoodinput').val();
+                            b--;
+                            $('#strgood').text(b);
+                            $('#strgoodinput').attr('value',b);
+                        }else if(data == 2){
+                            swal("Error!", "an internal error occurred!", "error");
+                        }
                     }
                 });
-            });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
 
-        </script>
+</script>
 
-        @stop
+@stop
