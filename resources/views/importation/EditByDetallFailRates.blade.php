@@ -102,14 +102,14 @@ $validation_expire = 'Please enter validity date';
                                         <tr id="{{'tr_clone'.$loop->index}}"  >
                                             <input type="hidden" name="rate_fail_id[]" value="{{$ratef['rate_id']}}">
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('origin_id['.$loop->index.'][]', $harbor,$ratef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;'.$ratef["classorigin"] ,'multiple' => 'multiple']) }}
+                                                {{ Form::select('origin_id['.$loop->index.'][]', $harbor,$ratef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;'.$ratef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
 
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('destiny_id['.$loop->index.'][]', $harbor,$ratef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
+                                                {{ Form::select('destiny_id['.$loop->index.'][]', $harbor,$ratef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('carrier_id['.$loop->index.']', $carrier,$ratef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}
+                                                {{ Form::select('carrier_id['.$loop->index.']', $carrier,$ratef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;']) }}
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {!! Form::text('twuenty['.$loop->index.']', $ratef['twuenty'], ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!} 
@@ -127,7 +127,7 @@ $validation_expire = 'Please enter validity date';
                                                 {!! Form::text('fortyfive['.$loop->index.']', $ratef['fortyfive'], ['placeholder' => 'Enter 45','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!}
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {{ Form::select('currency_id['.$loop->index.']', $currency,$ratef['currencyAIn'],['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}
+                                                {{ Form::select('currency_id['.$loop->index.']', $currency,$ratef['currencyAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;']) }}
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" onclick="removeTr('{{'tr_clone'.$loop->index}}')">
