@@ -13,7 +13,7 @@
 </style>
 @endsection
 
-@section('title', 'Edit Fails Rates FCL By Detalls')
+@section('title', 'Edit Fails Rates LCL By Detalls')
 @section('content')
 @php
 $validation_expire = 'Please enter validity date';
@@ -27,7 +27,7 @@ $validation_expire = 'Please enter validity date';
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Edit Fails Rates FCL
+                        Edit Fails Rates LCL
                     </h3>
                 </div>
             </div>
@@ -42,7 +42,7 @@ $validation_expire = 'Please enter validity date';
             </div>
         </div>
         <div class="container-fluid mt-4">
-            {!! Form::open(['route' => 'store.multi.rates.fails', 'method' => 'post','class' => 'form-group m-form__group']) !!}
+            {!! Form::open(['route' => 'store.multi.rates.fails.lcl', 'method' => 'post','class' => 'form-group m-form__group']) !!}
 
             <div class="m-portlet m-portlet--tabs">
                 <div class="m-portlet__head">
@@ -51,7 +51,7 @@ $validation_expire = 'Please enter validity date';
                             <li class="nav-item m-tabs__item">
                                 <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_tabs_6_1" role="tab">
                                     <i class="la la-cog"></i>
-                                    Fail Rates
+                                    Fail Rates LCL
                                 </a>
                             </li>
                         </ul>
@@ -64,29 +64,20 @@ $validation_expire = 'Please enter validity date';
                                 <table class="table table-striped m-table m-table--head-separator-primary table-contracts" id="sample_editable_1" style="width:100%;">
                                     <thead>
                                         <tr>
-                                            <th title="Field #1" style="padding: 0.75rem 0.2rem;">
+                                            <th title="Field #1" style="width:20%; padding: 0.75rem 0.2rem;">
                                                 Origin Port
                                             </th>
-                                            <th title="Field #2" style="padding: 0.75rem 0.2rem;">
+                                            <th title="Field #2" style="width:20%; padding: 0.75rem 0.2rem;">
                                                 Destination Port
                                             </th>
                                             <th title="Field #3" style="padding: 0.75rem 0.2rem;">
                                                 Carrier
                                             </th>
                                             <th title="Field #4" style="width:12%; padding: 0.75rem 0.2rem;">
-                                                20'
+                                                W/M
                                             </th>
                                             <th title="Field #5" style="width:12%; padding: 0.75rem 0.2rem;">
-                                                40'
-                                            </th>
-                                            <th title="Field #6" style="width:12%; padding: 0.75rem 0.2rem;">
-                                                40'HC
-                                            </th>
-                                            <th title="Field #6" style="width:12%; padding: 0.75rem 0.2rem;">
-                                                40'NOR
-                                            </th>
-                                            <th title="Field #6" style="width:12%; padding: 0.75rem 0.2rem;">
-                                                45'
+                                                Minimum
                                             </th>
                                             <th title="Field #7" style="padding: 0.75rem 0.2rem;">
                                                 Currency
@@ -97,13 +88,12 @@ $validation_expire = 'Please enter validity date';
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <input type="hidden" name="contract_id" value="{{$contract_id}}">
+                                        <input type="hidden" name="contractlcl_id" value="{{$contractlcl_id}}">
                                         @foreach($fail_rates_total as $ratef)
                                         <tr id="{{'tr_clone'.$loop->index}}"  >
-                                            <input type="hidden" name="rate_fail_id[]" value="{{$ratef['rate_id']}}">
+                                            <input type="hidden" name="rate_fail_id[]" value="{{$ratef['rate_lcl_id']}}">
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('origin_id['.$loop->index.'][]', $harbor,$ratef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;'.$ratef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
-
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('destiny_id['.$loop->index.'][]', $harbor,$ratef['destiny_port'],['class'=>'m-select2-general col-sm-6 form-control ','required' => 'required','style' => 'width:100%;' ,'multiple' => 'multiple']) }}
@@ -112,19 +102,10 @@ $validation_expire = 'Please enter validity date';
                                                 {{ Form::select('carrier_id['.$loop->index.']', $carrier,$ratef['carrierAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;']) }}
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {!! Form::text('twuenty['.$loop->index.']', $ratef['twuenty'], ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!} 
+                                                {!! Form::text('uom['.$loop->index.']', $ratef['uom'], ['placeholder' => 'W/M','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!} 
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
-                                                {!! Form::text('forty['.$loop->index.']', $ratef['forty'], ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!} 
-                                            </td>
-                                            <td style="padding: 0.75rem 0.2rem;">
-                                                {!! Form::text('fortyhc['.$loop->index.']', $ratef['fortyhc'], ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!}
-                                            </td>
-                                            <td style="padding: 0.75rem 0.2rem;">
-                                                {!! Form::text('fortynor['.$loop->index.']', $ratef['fortynor'], ['placeholder' => 'Enter 40NOR','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!}
-                                            </td>
-                                            <td style="padding: 0.75rem 0.2rem;">
-                                                {!! Form::text('fortyfive['.$loop->index.']', $ratef['fortyfive'], ['placeholder' => 'Enter 45','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!}
+                                                {!! Form::text('minimum['.$loop->index.']', $ratef['minimum'], ['placeholder' => 'Minimum','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!} 
                                             </td>
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('currency_id['.$loop->index.']', $currency,$ratef['currencyAIn'],['class'=>'m-select2-general col-sm-6 form-control','required' => 'required','style' => 'width:100%;']) }}

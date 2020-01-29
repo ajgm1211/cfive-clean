@@ -366,6 +366,16 @@ Route::middleware(['auth','role:administrator|data_entry'])->prefix('Importation
 
     Route::post('StoreMultFailRatesLCL/','ImportationLclController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Lcl')
         ->middleware(['auth','role:administrator|data_entry']);
+    
+    //editar rates fallidos por detalles y con opcion multiple
+	Route::post('ShMulRatesFaByLCL/','ImportationLclController@showRatesMultiplesPorDetalles')->name('Show.Multiples.Rates.por.detalles.Lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+
+	Route::post('LoMulRatesFaByLCL/','ImportationLclController@loadArrayEditMult')->name('load.arr.Rates.por.detalles.lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::post('StorMulRatesFaByLCL/','ImportationLclController@StoreFailRatesMultiplesByDetalls')->name('store.multi.rates.fails.lcl')
+        ->middleware(['auth','role:administrator|data_entry']);
 
 });
 
