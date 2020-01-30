@@ -1,0 +1,23 @@
+
+   RuntimeException  : Curl error (code 3): <url> malformed
+
+  at /var/www/html/cargofive/vendor/monolog/monolog/src/Monolog/Handler/Curl/Util.php:45
+    41|                     if ($closeAfterDone) {
+    42|                         curl_close($ch);
+    43|                     }
+    44| 
+  > 45|                     throw new \RuntimeException(sprintf('Curl error (code %s): %s', $curlErrno, $curlError));
+    46|                 }
+    47| 
+    48|                 continue;
+    49|             }
+
+  Exception trace:
+
+  1   Monolog\Handler\Curl\Util::execute()
+      /var/www/html/cargofive/vendor/monolog/monolog/src/Monolog/Handler/SlackWebhookHandler.php:102
+
+  2   Monolog\Handler\SlackWebhookHandler::write()
+      /var/www/html/cargofive/vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php:39
+
+  Please use the argument -v to see more details.
