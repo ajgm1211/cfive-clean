@@ -281,6 +281,43 @@ $(document).on('click', '#delete-rate', function () {
   });
 });
 
+
+$(document).on('click', '.file-contract', function () {
+  var id = $(this).attr('media-id');
+  var id_contract = $(this).attr('contract-id');
+
+  var theElement = $(this);
+  swal({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!'
+  }).then(function(result) {
+    if (result.value) {
+      $.ajax({
+        type: 'get',
+        url: '/contracts/excel-delete/' + id+'/'+id_contract,
+        success: function(data) {
+          swal(
+            'Deleted!',
+            'Your rate has been deleted.',
+            'success'
+          )
+
+          $('.col-dad'+id).remove();
+        },
+        error: function (request, status, error) {
+          alert(request.responseText);
+        }
+      });
+
+    }
+  });
+
+});
+
+
 function activarCountry(act){
   var divCountry = $( ".divcountry");
   var divport = $( ".divport");
@@ -294,18 +331,18 @@ function activarCountry(act){
   if(act == 'divcountry'){
     divport.attr('hidden','true');
     divCountry.removeAttr('hidden');
-    
+
     idCountryOrig.attr('required','true');
     idCountryDest.attr('required','true');
 
     idPortOrig.removeAttr('required');
     idPortDest.removeAttr('required');
-    
+
   }else if(act == 'divport'){
     divCountry.attr('hidden','true');
     divport.removeAttr('hidden');
-    
-    
+
+
     idPortOrig.attr('required','true');
     idPortDest.attr('required','true');
 
