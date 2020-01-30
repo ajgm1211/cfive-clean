@@ -95,11 +95,14 @@ class NewContractRequestsController extends Controller
 			->addColumn('user', function ($Ncontracts) {
 				return $Ncontracts->user;
 			})
+			->addColumn('username_load', function ($Ncontracts) {
+				return '<span id="userLoad'.$Ncontracts->id.'">'.$Ncontracts->username_load.'</span>';
+			})
 			->addColumn('time_elapsed', function ($Ncontracts) {
 				if(empty($Ncontracts->time_elapsed) != true){
 					return $Ncontracts->time_elapsed;
 				} else {
-					return '--------';
+					return '<span id="timeElapsed'.$Ncontracts->id.'"> ------------------ </span>';
 				}
 			})
 			->addColumn('status', function ($Ncontracts) {

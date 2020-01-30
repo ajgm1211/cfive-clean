@@ -314,21 +314,15 @@
 				"processing": true,
 				"serverSide": true,
 				"paging": true
-
-
-
 			});
-
 		});
 
 		function showModal(id){
-
 			var url = '{{ route("show.status.Request",":id") }}';
 			url = url.replace(':id',id);
 			$('#modal-body').load(url,function(){
 				$('#changeStatus').modal();
 			});
-
 		}
 
 		function editcontract(id){
