@@ -16,8 +16,8 @@
 @if(Auth::check())
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="011f006f-3864-44b5-9443-d700e87df5f7";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 <script>
-  /*var userId = {{ Auth::user()->id }}
-
+  var userId = {{ Auth::user()->id }}
+/*
     var APP_ID = "s9q3w42n";
     var current_user_email =  '{{\Auth::user()->email}}';
     var current_user_name = '{{ \Auth::user()->name }} {{\Auth::user()->lastname }}';
