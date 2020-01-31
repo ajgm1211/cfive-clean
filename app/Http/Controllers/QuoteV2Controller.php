@@ -86,6 +86,8 @@ use App\ContractFclFile;
 use App\ContractLclFile;
 use App\Http\Traits\QuoteV2Trait;
 use Illuminate\Support\Facades\Log;
+use Spatie\MediaLibrary\Models\Media;
+use Spatie\MediaLibrary\MediaStream;
 
 
 class QuoteV2Controller extends Controller
@@ -940,6 +942,7 @@ class QuoteV2Controller extends Controller
     $pdf_duplicate->origin_charges_currency=$pdf->origin_charges_currency;
     $pdf_duplicate->grouped_destination_charges=$pdf->grouped_destination_charges;
     $pdf_duplicate->destination_charges_currency=$pdf->destination_charges_currency;
+    $pdf_duplicate->show_total_freight_in_currency=$pdf->show_total_freight_in_currency;
     $pdf_duplicate->language=$pdf->language;
     $pdf_duplicate->show_carrier=$pdf->show_carrier;
     $pdf_duplicate->show_logo=$pdf->show_logo;
@@ -2599,6 +2602,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
@@ -2789,6 +2793,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';
@@ -3942,7 +3947,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          //  $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3955,21 +3960,21 @@ class QuoteV2Controller extends Controller
 
       $client = new Client();
 
+
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          /* $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));*/
-          //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+        //  $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
 
       $arreglo3 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
-        $q->where('validity', '<=',$dateSince)->where('expire', '>=', $dateUntil)->where('number','MAERSK');
+        $q->where('validity', '>=',$dateSince)->where('number','MAERSK');
       });
     }
 
+
     //ACA
-
-
 
 
     // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
@@ -4000,6 +4005,7 @@ class QuoteV2Controller extends Controller
 
     if($chargesAPI_M != null){
       $arreglo3 = $arreglo3->get();
+
       $arreglo = $arreglo->merge($arreglo3);
     }
 
@@ -4844,8 +4850,22 @@ class QuoteV2Controller extends Controller
         $excelRequestId = "0";
       }
 
+      $mediaItems = $data->contract->getMedia('document');
+      $totalItems = count($mediaItems);
+      $idContract = 0;
+      if($totalItems > 0)
+        $idContract = $data->contract->id;
 
+      // Franja APIS
+      $color = '';
+      if($data->contract->status == 'api'){
+        if($data->contract->number == 'MAERSK'){
+          $color = 'bg-maersk';
+        }else{
+          $color = 'bg-danger';
+        }
 
+      }
 
 
       // Valores
@@ -4887,6 +4907,11 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('typeCurrency',$typeCurrency);
 
       $data->setAttribute('idCurrency',$idCurrency);
+      //Excel
+      $data->setAttribute('totalItems',$totalItems);
+      $data->setAttribute('idContract',$idContract);
+      //COlor
+      $data->setAttribute('color',$color);
 
 
     }
@@ -5154,42 +5179,60 @@ class QuoteV2Controller extends Controller
   }
 
 
-  public function excelDownload($id,$idFcl){
+  public function excelDownload($id,$idFcl,$idContract){
 
-    $Ncontract = NewContractRequest::find($id);
-    if(!empty($Ncontract)){
+    if($idContract == 0){
+      $Ncontract = NewContractRequest::find($id);
+      if(!empty($Ncontract)){
 
-      $time       = new \DateTime();
-      $now        = $time->format('d-m-y');
-      $company    = CompanyUser::find($Ncontract->company_user_id);
-      $extObj     = new \SplFileInfo($Ncontract->namefile);
-      $ext        = $extObj->getExtension();
-      $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $company    = CompanyUser::find($Ncontract->company_user_id);
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
 
-    }else{
-      $Ncontract = ContractFclFile::find($idFcl);
-      $time       = new \DateTime();
-      $now        = $time->format('d-m-y');
-      $extObj     = new \SplFileInfo($Ncontract->namefile);
-      $ext        = $extObj->getExtension();
-      $name       = $Ncontract->id.'-'.$now.'-FLC.'.$ext;
+      }else{
+        $Ncontract = ContractFclFile::find($idFcl);
+        $time       = new \DateTime();
+        $now        = $time->format('d-m-y');
+        $extObj     = new \SplFileInfo($Ncontract->namefile);
+        $ext        = $extObj->getExtension();
+        $name       = $Ncontract->id.'-'.$now.'-FLC.'.$ext;
 
-    }
+      }
 
 
-    try{
-      return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
-    } catch(\Exception $e){
       try{
-        return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+        return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
       } catch(\Exception $e){
         try{
-          return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+          return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
-          return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+          try{
+            return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+          } catch(\Exception $e){
+            return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+          }
         }
       }
+    }else{
+      $contract = Contract::find($idContract);
+      $downloads = $contract->getMedia('document');
+      $total = count($downloads);
+      if($total > 1){
+        return MediaStream::create('my-contract.zip')->addMedia($downloads);
+
+      }else{
+        $media = $downloads->first();
+        $mediaItem = Media::find($media->id);
+        return $mediaItem;
+      }
+
+
+
     }
+
 
   }
 
@@ -7642,7 +7685,8 @@ class QuoteV2Controller extends Controller
 
 
 
-
+      //COlor
+      $data->setAttribute('color','');
       $data->setAttribute('remarks',$remarks);
       $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('excelRequestLCL',$excelRequestIdLCL);
@@ -7859,6 +7903,7 @@ class QuoteV2Controller extends Controller
       $pdf_option->freight_charges_currency=$currency->alphacode;
       $pdf_option->origin_charges_currency=$currency->alphacode;
       $pdf_option->destination_charges_currency=$currency->alphacode;
+      $pdf_option->show_total_freight_in_currency=$currency->alphacode;
       $pdf_option->show_schedules=1;
       $pdf_option->show_gdp_logo=1;
       $pdf_option->language='English';

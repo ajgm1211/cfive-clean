@@ -87,6 +87,10 @@
     border: 1px solid #ececec;
     transition: all 300ms ease;
   }
+  .bg-maersk {
+
+    background-color: #41B0D5;    
+  }
   .btn-detail__quotes:hover {
     border-color: #0072fc;
     background-color: #0072fc;    
@@ -524,12 +528,12 @@
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
-              <!--
-<div class="col-lg-2 for-check" id="maerskdiv">
-{{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
-<label for="mode5" class="label-check">Include MAERSK Price Finder</label>
-</div>
--->
+
+              <div class="col-lg-2 for-check" id="maerskdiv">
+                {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
+                <label for="mode5" class="label-check">Include MAERSK Price Finder</label>
+              </div>
+
             </div><br>
             <div class="row">
 
@@ -892,7 +896,7 @@
                         </div>
                         <div class="col-lg-4 d-flex flex-column justify-content-center">
                           <div class="progress m-progress--sm">
-                            <div class="progress-bar {{ $arr->contract->status == 'api' ? 'bg-danger'   : '' }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar {{ $arr->color }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>
@@ -959,9 +963,9 @@
                         </div>
                         @endif
                         <div class="col-lg-2 no-padding d-flex justify-content-end align-items-center">
-                          @if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") )
+                          @if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") || ($arr->totalItems !="0") )
                           <div class="downexcel" style="margin-right: 10px;">
-                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excel/{{ $arr->excelRequest }}/{{ $arr->excelRequestFCL }}"  class="l detailed-cost"  title="Cancel" >
+                            <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excel/{{ $arr->excelRequest }}/{{ $arr->excelRequestFCL }}/{{ $arr->idContract }}"  class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>

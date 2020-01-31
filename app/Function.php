@@ -3,6 +3,14 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 
 
+function extraerWith($patron,$cadena){
+    
+    $valor = explode($patron,$cadena);
+    return $valor[1];
+  
+}
+
+
 function setHashID(){
   $user =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->first();
   if(!empty($user)){
