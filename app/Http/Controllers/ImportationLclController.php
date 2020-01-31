@@ -348,7 +348,7 @@ class ImportationLclController extends Controller
                     $contractFile->save();
 
                     if(empty($requestFile->contract_id)){
-                        $requestFile->contractlcl_id = $Contract_id;
+                        $requestFile->contract_id = $Contract_id;
                         $requestFile->update();
                     }
                 }
@@ -485,177 +485,194 @@ class ImportationLclController extends Controller
                 $i = 0;
                 foreach($reader->get() as $read){
 
-                    $carrierVal         = '';
-                    $originVal          = '';
-                    $destinyVal         = '';
-                    $currencyVal        = '';
-                    $randons            = '';
-                    $currencyVal        = '';
-                    $wmVal              = '';
-                    $currencResul       = '';
-                    $minimunVal         = '';
-                    $scheduleTResul     = null;
-                    $transittimeResul   = 0;
-                    $viaResul           = null;
-
-                    $carriBol           = false;
-                    $wmExiBol           = false;
-                    $originBol          = false;
-                    $origExiBol         = false;
-                    $destinyBol         = false;
-                    $curreExitBol       = false;
-                    $destiExitBol       = false;
-                    $carriExitBol       = false;
-                    $minimunExiBol      = false;
-                    $scheduleTBol       = false;
-                    $transittimeBol     = false;
-                    $viaBol             = false;
-
                     $rqScheduleinfoBol = $requestobj[$scheduleinfo];
 
                     if($i != 0){
 
-                        //--------------- SCHEDULE TYPE --------------------------------------------
-
-                        if($rqScheduleinfoBol == true){
-                            $scheduleTResul = ScheduleType::where('name',$read[$requestobj[$scheduleTExc]])->first();
-                            if(count($scheduleTResul) >= 1){
-                                $scheduleTBol = true;
-                                $scheduleTResul = $scheduleTResul['id'];
-                            } else {
-                                $scheduleTResul = $read[$requestobj[$scheduleTExc]].'_E_E'; 
-                            }
+                        if($requestobj['existorigin'] == true){
+                            $originMultps = [0];
                         } else {
-                            $scheduleTBol = true;
+                            $originMultps = explode('|',$read[$requestobj[$originExc]]);
                         }
-                        //--------------- TRANSIT TIME ---------------------------------------------
-                        if($rqScheduleinfoBol == true){
-                            $transittimeBol      = true;
-                            $transittimeResul   = (INT)$read[$requestobj[$transittimeExc]];
+                        //--- DESTINY -----------------------------------------------------
+
+                        if($requestobj['existdestiny'] == true){
+                            $destinyMultps = [0];
                         } else {
-                            $transittimeBol      = true;
+                            $destinyMultps = explode('|',$read[$requestobj[$destinyExc]]);
                         }
 
-                        //--------------- VIA --------------------------------------------
-                        if($rqScheduleinfoBol == true){
-                            $viaBol     = true;
-                            $viaResul   = $read[$requestobj[$viaExc]];
-                        } else {
-                            $viaBol     = true;
-                        }
+                        foreach($originMultps as $originMult){
+                            foreach($destinyMultps as $destinyMult){
 
-                        //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+                                $carrierVal         = '';
+                                $originVal          = '';
+                                $destinyVal         = '';
+                                $currencyVal        = '';
+                                $randons            = '';
+                                $currencyVal        = '';
+                                $wmVal              = '';
+                                $currencResul       = '';
+                                $minimunVal         = '';
+                                $scheduleTResul     = null;
+                                $transittimeResul   = 0;
+                                $viaResul           = null;
 
-                        if($requestobj['existorigin'] == 1){
-                            $originBol = true;
-                            $origExiBol = true; //segundo boolean para verificar campos errados
-                            $randons = $requestobj[$origin];
-                        } else {
-                            $originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
-                            $resultadoPortOri = PrvHarbor::get_harbor($originVal);
-                            if($resultadoPortOri['boolean']){
-                                $origExiBol = true;    
-                            }
-                            $originVal  = $resultadoPortOri['puerto'];
+                                $carriBol           = false;
+                                $wmExiBol           = false;
+                                $originBol          = false;
+                                $origExiBol         = false;
+                                $destinyBol         = false;
+                                $curreExitBol       = false;
+                                $destiExitBol       = false;
+                                $carriExitBol       = false;
+                                $minimunExiBol      = false;
+                                $scheduleTBol       = false;
+                                $transittimeBol     = false;
+                                $viaBol             = false;
 
-                        }
+                                //--------------- SCHEDULE TYPE --------------------------------------------
 
-                        //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
-                        if($requestobj['existdestiny'] == 1){
-                            $destinyBol = true;
-                            $destiExitBol = true; //segundo boolean para verificar campos errados
-                            $randons = $requestobj[$destiny];
-                        } else {
-                            $destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
-                            $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
-                            if($resultadoPortDes['boolean']){
-                                $destiExitBol = true;    
-                            }
-                            $destinyVal  = $resultadoPortDes['puerto'];
-                        }
-
-                        //--------------- CARRIER -----------------------------------------------------------------
-                        if($requestobj['existcarrier'] == 1){
-                            $carriExitBol = true;
-                            $carriBol     = true;
-                            $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
-                        } else {
-                            $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
-                            $carrierArr      = PrvCarrier::get_carrier($carrierVal);
-                            $carriExitBol    = $carrierArr['boolean'];
-                            $carrierVal      = $carrierArr['carrier'];
-                        }
-
-                        //---------------- W/M ------------------------------------------------------------------
-
-                        $wmArr      = explode(' ',trim($read[$requestobj[$wm]]));
-
-                        if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
-                            $wmExiBol = true;
-                            $wmVal   = floatval($wmArr[0]);
-                        }else{
-                            $wmVal = $wmArr[0].'_E_E';
-                        }
-
-                        //---------------- MINIMUN --------------------------------------------------------------
-
-                        $minimunArr      = explode(' ',trim($read[$requestobj[$minimun]]));
-
-                        if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
-                            $minimunExiBol = true;
-                            $minimunVal   = floatval($minimunArr[0]);
-                        }else{
-                            $minimunVal = $minimunArr[0].'_E_E';
-                        }
-
-                        //---------------- CURRENCY VALUES ------------------------------------------------------
-
-                        if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
-
-                            // cargar  columna con el  valor y currency  juntos, se descompone
-
-                            //---------------- CURRENCY W/M + value ---------------------------------------------
-
-                            if(count($wmArr) > 1){
-                                $currencResultwm = str_replace($caracteres,'',$wmArr[1]);
-                            } else {
-                                $currencResultwm = '';
-                            }
-
-                            $currencwm = Currency::where('alphacode','=',$currencResultwm)->first();
-
-                            if(empty($currencwm->id) != true){
-                                $curreExitBol = true;
-                                $currencyValtwm =  $currencwm->id;
-                            }
-                            else{
-                                if(count($wmArr) > 1){
-                                    $currencyValtwm = $wmArr[1].'_E_E';
-                                } else{
-                                    $currencyValtwm = '_E_E';
+                                if($rqScheduleinfoBol == true){
+                                    $scheduleTResul = ScheduleType::where('name',$read[$requestobj[$scheduleTExc]])->first();
+                                    if(count($scheduleTResul) >= 1){
+                                        $scheduleTBol = true;
+                                        $scheduleTResul = $scheduleTResul['id'];
+                                    } else {
+                                        $scheduleTResul = $read[$requestobj[$scheduleTExc]].'_E_E'; 
+                                    }
+                                } else {
+                                    $scheduleTBol = true;
                                 }
-                            }
-
-                            $currencyVal = $currencyValtwm;
-
-                        } else {
-                            if(empty($read[$requestobj[$currency]]) != true){
-                                $currencResul= str_replace($caracteres,'',$read[$requestobj[$currency]]);
-                                $currenc = Currency::where('alphacode','=',$currencResul)->first();
-                                if(empty($currenc->id) != true){
-                                    $curreExitBol = true;
-                                    $currencyVal =  $currenc->id;
-                                } else{
-                                    $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                //--------------- TRANSIT TIME ---------------------------------------------
+                                if($rqScheduleinfoBol == true){
+                                    $transittimeBol      = true;
+                                    $transittimeResul   = (INT)$read[$requestobj[$transittimeExc]];
+                                } else {
+                                    $transittimeBol      = true;
                                 }
-                            }
-                            else{
-                                $currencyVal = $read[$requestobj[$currency]].'_E_E';
-                            }
 
-                        }
+                                //--------------- VIA --------------------------------------------
+                                if($rqScheduleinfoBol == true){
+                                    $viaBol     = true;
+                                    $viaResul   = $read[$requestobj[$viaExc]];
+                                } else {
+                                    $viaBol     = true;
+                                }
 
-                        /*  $data = [
+                                //--------------- ORIGEN MULTIPLE O SIMPLE ------------------------------------------------
+
+                                if($requestobj['existorigin'] == 1){
+                                    $originBol = true;
+                                    $origExiBol = true; //segundo boolean para verificar campos errados
+                                    $randons = $requestobj[$origin];
+                                } else {
+                                    //$originVal = $read[$requestobj[$originExc]];// hacer validacion de puerto en DB
+                                    $originVal = trim($originMult);// hacer validacion de puerto en DB
+                                    $resultadoPortOri = PrvHarbor::get_harbor($originVal);
+                                    if($resultadoPortOri['boolean']){
+                                        $origExiBol = true;    
+                                    }
+                                    $originVal  = $resultadoPortOri['puerto'];
+                                }
+
+                                //---------------- DESTINO MULTIPLE O SIMPLE -----------------------------------------------
+                                if($requestobj['existdestiny'] == 1){
+                                    $destinyBol = true;
+                                    $destiExitBol = true; //segundo boolean para verificar campos errados
+                                    $randons = $requestobj[$destiny];
+                                } else {
+                                    //$destinyVal = $read[$requestobj[$destinyExc]];// hacer validacion de puerto en DB
+                                    $destinyVal = trim($destinyMult);// hacer validacion de puerto en DB
+                                    $resultadoPortDes = PrvHarbor::get_harbor($destinyVal);
+                                    if($resultadoPortDes['boolean']){
+                                        $destiExitBol = true;    
+                                    }
+                                    $destinyVal  = $resultadoPortDes['puerto'];
+                                }
+
+                                //--------------- CARRIER -----------------------------------------------------------------
+                                if($requestobj['existcarrier'] == 1){
+                                    $carriExitBol = true;
+                                    $carriBol     = true;
+                                    $carrierVal = $requestobj['carrier']; // cuando se indica que no posee carrier 
+                                } else {
+                                    $carrierVal = $read[$requestobj['Carrier']]; // cuando el carrier existe en el excel
+                                    $carrierArr      = PrvCarrier::get_carrier($carrierVal);
+                                    $carriExitBol    = $carrierArr['boolean'];
+                                    $carrierVal      = $carrierArr['carrier'];
+                                }
+
+                                //---------------- W/M ------------------------------------------------------------------
+
+                                $wmArr      = explode(' ',trim($read[$requestobj[$wm]]));
+
+                                if(empty($wmArr[0]) != true || (int)$wmArr[0] == 0){
+                                    $wmExiBol = true;
+                                    $wmVal   = floatval($wmArr[0]);
+                                }else{
+                                    $wmVal = $wmArr[0].'_E_E';
+                                }
+
+                                //---------------- MINIMUN --------------------------------------------------------------
+
+                                $minimunArr      = explode(' ',trim($read[$requestobj[$minimun]]));
+
+                                if(empty($minimunArr[0]) != true || (int)$minimunArr[0] == 0){
+                                    $minimunExiBol = true;
+                                    $minimunVal   = floatval($minimunArr[0]);
+                                }else{
+                                    $minimunVal = $minimunArr[0].'_E_E';
+                                }
+
+                                //---------------- CURRENCY VALUES ------------------------------------------------------
+
+                                if($requestobj[$statustypecurren] == 2){ // se verifica si el valor viene junto con el currency
+
+                                    // cargar  columna con el  valor y currency  juntos, se descompone
+
+                                    //---------------- CURRENCY W/M + value ---------------------------------------------
+
+                                    if(count($wmArr) > 1){
+                                        $currencResultwm = str_replace($caracteres,'',$wmArr[1]);
+                                    } else {
+                                        $currencResultwm = '';
+                                    }
+
+                                    $currencwm = Currency::where('alphacode','=',$currencResultwm)->first();
+
+                                    if(empty($currencwm->id) != true){
+                                        $curreExitBol = true;
+                                        $currencyValtwm =  $currencwm->id;
+                                    }
+                                    else{
+                                        if(count($wmArr) > 1){
+                                            $currencyValtwm = $wmArr[1].'_E_E';
+                                        } else{
+                                            $currencyValtwm = '_E_E';
+                                        }
+                                    }
+
+                                    $currencyVal = $currencyValtwm;
+
+                                } else {
+                                    if(empty($read[$requestobj[$currency]]) != true){
+                                        $currencResul= str_replace($caracteres,'',$read[$requestobj[$currency]]);
+                                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
+                                        if(empty($currenc->id) != true){
+                                            $curreExitBol = true;
+                                            $currencyVal =  $currenc->id;
+                                        } else{
+                                            $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                        }
+                                    }
+                                    else{
+                                        $currencyVal = $read[$requestobj[$currency]].'_E_E';
+                                    }
+
+                                }
+
+                                /*  $data = [
                             'carriExitBol'      => $carriExitBol,
                             'carrierVal'        => $carrierVal,
                             'destinyBol'        => $destinyBol,
@@ -676,84 +693,84 @@ class ImportationLclController extends Controller
                         ];
 
                         dd($data);*/
-                        if($carriExitBol == true && $destiExitBol     == true &&
-                           $origExiBol   == true && $curreExitBol     == true &&
-                           $wmExiBol     == true && $scheduleTBol     == true && 
-                           $transittimeBol == true && $viaBol == true
-                           && $minimunExiBol    == true ){
+                                if($carriExitBol == true && $destiExitBol     == true &&
+                                   $origExiBol   == true && $curreExitBol     == true &&
+                                   $wmExiBol     == true && $scheduleTBol     == true && 
+                                   $transittimeBol == true && $viaBol == true
+                                   && $minimunExiBol    == true ){
 
-                            if($originBol == true || $destinyBol == true){
-                                foreach($randons as  $rando){
-                                    //insert por arreglo de puerto
-                                    if($originBol == true ){
-                                        $originVal = $rando;
-                                    } else {
-                                        $destinyVal = $rando;
+                                    if($originBol == true || $destinyBol == true){
+                                        foreach($randons as  $rando){
+                                            //insert por arreglo de puerto
+                                            if($originBol == true ){
+                                                $originVal = $rando;
+                                            } else {
+                                                $destinyVal = $rando;
+                                            }
+
+                                            $ratesArre = RateLcl::create([
+                                                'origin_port'       => $originVal,
+                                                'destiny_port'      => $destinyVal,
+                                                'carrier_id'        => $carrierVal,
+                                                'contractlcl_id'    => $contractIdVal,
+                                                'uom'               => $wmVal,
+                                                'minimum'           => $minimunVal,
+                                                'currency_id'       => $currencyVal,
+                                                'schedule_type_id'  => $scheduleTResul,
+                                                'transit_time'      => $transittimeResul,
+                                                'via'               => $viaResul
+                                            ]);
+                                        } 
+                                        //dd($ratesArre);
+                                    }else {
+                                        // fila por puerto, sin expecificar origen ni destino manualmente
+
+                                        $ratesArre = RateLcl::create([
+                                            'origin_port'       => $originVal,
+                                            'destiny_port'      => $destinyVal,
+                                            'carrier_id'        => $carrierVal,
+                                            'contractlcl_id'    => $contractIdVal,
+                                            'uom'               => $wmVal,
+                                            'minimum'           => $minimunVal,
+                                            'currency_id'       => $currencyVal,
+                                            'schedule_type_id'  => $scheduleTResul,
+                                            'transit_time'      => $transittimeResul,
+                                            'via'               => $viaResul
+                                        ]);
+
+                                        //dd($ratesArre);
+                                    }
+                                } else {
+                                    // aqui van los fallidos
+                                    //---------------------------- SHEDULES ---------------------------------------------------------
+
+                                    if( $scheduleTBol == true && $rqScheduleinfoBol == true){
+                                        $scheduleTResul = ScheduleType::find($scheduleTResul);
+                                        $scheduleTResul = $scheduleTResul['name'];
                                     }
 
-                                    $ratesArre = RateLcl::create([
-                                        'origin_port'       => $originVal,
-                                        'destiny_port'      => $destinyVal,
-                                        'carrier_id'        => $carrierVal,
-                                        'contractlcl_id'    => $contractIdVal,
-                                        'uom'               => $wmVal,
-                                        'minimum'           => $minimunVal,
-                                        'currency_id'       => $currencyVal,
-                                        'schedule_type_id'  => $scheduleTResul,
-                                        'transit_time'      => $transittimeResul,
-                                        'via'               => $viaResul
-                                    ]);
-                                } 
-                                //dd($ratesArre);
-                            }else {
-                                // fila por puerto, sin expecificar origen ni destino manualmente
+                                    //---------------------------- CARRIER  ---------------------------------------------------------
 
-                                $ratesArre = RateLcl::create([
-                                    'origin_port'       => $originVal,
-                                    'destiny_port'      => $destinyVal,
-                                    'carrier_id'        => $carrierVal,
-                                    'contractlcl_id'    => $contractIdVal,
-                                    'uom'               => $wmVal,
-                                    'minimum'           => $minimunVal,
-                                    'currency_id'       => $currencyVal,
-                                    'schedule_type_id'  => $scheduleTResul,
-                                    'transit_time'      => $transittimeResul,
-                                    'via'               => $viaResul
-                                ]);
+                                    if($carriExitBol == true){
+                                        if($carriBol == true){
+                                            $carrier = Carrier::find($requestobj['carrier']); 
+                                            $carrierVal = $carrier['name'];  
+                                        }else{
+                                            $carrier = Carrier::find($carrierVal); 
+                                            //$carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
+                                            $carrierVal = $carrier['name']; 
+                                        }
+                                    }
 
-                                //dd($ratesArre);
-                            }
-                        } else {
-                            // aqui van los fallidos
-                            //---------------------------- SHEDULES ---------------------------------------------------------
+                                    //---------------------------- CURRENCY  ---------------------------------------------------------
 
-                            if( $scheduleTBol == true && $rqScheduleinfoBol == true){
-                                $scheduleTResul = ScheduleType::find($scheduleTResul);
-                                $scheduleTResul = $scheduleTResul['name'];
-                            }
+                                    if($curreExitBol == true){
+                                        $currencyVal = Currency::find($currencyVal);
+                                        $currencyVal = $currencyVal->id;
+                                    }  
 
-                            //---------------------------- CARRIER  ---------------------------------------------------------
-
-                            if($carriExitBol == true){
-                                if($carriBol == true){
-                                    $carrier = Carrier::find($requestobj['carrier']); 
-                                    $carrierVal = $carrier['name'];  
-                                }else{
-                                    $carrier = Carrier::find($carrierVal); 
-                                    //$carrier = Carrier::where('name','=',$read[$requestobj['Carrier']])->first(); 
-                                    $carrierVal = $carrier['name']; 
-                                }
-                            }
-
-                            //---------------------------- CURRENCY  ---------------------------------------------------------
-
-                            if($curreExitBol == true){
-                                $currencyVal = Currency::find($currencyVal);
-                                $currencyVal = $currencyVal->id;
-                            }  
-
-                            //---------------------------- w/m  --------------------------------------------------------------                                    
-                            /*  $dataErr = [
+                                    //---------------------------- w/m  --------------------------------------------------------------                                    
+                                    /*  $dataErr = [
                                 'carriExitBol'      => $carriExitBol,
                                 'carrierVal'        => $carrierVal,
                                 'destinyBol'        => $destinyBol,
@@ -775,60 +792,62 @@ class ImportationLclController extends Controller
 
                             dd($dataErr); */
 
-                            if($originBol == true || $destinyBol == true){
-                                foreach($randons as  $rando){
-                                    //insert por arreglo de puerto
-                                    if($originBol == true ){
-                                        $originerr = Harbor::find($rando);
-                                        $originVal = $originerr['name'];
-                                        if($destiExitBol == true){    
-                                            $destinyVal = $read[$requestobj[$destinyExc]];
+                                    if($originBol == true || $destinyBol == true){
+                                        foreach($randons as  $rando){
+                                            //insert por arreglo de puerto
+                                            if($originBol == true ){
+                                                $originerr = Harbor::find($rando);
+                                                $originVal = $originerr['name'];
+                                                if($destiExitBol == true){    
+                                                    $destinyVal = $read[$requestobj[$destinyExc]];
+                                                }
+                                            } else {
+                                                $destinyerr = Harbor::find($rando);
+                                                $destinyVal = $destinyerr['name'];
+                                                if($origExiBol == true){
+                                                    $originVal = $read[$requestobj[$originExc]];                                      
+                                                }
+                                            }
+                                            $ratesArre = FailRateLcl::create([
+                                                'origin_port'    => $originVal,
+                                                'destiny_port'   => $destinyVal,
+                                                'carrier_id'     => $carrierVal,
+                                                'contractlcl_id' => $contractIdVal,
+                                                'uom'            => $wmVal,
+                                                'minimum'        => $minimunVal,
+                                                'currency_id'    => $currencyVal,
+                                                'schedule_type'  => $scheduleTResul,
+                                                'transit_time'   => $transittimeResul,
+                                                'via'            => $viaResul
+                                            ]);
                                         }
+
                                     } else {
-                                        $destinyerr = Harbor::find($rando);
-                                        $destinyVal = $destinyerr['name'];
                                         if($origExiBol == true){
-                                            $originVal = $read[$requestobj[$originExc]];                                      
+                                            $originExits = Harbor::find($originVal);
+                                            $originVal = $originExits->name;                                       
                                         }
+                                        if($destiExitBol == true){  
+                                            $destinyExits = Harbor::find($destinyVal);
+                                            $destinyVal = $destinyExits->name;
+                                        }
+
+                                        $ratesArre = FailRateLcl::create([
+                                            'origin_port'    => $originVal,
+                                            'destiny_port'   => $destinyVal,
+                                            'carrier_id'     => $carrierVal,
+                                            'contractlcl_id' => $contractIdVal,
+                                            'uom'            => $wmVal,
+                                            'minimum'        => $minimunVal,
+                                            'currency_id'    => $currencyVal,
+                                            'schedule_type'  => $scheduleTResul,
+                                            'transit_time'   => $transittimeResul,
+                                            'via'            => $viaResul
+                                        ]);
                                     }
-                                    $ratesArre = FailRateLcl::create([
-                                        'origin_port'    => $originVal,
-                                        'destiny_port'   => $destinyVal,
-                                        'carrier_id'     => $carrierVal,
-                                        'contractlcl_id' => $contractIdVal,
-                                        'uom'            => $wmVal,
-                                        'minimum'        => $minimunVal,
-                                        'currency_id'    => $currencyVal,
-                                        'schedule_type'  => $scheduleTResul,
-                                        'transit_time'   => $transittimeResul,
-                                        'via'            => $viaResul
-                                    ]);
+                                    $errors = $errors + 1;
                                 }
-
-                            } else {
-                                if($origExiBol == true){
-                                    $originExits = Harbor::find($originVal);
-                                    $originVal = $originExits->name;                                       
-                                }
-                                if($destiExitBol == true){  
-                                    $destinyExits = Harbor::find($destinyVal);
-                                    $destinyVal = $destinyExits->name;
-                                }
-
-                                $ratesArre = FailRateLcl::create([
-                                    'origin_port'    => $originVal,
-                                    'destiny_port'   => $destinyVal,
-                                    'carrier_id'     => $carrierVal,
-                                    'contractlcl_id' => $contractIdVal,
-                                    'uom'            => $wmVal,
-                                    'minimum'        => $minimunVal,
-                                    'currency_id'    => $currencyVal,
-                                    'schedule_type'  => $scheduleTResul,
-                                    'transit_time'   => $transittimeResul,
-                                    'via'            => $viaResul
-                                ]);
                             }
-                            $errors = $errors + 1;
                         }
                     }
                     $i =$i + 1;
@@ -884,6 +903,196 @@ class ImportationLclController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         return redirect()->route('Failed.Rates.lcl.view',[$id,1]);
+    }
+
+    //Edicion Multiples Rates Por detalles
+    public function loadArrayEditMult(Request $request){
+        $array          = $request->idAr;
+        $array_count    = count($array);
+        $contractlcl_id = $request->contractlcl_id;
+        //dd($request->all(),$array,$contractlcl_id);
+        return view('ImportationLcl.Body-Modals.FailEditByDetalls',compact('array','array_count','contractlcl_id'));
+    }
+
+    public function showRatesMultiplesPorDetalles(Request $request){
+        //dd($request->all());
+        $fail_rates_total   = collect([]);
+        $contractlcl_id     = $request->contractlcl_id;
+        $harbor             = Harbor::pluck('display_name','id');
+        $carrier            = Carrier::pluck('name','id');
+        $currency           = Currency::pluck('alphacode','id');
+        $schedulesT         = [null=>'Please Select'];
+        $scheduleTo         = ScheduleType::all();
+
+        foreach($scheduleTo as $d){
+            $schedulesT[$d['id']]=$d->name;
+        }
+        foreach($request->idAr as $rate_fail_id){
+            $failrate           = FailRateLcl::find($rate_fail_id);
+
+            $originV            = null;
+            $destinationV       = null;
+            $uomV               = null;
+            $minimumV           = null;
+            $carrierV           = null;
+            $currencyV          = null;
+
+            $pruebacurre        = '';
+            $classdorigin       = 'color:green';
+            $classddestination  = 'color:green';
+            $classcarrier       = 'color:green';
+            $classcurrency      = 'color:green';
+            $classuom           = 'color:green';
+            $classminimum       = 'color:green';
+            $classscheduleT     ='color:green';
+            $classtransittime   ='color:green';
+            $classvia           ='color:green';
+
+            $originA        = explode("_",$failrate['origin_port']);
+            $destinationA   = explode("_",$failrate['destiny_port']);
+            $carrierA       = explode("_",$failrate['carrier_id']);
+            $currencyA      = explode("_",$failrate['currency_id']);
+            $uomA           = explode("_",$failrate['uom']);
+            $minimumA       = explode("_",$failrate['minimum']);
+            $schedueleTA    = explode("_",$failrate['schedule_type']);
+
+            // --------------------------  SCHEDULES  ---------------------------------------------------------
+            if(count($schedueleTA) <= 1){
+                $schedueleTA = ScheduleType::where('name',$schedueleTA[0])->first();
+                $schedueleTA = $schedueleTA['id'];
+            } else{
+                $schedueleTA = '';
+                $classscheduleT='color:red';
+            }
+
+            // --------------------------  ORIGIN  ------------------------------------------------------------
+            $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
+                ->first();
+            if(count($originA) <= 1){
+                $originV = $originOb['id'];
+            } else{
+                $classdorigin='color:red';
+            }
+
+            // --------------------------  DESTINATIO  --------------------------------------------------------
+            $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                ->first();
+            if(count($destinationA) <= 1){
+                $destinationV = $destinationOb['id'];
+            } else{
+                $classddestination='color:red';
+            }
+
+            // --------------------------  W/M  ---------------------------------------------------------------
+            if(count($uomA) <= 1){
+                $uomV = $uomA[0];
+            } else{
+                $classuom   = 'color:red';
+            }
+
+            // --------------------------  MINIMUM  -----------------------------------------------------------
+            if(count($minimumA) <= 1){
+                $minimumV = $minimumA[0];
+            } else{
+                $classminimum   = 'color:red';
+            }
+
+            // --------------------------  CARRIER  -----------------------------------------------------------
+            $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+            if(count($carrierA) <= 1){
+                $carrierV       = $carrierOb['id'];
+            } else{
+                $classcarrier   = 'color:red';
+            }
+
+            // --------------------------  CURRENCY  ----------------------------------------------------------
+            if(count($currencyA) <= 1){
+                $currenc        = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+                $currencyV      = $currenc['id'];
+            } else{
+                $classcurrency  = 'color:red';
+            }        
+
+            $failrates = ['rate_lcl_id'     =>  $failrate->id,
+                          'origin_port'     =>  $originV,   
+                          'destiny_port'    =>  $destinationV,     
+                          'carrierAIn'      =>  $carrierV,
+                          'uom'             =>  $uomV,      
+                          'minimum'         =>  $minimumV,      
+                          'currencyAIn'     =>  $currencyV,
+                          'transit_time'    =>  $failrate->transit_time,
+                          'via'             =>  $failrate->via,
+                          'schedueleT'      =>  $schedueleTA,
+                          'classorigin'     =>  $classdorigin,
+                          'classdestiny'    =>  $classddestination,
+                          'classcarrier'    =>  $classcarrier,
+                          'classuom'        =>  $classuom,
+                          'classminimum'    =>  $classminimum,
+                          'classcurrency'   =>  $classcurrency,
+                          'classtransittime'=>  $classtransittime,
+                          'classvia'        =>  $classvia,
+                          'classscheduleT'  =>  $classscheduleT
+                         ];
+            $fail_rates_total->push($failrates);
+        }
+        //dd($fail_rates_total);
+        return view('ImportationLcl.EditByDetallFailRates',compact('fail_rates_total','contractlcl_id','schedulesT','harbor','carrier','currency'));
+    }
+
+    public function StoreFailRatesMultiplesByDetalls(Request $request){
+        //dd($request->all());
+        $contractlcl_id     = $request->contractlcl_id;
+        $data_rates         = $request->rate_fail_id;
+        $data_origins       = $request->origin_id;
+        $data_destinations  = $request->destiny_id;
+        $data_carrier       = $request->carrier_id;
+        $data_uom           = $request->uom;
+        $data_minimum       = $request->minimum;
+        $data_currency      = $request->currency_id;
+        foreach($data_rates as $key => $data_rate){
+            foreach($data_origins[$key] as $origin){
+                foreach($data_destinations[$key] as $destiny){
+                    if($origin != $destiny){
+                        $exists_rate = RateLcl::where('origin_port',$origin)
+                            ->where('destiny_port',$destiny)
+                            ->where('carrier_id',$data_carrier[$key])
+                            ->where('contractlcl_id',$contractlcl_id)
+                            ->where('uom',floatval($data_uom[$key]))
+                            ->where('minimum',floatval($data_minimum[$key]))
+                            ->where('currency_id',$data_currency[$key])
+                            ->first();
+                        if(count($exists_rate) == 0){
+                            $return = RateLcl::create([
+                                "origin_port"       => $origin,
+                                "destiny_port"      => $destiny,
+                                "carrier_id"        => $data_carrier[$key],
+                                "contractlcl_id"    => $contractlcl_id,
+                                "uom"               => floatval($data_uom[$key]),
+                                "minimum"           => floatval($data_minimum[$key]),
+                                "currency_id"       => $data_currency[$key],
+                                "schedule_type_id"  => null,
+                                "transit_time"      => 0,
+                                "via"               => null
+                            ]);
+
+                        }
+                    }
+                }
+            }
+            $failrate = FailRateLcl::find($data_rate);
+            $failrate->forceDelete();
+        }
+        $request->session()->flash('message.content', 'Updated Rate LCL' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        $countfailrates = FailRateLcl::where('contractlcl_id','=',$request->contractlcl_id)->count();
+
+        if($countfailrates > 0){
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contractlcl_id,1]);
+        } else{
+            return redirect()->route('Failed.Rates.lcl.view',[$request->contractlcl_id,0]);
+        }
     }
 
     // Rates view

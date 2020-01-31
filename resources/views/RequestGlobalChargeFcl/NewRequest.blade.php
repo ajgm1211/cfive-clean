@@ -58,7 +58,7 @@
                 </ul>
             </div>
         </div>
-        {!! Form::open(['route'=>'RequestsGlobalchargersFcl.store','method'=>'POST','files'=>true])!!}
+        {!! Form::open(['route'=>'RequestsGlobalchargersFcl.store','method'=>'POST','id' => 'form','files'=>true])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -76,7 +76,7 @@
                                     <label for="nameid" class="">Name</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'Contract Name',
-                                    'required',
+                                    'required' => 'required',
                                     'class'=>'form-control m-input'])!!}
                                 </div>
                                 <div class="col-lg-3">
@@ -89,7 +89,7 @@
                                     <label for="file" class="btn btn-primary form-control-label form-control" >
                                         Choose File
                                     </label>
-                                    <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required style='display: none;'>
+                                    <input type="file" class="form-control" name="file" onchange='cambiar()' id="file" required="required" style='display: none;'>
                                     <div id="info" style="color:red"></div>
                                 </div>
 
@@ -258,7 +258,7 @@
                                     <center>
                                         <div class="col-lg-2 col-lg-offset-2 ">
                                             <br />
-                                            <button type="submit" onclick="fileempty()" class="btn btn-primary form-control">
+                                            <button type="button" id="button-submit" onclick="fileempty()" class="btn btn-primary form-control">
                                                 Load Request
                                             </button>
                                         </div>
@@ -355,10 +355,25 @@
         function validate(formData, jqForm, options) {
             var form = jqForm[0];
             if (!form.file.value) {
-                alert('File not found');
+                // alert('File not found');
                 return false;
             }
         }
+
+        $('#button-submit').on('click',function(){
+            var date = $('#m_daterangepicker_1').val().split(' / ');
+            var date_star = $.trim(date[0]);
+            var date_end  = $.trim(date[1]);
+            if(date_star == date_end){
+                swal(
+                    "Error",
+                    "Error, Please select the date!", "error",
+                    true,
+                );
+            }else {
+                $('#form').submit();
+            }
+        });
 
         $(function() {
             var count = 0;
