@@ -54,7 +54,7 @@ class LoginController extends Controller
         }
       }
     }
-  }*//
+  }*/
 
   // @overwrite
   public function authenticated(Request $request, $user)
