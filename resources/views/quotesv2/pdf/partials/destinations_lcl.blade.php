@@ -313,12 +313,7 @@
                                         ?>
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
-                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
-                                                @php
-                                                    //echo str_replace("Per", "Por", @$v->calculation_type->display_name); 
-                                                @endphp
-                                                {{@$v->calculation_type->display_name}}
-                                            </td>
+                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             @if($quote->type=='LCL')
