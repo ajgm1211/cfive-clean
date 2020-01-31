@@ -111,11 +111,14 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			->addColumn('user', function ($Ncontracts) {
 				return $Ncontracts->user->name.' '.$Ncontracts->user->lastname;
 			})
+			->addColumn('username_load', function ($Ncontracts) {
+				return '<span id="userLoad'.$Ncontracts->id.'">'.$Ncontracts->username_load.'</span>';
+			})
 			->addColumn('time_elapsed', function ($Ncontracts) {
-				if(empty($Ncontracts->time_total) != true){
-					return $Ncontracts->time_total;
+				if(empty($Ncontracts->time_elapsed) != true){
+					return $Ncontracts->time_elapsed;
 				} else {
-					return '--------';
+					return '<span id="timeElapsed'.$Ncontracts->id.'"> ------------------ </span>';
 				}
 			})
 			->addColumn('status', function ($Ncontracts) {
@@ -218,13 +221,13 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			$user->notify(new SlackNotification($message));
 			$admins = User::where('type','admin')->get();
 			$message = 'has created an new request: '.$Ncontract->id;
-			
+
 			$message = 'has created an new request: '.$Ncontract->id;
 			NotificationsJob::dispatch('Request-Fcl-GC',[
 				'user' => $request->user,
 				'ncontract' => $Ncontract->toArray()
 			]);
-			
+
 			foreach($admins as $userNotifique){
 				/*\Mail::to($userNotifique->email)->send(new NewRequestGlobalChargeToAdminMail(
 					$userNotifique->toArray(),
