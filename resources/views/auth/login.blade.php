@@ -147,6 +147,6 @@
 <script src="/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
 <script src="/assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
 <script src="/assets/snippets/pages/user/login.js" type="text/javascript"></script>
-
+<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="011f006f-3864-44b5-9443-d700e87df5f7";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 
 @endsection
