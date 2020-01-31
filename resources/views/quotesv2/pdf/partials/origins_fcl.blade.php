@@ -48,12 +48,8 @@
                                     $sum45 += $item->sum45;
                                 @endphp
                                 <tr class="text-left color-table">
-                                    <td >
-                                        {{$item->charge!='' ? $item->charge:'-'}}
-                                    </td>
-                                    <td >
-                                        {{$item->detail!='' ? $item->detail:'-'}}
-                                    </td>
+                                    <td >{{$item->charge!='' ? $item->charge:'-'}}</td>
+                                    <td >{{$item->detail!='' ? $item->detail:'-'}}</td>
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
                                     <td {{ @$equipmentHides['20'] }}>{{number_format(@$item->c20, 2, '.', '')}}</td>
                                     <td {{ @$equipmentHides['40'] }}>{{number_format(@$item->c40, 2, '.', '')}}</td>
@@ -319,12 +315,7 @@
                                                     ?>
                                                     <tr class="text-left color-table">
                                                         <td>{{@$v->surcharge->name}}</td>
-                                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
-                                                            @php
-                                                                //echo str_replace("Per", "Por", @$v->calculation_type->display_name); 
-                                                            @endphp
-                                                            {{@$v->calculation_type->display_name}}
-                                                        </td>
+                                                        <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                         <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                         <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
