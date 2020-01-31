@@ -107,7 +107,7 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <label><br></label>
-                                            <button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
+                                            <button type="button" class="btn btn-primary form-control" id="button-submit" onclick="fileempty()" >
                                                 <i class=""></i>Import File
                                             </button>
                                         </div>
@@ -380,6 +380,21 @@
         }
     });
 
+    $('#button-submit').on('click',function(){
+        var date = $('#m_daterangepicker_1').val().split(' / ');
+        var date_star = $.trim(date[0]);
+        var date_end  = $.trim(date[1]);
+        if(date_star == date_end){
+            swal(
+                "Error",
+                "Error, Please select the date!", "error",
+                true,
+            );
+        }else {
+            $('#form').submit();
+        }
+    });
+
     var oTable = $('#requesttable').DataTable({
         processing: true,
         serverSide: true,
@@ -431,7 +446,7 @@
     function validate(formData, jqForm, options) {
         var form = jqForm[0];
         if (!form.file.value) {
-            alert('File not found');
+            //alert('File not found');
             return false;
         }
     }
@@ -494,7 +509,7 @@
                 } else{
                     window.location.href = "{{route('contractslcl.index')}}";
                 }
-                
+
                 //window.location.href = "{{route('RequestImportationLcl.indexListClient')}}";
             }
         });

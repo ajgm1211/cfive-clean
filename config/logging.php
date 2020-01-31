@@ -35,8 +35,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            //'channels' => ['single','slack'],
             'channels' => ['single'],
+			//'channels' => explode(',',env('LOGGING_CHANNELS')),
         ],
 
         'single' => [
