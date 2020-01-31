@@ -65,8 +65,15 @@
 			data:{id:idContract,status:status_id},
 			success: function(data){
 				//alert(data.data + data.status);
+				console.log(data);
 				if(data.data == 1){
 					$('a#statusHrf'+idContract).text(data.status);
+					if(data.request.time_total == null){
+						$('#timeElapsed'+idContract).text(' ------------------ ');
+					}else {
+						$('#timeElapsed'+idContract).text(data.request.time_total);						
+					}
+					$('#userLoad'+idContract).text(data.request.username_load);
 					$('a#statusHrf'+idContract).css('color',data.color);
 					$('#statusSamp'+idContract).css('color',data.color);
 					$('#changeStatus').modal('hide');
@@ -74,7 +81,7 @@
 					toastr.success("Your Status has been changed. ID: "+data.request.id+" - "+data.request.namecontract, "Status. ID: "+data.request.id);
 				}else if(data.data == 2){
 					//swal("Error!", "An internal error occurred!", "error");
-                    toastr.success("An internal error occurred!", "Error!");
+					toastr.success("An internal error occurred!", "Error!");
 				}
 			}
 		});
