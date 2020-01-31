@@ -59,6 +59,12 @@
 			data:{id:idContract,status:status_id},
 			success: function(data){
 				if(data.data == 1){
+					if(data.request.time_total == null){
+						$('#timeElapsed'+idContract).text(' ------------------ ');
+					}else {
+						$('#timeElapsed'+idContract).text(data.request.time_total);	
+					}
+					$('#userLoad'+idContract).text(data.request.username_load);
 					$('a#statusHrf'+idContract).text(data.status);
 					$('a#statusHrf'+idContract).css('color',data.color);
 					$('#statusSamp'+idContract).css('color',data.color);
