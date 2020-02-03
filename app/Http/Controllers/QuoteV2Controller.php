@@ -26,7 +26,6 @@ use App\QuoteV2;
 use App\Surcharge;
 use App\User;
 use App\PdfOption;
-use EventIntercom;
 use App\Jobs\SendQuotes;
 use App\SendQuote;
 use App\Contract;
@@ -2493,18 +2492,29 @@ class QuoteV2Controller extends Controller
     foreach($remarks_all as $remAll){
       $rems .="<br>";
       $remarkA = $origin_port->name." / ".$carrier->name;
-      $remarkA .=  "<br>".$remAll->remark->export;
+      if($mode == 1)
+        $remarkA .=  "<br>".$remAll->remark->export;
+      else
+        $remarkA .=  "<br>".$remAll->remark->import;
     }
 
     foreach($remarks_origin as $remOrig){
+      
       $rems .="<br>";
       $remarkO = $origin_port->name." / ".$carrier->name;
-      $remarkO .=  "<br>".$remOrig->remark->export;
+      if($mode == 1)
+        $remarkO .=  "<br>".$remOrig->remark->export;
+      else
+        $remarkO .=  "<br>".$remOrig->remark->import;
+
     }
     foreach($remarks_destination as $remDest){
       $rems .="<br>";
       $remarkD = $destiny_port->name." / ".$carrier->name;
-      $remarkD .=  "<br>".$remDest->remark->export;
+      if($mode == 1)
+        $remarkD .=  "<br>".$remDest->remark->export;
+      else
+        $remarkD .=  "<br>".$remDest->remark->import;
     }
     $rems = $remarkO." ".$remarkD." ".$remarkA ; 
     return $rems;
@@ -3331,8 +3341,7 @@ class QuoteV2Controller extends Controller
   public function processSearch(Request $request){
 
 
-    $event = new  EventIntercom();
-    $event->event_selectRate();
+
 
     //Variables del usuario conectado
 
@@ -3947,7 +3956,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-           $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3963,7 +3972,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-         $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3979,7 +3988,7 @@ class QuoteV2Controller extends Controller
 
     // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
 
-    if(in_array('20',$equipment)){
+    /*if(in_array('20',$equipment)){
       $arreglo->where('twuenty' , '!=' , "0");
     }
     if(in_array('40',$equipment)){
@@ -3993,7 +4002,7 @@ class QuoteV2Controller extends Controller
     }
     if(in_array('45',$equipment)){
       $arreglo->where('fortyfive' , '!=' , "0"); 
-    }
+    }*/
 
 
     $arreglo = $arreglo->get();
@@ -4817,7 +4826,8 @@ class QuoteV2Controller extends Controller
         $data->setAttribute('sheduleType',null);
       }
       //remarks
-      $mode = "";
+      $typeMode = $request->input('mode');
+
 
       $remarks="";
       if($data->contract->remarks != "")
@@ -4826,7 +4836,7 @@ class QuoteV2Controller extends Controller
 
 
 
-      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
       $remarks = trim($remarks);
 
       $data->setAttribute('remarks',$remarks);
@@ -7662,7 +7672,8 @@ class QuoteV2Controller extends Controller
       if($data->contract->comments != "")
         $remarks = $data->contract->comments."<br>";
 
-      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $typeMode = $request->input('mode');
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
       $remarks = trim($remarks);
 
 
@@ -9475,9 +9486,7 @@ class QuoteV2Controller extends Controller
       }
 
     }
-    // Intercom SEARCH 
-    //   $event = new  EventIntercom();
-    //  $event->event_searchRate();
+
 
   }
 
