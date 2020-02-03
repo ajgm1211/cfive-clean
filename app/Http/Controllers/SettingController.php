@@ -28,7 +28,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use App\Jobs\ProcessLogo;
-use Intercom\IntercomClient;
+
 
 class SettingController extends Controller
 {

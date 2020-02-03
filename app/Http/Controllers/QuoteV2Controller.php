@@ -26,7 +26,6 @@ use App\QuoteV2;
 use App\Surcharge;
 use App\User;
 use App\PdfOption;
-use EventIntercom;
 use App\Jobs\SendQuotes;
 use App\SendQuote;
 use App\Contract;
@@ -3342,8 +3341,7 @@ class QuoteV2Controller extends Controller
   public function processSearch(Request $request){
 
 
-    $event = new  EventIntercom();
-    $event->event_selectRate();
+
 
     //Variables del usuario conectado
 
@@ -9488,9 +9486,7 @@ class QuoteV2Controller extends Controller
       }
 
     }
-    // Intercom SEARCH 
-    //   $event = new  EventIntercom();
-    //  $event->event_searchRate();
+
 
   }
 
