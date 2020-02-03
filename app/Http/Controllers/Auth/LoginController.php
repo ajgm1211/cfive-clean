@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Intercom\IntercomClient;
 use App\Http\Traits\BrowserTrait;
 
 class LoginController extends Controller
@@ -42,45 +41,14 @@ class LoginController extends Controller
   }
 
 
- /* public function intercom($client,$user){ 
 
-    $cliente =  $client->users->getUsers(["email" => $user->email]);
-    if($cliente->total_count > 1 ){
-      foreach($cliente->users as $u){
-        if($u->type == "user" ){
-          if($u->user_id != $user->id ){
-            $client->users->archiveUser($u->id);
-          }
-        }
-      }
-    }
-  }*/
 
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
 
-   /* $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
-    $this->intercom($client,$user);
-    $client->users->create([
-      "email" => $user->email,
-      "user_id" =>$user->id,
-      "name" => $user->name,
-    ]);
-    // Crear hash id del usuario logueado 
-    if($user->company_user_id != ""){
-      setHashID();
-      $this->intercom($client,$user);
-      $client->users->create([
-        "email" => $user->email,
-        "companies" => [
-          [
-            "company_id" => $user->company_user_id,
-          ]
-        ]
-      ]);
-    }*/
+   
 
     $browser = $this->getBrowser();
 
