@@ -2499,7 +2499,7 @@ class QuoteV2Controller extends Controller
     }
 
     foreach($remarks_origin as $remOrig){
-      
+
       $rems .="<br>";
       $remarkO = $origin_port->name." / ".$carrier->name;
       if($mode == 1)
@@ -3972,7 +3972,15 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+
+
+
+          try {
+            $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          } catch (\Exception $e) {
+
+          }  
+
           // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -4859,12 +4867,17 @@ class QuoteV2Controller extends Controller
       }else{
         $excelRequestId = "0";
       }
-
-      $mediaItems = $data->contract->getMedia('document');
-      $totalItems = count($mediaItems);
+      
       $idContract = 0;
-      if($totalItems > 0)
-        $idContract = $data->contract->id;
+      $totalItems= 0;
+      if($data->contract->status !='api'){
+        $mediaItems = $data->contract->getMedia('document');
+        $totalItems = count($mediaItems);
+
+        if($totalItems > 0)
+          $idContract = $data->contract->id;
+      }
+
 
       // Franja APIS
       $color = '';
@@ -4947,7 +4960,7 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total45');
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M'));
 
   }
 
