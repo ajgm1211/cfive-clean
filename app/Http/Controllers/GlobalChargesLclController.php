@@ -7,7 +7,6 @@ use App\Harbor;
 use App\Carrier;
 use App\Country;
 use App\Currency;
-use EventIntercom;
 use App\Surcharge;
 use App\CompanyUser;
 use App\TypeDestiny;
@@ -187,9 +186,6 @@ class GlobalChargesLclController extends Controller
 
 			}
 		}
-		// EVENTO INTERCOM
-		$event = new  EventIntercom();
-		$event->event_globalChargesLcl();
 
 		$request->session()->flash('message.nivel', 'success');
 		$request->session()->flash('message.title', 'Well done!');
