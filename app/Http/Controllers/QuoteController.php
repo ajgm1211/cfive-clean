@@ -50,7 +50,6 @@ use App\Mail\SendQuotePdf;
 use App\Notifications\N_general;
 use App\Notifications\SlackNotification;
 use Yajra\Datatables\Datatables;
-use EventIntercom;
 use App\Repositories\Schedules;
 use Carbon\Carbon;
 
@@ -668,33 +667,7 @@ class QuoteController extends Controller
       if(isset($input['btnsubmit']) && $input['btnsubmit'] == 'submit-pdf'){
         return redirect()->route('quotes.show', ['quote_id' => setearRouteKey($quote->id)])->with('pdf','true');
       }
-      // REGISTRAR EVENTOS QUOTE EN INTERCOM
-      if(isset($input['quot_auto'])){
-        $event = new  EventIntercom();
-        if($input['type'] == '1'){
-          // Intercom QUOTE AUTOMATIC FCL
-          $event->event_quoteAutomaticFcl();
-        }
-        if($input['type'] == '2'){
-          // Intercom QUOTE AUTOMATIC LCL
-          $event->event_quoteAutomaticLcl();
-        }
-      }else{
-        $event = new  EventIntercom();
-        if($input['type'] == '1'){
-          // Intercom QUOTE AUTOMATIC FCL
-          $event->event_quoteManualFcl();
-        }
-        if($input['type'] == '2'){
-          // Intercom QUOTE AUTOMATIC LCL
-          $event->event_quoteManualLcl();
-        }
-        if($input['type'] == '3'){
-          // Intercom QUOTE AUTOMATIC LCL
-          $event->event_quoteManualAir();
-        }
-      }
-      // FIN EVENTOS INTERCOM
+
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');

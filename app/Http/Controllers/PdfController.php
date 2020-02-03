@@ -24,7 +24,6 @@ use App\EmailTemplate;
 use App\PackageLoad;
 use App\Mail\SendQuotePdf;
 use App\TermsPort;
-use EventIntercom;
 use Api2Pdf\Api2Pdf;
 
 class PdfController extends Controller
@@ -170,9 +169,7 @@ class PdfController extends Controller
             }
         }
 
-        // EVENTO INTERCOM
-        $event = new  EventIntercom();
-        $event->event_quotePdf();
+
 
 
         $pdf = \App::make('dompdf.wrapper');
@@ -297,9 +294,7 @@ class PdfController extends Controller
 
         $view = \View::make('quotes.pdf.index-new', ['quote'=>$quote,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'origin_ammounts'=>$origin_ammounts,'freight_ammounts'=>$freight_ammounts,'destination_ammounts'=>$destination_ammounts,'user'=>$user,'currency_cfg'=>$currency_cfg,'package_loads'=>$package_loads,'terms_origin'=>$terms_origin,'terms_destination'=>$terms_destination,'terms_all'=>$terms_all,'charges_type'=>$type,'ammounts_type'=>$ammounts_type]);
 
-        // EVENTO INTERCOM
-        $event = new  EventIntercom();
-        $event->event_quotePdf();
+
 
 
         $pdf = \App::make('dompdf.wrapper');
@@ -437,9 +432,7 @@ class PdfController extends Controller
             }
         }
 
-        // EVENTO INTERCOM 
-        $event = new  EventIntercom();
-        $event->event_quoteEmail();
+
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');

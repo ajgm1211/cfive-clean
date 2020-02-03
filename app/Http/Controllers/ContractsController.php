@@ -15,7 +15,7 @@ use App\Contract;
 use App\FailRate;
 use App\Currency;
 use PrvValidation;
-use EventIntercom;
+
 use App\Direction;
 use App\Surcharge;
 use App\ViewRates;
@@ -421,9 +421,7 @@ class ContractsController extends Controller
         $contract_client_restriction->save();
       }
     }
-    // EVENTO INTERCOM
-    $event = new  EventIntercom();
-    $event->event_contractFcl();
+
 
 
     foreach ($request->input('document', []) as $file) {
