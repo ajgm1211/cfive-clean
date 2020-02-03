@@ -489,7 +489,11 @@ class NewContractRequestsController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id)->onQueue('operaciones');
+					} else {
+						SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);				
+					}
 				}
 			}
 			$Ncontract->save();
@@ -704,7 +708,7 @@ class NewContractRequestsController extends Controller
 			);
 		} else{
 			$auth = \Auth::user()->toArray();
-			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl');
+			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl')->onQueue('operaciones');
 			$response =  array(
 				'actt' => 2
 			);
