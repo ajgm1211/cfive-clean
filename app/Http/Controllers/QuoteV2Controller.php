@@ -2493,18 +2493,28 @@ class QuoteV2Controller extends Controller
     foreach($remarks_all as $remAll){
       $rems .="<br>";
       $remarkA = $origin_port->name." / ".$carrier->name;
-      $remarkA .=  "<br>".$remAll->remark->export;
+      if($mode == 1)
+        $remarkA .=  "<br>".$remAll->remark->export;
+      else
+        $remarkA .=  "<br>".$remAll->remark->import;
     }
 
     foreach($remarks_origin as $remOrig){
       $rems .="<br>";
       $remarkO = $origin_port->name." / ".$carrier->name;
-      $remarkO .=  "<br>".$remOrig->remark->export;
+      if($mode == 1)
+        $remarkO .=  "<br>".$remOrig->remark->export;
+      else
+        $remarkO .=  "<br>".$remOrig->remark->import;
+
     }
     foreach($remarks_destination as $remDest){
       $rems .="<br>";
       $remarkD = $destiny_port->name." / ".$carrier->name;
-      $remarkD .=  "<br>".$remDest->remark->export;
+      if($mode == 1)
+        $remarkD .=  "<br>".$remDest->remark->export;
+      else
+        $remarkD .=  "<br>".$remDest->remark->import;
     }
     $rems = $remarkO." ".$remarkD." ".$remarkA ; 
     return $rems;
@@ -3947,7 +3957,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-           $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3963,7 +3973,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-         $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
