@@ -3947,7 +3947,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          //  $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+           $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -3963,7 +3963,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+         $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
@@ -4856,6 +4856,17 @@ class QuoteV2Controller extends Controller
       if($totalItems > 0)
         $idContract = $data->contract->id;
 
+      // Franja APIS
+      $color = '';
+      if($data->contract->status == 'api'){
+        if($data->contract->number == 'MAERSK'){
+          $color = 'bg-maersk';
+        }else{
+          $color = 'bg-danger';
+        }
+
+      }
+
 
       // Valores
       $data->setAttribute('excelRequest',$excelRequestId);
@@ -4899,6 +4910,8 @@ class QuoteV2Controller extends Controller
       //Excel
       $data->setAttribute('totalItems',$totalItems);
       $data->setAttribute('idContract',$idContract);
+      //COlor
+      $data->setAttribute('color',$color);
 
 
     }
@@ -7672,7 +7685,8 @@ class QuoteV2Controller extends Controller
 
 
 
-
+      //COlor
+      $data->setAttribute('color','');
       $data->setAttribute('remarks',$remarks);
       $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('excelRequestLCL',$excelRequestIdLCL);
