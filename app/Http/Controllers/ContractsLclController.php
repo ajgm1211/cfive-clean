@@ -12,7 +12,7 @@ use App\Country;
 use App\Carrier;
 use App\Currency;
 use App\Surcharge;
-use EventIntercom;
+
 use App\Direction;
 use App\ContractLcl;
 use App\CompanyUser;
@@ -340,9 +340,7 @@ class ContractsLclController extends Controller
                 $contract_client_restriction->save();
             }
         }
-        // EVENTO INTERCOM
-        $event = new  EventIntercom();
-        $event->event_contractLcl();
+
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $request->session()->flash('message.content', 'You successfully add this contract.');
