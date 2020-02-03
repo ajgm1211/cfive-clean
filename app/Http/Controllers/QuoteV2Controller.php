@@ -2500,6 +2500,7 @@ class QuoteV2Controller extends Controller
     }
 
     foreach($remarks_origin as $remOrig){
+      
       $rems .="<br>";
       $remarkO = $origin_port->name." / ".$carrier->name;
       if($mode == 1)
@@ -3989,7 +3990,7 @@ class QuoteV2Controller extends Controller
 
     // Se agregan las condiciones para evitar traer rates con ceros dependiendo de lo seleccionado por el usuario
 
-    if(in_array('20',$equipment)){
+    /*if(in_array('20',$equipment)){
       $arreglo->where('twuenty' , '!=' , "0");
     }
     if(in_array('40',$equipment)){
@@ -4003,7 +4004,7 @@ class QuoteV2Controller extends Controller
     }
     if(in_array('45',$equipment)){
       $arreglo->where('fortyfive' , '!=' , "0"); 
-    }
+    }*/
 
 
     $arreglo = $arreglo->get();
@@ -4827,7 +4828,8 @@ class QuoteV2Controller extends Controller
         $data->setAttribute('sheduleType',null);
       }
       //remarks
-      $mode = "";
+      $typeMode = $request->input('mode');
+
 
       $remarks="";
       if($data->contract->remarks != "")
@@ -4836,7 +4838,7 @@ class QuoteV2Controller extends Controller
 
 
 
-      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
       $remarks = trim($remarks);
 
       $data->setAttribute('remarks',$remarks);
@@ -7672,7 +7674,8 @@ class QuoteV2Controller extends Controller
       if($data->contract->comments != "")
         $remarks = $data->contract->comments."<br>";
 
-      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$mode);
+      $typeMode = $request->input('mode');
+      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
       $remarks = trim($remarks);
 
 
