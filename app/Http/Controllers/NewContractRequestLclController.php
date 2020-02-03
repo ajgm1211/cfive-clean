@@ -440,7 +440,11 @@ class NewContractRequestLclController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id);
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id)->onQueue('operaciones');
+					} else {
+						SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id);
+					}
 
 				}
 			}
@@ -615,7 +619,7 @@ class NewContractRequestLclController extends Controller
 			);
 		} else{
 			$auth = \Auth::user()->toArray();
-			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'lcl');
+			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'lcl')->onQueue('operaciones');
 			$response =  array(
 				'actt' => 2
 			);
