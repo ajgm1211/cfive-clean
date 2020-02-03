@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
-use EventIntercom;
 use App\ApiIntegrationSetting;
 use App\ViewQuoteV2;
 
@@ -169,9 +168,7 @@ class CompanyController extends Controller
             if ($request->ajax()) {
                 return response()->json('Company created successfully!');
             }
-            // EVENTO INTERCOM
-            $event = new  EventIntercom();
-            $event->event_companies();
+  
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'Register completed successfully!');
