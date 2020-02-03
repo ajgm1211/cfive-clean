@@ -42,7 +42,7 @@ class LoginController extends Controller
   }
 
 
-  public function intercom($client,$user){ 
+ /* public function intercom($client,$user){ 
 
     $cliente =  $client->users->getUsers(["email" => $user->email]);
     if($cliente->total_count > 1 ){
@@ -54,14 +54,14 @@ class LoginController extends Controller
         }
       }
     }
-  }
+  }*/
 
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
 
-    $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
+   /* $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
     $this->intercom($client,$user);
     $client->users->create([
       "email" => $user->email,
@@ -80,7 +80,7 @@ class LoginController extends Controller
           ]
         ]
       ]);
-    }
+    }*/
 
     $browser = $this->getBrowser();
 
