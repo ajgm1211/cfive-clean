@@ -87,6 +87,10 @@
     border: 1px solid #ececec;
     transition: all 300ms ease;
   }
+  .bg-maersk {
+
+    background-color: #41B0D5;    
+  }
   .btn-detail__quotes:hover {
     border-color: #0072fc;
     background-color: #0072fc;    
@@ -892,7 +896,7 @@
                         </div>
                         <div class="col-lg-4 d-flex flex-column justify-content-center">
                           <div class="progress m-progress--sm">
-                            <div class="progress-bar {{ $arr->contract->status == 'api' ? 'bg-danger'   : '' }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar {{ $arr->color }} " role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                           Contract: {{ $arr->contract->name }} / {{ $arr->contract->number }}
                         </div>
