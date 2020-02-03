@@ -11,7 +11,6 @@ use App\Carrier;
 use App\Contract;
 use PrvValidation;
 use App\Direction;
-use EventIntercom;
 use \Carbon\Carbon;
 use App\CompanyUser;
 use GuzzleHttp\Client;
@@ -256,9 +255,7 @@ class NewContractRequestsController extends Controller
 					$Ncontract->toArray()));*/
 				$userNotifique->notify(new N_general($user,$message));
 			}
-			//evento Intercom 
-			$event = new  EventIntercom();
-			$event->event_newRequest();
+
 			return response()->json(['data' => 'ok']);
 		} else {
 			return response()->json(['data' => 'err']);
@@ -482,9 +479,7 @@ class NewContractRequestsController extends Controller
 
 						$user->notify(new N_general(\Auth::user(),$message));
 					}
-					// Intercom SEARCH
-					$event = new  EventIntercom();
-					$event->event_requestDone($Ncontract->user_id);
+
 
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
