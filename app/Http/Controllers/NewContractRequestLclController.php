@@ -9,7 +9,7 @@ use PrvRequest;
 use App\Carrier;
 use Carbon\Carbon;
 use App\Direction;
-use EventIntercom;
+
 use App\ContractLcl;
 use App\CompanyUser;
 use App\RequetsCarrierLcl;
@@ -308,9 +308,7 @@ class NewContractRequestLclController extends Controller
 				$userNotifique->notify(new N_general($user,$message));
 			}
 
-			//evento Intercom 
-			$event = new  EventIntercom();
-			$event->event_newRequestLCL();
+		
 
 			$request->session()->flash('message.nivel', 'success');
 			$request->session()->flash('message.content', 'Your request was created');

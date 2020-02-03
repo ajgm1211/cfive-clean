@@ -140,9 +140,9 @@ $validation_expire = 'Please enter validity date';
                   <tbody>
 
                     <tr id='tr_clone'  >
-                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
-                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple']) }}</td>
-                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;']) }}</td>
+                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('origin_id1[]', $harbor,null,['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple','required'=>'true']) }}</td>
+                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('destiny_id1[]', $harbor,null,['class'=>'m-select2-general col-sm-6 form-control ','style' => 'width:100%;' ,'multiple' => 'multiple','required'=>'true']) }}</td>
+                      <td style="padding: 0.75rem 0.2rem;">{{ Form::select('carrier_id[]', $carrier,null,['class'=>'m-select2-general col-sm-6 form-control','style' => 'width:100%;','required'=>'true']) }}</td>
                       <td style="padding: 0.75rem 0.2rem;">{!! Form::number('twuenty[]', 0, ['placeholder' => 'Enter 20','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;']) !!} </td>
                       <td style="padding: 0.75rem 0.2rem;">{!! Form::number('forty[]', 0, ['placeholder' => 'Enter 40','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!} </td>
                       <td style="padding: 0.75rem 0.2rem;"> {!! Form::number('fortyhc[]', 0, ['placeholder' => 'Enter 40HC','class' => 'form-control m-input','required' => 'required','style' => 'width:100%; font-size: 11px;' ]) !!}</td>
