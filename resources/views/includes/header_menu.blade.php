@@ -345,7 +345,8 @@
                             @role('administrator|data_entry')
 
                             <!-- Sub- Menus --------------------------------------------------------------- -->
-
+<!--                        Inicio Links Importacion-->
+<!--
                             <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
                                 <a  href="#" class="m-menu__link m-menu__toggle">
                                     <i class="m-menu__link-icon la la-arrow-circle-o-up"></i>
@@ -500,6 +501,9 @@
                                     </span>
                                 </a>
                             </li>
+                            
+-->
+<!--                        Fin Links Importacion-->
                             <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                                 <a  href="{{route('settings.companies')}}" class="m-menu__link ">
                                     <i class="m-menu__link-icon flaticon-user-settings"></i>
