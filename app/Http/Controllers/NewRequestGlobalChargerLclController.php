@@ -305,8 +305,11 @@ class NewRequestGlobalChargerLclController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl');
-
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl')->onQueue('operaciones');
+					} else {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl');
+					}
 				}
 
 			}
