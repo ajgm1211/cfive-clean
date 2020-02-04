@@ -22,7 +22,12 @@ Route::get('/', function () {
 });
 
 Route::get('/home', function () {
-	return redirect()->route('quotes-v2.search');
+	if(\Session::has('impersonate') || env('APP_VIEW') == 'local' 
+	   || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'){
+		return redirect()->route('quotes-v2.search');
+	} elseif(env('APP_VIEW') == 'operaciones') {
+		return redirect()->route('RequestImportation.index');
+	}
 });
 
 Route::get('verify/{token}', 'Auth\RegisterController@verifyUser');
