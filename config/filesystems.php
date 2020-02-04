@@ -195,13 +195,16 @@ return [
       'secret' => env('AWS_SECRET_ACCESS_KEY'),
       'region' => env('AWS_DEFAULT_REGION'),
       'bucket' => env('AWS_UPLOAD'),
-    ],     
-    'contractm' => [
-      'driver' => 'local',
-      'root' => storage_path('app/public/manual'),
-      'url' => '/storage',
-      'visibility' => 'public',
-    ],
+    ],   
+    'contracts3' => [
+      'driver' => 's3',
+      'key' => env('AWS_ACCESS_KEY_ID'),
+      'root' => '/contract_manual/',
+      'secret' => env('AWS_SECRET_ACCESS_KEY'),
+      'region' => env('AWS_DEFAULT_REGION'),
+      'bucket' => env('AWS_UPLOAD'),
+    ],  
+
     'media' => [
       'driver' => 'local',
       'root' => storage_path('app/public/manual'),
