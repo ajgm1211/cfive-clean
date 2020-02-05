@@ -54,25 +54,26 @@ class ExcelController extends Controller
 
             $spreadsheet->getSheet($key)->getColumnDimension('A')->setWidth(3);
             $spreadsheet->getSheet($key)->getColumnDimension('B')->setWidth(17);
-            $spreadsheet->getSheet($key)->getColumnDimension('F')->setWidth(3);
+            $spreadsheet->getSheet($key)->getColumnDimension('C')->setWidth(20);
+            $spreadsheet->getSheet($key)->getColumnDimension('F')->setWidth(15);
             $spreadsheet->getSheet($key)->getColumnDimension('G')->setWidth(14);
             $spreadsheet->getSheet($key)->getColumnDimension('L')->setWidth(12);
 
-            $sheet->setCellValue('E5', 'CARTA DE INSTRUCCIONES INTERNA A OPERACIONES');
-            $sheet->setCellValue('G7', 'EMBARQUE MARÍTIMO');
+            $sheet->setCellValue('D5', 'CARTA DE INSTRUCCIONES INTERNA A OPERACIONES');
+            $sheet->setCellValue('E7', 'EMBARQUE MARÍTIMO');
 
             $sheet->setCellValue('A9', '1)');
             $sheet->setCellValue('B9', 'Agente Corresponsal:');
-            $sheet->setCellValue('C9', $quote->company->business_name);
+            $sheet->setCellValue('C9', @$quote->company->business_name);
             $sheet->setCellValue('B10', 'Embarcador:');
             $sheet->setCellValue('C10', '');
             $sheet->setCellValue('B11', 'Consignatario:');
             $sheet->setCellValue('C11', '');
 
-            $sheet->setCellValue('L9', 'Fecha:');
-            $sheet->setCellValue('M9', date('d-m-Y', strtotime($quote->date_issued)));
-            $sheet->setCellValue('L10', 'Referencia:');
-            $sheet->setCellValue('M10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
+            $sheet->setCellValue('H9', 'Fecha:');
+            $sheet->setCellValue('I9', date('d-m-Y', strtotime($quote->date_issued)));
+            $sheet->setCellValue('H10', 'Referencia:');
+            $sheet->setCellValue('I10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
 
             $sheet->setCellValue('A13', '2)');
             $sheet->setCellValue('B13', 'Crédito:');
@@ -133,12 +134,10 @@ class ExcelController extends Controller
             $sheet->setCellValue('B34', 'Incluye THC:');
             $sheet->setCellValue('C34', '');
 
-            $sheet->setCellValue('F20', '5)');
-            $sheet->setCellValue('G20', 'Requiere seguro:');
+            $sheet->setCellValue('G20', '5) Requiere seguro:');
             $sheet->setCellValue('H21', '');
 
-            $sheet->setCellValue('F22', '6)');
-            $sheet->setCellValue('G22', 'Carga peligrosa:');
+            $sheet->setCellValue('G22', '6) Carga peligrosa:');
             $sheet->setCellValue('H22', '');
 
             $sheet->setCellValue('G31', 'Proveedor de traslado a báscula:');
@@ -155,29 +154,38 @@ class ExcelController extends Controller
             $sheet->setCellValue('C38', '');
 
             //Table
-            $sheet->setCellValue('G40', 'DESGLOSE DE CARGOS');
+            $sheet->setCellValue('E40', 'DESGLOSE DE CARGOS');
 
             $sheet->setCellValue('B41', 'ID');
             $sheet->setCellValue('C41', 'Concepto');
             $sheet->setCellValue('D41', 'Costo');
-            $sheet->setCellValue('E41', 'Moneda');
-            $sheet->setCellValue('G41', 'Unidad');
-            $sheet->setCellValue('H41', 'Venta');
-            $sheet->setCellValue('I41', 'Moneda');
-            $sheet->setCellValue('J41', 'Unidad');
-            $sheet->setCellValue('K41', 'CC/PP');
+            $sheet->setCellValue('F41', 'Moneda');
+            $sheet->setCellValue('E41', 'Unidad');
+            $sheet->setCellValue('G41', 'Venta');
+            $sheet->setCellValue('H41', 'Moneda');
+            $sheet->setCellValue('I41', 'Unidad');
+            $sheet->setCellValue('J41', 'CC/PP');
 
-            
+            if($quote->type=='LCL' || $quote->type=='AIR'){
+                $i=42;
+                foreach($item->charge_lcl_air as $charge){
+                    $sheet->setCellValue('B'.$i, $charge->id);
+                    $sheet->setCellValue('C'.$i, @$charge->surcharge->name);
+                    $sheet->setCellValue('D'.$i, $charge->price_per_unit);
+                    $sheet->setCellValue('D'.$i, $charge->price_per_unit);
+                    $i++;
+                }
+            }
 
-            $spreadsheet->getSheet($key)->getStyle('A1:X61')->getFill()
+            $spreadsheet->getSheet($key)->getStyle('A1:AU200')->getFill()
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('FFFFFF');
 
-            $spreadsheet->getSheet($key)->getStyle('A5:N5')->getFill()
+            $spreadsheet->getSheet($key)->getStyle('A5:J5')->getFill()
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('E13B24');
 
-            $spreadsheet->getSheet($key)->getStyle('B40:N40')->getFill()
+            $spreadsheet->getSheet($key)->getStyle('B40:J40')->getFill()
                 ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                 ->getStartColor()->setARGB('E13B24');
 
@@ -187,7 +195,26 @@ class ExcelController extends Controller
 
             $spreadsheet->getSheet($key)->getStyle('A5:P5')->getFont()->getColor()->setARGB('FFFFFF');
             $spreadsheet->getSheet($key)->getStyle('B40:N40')->getFont()->getColor()->setARGB('FFFFFF');
+
+            $i = $i-1;
+            for ($i; $i > 40; $i--) { 
+                $spreadsheet->getSheet($key)->getStyle('B'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('C'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('D'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('E'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('F'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('G'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('H'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('I'.$i)->applyFromArray($styleArray);
+                $spreadsheet->getSheet($key)->getStyle('J'.$i)->applyFromArray($styleArray);
+            }
         }
+
+        //Bottom border
+        $spreadsheet->getSheet($key)->getStyle('C9')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C10')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C11')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C13')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         $writer = new Xlsx($spreadsheet);
         if($quote->custom_quote_id!=''){
