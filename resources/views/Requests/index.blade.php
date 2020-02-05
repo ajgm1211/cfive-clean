@@ -257,6 +257,10 @@
     
 	
 	<script>
+		@if(Session::has('message.nivel'))
+		var typeM="{{Session::get('message.nivel')}}";
+		toastr.error("{{ Session('message.content') }}");		
+		@endif
 		
 		$(function() {
 			$('#myatest').DataTable({
