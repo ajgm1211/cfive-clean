@@ -308,7 +308,7 @@ class NewContractRequestLclController extends Controller
 				$userNotifique->notify(new N_general($user,$message));
 			}
 
-		
+
 
 			$request->session()->flash('message.nivel', 'success');
 			$request->session()->flash('message.content', 'Your request was created');
@@ -343,7 +343,7 @@ class NewContractRequestLclController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequestLcl::find($id);
 		$time       = new \DateTime();
@@ -362,7 +362,13 @@ class NewContractRequestLclController extends Controller
 				try{
 					return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
 				} catch(\Exception $e){
-					return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					try{
+						return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					} catch(\Exception $e){
+						$request->session()->flash('message.nivel', 'danger');
+						$request->session()->flash('message.content', 'Error. File not found');
+						return back();
+					}
 				}
 			}
 		}
