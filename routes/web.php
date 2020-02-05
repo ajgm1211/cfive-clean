@@ -11,6 +11,14 @@
 |
 */
 
+
+Route::middleware(['auth'])->prefix('crisp')->group(function () {
+	
+	Route::get('home', 'CrispController@index')->name('crisp.home');
+
+});
+
+
 Route::get('/', function () {
 	if(\Session::has('impersonate') || env('APP_VIEW') == 'local' 
 	   || env('APP_VIEW') == 'prod' || env('APP_VIEW') == 'dev'){
