@@ -180,7 +180,7 @@ class NewRequestGlobalChargerLclController extends Controller
 		}
 	}
 
-	public function show($id,Request $request)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewRequestGlobalChargerLcl::find($id);
 		$time       = new \DateTime();
@@ -199,7 +199,8 @@ class NewRequestGlobalChargerLclController extends Controller
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
 			return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
 		}
-
+		$request->session()->flash('message.nivel', 'danger');
+		$request->session()->flash('message.content', 'Error. File not found');
 		return back();
 
 
