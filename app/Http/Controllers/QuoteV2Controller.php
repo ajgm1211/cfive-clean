@@ -5235,7 +5235,6 @@ class QuoteV2Controller extends Controller
 
 			}
 
-
 			try{
 				return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
 			} catch(\Exception $e){
@@ -5249,11 +5248,15 @@ class QuoteV2Controller extends Controller
 							return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
 						} catch(\Exception $e){
 							$request->session()->flash('message.nivel', 'danger');
-							$request->session()->flash('message.content', 'Error. File not found');
-							return back();
+						$request->session()->flash('message.content', 'Error. File not found');
+			//dd('lega');
+						//return view('quotesv2.redirectback');
 						}
 					}
 				}
+			}finally{
+				
+				//return back();
 			}
 		}else{
 			$contract = Contract::find($idContract);
