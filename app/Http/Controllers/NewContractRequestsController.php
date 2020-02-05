@@ -263,7 +263,7 @@ class NewContractRequestsController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequest::find($id);
 		$time       = new \DateTime();
@@ -281,7 +281,13 @@ class NewContractRequestsController extends Controller
 				try{
 					return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
 				} catch(\Exception $e){
-					return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					try{
+						return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					} catch(\Exception $e){
+						$request->session()->flash('message.nivel', 'danger');
+						$request->session()->flash('message.content', 'Error. File not found');
+						return back();
+					}
 				}
 			}
 		}
