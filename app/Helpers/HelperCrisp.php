@@ -32,7 +32,13 @@ class EventCrisp{
     $people =  self::findByEmail($email);
     $people = $obj->websitePeople->updatePeopleProfile(self::$web_id, $people['people_id'], $params);
     return $people;
-    
+  }
+
+  public function deleteProfile($email){
+    $obj  = self::$CrispClient;
+    $people =  self::findByEmail($email);
+    $people =  $obj->websitePeople->removePeopleProfile(self::$web_id, $people['people_id']);
+    return $people;
 
   }
 
