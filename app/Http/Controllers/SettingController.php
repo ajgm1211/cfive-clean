@@ -61,6 +61,7 @@ class SettingController extends Controller
   }
 
   public function store(Request $request){
+
     $file = Input::file('image');
     $footer_image = Input::file('footer_image');
     $signature_image = Input::file('email_signature_image');
@@ -111,13 +112,14 @@ class SettingController extends Controller
         $company->logo = $filepath;
       }
       $company->save();
-      User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
 
+      User::where('id',\Auth::id())->update(['company_user_id'=>$company->id]);
+      $usuario = User::find(\Auth::id());
       //Crisp Update 
 
       $CrispClient = new EventCrisp();
       $params = array('company' => array('name'=>$company->name ));
-      $people = $CrispClient->updateProfile($params,\Auth::email());
+      $people = $CrispClient->updateProfile($params,$usuario->email);
 
 
 

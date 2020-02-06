@@ -55,7 +55,7 @@ class LoginController extends Controller
     $people = $CrispClient->findByEmail($user->email);
     if(empty($people)){
       $params = array('email' => $user->email,'person'=> array('nickname' =>$user->name." ".$user->lastname));
-      if($user->companyUser->name != ''){
+      if($user->company_user_id != ''){
         $params['company'] =array('name'=>$user->companyUser->name);
       }
       $people = $CrispClient->createProfile($params);
