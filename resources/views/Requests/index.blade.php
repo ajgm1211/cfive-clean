@@ -264,8 +264,13 @@
 			$.ajax({
 				url:url,
 				method:'get',
-				success: function(data){
-					console.log();
+				success: function(response){
+					if(response.success == true){
+						window.location = response.url;
+					}else {
+						toastr.error('File not found');
+					}
+					///console.log(response);
 				}
 			});
 		}
