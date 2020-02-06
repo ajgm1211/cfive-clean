@@ -167,7 +167,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c40hc'])){
                     $amount_inland40hc=$array_amounts['c40hc'];
-                    $total_inland40hc=$amount40hc/$currency_rate;          
+                    $total_inland40hc=$amount_inland40hc/$currency_rate;          
                     $sum_inland40hc = number_format($total_inland40hc, 2, '.', '');
                 }
                 
@@ -178,7 +178,7 @@ trait QuoteV2Trait {
                 
                 if(isset($array_amounts['c40nor'])){
                     $amount_inland40nor=$array_amounts['c40nor'];
-                    $total_inland40nor=$amount40nor/$currency_rate;
+                    $total_inland40nor=$amount_inland40nor/$currency_rate;
                     $sum_inland40nor = number_format($total_inland40nor, 2, '.', '');
                 }
 
@@ -189,7 +189,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c45'])){
                     $amount_inland45=$array_amounts['c45'];
-                    $total_inland45=$amount45/$currency_rate;
+                    $total_inland45=$amount_inland45/$currency_rate;
                     $sum_inland45 = number_format($total_inland45, 2, '.', '');
                 }
 
