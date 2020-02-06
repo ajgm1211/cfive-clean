@@ -76,7 +76,7 @@ class QuoteV2 extends Model
     {
         return $this->hasOne('App\AutomaticRate','quote_id','id');
     }
-    
+
     public function rates_v2()
     {
         return $this->hasMany('App\AutomaticRate','quote_id','id');
