@@ -11,6 +11,7 @@
         "aws/aws-sdk-php": "~3.0",
         "barryvdh/laravel-dompdf": "^0.8.2",
         "barryvdh/laravel-elfinder": "^0.3.12",
+        "crispchat/php-crisp-api": "^1.5",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "greggilbert/recaptcha": "^2.2",
