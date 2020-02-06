@@ -5233,8 +5233,25 @@ class QuoteV2Controller extends Controller
 				$name       = $Ncontract->id.'-'.$now.'-FLC.'.$ext;
 
 			}
+			$success 	= false;
+			$descarga 	= null;
 
-			try{
+			if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
+				$success 	= true;
+				$descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
+			} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+				$success 	= true;
+				$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+			} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
+				$success 	= true;
+				$descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
+			} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+				$success 	= true;
+				$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+			}
+
+			return response()->json(['success' => $success,'url'=>$descarga]);
+			/*try{
 				return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
 			} catch(\Exception $e){
 				try{
@@ -5254,7 +5271,7 @@ class QuoteV2Controller extends Controller
 						}
 					}
 				}
-			}
+			}*/
 		}else{
 			$contract = Contract::find($idContract);
 			$downloads = $contract->getMedia('document');
