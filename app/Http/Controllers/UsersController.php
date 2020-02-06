@@ -17,7 +17,7 @@ use App\VerifyUser;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
-
+use EventCrisp;
 
 class UsersController extends Controller
 {
@@ -84,7 +84,7 @@ class UsersController extends Controller
 
       \Mail::to($user->email)->send(new VerifyMail($user));
 
-     
+
 
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
@@ -196,6 +196,11 @@ class UsersController extends Controller
   {
     $user = User::find($id);
     $user->delete();
+    
+    //Crisp Delete 
+    $CrispClient = new EventCrisp();
+    $people = $CrispClient->deleteProfile($user->email);
+    
     return $user;
   }
   public function destroyUser(Request $request,$id)
