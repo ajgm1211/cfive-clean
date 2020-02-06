@@ -539,7 +539,7 @@ Route::middleware(['auth'])->prefix('v2/quotes')->group(function () {
 	Route::post('inlands/store', 'QuoteV2Controller@storeInlands')->name('quotes-v2.inlands.store');
 	Route::get('html/{quote_id}', 'QuoteV2Controller@html')->name('quotes-v2.html');
 	Route::get('excel/{id}/{id2}/{id3}', 'QuoteV2Controller@excelDownload')->name('quotes-v2.excel');
-	Route::get('excelLcl/{id2}/', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
+	Route::get('excelLcl/{id2}/{id3}', 'QuoteV2Controller@excelDownloadLCL')->name('quotes-v2.excel-lcl');
 	Route::get('export', 'QuoteV2Controller@downloadQuotes')->name('quotes-v2.download');
 	//Sale terms
 	Route::post('store/saleterm', 'SaleTermV2Controller@store')->name('quotes-v2.saleterm.store');
