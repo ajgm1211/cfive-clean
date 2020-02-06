@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Traits\BrowserTrait;
+use EventCrisp;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 
 class LoginController extends Controller
 {
@@ -43,15 +45,25 @@ class LoginController extends Controller
 
 
 
-
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
 
-   
-
+      //Evento Crisp
+    $CrispClient = new EventCrisp();
+    $people = $CrispClient->findByEmail($user->email);
+    if(empty($people)){
+      $params = array('email' => $user->email,'person'=> array('nickname' =>$user->name." ".$user->lastname));
+      if($user->company_user_id != ''){
+        $params['company'] =array('name'=>$user->companyUser->name);
+      }
+      $people = $CrispClient->createProfile($params);
+      session(['push'=>'true']);
+    }
+    session(['people_key'=>$people['people_id']]);
     $browser = $this->getBrowser();
+    //Fin evento
 
     if($browser["name"]=="Internet Explorer"){
       auth()->logout();
