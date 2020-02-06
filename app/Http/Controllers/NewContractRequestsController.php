@@ -125,7 +125,10 @@ class NewContractRequestsController extends Controller
 
 				$buttons = '
                 &nbsp;&nbsp;
-                <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
+                <!--<a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>-->
+				<a href="#" onclick="downlodRequest('.$Ncontracts->id.')" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
@@ -272,6 +275,9 @@ class NewContractRequestsController extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+		
+		return response(['success'=>1])->Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
+		
 		try{
 			return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
 		} catch(\Exception $e){
