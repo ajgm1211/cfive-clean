@@ -191,6 +191,23 @@
 	<script type="application/x-javascript" src="/js/toarts-config.js"></script>
     <script>
 
+		function downlodRequest(id){
+			url='{!! route("RequestsGlobalchargersLcl.show",":id") !!}';
+			url = url.replace(':id', id);
+			$.ajax({
+				url:url,
+				method:'get',
+				success: function(response){
+					if(response.success == true){
+						window.location = response.url;
+					}else {
+						toastr.error('File not found');
+					}
+					///console.log(response);
+				}
+			});
+		}
+		
         $(function() {
             $('#myatest').DataTable({
                 processing: true,

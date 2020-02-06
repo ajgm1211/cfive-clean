@@ -125,7 +125,7 @@ class NewContractRequestsController extends Controller
 
 				$buttons = '
                 &nbsp;&nbsp;
-                <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
+				<a href="#" onclick="downlodRequest('.$Ncontracts->id.')" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
@@ -272,19 +272,25 @@ class NewContractRequestsController extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
-		try{
-			return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
-		} catch(\Exception $e){
-			try{
-				return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-			} catch(\Exception $e){
-				try{
-					return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
-				} catch(\Exception $e){
-					return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-				}
-			}
+		$success 	= false;
+		$descarga 	= null;
+		
+		if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			$descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			$descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
+		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
 		}
+		
+		return response()->json(['success' => $success,'url'=>$descarga]);
+		
 	}
 
 	public function showStatus($id){
