@@ -60,26 +60,23 @@
                         </div>
                     </div>
                 </div>
-                <table class="m-datatable">
-                    <thead>
+                <table class="table table-bordered table-hover">
+                    <thead style="background-color:#f4f5f8;">
                     <tr>
                         <th title="Client id">
-                            Client id
+                            <b>Client id</b>
                         </th>
                         <th title="Name">
-                            Name
-                        </th>
-                        <th title="Company user">
-                            Company
+                            <b>Name</b>
                         </th>
                         <th title="Secret">
-                            Secret
+                            <b>Secret</b>
                         </th>
                         <th title="Created at">
-                            Created at
+                            <b>Created at</b>
                         </th>
                         <th title="Options">
-                            Options
+                            <b>Options</b>
                         </th>
                     </tr>
                     </thead>
@@ -88,7 +85,6 @@
                         <tr>
                             <td>{{$token->id }}</td>
                             <td>{{$token->name }}</td>
-                            <td>{{$token->company_user['name'] }}</td>
                             <td>{{$token->secret }}</td>
                             <td>{{$token->created_at }}</td>
                             <td>
