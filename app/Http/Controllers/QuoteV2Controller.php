@@ -106,11 +106,15 @@ class QuoteV2Controller extends Controller
         if(\Auth::user()->hasRole('subuser')){
             $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with('currency','incoterm','origin_port','destination_port','rates_v2')->get();
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->get();
         }else{
             $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with('currency','incoterm','origin_port','destination_port','rates_v2')->get();
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->get();
         }
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
@@ -268,7 +272,9 @@ class QuoteV2Controller extends Controller
         }
 
         $company_user_id = \Auth::user()->company_user_id;
-        $quote = QuoteV2::with('currency','incoterm','origin_port','destination_port','rates_v2')->findOrFail($id);
+        $quote = QuoteV2::with(['rates_v2'=>function($query){
+            $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+        }])->findOrFail($id);
         $package_loads = PackageLoadV2::where('quote_id',$quote->id)->get();
         $inlands = AutomaticInland::where('quote_id',$quote->id)->get();
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge','automaticInlandLclAir','charge_lcl_air')->get();
@@ -280,11 +286,11 @@ class QuoteV2Controller extends Controller
         $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
         if($quote->delivery_type==2 || $quote->delivery_type==4){
-            $destinationAddressHides = '';
+            $destinationAddressHides = null;
         }
 
         if($quote->delivery_type==3 || $quote->delivery_type==4){
-            $originAddressHides = '';
+            $originAddressHides = null;
         }
 
         foreach($sale_terms_origin as $value){
