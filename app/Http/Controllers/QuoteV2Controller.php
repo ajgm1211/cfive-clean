@@ -5212,8 +5212,7 @@ class QuoteV2Controller extends Controller
 	}
 
 
-	public function excelDownload(Request $request,$id,$idFcl,$idContract){
-
+	public function excelDownload($id,$idFcl,$idContract,Request $request){
 		if($idContract == 0){
 			$Ncontract = NewContractRequest::find($id);
 			if(!empty($Ncontract)){
@@ -5248,15 +5247,13 @@ class QuoteV2Controller extends Controller
 							return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
 						} catch(\Exception $e){
 							$request->session()->flash('message.nivel', 'danger');
-						$request->session()->flash('message.content', 'Error. File not found');
-			//dd('lega');
-						//return view('quotesv2.redirectback');
+							$request->session()->flash('message.content', 'Error. File not found');
+							//dd('lega');
+							return back();
+							return view('quotesv2.redirectback');
 						}
 					}
 				}
-			}finally{
-				
-				//return back();
 			}
 		}else{
 			$contract = Contract::find($idContract);
