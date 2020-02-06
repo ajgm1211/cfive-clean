@@ -79,7 +79,8 @@ return [
     'FclRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/Fcl'),
-      'url' => 'storage/app/public/Request/Fcl',
+      //'url' => 'storage/app/public/Request/Fcl',
+      'url' => '/storage/Request/Fcl',
       'visibility' => 'public',
     ],
 
@@ -100,21 +101,24 @@ return [
     'LclRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/Lcl'),
-      'url' => 'storage/app/public/Request/Lcl',
+      //'url' => 'storage/app/public/Request/Lcl',
+      'url' => '/storage/Request/Lcl',
       'visibility' => 'public',
     ],
 
     'GCRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/GC'),
-      'url' => 'storage/app/public/Request/GC',
+      //'url' => 'storage/app/public/Request/GC',
+      'url' => '/storage/Request/GC',
       'visibility' => 'public',
     ],
 
     'GCRequestLcl' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/GC-LCL'),
-      'url' => 'storage/app/public/Request/GC-LCL',
+      //'url' => 'storage/app/public/Request/GC-LCL',
+      'url' => '/storage/Request/GC-LCL',
       'visibility' => 'public',
     ],
 
