@@ -36,7 +36,7 @@ class ExcelController extends Controller
 
         foreach($rates as $key=>$item){
             // Create a new worksheet called "My Data"
-            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, $item->carrier->name);
+            $myWorkSheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($spreadsheet, @$item->carrier->name);
 
             // Attach the "My Data" worksheet as the first worksheet in the Spreadsheet object
             $spreadsheet->addSheet($myWorkSheet);
@@ -70,10 +70,10 @@ class ExcelController extends Controller
             $sheet->setCellValue('B11', 'Consignatario:');
             $sheet->setCellValue('C11', '');
 
-            $sheet->setCellValue('H9', 'Fecha:');
-            $sheet->setCellValue('I9', date('d-m-Y', strtotime($quote->date_issued)));
-            $sheet->setCellValue('H10', 'Referencia:');
-            $sheet->setCellValue('I10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
+            $sheet->setCellValue('G9', 'Fecha:');
+            $sheet->setCellValue('H9', date('d-m-Y', strtotime($quote->date_issued)));
+            $sheet->setCellValue('G10', 'Referencia:');
+            $sheet->setCellValue('H10', $quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id);
 
             $sheet->setCellValue('A13', '2)');
             $sheet->setCellValue('B13', 'Crédito:');
@@ -83,7 +83,7 @@ class ExcelController extends Controller
             $sheet->setCellValue('C15', 'Carga General');
 
             $sheet->setCellValue('B16', 'Incoterm:');
-            $sheet->setCellValue('C16', $quote->incoterm->name);
+            $sheet->setCellValue('C16', @$quote->incoterm->name);
 
             $sheet->setCellValue('G15', 'Embarque:');
             $sheet->setCellValue('H15', $quote->type);
@@ -126,7 +126,7 @@ class ExcelController extends Controller
 
             $sheet->setCellValue('A31', '9)');
             $sheet->setCellValue('B31', 'Naviera/co-loader:');
-            $sheet->setCellValue('C31', $item->carrier->name);
+            $sheet->setCellValue('C31', @$item->carrier->name);
             $sheet->setCellValue('B32', 'Agente Aduanal:');
             $sheet->setCellValue('C32', 'Del consignatario');
             $sheet->setCellValue('B33', 'Incluye pistas:');
@@ -139,6 +139,15 @@ class ExcelController extends Controller
 
             $sheet->setCellValue('G22', '6) Carga peligrosa:');
             $sheet->setCellValue('H22', '');
+            
+            $sheet->setCellValue('G23', 'UN:');
+            $sheet->setCellValue('H23', '');
+            
+            $sheet->setCellValue('G24', 'Clase:');
+            $sheet->setCellValue('H24', '');
+            
+            $sheet->setCellValue('I24', 'PG:');
+            $sheet->setCellValue('J24', '');
 
             $sheet->setCellValue('G31', 'Proveedor de traslado a báscula:');
             $sheet->setCellValue('H31', 'N/A');
@@ -197,6 +206,8 @@ class ExcelController extends Controller
             $spreadsheet->getSheet($key)->getStyle('B40:N40')->getFont()->getColor()->setARGB('FFFFFF');
 
             $i = $i-1;
+            $a = $i + 2;
+            
             for ($i; $i > 40; $i--) { 
                 $spreadsheet->getSheet($key)->getStyle('B'.$i)->applyFromArray($styleArray);
                 $spreadsheet->getSheet($key)->getStyle('C'.$i)->applyFromArray($styleArray);
@@ -209,12 +220,78 @@ class ExcelController extends Controller
                 $spreadsheet->getSheet($key)->getStyle('J'.$i)->applyFromArray($styleArray);
             }
         }
-
+        
+        $b = $a + 1;
+        $c = $b + 2;
+        $d = $c + 1;
+        $e = $d + 2;
+        $f = $e + 1;
+            
+        $sheet->setCellValue('A'.$a, '12)');
+        $sheet->setCellValue('B'.$a, 'Vigencia de tarifa:');
+        $sheet->setCellValue('C'.$a, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$a)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $sheet->setCellValue('B'.$b, 'Enviar pre-alerta a:');
+        $sheet->setCellValue('C'.$b, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$b)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $sheet->setCellValue('A'.$c, '13)');
+        $sheet->setCellValue('B'.$c, 'Instrucciones adicionales:');
+        $sheet->setCellValue('C'.$c, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$c)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $sheet->setCellValue('B'.$d, 'Se otorgó benefico de carta garantía:');
+        $sheet->setCellValue('C'.$d, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$d)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $sheet->setCellValue('A'.$e, '14)');
+        $sheet->setCellValue('B'.$e, 'Vendedor:');
+        $sheet->setCellValue('C'.$e, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$e)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $sheet->setCellValue('B'.$f, 'Elaboró:');
+        $sheet->setCellValue('C'.$f, '');
+        $spreadsheet->getSheet($key)->getStyle('C'.$f)->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
         //Bottom border
         $spreadsheet->getSheet($key)->getStyle('C9')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $spreadsheet->getSheet($key)->getStyle('C10')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $spreadsheet->getSheet($key)->getStyle('C11')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
         $spreadsheet->getSheet($key)->getStyle('C13')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C15')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C16')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C19')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C20')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C21')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C22')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C24')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C25')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C27')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C28')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C29')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C31')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C32')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C33')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C34')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C36')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('C38')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $spreadsheet->getSheet($key)->getStyle('H15')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H16')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H17')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H18')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H20')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H22')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H23')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H24')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H31')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H32')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $spreadsheet->getSheet($key)->getStyle('H9')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $spreadsheet->getSheet($key)->getStyle('H10')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        
+        $spreadsheet->getSheet($key)->getStyle('J24')->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         $writer = new Xlsx($spreadsheet);
         if($quote->custom_quote_id!=''){
