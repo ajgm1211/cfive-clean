@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "319d15744dba49b0c024d2047349004f",
-    "content-hash": "6a3f18f1b69e888369f5a508b036e7a1",
+    "hash": "ce67ebb5e709dd5a8ae13f2cd2e528a9",
+    "content-hash": "c2936a2f4176b2d6c044af43b94c9da6",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -148,16 +148,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.6",
+            "version": "3.133.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "cd7bd2fdd159146ef6c7eeb90b73fae4fd11da57"
+                "reference": "cd6fb07aed2cc68088251e3c572d111d67d558a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cd7bd2fdd159146ef6c7eeb90b73fae4fd11da57",
-                "reference": "cd7bd2fdd159146ef6c7eeb90b73fae4fd11da57",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cd6fb07aed2cc68088251e3c572d111d67d558a3",
+                "reference": "cd6fb07aed2cc68088251e3c572d111d67d558a3",
                 "shasum": ""
             },
             "require": {
@@ -228,7 +228,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-01-24 19:11:35"
+            "time": "2020-02-04 19:11:15"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -450,6 +450,43 @@
                 "stream_filter_register"
             ],
             "time": "2019-04-09 12:31:48"
+        },
+        {
+            "name": "crispchat/php-crisp-api",
+            "version": "1.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crisp-im/php-crisp-api.git",
+                "reference": "32c338a7b26dd16b526234b042d664f41e1550af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crisp-im/php-crisp-api/zipball/32c338a7b26dd16b526234b042d664f41e1550af",
+                "reference": "32c338a7b26dd16b526234b042d664f41e1550af",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "tcdent/php-restclient": "^0.1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "crisp.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Baptiste Jamin",
+                    "email": "baptiste@crisp.chat"
+                }
+            ],
+            "description": "Crisp API PHP Wrapper",
+            "time": "2019-02-24 21:45:46"
         },
         {
             "name": "defuse/php-encryption",
@@ -2484,16 +2521,16 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.63",
+            "version": "1.0.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "8132daec326565036bc8e8d1876f77ec183a7bd6"
+                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/8132daec326565036bc8e8d1876f77ec183a7bd6",
-                "reference": "8132daec326565036bc8e8d1876f77ec183a7bd6",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d13c43dbd4b791f815215959105a008515d1a2e0",
+                "reference": "d13c43dbd4b791f815215959105a008515d1a2e0",
                 "shasum": ""
             },
             "require": {
@@ -2505,7 +2542,7 @@
             },
             "require-dev": {
                 "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "^5.7.10"
+                "phpunit/phpunit": "^5.7.26"
             },
             "suggest": {
                 "ext-fileinfo": "Required for MimeType",
@@ -2564,7 +2601,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2020-01-04 16:30:31"
+            "time": "2020-02-05 18:14:17"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -5077,9 +5114,9 @@
             "authors": [
                 {
                     "name": "Freek Van der Herten",
+                    "role": "Developer",
                     "email": "freek@spatie.be",
-                    "homepage": "https://spatie.be",
-                    "role": "Developer"
+                    "homepage": "https://spatie.be"
                 }
             ],
             "description": "Dump databases",
@@ -7289,6 +7326,58 @@
                 "dump"
             ],
             "time": "2020-01-25 12:44:29"
+        },
+        {
+            "name": "tcdent/php-restclient",
+            "version": "0.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tcdent/php-restclient.git",
+                "reference": "4522e8518eaef770d715977fcb45f187f8ad7499"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tcdent/php-restclient/zipball/4522e8518eaef770d715977fcb45f187f8ad7499",
+                "reference": "4522e8518eaef770d715977fcb45f187f8ad7499",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "php": ">=5.5.7",
+                "phpunit/phpunit": ">=4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "restclient.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Travis Dent",
+                    "email": "tcdent@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A generic REST API client for PHP",
+            "homepage": "http://github.com/tcdent/php-restclient",
+            "keywords": [
+                "api",
+                "client",
+                "curl",
+                "json",
+                "rest",
+                "xml"
+            ],
+            "time": "2017-09-07 20:44:36"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
