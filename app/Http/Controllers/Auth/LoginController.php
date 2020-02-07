@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Traits\BrowserTrait;
+use EventCrisp;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 
 class LoginController extends Controller
 {
@@ -42,15 +45,25 @@ class LoginController extends Controller
 
 
 
-
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
 
-   
-
+      //Evento Crisp
+    $CrispClient = new EventCrisp();
+    $people = $CrispClient->findByEmail($user->email);
+    if(empty($people)){
+      $params = array('email' => $user->email,'person'=> array('nickname' =>$user->name." ".$user->lastname));
+      if($user->company_user_id != ''){
+        $params['company'] =array('name'=>$user->companyUser->name);
+      }
+      $people = $CrispClient->createProfile($params);
+      session(['push'=>'true']);
+    }
+    session(['people_key'=>$people['people_id']]);
     $browser = $this->getBrowser();
+    //Fin evento
 
     if($browser["name"]=="Internet Explorer"){
       auth()->logout();
@@ -63,8 +76,12 @@ class LoginController extends Controller
     }else if($user->state!=1){
       auth()->logout();
       return back()->with('warning', 'This user has been disabled.');
+    }else if(env('APP_VIEW') == 'operaciones' && !$user->hasRole('administrator')){
+      auth()->logout();
+      return back()->with('warning', 'This user does not have administrator permission.');
     }else  if($user->company_user_id==''){
       return redirect('/settings');
+        
     }
 
     return redirect()->intended($this->redirectPath());
