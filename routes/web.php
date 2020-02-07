@@ -119,6 +119,17 @@ Route::prefix('globalcharges')->group(function () {
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
+/************************************************************
+*               Global Charges Api Routes                   *
+*************************************************************/ 
+Route::resource('globalchargesapi', 'GlobalChargesApiController')->middleware(['auth', 'role:administrator|data_entry']);
+
+Route::post('globalchargesapi/destroyArr', 'GlobalChargesApiController@destroyArr')->name('globalchargesapi.destroyArr')->middleware(['auth', 'role:administrator|data_entry']);
+
+/************************************************************
+*              End Global Charges Api Routes                   *
+*************************************************************/ 
+
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
   //Route::get('add', 'ContractsController@add')->name('contracts.add');
   Route::get('ShowContractEdit/{id}', 'ContractsController@showContractRequest')->name('show.contract.edit');
