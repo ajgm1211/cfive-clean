@@ -1562,7 +1562,7 @@ class PdfV2Controller extends Controller
         /** Freight Charges **/
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
-
+        
         $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg,'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped]);
 
         // EVENTO INTERCOM 
