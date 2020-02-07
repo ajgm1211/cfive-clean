@@ -14,7 +14,7 @@
 <script src="{{ asset('/assets/demo/default/custom/components/forms/wizard/wizard.min.js')}}" type="text/javascript"></script>
 <script src="{{ asset('js/jqueryui-editable.min.js')}}" type="text/javascript"></script>
 @if(Auth::check())
-
+<!--
 <script type="text/javascript">
   CRISP_RUNTIME_CONFIG = {
     session_merge : false
@@ -33,7 +33,7 @@
 $crisp.push(["set", "user:email", "{{  Auth::user()->email }}"]);
 </script>
 @endif
-
+-->
 
 <script>
   var userId = {{ Auth::user()->id }}
