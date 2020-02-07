@@ -170,6 +170,16 @@
                                     </span>
                                 </a>
                             </li>
+                            @hasrole('administrator')
+                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                                <a  href="{{route('globalchargesapi.index')}}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon la la-globe"></i>
+                                    <span class="m-menu__link-text">
+                                        Sea Freight API
+                                    </span>
+                                </a>
+                            </li>
+                            @endrole
                         </ul>
                     </div>
                 </li>
