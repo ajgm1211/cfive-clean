@@ -63,7 +63,7 @@
                                 ?>
                                 <tr class="text-center color-table">
                                     <td >{{$quote->type=='LCL' ? @$rate->origin_port->name.', '.@$rate->origin_port->code:@$rate->origin_airport->name.', '.@$rate->origin_airport->code}}</td>
-                                    <td >{{$quote->type=='LCL' ? @$rate->origin_port->name.', '.@$rate->origin_port->code:@$rate->origin_airport->name.', '.@$rate->origin_airport->code}}</td>
+                                    <td >{{$quote->type=='LCL' ? @$rate->destination_port->name.', '.@$rate->destination_port->code:@$rate->destination_airport->name.', '.@$rate->destination_airport->code}}</td>
                                     @if($quote->type=='LCL')
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                     @else
@@ -314,7 +314,7 @@
                                     @endforeach
                                     <tr class="text-center color-table">
                                         <td >{{$quote->type=='LCL' ? @$rate->origin_port->name.', '.@$rate->origin_port->code:@$rate->origin_airport->name.', '.@$rate->origin_airport->code}}</td>
-                                        <td >{{$quote->type=='LCL' ? @$rate->origin_port->name.', '.@$rate->origin_port->code:@$rate->origin_airport->name.', '.@$rate->origin_airport->code}}</td>
+                                        <td >{{$quote->type=='LCL' ? @$rate->destination_port->name.', '.@$rate->destination_port->code:@$rate->destination_airport->name.', '.@$rate->destination_airport->code}}</td>
                                         @if($quote->type=='LCL')
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                         @else
