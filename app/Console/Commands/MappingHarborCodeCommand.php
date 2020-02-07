@@ -41,7 +41,7 @@ class MappingHarborCodeCommand extends Command
         try{
 
             // Initialize CURL:
-            $ch = curl_init('https://api.maersk.com/locations/?type=city&pageSize=50&sort=cityName');
+            $ch = curl_init('https://api.maersk.com/locations/?type=city&pageSize=100&sort=cityName');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             // Store the data:
