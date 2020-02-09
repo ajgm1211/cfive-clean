@@ -28,8 +28,4 @@ class GlobalChargePortApi extends Model
     public function typedestiny(){
         return $this->belongsTo('App\TypeDestiny');
     }
-
-    public function globalCarrier(){
-        return $this->hasManyThrough('App\GlobalCharCarrier','App\GlobalCharge','id','globalcharge_id');
-    }
 }
