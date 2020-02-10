@@ -18,6 +18,9 @@
 
 
 <script type="text/javascript">
+  $(document).ready(function() {
+    $(".dropdown-toggle").dropdown();
+  });
   $crisp = [];
   CRISP_TOKEN_ID = '{{ session('people_key') }}';
   CRISP_WEBSITE_ID = '011f006f-3864-44b5-9443-d700e87df5f7';
