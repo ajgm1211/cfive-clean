@@ -385,7 +385,7 @@ $v=0;
                                                     <input name="type" value="1" class="form-control type" type="hidden" />
                                                     <input name="charge_id td-a" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
 
-                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select"  data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
@@ -647,7 +647,7 @@ $v=0;
                                                     <input name="type" value="1" class="form-control type" type="hidden" />
                                                     <input name="charge_id" value="{{$item->id}}" class="form-control charge_id td-a" type="hidden" />
 
-                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select"  data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>

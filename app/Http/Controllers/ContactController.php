@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use App\Contact;
 use App\Company;
-use EventIntercom;
+
 
 class ContactController extends Controller
 {
@@ -99,9 +99,7 @@ class ContactController extends Controller
   public function store(Request $request)
   {
     Contact::create($request->all());
-    // EVENTO INTERCOM 
-    $event = new  EventIntercom();
-    $event->event_contacts();
+  
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'Register completed successfully!');

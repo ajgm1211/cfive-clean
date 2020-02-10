@@ -144,9 +144,12 @@ class NewGlobalchargeRequestControllerFcl extends Controller
                     <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
+				<a href="'.route("RequestsGlobalchargersFcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
+                <!--<a href="/RequestsGlobalchargers/RequestsGlobalchargersFcl/'.$Ncontracts->id.'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>-->
                 &nbsp;&nbsp;';
 				$eliminiar_buton ='
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: '.$Ncontracts->numbercontract.'"  title="Delete" >
@@ -250,7 +253,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		}
 	}
 
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewGlobalchargeRequestFcl::find($id);
 		$time       = new \DateTime();
@@ -259,34 +262,27 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
-
-
+		$success 	= false;
+		$descarga 	= null;
+		
 		if(Storage::disk('s3_upload')->exists('Request/Global-charges/FCL/'.$Ncontract->namefile)){
-			return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile)){
-			return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('GCRequest')->exists($Ncontract->namefile)){
-			return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
-			return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else {
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
-
-		return back();
-
-		/*
-        try{
-            return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
-        } catch(\Exception $e){
-            try{
-                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-            } catch(\Exception $e){
-                try{
-                    return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
-                } catch(\Exception $e){
-                    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-                }
-            }
-        }*/
+		
 
 	}
 
@@ -356,7 +352,11 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'fcl');
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'fcl')->onQueue('operaciones'); 
+					} else {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'fcl'); 
+					}
 
 				}
 
