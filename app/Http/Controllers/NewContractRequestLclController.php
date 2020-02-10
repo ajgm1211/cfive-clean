@@ -113,12 +113,9 @@ class NewContractRequestLclController extends Controller
 			->addColumn('action',  function ($Ncontracts) use($permiso_eliminar) {
 
 				$buttons = '&nbsp;&nbsp;
-                <a href="#'.$Ncontracts->id.'" onclick="downlodRequest('.$Ncontracts->id.')" title="Download File">
+                <a href="'.route("RequestImportationLcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
-                </a>&nbsp;&nbsp;
-				<!--<a href="/RequestsLcl/RequestImportationLcl/'.$Ncontracts->id.'" title="Download File">
-                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
-                </a>&nbsp;&nbsp;-->';
+                </a>&nbsp;&nbsp;';
 				$eliminiar_buton = '                
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' References: '.$Ncontracts->namecontract.'"  title="Delete" >
                     <samp class="la la-trash" style="font-size:20px; color:#031B4E"></samp>
@@ -346,7 +343,7 @@ class NewContractRequestLclController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequestLcl::find($id);
 		$time       = new \DateTime();
@@ -355,26 +352,27 @@ class NewContractRequestLclController extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-LCL.'.$ext;
-		
+
 		$success 	= false;
 		$descarga 	= null;
-		
+
 		if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('Request/LCL/'.$Ncontract->namefile,$name);
+			return	Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+			return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('LclRequest')->url($Ncontract->namefile,$name);
+			return	Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+			return	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else {
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
-		
-		return response()->json(['success' => $success,'url'=>$descarga]);
-		
 
 		/*try{
 			return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
