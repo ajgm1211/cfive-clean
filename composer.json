@@ -18,6 +18,7 @@
         "guzzlehttp/guzzle": "^6.3",
         "hashids/hashids": "^3.0",
         "intercom/intercom-php": "^4.0",
+        "kordy/ticketit": "0.*",
         "lab404/laravel-impersonate": "^1.2",
         "laracasts/flash": "^3.0",
         "laravel/framework": "5.6.*",
