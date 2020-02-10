@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce67ebb5e709dd5a8ae13f2cd2e528a9",
-    "content-hash": "c2936a2f4176b2d6c044af43b94c9da6",
+    "hash": "a183dd45b6e45f4874d2ce680766daf9",
+    "content-hash": "30879a45decee7db51ae992b5e30129b",
     "packages": [
         {
             "name": "alexpechkarev/geometry-library",
@@ -148,16 +148,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.133.7",
+            "version": "3.133.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "cd6fb07aed2cc68088251e3c572d111d67d558a3"
+                "reference": "4a43308b22c46df9948688f4ff05096c3a15ab7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/cd6fb07aed2cc68088251e3c572d111d67d558a3",
-                "reference": "cd6fb07aed2cc68088251e3c572d111d67d558a3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4a43308b22c46df9948688f4ff05096c3a15ab7e",
+                "reference": "4a43308b22c46df9948688f4ff05096c3a15ab7e",
                 "shasum": ""
             },
             "require": {
@@ -228,7 +228,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-02-04 19:11:15"
+            "time": "2020-02-10 19:19:57"
         },
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -1176,6 +1176,53 @@
             "time": "2019-12-30 22:54:17"
         },
         {
+            "name": "ezyang/htmlpurifier",
+            "version": "v4.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezyang/htmlpurifier.git",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/d85d39da4576a6934b72480be6978fb10c860021",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "simpletest/simpletest": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "HTMLPurifier": "library/"
+                },
+                "files": [
+                    "library/HTMLPurifier.composer.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Edward Z. Yang",
+                    "email": "admin@htmlpurifier.org",
+                    "homepage": "http://ezyang.com"
+                }
+            ],
+            "description": "Standards compliant HTML filter written in PHP",
+            "homepage": "http://htmlpurifier.org/",
+            "keywords": [
+                "html"
+            ],
+            "time": "2018-02-23 01:58:20"
+        },
+        {
             "name": "fideloper/proxy",
             "version": "4.2.2",
             "source": {
@@ -1857,6 +1904,71 @@
             "time": "2019-12-13 19:53:11"
         },
         {
+            "name": "jenssegers/date",
+            "version": "v3.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jenssegers/date.git",
+                "reference": "58393b0544fc2525b3fcd02aa4c989857107e05a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jenssegers/date/zipball/58393b0544fc2525b3fcd02aa4c989857107e05a",
+                "reference": "58393b0544fc2525b3fcd02aa4c989857107e05a",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^1.0|^2.0",
+                "php": ">=5.6",
+                "symfony/translation": "^2.7|^3.0|^4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.0|^6.0|^7.0",
+                "satooshi/php-coveralls": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Jenssegers\\Date\\DateServiceProvider"
+                    ],
+                    "aliases": {
+                        "Date": "Jenssegers\\Date\\Date"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jenssegers\\Date\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Segers",
+                    "homepage": "https://jenssegers.com"
+                }
+            ],
+            "description": "A date library to help you work with dates in different languages",
+            "homepage": "https://github.com/jenssegers/date",
+            "keywords": [
+                "carbon",
+                "date",
+                "datetime",
+                "i18n",
+                "laravel",
+                "time",
+                "translation"
+            ],
+            "time": "2019-03-10 08:50:58"
+        },
+        {
             "name": "jeremeamia/superclosure",
             "version": "2.4.0",
             "source": {
@@ -1913,6 +2025,58 @@
                 "tokenizer"
             ],
             "time": "2018-03-21 22:21:57"
+        },
+        {
+            "name": "kordy/ticketit",
+            "version": "v0.4.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thekordy/ticketit.git",
+                "reference": "ccf1f0c122a47b07a285584dce8f23915ddf2b77"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thekordy/ticketit/zipball/ccf1f0c122a47b07a285584dce8f23915ddf2b77",
+                "reference": "ccf1f0c122a47b07a285584dce8f23915ddf2b77",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^2.5|^2.6",
+                "illuminate/support": "^5.1|^6.0",
+                "jenssegers/date": "^3.0",
+                "laravel/framework": "^5.1|^6.0",
+                "laravelcollective/html": "^5.1|^6.0",
+                "mews/purifier": "^2.0|^3.1",
+                "yajra/laravel-datatables-oracle": "^6.0|^8.0|^9.4"
+            },
+            "type": "laravel-package",
+            "autoload": {
+                "psr-4": {
+                    "Kordy\\Ticketit\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ahmed Kordy",
+                    "email": "ahmed@kordy.info"
+                },
+                {
+                    "name": "Balázs Dura-Kovács",
+                    "homepage": "https://gitlab.com/balping"
+                }
+            ],
+            "description": "A simple helpdesk tickets system for Laravel 5.1 – 5.8 and 6.* which integrates smoothly with Laravel default users and auth system",
+            "keywords": [
+                "helpdesk",
+                "laravel",
+                "support",
+                "ticket"
+            ],
+            "time": "2019-09-16 09:26:59"
         },
         {
             "name": "kylekatarnls/update-helper",
@@ -3128,6 +3292,81 @@
                 "vector"
             ],
             "time": "2019-10-06 11:29:25"
+        },
+        {
+            "name": "mews/purifier",
+            "version": "2.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mewebstudio/Purifier.git",
+                "reference": "ab70b25543a1afb3bcd0285d09e063fd268bf344"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mewebstudio/Purifier/zipball/ab70b25543a1afb3bcd0285d09e063fd268bf344",
+                "reference": "ab70b25543a1afb3bcd0285d09e063fd268bf344",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": "4.10.*",
+                "illuminate/config": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*",
+                "illuminate/filesystem": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*",
+                "illuminate/support": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "graham-campbell/testbench": "^3.2",
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "scrutinizer/ocular": "^1.3"
+            },
+            "suggest": {
+                "laravel/framework": "To test the Laravel bindings",
+                "laravel/lumen-framework": "To test the Lumen bindings"
+            },
+            "type": "package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mews\\Purifier\\PurifierServiceProvider"
+                    ],
+                    "aliases": {
+                        "Purifier": "Mews\\Purifier\\Facades\\Purifier"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Mews\\Purifier\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Muharrem ERİN",
+                    "email": "me@mewebstudio.com",
+                    "homepage": "https://github.com/mewebstudio",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel 5 HtmlPurifier Package",
+            "homepage": "https://github.com/mewebstudio/purifier",
+            "keywords": [
+                "Purifier",
+                "htmlpurifier",
+                "laravel5 HtmlPurifier",
+                "laravel5 Purifier",
+                "laravel5 Security",
+                "security",
+                "xss"
+            ],
+            "time": "2019-03-07 07:55:14"
         },
         {
             "name": "monolog/monolog",
@@ -7556,16 +7795,16 @@
         },
         {
             "name": "voku/portable-ascii",
-            "version": "1.4.7",
+            "version": "1.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/portable-ascii.git",
-                "reference": "a691852adbf7518370332fd7921292d8dad34e7e"
+                "reference": "a3801f5facf187a28cc2cae7b98a540c36406dc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/a691852adbf7518370332fd7921292d8dad34e7e",
-                "reference": "a691852adbf7518370332fd7921292d8dad34e7e",
+                "url": "https://api.github.com/repos/voku/portable-ascii/zipball/a3801f5facf187a28cc2cae7b98a540c36406dc4",
+                "reference": "a3801f5facf187a28cc2cae7b98a540c36406dc4",
                 "shasum": ""
             },
             "require": {
@@ -7601,7 +7840,7 @@
                 "clean",
                 "php"
             ],
-            "time": "2020-01-27 08:58:33"
+            "time": "2020-02-06 21:46:48"
         },
         {
             "name": "voku/stop-words",
