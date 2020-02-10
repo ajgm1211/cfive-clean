@@ -79,7 +79,8 @@ return [
     'FclRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/Fcl'),
-      'url' => 'storage/app/public/Request/Fcl',
+      //'url' => 'storage/app/public/Request/Fcl',
+      'url' => '/storage/Request/Fcl',
       'visibility' => 'public',
     ],
 
@@ -100,21 +101,24 @@ return [
     'LclRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/Lcl'),
-      'url' => 'storage/app/public/Request/Lcl',
+      //'url' => 'storage/app/public/Request/Lcl',
+      'url' => '/storage/Request/Lcl',
       'visibility' => 'public',
     ],
 
     'GCRequest' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/GC'),
-      'url' => 'storage/app/public/Request/GC',
+      //'url' => 'storage/app/public/Request/GC',
+      'url' => '/storage/Request/GC',
       'visibility' => 'public',
     ],
 
     'GCRequestLcl' => [
       'driver' => 'local',
       'root' => storage_path('app/public/Request/GC-LCL'),
-      'url' => 'storage/app/public/Request/GC-LCL',
+      //'url' => 'storage/app/public/Request/GC-LCL',
+      'url' => '/storage/Request/GC-LCL',
       'visibility' => 'public',
     ],
 
@@ -195,13 +199,16 @@ return [
       'secret' => env('AWS_SECRET_ACCESS_KEY'),
       'region' => env('AWS_DEFAULT_REGION'),
       'bucket' => env('AWS_UPLOAD'),
-    ],     
-    'contractm' => [
-      'driver' => 'local',
-      'root' => storage_path('app/public/manual'),
-      'url' => '/storage',
-      'visibility' => 'public',
-    ],
+    ],   
+    'contracts3' => [
+      'driver' => 's3',
+      'key' => env('AWS_ACCESS_KEY_ID'),
+      'root' => '/contract_manual/',
+      'secret' => env('AWS_SECRET_ACCESS_KEY'),
+      'region' => env('AWS_DEFAULT_REGION'),
+      'bucket' => env('AWS_UPLOAD'),
+    ],  
+
     'media' => [
       'driver' => 'local',
       'root' => storage_path('app/public/manual'),

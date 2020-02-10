@@ -15,6 +15,7 @@ use App\ContractAddons;
 use App\ContractCarrier;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
+use App\NewContractRequest;
 use App\ContractUserRestriction;
 use App\ContractCompanyRestriction;
 // LCL
@@ -80,6 +81,12 @@ class GeneralJob implements ShouldQueue
             $contract_new->status           = 'publish';
             $contract_new->save();
             $contract_new_id                = $contract_new->id;
+            
+            if($requestArray['requestChange'] == true){   
+                $requestFc              = NewContractRequest::find($requestArray['request_id']);
+                $requestFc->contract_id = $contract_new_id;
+                $requestFc->update();
+            }
 
             foreach($requestArray['carrier_id'] as $carrier_id){
                 $carrier_contract               = new ContractCarrier();
