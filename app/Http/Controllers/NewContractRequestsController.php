@@ -125,7 +125,7 @@ class NewContractRequestsController extends Controller
 
 				$buttons = '
                 &nbsp;&nbsp;
-				<a href="#" onclick="downlodRequest('.$Ncontracts->id.')" title="Download File">
+				<a href="'.route("RequestImportation.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
@@ -139,9 +139,14 @@ class NewContractRequestsController extends Controller
 				}
 
 				if(empty($Ncontracts->contract) != true){
+					$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.")'  title='Duplicate to another company'>
+                      <i style='color:#b90000' class='la la-copy'></i>
+                    </a>";   
 					$butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
                     </a>
+
+                    '.$buttonDp.'
                     &nbsp;&nbsp;
                     <a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
@@ -263,7 +268,7 @@ class NewContractRequestsController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequest::find($id);
 		$time       = new \DateTime();
@@ -274,23 +279,25 @@ class NewContractRequestsController extends Controller
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
 		$success 	= false;
 		$descarga 	= null;
-		
+
 		if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
+			return	Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+			return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
+			return	Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
 			$success 	= true;
-			$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+			return	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else{
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
-		
-		return response()->json(['success' => $success,'url'=>$descarga]);
-		
+
 	}
 
 	public function showStatus($id){
@@ -717,6 +724,15 @@ class NewContractRequestsController extends Controller
 		return response()->json($response);
 	}
 
+	public function  getdataRequest($id){
+		$requestFc = NewContractRequest::find($id);
+		$requestFc->load('Requestcarriers');
+		$carriers = [];
+		foreach($requestFc->requestcarriers as $carrierF){
+			array_push($carriers,$carrierF->carrier_id);
+		}
+		return response()->json(['success' => true , 'data' => $requestFc->toArray(),'carriers' => $carriers]);
+	}
 
 	// TEST Request Importation ----------------------------------------------------------
 	public function test(Request $request){

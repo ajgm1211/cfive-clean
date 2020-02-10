@@ -104,7 +104,7 @@ class NewRequestGlobalChargerLclController extends Controller
                     <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="#" onclick="downlodRequest('.$Ncontracts->id.')" title="Download File">
+                <a href="'.route("RequestsGlobalchargersLcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
 				<!--<a href="'.route('RequestsGlobalchargersLcl.show',$Ncontracts->id).'" title="Download File">
@@ -183,7 +183,7 @@ class NewRequestGlobalChargerLclController extends Controller
 		}
 	}
 
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewRequestGlobalChargerLcl::find($id);
 		$time       = new \DateTime();
@@ -197,18 +197,21 @@ class NewRequestGlobalChargerLclController extends Controller
 		
 		if(Storage::disk('s3_upload')->exists('Request/Global-charges/LCL/'.$Ncontract->namefile)){
 			$success 	= true;
-			$descarga 	= Storage::disk('s3_upload')->url('Request/Global-charges/LCL/'.$Ncontract->namefile,$name);
+			return 	Storage::disk('s3_upload')->download('Request/Global-charges/LCL/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile)){
 			$success 	= true;
-			$descarga 	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+			return 	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('GCRequestLcl')->exists($Ncontract->namefile)){
 			$success 	= true;
-			$descarga 	= Storage::disk('GCRequestLcl')->url($Ncontract->namefile,$name);
+			return 	Storage::disk('GCRequestLcl')->download($Ncontract->namefile,$name);
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
 			$success 	= true;
-			$descarga 	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+			return 	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else {
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
-		return response()->json(['success' => $success,'url'=>$descarga]);
 
 	}
 
