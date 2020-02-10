@@ -50,7 +50,7 @@ class LoginController extends Controller
   {  
 
 
-      //Evento Crisp
+    //Evento Crisp
     $CrispClient = new EventCrisp();
     $people = $CrispClient->findByEmail($user->email);
     if(empty($people)){
@@ -60,6 +60,12 @@ class LoginController extends Controller
       }
       $people = $CrispClient->createProfile($params);
       session(['push'=>'true']);
+    }else{
+      if($people['company']['name'] == ""){
+        $params = array('company' => array('name'=>$user->companyUser->name ));
+        $people = $CrispClient->updateProfile($params,$user->email);
+      }
+
     }
     session(['people_key'=>$people['people_id']]);
     $browser = $this->getBrowser();
@@ -81,7 +87,7 @@ class LoginController extends Controller
       return back()->with('warning', 'This user does not have administrator permission.');
     }else  if($user->company_user_id==''){
       return redirect('/settings');
-        
+
     }
 
     return redirect()->intended($this->redirectPath());
