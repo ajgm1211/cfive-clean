@@ -64,24 +64,8 @@
                                             }
                                         ?>
                                         <tr class="text-left color-table">
-                                            <td >
-                                                @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                                    {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                                @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                                    {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
-                                                @else 
-                                                    {{$rate->origin_address}} 
-                                                @endif
-                                            </td>
-                                            <td >
-                                                @if($rate->destination_address=='' && $rate->destination_port_id!='') 
-                                                    {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                                @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
-                                                    {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                                @else 
-                                                    {{$rate->destination_address}} 
-                                                @endif
-                                            </td>                           
+                                            <td >@if($rate->origin_address=='' && $rate->origin_port_id!='') {{$rate->origin_port->name}}, {{$rate->origin_port->code}} @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}} @else  {{$rate->origin_address}} @endif</td>
+                                            <td >@if($rate->destination_address=='' && $rate->destination_port_id!='') {{$rate->destination_port->name}}, {{$rate->destination_port->code}} @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}@else {{$rate->destination_address}} @endif</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                             <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_freight_20, 2, '.', '')}}</td>
                                             <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_freight_40, 2, '.', '')}}</td>
@@ -358,24 +342,8 @@
                                             @endforeach
                                         @endforeach
                                         <tr class="text-left color-table">
-                                            <td >
-                                                @if($rate->origin_address=='' && $rate->origin_port_id!='') 
-                                                    {{$rate->origin_port->name}}, {{$rate->origin_port->code}} 
-                                                @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') 
-                                                    {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}
-                                                @else 
-                                                    {{$rate->origin_address}} 
-                                                @endif
-                                            </td>
-                                            <td >
-                                                @if($rate->destination_address=='' && $rate->destination_port_id!='') 
-                                                    {{$rate->destination_port->name}}, {{$rate->destination_port->code}} 
-                                                @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') 
-                                                    {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}
-                                                @else 
-                                                    {{$rate->destination_address}} 
-                                                @endif
-                                            </td>                           
+                                            <td >@if($rate->origin_address=='' && $rate->origin_port_id!=''){{$rate->origin_port->name}}, {{$rate->origin_port->code}} @elseif($rate->origin_address=='' && $rate->origin_airport_id!='') {{$rate->origin_airport->name}}, {{$rate->origin_airport->code}}@else {{$rate->origin_address}} @endif</td>
+                                            <td >@if($rate->destination_address=='' && $rate->destination_port_id!='') {{$rate->destination_port->name}}, {{$rate->destination_port->code}} @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}}@else {{$rate->destination_address}} @endif</td>                           
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                             <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_freight_20, 2, '.', '')}}</td>
                                             <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_freight_40, 2, '.', '')}}</td>
