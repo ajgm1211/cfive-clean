@@ -291,23 +291,6 @@
         }
     }
 
-    function downlodRequest(id){
-        url='{!! route("RequestImportation.show",":id") !!}';
-        url = url.replace(':id', id);
-        $.ajax({
-            url:url,
-            method:'get',
-            success: function(response){
-                if(response.success == true){
-                    window.location = response.url;
-                }else {
-                    toastr.error('File not found');
-                }
-                ///console.log(response);
-            }
-        });
-    }
-
 
     $(function() {
         $('#myatest').DataTable({
