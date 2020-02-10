@@ -190,23 +190,6 @@
 	<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 	<script type="application/x-javascript" src="/js/toarts-config.js"></script>
 	<script>
-
-		function downlodRequest(id){
-			url='{!! route("RequestsGlobalchargersFcl.show",":id") !!}';
-			url = url.replace(':id', id);
-			$.ajax({
-				url:url,
-				method:'get',
-				success: function(response){
-					if(response.success == true){
-						window.location = response.url;
-					}else {
-						toastr.error('File not found');
-					}
-					///console.log(response);
-				}
-			});
-		}
 		
 		$(function() {
 			$('#myatest').DataTable({

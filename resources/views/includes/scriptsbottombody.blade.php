@@ -28,12 +28,12 @@
   (function(){d=document;s=d.createElement('script');s.src='//client.crisp.chat/l.js';s.async=1;d.getElementsByTagName('head')[0].appendChild(s);})();
 </script>
 
-@if(session()->has('push'))
+
 <script>
 $crisp.push(["set", "user:email", "{{  Auth::user()->email }}"]);
 </script>
-@endif
 -->
+
 
 <script>
   var userId = {{ Auth::user()->id }}
