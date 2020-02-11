@@ -27,9 +27,9 @@
   (function(){d=document;s=d.createElement('script');s.src='//client.crisp.chat/l.js';s.async=1;d.getElementsByTagName('head')[0].appendChild(s);})();
 </script>
 
-<script>
-  $crisp.push(["set", "user:email", "{{  Auth::user()->email }}"]);
-</script>
+
+<script src="{{ asset('/js/crisp.js?v=1313')}}" email="{{ Auth::user()->email }}" type="text/javascript"></script>
+
 
 <script>
   var userId = {{ Auth::user()->id }}
