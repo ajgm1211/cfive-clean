@@ -7,19 +7,10 @@ use EventCrisp;
 
 class CrispController extends Controller
 {
-
   public function index()
   {
-
-
     $CrispClient = new EventCrisp();
-    $people = $CrispClient->findByEmail('jonathan.atp@gmail.com');
-    dd($people);
-
-
-    
-
+    $people = $CrispClient->checkIfExist('jonathan.atap@gmail.com');
+   
   }
-
-
 }
