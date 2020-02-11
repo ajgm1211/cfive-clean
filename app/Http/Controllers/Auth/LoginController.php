@@ -63,7 +63,7 @@ class LoginController extends Controller
 
     }else{//validamos que tenga compañia si no lo actualizamos
       $people = $CrispClient->findByEmail($user->email);
-      if($people['company']['name'] == ""){
+      if(isset($people['company']['name'])){
         $params = array('company' => array('name'=>$user->companyUser->name ));
         $people = $CrispClient->updateProfile($params,$user->email);
       }
