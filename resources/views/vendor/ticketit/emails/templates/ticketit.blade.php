@@ -230,7 +230,7 @@ font-family: sans-serif !important;
           </td>
         </tr>
         <tr>
-          <td style="color:#001728; background-color: #ffffff;  display:flex; flex-direction: column; justify-content: center; align-items: center; text-align: center">
+          <td style="color:#001728; background-color: #ffffff;  display:flex; flex-direction: column; justify-content: center;  text-align: center">
             {{ $setting->grab('email.signoff') }}<br>
             {{ $setting->grab('email.signature') }}
             <br><br>
@@ -259,7 +259,7 @@ font-family: sans-serif !important;
         </tr>
 
         <tr>
-          <td style="display: flex;justify-content:center;align-items:center">
+          <td style="display: flex;justify-content:center;text-align: center;">
             <a style="color: #ffffff; text-decoration:none; font-size: 12px; margin-top: 50px;" href="{{ $setting->grab('email.footer_link') }}">
               {{ $setting->grab('email.footer') }}
             </a>
