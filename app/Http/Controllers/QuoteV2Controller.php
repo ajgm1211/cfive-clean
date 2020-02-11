@@ -125,7 +125,16 @@ class QuoteV2Controller extends Controller
         }
 
         if($request->ajax()){
+            $quotes->load('user','company','contact','incoterm');
             $collection = Collection::make($quotes);
+            $collection->transform(function ($quote, $key) {
+                unset($quote['origin_port_id']);
+                unset($quote['destination_port_id']);
+                unset($quote['origin_address']);
+                unset($quote['destination_address']);
+                unset($quote['currency_id']);
+                return $quote;
+            });
             return $collection;
         }
 
@@ -647,6 +656,7 @@ class QuoteV2Controller extends Controller
             ]);
 
             if($request->ajax()){
+                $quote->load('user','company','contact','incoterm');
                 $collection = Collection::make($quote);
                 return $collection;
             }
@@ -5241,25 +5251,25 @@ class QuoteV2Controller extends Controller
 
             }
 
-			$success 	= false;
-			$descarga 	= null;
+            $success 	= false;
+            $descarga 	= null;
 
-			if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
-			} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
-			} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
-			} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
-			}
+            if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
+            } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+            } elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
+            } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+            }
 
-			return response()->json(['success' => $success,'url'=>$descarga]);
-			
+            return response()->json(['success' => $success,'url'=>$descarga]);
+
             /*try{
                 return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
             } catch(\Exception $e){
@@ -5317,30 +5327,30 @@ class QuoteV2Controller extends Controller
 
         }
 
-		$success 	= false;
-		$descarga 	= null;
-		
-		if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
-			$success 	= true;
-			//return 1;
-			$descarga	= Storage::disk('s3_upload')->url('Request/LCL/'.$Ncontract->namefile,$name);
-		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
-			//return 2;
-			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
-		} elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
-			//return 3;
-			$success 	= true;
-			$descarga	= Storage::disk('LclRequest')->url($Ncontract->namefile,$name);
-		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
-			//return 4;
-			$success 	= true;
-			$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
-		}
-		
-		return response()->json(['success' => $success,'url'=>$descarga]);
-		
-		
+        $success 	= false;
+        $descarga 	= null;
+
+        if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
+            $success 	= true;
+            //return 1;
+            $descarga	= Storage::disk('s3_upload')->url('Request/LCL/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+            //return 2;
+            $success 	= true;
+            $descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
+            //return 3;
+            $success 	= true;
+            $descarga	= Storage::disk('LclRequest')->url($Ncontract->namefile,$name);
+        } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+            //return 4;
+            $success 	= true;
+            $descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+        }
+
+        return response()->json(['success' => $success,'url'=>$descarga]);
+
+
         /*try{
             return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
