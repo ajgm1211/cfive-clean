@@ -16,8 +16,8 @@ class CreateSettingsTable extends Migration
             $table->increments('id');
             $table->string('lang')->unique()->nullable();
             $table->string('slug')->unique()->index();
-            $table->text('value');
-            $table->text('default');
+            $table->string('value');
+            $table->string('default');
             $table->timestamps();
         });
     }
