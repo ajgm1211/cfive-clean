@@ -1,208 +1,274 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style type="text/css">
-      @import url(http://fonts.googleapis.com/css?family=Droid+Sans);
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+  <head>
+    <meta charset="utf-8"> <!-- utf-8 works for most cases -->
+    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
+    <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+    <!-- The title tag shows in email notifications, like Android 4.4. -->
 
-      img {
-        max-width: 600px;
-        outline: none;
-        text-decoration: none;
-        -ms-interpolation-mode: bicubic;
-    }
+    <!-- Web Font / @font-face : BEGIN -->
+    <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
 
-    a {
-        text-decoration: none;
-        border: 0;
-        outline: none;
-        color: #bbbbbb;
-    }
+    <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
+    <!--[if mso]>
+<style>
+* {
+font-family: sans-serif !important;
+}
+</style>
+<![endif]-->
 
-    a img {
-        border: none;
-    }
+    <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
+    <!--[if !mso]><!-->
+    <!-- insert web font reference, eg: <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'> -->
+    <!--<![endif]-->
 
-    td, h1, h2, h3  {
-        font-family: Helvetica, Arial, sans-serif;
-        font-weight: 400;
-    }
+    <!-- Web Font / @font-face : END -->
 
-    td {
-        text-align: center;
-    }
+    <!-- CSS Reset : BEGIN -->
+    <style>
 
-    body {
-        -webkit-font-smoothing:antialiased;
-        -webkit-text-size-adjust:none;
-        width: 100%;
-        height: 100%;
-        color: {{ $setting->grab('email.color_body_bg') }};
-        background: #ffffff;
-        font-size: 16px;
-    }
+      /* What it does: Remove spaces around the email design added by some email clients. */
+      /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+      html,
+      body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+      }
 
-    table {
+      /* What it does: Stops email clients resizing small text. */
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      /* What it does: Centers email on Android 4.4 */
+      div[style*="margin: 16px 0"] {
+        margin: 0 !important;
+      }
+
+      /* What it does: Stops Outlook from adding extra spacing to tables. */
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+
+      /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the first 2 tables then removes for anything nested deeper. */
+      table {
+        border-spacing: 0 !important;
         border-collapse: collapse !important;
-    }
+        table-layout: fixed !important;
+        margin: 0 auto !important;
+      }
+      table table table {
+        table-layout: auto;
+      }
 
-    .subject {
-        color: #ffffff;
-        font-size: 36px;
-    }
+      /* What it does: Uses a better rendering method when resizing images in IE. */
+      img {
+        -ms-interpolation-mode:bicubic;
+      }
 
-    .force-full-width {
-      width: 100% !important;
-  }
+      /* What it does: A work-around for email clients meddling in triggered links. */
+      *[x-apple-data-detectors],  /* iOS */
+      .x-gmail-data-detectors,    /* Gmail */
+      .x-gmail-data-detectors *,
+      .aBn {
+        border-bottom: 0 !important;
+        cursor: default !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+      }
 
-</style>
+      /* What it does: Prevents Gmail from displaying a download button on large, non-linked images. */
+      .a6S {
+        display: none !important;
+        opacity: 0.01 !important;
+      }
+      /* If the above doesn't work, add a .g-img class to any image in question. */
+      img.g-img + div {
+        display: none !important;
+      }
 
-<style type="text/css" media="screen">
-  @media screen {
-    td, h1, h2, h3 {
-      font-family: 'Droid Sans', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
-  }
-}
-</style>
+      /* What it does: Prevents underlining the button text in Windows 10 */
+      .button-link {
+        text-decoration: none !important;
+      }
 
-<style type="text/css" media="only screen and (max-width: 480px)">
-    @media only screen and (max-width: 480px) {
+      /* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+      /* Create one of these media queries for each additional viewport size you'd like to fix */
 
-      table[class="w320"] {
-        width: 320px !important;
-    }
-}
-</style>
-</head>
-<body class="body" style="padding:0; margin:0; display:block; background:#fff; -webkit-text-size-adjust:none" bgcolor="#fff">
-    <br>
-    <table align="center" cellpadding="0" cellspacing="0" width="100%" height="100%" >
-      <tr>
-        <td align="center" valign="top" bgcolor="#fff"  width="100%">
-          <center>
-            <table style="margin: 0 auto;" cellpadding="0" cellspacing="0" width="600" class="w320">
-              <tr>
-                <td align="center" valign="top">
+      /* iPhone 4, 4S, 5, 5S, 5C, and 5SE */
+      @media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+        .email-container {
+          min-width: 320px !important;
+        }
+      }
+      /* iPhone 6, 6S, 7, 8, and X */
+      @media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+        .email-container {
+          min-width: 375px !important;
+        }
+      }
+      /* iPhone 6+, 7+, and 8+ */
+      @media only screen and (min-device-width: 414px) {
+        .email-container {
+          min-width: 414px !important;
+        }
+      }
 
-              <table style="margin: 0 auto;" cellpadding="0" cellspacing="0" width="100%" bgcolor="{{ $setting->grab('email.color_header_bg') }}">
-                <tr>
-                    <td class="subject">
-                    <br>
-                        @yield('subject')
-                  </td>
-              </tr>
-              <tr>
-                <td>
+    </style>
+    <!-- CSS Reset : END -->
 
-                  <center>
-                    <table cellpadding="0" cellspacing="0" width="80%">
-                      <tr>
-                        <td style="margin: 20px; text-align: left color:#187272;" align="left">
-                            <br>
-                            @yield('content')
-                            <br>
-                            <br>
-                        </td>
-                    </tr>
-                </table>
-            </center>
+    <!-- Progressive Enhancements : BEGIN -->
+    <style>
 
-        </td>
-    </tr>
-</table>
+      /* What it does: Hover styles for buttons */
+      .button-td,
+      .button-a {
+        transition: all 100ms ease-in;
+      }
+      .button-td:hover,
+      .button-a:hover {
+        background: #ffffff !important;
+        border-color: #ffffff !important;
+      }
 
-<table style="margin: 0 auto;" cellpadding="0" cellspacing="0" width="100%" bgcolor="{{ $setting->grab('email.color_content_bg') }}">
-<tr>
-    <td>
+      /* Media Queries */
+      @media screen and (max-width: 600px) {
 
-      <center>
-        <table style="margin: 0 auto;" cellpadding="0" cellspacing="0" width="60%">
-          <tr>
-            <td style="color:#933f24;">
-            <br>
-                @yield('link')
+        .email-container {
+          width: 100% !important;
+          margin: auto !important;
+        }
+
+        /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images beyond their max-width. */
+        .fluid {
+          max-width: 100% !important;
+          height: auto !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+
+        /* What it does: Forces table cells into full-width rows. */
+        .stack-column,
+        .stack-column-center {
+          display: block !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          direction: ltr !important;
+        }
+        /* And center justify these ones. */
+        .stack-column-center {
+          text-align: center !important;
+        }
+
+        /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+        .center-on-narrow {
+          text-align: center !important;
+          display: block !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          float: none !important;
+        }
+        table.center-on-narrow {
+          display: inline-block !important;
+        }
+
+        /* What it does: Adjust typography on small screens to improve readability */
+        .email-container p {
+          font-size: 17px !important;
+        }
+
+      }
+      
+
+    </style>
+
+
+  </head>
+
+  <body width="100%" bgcolor="#222222" style="margin: 0; mso-line-height-rule: exactly; background-color: #001728;">
+    <center style="width: 100%; text-align: left; margin-bottom: 100px !important;">
+
+      <!-- Preview Text Spacing Hack : BEGIN -->
+      <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+        &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+      </div>
+      <!-- Preview Text Spacing Hack : END -->
+
+      <!-- Email Header : BEGIN -->
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
+        <tr>
+          <td style="padding: 20px 0; text-align: center;">
+            <img src="{{ url('/logo.png')}}" alt="alt_text" border="0" style="height: auto; background: #001728; font-family: sans-serif; font-size: 15px; line-height: 140%; max-width: 200px; margin-top: 50px">
+          </td>
+        </tr>
+      </table>
+      <!-- Email Header : END -->
+
+      <!-- Email Body : BEGIN -->
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
+
+        <!-- 1 Column Text + Button : BEGIN -->
+        <tr>
+          <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center; font-size: 35px; font-weight: 600">
+            @yield('subject')
+             </td>
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: center;">
+            @yield('content')
+          </td>
+        </tr>
+        <tr>
+          <td style="color:#001728; background-color: #ffffff;  display:flex; flex-direction: column; justify-content: center; align-items: center; text-align: center">
+            {{ $setting->grab('email.signoff') }}<br>
+            {{ $setting->grab('email.signature') }}
             <br><br>
           </td>
-      </tr>
-      <tr>
-          <td style="color:#933f24;">
-              {{ $setting->grab('email.signoff') }}<br>
-              {{ $setting->grab('email.signature') }}
-              <br><br>
-          </td>
-      </tr>
-  </table>
-</center>
-
-</td>
-</tr>
-<tr>
-    <td>
-                      <div><!--[if mso]>
-                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="8%" stroke="f" fillcolor="{{ $setting->grab('email.color_button_bg') }}">
-                          <w:anchorlock/>
-                          <center>
-                            <![endif]-->
-                            <a href="{{ url($setting->grab('admin_route')) }}"
-                            style="background-color:{{ $setting->grab('email.color_button_bg') }};border-radius:4px;color:#ffffff;display:inline-block;font-family: Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:50px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;">{{ $setting->grab('email.dashboard') }}</a>
-                        <!--[if mso]>
-                          </center>
-                        </v:roundrect>
-                        <![endif]--></div>
-                        <br>
-                        <br>
-                    </td>
-                </tr>
-            </table>
-
-            <table style="margin: 0 auto;" cellpadding="0" cellspacing="0" class="force-full-width" bgcolor="{{ $setting->grab('email.color_footer_bg') }}" style="margin: 0 auto">
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #ffffff;">
+            <!-- Button : BEGIN -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
               <tr>
-                <td style="background-color:{{ $setting->grab('email.color_footer_bg') }};">
-                    <br>
-                    <br>
-                      @if( (bool) $setting->grab('email.google_plus_link') )
-                        <a href="{{ $setting->grab('email.google_plus_link') }}"><img src="https://www.filepicker.io/api/file/R4VBTe2UQeGdAlM7KDc4" alt="google+"></a>
-                      @endif
-                      @if( (bool) $setting->grab('email.facebook_link') )
-                        <a href="{{ $setting->grab('email.facebook_link') }}"><img src="https://www.filepicker.io/api/file/cvmSPOdlRaWQZnKFnBGt" alt="facebook"></a>
-                      @endif
-                      @if( (bool) $setting->grab('email.twitter_link') )
-                        <a href="{{ $setting->grab('email.twitter_link') }}"><img src="https://www.filepicker.io/api/file/Gvu32apSQDqLMb40pvYe" alt="twitter"></a>
-                      @endif
-                    <br>
-                    <br>
+                <td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
+                  @yield('link')
                 </td>
-            </tr>
-            <!-- Not implemented
-            <tr>
-                <td style="color:#bbbbbb; font-size:12px;">
-                  <a href="#">View in browser</a> | <a href="#">Unsubscribe</a> | <a href="#">Contact</a>
-                  <br><br>
-              </td>
-          </tr>
-          -->
-          <tr>
-            <td style="color:#933f24; font-size:12px;">
-             <a href="{{ $setting->grab('email.footer_link') }}">
-                {{ $setting->grab('email.footer') }}
-             </a>
-             <br>
-             <br>
-         </td>
-     </tr>
- </table>
+              </tr>
+            </table>    
+            <!-- Button : END -->
+          </td>
+        </tr>
+        <!-- 1 Column Text + Button : END -->
+        <tr>
+          <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 10px; line-height: 140%; color: #001728; text-align: center;">
+            <p>This message was sent to <b>info@cargofive.com</b>. If you do not want to receive more emails, please tell us.</p>
+            <h4 style="text-align: center;"> CARGOFIVE. Lisbon, Portugal.</h4>
+            <h4 style="text-align: center;">info@cargofive.com </h4>
+          </td>
+        </tr>
 
-
-
-
-
-</td>
-</tr>
-</table>
-</center>
-</td>
-</tr>
-</table>
-</body>
+        <tr>
+          <td style="display: flex;justify-content:center;align-items:center">
+            <a style="color: #ffffff; text-decoration:none; font-size: 12px; margin-top: 50px;" href="{{ $setting->grab('email.footer_link') }}">
+              {{ $setting->grab('email.footer') }}
+            </a>
+            <br>
+            <br>
+          </td>
+        </tr>
+      </table>
+      <!-- Email Body : END -->
+    </center>
+  </body>
 </html>
