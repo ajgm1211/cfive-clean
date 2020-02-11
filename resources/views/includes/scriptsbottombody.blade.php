@@ -28,7 +28,7 @@
 </script>
 
 <script>
-  $crisp.push(["set", "user:email", "{{  Auth::user()->email }}"]);
+  $crisp.push(["set", "user:email", ""]);
 </script>
 
 <script>
