@@ -151,9 +151,9 @@ trait QuoteV2Trait {
 
                 if(isset($array_markups['m20'])){
                     $markup_inland20=$array_markups['m20'];
-                    $total_markup20=$markup_inland20/$currency_rate;
+                    $total_inland_markup20=$markup_inland20/$currency_rate;
                 }
-
+                
                 if(isset($array_amounts['c40'])){
                     $amount_inland40=$array_amounts['c40'];
                     $total_inland40=$amount_inland40/$currency_rate;          
@@ -167,18 +167,18 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c40hc'])){
                     $amount_inland40hc=$array_amounts['c40hc'];
-                    $total_inland40hc=$amount40hc/$currency_rate;          
-                    $sum_inland_40hc = number_format($total_inland40hc, 2, '.', '');
+                    $total_inland40hc=$amount_inland40hc/$currency_rate;          
+                    $sum_inland40hc = number_format($total_inland40hc, 2, '.', '');
                 }
-
+                
                 if(isset($array_markups['m40hc'])){
                     $markup_inland40hc=$array_markups['m40hc'];
                     $total_inland_markup40hc=$markup_inland40hc/$currency_rate;
                 }
-
+                
                 if(isset($array_amounts['c40nor'])){
                     $amount_inland40nor=$array_amounts['c40nor'];
-                    $total_inland40nor=$amount40nor/$currency_rate;
+                    $total_inland40nor=$amount_inland40nor/$currency_rate;
                     $sum_inland40nor = number_format($total_inland40nor, 2, '.', '');
                 }
 
@@ -189,7 +189,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c45'])){
                     $amount_inland45=$array_amounts['c45'];
-                    $total_inland45=$amount45/$currency_rate;
+                    $total_inland45=$amount_inland45/$currency_rate;
                     $sum_inland45 = number_format($total_inland45, 2, '.', '');
                 }
 
@@ -197,13 +197,13 @@ trait QuoteV2Trait {
                     $markup_inland45=$array_markups['m45'];
                     $total_inland_markup45=$markup_inland45/$currency_rate;
                 }
-
+                
                 $inland->total_20=number_format($sum_inland20, 2, '.', '');
                 $inland->total_40=number_format($sum_inland40, 2, '.', '');
                 $inland->total_40hc=number_format($sum_inland40hc, 2, '.', '');
                 $inland->total_40nor=number_format($sum_inland40nor, 2, '.', '');
                 $inland->total_45=number_format($sum_inland45, 2, '.', '');
-
+                
                 $inland->total_m20=number_format($total_inland_markup20, 2, '.', '');
                 $inland->total_m40=number_format($total_inland_markup40, 2, '.', '');
                 $inland->total_m40hc=number_format($total_inland_markup40hc, 2, '.', '');

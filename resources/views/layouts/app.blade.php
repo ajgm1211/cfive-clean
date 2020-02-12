@@ -25,5 +25,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <i class="la la-arrow-up"></i>
 </div>
 @include('includes.scriptsbottombody')
+@yield('footer')
 </body>
 </html>

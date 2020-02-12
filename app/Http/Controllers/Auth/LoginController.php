@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Traits\BrowserTrait;
+use EventCrisp;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 
 class LoginController extends Controller
 {
@@ -40,17 +43,46 @@ class LoginController extends Controller
     $this->middleware('guest')->except('logout');
   }
 
+  public function userCrisp($user){
 
+    //Evento Crisp
+    $CrispClient = new EventCrisp();
+    $exist =  $CrispClient->checkIfExist($user->email);
+    if($exist != 'true'){//Creamos el perfil
+      $params = array('email' => $user->email,'person'=> array('nickname' =>$user->name." ".$user->lastname));
+      if($user->company_user_id != ''){
+        $params['company'] =array('name'=>$user->companyUser->name);
+      }
+      $people = $CrispClient->createProfile($params);
+      if(isset($people['people_id']))
+        session(['people_key'=>$people['people_id']]);
+      else{
+        session(['people_key'=> '']);
+        \Log::channel('stack')->error(' No se genero el people_key de crisp y el usuario no existe ');
+      }
 
-
+    }else{//validamos que tenga compañia si no lo actualizamos
+      $people = $CrispClient->findByEmail($user->email);
+      if(isset($people['company']['name'])){
+        $params = array('company' => array('name'=>$user->companyUser->name ));
+        $people = $CrispClient->updateProfile($params,$user->email);
+      }
+      if(isset($people['people_id']))
+        session(['people_key'=> $people['people_id']]);
+      else{
+        session(['people_key'=> '']);
+        \Log::channel('stack')->error(' No se genero el people_key de crisp , y el usuario existe ');
+      }
+    }
+  }
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
 
-   
-
+    $this->userCrisp($user);
     $browser = $this->getBrowser();
+    //Fin evento
 
     if($browser["name"]=="Internet Explorer"){
       auth()->logout();
@@ -63,8 +95,12 @@ class LoginController extends Controller
     }else if($user->state!=1){
       auth()->logout();
       return back()->with('warning', 'This user has been disabled.');
+    }else if(env('APP_VIEW') == 'operaciones' && !$user->hasRole('administrator')){
+      auth()->logout();
+      return back()->with('warning', 'This user does not have administrator permission.');
     }else  if($user->company_user_id==''){
       return redirect('/settings');
+
     }
 
     return redirect()->intended($this->redirectPath());

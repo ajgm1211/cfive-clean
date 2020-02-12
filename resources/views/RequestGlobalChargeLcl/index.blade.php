@@ -190,7 +190,7 @@
 <!--    <script type="application/x-javascript" src="/js/Globalchargers/Request.GlobalCLCL.Status.js"></script>-->
 	<script type="application/x-javascript" src="/js/toarts-config.js"></script>
     <script>
-
+		
         $(function() {
             $('#myatest').DataTable({
                 processing: true,

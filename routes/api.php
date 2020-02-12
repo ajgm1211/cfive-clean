@@ -36,7 +36,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::group(['middleware' => 'auth:api'], function() {
         Route::get('logout', 'ApiController@logout');
         Route::get('user', 'ApiController@user');
-        Route::get('quotes', 'QuoteController@index');
+        Route::get('quotes', 'QuoteV2Controller@index');
+        Route::get('quotes/{id}', 'QuoteV2Controller@show');
         Route::get('fcl/rates', 'ApiController@rates');
         Route::get('fcl/charges', 'ApiController@charges');
         Route::get('fcl/global/charges', 'ApiController@globalCharges');

@@ -125,7 +125,7 @@ class NewContractRequestsController extends Controller
 
 				$buttons = '
                 &nbsp;&nbsp;
-                <a href="/Requests/RequestImportation/'.$Ncontracts->id.'" title="Download File">
+				<a href="'.route("RequestImportation.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
@@ -139,9 +139,14 @@ class NewContractRequestsController extends Controller
 				}
 
 				if(empty($Ncontracts->contract) != true){
+					$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.")'  title='Duplicate to another company'>
+                      <i style='color:#b90000' class='la la-copy'></i>
+                    </a>";   
 					$butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
                     <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
                     </a>
+
+                    '.$buttonDp.'
                     &nbsp;&nbsp;
                     <a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
@@ -238,7 +243,11 @@ class NewContractRequestsController extends Controller
 				]);
 			}
 
-			ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
+			if(env('APP_VIEW') == 'operaciones') {
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request')->onQueue('operaciones');
+			} else{
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'fcl','request');
+			}
 			$user = User::find($request->user);
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
 			$user->notify(new SlackNotification($message));
@@ -263,7 +272,7 @@ class NewContractRequestsController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequest::find($id);
 		$time       = new \DateTime();
@@ -272,19 +281,27 @@ class NewContractRequestsController extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
-		try{
-			return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
-		} catch(\Exception $e){
-			try{
-				return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-			} catch(\Exception $e){
-				try{
-					return Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
-				} catch(\Exception $e){
-					return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-				}
-			}
+		$success 	= false;
+		$descarga 	= null;
+
+		if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('FclRequest')->download($Ncontract->namefile,$name);
+		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else{
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
+
 	}
 
 	public function showStatus($id){
@@ -484,7 +501,11 @@ class NewContractRequestsController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id)->onQueue('operaciones');
+					} else {
+						SendEmailRequestFclJob::dispatch($usercreador->toArray(),$id);				
+					}
 				}
 			}
 			$Ncontract->save();
@@ -699,7 +720,7 @@ class NewContractRequestsController extends Controller
 			);
 		} else{
 			$auth = \Auth::user()->toArray();
-			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl');
+			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'fcl')->onQueue('operaciones');
 			$response =  array(
 				'actt' => 2
 			);
@@ -707,6 +728,15 @@ class NewContractRequestsController extends Controller
 		return response()->json($response);
 	}
 
+	public function  getdataRequest($id){
+		$requestFc = NewContractRequest::find($id);
+		$requestFc->load('Requestcarriers');
+		$carriers = [];
+		foreach($requestFc->requestcarriers as $carrierF){
+			array_push($carriers,$carrierF->carrier_id);
+		}
+		return response()->json(['success' => true , 'data' => $requestFc->toArray(),'carriers' => $carriers]);
+	}
 
 	// TEST Request Importation ----------------------------------------------------------
 	public function test(Request $request){
