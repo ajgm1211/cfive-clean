@@ -217,7 +217,11 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			$Ncontract->data            = $data;
 			$Ncontract->save();
 
-			ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gcfcl','request');
+			if(env('APP_VIEW') == 'operaciones') {
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gcfcl','request')->onQueue('operaciones');
+			} else{
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gcfcl','request');
+			}
 
 			$user = User::find($request->user);
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -264,7 +268,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
 		$success 	= false;
 		$descarga 	= null;
-		
+
 		if(Storage::disk('s3_upload')->exists('Request/Global-charges/FCL/'.$Ncontract->namefile)){
 			$success 	= true;
 			return 	Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
@@ -282,7 +286,7 @@ class NewGlobalchargeRequestControllerFcl extends Controller
 			$request->session()->flash('message.content', 'Error. File not found');
 			return back();
 		}
-		
+
 
 	}
 

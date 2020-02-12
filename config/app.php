@@ -182,13 +182,13 @@ return [
     Barryvdh\Debugbar\ServiceProvider::class,
     App\Providers\CarrierServiceProvider::class,
     App\Providers\UserConfigurationProvider::class,
-
     App\Providers\RouteServiceProvider::class,
     App\Providers\RequetsProvider::class,
     App\Providers\ValidationsProvider::class,
     Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
     Kordy\Ticketit\TicketitServiceProvider::class,
     App\Providers\CrispServiceProvider::class,
+    
 
 
 
