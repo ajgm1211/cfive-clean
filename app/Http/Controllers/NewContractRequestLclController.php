@@ -113,7 +113,7 @@ class NewContractRequestLclController extends Controller
 			->addColumn('action',  function ($Ncontracts) use($permiso_eliminar) {
 
 				$buttons = '&nbsp;&nbsp;
-                <a href="/RequestsLcl/RequestImportationLcl/'.$Ncontracts->id.'" title="Download File">
+                <a href="'.route("RequestImportationLcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>&nbsp;&nbsp;';
 				$eliminiar_buton = '                
@@ -289,7 +289,11 @@ class NewContractRequestLclController extends Controller
 				]);
 			}
 
-			ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
+			if(env('APP_VIEW') == 'operaciones') {
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request')->onQueue('operaciones');
+			} else{
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
+			}
 
 			$user = User::find($request->user);
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -308,7 +312,7 @@ class NewContractRequestLclController extends Controller
 				$userNotifique->notify(new N_general($user,$message));
 			}
 
-		
+
 
 			$request->session()->flash('message.nivel', 'success');
 			$request->session()->flash('message.content', 'Your request was created');
@@ -343,7 +347,7 @@ class NewContractRequestLclController extends Controller
 	}
 
 	//Para descargar el archivo
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewContractRequestLcl::find($id);
 		$time       = new \DateTime();
@@ -353,7 +357,28 @@ class NewContractRequestLclController extends Controller
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-LCL.'.$ext;
 
-		try{
+		$success 	= false;
+		$descarga 	= null;
+
+		if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+		} elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
+		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+			$success 	= true;
+			return	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else {
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
+		}
+
+		/*try{
 			return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
 		} catch(\Exception $e){
 			try{
@@ -362,10 +387,16 @@ class NewContractRequestLclController extends Controller
 				try{
 					return Storage::disk('LclRequest')->download($Ncontract->namefile,$name);
 				} catch(\Exception $e){
-					return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					try{
+						return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+					} catch(\Exception $e){
+						$request->session()->flash('message.nivel', 'danger');
+						$request->session()->flash('message.content', 'Error. File not found');
+						return back();
+					}
 				}
 			}
-		}
+		}*/
 	}
 
 
@@ -438,7 +469,11 @@ class NewContractRequestLclController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id);
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id)->onQueue('operaciones');
+					} else {
+						SendEmailRequestLclJob::dispatch($usercreador->toArray(),$id);
+					}
 
 				}
 			}
@@ -613,7 +648,7 @@ class NewContractRequestLclController extends Controller
 			);
 		} else{
 			$auth = \Auth::user()->toArray();
-			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'lcl');
+			ExportRequestsJob::dispatch($dateStart,$dateEnd,$auth,'lcl')->onQueue('operaciones');
 			$response =  array(
 				'actt' => 2
 			);
