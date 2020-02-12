@@ -258,7 +258,7 @@ class QuoteV2Controller extends Controller
 
     //Retrieving all data
     $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-    if(count($company_user->companyUser)>0) {
+    if($company_user->companyUser) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
     }
 
@@ -3307,7 +3307,7 @@ class QuoteV2Controller extends Controller
     $airlines = Airline::all()->pluck('name','id');
 
     $company_user = User::where('id',\Auth::id())->first();
-    if(count($company_user->companyUser)>0) {
+    if($company_user->companyUser) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
     }else{
       $currency_name = '';
@@ -3375,7 +3375,7 @@ class QuoteV2Controller extends Controller
     $company_user = User::where('id',\Auth::id())->first();
     $carrierMan = Carrier::all()->pluck('name','id');
 
-    if(count($company_user->companyUser)>0) {
+    if($company_user->companyUser) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
     }else{
       $currency_name = '';
@@ -3956,8 +3956,13 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-          //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+
+          $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
+
+          $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+
+          $response = $client->request('GET', $url);
+          
         }
       }
       $arreglo2 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
@@ -3973,10 +3978,14 @@ class QuoteV2Controller extends Controller
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
 
-
-
           try {
-            $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+
+            $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
+
+            $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+
+            $response = $client->request('GET', $url);
+
           } catch (\Exception $e) {
 
           }  
@@ -5370,7 +5379,7 @@ class QuoteV2Controller extends Controller
     $company_user = User::where('id',\Auth::id())->first();
     $carrierMan = Carrier::all()->pluck('name','id');
 
-    if(count($company_user->companyUser)>0) {
+    if($company_user->companyUser) {
       $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
     }else{
       $currency_name = '';
