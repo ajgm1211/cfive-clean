@@ -104,9 +104,12 @@ class NewRequestGlobalChargerLclController extends Controller
                     <samp class="la la-cogs" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;
-                <a href="'.route('RequestsGlobalchargersLcl.show',$Ncontracts->id).'" title="Download File">
+                <a href="'.route("RequestsGlobalchargersLcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
+				<!--<a href="'.route('RequestsGlobalchargersLcl.show',$Ncontracts->id).'" title="Download File">
+                    <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
+                </a>-->
                 &nbsp;&nbsp;';
 				$eliminiar_buton = '
                 <a href="#" class="eliminarrequest" data-id-request="'.$Ncontracts->id.'" data-info="id:'.$Ncontracts->id.' Number Contract: "  title="Delete" >
@@ -145,7 +148,11 @@ class NewRequestGlobalChargerLclController extends Controller
 			$Ncontract->created         = $now2;
 			$Ncontract->save();
 
-			ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gclcl','request');
+			if(env('APP_VIEW') == 'operaciones') {
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gclcl','request')->onQueue('operaciones');
+			} else{
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'gclcl','request');
+			}
 
 			$user = User::find($request->user);
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
@@ -180,7 +187,7 @@ class NewRequestGlobalChargerLclController extends Controller
 		}
 	}
 
-	public function show($id,Request $request)
+	public function show(Request $request,$id)
 	{
 		$Ncontract = NewRequestGlobalChargerLcl::find($id);
 		$time       = new \DateTime();
@@ -189,33 +196,26 @@ class NewRequestGlobalChargerLclController extends Controller
 		$extObj     = new \SplFileInfo($Ncontract->namefile);
 		$ext        = $extObj->getExtension();
 		$name       = $Ncontract->id.'-'.$company->name.'_'.$now.'-GCFCL.'.$ext;
+		$success 	= false;
+		$descarga 	= null;
 
 		if(Storage::disk('s3_upload')->exists('Request/Global-charges/LCL/'.$Ncontract->namefile)){
-			return Storage::disk('s3_upload')->download('Request/Global-charges/LCL/'.$Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('s3_upload')->download('Request/Global-charges/LCL/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile)){
-			return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
 		} elseif(Storage::disk('GCRequestLcl')->exists($Ncontract->namefile)){
-			return Storage::disk('GCRequestLcl')->download($Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('GCRequestLcl')->download($Ncontract->namefile,$name);
 		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile)){
-			return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+			$success 	= true;
+			return 	Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
+		} else {
+			$request->session()->flash('message.nivel', 'danger');
+			$request->session()->flash('message.content', 'Error. File not found');
+			return back();
 		}
-
-		return back();
-
-
-		/* try{
-            return Storage::disk('s3_upload')->download('Request/Global-charges/FCL/'.$Ncontract->namefile,$name);
-        } catch(\Exception $e){
-            try{
-                return Storage::disk('s3_upload')->download('contracts/'.$Ncontract->namefile,$name);
-            } catch(\Exception $e){
-                try{
-                    return Storage::disk('GCRequest')->download($Ncontract->namefile,$name);
-                } catch(\Exception $e){
-                    return Storage::disk('UpLoadFile')->download($Ncontract->namefile,$name);
-                }
-            }
-        }*/
 
 	}
 
@@ -305,8 +305,11 @@ class NewRequestGlobalChargerLclController extends Controller
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";
 					$usercreador->notify(new SlackNotification($message));
-					SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl');
-
+					if(env('APP_VIEW') == 'operaciones') {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl')->onQueue('operaciones');
+					} else {
+						SendEmailRequestGcJob::dispatch($usercreador->toArray(),$id,'lcl');
+					}
 				}
 
 			}

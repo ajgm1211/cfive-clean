@@ -190,7 +190,7 @@
 	<script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 	<script type="application/x-javascript" src="/js/toarts-config.js"></script>
 	<script>
-
+		
 		$(function() {
 			$('#myatest').DataTable({
 				processing: true,
