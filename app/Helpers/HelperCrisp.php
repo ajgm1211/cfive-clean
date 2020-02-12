@@ -21,6 +21,14 @@ class EventCrisp{
     return $people;
   }
 
+  public function checkIfExist($email){
+    $obj  = self::$CrispClient;   
+    $people =   $obj->websitePeople->checkPeopleProfileExists(self::$web_id,$email);
+    return $people;
+
+
+  }
+
   public function createProfile($params){
     $obj  = self::$CrispClient;   
     $people =  $obj->websitePeople->createNewPeopleProfile(self::$web_id, $params);
