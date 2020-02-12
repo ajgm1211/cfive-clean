@@ -8,6 +8,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use App\QuoteV2;
 use App\AutomaticRate;
+use App\CompanyUser;
+use App\Currency;
 use App\Http\Traits\QuoteV2Trait;
 
 class ExcelController extends Controller
@@ -111,7 +113,7 @@ class ExcelController extends Controller
             $sheet->setCellValue('C19', $quote->type=='FCL' ? 'N/A':$quote->total_quantity);
 
             $sheet->setCellValue('B20', 'Dimensiones:');
-            $sheet->setCellValue('C20', $quote->type=='FCL' ? 'N/A':$quote->packing_load->height.' x '.$quote->packing_load->width.' x '.$quote->packing_load->large);
+            $sheet->setCellValue('C20', $quote->type=='FCL' ? 'N/A':@$quote->packing_load->height.' x '.@$quote->packing_load->width.' x '.@$quote->packing_load->large);
 
             $sheet->setCellValue('B21', 'Peso Bruto:');
             $sheet->setCellValue('C21', $quote->type=='FCL' ? 'N/A':$quote->total_weight.' Kg');
@@ -187,12 +189,80 @@ class ExcelController extends Controller
             $sheet->setCellValue('I41', 'Unidad');
             $sheet->setCellValue('J41', 'CC/PP');
 
+            $i=42;
             if($quote->type=='LCL' || $quote->type=='AIR'){
-                $i=42;
                 foreach($item->charge_lcl_air as $charge){
                     $sheet->setCellValue('B'.$i, $charge->id);
-                    $sheet->setCellValue('C'.$i, @$charge->surcharge->name);
+                    if($charge->surcharge_id==''){
+                        $sheet->setCellValue('C'.$i, 'Ocean freight');  
+                    }else{
+                        $sheet->setCellValue('C'.$i, @$charge->surcharge->name);   
+                    }
                     $sheet->setCellValue('D'.$i, $charge->price_per_unit);
+                    $sheet->setCellValue('F'.$i, $charge->currency->alphacode);
+                    $sheet->setCellValue('J'.$i, 'PP');
+                    $i++;
+                }
+            }else{
+                $this->calculateFcl($item);
+
+                foreach($item->charge as $charge){
+
+                    $sum20 = 0;
+                    $sum40 = 0;
+                    $sum40hc = 0;
+                    $sum40nor = 0;
+                    $sum45 = 0;
+                    $sum_m20 = 0;
+                    $sum_m40 = 0;
+                    $sum_m40hc = 0;
+                    $sum_m40nor = 0;
+                    $sum_m45 = 0;
+
+                    $amounts = json_decode($charge->amount,true);
+                    $markups = json_decode($charge->markups,true);
+                    //dd($amounts);
+                    if(isset($amounts['c20'])){
+                        $sum20+=$charge->total_20;
+                    }
+                    if(isset($amounts['c40'])){
+                        $sum40+=@$charge->total_40;
+                    }
+                    if(isset($amounts['c40hc'])){
+                        $sum40hc+=@$charge->total_40hc;
+                    }
+                    if(isset($amounts['c40nor'])){
+                        $sum40nor+=@$charge->total_40nor;
+                    }
+                    if(isset($amounts['c45'])){
+                        $sum45+=@$charge->total_45;
+                    }
+
+                    if(isset($markups['m20'])){
+                        $sum_m20+=$charge->total_markup20;
+                    }
+                    if(isset($markups['m40'])){
+                        $sum_m40+=@$charge->total_markup40;
+                    }
+                    if(isset($markups['m40hc'])){
+                        $sum_m40hc+=@$charge->total_markup40hc;
+                    }
+                    if(isset($markups['m40nor'])){
+                        $sum_m40nor+=@$charge->total_markup40nor;
+                    }
+                    if(isset($markups['m45'])){
+                        $sum_m45+=@$charge->total_markup45;
+                    }
+
+                    $sheet->setCellValue('B'.$i, $charge->id);
+                    if($charge->surcharge_id==''){
+                        $sheet->setCellValue('C'.$i, 'Ocean freight');  
+                    }else{
+                        $sheet->setCellValue('C'.$i, @$charge->surcharge->name);   
+                    }
+
+                    $sheet->setCellValue('D'.$i, $sum20+$sum_m20+$sum40+$sum_m40+$sum40hc+$sum_m40hc+$sum40nor+$sum_m40nor+$sum45+$sum_m45);
+                    $sheet->setCellValue('E'.$i, '');
                     $sheet->setCellValue('F'.$i, $charge->currency->alphacode);
                     $sheet->setCellValue('J'.$i, 'PP');
                     $i++;
@@ -417,5 +487,132 @@ class ExcelController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function calculateFcl($rates){
+
+
+        $sum20=0;
+        $sum40=0;
+        $sum40hc=0;
+        $sum40nor=0;
+        $sum45=0;
+
+        $total_markup20=0;
+        $total_markup40=0;
+        $total_markup40hc=0;
+        $total_markup40nor=0;
+        $total_markup45=0;
+
+        $total_rate20=0;
+        $total_rate40=0;
+        $total_rate40hc=0;
+        $total_rate40nor=0;
+        $total_rate45=0;
+
+        $total_rate_markup20=0;
+        $total_rate_markup40=0;
+        $total_rate_markup40hc=0;
+        $total_rate_markup40nor=0;
+        $total_rate_markup45=0;
+
+        $total_lcl_air_freight=0;
+        $total_lcl_air_origin=0;
+        $total_lcl_air_destination=0;
+
+        foreach ($rates->charge as $value) {
+
+            $company = CompanyUser::find(\Auth::user()->company_user_id);
+
+            $typeCurrency =  $company->currency->alphacode;
+
+            $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
+
+            $array_amounts = json_decode($value->amount,true);
+            $array_markups = json_decode($value->markups,true);
+
+            if(isset($array_amounts['c20'])){
+                $amount20=$array_amounts['c20'];
+                $total20=$amount20;
+                $sum20 = number_format($total20, 2, '.', '');
+            }
+
+            if(isset($array_markups['m20'])){
+                $markup20=$array_markups['m20'];
+                $total_markup20=$markup20;
+            }
+
+            if(isset($array_amounts['c40'])){
+                $amount40=$array_amounts['c40'];
+                $total40=$amount40;          
+                $sum40 = number_format($total40, 2, '.', '');
+            }
+
+            if(isset($array_markups['m40'])){
+                $markup40=$array_markups['m40'];
+                $total_markup40=$markup40;
+            }
+
+            if(isset($array_amounts['c40hc'])){
+                $amount40hc=$array_amounts['c40hc'];
+                $total40hc=$amount40hc;          
+                $sum40hc = number_format($total40hc, 2, '.', '');
+            }
+
+            if(isset($array_markups['m40hc'])){
+                $markup40hc=$array_markups['m40hc'];
+                $total_markup40hc=$markup40hc;
+            }
+
+            if(isset($array_amounts['c40nor'])){
+                $amount40nor=$array_amounts['c40nor'];
+                $total40nor=$amount40nor;
+                $sum40nor = number_format($total40nor, 2, '.', '');
+            }
+
+            if(isset($array_markups['m40nor'])){
+                $markup40nor=$array_markups['m40nor'];
+                $total_markup40nor=$markup40nor;
+            }
+
+            if(isset($array_amounts['c45'])){
+                $amount45=$array_amounts['c45'];
+                $total45=$amount45;
+                $sum45 = number_format($total45, 2, '.', '');
+            }
+
+            if(isset($array_markups['m45'])){
+                $markup45=$array_markups['m45'];
+                $total_markup45=$markup45;
+            }
+
+            $value->total_20=number_format($sum20, 2, '.', '');
+            $value->total_40=number_format($sum40, 2, '.', '');
+            $value->total_40hc=number_format($sum40hc, 2, '.', '');
+            $value->total_40nor=number_format($sum40nor, 2, '.', '');
+            $value->total_45=number_format($sum45, 2, '.', '');
+
+            $value->total_markup20=number_format($total_markup20, 2, '.', '');
+            $value->total_markup40=number_format($total_markup40, 2, '.', '');
+            $value->total_markup40hc=number_format($total_markup40hc, 2, '.', '');
+            $value->total_markup40nor=number_format($total_markup40nor, 2, '.', '');
+            $value->total_markup45=number_format($total_markup45, 2, '.', ''); 
+
+        }
+
+        return $value;
+
+    }
+
+    public function ratesCurrency($id,$typeCurrency){
+        $rates = Currency::where('id','=',$id)->get();
+        foreach($rates as $rate){
+            if($typeCurrency == "USD"){
+                $rateC = $rate->rates;
+            }else{
+                $rateC = $rate->rates_eur;
+            }
+        }
+        return $rateC;
     }
 }
