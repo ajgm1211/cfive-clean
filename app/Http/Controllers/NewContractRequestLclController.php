@@ -289,7 +289,11 @@ class NewContractRequestLclController extends Controller
 				]);
 			}
 
-			ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
+			if(env('APP_VIEW') == 'operaciones') {
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request')->onQueue('operaciones');
+			} else{
+				ProcessContractFile::dispatch($Ncontract->id,$Ncontract->namefile,'lcl','request');
+			}
 
 			$user = User::find($request->user);
 			$message = "There is a new request from ".$user->name." - ".$user->companyUser->name;
