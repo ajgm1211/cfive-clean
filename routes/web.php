@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/what-is-my-ip', function(){ return request()->ip();});
+Route::get('/what-is-my-ip', function(){ return request()->getClientIp();});
 
 Route::middleware(['auth'])->prefix('crisp')->group(function () {
 	
