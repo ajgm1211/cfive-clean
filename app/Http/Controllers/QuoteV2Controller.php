@@ -2618,15 +2618,12 @@ class QuoteV2Controller extends Controller
 
         }
       }
-      
+
       if(isset($form->contact_id)){
         if($form->contact_id != "0" && $form->contact_id != null ){
           $fcontact_id  = $form->contact_id;
         }
       }
-
-
-
 
       $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'origin_address'=> $form->origin_address,'destination_address'  => $form->destination_address ]);
 
@@ -3990,17 +3987,16 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          /*
-                  $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+          $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
 
-                  $response = $client->request('GET', $url);
+          $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+
+          $response = $client->request('GET', $url);
 
 
-                    //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-                    //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
-                    */
+          //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+          //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
         }
       }
       $arreglo2 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
@@ -4015,7 +4011,7 @@ class QuoteV2Controller extends Controller
 
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
-          /*
+
           $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
 
           $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
@@ -4025,7 +4021,7 @@ class QuoteV2Controller extends Controller
           } catch (\Exception $e) {
 
           }  
-*/
+
         }
       }
 
