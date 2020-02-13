@@ -234,9 +234,9 @@ class QuoteV2Controller extends Controller
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
           <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
           <span>
-          <i class="la la-eye"></i>
+          <i class="la la-pencil"></i>
           &nbsp;
-          Show
+          Edit
           </span>
           </a>
           <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
@@ -262,6 +262,7 @@ class QuoteV2Controller extends Controller
    * @param integer $id 
    * @return Illuminate\View\View
    */
+
     public function show(Request $request, $id)
     {
         //Setting id
@@ -276,7 +277,7 @@ class QuoteV2Controller extends Controller
 
         //Retrieving all data
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }
 
@@ -501,7 +502,7 @@ class QuoteV2Controller extends Controller
                 $value->currency_eur = $currency_charge->rates_eur;
             }
 
-            //Charges
+            //Charges LCL/AIR
             foreach ($item->charge_lcl_air as $value) {
 
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
@@ -3294,12 +3295,12 @@ class QuoteV2Controller extends Controller
    * @return type
    */
 
-
     public function skipPluck($pluck)
     {
-        $skips = ["[","]","\""];
-        return str_replace($skips, '',$pluck);
+      $skips = ["[","]","\""];
+      return str_replace($skips, '',$pluck);
     }
+
     public function ratesCurrency($id,$typeCurrency){
         $rates = Currency::where('id','=',$id)->get();
         foreach($rates as $rate){
@@ -3311,6 +3312,7 @@ class QuoteV2Controller extends Controller
         }
         return $rateC;
     }
+
     public function search()
     {
 
@@ -3333,7 +3335,7 @@ class QuoteV2Controller extends Controller
         $airlines = Airline::all()->pluck('name','id');
 
         $company_user = User::where('id',\Auth::id())->first();
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';
@@ -3401,7 +3403,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id',\Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name','id');
 
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';
@@ -3971,7 +3973,6 @@ class QuoteV2Controller extends Controller
 
         }
 
-
         // ************************* CONSULTA RATE API ****************************** 
 
 
@@ -3982,6 +3983,14 @@ class QuoteV2Controller extends Controller
 
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
+
+                  $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
+
+                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+
+                  $response = $client->request('GET', $url);
+
+
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                 }
@@ -3999,15 +4008,16 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
+                  $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
 
+                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
 
                     try {
-                        //$response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+                        $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
 
                     }  
 
-                    // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                 }
             }
 
@@ -5396,7 +5406,9 @@ class QuoteV2Controller extends Controller
         }
 
         return $cantidad_pack_pallet;
+
     }
+
     /*  **************************  LCL  ******************************************** */
     public function processSearchLCL(Request $request)
     {
@@ -5438,7 +5450,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id',\Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name','id');
 
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';

@@ -272,8 +272,9 @@ class GlobalChargesController extends Controller
     })->with('globalcharport.portOrig','globalcharport.portDest','GlobalCharCarrier.carrier','typedestiny')->get();
 
     return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
-		return redirect()->back()->with('globalchar','true');
-	}
+        return redirect()->back()->with('globalchar','true');
+    }
+
 	public function destroyGlobalCharges($id)
 	{
 
@@ -289,6 +290,7 @@ class GlobalChargesController extends Controller
 		$objcalculation = new CalculationType();
 		$objsurcharge = new Surcharge();
 		$countries = Country::pluck('name','id');
+        $route = 'update-global-charge';
 
 		$calculationT = $objcalculation->all()->pluck('name','id');
 		$typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -299,6 +301,7 @@ class GlobalChargesController extends Controller
 		$globalcharges = GlobalCharge::find($id);
 		$validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
 		$globalcharges->setAttribute('validation_expire',$validation_expire);
+        $amount = $globalcharges->amount;
 
 		$activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
 
@@ -321,7 +324,7 @@ class GlobalChargesController extends Controller
 
 		//dd($activacion);
 
-		return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion'));
+		return view('globalcharges.edit', compact('globalcharges','harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','activacion', 'route', 'amount'));
 	}
 
 	public function addGlobalChar(){
@@ -333,6 +336,7 @@ class GlobalChargesController extends Controller
 		$objcalculation = new CalculationType();
 		$objsurcharge = new Surcharge();
 		$countries = Country::pluck('name','id');
+        $route = 'globalcharges.store';
 
 
 		$calculationT = $objcalculation->all()->pluck('name','id');
@@ -344,7 +348,7 @@ class GlobalChargesController extends Controller
 		$company_user=CompanyUser::find(\Auth::user()->company_user_id);
 		$currency_cfg = Currency::find($company_user->currency_id);
 
-		return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','currency_cfg'));
+		return view('globalcharges.add', compact('harbor','carrier','currency','calculationT','typedestiny','surcharge','countries','currency_cfg', 'route'));
 	}
 
 	public function duplicateGlobalCharges($id){

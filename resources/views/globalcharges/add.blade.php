@@ -1,6 +1,6 @@
 <div class="m-portlet" style="box-shadow:none">
 
-  {!! Form::open(['route' => 'globalcharges.store','class' => 'form-group m-form__group']) !!}
+  {!! Form::open(['route' => $route,'class' => 'form-group m-form__group']) !!}
   <div class="m-portlet__body">
     <div class="form-group m-form__group row">
       <div class="col-lg-12">
@@ -11,9 +11,10 @@
             </label>
             <div class="m-radio-inline">
               <label class="m-radio">
-                <input type="radio" id="rdrouteP" onclick="activarCountry('divport')" checked='true' name="typeroute" value="port"> Port
+                <input type="radio" id="rdrouteP" onclick="activarCountry('divport')" checked='true' name="typeroute" value="port"> Ports
                 <span></span>
               </label>
+              @if ($route == 'globalcharges.store')
               <label class="m-radio">
                 <input type="radio" id="rdrouteC" onclick="activarCountry('divcountry')"  name="typeroute" value="country"> Country
                 <span></span>
@@ -26,6 +27,7 @@
                 <input type="radio" id="rdrouteCP" onclick="activarCountry('divcountryport')"  name="typeroute" value="countryport"> Country to Port
                 <span></span>
               </label>
+              @endif
 
             </div>
 
@@ -132,7 +134,8 @@
       </div>
     </div>
     <div class="form-group m-form__group row">
-
+      
+      @if ($route == 'globalcharges.store')
       <div class="col-lg-4">
         <i class="la la-ship icon__modal"></i>{!! Form::label('carrierL', 'Carrier') !!}
         <div class="m-input-icon m-input-icon--right">
@@ -145,6 +148,22 @@
         </div>
 
       </div>
+
+      @elseif ($route == 'globalchargesapi.store')
+      <div class="col-lg-4">
+        <i class="la la-ship icon__modal"></i>{!! Form::label('provider', 'Provider') !!}
+        <div class="m-input-icon m-input-icon--right">
+          {{ Form::select('providers[]', $providers, null,['id' => 'provider','class'=>'m-select2-general form-control','multiple' => 'multiple' ,'required' => 'true']) }}
+          <span class="m-input-icon__icon m-input-icon__icon--right">
+            <span>
+              <i class="la la-info-circle"></i>
+            </span>
+          </span>
+        </div>
+
+      </div>
+      @endif
+
       <div class="col-lg-4">
         <i class="la la-dollar icon__modal"></i>{!! Form::label('currencyl', 'Currency') !!}
         <div class="m-input-icon m-input-icon--right">
