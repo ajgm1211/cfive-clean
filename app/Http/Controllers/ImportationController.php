@@ -5601,7 +5601,7 @@ class ImportationController extends Controller
             })*/
             ->addColumn('action', function ( $account) {
                 if(strnatcasecmp($account->namefile,'N/A') == 0){
-                    $descarga = '';
+                    $descarga = '&nbsp;<span style="color:#0072FC;font-size:15px" title="Duplicate Contract">Dp</span>';
 
                 } else {
                     $descarga = '&nbsp;
