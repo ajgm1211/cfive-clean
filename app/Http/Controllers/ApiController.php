@@ -406,4 +406,10 @@ class ApiController extends Controller
 
         return $charges;
     }
+    
+    public function contracts(){
+        $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        
+        return $contracts;
+    }
 }
