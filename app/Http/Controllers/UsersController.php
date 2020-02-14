@@ -179,6 +179,10 @@ class UsersController extends Controller
 
     $user->update($requestForm);
 
+    if($request->ajax()) {
+      return response()->json('User updated successfully!');
+    }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You upgrade has been success ');
@@ -192,6 +196,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
   public function destroy($id)
   {
     $user = User::find($id);
@@ -203,9 +208,10 @@ class UsersController extends Controller
     if($exist == 'true'){//Eliminamos el perfil
       $people = $CrispClient->deleteProfile($user->email);
     }
-
     return $user;
   }
+
+
   public function destroyUser(Request $request,$id)
   {
     if($request->user_id){
