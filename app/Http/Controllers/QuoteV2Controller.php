@@ -4028,7 +4028,7 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
+                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}');
 
                     $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
 
