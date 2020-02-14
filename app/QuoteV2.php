@@ -90,5 +90,15 @@ class QuoteV2 extends Model
     public function pdf_option()
     {
         return $this->hasOne('App\PdfOption','quote_id','id');
+    }    
+
+    public function packing_load()
+    {
+        return $this->hasOne('App\PackageLoadV2','quote_id','id');
+    }
+
+    public function scopeExclude($query,$value = array()) 
+    {
+        return $query->select( array_diff( $this->columns,(array) $value) );
     }
 }
