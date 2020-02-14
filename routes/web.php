@@ -11,6 +11,7 @@
 |
 */
 
+Route::get('/what-is-my-ip', function(){ return request()->getClientIp();});
 
 Route::middleware(['auth'])->prefix('crisp')->group(function () {
 	
@@ -138,6 +139,17 @@ Route::prefix('globalcharges')->group(function () {
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
+/************************************************************
+*               Global Charges Api Routes                   *
+*************************************************************/ 
+Route::resource('globalchargesapi', 'GlobalChargesApiController')->middleware(['auth', 'role:administrator|data_entry']);
+
+Route::post('globalchargesapi/destroyArr', 'GlobalChargesApiController@destroyArr')->name('globalchargesapi.destroyArr')->middleware(['auth', 'role:administrator|data_entry']);
+
+/************************************************************
+*              End Global Charges Api Routes                   *
+*************************************************************/ 
+
 Route::middleware(['auth'])->prefix('contracts')->group(function () {
 	//Route::get('add', 'ContractsController@add')->name('contracts.add');
 	Route::get('ShowContractEdit/{id}', 'ContractsController@showContractRequest')->name('show.contract.edit');
@@ -176,7 +188,10 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
 
 	// Duplicated contracts
 	Route::get('duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractShow')->name('contract.duplicated');
+	Route::get('selectRequestFcl', 'ContractsController@selectRequest')->name('select.request.fcl.dp');
 	Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
+    Route::post('Store-duplicated-FromRq/contract-fcl/{id}', 'ContractsController@duplicatedContractFromRequestStore')->name('contract.duplicated.from.request.store');
+	Route::get('duplicatedOC/contract-fcl/{id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth','role:administrator|data_entry']);
 
 });
 
@@ -200,7 +215,11 @@ Route::prefix('Requests')->group(function () {
 
 	Route::get('RequestStatus','NewContractRequestsController@UpdateStatusRequest')->name('Request.status')
 		->middleware(['auth','role:administrator|data_entry']);
-	Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
+    
+    Route::get('getdataRequest/{id}','NewContractRequestsController@getdataRequest')->name('get.request.fcl')
+		->middleware(['auth','role:administrator|data_entry']);
+	
+    Route::get('RequestDestroy/{id}','NewContractRequestsController@destroyRequest')->name('destroy.Request')
 		->middleware(['auth','role:administrator|data_entry']);
 	Route::post('RequestExport/','NewContractRequestsController@export')->name('export.Request')
 		->middleware(['auth','role:administrator|data_entry']);

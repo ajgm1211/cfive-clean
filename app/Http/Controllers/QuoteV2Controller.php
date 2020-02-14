@@ -104,17 +104,33 @@ class QuoteV2Controller extends Controller
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
-            $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-            }])->get();
+            if($request->size){
+                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->take($request->size)->get();
+            }else{
+                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->get();
+            }
         }else{
-            $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-            }])->get();
+            if($request->size){
+                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->take($request->size)->get();
+            }else{
+                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->get();
+            }
         }
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
@@ -125,7 +141,16 @@ class QuoteV2Controller extends Controller
         }
 
         if($request->ajax()){
+            $quotes->load('user','company','contact','incoterm');
             $collection = Collection::make($quotes);
+            $collection->transform(function ($quote, $key) {
+                unset($quote['origin_port_id']);
+                unset($quote['destination_port_id']);
+                unset($quote['origin_address']);
+                unset($quote['destination_address']);
+                unset($quote['currency_id']);
+                return $quote;
+            });
             return $collection;
         }
 
@@ -225,9 +250,9 @@ class QuoteV2Controller extends Controller
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
           <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
           <span>
-          <i class="la la-eye"></i>
+          <i class="la la-edit"></i>
           &nbsp;
-          Show
+          Edit
           </span>
           </a>
           <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
@@ -253,6 +278,7 @@ class QuoteV2Controller extends Controller
    * @param integer $id 
    * @return Illuminate\View\View
    */
+
     public function show(Request $request, $id)
     {
         //Setting id
@@ -267,7 +293,7 @@ class QuoteV2Controller extends Controller
 
         //Retrieving all data
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }
 
@@ -647,6 +673,7 @@ class QuoteV2Controller extends Controller
             ]);
 
             if($request->ajax()){
+                $quote->load('user','company','contact','incoterm');
                 $collection = Collection::make($quote);
                 return $collection;
             }
@@ -2604,11 +2631,15 @@ class QuoteV2Controller extends Controller
                 if($form->company_id_quote != "0" && $form->company_id_quote != null ){
                     $payments = $this->getCompanyPayments($form->company_id_quote);
                     $fcompany_id = $form->company_id_quote;
-                    $fcontact_id  = $form->contact_id;
+
                 }
             }
 
-
+            if(isset($form->contact_id)){
+                if($form->contact_id != "0" && $form->contact_id != null ){
+                    $fcontact_id  = $form->contact_id;
+                }
+            }
 
             $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'origin_address'=> $form->origin_address,'destination_address'  => $form->destination_address ]);
 
@@ -3284,12 +3315,12 @@ class QuoteV2Controller extends Controller
    * @return type
    */
 
-
     public function skipPluck($pluck)
     {
         $skips = ["[","]","\""];
         return str_replace($skips, '',$pluck);
     }
+
     public function ratesCurrency($id,$typeCurrency){
         $rates = Currency::where('id','=',$id)->get();
         foreach($rates as $rate){
@@ -3301,6 +3332,7 @@ class QuoteV2Controller extends Controller
         }
         return $rateC;
     }
+
     public function search()
     {
 
@@ -3323,7 +3355,7 @@ class QuoteV2Controller extends Controller
         $airlines = Airline::all()->pluck('name','id');
 
         $company_user = User::where('id',\Auth::id())->first();
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';
@@ -3391,7 +3423,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id',\Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name','id');
 
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';
@@ -3961,7 +3993,6 @@ class QuoteV2Controller extends Controller
 
         }
 
-
         // ************************* CONSULTA RATE API ****************************** 
 
 
@@ -3972,7 +4003,15 @@ class QuoteV2Controller extends Controller
 
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
-                    $response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+
+                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
+
+                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+
+                    $response = $client->request('GET', $url);
+
+
+                    //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                 }
             }
@@ -3989,15 +4028,16 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
+                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
 
+                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
 
                     try {
-                        $response = $client->request('GET','http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
+                        $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
 
                     }  
 
-                    // $response = $client->request('GET','http://maersk-scrap/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                 }
             }
 
@@ -5241,25 +5281,25 @@ class QuoteV2Controller extends Controller
 
             }
 
-			$success 	= false;
-			$descarga 	= null;
+            $success 	= false;
+            $descarga 	= null;
 
-			if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
-			} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
-			} elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
-			} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
-				$success 	= true;
-				$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
-			}
+            if(Storage::disk('s3_upload')->exists('Request/FCL/'.$Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('s3_upload')->url('Request/FCL/'.$Ncontract->namefile,$name);
+            } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+            } elseif(Storage::disk('FclRequest')->exists($Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('FclRequest')->url($Ncontract->namefile,$name);
+            } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+                $success 	= true;
+                $descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+            }
 
-			return response()->json(['success' => $success,'url'=>$descarga]);
-			
+            return response()->json(['success' => $success,'url'=>$descarga]);
+
             /*try{
                 return Storage::disk('s3_upload')->download('Request/FCL/'.$Ncontract->namefile,$name);
             } catch(\Exception $e){
@@ -5317,30 +5357,30 @@ class QuoteV2Controller extends Controller
 
         }
 
-		$success 	= false;
-		$descarga 	= null;
-		
-		if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
-			$success 	= true;
-			//return 1;
-			$descarga	= Storage::disk('s3_upload')->url('Request/LCL/'.$Ncontract->namefile,$name);
-		} elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
-			//return 2;
-			$success 	= true;
-			$descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
-		} elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
-			//return 3;
-			$success 	= true;
-			$descarga	= Storage::disk('LclRequest')->url($Ncontract->namefile,$name);
-		} elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
-			//return 4;
-			$success 	= true;
-			$descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
-		}
-		
-		return response()->json(['success' => $success,'url'=>$descarga]);
-		
-		
+        $success 	= false;
+        $descarga 	= null;
+
+        if(Storage::disk('s3_upload')->exists('Request/LCL/'.$Ncontract->namefile,$name)){
+            $success 	= true;
+            //return 1;
+            $descarga	= Storage::disk('s3_upload')->url('Request/LCL/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('s3_upload')->exists('contracts/'.$Ncontract->namefile,$name)){
+            //return 2;
+            $success 	= true;
+            $descarga	= Storage::disk('s3_upload')->url('contracts/'.$Ncontract->namefile,$name);
+        } elseif(Storage::disk('LclRequest')->exists($Ncontract->namefile,$name)){
+            //return 3;
+            $success 	= true;
+            $descarga	= Storage::disk('LclRequest')->url($Ncontract->namefile,$name);
+        } elseif(Storage::disk('UpLoadFile')->exists($Ncontract->namefile,$name)){
+            //return 4;
+            $success 	= true;
+            $descarga	= Storage::disk('UpLoadFile')->url($Ncontract->namefile,$name);
+        }
+
+        return response()->json(['success' => $success,'url'=>$descarga]);
+
+
         /*try{
             return Storage::disk('s3_upload')->download('Request/LCL/'.$Ncontract->namefile,$name);
         } catch(\Exception $e){
@@ -5386,7 +5426,9 @@ class QuoteV2Controller extends Controller
         }
 
         return $cantidad_pack_pallet;
+
     }
+
     /*  **************************  LCL  ******************************************** */
     public function processSearchLCL(Request $request)
     {
@@ -5428,7 +5470,7 @@ class QuoteV2Controller extends Controller
         $company_user = User::where('id',\Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name','id');
 
-        if(count($company_user->companyUser)>0) {
+        if($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         }else{
             $currency_name = '';

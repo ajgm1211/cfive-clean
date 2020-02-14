@@ -15,8 +15,10 @@ use App\ContractAddons;
 use App\ContractCarrier;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
+use App\NewContractRequest;
 use App\ContractUserRestriction;
 use App\ContractCompanyRestriction;
+use App\AccountImportationContractFcl as AccountFcl;
 // LCL
 use App\RateLcl;
 use App\FailRateLcl;
@@ -78,8 +80,28 @@ class GeneralJob implements ShouldQueue
             $contract_new->validity         = $validity;
             $contract_new->expire           = $expire;
             $contract_new->status           = 'publish';
+
+            if($requestArray['requestChange'] == true){   
+                $now                        = new \DateTime();
+                $now                        = $now->format('Y-m-d');
+                $requestFc                  = NewContractRequest::find($requestArray['request_id']);
+                $account                    = new AccountFcl();
+                $account->name              = $requestArray['reference'];
+                $account->date              = $now;
+                $account->namefile          = 'N/A';
+                $account->company_user_id   = $requestArray['company_user_id'];
+                $account->request_id        = $requestArray['request_id'];
+                $account->save();
+                $contract_new->account_id   = $account->id;
+            }
+
             $contract_new->save();
             $contract_new_id                = $contract_new->id;
+
+            if($requestArray['requestChange'] == true){   
+                $requestFc->contract_id     = $contract_new_id;
+                $requestFc->update();
+            }
 
             foreach($requestArray['carrier_id'] as $carrier_id){
                 $carrier_contract               = new ContractCarrier();
