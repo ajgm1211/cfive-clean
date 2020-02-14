@@ -21,6 +21,14 @@ class EventCrisp{
     return $people;
   }
 
+  public function checkIfExist($email){
+    $obj  = self::$CrispClient;   
+    $people =   $obj->websitePeople->checkPeopleProfileExists(self::$web_id,$email);
+    return $people;
+
+
+  }
+
   public function createProfile($params){
     $obj  = self::$CrispClient;   
     $people =  $obj->websitePeople->createNewPeopleProfile(self::$web_id, $params);
@@ -29,17 +37,25 @@ class EventCrisp{
 
   public function updateProfile($params,$email){
     $obj  = self::$CrispClient;
-    $people =  self::findByEmail($email);
-    if($people !="")
+    $exist = self::checkIfExist($email);
+    $people='';
+    if($exist == 'true'){
+      $people =  self::findByEmail($email);
       $people = $obj->websitePeople->updatePeopleProfile(self::$web_id, $people['people_id'], $params);
+    }
+
     return $people;
   }
 
   public function deleteProfile($email){
     $obj  = self::$CrispClient;
-    $people =  self::findByEmail($email);
-    if($people !="")
+    $exist = self::checkIfExist($email);
+    $people='';
+    if($exist == 'true'){
+      $people =  self::findByEmail($email);
       $people =  $obj->websitePeople->removePeopleProfile(self::$web_id, $people['people_id']);
+    }
+
     return $people;
 
   }

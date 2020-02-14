@@ -531,7 +531,7 @@
 
 							<div class="col-lg-2 for-check" id="maerskdiv">
 								{{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
-								<label for="mode5" class="label-check">Include MAERSK Price Finder</label>
+								<label for="mode5" class="label-check">Include MAERSK Spot</label>
 							</div>
 
 						</div><br>
@@ -965,12 +965,20 @@
 												<div class="col-lg-2 no-padding d-flex justify-content-end align-items-center">
 													@if(($arr->excelRequest !="0") || ($arr->excelRequestFCL !="0") || ($arr->totalItems !="0") )
 													<div class="downexcel" style="margin-right: 10px;">
-														
+
+														@if($arr->idContract !="0")
+														<a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Cancel" >
+															<span class="workgreen"><i class="icon-excel"></i></span>
+
+															<i class="la la-file-excel-o"></i>
+														</a>
+														@else
 														<a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestFCL }},{{ $arr->idContract }})" class="l detailed-cost"  title="Cancel" >
 															<span class="workgreen"><i class="icon-excel"></i></span>
 
 															<i class="la la-file-excel-o"></i>
 														</a>
+														@endif
 													</div>
 													@endif
 													<div class="btn-detail__quotes btn-d">
