@@ -196,11 +196,14 @@ class UsersController extends Controller
   {
     $user = User::find($id);
     $user->delete();
-    
+
     //Crisp Delete 
     $CrispClient = new EventCrisp();
-    $people = $CrispClient->deleteProfile($user->email);
-    
+    $exist =  $CrispClient->checkIfExist($user->email);
+    if($exist == 'true'){//Eliminamos el perfil
+      $people = $CrispClient->deleteProfile($user->email);
+    }
+
     return $user;
   }
   public function destroyUser(Request $request,$id)
