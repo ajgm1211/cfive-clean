@@ -234,9 +234,9 @@ class QuoteV2Controller extends Controller
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
           <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
           <span>
-          <i class="la la-eye"></i>
+          <i class="la la-edit"></i>
           &nbsp;
-          Show
+          Edit
           </span>
           </a>
           <a href="/v2/quotes/duplicate/'.$colletion['idSet'].'" class="dropdown-item" >
