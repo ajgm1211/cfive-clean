@@ -531,7 +531,7 @@
 
 							<div class="col-lg-2 for-check" id="maerskdiv">
 								{{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
-								<label for="mode5" class="label-check">Include MAERSK Price Finder</label>
+								<label for="mode5" class="label-check">Include MAERSK Spot</label>
 							</div>
 
 						</div><br>

@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\ViewQuoteV2;
-use Illuminate\Support\Collection as Collection;
 
 
 class CompanyController extends Controller
@@ -82,7 +81,7 @@ class CompanyController extends Controller
 
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
         $id = obtenerRouteKey($id);
         $company = Company::find($id);
@@ -95,11 +94,6 @@ class CompanyController extends Controller
         }
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
         $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-
-        if($request->ajax()){
-            $collection = Collection::make($company);
-            return $collection;
-        }
 
         return view('companies.show', compact('company','companies','contacts','quotes','users','prices'));
     }
@@ -174,7 +168,7 @@ class CompanyController extends Controller
             if ($request->ajax()) {
                 return response()->json('Company created successfully!');
             }
-
+  
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'Register completed successfully!');
@@ -306,15 +300,11 @@ class CompanyController extends Controller
         return response()->json(['message' => 'Ok']);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         try {
             $company = Company::find($id);
             $company->delete();
-
-            if($request->ajax()) {
-                return response()->json('Company deleted successfully!');
-            }
 
             return response()->json(['message' => 'Ok']);
         }
