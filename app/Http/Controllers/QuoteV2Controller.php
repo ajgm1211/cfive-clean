@@ -104,17 +104,33 @@ class QuoteV2Controller extends Controller
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
-            $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-            }])->get();
+            if($request->size){
+                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->take($request->size)->get();
+            }else{
+                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->get();
+            }
         }else{
-            $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-                $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-            }])->get();
+            if($request->size){
+                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->take($request->size)->get();
+            }else{
+                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+                    $q->where('company_user_id','=',$company_user_id);
+                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                }])->get();
+            }
         }
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
@@ -234,7 +250,7 @@ class QuoteV2Controller extends Controller
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
           <a class="dropdown-item" href="/v2/quotes/show/'.$colletion['idSet'].'">
           <span>
-          <i class="la la-pencil"></i>
+          <i class="la la-edit"></i>
           &nbsp;
           Edit
           </span>
@@ -502,7 +518,7 @@ class QuoteV2Controller extends Controller
                 $value->currency_eur = $currency_charge->rates_eur;
             }
 
-            //Charges LCL/AIR
+            //Charges
             foreach ($item->charge_lcl_air as $value) {
 
                 $currency_rate=$this->ratesCurrency($value->currency_id,$typeCurrency);
@@ -2615,11 +2631,15 @@ class QuoteV2Controller extends Controller
                 if($form->company_id_quote != "0" && $form->company_id_quote != null ){
                     $payments = $this->getCompanyPayments($form->company_id_quote);
                     $fcompany_id = $form->company_id_quote;
-                    $fcontact_id  = $form->contact_id;
+
                 }
             }
 
-
+            if(isset($form->contact_id)){
+                if($form->contact_id != "0" && $form->contact_id != null ){
+                    $fcontact_id  = $form->contact_id;
+                }
+            }
 
             $request->request->add(['company_user_id' => \Auth::user()->company_user_id ,'quote_id'=>$this->idPersonalizado(),'type'=>'FCL','delivery_type'=>$form->delivery_type,'company_id'=>$fcompany_id,'contact_id' =>$fcontact_id,'validity_start'=>$since,'validity_end'=>$until,'user_id'=>\Auth::id(), 'equipment'=>$equipment  , 'status'=>'Draft' ,'date_issued'=>$since ,'price_id' => $priceId ,'payment_conditions' => $payments,'origin_address'=> $form->origin_address,'destination_address'  => $form->destination_address ]);
 
@@ -3297,8 +3317,8 @@ class QuoteV2Controller extends Controller
 
     public function skipPluck($pluck)
     {
-      $skips = ["[","]","\""];
-      return str_replace($skips, '',$pluck);
+        $skips = ["[","]","\""];
+        return str_replace($skips, '',$pluck);
     }
 
     public function ratesCurrency($id,$typeCurrency){
@@ -3984,11 +4004,11 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                  $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
+                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
 
-                  $response = $client->request('GET', $url);
+                    $response = $client->request('GET', $url);
 
 
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4008,9 +4028,9 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                  $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
+                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
 
                     try {
                         $response = $client->request('GET', $url);

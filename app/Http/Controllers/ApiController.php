@@ -79,9 +79,9 @@ class ApiController extends Controller
             return response()->json([
                 'message' => 'Unauthorized'], 401);
             }*/
-            $user = User::find($user_id);
-            $tokenResult = $user->createToken($user->name.' '.$user->lastname.' Token');
-            $token = $tokenResult->token;
+        $user = User::find($user_id);
+        $tokenResult = $user->createToken($user->name.' '.$user->lastname.' Token');
+        $token = $tokenResult->token;
         /*if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
         }*/
@@ -95,7 +95,7 @@ class ApiController extends Controller
                 $tokenResult->token->expires_at)
                 ->toDateTimeString(),
             ]);*/
-        }
+    }
 
     /**
      * Login user and create token
@@ -117,8 +117,8 @@ class ApiController extends Controller
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+            'message' => 'Unauthorized'
+        ], 401);
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -148,7 +148,7 @@ class ApiController extends Controller
     {
         $request->user()->token()->revoke();
         return response()->json(['message' =>
-            'Successfully logged out']);
+                                 'Successfully logged out']);
     }
 
     public function user(Request $request)
@@ -193,9 +193,15 @@ class ApiController extends Controller
 
     public function rates(Request $request)
     {
-        $rates=Rate::whereHas('contract', function($q)  {
-            $q->where('contracts.company_user_id',\Auth::user()->company_user_id);
-        })->with('contract')->get();
+        if($request->size){
+            $rates=Rate::whereHas('contract', function($q)  {
+                $q->where('contracts.company_user_id',\Auth::user()->company_user_id);
+            })->with('contract')->take($request->size)->get();
+        }else{
+            $rates=Rate::whereHas('contract', function($q)  {
+                $q->where('contracts.company_user_id',\Auth::user()->company_user_id);
+            })->with('contract')->get();
+        }
 
         $collection = Collection::make($rates);
         $collection->transform(function ($rate) {
@@ -236,15 +242,21 @@ class ApiController extends Controller
     public function charges(Request $request)
     {
 
-        $charges=ViewLocalCharges::whereHas('contract',function ($q) {
-            $q->where('company_user_id', \Auth::user()->company_user_id);
-        })->get();
+        if($request->size){
+            $charges=ViewLocalCharges::whereHas('contract',function ($q) {
+                $q->where('company_user_id', \Auth::user()->company_user_id);
+            })->take($request->size)->get();
+        }else{
+            $charges=ViewLocalCharges::whereHas('contract',function ($q) {
+                $q->where('company_user_id', \Auth::user()->company_user_id);
+            })->get();
+        }
 
         $collection = Collection::make($charges);
         $collection->transform(function ($charge) {
             $charge->contract_name=$charge->contract->name;
             $charge->amount=$charge->ammount;
-            $charge->currency_code=$charge->currency;
+            $charge->currency_code=@$charge->currency;
             $charge->charge=$charge->surcharge;
             $charge->charge_type=$charge->changetype;
             if($charge->port_orig!=''){
@@ -350,7 +362,11 @@ class ApiController extends Controller
 
     public function globalCharges(Request $request)
     {
-        $charges=ViewGlobalCharge::where('company_user_id', \Auth::user()->company_user_id)->get();
+        if($request->size){
+            $charges=ViewGlobalCharge::where('company_user_id', \Auth::user()->company_user_id)->take($request->size)->get();   
+        }else{
+            $charges=ViewGlobalCharge::where('company_user_id', \Auth::user()->company_user_id)->get();
+        }
 
         $collection = Collection::make($charges);
         $collection->transform(function ($charge) {
@@ -405,5 +421,15 @@ class ApiController extends Controller
         });
 
         return $charges;
+    }
+
+    public function contracts(){
+        if($request->size){
+            $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->take($request->size)->get();
+        }else{
+            $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->get();
+        }
+
+        return $contracts;
     }
 }
