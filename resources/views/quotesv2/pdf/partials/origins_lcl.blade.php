@@ -123,7 +123,7 @@
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en origen</td>
                                             <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td >{{number_format(@$total_origin, 2, '.', '')}}</td>
+                                            <td >{{round(@$total_origin)}}</td>
                                             @if($quote->pdf_option->grouped_origin_charges==1)
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
@@ -306,7 +306,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_origin+@$total_inland_origin, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_origin+@$total_inland_origin)}}</b></td>
                             @if($quote->pdf_option->grouped_origin_charges==1)
                                 <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
                             @else

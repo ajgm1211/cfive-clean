@@ -139,11 +139,11 @@
                                 <td >@if($rate->destination_address=='' && $rate->destination_port_id!=''){{$rate->destination_port->name}}, {{$rate->destination_port->code}} @elseif($rate->destination_address=='' && $rate->destination_airport_id!='') {{$rate->destination_airport->name}}, {{$rate->destination_airport->code}} @else {{$rate->destination_address}} @endif
                                 </td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
-                                <td {{ @$equipmentHides['20'] }}>{{number_format((float)@$sum_total20+@$sum_inland20, 2, '.', '')}}</td>
-                                <td {{ @$equipmentHides['40'] }}>{{number_format((float)@$sum_total40+@$sum_inland40, 2, '.', '')}}</td>
-                                <td {{ @$equipmentHides['40hc'] }}>{{number_format((float)@$sum_total40hc+@$sum_inland40hc, 2, '.', '')}}</td>
-                                <td {{ @$equipmentHides['40nor'] }}>{{number_format((float)@$sum_total40nor+@$sum_inland40nor, 2, '.', '')}}</td>
-                                <td {{ @$equipmentHides['45'] }}>{{number_format((float)@$sum_total45+@$sum_inland45, 2, '.', '')}}</td>
+                                <td {{ @$equipmentHides['20'] }}>{{round(@$sum_total20+@$sum_inland20)}}</td>
+                                <td {{ @$equipmentHides['40'] }}>{{round(@$sum_total40+@$sum_inland40)}}</td>
+                                <td {{ @$equipmentHides['40hc'] }}>{{round(@$sum_total40hc+@$sum_inland40hc)}}</td>
+                                <td {{ @$equipmentHides['40nor'] }}>{{round(@$sum_total40nor+@$sum_inland40nor)}}</td>
+                                <td {{ @$equipmentHides['45'] }}>{{round(@$sum_total45+@$sum_inland45)}}</td>
                                 @if($quote->pdf_option->show_schedules==1)
                                     @if($quote->pdf_option->language=='Spanish')
                                         @if($rate->schedule_type=='Transfer')
