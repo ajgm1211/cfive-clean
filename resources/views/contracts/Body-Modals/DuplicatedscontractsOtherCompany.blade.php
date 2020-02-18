@@ -87,6 +87,7 @@
                     $('#reference').val(response.data.namecontract);
                     var carriers = response.carriers;
                     $('#localcarrier').val(carriers).trigger('change');
+                    $('#company_user').val(response.data.company_user_id).trigger('change');
                     $('#direction').val(response.data.direction_id).trigger('change');
                     var date =response.data.validation;
                     date = date.split(' / ');
