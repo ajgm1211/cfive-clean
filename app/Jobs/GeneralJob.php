@@ -8,6 +8,7 @@ use PrvCarrier;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use \Carbon\Carbon;
 use App\LocalCharge;
 use App\ScheduleType;
 use App\LocalCharPort;
@@ -208,6 +209,29 @@ class GeneralJob implements ShouldQueue
                     }
                 }
 
+            }
+
+            if($requestArray['requestChange'] == true){
+                $time   = new \DateTime();
+                $now2   = $time->format('Y-m-d H:i:s');
+                $requestFc->status        = 'Review';
+                if($requestFc->time_total == null){
+                    $fechaEnd = Carbon::parse($now2);
+                    if(empty($requestFc->time_star) == true){
+                        $requestFc->time_total = 'It did not go through the processing state';
+                    } else{
+                        $time_exacto = '';
+                        $fechaStar = Carbon::parse($requestFc->time_star);
+                        $time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+                        if($time_exacto == 0 || $time_exacto == '0'){
+                            $time_exacto = '1 minute';
+                        } else {
+                            $time_exacto = $time_exacto.' minutes';							
+                        }				
+                        $requestFc->time_total = $time_exacto;
+                    }
+                }
+                $requestFc->update();
             }
 
         } else if(strnatcasecmp($this->accion,'duplicated_lcl') == 0){
