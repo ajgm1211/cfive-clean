@@ -378,6 +378,14 @@
 </script>
 <script>
 
+    $(document).ready(function(){
+//        $('#tableContracts').DataTable()
+//            .search( '' )
+//            .columns().search( '' )
+//            .draw();
+
+    });
+
     function resetSelects(){
         $('#originS').val("null").trigger('change');
         $('#select2-originS-container').text('Select option');
@@ -468,9 +476,8 @@
             )
         }
     });
-
     $(function() {
-        $('#tableContracts').DataTable({
+        var tabla  = $('#tableContracts').DataTable({
             ajax:  "{{ route('contract.tableG') }}",
             "columnDefs": [
                 { className: "truncate", "targets": [ 0,1] }
@@ -519,6 +526,7 @@
                         select.append('<option value="' + d + '">' + d + '</option>')
                     });
                 });
+
             },
             "lengthChange": false,
             "stateSave": true,
@@ -553,6 +561,9 @@
                 }
             ]
         });
+        //$('.filterdropdown').val('');
+        //tabla.ajax.reload();
+        tabla.columns().search( '' ).draw();
     });
 </script>
 @stop
