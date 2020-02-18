@@ -2564,40 +2564,124 @@ class QuoteV2Controller extends Controller
 
   }
 
-  function saveRemarks($quoteId,$type,$modo){
-    $companyUser = CompanyUser::All();
-    $company = $companyUser->where('id', Auth::user()->company_user_id)->pluck('name');
-    $remark = RemarkCondition::where('company_user_id', Auth::user()->company_user_id)->where('type',$type)->with('language')->get();
+  function saveRemarks($quoteId,$orig,$dest,$carrier,$modo){
+
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $rem_port_orig[] =$orig;
+    $rem_port_dest[] = $dest;
+    $rem_carrier_id[] = $carrier;
+    array_push($rem_carrier_id,$carrier_all);
+
+    $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+    $language_id = $company->companyUser->pdf_language;
+
+    $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+
+    $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id,$language_id) {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+    
+
 
 
     $remarks_english="";
     $remarks_spanish="";
     $remarks_portuguese="";
-    //Export
-    foreach($remark as $rem){
+
+    foreach($remarks_all as $remAll){
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
       if($modo == '1'){
-        if($rem->language_id == '1')
-          $remarks_english .=$rem->export."<br>";
-        if($rem->language_id == '2')
-          $remarks_spanish .=$rem->export."<br>";
-        if($rem->language_id == '3')
-          $remarks_portuguese .=$rem->export."<br>";
+        if($remAll->remark->language_id == '1')
+          $remarks_english .=$remAll->remark->export."<br>";
+        if($remAll->remark->language_id == '2')
+          $remarks_spanish .=$remAll->remark->export."<br>";
+        if($remAll->remark->language_id == '3')
+          $remarks_portuguese .=$remAll->remark->export."<br>";
       }else{ // import
 
-        if($rem->language_id == '1')
-          $remarks_english .=$rem->import."<br>";
-        if($rem->language_id == '2')
-          $remarks_spanish .=$rem->import."<br>";
-        if($rem->language_id == '3')
-          $remarks_portuguese .=$rem->import."<br>";
+        if($remAll->remark->language_id == '1')
+          $remarks_english .=$remAll->remark->import."<br>";
+        if($remAll->remark->language_id == '2')
+          $remarks_spanish .=$remAll->remark->import."<br>";
+        if($remAll->remark->language_id == '3')
+          $remarks_portuguese .=$remAll->remark->import."<br>";
+      }
+
+    }
+
+    foreach($remarks_origin as $remOrig){
+
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
+
+      if($modo == '1'){
+        if($remOrig->remark->language_id == '1')
+          $remarks_english .=$remOrig->remark->export."<br>";
+        if($remOrig->remark->language_id == '2')
+          $remarks_spanish .=$remOrig->remark->export."<br>";
+        if($remOrig->remark->language_id == '3')
+          $remarks_portuguese .=$remOrig->remark->export."<br>";
+      }else{ // import
+
+        if($remOrig->remark->language_id == '1')
+          $remarks_english .=$remOrig->remark->import."<br>";
+        if($remOrig->remark->language_id == '2')
+          $remarks_spanish .=$remOrig->remark->import."<br>";
+        if($remOrig->remark->language_id == '3')
+          $remarks_portuguese .=$remOrig->remark->import."<br>";
+      }
+
+    }
+
+    foreach($remarks_destination as $remDest){
+
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
+
+      if($modo == '1'){
+        if($remDest->remark->language_id == '1')
+          $remarks_english .=$remDest->remark->export."<br>";
+        if($remDest->remark->language_id == '2')
+          $remarks_spanish .=$remDest->remark->export."<br>";
+        if($remDest->remark->language_id == '3')
+          $remarks_portuguese .=$remDest->remark->export."<br>";
+      }else{ // import
+
+        if($remDest->remark->language_id == '1')
+          $remarks_english .=$remDest->remark->import."<br>";
+        if($remDest->remark->language_id == '2')
+          $remarks_spanish .=$remDest->remark->import."<br>";
+        if($remDest->remark->language_id == '3')
+          $remarks_portuguese .=$remDest->remark->import."<br>";
       }
     }
 
+
     $quoteEdit = QuoteV2::find($quoteId);
-    $quoteEdit->remarks_english= $terminos_english;
-    $quoteEdit->remarks_spanish = $terminos_spanish;
-    $quoteEdit->remarks_portuguese = $terminos_portuguese;
+    $quoteEdit->remarks_english= $remarks_english;
+    $quoteEdit->remarks_spanish = $remarks_spanish;
+    $quoteEdit->remarks_portuguese = $remarks_portuguese;
     $quoteEdit->update();
+    
+    
 
   }
 
@@ -2913,7 +2997,7 @@ class QuoteV2Controller extends Controller
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
-          //$remarks = $info_D->remarks."<br>";          
+          $remarks = $info_D->remarks."<br>";          
           // $remarks .= $this->remarksCondition($info_D->port_origin,$info_D->port_destiny,$info_D->carrier,$mode);
 
           $request->request->add(['contract' => $info_D->contract->name." / ".$info_D->contract->number ,'origin_port_id'=> $info_D->port_origin->id,'destination_port_id'=>$info_D->port_destiny->id ,'carrier_id'=>$info_D->carrier->id ,'currency_id'=>  $info_D->currency->id ,'quote_id'=>$quote->id,'remarks'=>$remarks , 'schedule_type' =>$info_D->sheduleType , 'transit_time'=> $info_D->transit_time  , 'via' => $info_D->via ]);
@@ -3137,13 +3221,8 @@ class QuoteV2Controller extends Controller
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $language_id = $company->companyUser->pdf_language;
       $this->saveTerms($quote->id,'FCL',$form->mode);
+      $this->saveRemarks($quote->id,$info_D->port_origin->id,$info_D->port_destiny->id,$info_D->carrier->id,$form->mode);
     }
-
-    //$request->session()->flash('message.nivel', 'success');
-    //$request->session()->flash('message.title', 'Well done!');
-    //$request->session()->flash('message.content', 'Register completed successfully!');
-    //return redirect()->route('quotes.index');
-
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
@@ -4936,11 +5015,12 @@ class QuoteV2Controller extends Controller
 
 
 
+      $remarksGeneral = "";
+      $remarksGeneral .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
 
-      //$remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
-      //$remarks = trim($remarks);
 
       $data->setAttribute('remarks',$remarks);
+      $data->setAttribute('remarksG',$remarksGeneral);
 
       // EXCEL REQUEST 
 
