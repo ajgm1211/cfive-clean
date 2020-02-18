@@ -277,10 +277,10 @@ New \ Status Import  &nbsp;
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade bd-example-modal-lg" id="m_select2_modal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-        
+
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
@@ -295,7 +295,7 @@ New \ Status Import  &nbsp;
                 <div class="modal-body">
 
                 </div>
-       
+
             </div>
         </div>
     </div>
@@ -371,93 +371,7 @@ New \ Status Import  &nbsp;
         }
     });
     $(function() {
-        /* $('#tableRates').DataTable({
-            ordering: true,
-            searching: true,
-            processing: true,
-            serverSide: true,
-            order: [[ 3, "asc" ],[ 4, "asc" ]],
-            ajax:  "{{ route('contractlcl.table') }}",
-            "columnDefs": [
-                { className: "truncate", "targets": [ 0,1] }
-            ],
-            columns: [
-
-                {data: 'name', name: 'name'},
-                {data: 'carrier', name: 'carrier'},
-                {data: 'port_orig', name: 'port_orig'},
-                {data: 'port_dest', name: 'port_dest'},
-                {data: 'uom', name: 'uom'},
-                {data: 'minimum', name: 'minimum'},
-                {data: 'currency', name: 'currency'},
-                {data: 'validity', name: 'validity'},
-                {data: 'status', name: 'status'},
-                {data: 'options', name: 'options'}
-            ] ,
-            "autoWidth": true,
-            "overflow":false,
-            //"scrollY": true,         
-            "bPaginate": false,
-            "bJQueryUI": true,
-            buttons: [
-                {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                },
-                {
-                    extend: 'excelHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                }
-            ],
-            initComplete: function () {
-                this.api().columns(8).every(function () {
-                    var column = this;
-                    $('#tableContracts .head .head_hide').html('');
-
-                    var select = $('<select id="formfilter" class="filterdropdown search2"><option value="">' + $(column.header()).text() + '</option></select>')
-                    .prependTo($(column.header()).empty())
-                    .on('change', function () {
-                        var val = new Array();
-                        //set val to current element in the dropdown.
-                        val = $(this).val();
-
-                        if (val.length > 1){
-
-                            valString = val.toString();
-                            valPiped =  valString.replace(/,/g,"|")
-
-                            column
-                                .search( valPiped ? '^'+valPiped+'$' : '', true, false ) //find this value in this column, if it matches, draw it into the table.
-                                .draw();
-                        } else if (val.length == 1) {
-                            column
-                                .search( val ? '^'+val+'$' : '', true, false ) //find this value in this column, if it matches, draw it into the table.
-                                .draw();
-                        } else {
-                            column
-                                .search('',true,false)
-                                .draw();
-                        }
-                    });
-
-                    column.data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>')
-                    });
-                });
-                $('.search2').select2();
-            }
-        });*/
-        $('#tableContracts').DataTable({
+        var tabla = $('#tableContracts').DataTable({
             ajax:  "{{ route('contractlcl.tableG') }}",
             "columnDefs": [
                 { className: "truncate", "targets": [ 0,1] }
@@ -525,6 +439,7 @@ New \ Status Import  &nbsp;
                 }
             ]
         });
+        tabla.columns().search( '' ).draw();
     });  
 </script>
 @stop
