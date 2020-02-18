@@ -222,12 +222,12 @@
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
                                 @if($quote->pdf_option->show_total_freight_in==1)
                                     @if($quote->pdf_option->show_total_freight_in_currency=='USD')
-                                        <td ><b>{{number_format(@$total_freight/$currency_cfg->rates, 2, '.', '')}}</b></td>
+                                        <td ><b>{{round(@$total_freight/$currency_cfg->rates)}}</b></td>
                                     @else
-                                        <td ><b>{{number_format(@$total_freight/$currency_cfg->rates_eur, 2, '.', '')}}</b></td>
+                                        <td ><b>{{round(@$total_freight/$currency_cfg->rates_eur)}}</b></td>
                                     @endif
                                 @else
-                                    <td ><b>{{number_format(@$total_freight, 2, '.', '')}}</b></td>
+                                    <td ><b>{{round(@$total_freight)}}</b></td>
                                 @endif
                                 @if($quote->pdf_option->show_total_freight_in==1)
                                     <td >{{$quote->pdf_option->show_total_freight_in_currency}}</td>

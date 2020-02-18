@@ -152,11 +152,11 @@
                                                     <td colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
                                                     <td colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                                    <td {{ @$equipmentHides['20'] }}>{{number_format(@$sum_sale20, 2, '.', '')}}</td>
-                                                    <td {{ @$equipmentHides['40'] }}>{{number_format(@$sum_sale40, 2, '.', '')}}</td>
-                                                    <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$sum_sale40hc, 2, '.', '')}}</td>
-                                                    <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$sum_sale40nor, 2, '.', '')}}</td>
-                                                    <td {{ @$equipmentHides['45'] }}>{{number_format(@$sum_sale45, 2, '.', '')}}</td>
+                                                    <td {{ @$equipmentHides['20'] }}>{{round(@$sum_sale20)}}</td>
+                                                    <td {{ @$equipmentHides['40'] }}>{{round(@$sum_sale40)}}</td>
+                                                    <td {{ @$equipmentHides['40hc'] }}>{{round(@$sum_sale40hc)}}</td>
+                                                    <td {{ @$equipmentHides['40nor'] }}>{{round(@$sum_sale40nor)}}</td>
+                                                    <td {{ @$equipmentHides['45'] }}>{{round(@$sum_sale45)}}</td>
                                                     @if($quote->pdf_option->grouped_destination_charges==1)
                                                         <td >{{$quote->pdf_option->destination_charges_currency}}</td>
                                                     @else
@@ -229,11 +229,11 @@
                                         {{$item->detail!='' ? $item->detail:'-'}}
                                     </td>
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                    <td {{ @$equipmentHides['20'] }}>{{number_format(@$item->c20, 2, '.', '')}}</td>
-                                    <td {{ @$equipmentHides['40'] }}>{{number_format(@$item->c40, 2, '.', '')}}</td>
-                                    <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$item->c40hc, 2, '.', '')}}</td>
-                                    <td {{ @$equipmentHides['40nor'] }}>{{number_format(@$item->c40nor, 2, '.', '')}}</td>
-                                    <td {{ @$equipmentHides['45'] }}>{{number_format(@$item->c45, 2, '.', '')}}</td>
+                                    <td {{ @$equipmentHides['20'] }}>{{round(@$item->c20)}}</td>
+                                    <td {{ @$equipmentHides['40'] }}>{{round(@$item->c40)}}</td>
+                                    <td {{ @$equipmentHides['40hc'] }}>{{round(@$item->c40hc)}}</td>
+                                    <td {{ @$equipmentHides['40nor'] }}>{{round(@$item->c40nor)}}</td>
+                                    <td {{ @$equipmentHides['45'] }}>{{round(@$item->c45)}}</td>
                                     <td >{{@$item->currency->alphacode}}</td>
                                 </tr>
                             @endforeach
@@ -243,11 +243,11 @@
                                 <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                 <td></td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                <td {{ @$equipmentHides['20'] }}><b>{{number_format(@$sum20, 2, '.', '')}}</b></td>
-                                <td {{ @$equipmentHides['40'] }}><b>{{number_format(@$sum40, 2, '.', '')}}</b></td>
-                                <td {{ @$equipmentHides['40hc'] }}><b>{{number_format(@$sum40hc, 2, '.', '')}}</b></td>
-                                <td {{ @$equipmentHides['40nor'] }}><b>{{number_format(@$sum40nor, 2, '.', '')}}</b></td>
-                                <td {{ @$equipmentHides['45'] }}><b>{{number_format(@$sum45, 2, '.', '')}}</b></td>
+                                <td {{ @$equipmentHides['20'] }}><b>{{round(@$sum20)}}</b></td>
+                                <td {{ @$equipmentHides['40'] }}><b>{{round(@$sum40)}}</b></td>
+                                <td {{ @$equipmentHides['40hc'] }}><b>{{round(@$sum40hc)}}</b></td>
+                                <td {{ @$equipmentHides['40nor'] }}><b>{{round(@$sum40nor)}}</b></td>
+                                <td {{ @$equipmentHides['45'] }}><b>{{round(@$sum45)}}</b></td>
                                 <td><b>{{$currency_cfg->alphacode}}</b></td>                    
                             </tr>
                         </tbody>
@@ -374,11 +374,11 @@
                                     <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
                                     <td></td>
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                                    <td {{ @$equipmentHides['20'] }}><b>{{number_format(@$sum_destination_20+@$inland_20, 2, '.', '')}}</b></td>
-                                    <td {{ @$equipmentHides['40'] }}><b>{{number_format(@$sum_destination_40+@$inland_40, 2, '.', '')}}</b></td>
-                                    <td {{ @$equipmentHides['40hc'] }}><b>{{number_format(@$sum_destination_40hc+@$inland_40hc, 2, '.', '')}}</b></td>
-                                    <td {{ @$equipmentHides['40nor'] }}><b>{{number_format(@$sum_destination_40nor+@$inland_40nor, 2, '.', '')}}</b></td>
-                                    <td {{ @$equipmentHides['45'] }}><b>{{number_format(@$sum_destination_45+@$inland_45, 2, '.', '')}}</b></td>
+                                    <td {{ @$equipmentHides['20'] }}><b>{{round(@$sum_destination_20+@$inland_20)}}</b></td>
+                                    <td {{ @$equipmentHides['40'] }}><b>{{round(@$sum_destination_40+@$inland_40)}}</b></td>
+                                    <td {{ @$equipmentHides['40hc'] }}><b>{{round(@$sum_destination_40hc+@$inland_40hc)}}</b></td>
+                                    <td {{ @$equipmentHides['40nor'] }}><b>{{round(@$sum_destination_40nor+@$inland_40nor)}}</b></td>
+                                    <td {{ @$equipmentHides['45'] }}><b>{{round(@$sum_destination_45+@$inland_45)}}</b></td>
                                     @if($quote->pdf_option->grouped_destination_charges==1)
                                         <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                                     @else

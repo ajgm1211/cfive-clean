@@ -143,7 +143,7 @@
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
                                             <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$total_destination, 2, '.', '')}}</td>
+                                            <td {{ @$equipmentHides['40hc'] }}>{{round(@$total_destination)}}</td>
                                             @if($quote->pdf_option->grouped_destination_charges==1)
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
@@ -234,7 +234,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_destination, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_destination)}}</b></td>
                             @if($quote->pdf_option->grouped_destintion_charges==1)
                                 <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                             @else
@@ -367,7 +367,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_destination+@$total_inland, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_destination+@$total_inland)}}</b></td>
                             @if($quote->pdf_option->grouped_destintion_charges==1)
                                 <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                             @else
