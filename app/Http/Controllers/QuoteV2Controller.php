@@ -2564,12 +2564,14 @@ class QuoteV2Controller extends Controller
 
   }
 
-  function saveRemarks($quoteId,$orig,$dest,$carrier,$modo){
+  function searchRemarks($quoteId,$orig,$dest,$carrier,$modo){
 
     $carrier_all = 26;
     $port_all = harbor::where('name','ALL')->first();
-    $rem_port_orig[] =$orig;
-    $rem_port_dest[] = $dest;
+    $nameOrig = $orig->name;
+    $rem_port_orig[] =$orig->id;
+    $nameDest = $dest->name;
+    $rem_port_dest[] = $dest->id;
     $rem_carrier_id[] = $carrier;
     array_push($rem_carrier_id,$carrier_all);
 
@@ -2594,7 +2596,7 @@ class QuoteV2Controller extends Controller
         $b->wherein('carrier_id',$rem_carrier_id);
       });
     })->get();
-    
+
 
 
 
@@ -2674,14 +2676,41 @@ class QuoteV2Controller extends Controller
       }
     }
 
+    $remarkGenerales = array('english' => $remarks_english , 'spanish' => $remarks_spanish , 'portuguese' => $remarks_portuguese ,'origen' => $nameOrig , 'destino' => $nameDest  );
 
+    return $remarkGenerales ; 
+
+
+    /* $quoteEdit = QuoteV2::find($quoteId);
+    $quoteEdit->remarks_english= $remarks_english;
+    $quoteEdit->remarks_spanish = $remarks_spanish;
+    $quoteEdit->remarks_portuguese = $remarks_portuguese;
+    $quoteEdit->update();*/
+
+
+
+  }
+
+  function saveRemarks($quoteId,$remarkGenerales){
+
+    $remarks_english="";
+    $remarks_spanish="";
+    $remarks_portuguese="";
+
+    foreach($remarkGenerales as  $remark){
+      $titulo = $remark['origen']." / ".$remark['destino']."<br>";
+
+      $remarks_english.= $titulo."<br>". $remark['english']."<br>";
+      $remarks_spanish.=$titulo."<br>". $remark['english']."<br>";
+      $remarks_portuguese.=$titulo."<br>". $remark['english']."<br>";
+
+    }
     $quoteEdit = QuoteV2::find($quoteId);
     $quoteEdit->remarks_english= $remarks_english;
     $quoteEdit->remarks_spanish = $remarks_spanish;
     $quoteEdit->remarks_portuguese = $remarks_portuguese;
     $quoteEdit->update();
-    
-    
+
 
   }
 
@@ -2994,6 +3023,7 @@ class QuoteV2Controller extends Controller
         foreach($info_D->rates as $rateO){
 
           $rates =   json_encode($rateO->rate);
+
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
@@ -3215,13 +3245,15 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
+        $remarksGenerales[] = $this->searchRemarks($quote->id,$info_D->port_origin,$info_D->port_destiny,$info_D->carrier->id,$form->mode);
       }  
+
 
       // Terminos Automatica
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $language_id = $company->companyUser->pdf_language;
       $this->saveTerms($quote->id,'FCL',$form->mode);
-      $this->saveRemarks($quote->id,$info_D->port_origin->id,$info_D->port_destiny->id,$info_D->carrier->id,$form->mode);
+      $this->saveRemarks($quote->id,$remarksGenerales);
     }
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
