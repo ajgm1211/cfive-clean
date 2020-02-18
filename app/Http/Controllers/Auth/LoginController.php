@@ -58,7 +58,7 @@ class LoginController extends Controller
         session(['people_key'=>$people['people_id']]);
       else{
         session(['people_key'=> '']);
-        \Log::channel('stack')->error(' No se genero el people_key de crisp y el usuario no existe ');
+        \Log::channel('single')->error(' No se genero el people_key de crisp y el usuario no existe ');
       }
 
     }else{//validamos que tenga compañia si no lo actualizamos
@@ -71,7 +71,7 @@ class LoginController extends Controller
         session(['people_key'=> $people['people_id']]);
       else{
         session(['people_key'=> '']);
-        \Log::channel('stack')->error(' No se genero el people_key de crisp , y el usuario existe ');
+        \Log::channel('single')->error(' No se genero el people_key de crisp , y el usuario existe ' .$user->email);
       }
     }
   }
