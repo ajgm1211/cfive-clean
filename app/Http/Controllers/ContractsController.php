@@ -19,6 +19,7 @@ use PrvValidation;
 use App\Direction;
 use App\Surcharge;
 use App\ViewRates;
+use \Carbon\Carbon;
 use App\CompanyUser;
 use App\TypeDestiny;
 use App\LocalCharge;
@@ -1510,15 +1511,28 @@ class ContractsController extends Controller
 
     public function duplicatedContractFromRequestStore(Request $request, $id){
         $requestArray   = $request->all();
+        //dd($requestArray);
         $requestArray['requestChange'] = true;
+        $time   = new \DateTime();
+        $now2   = $time->format('Y-m-d H:i:s');
         $requestFc = NewContractRequest::find($requestArray['request_id']);
+
         if(empty($requestFc->contract_id) != true){
             $contracOld = Contract::find($requestFc->contract_id);
             if(empty($contracOld->id) != true){
                 $contracOld->delete();
             }
         }
-        //dd($requestArray);
+
+        if($requestFc->username_load == 'Not assigned'){
+            $requestFc->username_load = \Auth::user()->name.' '.\Auth::user()->lastname;
+        }
+        $requestFc->status        = 'Processing';
+        if($requestFc->time_star_one == false){
+            $requestFc->time_star       = $now2;
+            $requestFc->time_star_one   = true;
+        }
+        $requestFc->update();
         $data           = ['id'=> $id,'data' => $requestArray];
         if(env('APP_VIEW') == 'operaciones') {
             GeneralJob::dispatch('duplicated_fcl',$data)->onQueue('operaciones');
