@@ -137,27 +137,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
-                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
-                                        Replace "Total" with "TON/M3" (LCL)
-                                    </span>
-                                </label>
+                    @if($quote->type=='LCL')
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                        <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                            Replace "Total" with "TON/M3"
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                        <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
+                                        {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
-                                    <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
-                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
 
                 <div id="all" class="tabcontent {{$quote->pdf_option->show_type=='total in' ? '':'displayno'}}">
@@ -206,27 +208,29 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
-                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
-                                        Replace "Total" with "TON/M3" (LCL)
-                                    </span>
-                                </label>
+                    @if($quote->type=='LCL')
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                        <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                            Replace "Total" with "TON/M3"
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                        <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
+                                        {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
-                                    <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
-                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                 </div>
 
                 <div id="charges" class="tabcontent {{$quote->pdf_option->show_type=='charges' ? '':'displayno'}}">
@@ -290,27 +294,31 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
-                                    <span class="form-check-label title-quote input_form" for="replace_total_title">
-                                        Replace "Total" with "TON/M3" (LCL)
-                                    </span>
-                                </label>
+                        @if($quote->type=='LCL')
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" type="checkbox" name="replace_total_title" value="1" id="replace_total_title" data-quote-id="{{$quote->id}}" data-name="replace_total_title" data-type="checkbox" {{$quote->pdf_option->replace_total_title==1 ? 'checked':''}}>
+                                        <span class="form-check-label title-quote input_form" for="replace_total_title">
+                                            Replace "Total" with "TON/M3"
+                                        </span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <label>
-                                    <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
-                                    <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
-                                    {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
-                                </label>
+                        @if($quote->type=='LCL')
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label>
+                                        <input class="form-check-input pdf-feature check" data-quote-id="{{$quote->id}}" data-name="show_total_freight_in" type="checkbox" data-type="checkbox" name="show_total_freight_in" value="1" {{$quote->pdf_option->show_total_freight_in==1 ? 'checked':''}}>
+                                        <span class="title-quote input_form"><b>Show Total Freight In (Detailed LCL):</b></span>
+                                        {{ Form::select('show_total_freight_in_currency',['USD'=>'USD','EUR'=>'EUR'],$quote->pdf_option->show_total_freight_in_currency,['class'=>'form-control-sm pdf-feature select_forms','data-type'=>'select','data-quote-id'=>$quote->id,'data-name'=>'show_total_freight_in_currency']) }}
+                                    </label>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
