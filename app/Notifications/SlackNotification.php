@@ -30,7 +30,7 @@ use Illuminate\Notifications\Messages\SlackMessage;
 
      return (new SlackMessage)
                 ->from('CargoFive', ':extraterrestre:')
-                ->to('#general')
+                ->to('#request-importation')
                 ->content($this->message);
   }
   /**

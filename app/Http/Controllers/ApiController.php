@@ -261,12 +261,12 @@ class ApiController extends Controller
             $charge->charge_type=$charge->changetype;
             if($charge->port_orig!=''){
                 $explode_port = explode(',',$charge->port_orig);
-                $origin_port = $explode_port[1];
+                $origin_port = @$explode_port[1];
                 $charge->origin_port=trim($origin_port," ");
             }
             if($charge->port_dest!=''){
                 $explode_port = explode(',',$charge->port_dest);
-                $destination_port = $explode_port[1];
+                $destination_port = @$explode_port[1];
                 $charge->destination_port=trim($destination_port," ");
             }
             if($charge->country_orig!=''){
@@ -423,7 +423,7 @@ class ApiController extends Controller
         return $charges;
     }
 
-    public function contracts(){
+    public function contracts(Request $request){
         if($request->size){
             $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->take($request->size)->get();
         }else{

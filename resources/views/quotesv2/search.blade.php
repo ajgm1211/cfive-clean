@@ -930,7 +930,7 @@
 <a  id='display_l{{$loop->iteration}}' onclick="display({{$loop->iteration}})" class="l"  title="Cancel" ><i  class="la la-angle-down blue"></i></a>
 </div>
 </div>-->
-												@if(!empty($arr->remarks))
+												@if(!empty($arr->remarks) || !empty($arr->remarksG))
 												<div class="col-lg-1">
 													<div class="btn-detail__quotes btn-remarks">
 														<a  id='display_r{{$loop->iteration}}' onclick="display_r({{$loop->iteration}})" class="l btn-nowrap"  title="Cancel" >
@@ -1351,14 +1351,14 @@
 							</div>
 							@endif
 
-							@if(!empty($arr->remarks))
+							@if(!empty($arr->remarks) || !empty($arr->remarksG))
 							<div class="row no-margin margin-card" id='remark{{$loop->iteration}}'  hidden='true' >
 								<div class="col-lg-12">
 									<div class="row">
 										<span class="darkblue cabezeras">Remarks</span><br><br>
 									</div>
 									<div class="row">
-										<div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} </span></div>
+										<div class="col-lg-6"><span class="monto-down">{!! $arr->remarks !!} <br>  {!! $arr->remarksG !!}</span></div>
 
 									</div>
 								</div>
