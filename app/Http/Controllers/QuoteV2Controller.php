@@ -2564,7 +2564,7 @@ class QuoteV2Controller extends Controller
 
   }
 
-  function searchRemarks($quoteId,$orig,$dest,$carrier,$modo){
+  function saveRemarks($rateId,$orig,$dest,$carrier,$modo){
 
     $carrier_all = 26;
     $port_all = harbor::where('name','ALL')->first();
@@ -2676,22 +2676,22 @@ class QuoteV2Controller extends Controller
       }
     }
 
-    $remarkGenerales = array('english' => $remarks_english , 'spanish' => $remarks_spanish , 'portuguese' => $remarks_portuguese ,'origen' => $nameOrig , 'destino' => $nameDest  );
+    //   $remarkGenerales = array('english' => $remarks_english , 'spanish' => $remarks_spanish , 'portuguese' => $remarks_portuguese ,'origen' => $nameOrig , 'destino' => $nameDest  );
 
-    return $remarkGenerales ; 
+    //return $remarkGenerales ; 
 
 
-    /* $quoteEdit = QuoteV2::find($quoteId);
+    $quoteEdit = AutomaticRate::find($rateId);
     $quoteEdit->remarks_english= $remarks_english;
     $quoteEdit->remarks_spanish = $remarks_spanish;
     $quoteEdit->remarks_portuguese = $remarks_portuguese;
-    $quoteEdit->update();*/
+    $quoteEdit->update();
 
 
 
   }
 
-  function saveRemarks($quoteId,$remarkGenerales){
+  /*function saveRemarks($quoteId,$remarkGenerales){
 
     $remarks_english="";
     $remarks_spanish="";
@@ -2712,7 +2712,7 @@ class QuoteV2Controller extends Controller
     $quoteEdit->update();
 
 
-  }
+  }*/
 
   function saveTerms($quoteId,$type,$modo){
 
@@ -3137,7 +3137,7 @@ class QuoteV2Controller extends Controller
             }  
           }
 
-
+          $this->saveRemarks($rate->id,$info_D->port_origin,$info_D->port_destiny,$info_D->carrier->id,$form->mode);
 
         }
         //CHARGES ORIGIN
@@ -3245,7 +3245,7 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
-        $remarksGenerales[] = $this->searchRemarks($quote->id,$info_D->port_origin,$info_D->port_destiny,$info_D->carrier->id,$form->mode);
+
       }  
 
 
@@ -3253,7 +3253,7 @@ class QuoteV2Controller extends Controller
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $language_id = $company->companyUser->pdf_language;
       $this->saveTerms($quote->id,'FCL',$form->mode);
-      $this->saveRemarks($quote->id,$remarksGenerales);
+      //$this->saveRemarks($quote->id,$remarksGenerales);
     }
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
