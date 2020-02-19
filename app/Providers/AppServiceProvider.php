@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     Schema::defaultStringLength(191);
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
-    
+
     if(env('APP_ENV') !== 'local') {
       $url->forceScheme('https');
     }
