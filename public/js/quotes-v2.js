@@ -185,7 +185,7 @@ $(document).ready(function() {
         url:'/v2/quotes/info/update',
         emptytext:0,
         success: function(response, newValue) {
-            
+
             var total_volume=parseFloat($('#total-volume').html());
             var weight=newValue;
             var chargeable_weight = 0;
@@ -2324,22 +2324,22 @@ $(document).on('click', '.delete-rate', function () {
 
 //Guardar Sale Terms
 
-    $('#saveSaleTerm').on('click',function(e){
-        e.preventDefault();
-        var origin_port=$("#origin_port_select").val();
-        var destination_port=$("#destination_port_select").val();
-        var origin_airport=$("#origin_airport_select").val();
-        var destination_airport=$("#destination_airport_select").val();
+$('#saveSaleTerm').on('click',function(e){
+    e.preventDefault();
+    var origin_port=$("#origin_port_select").val();
+    var destination_port=$("#destination_port_select").val();
+    var origin_airport=$("#origin_airport_select").val();
+    var destination_airport=$("#destination_airport_select").val();
 
-        var form = $(this).parents('form');
-        
-        if(origin_port!='' || destination_port!='' || origin_airport!='' || destination_airport!=''){
-            form.submit();
-        }else{
-            notification('You must select a port/airport','error');
-        }
+    var form = $(this).parents('form');
 
-    });
+    if(origin_port!='' || destination_port!='' || origin_airport!='' || destination_airport!=''){
+        form.submit();
+    }else{
+        notification('You must select a port/airport','error');
+    }
+
+});
 
 //Borrar sale terms
 $(document).on('click', '.delete-sale-term', function () {
@@ -4828,7 +4828,7 @@ function cancel_update($span,$textarea,$update_box){
 }
 
 //Actualizar remarks
-function update_remark($id,$content,$v){
+function update_remark($id,$content,$v,$language){
     var id=$(".id").val();
     var remarks = tinymce.get($content).getContent();
     $.ajax({
@@ -4836,6 +4836,7 @@ function update_remark($id,$content,$v){
         url: '/v2/quotes/update/remarks/'+$id,
         data: {
             'remarks': remarks,
+            'language': $language,
         },
         success: function(data) {
             if(data.message=='Ok'){
@@ -4844,11 +4845,28 @@ function update_remark($id,$content,$v){
                     'The remarks has been updated.',
                     'success'
                 )
+                if($language=='all'){
+                    $(".remarks_box_"+$v).html(data.rate['remarks']);
+                    $(".remarks_span_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_"+$v).attr('hidden','true');
+                    $(".update_remarks_"+$v).attr('hidden','true');
+                }else if($language=='english'){
+                    $(".remarks_box_english_"+$v).html(data.rate['remarks_english']);
+                    $(".remarks_span_english_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_english_"+$v).attr('hidden','true');
+                    $(".update_remarks_english_"+$v).attr('hidden','true');
+                }else if($language=='spanish'){
+                    $(".remarks_box_spanish_"+$v).html(data.rate['remarks_spanish']);
+                    $(".remarks_span_spanish_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_spanish_"+$v).attr('hidden','true');
+                    $(".update_remarks_spanish_"+$v).attr('hidden','true');
+                }else if($language=='portuguese'){
+                    $(".remarks_box_portuguese_"+$v).html(data.rate['remarks_portuguese']);
+                    $(".remarks_span_portuguese_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_portuguese_"+$v).attr('hidden','true');
+                    $(".update_remarks_portuguese_"+$v).attr('hidden','true');
+                }
 
-                $(".remarks_box_"+$v).html(data.rate['remarks']);
-                $(".remarks_span_"+$v).removeAttr('hidden');
-                $(".remarks_textarea_"+$v).attr('hidden','true');
-                $(".update_remarks_"+$v).attr('hidden','true');
             }
         }
     });
