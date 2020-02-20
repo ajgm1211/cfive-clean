@@ -3,7 +3,7 @@
 	<head>
 		<title>Error 500</title>
 		<link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="/bootstrap-4.4.1/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="{{asset('bootstrap-4.4.1/css/bootstrap.min.css')}} ">
 		<link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 		<style>
 			html, body {
@@ -91,8 +91,8 @@
 				</div>
 			</div>
 		</div>
-		<script src="/public/jquery-3.4.1.min.js"></script>
+		<script src="{{asset('jquery-3.4.1.min.js')}}"></script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-		<script src="/bootstrap-4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script src="{{asset('/bootstrap-4.4.1/js/bootstrap.min.js')}}" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 	</body>
 </html>
