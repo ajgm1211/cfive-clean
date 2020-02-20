@@ -30,7 +30,7 @@
             </li>
             <li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.cost.page',setearRouteKey($quote->id))}}">
-                    Excel (BETA) &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
+                    Excel &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
                 </a>
             </li>
             <li class="nav-item m-tabs__item" >
