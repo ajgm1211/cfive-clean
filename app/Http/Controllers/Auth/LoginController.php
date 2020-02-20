@@ -79,6 +79,8 @@ class LoginController extends Controller
   public function authenticated(Request $request, $user)
   {  
 
+    $uuid = \Uuid::generate(4);
+    //dd($test->string);
 
     $this->userCrisp($user);
     $browser = $this->getBrowser();
