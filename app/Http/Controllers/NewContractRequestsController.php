@@ -740,6 +740,6 @@ class NewContractRequestsController extends Controller
 
 	// TEST Request Importation ----------------------------------------------------------
 	public function test(Request $request){
-		return response()->json($request);
+		return view('errors.500');
 	}
 }
