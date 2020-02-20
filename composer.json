@@ -38,6 +38,7 @@
         "spatie/laravel-medialibrary": "^7.0.0",
         "spatie/laravel-permission": "^2.14",
         "unisharp/laravel-filemanager": "v2.0.0-alpha7",
+        "webpatser/laravel-uuid": "^3.0",
         "yajra/laravel-datatables-oracle": "^8.7"
     },
     "require-dev": {
