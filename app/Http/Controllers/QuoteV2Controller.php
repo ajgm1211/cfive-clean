@@ -4148,10 +4148,8 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
-
+                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}';
                     $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-
                     $response = $client->request('GET', $url);
 
 
@@ -4172,10 +4170,8 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
-
+                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}';
                     $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-
                     try {
                         $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
