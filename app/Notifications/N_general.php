@@ -28,7 +28,7 @@ class N_general extends Notification
      */
   public function via($notifiable)
   {
-    return ['database','broadcast'];
+    return ['broadcast'];
   }
 
 
