@@ -10,7 +10,7 @@
 				height: 100%;
 			}
 			body {
-				background-image: url("/errors/a2.jpg");
+				background-image: url("/errors/a4.jpg");
 				background-repeat: no-repeat;
 				background-size: 50% 100%;
 				background-position: right;
