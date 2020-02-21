@@ -16,6 +16,12 @@ use App\LocalCharge;
 use App\OauthAccessToken;
 use App\ViewLocalCharges;
 use App\ViewGlobalCharge;
+use App\Currency;
+use App\Harbor;
+use App\Company;
+use App\Country;
+use App\CompanyUser;
+use App\QuoteV2;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
@@ -144,6 +150,11 @@ class ApiController extends Controller
         ]);
     }
 
+  /**
+   * Logout from session
+   * @param Request $request 
+   * @return JSON
+   */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
@@ -151,6 +162,12 @@ class ApiController extends Controller
                                  'Successfully logged out']);
     }
 
+  /**
+   * Show user info
+   * @param Request $request 
+   * @return JSON
+   */
+    
     public function user(Request $request)
     {
         return response()->json($request->user());
@@ -191,6 +208,12 @@ class ApiController extends Controller
         }
     }
 
+  /**
+   * Show FCL Rates list
+   * @param Request $request 
+   * @return JSON
+   */
+    
     public function rates(Request $request)
     {
         if($request->size){
@@ -238,7 +261,14 @@ class ApiController extends Controller
 
         return $rates;
     }
-
+    
+    
+  /**
+   * Show charges list
+   * @param Request $request 
+   * @return JSON
+   */
+    
     public function charges(Request $request)
     {
 
@@ -294,72 +324,13 @@ class ApiController extends Controller
         return $charges;
     }
 
-    public function charges2(Request $request)
-    {
-        $charges=LocalCharPort::whereHas('localcharge',function ($q) {
-            $q->whereHas('contract', function ($q){
-                $q->where('company_user_id', \Auth::user()->company_user_id);
-            });
-        })->with('localcharge')->get();
 
-        $collection = Collection::make($charges);
-        $collection->transform(function ($charge) {
-            $charge->id=$charge->localcharge->id;
-            $charge->charge=$charge->localcharge->surcharge['name'];
-            $charge->origin_port=$charge->portOrig->code;
-            $charge->destination_port=$charge->portDest->code;
-            $charge->charge_type=$charge->localcharge->typedestiny['description'];
-            $charge->calculation_type=$charge->localcharge->calculationtype['name'];
-            $charge->amount=$charge->localcharge->ammount;
-            $charge->currency_code=$charge->localcharge->currency['alphacode'];
-            $charge->contract=$charge->localcharge->contract['name'];
-            $charge->contract_id=$charge->localcharge->contract['id'];
-            $charge->valid_from=$charge->localcharge->contract['validity'];
-            $charge->valid_until=$charge->localcharge->contract['expire'];
-            unset($charge['portOrig']);
-            unset($charge['portDest']);
-            unset($charge['port_orig']);
-            unset($charge['port_dest']);
-            unset($charge['localcharge']);
-            unset($charge['localcharge_id']);
-        });
-
-        return $charges;
-    }
-
-    public function chargesCountry(Request $request)
-    {
-        $charges=LocalCharCountry::whereHas('localcharge',function ($q) {
-            $q->whereHas('contract', function ($q){
-                $q->where('company_user_id', \Auth::user()->company_user_id);
-            });
-        })->with('localcharge')->get();
-
-        $collection = Collection::make($charges);
-        $collection->transform(function ($charge) {
-            $charge->id=$charge->localcharge->id;
-            $charge->charge=$charge->localcharge->surcharge['name'];
-            $charge->origin_country=$charge->countryOrig->name;
-            $charge->destination_country=$charge->countryDest->name;
-            $charge->charge_type=$charge->localcharge->typedestiny['description'];
-            $charge->calculation_type=$charge->localcharge->calculationtype['name'];
-            $charge->amount=$charge->localcharge->ammount;
-            $charge->currency_code=$charge->localcharge->currency['alphacode'];
-            $charge->contract_name=$charge->localcharge->contract['name'];
-            $charge->contract_id=$charge->localcharge->contract['id'];
-            $charge->valid_from=$charge->localcharge->contract['validity'];
-            $charge->valid_until=$charge->localcharge->contract['expire'];
-            unset($charge['countryOrig']);
-            unset($charge['countryDest']);
-            unset($charge['country_orig']);
-            unset($charge['country_dest']);
-            unset($charge['localcharge']);
-            unset($charge['localcharge_id']);
-        });
-
-        return $charges;
-    }
-
+  /**
+   * Show globalcharge list
+   * @param Request $request 
+   * @return JSON
+   */
+    
     public function globalCharges(Request $request)
     {
         if($request->size){
@@ -389,40 +360,11 @@ class ApiController extends Controller
         return $charges;
     }
 
-    public function globalChargesCountry(Request $request)
-    {
-        $charges=GlobalCharCountry::whereHas('globalcharge',function ($q) {
-            $q->where('company_user_id', \Auth::user()->company_user_id);
-        })->with('globalcharge')->get();
-
-        $collection = Collection::make($charges);
-        $collection->transform(function ($charge) {
-            $charge->id=$charge->globalcharge->id;
-            $charge->charge=$charge->globalcharge->surcharge['name'];
-            $charge->origin_country=$charge->countryOrig->name;
-            $charge->destination_country=$charge->countryDest->name;
-            $charge->charge_type=$charge->globalcharge->typedestiny['description'];
-            $charge->calculation_type=$charge->globalcharge->calculationtype['name'];
-            $charge->amount=$charge->globalcharge->ammount;
-            $charge->currency_code=$charge->globalcharge->currency['alphacode'];
-            $charge->carrier_code=$charge->globalcharge->carrier->carrier->uncode;
-            $charge->valid_from=$charge->globalcharge->validity;
-            $charge->valid_until=$charge->globalcharge->expire;
-            unset($charge['countryOrig']);
-            unset($charge['countryDest']);
-            unset($charge['country_orig']);
-            unset($charge['country_dest']);
-            unset($charge['port_orig']);
-            unset($charge['port_dest']);
-            unset($charge['globalcharge']);
-            unset($charge['globalcharge_id']);
-            unset($charge['typedestiny_id']);
-            unset($charge['globalCarrier']);
-        });
-
-        return $charges;
-    }
-
+  /**
+   * Show contracts list
+   * @param Request $request 
+   * @return JSON
+   */
     public function contracts(Request $request){
         if($request->size){
             $contracts = Contract::where('company_user_id','=',Auth::user()->company_user_id)->take($request->size)->get();
@@ -431,5 +373,60 @@ class ApiController extends Controller
         }
 
         return $contracts;
+    }
+
+  /**
+   * Show quotes list
+   * @param Request $request 
+   * @return JSON
+   */
+    
+    public function quotes(Request $request){
+        $company_user = null;
+        $currency_cfg = null;
+        $type = $request->type;
+        $status = $request->status;
+        $company_user_id = \Auth::user()->company_user_id;
+        if(\Auth::user()->hasRole('subuser')){
+            $quotes = QuoteV2::when($type,function($query,$type) {
+                return $query->where('type',$type);
+            })->when($status,function($query,$status) {
+                return $query->where('status',$status);
+            })->where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->take($request->size)->get();
+        }else{
+            $quotes = QuoteV2::when($type,function($query,$type) {
+                return $query->where('type',$type);
+            })->when($status,function($query,$status) {
+                return $query->where('status',$status);
+            })->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->take($request->size)->get();
+        }
+        $companies = Company::pluck('business_name','id');
+        $harbors = Harbor::pluck('display_name','id');
+        $countries = Country::pluck('name','id');
+        if(\Auth::user()->company_user_id){
+            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+            $currency_cfg = Currency::find($company_user->currency_id);
+        }
+
+        $quotes->load('user','company','contact','incoterm');
+        $collection = Collection::make($quotes);
+        $collection->transform(function ($quote, $key) {
+            unset($quote['origin_port_id']);
+            unset($quote['destination_port_id']);
+            unset($quote['origin_address']);
+            unset($quote['destination_address']);
+            unset($quote['currency_id']);
+            return $quote;
+        });
+
+        return $collection;
     }
 }
