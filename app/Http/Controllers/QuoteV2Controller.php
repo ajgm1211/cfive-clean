@@ -104,33 +104,17 @@ class QuoteV2Controller extends Controller
         $currency_cfg = null;
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
-            if($request->size){
-                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-                    $q->where('company_user_id','=',$company_user_id);
-                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-                }])->take($request->size)->get();
-            }else{
-                $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-                    $q->where('company_user_id','=',$company_user_id);
-                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-                }])->get();
-            }
+            $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->get();
         }else{
-            if($request->size){
-                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-                    $q->where('company_user_id','=',$company_user_id);
-                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-                }])->take($request->size)->get();
-            }else{
-                $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-                    $q->where('company_user_id','=',$company_user_id);
-                })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                    $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-                }])->get();
-            }
+            $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+                $q->where('company_user_id','=',$company_user_id);
+            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+            }])->get();
         }
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
@@ -905,7 +889,7 @@ class QuoteV2Controller extends Controller
     public function updateRemarks(Request $request,$id)
     {
         $rate=AutomaticRate::find($id);
-        
+
         if($request->language == 'all'){
             $rate->remarks=$request->remarks;
         }
@@ -4164,10 +4148,8 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}');
-
+                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}';
                     $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-
                     $response = $client->request('GET', $url);
 
 
@@ -4188,10 +4170,8 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
-
+                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}';
                     $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-
                     try {
                         $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
