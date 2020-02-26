@@ -1128,45 +1128,8 @@ $v=0;
                             </div>
                         </div>
                         <br>
-
                         <!-- Remarks -->
-                        <div class="row">
-                            <div class="col-md-12 ">
-                                <div class="">
-                                    <div class="header-charges" >
-                                        <div class="row " style="padding-left: 20px;">
-                                            <h5 class="title-quote size-12px">Remarks</h5>
-                                        </div>
-                                    </div>
-                                    <div class="m-portlet__body">
-                                        <div class="remarks_span_{{$v}}">
-                                            <button class="btn btn-primary-v2 edit-remarks btn-edit" onclick="edit_remark('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')" style="margin-bottom: 12px;">
-                                                Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                            </button>
-                                            <div class="card card-body bg-light remarks_box_{{$v}}">
-                                                <span>{!! $rate->remarks !!}</span>
-                                                <br>
-                                            </div>
-                                        </div>
-                                        <div class="remarks_textarea_{{$v}}" hidden>
-                                            <textarea name="remarks_{{$v}}" class="form-control remarks_{{$v}} editor">{!!$rate->remarks!!}</textarea>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12 text-center update_remarks_{{$v}}"  hidden>
-                                                <br>
-                                                <button class="btn btn-danger cancel-remarks_{{$v}}" onclick="cancel_update('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')">
-                                                    Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
-                                                </button>
-                                                <button class="btn btn-primary update-remarks_{{$v}}" onclick="update_remark({{$rate->id}},'remarks_{{$v}}',{{$v}})">
-                                                    Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                                </button>
-                                                <br>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @include('quotesv2.partials.remarks')
                     </div>
                 </div>
             </div>
