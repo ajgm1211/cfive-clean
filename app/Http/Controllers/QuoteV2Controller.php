@@ -4010,7 +4010,7 @@ class QuoteV2Controller extends Controller
 
                   $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maerks/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
                         $response = $client->request('GET', $url);
