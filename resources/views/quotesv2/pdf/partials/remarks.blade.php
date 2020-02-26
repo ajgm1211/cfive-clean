@@ -29,8 +29,19 @@
 
         @foreach($rates as $rate)
             @if($rate->remarks != '')
-                <span class="text-justify">{!! $rate->remarks !!}</span>
+                <span class="text-justify">{!! $rate->remarks !!}</span><br/>
             @endif
+            @switch($quote->pdf_option->language)
+                @case("English")
+                    <span class="text-justify">{!! $rate->remarks_english !!}</span>
+                    @break
+                @case("Portuguese")
+                    <span class="text-justify">{!! $rate->remarks_portuguese !!}</span>
+                    @break
+                @case("Spanish")
+                    <span class="text-justify">{!! $rate->remarks_spanish !!}</span>
+                    @break
+            @endswitch
         @endforeach
         <!--<table class="table-border table-no-split" border="0" cellspacing="0" cellpadding="0">
             <thead class="title-quote header-table">
