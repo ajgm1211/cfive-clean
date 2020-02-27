@@ -11,9 +11,9 @@ class RegionPt extends Model
                            'name'
                           ];
 
-    public function PuertosRegions()
+    public function PortRegions()
     {
-        return $this->hasMany('App\PuertoRegion');
+        return $this->hasMany('App\PortRegion','region_pts_id');
     }
     
     public function harbor(){
