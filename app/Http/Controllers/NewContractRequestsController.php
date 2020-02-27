@@ -740,6 +740,15 @@ class NewContractRequestsController extends Controller
 
 	// TEST Request Importation ----------------------------------------------------------
 	public function test(Request $request){
-		return view('errors.404');
+		$carrier        = carrier::all()->pluck('name','id');
+		$direction      = [null=>'Please Select'];
+		$direction2      = Direction::all();
+		$user           = \Auth::user();
+		foreach($direction2 as $d){
+			//dd($direction2);
+			$direction[$d['id']]=$d->name;
+		}
+		//dd($direction);
+		return view('RequestV2.Fcl.index',compact('carrier','user','direction'));
 	}
 }
