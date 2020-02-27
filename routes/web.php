@@ -128,6 +128,7 @@ Route::prefix('globalcharges')->group(function () {
 	Route::POST('StoreArrayDupicateAdm/','GlobalChargesController@storeArrayAdm')->name('gcadm.store.array')->middleware(['auth','role:administrator|data_entry']);
 	Route::POST('EditDateAdm','GlobalChargesController@editDateArrAdm')->name('gcadm.edit.dates.Array')->middleware(['auth','role:administrator|data_entry']);
 	Route::POST('ArrUpdateDateAdm/','GlobalChargesController@updateDateArrAdm')->name('gcadm.update.dates.Array')->middleware(['auth','role:administrator|data_entry']);
+    Route::POST('loadSelectForRegion/','GlobalChargesController@loadSelectForRegion')->name('gcadm.load.select.region')->middleware(['auth','role:administrator|data_entry']);
 });
 Route::resource('globalcharges', 'GlobalChargesController')->middleware('auth');
 
