@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Rate;
+use App\Region;
 use App\Harbor;
 use App\Carrier;
 use App\Country;
 use App\Currency;
+use App\RegionPt;
 use App\Surcharge;
 use App\CompanyUser;
 use App\TypeDestiny;
@@ -478,6 +480,11 @@ class GlobalChargesController extends Controller
 
 	// CRUD Administarator -----------------------------------------------------------------------------------------------------
 
+    public function loadSelectForRegion(Request $request){
+        
+        return response()->json(['success' => 'ok','data' => $request->all()]);
+    }
+    
 	public function indexAdm(Request $request){
 		$companies              = CompanyUser::pluck('name','id');
 		$carriers               = Carrier::pluck('name','id');
@@ -800,6 +807,8 @@ class GlobalChargesController extends Controller
 
 		$globalcharges      = GlobalCharge::find($id);
 		$calculationT       = CalculationType::pluck('name','id');
+		$regionCt           = Region::pluck('name','id');
+		$regionPt           = RegionPt::pluck('name','id');
 		$typedestiny        = TypeDestiny::pluck('description','id');
 		$surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
 		$harbor             = Harbor::pluck('display_name','id');
@@ -828,7 +837,7 @@ class GlobalChargesController extends Controller
 			$activacion['act'] = 'divport';
 		}
 
-		return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
+		return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','regionPt','regionCt','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
 	}
 
 	public function updateAdm(Request $request, $id){
