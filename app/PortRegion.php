@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PuertoRegion extends Model
+class PortRegion extends Model
 {
     protected $table    = "puerto_regions";
     protected $fillable = ['id',

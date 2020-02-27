@@ -1,102 +1,102 @@
 <div class="m-stack m-stack--ver m-stack--desktop">
-    <!-- BEGIN: Brand -->
-    <div class="m-stack__item m-brand  m-brand--skin-dark ">
-        <div class="m-stack m-stack--ver m-stack--general">
-            <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                @if(empty(\Auth::user()->company_user_id) != true)
-                <a href="/" class="m-brand__logo-wrapper">
-                    <img alt="" src="/logo.png"/>
-                </a>
-                @else
-                <a href="/settings" class="m-brand__logo-wrapper">
-                    <img alt="" src="/logo.png"/>
-                </a>
+  <!-- BEGIN: Brand -->
+  <div class="m-stack__item m-brand  m-brand--skin-dark ">
+    <div class="m-stack m-stack--ver m-stack--general">
+      <div class="m-stack__item m-stack__item--middle m-brand__logo">
+        @if(empty(\Auth::user()->company_user_id) != true)
+        <a href="/" class="m-brand__logo-wrapper">
+          <img alt="" src="/logo.png"/>
+        </a>
+        @else
+        <a href="/settings" class="m-brand__logo-wrapper">
+          <img alt="" src="/logo.png"/>
+        </a>
 
-                @endif
-            </div>
-            <div class="m-stack__item m-stack__item--middle m-brand__tools">
-                <!-- BEGIN: Left Aside Minimize Toggle 1 -->
-                <!--<a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block 
+        @endif
+      </div>
+      <div class="m-stack__item m-stack__item--middle m-brand__tools">
+        <!-- BEGIN: Left Aside Minimize Toggle 1 -->
+        <!--<a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block 
 ">
 <span></span>
 </a>-->
-                <!-- END -->
-                <!-- BEGIN: Responsive Aside Left Menu Toggler 2 -->
-                <!--<a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
+        <!-- END -->
+        <!-- BEGIN: Responsive Aside Left Menu Toggler 2 -->
+        <!--<a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
 <span></span>
 </a>-->
-                <!-- END -->
-                <!-- BEGIN: Responsive Header Menu Toggler 3 -->
-                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
-                    <span></span>
-                </a>
-                <!-- END -->
-                <!-- BEGIN: Topbar Toggler 4 -->
-                <!--<a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
+        <!-- END -->
+        <!-- BEGIN: Responsive Header Menu Toggler 3 -->
+        <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+          <span></span>
+        </a>
+        <!-- END -->
+        <!-- BEGIN: Topbar Toggler 4 -->
+        <!--<a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
 <i class="flaticon-more"></i>
 </a>-->
-                <!-- BEGIN: Topbar Toggler 5 -->
-            </div>
-        </div>
+        <!-- BEGIN: Topbar Toggler 5 -->
+      </div>
     </div>
-    <!-- END: Brand -->
-    <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
-        <!-- BEGIN: Horizontal Menu -->
-        <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
-            <i class="la la-close"></i>
-        </button>
-        <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
-            <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+  </div>
+  <!-- END: Brand -->
+  <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
+    <!-- BEGIN: Horizontal Menu -->
+    <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
+      <i class="la la-close"></i>
+    </button>
+    <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-dark m-header-menu--submenu-skin-dakr m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
+      <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
 
-                @if(empty(\Auth::user()->company_user_id) != true)
+        @if(empty(\Auth::user()->company_user_id) != true)
 
-                @role('administrator|company')
+        @role('administrator|company')
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-wrap">
-                                <span class="m-menu__link-text">
-                                    <b>Contracts</b>
-                                </span>
-                            </span>
-                        </span>
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                    </a>
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                        <ul class="m-menu__subnav">
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('contracts.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-file"></i>
-                                    <span class="m-menu__link-text">
-                                        Sea Freight FCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('contractslcl.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-file"></i>
-                                    <span class="m-menu__link-text">
-                                        Sea Freight LCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('surcharges.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-list-1"></i>
-                                    <span class="m-menu__link-text">
-                                        Surcharge List
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+          <a  href="#" class="m-menu__link m-menu__toggle">
+            <span class="m-menu__link-title">
+              <span class="m-menu__link-wrap">
+                <span class="m-menu__link-text">
+                  <b>Contracts</b>
+                </span>
+              </span>
+            </span>
+            <i class="m-menu__hor-arrow la la-angle-down"></i>
+            <i class="m-menu__ver-arrow la la-angle-right"></i>
+          </a>
+          <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+            <ul class="m-menu__subnav">
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('contracts.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-file"></i>
+                  <span class="m-menu__link-text">
+                    Sea Freight FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('contractslcl.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-file"></i>
+                  <span class="m-menu__link-text">
+                    Sea Freight LCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('surcharges.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-list-1"></i>
+                  <span class="m-menu__link-text">
+                    Surcharge List
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
 
 
-                <!--
+        <!--
 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
 <a  href="#" class="m-menu__link m-menu__toggle">
 <span class="m-menu__link-title">
@@ -133,143 +133,143 @@ Sea Freight LCL
 </li>
 -->
 
-                @endrole
+        @endrole
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-wrap">
-                                <span class="m-menu__link-text">
-                                    <b>Manage Requests</b>
-                                </span>
-                            </span>
-                        </span>
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                    </a>
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                        <ul class="m-menu__subnav">
-                            @role('administrator|data_entry')
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
-                                    <span class="m-menu__link-text">
-                                        Request Imp. FCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
-                                    <span class="m-menu__link-text">
-                                        Request Imp. LCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
-                                    <span class="m-menu__link-text">
-                                        Request Imp. G.C-FCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestsGlobalchargersLcl.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-folder-3"></i>
-                                    <span class="m-menu__link-text">
-                                        Request Imp. G.C-LCL
-                                    </span>
-                                </a>
-                            </li>
-                            @endrole
-                        </ul>
-                    </div>
-                </li>
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+          <a  href="#" class="m-menu__link m-menu__toggle">
+            <span class="m-menu__link-title">
+              <span class="m-menu__link-wrap">
+                <span class="m-menu__link-text">
+                  <b>Manage Requests</b>
+                </span>
+              </span>
+            </span>
+            <i class="m-menu__hor-arrow la la-angle-down"></i>
+            <i class="m-menu__ver-arrow la la-angle-right"></i>
+          </a>
+          <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+            <ul class="m-menu__subnav">
+              @role('administrator|data_entry')
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Imp. FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Imp. LCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestsGlobalchargersFcl.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Imp. G.C-FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestsGlobalchargersLcl.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Imp. G.C-LCL
+                  </span>
+                </a>
+              </li>
+              @endrole
+            </ul>
+          </div>
+        </li>
 
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+          <a  href="#" class="m-menu__link m-menu__toggle">
+            <span class="m-menu__link-text">
+              <b>Manage G.C.</b>
+            </span>                                    
+            <i class="m-menu__hor-arrow la la-angle-down"></i>
+            <i class="m-menu__ver-arrow la la-angle-right"></i>
+          </a>
+          <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+            <ul class="m-menu__subnav">
+
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-globe"></i>
+                  <span class="m-menu__link-text">
+                    Administrator FCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('gclcladm.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-globe"></i>
+                  <span class="m-menu__link-text">
+                    Administrator LCL
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('globalsduplicated.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-copy"></i>
+                  <span class="m-menu__link-text">
+                    Duplicates FCL
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+          <a  href="#" class="m-menu__link m-menu__toggle">
+            <span class="m-menu__link-title">
+              <span class="m-menu__link-wrap">
+                <span class="m-menu__link-text">
+                  <b>Settings</b>
+                </span>
+              </span>
+            </span>
+            <i class="m-menu__hor-arrow la la-angle-down"></i>
+            <i class="m-menu__ver-arrow la la-angle-right"></i>
+          </a>
+          <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+            <ul class="m-menu__subnav">
+              @role('administrator|company|subuser')
+
+              @endrole
+              @role('administrator|company')
+
+              <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <a  href="#" class="m-menu__link m-menu__toggle">
+                  <i class="m-menu__link-icon flaticon-share"></i>
+                  &nbsp;&nbsp;&nbsp;
+                  <span class="m-menu__link-text">
+                    API Settings
+                  </span>                                    
+                  <i class="m-menu__hor-arrow la la-angle-down"></i>
+                  <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+
+                  <ul class="m-menu__subnav">
+                    <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
+                      <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
+                        <i class="m-menu__link-icon flaticon-refresh"></i>
                         <span class="m-menu__link-text">
-                            <b>Manage G.C.</b>
-                        </span>                                    
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                    </a>
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <ul class="m-menu__subnav">
-
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('gcadm.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-globe"></i>
-                                    <span class="m-menu__link-text">
-                                        Administrator FCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('gclcladm.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-globe"></i>
-                                    <span class="m-menu__link-text">
-                                        Administrator LCL
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('globalsduplicated.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-copy"></i>
-                                    <span class="m-menu__link-text">
-                                        Duplicates FCL
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-wrap">
-                                <span class="m-menu__link-text">
-                                    <b>Settings</b>
-                                </span>
-                            </span>
+                          API tokens
                         </span>
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                    </a>
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                        <ul class="m-menu__subnav">
-                            @role('administrator|company|subuser')
+                      </a>
+                    </li>
 
-                            @endrole
-                            @role('administrator|company')
-
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                <a  href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon flaticon-share"></i>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span class="m-menu__link-text">
-                                        API Settings
-                                    </span>                                    
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-
-                                    <ul class="m-menu__subnav">
-                                        <li class="m-menu__item " data-redirect="true" aria-haspopup="true">
-                                            <a  href="{{ route('oauth.tokens') }}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-refresh"></i>
-                                                <span class="m-menu__link-text">
-                                                    API tokens
-                                                </span>
-                                            </a>
-                                        </li>
-
-                                        <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                    <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
 <a  href="{{route('api.settings')}}" class="m-menu__link ">
 <i class="m-menu__link-icon flaticon-network"></i>
 <span class="m-menu__link-text">
@@ -277,272 +277,280 @@ API Integrations
 </span>
 </a>
 </li>-->
-                                    </ul>
-                                </div>
-                            </li>
-                            @endrole
-                            @role('administrator|company|subuser')
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-graph"></i>
-                                    <span class="m-menu__link-text">
-                                        Dashboard
-                                    </span>
-                                </a>
-                            </li>
-                            @endrole
-                            @role('administrator|company')
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{ route('users.home') }}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-users"></i>
-                                    <span class="m-menu__link-text">
-                                        Users
-                                    </span>
-                                </a>
-                            </li>
-                            @endrole
-                            @role('administrator|data_entry')
-
-                            <!-- Sub- Menus --------------------------------------------------------------- -->
-
-
-                            <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                                <a  href="#" class="m-menu__link m-menu__toggle">
-                                    <i class="m-menu__link-icon la la-map-marker"></i>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <span class="m-menu__link-text">
-                                        Places And Carriers
-                                    </span>                                    
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-
-                                    <ul class="m-menu__subnav">
-                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                            <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-business"></i>
-                                                <span class="m-menu__link-text">
-                                                    Harbors
-                                                </span>
-                                            </a>
-                                        </li>
-
-                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                            <a  href="{{route('Countries.index')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon la la-globe"></i>
-                                                <span class="m-menu__link-text">
-                                                    Countries
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                            <a  href="{{route('Region.index')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon la la-globe"></i>
-                                                <span class="m-menu__link-text">
-                                                    Regions
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                            <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
-                                                <i class="m-menu__link-icon la la-ship"></i>
-                                                <span class="m-menu__link-text">
-                                                    Manage Carriers
-                                                </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('CarrierImportation.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-dropbox"></i>
-                                    <span class="m-menu__link-text">
-                                        Carrier Auto Importation
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('gruopSurcharger.index')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon la la-dropbox"></i>
-                                    <span class="m-menu__link-text">
-                                        Group Surchargers
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('settings.companies')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-user-settings"></i>
-                                    <span class="m-menu__link-text">
-                                        User companies
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('search.list')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-search"></i>
-                                    <span class="m-menu__link-text">
-                                        Search History
-                                    </span>
-                                </a>
-                            </li>
-                            @endrole
-                            @if(Session::has('impersonate'))
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
-                                    <i class="m-menu__link-icon flaticon-logout"></i>
-                                    <span class="m-menu__link-text">
-                                        Exit impersonate mode
-                                    </span>
-                                </a>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </li>
-                @endif
-
-                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
-                    <a  href="#" class="m-menu__link m-menu__toggle">
-                        <span class="m-menu__link-title">
-                            <span class="m-menu__link-wrap">
-                                <span class="m-menu__link-text">
-                                    <b>{{\Auth::user()->name}} {{\Auth::user()->lastname}}</b>
-                                </span>
-                            </span>
-                        </span>
-                        <i class="m-menu__hor-arrow la la-angle-down"></i>
-                        <i class="m-menu__ver-arrow la la-angle-right"></i>
-                    </a>
-                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
-                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
-                        <ul class="m-menu__subnav">
-
-                            <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                                <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="m-menu__link-text">
-                                        <span class="la la-sign-out" style="font-size:23px;"></span> 
-                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout </b>
-                                    </span>
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
-                            <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
-                                <div class='row'>
-                                    <div class="col-md-2">
-                                        <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
-                                    </div>
-                                    <span class="m-nav__link-icon">
-                                        <i class="flaticon-music-2"></i>
-                                    </span>
-                                </div>
-                            </a>
-
-                            <a href="#" class="m-nav__link m-dropdown__toggle noNotification">
-                                <div class='row'>
-                                    <div class="col-md-2">
-                                        <div>
-
-                                        </div>
-                                    </div>
-                                    <span class="m-nav__link-icon">
-                                        <i class="flaticon-music-2"></i>
-                                    </span>
-                                </div>
-                            </a>
-                            <div class="m-dropdown__wrapper">
-                                <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
-                                <div class="m-dropdown__inner">
-                                    <div class="m-dropdown__header m--align-center" style="background: url(../../assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <span class="m-dropdown__header-subtitle" style="font-size: 15px;">
-                                                    <strong>Notifications</strong>
-                                                </span>
-                                            </div>
-                                            <style>
-                                                .setting:hover {
-                                                    background-color: gray;
-                                                }
-                                            </style>
-                                            <div class="col-md-6" title="Notification settings">
-                                                <a href="#" >
-                                                    <i  class="la la-cog pull-right setting" style="font-weight: bold; color:white; font-size: 23px;"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="m-dropdown__body">
-                                        <div class="m-dropdown__content">
-                                            <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--brand" role="tablist">
-                                                <li class="nav-item m-tabs__item">
-                                                    <a class="nav-link m-tabs__link active" data-toggle="tab" href="#topbar_notifications_notifications" role="tab">
-                                                        New Notifications
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item m-tabs__item">
-                                                    <a class="nav-link m-tabs__link " data-toggle="tab" href="#topbar_notifications_notifications_old" role="tab">
-                                                        Old Notifications
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content">
-                                                <div class="tab-pane active" id="topbar_notifications_notifications" role="tabpanel">
-                                                    <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
-                                                        <div class="m-list-timeline m-list-timeline--skin-light">
-                                                            <div class="m-list-timeline__items notifications">
-                                                                <div class="m-list-timeline__item notificationsMenu">
-                                                                    <span class="m-list-timeline__badge"></span>
-                                                                    <span class="m-list-timeline__text">
-                                                                        No notifications
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="tab-pane " id="topbar_notifications_notifications_old" role="tabpanel">
-                                                    <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
-                                                        <div class="m-list-timeline m-list-timeline--skin-light">
-                                                            <div class="m-list-timeline__items notifications_old">
-                                                                <div class="m-list-timeline__item notificationsMenu_old">
-                                                                    <span class="m-list-timeline__badge"></span>
-                                                                    <span class="m-list-timeline__text">
-                                                                        No notifications
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
-                    <div class="col-md-6">
-                        <li  class="m-nav__item "  style="margin-top:20px;">
-                            <a  href="{{ url('/tickets') }}" class=" ">
-                                <span class="m-nav__link-icon">
-                                    <i class="flaticon-computer"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </div>
+                  </ul>
                 </div>
+              </li>
+              @endrole
+              @role('administrator|company|subuser')
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-graph"></i>
+                  <span class="m-menu__link-text">
+                    Dashboard
+                  </span>
+                </a>
+              </li>
+              @endrole
+              @role('administrator|company')
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('users.home') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-users"></i>
+                  <span class="m-menu__link-text">
+                    Users
+                  </span>
+                </a>
+              </li>
+              @endrole
+              @role('administrator|data_entry')
+
+              <!-- Sub- Menus --------------------------------------------------------------- -->
+
+
+              <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                <a  href="#" class="m-menu__link m-menu__toggle">
+                  <i class="m-menu__link-icon la la-map-marker"></i>
+                  &nbsp;&nbsp;&nbsp;
+                  <span class="m-menu__link-text">
+                    Places And Carriers
+                  </span>                                    
+                  <i class="m-menu__hor-arrow la la-angle-down"></i>
+                  <i class="m-menu__ver-arrow la la-angle-right"></i>
+                </a>
+                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+
+                  <ul class="m-menu__subnav">
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('UploadFile.index')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon flaticon-business"></i>
+                        <span class="m-menu__link-text">
+                          Harbors
+                        </span>
+                      </a>
+                    </li>
+
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('Countries.index')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon la la-globe"></i>
+                        <span class="m-menu__link-text">
+                          Countries
+                        </span>
+                      </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('Region.index')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon la la-globe"></i>
+                        <span class="m-menu__link-text">
+                          Regions
+                        </span>
+                      </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('RegionP.index')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon la la-globe"></i>
+                        <span class="m-menu__link-text">
+                          Regions / Harbors
+                        </span>
+                      </a>
+                    </li>
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('managercarriers.index')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon la la-ship"></i>
+                        <span class="m-menu__link-text">
+                          Manage Carriers
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('CarrierImportation.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-dropbox"></i>
+                  <span class="m-menu__link-text">
+                    Carrier Auto Importation
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('gruopSurcharger.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-dropbox"></i>
+                  <span class="m-menu__link-text">
+                    Group Surchargers
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('settings.companies')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-user-settings"></i>
+                  <span class="m-menu__link-text">
+                    User companies
+                  </span>
+                </a>
+              </li>
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('search.list')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-search"></i>
+                  <span class="m-menu__link-text">
+                    Search History
+                  </span>
+                </a>
+              </li>
+              @endrole
+              @if(Session::has('impersonate'))
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('impersonate.revert')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-logout"></i>
+                  <span class="m-menu__link-text">
+                    Exit impersonate mode
+                  </span>
+                </a>
+              </li>
+              @endif
             </ul>
+          </div>
+        </li>
+        @endif
+
+        <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+          <a  href="#" class="m-menu__link m-menu__toggle">
+            <span class="m-menu__link-title">
+              <span class="m-menu__link-wrap">
+                <span class="m-menu__link-text">
+                  <b>{{\Auth::user()->name}} {{\Auth::user()->lastname}}</b>
+                </span>
+              </span>
+            </span>
+            <i class="m-menu__hor-arrow la la-angle-down"></i>
+            <i class="m-menu__ver-arrow la la-angle-right"></i>
+          </a>
+          <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+            <ul class="m-menu__subnav">
+
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="" class="m-menu__link " onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                  <span class="m-menu__link-text">
+                    <span class="la la-sign-out" style="font-size:23px;"></span> 
+                    &nbsp;&nbsp;&nbsp;&nbsp;<b>Logout </b>
+                  </span>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+                </form>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        <div class="row">
+          <div class="col-md-6">
+            <li id="notifications" class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true" style="margin-top:20px;">
+              <a href="#" class="m-nav__link m-dropdown__toggle newNotification" hidden="true" id="m_topbar_notification_icon">
+                <div class='row'>
+                  <div class="col-md-2">
+                    <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger"></span>
+                  </div>
+                  <span class="m-nav__link-icon">
+                    <i class="flaticon-music-2"></i>
+                  </span>
+                </div>
+              </a>
+
+              <a href="#" class="m-nav__link m-dropdown__toggle noNotification">
+                <div class='row'>
+                  <div class="col-md-2">
+                    <div>
+
+                    </div>
+                  </div>
+                  <span class="m-nav__link-icon">
+                    <i class="flaticon-music-2"></i>
+                  </span>
+                </div>
+              </a>
+              <div class="m-dropdown__wrapper">
+                <span class="m-dropdown__arrow m-dropdown__arrow--center"></span>
+                <div class="m-dropdown__inner">
+                  <div class="m-dropdown__header m--align-center" style="background: url(../../assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <span class="m-dropdown__header-subtitle" style="font-size: 15px;">
+                          <strong>Notifications</strong>
+                        </span>
+                      </div>
+                      <style>
+                        .setting:hover {
+                          background-color: gray;
+                        }
+                      </style>
+                      <div class="col-md-6" title="Notification settings">
+                        <a href="#" >
+                          <i  class="la la-cog pull-right setting" style="font-weight: bold; color:white; font-size: 23px;"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="m-dropdown__body">
+                    <div class="m-dropdown__content">
+                      <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--brand" role="tablist">
+                        <li class="nav-item m-tabs__item">
+                          <a class="nav-link m-tabs__link active" data-toggle="tab" href="#topbar_notifications_notifications" role="tab">
+                            New Notifications
+                          </a>
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                          <a class="nav-link m-tabs__link " data-toggle="tab" href="#topbar_notifications_notifications_old" role="tab">
+                            Old Notifications
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="tab-content">
+                        <div class="tab-pane active" id="topbar_notifications_notifications" role="tabpanel">
+                          <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
+                            <div class="m-list-timeline m-list-timeline--skin-light">
+                              <div class="m-list-timeline__items notifications">
+                                <div class="m-list-timeline__item notificationsMenu">
+                                  <span class="m-list-timeline__badge"></span>
+                                  <span class="m-list-timeline__text">
+                                    No notifications
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="tab-pane " id="topbar_notifications_notifications_old" role="tabpanel">
+                          <div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200">
+                            <div class="m-list-timeline m-list-timeline--skin-light">
+                              <div class="m-list-timeline__items notifications_old">
+                                <div class="m-list-timeline__item notificationsMenu_old">
+                                  <span class="m-list-timeline__badge"></span>
+                                  <span class="m-list-timeline__text">
+                                    No notifications
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </div>
+          <div class="col-md-6">
+            <li  class="m-nav__item "  style="margin-top:20px;">
+              <a  href="{{ url('/tickets') }}" class=" ">
+                <span class="m-nav__link-icon">
+                  <i class="flaticon-computer"></i>
+                </span>
+              </a>
+            </li>
+          </div>
         </div>
+      </ul>
     </div>
+  </div>
 </div>
