@@ -251,7 +251,7 @@
         $.ajax({
             cache: false,
             type:'POST',
-            data:{typeSelect,origen_port_reg,destino_port_reg,origen_count_reg,destino_count_reg},
+            data:{typeSelect,typeRoute:radioValue,origen_port_reg,destino_port_reg,origen_count_reg,destino_count_reg},
             url: url,
             success: function (response, textStatus, request) {
                 console.log(response);
