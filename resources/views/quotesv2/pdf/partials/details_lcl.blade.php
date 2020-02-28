@@ -96,7 +96,7 @@
                 @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
                   <div class="row">
                       <div class="col-md-12 ">
-                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
                       </div>
                   </div>
                 @endif
@@ -125,7 +125,7 @@
                       <td>{{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</td>
                       <td>{{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</td>
                       <td>{!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</td>
-                      <td>{{$quote->chargeable_weight}} kg</td>
+                      <td>{{$quote->chargeable_weight}} m<sup>3</sup></td>
                     </tr>
                   </tbody>
                 </table>
