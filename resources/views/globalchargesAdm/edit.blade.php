@@ -1,6 +1,7 @@
 
 <script>
 	activarCountry('{{ $activacion['act'] }}');
+	activarRegions('{{ $activacion['act'] }}');
 </script>
 
 
@@ -11,39 +12,73 @@
 		<div class="form-group m-form__group row">
 			<div class="col-lg-12">
 				<div class="row">
-					<div class="col-lg-9">
+					<div class="col-lg-8">
 						<label>
-							{!! Form::label('Type Route', 'Type Route') !!}
+							{!! Form::label('Type Route', 'Regions') !!}
 						</label>
-						<div class="m-radio-inline">
-							<label class="m-radio">
-								{{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\')' ]) }} Port
-								<span></span>
-							</label>
-							<label class="m-radio">
-								{{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\')' ]) }} Country
-								<span></span>
-							</label>
-							<label class="m-radio">
-								{{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\')' ]) }} Port to Country
-								<span></span>
-							</label>
-							<label class="m-radio">
-								{{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\')' ]) }}  Country to Port
-								<span></span>
-							</label>
-							<i onclick="inverter()" style="font-size:22px" class="la la-arrows-h" title="Exchange Origin / Destination"></i>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="divPortRgOri" >
+									{{ Form::select('reg_port_orig[]',$regionPt,null,['id' => 'reg_port_orig','class'=>'m-select2-general form-control ','onchange' => 'loadSelects(\'origin\')','multiple' => 'multiple']) }}
+								</div>
+								<div class="divCountryRgOri" hidden="true">
+									{{ Form::select('reg_port_orig[]',$regionCt,null,['id' => 'reg_count_orig','class'=>'m-select2-general form-control col-lg-12','onchange' => 'loadSelects(\'origin\')','multiple' => 'multiple']) }}
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="divPortRgDst" >
+									{{ Form::select('reg_port_dest[]',$regionPt,null,['id' => 'reg_port_dest','class'=>'m-select2-general form-control ','onchange' => 'loadSelects(\'destiny\')','multiple' => 'multiple']) }}
+								</div>
+								<div class="divCountryRgDst" hidden="true">
+									{{ Form::select('reg_port_dest[]',$regionCt,null,['id' => 'reg_count_dest','class'=>'m-select2-general form-control col-lg-12','onchange' => 'loadSelects(\'destiny\')','multiple' => 'multiple']) }}
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-lg-3">
-						{!! Form::label('company_user', 'Company User') !!}
-						<div class="m-input-icon m-input-icon--right">
-							{{ Form::select('company_user_id',$company_users,$globalcharges->company_user_id,['id' => 'company_user_id','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
+					<div class="col-lg-4">
+						<div class="row">
+							<label>
+								{!! Form::label('company_user', 'Company User') !!}
+							</label>
+							<div class="m-input-icon m-input-icon--right">
+								{{ Form::select('company_user_id',$company_users,$globalcharges->company_user_id,['id' => 'company_user_id','class'=>'m-select2-general form-control' ,'required' => 'true' ]) }}
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="form-group m-form__group row">
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="m-radio-inline">
+							<label>
+								{!! Form::label('Type Route', 'Type Route') !!}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							</label>
+							<label class="m-radio">
+								{{ Form::radio('typeroute', 'port',  $activacion['rdrouteP']   ,['id' => 'rdrouteP' , 'onclick' => 'activarCountry(\'divport\'); activarRegions(\'divport\')' ]) }} Port
+								<span></span>
+							</label>
+							<label class="m-radio">
+								{{ Form::radio('typeroute', 'country', $activacion['rdrouteC'] ,['id' => 'rdrouteC' , 'onclick' => 'activarCountry(\'divcountry\'); activarRegions(\'divcountry\')' ]) }} Country
+								<span></span>
+							</label>
+							<label class="m-radio">
+								{{ Form::radio('typeroute', 'portcountry', $activacion['rdroutePC'] ,['id' => 'rdroutePC' , 'onclick' => 'activarCountry(\'divportcountry\'); activarRegions(\'divportcountry\')' ]) }} Port to Country
+								<span></span>
+							</label>
+							<label class="m-radio">
+								{{ Form::radio('typeroute', 'countryport', $activacion['rdrouteCP'] ,['id' => 'rdrouteCP' , 'onclick' => 'activarCountry(\'divcountryport\'); activarRegions(\'divcountryport\')' ]) }}  Country to Port
+								<span></span>
+							</label>
+							<i onclick="inverter()" style="font-size:22px" class="la la-arrows-h" title="Exchange Origin / Destination"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
 		<div class="form-group m-form__group row">
 			<div class="col-lg-4">
 				<label>
@@ -88,7 +123,6 @@
 					{!! Form::label('destC', 'Destination Country') !!}
 					{{ Form::select('country_dest[]',$countries,$globalcharges->globalcharcountry->pluck('countryDest')->unique()->pluck('id'),[ 'id' => 'country_dest','class'=>'m-select2-general form-control','multiple' => 'multiple'  ]) }}
 				</div>
-
 				<div class="divportcountry" hidden="true" >
 
 					<i class="la la-anchor icon__modal"></i>{!! Form::label('destPC', 'Destination Country') !!}
@@ -125,7 +159,7 @@
 
 			</div>
 		</div>
-		<div class="form-group m-form__group row">
+		<div  class="form-group m-form__group row">
 			<div class="col-lg-4">
 				{!! Form::label('carrierL', 'Carrier') !!}
 				<div class="m-input-icon m-input-icon--right">
@@ -182,16 +216,89 @@
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script src="/js/globalcharges.js"></script>
 <script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	function loadSelects(typeSelect){
+		/*reg_port_dest
+        reg_count_dest*/
+		//alert('llega');
+		var radioValue = $("input[name='typeroute']:checked").val();
+		var origen_port_reg     = [];
+		var destino_port_reg    = [];
+		var origen_count_reg    = [];
+		var destino_count_reg   = [];
+		if(radioValue == 'port'){
+			origen_port_reg  = $("#reg_port_orig").select2('val');
+			destino_port_reg = $("#reg_port_dest").select2('val');
+		} else if(radioValue == 'country'){
+			origen_count_reg  = $("#reg_count_orig").select2('val');
+			destino_count_reg = $("#reg_count_dest").select2('val');
+		} else if(radioValue == 'portcountry'){
+			origen_port_reg  = $("#reg_port_orig").select2('val');
+			destino_count_reg = $("#reg_count_dest").select2('val');
+		} else if(radioValue == 'countryport'){
+			origen_count_reg = $("#reg_count_orig").select2('val');
+			destino_port_reg = $("#reg_port_dest").select2('val');
+		}
+		console.log(typeSelect,origen_port_reg,destino_port_reg,origen_count_reg,destino_count_reg);
+		//$('#reg_port_orig').val([2]).trigger('change');
+
+		var url = '{!! route("gcadm.load.select.region") !!}';
+		$.ajax({
+			cache: false,
+			type:'POST',
+			data:{typeSelect,typeRoute:radioValue,origen_port_reg,destino_port_reg,origen_count_reg,destino_count_reg},
+			url: url,
+			success: function (response, textStatus, request) {
+				console.log(response);
+				if (request.status === 200) {
+					if(response.data.type == 'port'){
+						if(response.data.select == 'origin'){
+							$('#port_orig').val(response.data.values).trigger('change');
+						}else if(response.data.select == 'destiny'){
+							$('#port_dest').val(response.data.values).trigger('change');
+						}
+					} else if(response.data.type == 'country'){
+						if(response.data.select == 'origin'){
+							$('#country_orig').val(response.data.values).trigger('change');
+						}else if(response.data.select == 'destiny'){
+							$('#country_dest').val(response.data.values).trigger('change');
+						}
+					} else if(response.data.type == 'portcountry'){
+						if(response.data.select == 'origin'){
+							$('#portcountry_orig').val(response.data.values).trigger('change');
+						}else if(response.data.select == 'destiny'){
+							$('#portcountry_dest').val(response.data.values).trigger('change');
+						}
+					} else if(response.data.type == 'countryport'){
+						if(response.data.select == 'origin'){
+							$('#countryport_orig').val(response.data.values).trigger('change');
+						}else if(response.data.select == 'destiny'){
+							$('#countryport_dest').val(response.data.values).trigger('change');
+						}
+					}
+				}
+			},
+			error: function (ajaxContext) {
+				toastr.error('Export error: '+ajaxContext.responseText);
+			}
+		});
+	}
 
 	function inverter(){
 		var radioValue = $("input[name='typeroute']:checked").val();
 		if(radioValue == 'port'){
+			activarRegions('divport');
 			var origen_port  = $("#port_orig").select2('val');
 			var destino_port = $("#port_dest").select2('val');
 			$('#port_orig').val(destino_port).trigger('change');
 			$('#port_dest').val(origen_port).trigger('change');
 			//alert('va por puerto a puerto');
 		} else if(radioValue == 'country'){
+			activarRegions('divcountry');
 			var origen_country  = $("#country_orig").select2('val');
 			var destino_country = $("#country_dest").select2('val');
 			$('#country_orig').val(destino_country).trigger('change');
@@ -202,6 +309,7 @@
 			var origen_PrCr  = $("#portcountry_orig").select2('val');
 			var destino_CrPr = $("#portcountry_dest").select2('val');
 			activarCountry('divcountryport');
+			activarRegions('divcountryport');
 			$('#countryport_orig').val(destino_CrPr).trigger('change');
 			$('#countryport_dest').val(origen_PrCr).trigger('change');
 			$("#rdrouteCP").attr('checked', 'checked');
@@ -210,6 +318,7 @@
 			var origen_CrPr  = $("#countryport_orig").select2('val');
 			var destino_PrCr = $("#countryport_dest").select2('val');
 			activarCountry('divportcountry');
+			activarRegions('divportcountry');
 			$('#portcountry_orig').val(destino_PrCr).trigger('change');
 			$('#portcountry_dest').val(origen_CrPr).trigger('change');
 			$("#rdroutePC").attr('checked', 'checked');

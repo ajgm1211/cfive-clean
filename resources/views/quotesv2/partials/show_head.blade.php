@@ -30,7 +30,7 @@
             </li>
             <li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.cost.page',setearRouteKey($quote->id))}}">
-                    Excel (BETA) &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
+                    Excel &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
                 </a>
             </li>
             <li class="nav-item m-tabs__item" >
@@ -317,7 +317,7 @@
                 <div class="row ">
                     @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
                     <div class="col-md-6 ">
-                        <b>Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                        <b>Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
                     </div>
                     @else
                     <div class="col-md-6 "></div>
@@ -344,7 +344,7 @@
                         <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-volume" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume" id="total-volume"></a> m<sup>3</sup></p>
                     </div>
                     <div class="col-md-2">
-                        <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> Kg</p>
+                        <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> m<sup>3</sup></p>
                     </div>
                 </div>
                 @endif

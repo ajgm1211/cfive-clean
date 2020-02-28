@@ -32,28 +32,27 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new SendQuotesJob)->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new ProcessExpiredContractsJob)->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->job(new SendQuotesJob)->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+        /*$schedule->job(new ProcessExpiredContractsJob)->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->job(new UpdateCurrenciesJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
+        $schedule->job(new UpdateCurrenciesEurJob)->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));*/
 
-        /*$schedule->command('command:updateCurrenciesUsd')
+        $schedule->command('command:updateCurrenciesUsd')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:updateCurrenciesEur')
             ->twiceDaily(6, 14)->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:sendQuotes')
-            ->cron('*\/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
+            ->cron('*/3 * * * *')->appendOutputTo(storage_path('logs/commands.log'));
         $schedule->command('command:processExpiredContracts')
             ->dailyAt('00:00')->appendOutputTo(storage_path('logs/commands.log'));
-        $schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
-      ->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));*/
-		//$schedule->exec('php /var/www/html/artisan queue:work --queue=importation --timeout=3600 --tries=7 &')
-		//->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->exec('php /var/www/html/artisan queue:work --timeout=3600 --tries=7 &')
+        //    ->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
+        //$schedule->exec('php /var/www/html/artisan queue:work --queue=importation --timeout=3600 --tries=7 &')
+        //->withoutOverlapping()->appendOutputTo(storage_path('logs/commands.log'));
 
         // Comandos para backups
-
-		$schedule->command('backup:clean')->daily()->at('01:40');
-		$schedule->command('backup:run')->daily()->at('02:00');
+        $schedule->command('backup:clean')->daily()->at('01:40');
+        $schedule->command('backup:run')->daily()->at('02:00');
     }
 
     /**
