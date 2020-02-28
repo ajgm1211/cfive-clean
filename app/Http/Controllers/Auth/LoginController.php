@@ -8,6 +8,7 @@ use EventCrisp;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\User;
 
 
 class LoginController extends Controller
@@ -54,34 +55,34 @@ class LoginController extends Controller
         $params['company'] =array('name'=>$user->companyUser->name);
       }
       $people = $CrispClient->createProfile($params);
-      if(isset($people['people_id']))
-        session(['people_key'=>$people['people_id']]);
-      else{
-        session(['people_key'=> '']);
-        \Log::channel('single')->error(' No se genero el people_key de crisp y el usuario no existe ');
-      }
-
     }else{//validamos que tenga compañia si no lo actualizamos
       $people = $CrispClient->findByEmail($user->email);
       if(isset($people['company']['name'])){
         $params = array('company' => array('name'=>$user->companyUser->name ));
         $people = $CrispClient->updateProfile($params,$user->email);
       }
-      if(isset($people['people_id']))
-        session(['people_key'=> $people['people_id']]);
-      else{
-        session(['people_key'=> '']);
-        \Log::channel('single')->error(' No se genero el people_key de crisp , y el usuario existe ' .$user->email);
-      }
     }
   }
+
+  public function updateKey($user){
+
+    if($user->people_key == ""){
+      $usuario =  User::find($user->id);
+      $uuid = \Uuid::generate(4);
+      $usuario->people_key = $uuid->string;
+      $usuario->update();
+    }
+
+  }
+
+
   // @overwrite
   public function authenticated(Request $request, $user)
   {  
 
-    $uuid = \Uuid::generate(4);
-    //dd($test->string);
 
+
+    $this->updateKey($user);
     $this->userCrisp($user);
     $browser = $this->getBrowser();
     //Fin evento
