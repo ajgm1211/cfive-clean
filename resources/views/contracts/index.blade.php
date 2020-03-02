@@ -407,7 +407,7 @@
                 $('#global-modal').modal({show:true});
             });
         } else if(action == "DuplicatedContractOtherCompany"){
-            var url = '{{ route("contract.duplicated.other.company", ":id") }}';
+            var url = '{{ route("contract.duplicated.other.company", [":id","0"]) }}';
             url = url.replace(':id', id);
             $('#global-body').load(url,function(){
                 $('#global-modal').modal({show:true});
