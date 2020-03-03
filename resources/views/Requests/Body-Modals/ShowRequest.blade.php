@@ -1,4 +1,8 @@
 <div class="col-lg-12">
+	<strong>
+		<h5 style="color:#2053c6">Request - Contract Duplicated From</h5>
+	</strong>
+	<br>
 	<div class="form-group row">
 		<div class="col-md-6">
 			<label> References </label>
@@ -6,7 +10,7 @@
 		</div>
 		<div class="col-md-4">
 			<label>Company</label>
-			{!! Form::text('company',null,['class' => 'form-control','readonly'])!!}
+			{!! Form::text('company',$request->companyuser->name,['class' => 'form-control','readonly'])!!}
 		</div>
 		<div class="col-md-2">
 			<label>Request ID</label>
@@ -16,11 +20,11 @@
 	<div class="form-group row">
 		<div class="col-md-5">
 			<label> Carrier </label>
-			{!! Form::text('carrier',null,['class' => 'form-control','readonly'])!!}
+			{!! Form::text('carrier',$request->Requestcarriers->pluck('carrier')->implode('name',', '),['class' => 'form-control','readonly'])!!}
 		</div>
 		<div class="col-md-3">
 			<label>Direction</label>
-			{!! Form::text('direction',null,['class' => 'form-control','readonly'])!!}
+			{!! Form::text('direction',$request->direction->name,['class' => 'form-control','readonly'])!!}
 		</div>
 		<div class="col-md-4">
 			<label>Validation</label>
@@ -30,7 +34,7 @@
 </div>
 
 <div class="modal-footer">      
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-        Close
-    </button>
+	<button type="button" class="btn btn-secondary" data-dismiss="modal">
+		Close
+	</button>
 </div>
