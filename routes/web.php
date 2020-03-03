@@ -184,7 +184,7 @@ Route::middleware(['auth'])->prefix('contracts')->group(function () {
     Route::get('selectRequestFcl', 'ContractsController@selectRequest')->name('select.request.fcl.dp');
     Route::post('Store-duplicated/contract-fcl/{id}', 'ContractsController@duplicatedContractStore')->name('contract.duplicated.store');
     Route::post('Store-duplicated-FromRq/contract-fcl/{id}', 'ContractsController@duplicatedContractFromRequestStore')->name('contract.duplicated.from.request.store');
-    Route::get('duplicatedOC/contract-fcl/{id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth','role:administrator|data_entry']);
+    Route::get('duplicatedOC/contract-fcl/{id}/{request_id}', 'ContractsController@duplicatedContractOtherCompanyShow')->name('contract.duplicated.other.company')->middleware(['auth','role:administrator|data_entry']);
 
 });
 
@@ -247,6 +247,8 @@ Route::prefix('Importation')->group(function () {
     Route::get('DestroyAccountcfcl/{id}','ImportationController@DestroyAccount')->name('Destroy.account.cfcl')
         ->middleware(['auth','role:administrator|data_entry']);
     Route::get('DownloadAccountcfcl/{id}','ImportationController@Download')->name('Download.Account.cfcl')
+        ->middleware(['auth','role:administrator|data_entry']);
+	Route::get('ShowRqDpAccountcfcl/{id}','ImportationController@ShowRequestDp')->name('show.request.dp.cfcl')
         ->middleware(['auth','role:administrator|data_entry']);
 
     // Rates
