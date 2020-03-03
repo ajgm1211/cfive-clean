@@ -38,31 +38,12 @@
 	<!--Begin::Main Portlet-->
 	<div class="m-portlet m-portlet--full-height">
 		<!--begin: Portlet Head-->
-		<div class="m-portlet__head">
-			<div class="m-portlet__head-caption">
-				<div class="m-portlet__head-title">
-					<h2 class="m-portlet__head-text">
-						Import New Contract - <strong  style="color:#0062ff;">Request Fcl</strong>
-					</h2>
-				</div>
-			</div>
-
-
-			<div class="m-portlet__head-tools">
-				<ul class="m-portlet__nav">
-					<li class="m-portlet__nav-item">
-						<!--
-<a href="#" data-toggle="m-tooltip" class="m-portlet__nav-link m-portlet__nav-link--icon" data-direction="left" data-width="auto" title="Get help with filling up this form">
-<i class="flaticon-info m--icon-font-size-lg3"></i> 
-</a>
--->
-					</li>
-				</ul>
-			</div>
-		</div>
 		<div class="m-portlet__body">
 			<div class="tab-content">
 				<div class="tab-pane active" id="m_portlet_tab_1_1">
+					<h5 class="m-portlet__head-text">
+						<strong  style="color:#0062ff;">Import New Contract - Sea Freight FCL</strong>
+					</h5>
 					<br>
 					<div class="row">
 						<div class="col-lg-12">
@@ -70,72 +51,43 @@
 							<form method="post" id="form" enctype="multipart/form-data">
 								@csrf
 								<div class="form-group m-form__group row">
-
+									<div class="col-lg-2">
+										<label class="">Carrier</label>
+										<div class="" id="carrierMul">
+											{!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<label class="">Group Equipments</label>
+										<div class="" id="ssss">
+											{!! Form::select('ssss',['0'=>'---'],null,['class'=>'m-select2-general form-control','required','id'=>'ssss'])!!}
+										</div>
+									</div>
 									<div class="col-lg-3">
+										<label class="">Equipments</label>
+										<div class="" id="-----">
+											{!! Form::select('---[]',['0'=>''],null,['class'=>'m-select2-general form-control','id'=>'-----','required','multiple'=>'multiple'])!!}
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<label class="">Direction</label>
+										<div class="" id="direction">
+											{!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<label for="validation_expire" class=" ">Validation</label>
+										<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
+									</div>
+								</div>
+								<div class="form-group m-form__group row">
+									<div class="col-lg-6">
 										<label for="nameid" class="">References</label>
 										{!!  Form::text('name',null,['id'=>'nameid',
 										'placeholder'=>'References  ',
 										'required',
 										'class'=>'form-control m-input'])!!}
 									</div>
-									<div class="col-lg-3">
-										<label for="validation_expire" class=" ">Validation</label>
-										<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
-									</div>
-									<div class="col-lg-3">
-										<label class="">Carrier</label>
-										<div class="" id="carrierMul">
-											{!! Form::select('carrierM[]',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrierM','required','multiple'=>'multiple'])!!}
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<label class="">Direction</label>
-										<div class="" id="direction">
-											{!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
-										</div>
-									</div>
-									<!--
-<div class="col-lg-4">
-<div class="form-group row ">
-
-<div class="col-lg-4">
-<label><br></label>
-<button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
-<i class=""></i>Import File
-</button>
-</div>
-</div>
-</div>
--->
-								</div>
-
-								<div class="form-group m-form__group row">
-
-									<div class="col-lg-3">
-										<label class="">-----</label>
-										<div class="" id="ssss">
-											{!! Form::select('ssss',['0'=>'---'],null,['class'=>'m-select2-general form-control','required','id'=>'ssss'])!!}
-										</div>
-									</div>
-									<div class="col-lg-3">
-										<label class="">------</label>
-										<div class="" id="-----">
-											{!! Form::select('---[]',['0'=>''],null,['class'=>'m-select2-general form-control','id'=>'-----','required','multiple'=>'multiple'])!!}
-										</div>
-									</div>
-									<!--
-<div class="col-lg-4">
-<div class="form-group row ">
-
-<div class="col-lg-4">
-<label><br></label>
-<button type="submit" class="btn btn-primary form-control" onclick="fileempty()" >
-<i class=""></i>Import File
-</button>
-</div>
-</div>
-</div>
--->
 								</div>
 
 								<input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
@@ -144,47 +96,77 @@
 							</form>
 
 						</div>
+						<div class="col-md-4 col-md-offset-4">&nbsp;</div>
 						<div class="col-lg-12">
-							<div class="m-portlet__body">
-								<!--begin::Section-->
-								<div class="m-section m-section--last">
-									<div class="m-section__content">
-										<!--begin::Preview-->
-										<div class="m-demo">
-											<div class="m-demo__preview">
-												<div class="m-list-search">
-													<div class="m-list-search__results">
-														<span class="m-list-search__result-message m--hide">
-															No record found
-														</span>
-														<span class="m-list-search__result-category m-list-search__result-category--first">
-															Documents
-														</span>
-														<br>
-														<hr>
-														<div class="tabDrag ">
-															<div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
-																<div class="m-dropzone__msg dz-message needsclick">
-																	<h3 class="m-dropzone__msg-title">
-																		Drop files here or click to upload.
-																	</h3>
-																	<span class="m-dropzone__msg-desc">
-																		Only image, pdf and psd files are allowed for upload
-																	</span>
-																</div>
+							<!--begin::Section-->
+							<div class="m-section m-section--last">
+								<div class="m-section__content">
+									<!--begin::Preview-->
+									<div class="m-demo">
+										<div class="m-demo__preview">
+											<div class="m-list-search">
+												<div class="m-list-search__results">
+													<span class="m-list-search__result-message m--hide">
+														No record found
+													</span>
+													<span class="m-list-search__result-category m-list-search__result-category--first" style="text-transform: initial;" >
+														Upload
+													</span>
+													<br>
+													<style>
+														.m-list-search .m-list-search__results .m-list-search__result-category {
+															color: #45426c;
+														}
+														.m-demo {
+															background: #f7f7fa;
+															margin-bottom: 20px;
+															border-radius: 10px ;
+														}
+														.m-dropzone.m-dropzone--success {
+															border-color: rgba(46, 35, 175, 0.28);
+														}
+														.m-dropzone {
+															border: 1px solid;
+
+														}
+														.dropzone {
+															background: #f7f7fa;
+															border-radius: 10px;
+														}
+														.m-demo .m-demo__preview {
+															/*border-radius: 100px;*/
+															background: #f7f7fa;
+															border: 4px solid #f7f7fa;
+															border-radius: 10px;
+															padding: 30px;
+														}
+														
+														
+
+													</style>
+													<div class="tabDrag ">
+														<div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
+															<div class="m-dropzone__msg dz-message needsclick">
+																<img class="img-dropzone" src="/images/upload-files.png" alt="Smiley face" height="100" width="100">
+																<h3 class="m-dropzone__msg-title">
+																	Drop files here or click to upload.
+																</h3>
+																<span class="m-dropzone__msg-desc">
+																	Only image, pdf and psd files are allowed for upload
+																</span>
 															</div>
 														</div>
-
 													</div>
+
 												</div>
 											</div>
 										</div>
-
-
 									</div>
+
+
 								</div>
-								<!--end::Section-->
 							</div>
+							<!--end::Section-->
 						</div>
 					</div>
 				</div>
