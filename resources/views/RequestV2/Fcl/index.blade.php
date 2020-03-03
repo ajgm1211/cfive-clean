@@ -60,14 +60,25 @@
 									<div class="col-lg-2">
 										<label class="">Group Equipments</label>
 										<div class="" id="ssss">
-											{!! Form::select('ssss',['0'=>'---'],null,['class'=>'m-select2-general form-control','required','id'=>'ssss'])!!}
+											{!! Form::select('groupContainers',$groupContainer,null,['class'=>'m-select2-general form-control','required','id'=>'groupContainers'])!!}
 										</div>
 									</div>
-									<div class="col-lg-3">
+									<div class="col-lg-2">
 										<label class="">Equipments</label>
 										<div class="" id="-----">
 											{!! Form::select('---[]',['0'=>''],null,['class'=>'m-select2-general form-control','id'=>'-----','required','multiple'=>'multiple'])!!}
 										</div>
+									</div>
+									<div class="col-lg-2">
+										<label for="validation_expire" class=" ">Validation</label>
+										<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
+									</div>
+									<div class="col-lg-2">
+										<label for="nameid" class="">References</label>
+										{!!  Form::text('name',null,['id'=>'nameid',
+										'placeholder'=>'References  ',
+										'required',
+										'class'=>'form-control m-input'])!!}
 									</div>
 									<div class="col-lg-2">
 										<label class="">Direction</label>
@@ -75,19 +86,8 @@
 											{!! Form::select('direction',$direction,null,['class'=>'m-select2-general form-control','required','id'=>'direction'])!!}
 										</div>
 									</div>
-									<div class="col-lg-3">
-										<label for="validation_expire" class=" ">Validation</label>
-										<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
-									</div>
 								</div>
 								<div class="form-group m-form__group row">
-									<div class="col-lg-6">
-										<label for="nameid" class="">References</label>
-										{!!  Form::text('name',null,['id'=>'nameid',
-										'placeholder'=>'References  ',
-										'required',
-										'class'=>'form-control m-input'])!!}
-									</div>
 								</div>
 
 								<input type="hidden" name="CompanyUserId" value="{{$user->company_user_id}}" />
@@ -147,13 +147,13 @@
 													<div class="tabDrag ">
 														<div class="m-dropzone dropzone m-dropzone--success"  id="document-dropzone">
 															<div class="m-dropzone__msg dz-message needsclick">
-																<img class="img-dropzone" src="/images/upload-files.png" alt="Smiley face" height="100" width="100">
-																<h3 class="m-dropzone__msg-title">
-																	Drop files here or click to upload.
+																<img class="img-dropzone" style="margin-bottom:15px;" src="/images/upload-files.png" alt="Smiley face" height="100" width="100">
+																<h3 style="margin-bottom:10px;" class="m-dropzone__msg-title">
+																	Drag and drop a file here 
+																	<br>
+																	or
 																</h3>
-																<span class="m-dropzone__msg-desc">
-																	Only image, pdf and psd files are allowed for upload
-																</span>
+																<a href="" class="btn btn-primary col-2" > Choose file </a>
 															</div>
 														</div>
 													</div>
@@ -248,42 +248,15 @@
 
 <script>
 
+	$('.m-select2-general').select2({
+        placeholder: "Select an option"
+    });
+	
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-
-
-
-
-	/*
-    $('#btnFiterSubmitSearch').click(function(){
-        $('#nameid').removeAttr('required');
-        $('#carrierM').removeAttr('required');
-        $('#direction').removeAttr('required');
-        $('#requesttable').DataTable().draw(true);
-        $('#nameid').attr('required','required');
-        $('#carrierM').attr('required','required');
-        $('#direction').attr('required','required');
-    });
-
-    function fileempty(){
-        if( document.getElementById("file").files.length == 0 ){
-            swal("Error!", "Choose File", "error");
-        }
-    }
-    function cambiar(){
-        var pdrs = document.getElementById('file').files[0].name;
-        document.getElementById('info').innerHTML = pdrs;
-    } 
-    function validate(formData, jqForm, options) {
-        var form = jqForm[0];
-        if (!form.file.value) {
-            //alert('File not found');
-            return false;
-        }
-    }*/
 
 	$("#form").on('submit', function(e){
 		var date = $('#m_daterangepicker_1').val().split(' / ');
@@ -370,7 +343,6 @@
 	});
 
 	var uploadedDocumentMap = {}
-
 
 	Dropzone.options.documentDropzone = {
 		url: '{{ route('contracts.storeMedia') }}',
