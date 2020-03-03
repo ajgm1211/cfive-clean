@@ -5669,8 +5669,8 @@ class ImportationController extends Controller
 	
 	public function ShowRequestDp($id){
 		$request = NewContractRequest::find($id);
-		$request->load('user','direction','Requestcarriers','companyuser');
-		//dd($request);
+		$request->load('user','direction','Requestcarriers.carrier','companyuser');
+		//dd($request->Requestcarriers->pluck('carrier')->implode('name',', '));
 		return view('Requests.Body-Modals.ShowRequest',compact('request'));
 	}
 
