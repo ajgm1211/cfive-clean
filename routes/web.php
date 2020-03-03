@@ -961,3 +961,16 @@ Route::group(['prefix' => 'TestApp','middleware' => ['auth','role:administrator'
 Route::get('/testRoute',function(){
     dd(explode(',',env('LOGGING_CHANNELS')));
 })->name('test.route');
+
+// RequestFcl V2
+Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
+	route::get('index','RequestFclV2Controller@index')->name('RequestFcl.index');
+	route::get('create','RequestFclV2Controller@create')->name('RequestFcl.create');
+	route::post('store','RequestFclV2Controller@store')->name('RequestFcl.store')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::get('show/{id}','RequestFclV2Controller@show')->name('RequestFcl.show');
+	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit');
+	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update');
+	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy');
+	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request');
+});
+
