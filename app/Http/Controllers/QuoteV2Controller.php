@@ -3533,12 +3533,6 @@ class QuoteV2Controller extends Controller
     public function processSearch(Request $request){
 
 
-
-
-        //Variables del usuario conectado
-
-
-
         $company_user_id=\Auth::user()->company_user_id;
         $user_id =  \Auth::id();
 
