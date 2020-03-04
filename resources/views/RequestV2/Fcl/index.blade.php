@@ -1,7 +1,8 @@
 @extends('layouts.app')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 @section('css')
 @parent
-
+<link rel="stylesheet" href="/css/bootstrap-multiselect.css">
 @endsection
 
 @section('title', 'New Request')
@@ -168,6 +169,30 @@
 							</div>
 							<!--end::Section-->
 						</div>
+						<script type="text/javascript">
+							$(document).ready(function() {
+								$('#option-droup-demo').multiselect();
+							});
+						</script>
+						<select id="option-droup-demo" multiple="multiple">
+							<optgroup label="Web Development">
+								<option value="jQuery">jQuery</option>
+								<option value="Bootstrap">Bootstrap</option>
+								<option value="HTML" selected="selected">HTML</option>
+								<option value="CSS" selected="selected">CSS</option>
+								<option value="Angular">Angular</option>
+							</optgroup>
+							<optgroup label="Programming Languages">
+								<option value="Java">Java</option>
+								<option value="csharp">C#</option>
+								<option value="Python">Python</option>
+							</optgroup>
+							<optgroup label="Databases">
+								<option value="MySQL">MySQL</option>
+								<option value="Oracle">Oracle</option>
+								<option value="MSSQL">MS SQL Server</option>
+							</optgroup>        
+						</select>
 					</div>
 				</div>
 			</div>
@@ -245,9 +270,11 @@
 <script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
 <script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
+<script src="/js/bootstrap-multiselect.js"></script>
 
 <script>
-	
+
+
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -369,35 +396,35 @@
 		maxFilesize: 2, // MB
 		addRemoveLinks: true,
 		headers: {
-		'X-CSRF-TOKEN': "{{ csrf_token() }}"
-	},
+			'X-CSRF-TOKEN': "{{ csrf_token() }}"
+		},
 		success: function (file, response) {
 			$('#formu').append('<input type="hidden" name="document[]" value="' + response.name + '">')
 			uploadedDocumentMap[file.name] = response.name
 		},
-			removedfile: function (file) {
-				file.previewElement.remove()
-				var name = ''
-				if (typeof file.file_name !== 'undefined') {
-					name = file.file_name
-				} else {
-					name = uploadedDocumentMap[file.name]
-				}
-				$('#formu').find('input[name="document[]"][value="' + name + '"]').remove()
-			},
-				init: function () {
-					@if(isset($project) && $project->document)
-					var files =
-						{!! json_encode($project->document) !!}
-					for (var i in files) {
-						var file = files[i]
-						this.options.addedfile.call(this, file)
-						file.previewElement.classList.add('dz-complete')
-						$('form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
-					}
-					@endif
-				}
-				}
+		removedfile: function (file) {
+			file.previewElement.remove()
+			var name = ''
+			if (typeof file.file_name !== 'undefined') {
+				name = file.file_name
+			} else {
+				name = uploadedDocumentMap[file.name]
+			}
+			$('#formu').find('input[name="document[]"][value="' + name + '"]').remove()
+		},
+		init: function () {
+			@if(isset($project) && $project->document)
+			var files =
+				{!! json_encode($project->document) !!}
+			for (var i in files) {
+				var file = files[i]
+				this.options.addedfile.call(this, file)
+				file.previewElement.classList.add('dz-complete')
+				$('form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
+			}
+			@endif
+		}
+		}
 
 </script>
 
