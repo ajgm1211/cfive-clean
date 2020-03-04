@@ -58,15 +58,15 @@
 										</div>
 									</div>
 									<div class="col-lg-2">
-										<label class="">Group Equipments</label>
-										<div class="" id="ssss">
-											{!! Form::select('groupContainers',$groupContainer,null,['class'=>'m-select2-general form-control','required','id'=>'groupContainers'])!!}
+										<label class="" for="groupContainers">Group Equipments</label>
+										<div class="">
+											{!! Form::select('groupContainers',$groupContainer,null,['class'=>'m-select2-general form-control','required','onchange' => 'loadContainers()','id'=>'groupContainers'])!!}
 										</div>
 									</div>
-									<div class="col-lg-2">
+									<div class="col-lg-2" >
 										<label class="">Equipments</label>
 										<div class="" id="-----">
-											{!! Form::select('---[]',['0'=>''],null,['class'=>'m-select2-general form-control','id'=>'-----','required','multiple'=>'multiple'])!!}
+											{!! Form::select('containers',$containers,null,['class'=>'m-select2-general form-control','id'=>'containerID','required','multiple'=>'multiple'])!!}
 										</div>
 									</div>
 									<div class="col-lg-2">
@@ -140,8 +140,8 @@
 															border-radius: 10px;
 															padding: 30px;
 														}
-														
-														
+
+
 
 													</style>
 													<div class="tabDrag ">
@@ -247,15 +247,35 @@
 <script type="text/javascript" charset="utf8" src="/assets/datatable/jquery.dataTables.js"></script>
 
 <script>
-
-	$('.m-select2-general').select2({
-        placeholder: "Select an option"
-    });
 	
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
+	});
+
+	function loadContainers(){
+		var groupContainers  = $("#groupContainers").select2('val');
+		var url = '{!! route("request.fcl.get.containers") !!}';
+		$.ajax({
+			cache: false,
+			type:'get',
+			data:{groupContainers},
+			url: url,
+			success: function (response, textStatus, request) {
+				//console.log(response);
+				if (request.status === 200) {
+					$('#containerID').val(response.data.values).trigger('change');
+				}
+			},
+			error: function (ajaxContext) {
+				toastr.error('Export error: '+ajaxContext.responseText);
+			}
+		});
+	}
+
+	$('.m-select2-general').select2({
+		placeholder: "Select an option"
 	});
 
 	$("#form").on('submit', function(e){
@@ -345,7 +365,7 @@
 	var uploadedDocumentMap = {}
 
 	Dropzone.options.documentDropzone = {
-		url: '{{ route('contracts.storeMedia') }}',
+		url: '{{ route("request.fcl.storeMedia") }}',
 		maxFilesize: 2, // MB
 		addRemoveLinks: true,
 		headers: {

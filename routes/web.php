@@ -972,5 +972,7 @@ Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
 	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update');
 	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy');
 	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request');
+	route::get('getContainers','RequestFclV2Controller@getContainers')->name('request.fcl.get.containers');
+	route::post('storeMediaRqFcl','RequestFclV2Controller@storeMedia')->name('request.fcl.storeMedia');
 });
 
