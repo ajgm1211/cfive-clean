@@ -4441,7 +4441,6 @@ class QuoteV2Controller extends Controller
         }
       }
       // ################## Fin local Charges        #############################
-
       //################## Calculos Global Charges #################################
 
       if($contractStatus != 'api'){ 
@@ -4474,7 +4473,7 @@ class QuoteV2Controller extends Controller
               //Origin
               if($chargesOrigin != null){
                 if($global->typedestiny_id == '1'){
-
+                  
                   if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment) ){
 
                     $montoOrig = $global->ammount ;
@@ -5383,8 +5382,6 @@ class QuoteV2Controller extends Controller
     $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-
-
     //Markups
 
     $fclMarkup = Price::whereHas('company_price', function($q) use($price_id) {
