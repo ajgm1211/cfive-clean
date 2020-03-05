@@ -1,8 +1,23 @@
 @extends('layouts.app')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('.b-select').multiselect();
+		$('.multiselect-selected-text').text('Select an option',"title", "my new title" );
+	});
+	
+</script>
 @section('css')
 @parent
+<style>
+	.multiselect-selected-text {
+		font-size: small;
+		/*color: #9699a2;*/
+	}
+
+</style>
 <link rel="stylesheet" href="/css/bootstrap-multiselect.css">
+
 @endsection
 
 @section('title', 'New Request')
@@ -67,7 +82,7 @@
 									<div class="col-lg-2" >
 										<label class="">Equipments</label>
 										<div class="" id="-----">
-											{!! Form::select('containers',$containers,null,['class'=>'m-select2-general form-control','id'=>'containerID','required','multiple'=>'multiple'])!!}
+											{!! Form::select('containers[]',$containers,null,['class'=>'b-select form-control','id'=>'containerID','required','multiple'=>'multiple'])!!}
 										</div>
 									</div>
 									<div class="col-lg-2">
@@ -169,30 +184,6 @@
 							</div>
 							<!--end::Section-->
 						</div>
-						<script type="text/javascript">
-							$(document).ready(function() {
-								$('#option-droup-demo').multiselect();
-							});
-						</script>
-						<select id="option-droup-demo" multiple="multiple">
-							<optgroup label="Web Development">
-								<option value="jQuery">jQuery</option>
-								<option value="Bootstrap">Bootstrap</option>
-								<option value="HTML" selected="selected">HTML</option>
-								<option value="CSS" selected="selected">CSS</option>
-								<option value="Angular">Angular</option>
-							</optgroup>
-							<optgroup label="Programming Languages">
-								<option value="Java">Java</option>
-								<option value="csharp">C#</option>
-								<option value="Python">Python</option>
-							</optgroup>
-							<optgroup label="Databases">
-								<option value="MySQL">MySQL</option>
-								<option value="Oracle">Oracle</option>
-								<option value="MSSQL">MS SQL Server</option>
-							</optgroup>        
-						</select>
 					</div>
 				</div>
 			</div>
@@ -273,8 +264,9 @@
 <script src="/js/bootstrap-multiselect.js"></script>
 
 <script>
+	$(document).ready(function(){
 
-
+	});
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -292,7 +284,10 @@
 			success: function (response, textStatus, request) {
 				//console.log(response);
 				if (request.status === 200) {
-					$('#containerID').val(response.data.values).trigger('change');
+					var arr = $('#containerID').val();
+					$('#containerID').multiselect('deselect',arr);
+					$('#containerID').multiselect('select',response.data.values)
+					//$('#containerID').val(response.data.values).trigger('change');
 				}
 			},
 			error: function (ajaxContext) {
