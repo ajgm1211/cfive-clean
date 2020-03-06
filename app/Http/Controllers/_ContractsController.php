@@ -51,7 +51,7 @@ use App\Jobs\ImportationRatesSurchargerJob;
 use App\Http\Requests\UploadFileRateRequest;
 use Illuminate\Support\Collection as Collection;
 
-class ContractsController extends Controller
+class _ContractsController extends Controller
 {
 
     public function index(Request $request)
