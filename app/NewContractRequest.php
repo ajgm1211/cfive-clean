@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class NewContractRequest extends Model
+class NewContractRequest extends Model implements HasMedia
 {
-    
+    use HasMediaTrait;
     protected $table = 'newcontractrequests';
     protected $fillable = ['namecontract',
                            'numbercontract',
