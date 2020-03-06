@@ -43,7 +43,7 @@ class RequestFclV2Controller extends Controller
 
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
 	public function newRequest(Request $request){
@@ -78,13 +78,13 @@ class RequestFclV2Controller extends Controller
 	
 	public function getContainers(Request $request){
 		$groupContainers = $request->groupContainers;
-		$containers 	 = Container::where('gp_container_id',$groupContainers)->pluck('id');
+		$containers 	 = Container::where('gp_container_id',$groupContainers)->where('name','!=','45 HC')->where('name','!=','40 NOR')->pluck('id');
 		return response()->json(['success' => true,'data' => ['values' => $containers->all() ]]);
 	}
 	
 	public function storeMedia(Request $request)
     {
-        $path = storage_path('tmp/uploads');
+        $path = storage_path('tmp/request');
 
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
