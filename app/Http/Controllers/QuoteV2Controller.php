@@ -88,6 +88,8 @@ use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\MediaLibrary\MediaStream;
 use App\Http\Traits\SearchTrait;
+use App\ContainerCalculation;
+use App\Container;
 
 class QuoteV2Controller extends Controller
 {
@@ -3535,6 +3537,7 @@ class QuoteV2Controller extends Controller
 
     $company_user_id=\Auth::user()->company_user_id;
     $user_id =  \Auth::id();
+    $container_calculation = ContainerCalculation::get();
 
     //Variables para cargar el  Formulario
     $chargesOrigin = $request->input('chargeOrigin');
@@ -4074,7 +4077,22 @@ class QuoteV2Controller extends Controller
     }
 
     $formulario = $request;
-    $array20 = array('2','4','5','6','9','10','11'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container
+
+
+
+    /*$array20 = array('2','4','5','6','9','10','11'); // id  calculation type 2 = per 20 , 4= per teu , 5 per container*/
+
+    $array20 = $container_calculation->where('container_id','1')->pluck('calculationtype_id')->toArray();
+    $contain = Container::get();
+
+    foreach($contain as $cont){
+      $var = 'array'.$cont->code;
+      $$var = $container_calculation->where('container_id',$cont->id)->pluck('calculationtype_id')->toArray();
+    }
+
+
+  //  dd('wait',$array20DV,$array40DV);
+
     $array40 =  array('1','4','5','6','9','10','11'); // id  calculation type 2 = per 40 
     $array40Hc= array('3','4','5','6','9','10','11'); // id  calculation type 3 = per 40HC 
     $array40Nor = array('7','4','5','6','9','10','11');  // id  calculation type 7 = per 40NOR
@@ -4200,6 +4218,23 @@ class QuoteV2Controller extends Controller
             if($chargesOrigin != null){
               if($local->typedestiny_id == '1'){
 
+                /*foreach($contain as $cont){
+                  $array = 'array'.$cont->code;
+                  $total = 'tot'.$cont->code.'_O';
+                  
+                  if(in_array($local->calculationtype_id, $$array) && in_array( '20',$equipment) ){
+                    $montoOrig = $local->ammount;
+                    $monto =   $local->ammount  / $rateMount ;
+                    $monto = number_format($monto, 2, '.', '');
+                    $markup = $this->localMarkupsFCL($markup['charges']['localPercentage'],$markup['charges']['localAmmount'],$markup['charges']['localMarkup'],$monto,$montoOrig,$typeCurrency,$markup['charges']['markupLocalCurre'],$local->currency->id);
+                    $arregloOrigin = $this->ChargesArray($localParams,$monto,$montoOrig,$cont->code);
+                    $arregloOrigin = array_merge($arregloOrigin,$markup);
+                    $collectionOrigin->push($arregloOrigin);      
+                    $total  +=  $markup20['montoMarkup'];
+                  }
+
+                }*/
+                
                 if(in_array($local->calculationtype_id, $array20) && in_array( '20',$equipment) ){
 
                   $montoOrig = $local->ammount;
@@ -4271,9 +4306,9 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
-                  $arregloOrigin =  $this->ChargesArray99($params,'5','Per Container');
+                  $arregloOrigin =  $this->ChargesArray99($localParams,'5','Per Container');
                 }else{
-                  $arregloOrigin =  $this->ChargesArray99($params,$local->calculationtype->id ,$local->calculationtype->name);              
+                  $arregloOrigin =  $this->ChargesArray99($localParams,$local->calculationtype->id ,$local->calculationtype->name);              
                 }
                 $collectionOrigin->push($arregloOrigin);
               }  
@@ -4350,9 +4385,9 @@ class QuoteV2Controller extends Controller
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
-                  $arregloDestiny =  $this->ChargesArray99($params,'5','Per Container');
+                  $arregloDestiny =  $this->ChargesArray99($localParams,'5','Per Container');
                 }else{
-                  $arregloDestiny =  $this->ChargesArray99($params,$local->calculationtype->id ,$local->calculationtype->name);       
+                  $arregloDestiny =  $this->ChargesArray99($localParams,$local->calculationtype->id ,$local->calculationtype->name);       
                 }
                 $collectionDestiny->push($arregloDestiny);
               }
@@ -4430,9 +4465,9 @@ class QuoteV2Controller extends Controller
 
                 }
                 if(in_array($local->calculationtype_id,$arrayContainers)){             
-                  $arregloFreight =  $this->ChargesArray99($params,'5','Per Container');
+                  $arregloFreight =  $this->ChargesArray99($localParams,'5','Per Container');
                 }else{          
-                  $arregloFreight =  $this->ChargesArray99($params,$local->calculationtype->id ,$local->calculationtype->name);    
+                  $arregloFreight =  $this->ChargesArray99($localParams,$local->calculationtype->id ,$local->calculationtype->name);    
                 }
                 $collectionFreight->push($arregloFreight);
               }
@@ -4473,7 +4508,7 @@ class QuoteV2Controller extends Controller
               //Origin
               if($chargesOrigin != null){
                 if($global->typedestiny_id == '1'){
-                  
+
                   if(in_array($global->calculationtype_id, $array20) && in_array('20',$equipment) ){
 
                     $montoOrig = $global->ammount ;
@@ -4544,9 +4579,9 @@ class QuoteV2Controller extends Controller
                   }
 
                   if(in_array($global->calculationtype_id,$arrayContainers)){
-                    $arregloOriginG =  $this->ChargesArray99($params,'5','Per Container');
+                    $arregloOriginG =  $this->ChargesArray99($globalParams,'5','Per Container');
                   }else{
-                    $arregloOriginG =  $this->ChargesArray99($params,$global->calculationtype->id ,$global->calculationtype->name);  
+                    $arregloOriginG =  $this->ChargesArray99($globalParams,$global->calculationtype->id ,$global->calculationtype->name);  
                   }
                   $collectionOrigin->push($arregloOriginG);
                 }
@@ -4625,9 +4660,9 @@ class QuoteV2Controller extends Controller
                   }
 
                   if(in_array($global->calculationtype_id,$arrayContainers)){
-                    $arregloDestinyG =  $this->ChargesArray99($params,'5','Per Container');
+                    $arregloDestinyG =  $this->ChargesArray99($globalParams,'5','Per Container');
                   }else{
-                    $arregloDestinyG =  $this->ChargesArray99($params,$global->calculationtype->id ,$global->calculationtype->name);  
+                    $arregloDestinyG =  $this->ChargesArray99($globalParams,$global->calculationtype->id ,$global->calculationtype->name);  
                   }
                   $collectionDestiny->push($arregloDestinyG);
                 }
@@ -4705,9 +4740,9 @@ class QuoteV2Controller extends Controller
                   }
 
                   if(in_array($global->calculationtype_id,$arrayContainers)){
-                    $arregloFreightG =  $this->ChargesArray99($params,'5','Per Container');
+                    $arregloFreightG =  $this->ChargesArray99($globalParams,'5','Per Container');
                   }else{
-                    $arregloFreightG =  $this->ChargesArray99($params,$global->calculationtype->id ,$global->calculationtype->name); 
+                    $arregloFreightG =  $this->ChargesArray99($globalParams,$global->calculationtype->id ,$global->calculationtype->name); 
                   }
                   $collectionFreight->push($arregloFreightG);
                 }
@@ -4777,7 +4812,7 @@ class QuoteV2Controller extends Controller
       }else{
         $excelRequestIdFCL= '0';
       }
-      
+
       $excelRequest = NewContractRequest::where('contract_id',$data->contract->id)->first();
       if(!empty($excelRequest)){
         $excelRequestId = $excelRequest->id;

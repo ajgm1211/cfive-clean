@@ -466,13 +466,13 @@ trait SearchTrait {
     return $arreglo;
   }
 
-  public function ChargesArray99($params,$calulation_id,$calculation_name){
+  public function ChargesArray99($params,$calculation_id,$calculation_name){
 
     $local = $params['local'];
     $data = $params['data'];
     $localCarrier = $params['localCarrier'];
     
-    $arregloOrigin = array('surcharge_terms' => $terminos,'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $calulation_name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=>$calulation_id, 'montoOrig' => 0.00, 'typecurrency' => $typeCurrency ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $idCurrency,'markupConvert' => 0.00 );
+    $arreglo = array('surcharge_terms' => $params['terminos'],'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $calculation_name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=>$calculation_id, 'montoOrig' => 0.00, 'typecurrency' => $params['typeCurrency'] ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $params['idCurrency'],'markupConvert' => 0.00 );
     
     return $arreglo;
   }
