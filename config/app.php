@@ -188,6 +188,7 @@ return [
     Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
     Kordy\Ticketit\TicketitServiceProvider::class,
     App\Providers\CrispServiceProvider::class,
+    App\Providers\AllServiceProvider::class,
     
 
 
@@ -262,6 +263,7 @@ return [
     'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
     'EventCrisp' => App\Helpers\EventCrisp::class,
+    'HelperAll' => App\Helpers\HelperAll::class,
 
   ],
 
