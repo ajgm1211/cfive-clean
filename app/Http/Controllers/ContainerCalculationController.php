@@ -2,84 +2,66 @@
 
 namespace App\Http\Controllers;
 
+use HelperAll;
+use App\Container;
 use App\ContainerCalculation;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
 
 class ContainerCalculationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	public function index()
+	{
+		//containersCalculations
+		return view('containersCalculation.index');
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+	public function create()
+	{
+		$containerscal = ContainerCalculation::all();
+		$containerscal->load('container','calculationtype');
+		//dd($containerscal);
+		return DataTables::of($containerscal)
+			->addColumn('container', function ($containerscal) {
+				return $containerscal->container->name;
+			})
+			->addColumn('calculationtype', function ($containerscal) {
+				return $containerscal->calculationtype->name;
+			})
+			->addColumn('action', function ($containerscal) {
+				return '';
+			})
+			->editColumn('id', '{{$id}}')->toJson();
+	}
+	
+	public function loadBodymodalAdd(){
+		$conatiner = HelperAll::addOptionSelect(Container::all(),'id','name');
+		return view('containersCalculation.Body-Modals.add',compact('conatiner'));
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ContainerCalculation  $containerCalculation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ContainerCalculation $containerCalculation)
-    {
-        //
-    }
+	public function store(Request $request)
+	{
+		//
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ContainerCalculation  $containerCalculation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ContainerCalculation $containerCalculation)
-    {
-        //
-    }
+	public function show(ContainerCalculation $containerCalculation)
+	{
+		//
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ContainerCalculation  $containerCalculation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ContainerCalculation $containerCalculation)
-    {
-        //
-    }
+	public function edit(ContainerCalculation $containerCalculation)
+	{
+		//
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\ContainerCalculation  $containerCalculation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ContainerCalculation $containerCalculation)
-    {
-        //
-    }
+	public function update(Request $request, ContainerCalculation $containerCalculation)
+	{
+		//
+	}
+
+	public function destroy(ContainerCalculation $containerCalculation)
+	{
+		//
+	}
 }
