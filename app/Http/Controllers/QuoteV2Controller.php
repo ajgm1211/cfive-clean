@@ -4084,19 +4084,21 @@ class QuoteV2Controller extends Controller
     $formulario = $request;
 
 
-    $array20 = $container_calculation->where('container_id','1')->pluck('calculationtype_id')->toArray();
-    $array40= $container_calculation->where('container_id','2')->pluck('calculationtype_id')->toArray();
-    $array40Hc= $container_calculation->where('container_id','3')->pluck('calculationtype_id')->toArray();
-    $array40Nor= $container_calculation->where('container_id','5')->pluck('calculationtype_id')->toArray();
-    $array45= $container_calculation->where('container_id','4')->pluck('calculationtype_id')->toArray();
     $arrayContainers =  array('1','2','3','4','7','8'); 
 
-    //$arrayContainers= $container_calculation->where('container_id','1')->pluck('calculationtype_id')->toArray();
-    /*    $containers = Container::get();
+
+    $containers = Container::get();
+    $totalesCont = array();
     foreach($containers as $cont){
+
+      $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
+      $totalesCont = array_merge($totalesContainer,$totalesCont);
+
       $var = 'array'.$cont->code;
       $$var = $container_calculation->where('container_id',$cont->id)->pluck('calculationtype_id')->toArray();
-    }*/
+    }
+
+
 
 
     foreach($arreglo as $data){
@@ -4104,6 +4106,7 @@ class QuoteV2Controller extends Controller
       $collectionRate = new Collection();
       $totalFreight = 0;
       $totalRates = 0;
+
       $totalT20 = 0;
       $totalT40 = 0;
       $totalT40hc = 0;
@@ -4113,23 +4116,34 @@ class QuoteV2Controller extends Controller
       //Variables Totalizadoras 
       $totales = array();
 
-      $tot_20_F = 0;
+      //Arreglo totalizador de freight , destination , origin por contenedor 
+      $totalesCont = array();
+      foreach($containers as $cont){
+
+        $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
+        $totalesCont = array_merge($totalesContainer,$totalesCont);
+
+      }
+
+      /*$tot_20_F = 0;
       $tot_40_F = 0;
       $tot_40hc_F = 0;
       $tot_40nor_F = 0;
-      $tot_45_F = 0;
+      $tot_45_F = 0;*/
 
-      $tot_20_O = 0;
-      $tot_40_O = 0;
-      $tot_40hc_O = 0;
-      $tot_40nor_O = 0;
-      $tot_45_O = 0;
 
-      $tot_20_D = 0;
-      $tot_40_D = 0;
-      $tot_40hc_D = 0;
-      $tot_40nor_D = 0;
-      $tot_45_D = 0;
+
+      //$tot_20_O = 0;
+      //$tot_40_O = 0;
+      //$tot_40hc_O = 0;
+      //$tot_40nor_O = 0;
+      //$tot_45_O = 0;
+
+      //$tot_20_D = 0;
+      //$tot_40_D = 0;
+      //$tot_40hc_D = 0;
+      //$tot_40nor_D = 0;
+      //$tot_45_D = 0;
 
       $carrier[] = $data->carrier_id;
       $orig_port = array($data->origin_port);
@@ -4159,11 +4173,14 @@ class QuoteV2Controller extends Controller
 
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
       // Rates 
-      $arregloR = $this->rates($equipment,$markup,$data,$rateC,$typeCurrency);
+      $arregloR = $this->rates($equipment,$markup,$data,$rateC,$typeCurrency,$containers);
 
-      $arregloRateSave['rate'] = $arregloR['arregloRate'] ;
-      $arregloRateSave['markups'] = $arregloR['arregloSaveM'] ;
-      $arregloRate = $arregloR['arregloSaveR'] ;
+
+      $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'],$arregloR['arregloSaveR']);
+      $arregloRateSave['markups'] = array_merge($arregloRateSave['markups'],$arregloR['arregloSaveM'] );
+      $arregloRate = array_merge($arregloRate,$arregloR['arregloRate']);
+
+
 
       // id de los port  ALL
       array_push($orig_port,1485);
@@ -4218,7 +4235,7 @@ class QuoteV2Controller extends Controller
             if($chargesOrigin != null){
               if($local->typedestiny_id == '1'){
 
-                if(in_array($local->calculationtype_id, $array20) && in_array( '1',$equipment) ){
+                if(in_array($local->calculationtype_id, $array20DV) && in_array( '1',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
@@ -4227,10 +4244,10 @@ class QuoteV2Controller extends Controller
                   $arregloOrigin = $this->ChargesArray($localParams,$monto,$montoOrig,'20');
                   $arregloOrigin = array_merge($arregloOrigin,$markup20);
                   $collectionOrigin->push($arregloOrigin);      
-                  $tot_20_O  +=  $markup20['montoMarkup'];
+                  $totalesCont['20DV']['tot_20DV_O']  +=  $markup20['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40) && in_array( '2',$equipment) ){
+                if(in_array($local->calculationtype_id, $array40DV) && in_array( '2',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4241,10 +4258,10 @@ class QuoteV2Controller extends Controller
                   $arregloOrigin =$this->ChargesArray($localParams,$monto,$montoOrig,'40');
                   $arregloOrigin = array_merge($arregloOrigin,$markup40);
                   $collectionOrigin->push($arregloOrigin);
-                  $tot_40_O  +=  $markup40['montoMarkup'];
+                  $totalesCont['40DV']['tot_40DV_O']  +=  $markup40['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40Hc)&& in_array( '3',$equipment)){
+                if(in_array($local->calculationtype_id, $array40HC)&& in_array( '3',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4256,10 +4273,10 @@ class QuoteV2Controller extends Controller
                   $arregloOrigin =$this->ChargesArray($localParams,$monto,$montoOrig,'40hc');
                   $arregloOrigin = array_merge($arregloOrigin,$markup40hc);
                   $collectionOrigin->push($arregloOrigin);
-                  $tot_40hc_O  +=   $markup40hc['montoMarkup'];
+                  $totalesCont['40HC']['tot_40HC_O']  +=   $markup40hc['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40Nor)&& in_array( '5',$equipment)){
+                if(in_array($local->calculationtype_id, $array40NOR)&& in_array( '5',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4270,10 +4287,10 @@ class QuoteV2Controller extends Controller
                   $arregloOrigin =$this->ChargesArray($localParams,$monto,$montoOrig,'40nor');
                   $arregloOrigin = array_merge($arregloOrigin,$markup40nor);
                   $collectionOrigin->push($arregloOrigin);
-                  $tot_40nor_O  +=  $markup40nor['montoMarkup'];
+                  $totalesCont['40NOR']['tot_40NOR_O']  +=  $markup40nor['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array45) && in_array( '4',$equipment)){
+                if(in_array($local->calculationtype_id, $array45HC) && in_array( '4',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4284,7 +4301,7 @@ class QuoteV2Controller extends Controller
                   $arregloOrigin = $this->ChargesArray($localParams,$monto,$montoOrig,'45');
                   $arregloOrigin = array_merge($arregloOrigin,$markup45);
                   $collectionOrigin->push($arregloOrigin);
-                  $tot_45_O  +=  $markup45['montoMarkup'];
+                  $totalesCont['45HC']['tot_45HC_O']  +=  $markup45['montoMarkup'];
 
                 }
 
@@ -4300,7 +4317,7 @@ class QuoteV2Controller extends Controller
             if($chargesDestination != null){
               if($local->typedestiny_id == '2'){
 
-                if(in_array($local->calculationtype_id, $array20) && in_array( '1',$equipment)  ){
+                if(in_array($local->calculationtype_id, $array20DV) && in_array( '1',$equipment)  ){
 
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
@@ -4309,9 +4326,9 @@ class QuoteV2Controller extends Controller
                   $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'20');
                   $arregloDestiny = array_merge($arregloDestiny,$markup20);
                   $collectionDestiny->push($arregloDestiny);
-                  $tot_20_D +=  $markup20['montoMarkup'];
+                  $totalesCont['20DV']['tot_20DV_D'] +=  $markup20['montoMarkup'];
                 }
-                if(in_array($local->calculationtype_id, $array40)&& in_array( '2',$equipment)){
+                if(in_array($local->calculationtype_id, $array40DV)&& in_array( '2',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4322,9 +4339,9 @@ class QuoteV2Controller extends Controller
                   $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'40');
                   $arregloDestiny = array_merge($arregloDestiny,$markup40);
                   $collectionDestiny->push($arregloDestiny);
-                  $tot_40_D  +=  $markup40['montoMarkup'];
+                  $totalesCont['40DV']['tot_40DV_D']  +=  $markup40['montoMarkup'];
                 }
-                if(in_array($local->calculationtype_id, $array40Hc)&& in_array( '3',$equipment)){
+                if(in_array($local->calculationtype_id, $array40HC)&& in_array( '3',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4335,10 +4352,10 @@ class QuoteV2Controller extends Controller
                   $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'40hc');
                   $arregloDestiny = array_merge($arregloDestiny,$markup40hc);
                   $collectionDestiny->push($arregloDestiny);
-                  $tot_40hc_D  +=   $markup40hc['montoMarkup'];
+                  $totalesCont['40HC']['tot_40HC_D']  +=   $markup40hc['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40Nor)&& in_array( '5',$equipment)){
+                if(in_array($local->calculationtype_id, $array40NOR)&& in_array( '5',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4349,10 +4366,10 @@ class QuoteV2Controller extends Controller
                   $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'40nor');
                   $arregloDestiny = array_merge($arregloDestiny,$markup40nor);
                   $collectionDestiny->push($arregloDestiny);
-                  $tot_40nor_D  +=  $markup40nor['montoMarkup'];
+                  $totalesCont['40NOR']['tot_40NOR_D']  +=  $markup40nor['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array45) && in_array( '4',$equipment)){
+                if(in_array($local->calculationtype_id, $array45HC) && in_array( '4',$equipment)){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4363,7 +4380,7 @@ class QuoteV2Controller extends Controller
                   $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'45');
                   $arregloDestiny = array_merge($arregloDestiny,$markup45);
                   $collectionDestiny->push($arregloDestiny);
-                  $tot_45_D  +=  $markup45['montoMarkup'];
+                  $totalesCont['45HC']['tot_45HC_D']  +=  $markup45['montoMarkup'];
                   $montoOrig = $local->ammount;
                 }
 
@@ -4379,7 +4396,7 @@ class QuoteV2Controller extends Controller
             if($chargesFreight != null){
               if($local->typedestiny_id == '3'){
 
-                if(in_array($local->calculationtype_id, $array20) && in_array( '1',$equipment) ){
+                if(in_array($local->calculationtype_id, $array20DV) && in_array( '1',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $monto =   $local->ammount  / $rateMount ;
@@ -4388,10 +4405,10 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'20');
                   $arregloFreight = array_merge($arregloFreight,$markup20);
                   $collectionFreight->push($arregloFreight);
-                  $totales['20F'] += $markup20['montoMarkup'];
+                  $totalesCont['20DV']['tot_20DV_F'] += $markup20['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40) && in_array( '2',$equipment) ){
+                if(in_array($local->calculationtype_id, $array40DV) && in_array( '2',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4402,10 +4419,10 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'40');
                   $arregloFreight = array_merge($arregloFreight,$markup40);
                   $collectionFreight->push($arregloFreight);
-                  $totales['40F'] +=  $markup40['montoMarkup'];
+                  $totalesCont['40DV']['tot_40DV_F'] +=  $markup40['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40Hc) && in_array( '3',$equipment) ){
+                if(in_array($local->calculationtype_id, $array40HC) && in_array( '3',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4416,10 +4433,10 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'40HC');
                   $arregloFreight = array_merge($arregloFreight,$markup40hc);
                   $collectionFreight->push($arregloFreight);
-                  $totales['40hcF'] +=   $markup40hc['montoMarkup'];
+                  $totalesCont['40HC']['tot_40HC_F'] +=   $markup40hc['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array40Nor)  && in_array( '5',$equipment) ){
+                if(in_array($local->calculationtype_id, $array40NOR)  && in_array( '5',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4430,10 +4447,10 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'40nor');
                   $arregloFreight = array_merge($arregloFreight,$markup40nor);
                   $collectionFreight->push($arregloFreight);
-                  $totales['40norF'] += $markup40nor['montoMarkup'];
+                  $totalesCont['40NOR']['tot_40NOR_F'] += $markup40nor['montoMarkup'];
 
                 }
-                if(in_array($local->calculationtype_id, $array45) && in_array( '4',$equipment) ){
+                if(in_array($local->calculationtype_id, $array45HC) && in_array( '4',$equipment) ){
 
                   $montoOrig = $local->ammount;
                   $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
@@ -4444,10 +4461,10 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'45');
                   $arregloFreight = array_merge($arregloFreight,$markup45);
                   $collectionFreight->push($arregloFreight);
-                  $totales['45F'] +=  $markup45['montoMarkup'];
+                  $totalesCont['45HC']['tot_45HC_F'] +=  $markup45['montoMarkup'];
 
                 }
-                
+
                 if(in_array($local->calculationtype_id,$arrayContainers)){             
                   $arregloFreight =  $this->ChargesArray99($localParams,'5','Per Container');
                 }else{          
@@ -4493,7 +4510,7 @@ class QuoteV2Controller extends Controller
               if($chargesOrigin != null){
                 if($global->typedestiny_id == '1'){
 
-                  if(in_array($global->calculationtype_id, $array20) && in_array('1',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array20DV) && in_array('1',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $monto =   $global->ammount  / $rateMount ;
@@ -4502,10 +4519,10 @@ class QuoteV2Controller extends Controller
                     $arregloOriginG = $this->ChargesArray($globalParams,$monto,$montoOrig,'20');
                     $arregloOriginG = array_merge($arregloOriginG,$markup20);
                     $collectionOrigin->push($arregloOriginG);
-                    $tot_20_O  +=  $markup20['montoMarkup'];
+                    $totalesCont['20DV']['tot_20DV_O']  +=  $markup20['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40)&& in_array( '2',$equipment)){
+                  if(in_array($global->calculationtype_id, $array40DV)&& in_array( '2',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4516,10 +4533,10 @@ class QuoteV2Controller extends Controller
                     $arregloOriginG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40');
                     $arregloOriginG = array_merge($arregloOriginG,$markup40);
                     $collectionOrigin->push($arregloOriginG);
-                    $tot_40_O  +=   $markup40['montoMarkup'];
+                    $totalesCont['40DV']['tot_40DV_O']  +=   $markup40['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '3',$equipment)){
+                  if(in_array($global->calculationtype_id, $array40HC)&& in_array( '3',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4530,10 +4547,10 @@ class QuoteV2Controller extends Controller
                     $arregloOriginG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40hc');
                     $arregloOriginG = array_merge($arregloOriginG,$markup40hc);
                     $collectionOrigin->push($arregloOriginG);
-                    $tot_40hc_O  +=   $markup40hc['montoMarkup'];
+                    $totalesCont['40HC']['tot_40HC_O']  +=   $markup40hc['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '5',$equipment)){
+                  if(in_array($global->calculationtype_id, $array40NOR)&& in_array( '5',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4544,10 +4561,10 @@ class QuoteV2Controller extends Controller
                     $arregloOriginG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40nor');
                     $arregloOriginG = array_merge($arregloOriginG,$markup40nor);
                     $collectionOrigin->push($arregloOriginG);
-                    $tot_40nor_O  +=  $markup40nor['montoMarkup'];
+                    $totalesCont['40NOR']['tot_40NOR_O']  +=  $markup40nor['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array45)&& in_array( '4',$equipment)){
+                  if(in_array($global->calculationtype_id, $array45HC)&& in_array( '4',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4558,7 +4575,7 @@ class QuoteV2Controller extends Controller
                     $arregloOriginG = $this->ChargesArray($globalParams,$monto,$montoOrig,'45');
                     $arregloOriginG = array_merge($arregloOriginG,$markup45);
                     $collectionOrigin->push($arregloOriginG);
-                    $tot_45_O  +=  $markup45['montoMarkup'];
+                    $totalesCont['45HC']['tot_45HC_O']  +=  $markup45['montoMarkup'];
 
                   }
 
@@ -4574,7 +4591,7 @@ class QuoteV2Controller extends Controller
               if($chargesDestination != null){
                 if($global->typedestiny_id == '2'){
 
-                  if(in_array($global->calculationtype_id, $array20) &&  in_array('1',$equipment)){
+                  if(in_array($global->calculationtype_id, $array20DV) &&  in_array('1',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $monto =   $global->ammount  / $rateMount ;
@@ -4583,10 +4600,10 @@ class QuoteV2Controller extends Controller
                     $arregloDestinyG = $this->ChargesArray($globalParams,$monto,$montoOrig,'20');
                     $arregloDestinyG = array_merge($arregloDestinyG,$markup20);
                     $collectionDestiny->push($arregloDestinyG);
-                    $tot_20_D +=  $markup20['montoMarkup'];
+                    $totalesCont['20DV']['tot_20DV_D'] +=  $markup20['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40)&& in_array( '2',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40DV)&& in_array( '2',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4597,10 +4614,10 @@ class QuoteV2Controller extends Controller
                     $arregloDestinyG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40');
                     $arregloDestinyG = array_merge($arregloDestinyG,$markup40);
                     $collectionDestiny->push($arregloDestinyG);
-                    $tot_40_D  +=  $markup40['montoMarkup'];
+                    $totalesCont['40DV']['tot_40DV_D']  +=  $markup40['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40Hc)&& in_array( '3',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40HC)&& in_array( '3',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4611,10 +4628,10 @@ class QuoteV2Controller extends Controller
                     $arregloDestinyG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40hc');
                     $arregloDestinyG = array_merge($arregloDestinyG,$markup40hc);
                     $collectionDestiny->push($arregloDestinyG);
-                    $tot_40hc_D  +=   $markup40hc['montoMarkup'];
+                    $totalesCont['40HC']['tot_40HC_D']  +=   $markup40hc['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40Nor)&& in_array( '5',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40NOR)&& in_array( '5',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4625,10 +4642,10 @@ class QuoteV2Controller extends Controller
                     $arregloDestinyG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40nor');
                     $arregloDestinyG = array_merge($arregloDestinyG,$markup40nor);
                     $collectionDestiny->push($arregloDestinyG);
-                    $tot_40nor_D  +=  $markup40nor['montoMarkup'];
+                    $totalesCont['40NOR']['tot_40NOR_D']  +=  $markup40nor['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array45)&& in_array( '4',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array45HC)&& in_array( '4',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4639,7 +4656,7 @@ class QuoteV2Controller extends Controller
                     $arregloDestinyG = $this->ChargesArray($globalParams,$monto,$montoOrig,'45');
                     $arregloDestinyG = array_merge($arregloDestinyG,$markup45);
                     $collectionDestiny->push($arregloDestinyG);
-                    $tot_45_D  +=  $markup45['montoMarkup'];
+                    $totalesCont['45HC']['tot_45HC_D']  +=  $markup45['montoMarkup'];
 
                   }
 
@@ -4655,7 +4672,7 @@ class QuoteV2Controller extends Controller
               if($chargesFreight != null){
                 if($global->typedestiny_id == '3'){
 
-                  if(in_array($global->calculationtype_id, $array20) && in_array('1',$equipment)){
+                  if(in_array($global->calculationtype_id, $array20DV) && in_array('1',$equipment)){
 
                     $montoOrig = $global->ammount ;
                     $monto =   $global->ammount  / $rateMount ;
@@ -4664,10 +4681,10 @@ class QuoteV2Controller extends Controller
                     $arregloFreightG = $this->ChargesArray($globalParams,$monto,$montoOrig,'20');
                     $arregloFreightG = array_merge($arregloFreightG,$markup20);
                     $collectionFreight->push($arregloFreightG);
-                    $totales['20F'] += $markup20['montoMarkup'];
+                    $totalesCont['20DV']['tot_20DV_F'] += $markup20['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40) && in_array( '2',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40DV) && in_array( '2',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4678,9 +4695,9 @@ class QuoteV2Controller extends Controller
                     $arregloFreightG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40');                   
                     $arregloFreightG = array_merge($arregloFreightG,$markup40);
                     $collectionFreight->push($arregloFreightG);
-                    $totales['40F'] +=  $markup40['montoMarkup'];
+                    $totalesCont['40DV']['tot_40DV_F'] +=  $markup40['montoMarkup'];
                   }
-                  if(in_array($global->calculationtype_id, $array40Hc) && in_array( '3',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40HC) && in_array( '3',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4691,10 +4708,10 @@ class QuoteV2Controller extends Controller
                     $arregloFreightG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40hc');
                     $arregloFreightG = array_merge($arregloFreightG,$markup40hc);
                     $collectionFreight->push($arregloFreightG);
-                    $totales['40hcF'] +=   $markup40hc['montoMarkup'];
+                    $totalesCont['40HC']['tot_40HC_F'] +=   $markup40hc['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array40Nor) && in_array( '5',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array40NOR) && in_array( '5',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4705,10 +4722,10 @@ class QuoteV2Controller extends Controller
                     $arregloFreightG = $this->ChargesArray($globalParams,$monto,$montoOrig,'40nor');
                     $arregloFreightG = array_merge($arregloFreightG,$markup40nor);
                     $collectionFreight->push($arregloFreightG);
-                    $totales['40norF'] += $markup40nor['montoMarkup'];
+                    $totalesCont['40NOR']['tot_40NOR_F'] += $markup40nor['montoMarkup'];
 
                   }
-                  if(in_array($global->calculationtype_id, $array45) && in_array( '4',$equipment) ){
+                  if(in_array($global->calculationtype_id, $array45HC) && in_array( '4',$equipment) ){
 
                     $montoOrig = $global->ammount ;
                     $montoOrig = $this->perTeu($montoOrig,$global->calculationtype_id);
@@ -4719,7 +4736,7 @@ class QuoteV2Controller extends Controller
                     $arregloFreightG = $this->ChargesArray($globalParams,$monto,$montoOrig,'45');
                     $arregloFreightG = array_merge($arregloFreightG,$markup45);
                     $collectionFreight->push($arregloFreightG);
-                    $totales['45F'] +=  $markup45['montoMarkup'];
+                    $totalesCont['45HC']['tot_45HC_F'] +=  $markup45['montoMarkup'];
 
                   }
 
@@ -4747,7 +4764,7 @@ class QuoteV2Controller extends Controller
         $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
 
       // Totales Freight 
-      if(!isset($totales['20F']))
+      /*  if(!isset($totales['20F']))
         $totales['20F'] = 0;
       if(!isset($totales['40F']))
         $totales['40F'] = 0;
@@ -4756,13 +4773,13 @@ class QuoteV2Controller extends Controller
       if(!isset($totales['40norF']))
         $totales['40norF'] = 0;
       if(!isset($totales['45F']))
-        $totales['45F'] = 0;
+        $totales['45F'] = 0;*/
 
-      $totalT20 = $tot_20_D +  $totales['20F'] + $tot_20_O ;
-      $totalT40  = $tot_40_D + $totales['40F'] + $tot_40_O ;
-      $totalT40hc  = $tot_40hc_D + $totales['40hcF'] + $tot_40hc_O ;
-      $totalT40nor  = $tot_40nor_D +  $totales['40norF'] + $tot_40nor_O ;
-      $totalT45  = $tot_45_D + $totales['45F'] + $tot_45_O ;
+      $totalT20 = $totalesCont['20DV']['tot_20DV_D'] +  $totalesCont['20DV']['tot_20DV_F'] + $totalesCont['20DV']['tot_20DV_O'] ;
+      $totalT40  = $totalesCont['40DV']['tot_40DV_D'] + $totalesCont['40DV']['tot_40DV_F'] + $totalesCont['40DV']['tot_40DV_O'] ;
+      $totalT40hc  = $totalesCont['40HC']['tot_40HC_D'] + $totalesCont['40HC']['tot_40HC_F'] + $totalesCont['40HC']['tot_40HC_O'] ;
+      $totalT40nor  = $totalesCont['40NOR']['tot_40NOR_D'] +  $totalesCont['40NOR']['tot_40NOR_F'] + $totalesCont['40NOR']['tot_40NOR_O'] ;
+      $totalT45  = $totalesCont['45HC']['tot_45HC_D'] + $totalesCont['45HC']['tot_45HC_F'] + $totalesCont['45HC']['tot_45HC_O'] ;
 
 
       $totalRates += $totalT;
@@ -4821,6 +4838,7 @@ class QuoteV2Controller extends Controller
           $color = 'bg-danger';
         }
       }
+
       // Valores
       $data->setAttribute('excelRequest',$excelRequestId);
       $data->setAttribute('excelRequestFCL',$excelRequestIdFCL);
@@ -4836,24 +4854,24 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
 
       // Freight
-      $data->setAttribute('tot20F', number_format($totales['20F'], 2, '.', ''));
-      $data->setAttribute('tot40F', number_format($totales['40F'], 2, '.', ''));
-      $data->setAttribute('tot40hcF', number_format($totales['40hcF'], 2, '.', ''));
-      $data->setAttribute('tot40norF', number_format($totales['40norF'], 2, '.', ''));
-      $data->setAttribute('tot45F', number_format($totales['45F'], 2, '.', ''));
+      $data->setAttribute('tot20F', number_format($totalesCont['20DV']['tot_20DV_F'], 2, '.', ''));
+      $data->setAttribute('tot40F', number_format($totalesCont['40DV']['tot_40DV_F'], 2, '.', ''));
+      $data->setAttribute('tot40hcF', number_format($totalesCont['40HC']['tot_40HC_F'], 2, '.', ''));
+      $data->setAttribute('tot40norF', number_format($totalesCont['40NOR']['tot_40NOR_F'], 2, '.', ''));
+      $data->setAttribute('tot45F', number_format($totalesCont['45HC']['tot_45HC_F'], 2, '.', ''));
 
       // Origin
-      $data->setAttribute('tot20O', number_format($tot_20_O, 2, '.', ''));
-      $data->setAttribute('tot40O', number_format($tot_40_O, 2, '.', ''));
-      $data->setAttribute('tot40hcO', number_format($tot_40hc_O, 2, '.', ''));
-      $data->setAttribute('tot40norO', number_format($tot_40nor_O, 2, '.', ''));
-      $data->setAttribute('tot45O', number_format($tot_45_O, 2, '.', ''));
+      $data->setAttribute('tot20O', number_format($totalesCont['20DV']['tot_20DV_O'], 2, '.', ''));
+      $data->setAttribute('tot40O', number_format($totalesCont['40DV']['tot_40DV_O'], 2, '.', ''));
+      $data->setAttribute('tot40hcO', number_format($totalesCont['40HC']['tot_40HC_O'], 2, '.', ''));
+      $data->setAttribute('tot40norO', number_format($totalesCont['40NOR']['tot_40NOR_O'], 2, '.', ''));
+      $data->setAttribute('tot45O', number_format($totalesCont['45HC']['tot_45HC_O'], 2, '.', ''));
       //Destiny
-      $data->setAttribute('tot20D', number_format($tot_20_D, 2, '.', ''));
-      $data->setAttribute('tot40D', number_format($tot_40_D, 2, '.', ''));
-      $data->setAttribute('tot40hcD', number_format($tot_40hc_D, 2, '.', ''));
-      $data->setAttribute('tot40norD', number_format($tot_40nor_D, 2, '.', ''));
-      $data->setAttribute('tot45D', number_format($tot_45_D, 2, '.', ''));
+      $data->setAttribute('tot20D', number_format($totalesCont['20DV']['tot_20DV_D'], 2, '.', ''));
+      $data->setAttribute('tot40D', number_format($totalesCont['40DV']['tot_40DV_D'], 2, '.', ''));
+      $data->setAttribute('tot40hcD', number_format($totalesCont['40HC']['tot_40HC_D'], 2, '.', ''));
+      $data->setAttribute('tot40norD', number_format($totalesCont['40NOR']['tot_40NOR_D'], 2, '.', ''));
+      $data->setAttribute('tot45D', number_format($totalesCont['45HC']['tot_45HC_D'], 2, '.', ''));
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
       $data->setAttribute('inlandOrigin',$inlandOrigin);
