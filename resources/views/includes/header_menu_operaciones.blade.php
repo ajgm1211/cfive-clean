@@ -159,6 +159,14 @@ Sea Freight LCL
                   </span>
                 </a>
               </li>
+				<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('RequestFcl.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-folder-3"></i>
+                  <span class="m-menu__link-text">
+                    Request Imp. FCL V2
+                  </span>
+                </a>
+              </li>
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
                 <a  href="{{ route('RequestImportationLcl.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>

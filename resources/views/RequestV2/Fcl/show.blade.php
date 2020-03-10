@@ -76,16 +76,7 @@
 						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 							<div class="row align-items-center">
 								<div class="col-xl-12 order-2 order-xl-1 conten_load">
-									<div class="col-xl-12 order-1 order-xl-2 m--align-right row">
-										<div class="col-md-3">
-											<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="{{$date}}">
-										</div>
-										<div class="col-md-2">
-
-											<!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
-											<a href="#" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</a>
-										</div>
-									</div>
+									
 									<div class="col-xl-12 order-1 order-xl-2 m--align-right">
 										<a href="{{route('importaion.fcl')}}">
 											<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
@@ -108,7 +99,16 @@
 											</button>
 										</a>
 									</div>
+									<div class="col-xl-12 order-1 order-xl-2 m--align-right row">
+										<div class="col-md-3">
+											<input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="{{$date}}">
+										</div>
+										<div class="col-md-2">
 
+											<!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
+											<a href="#" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</a>
+										</div>
+									</div>
 									<br />
 									<table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
 										<thead >
