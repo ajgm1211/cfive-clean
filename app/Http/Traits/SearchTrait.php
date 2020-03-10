@@ -383,40 +383,55 @@ trait SearchTrait {
   }
 
   // Metodos para los rates 
-  public function rates($equipment,$markup,$data,$rateC,$typeCurrency){
+  public function rates($equipment,$markup,$data,$rateC,$typeCurrency,$contain){
+
     $arreglo = array();
     $arregloRate = array();
     $arregloSaveR = array();
     $arregloSaveM = array();
     foreach($equipment as $containers){
       //Calculo para los diferentes tipos de contenedores
-      if($containers == '20') {
-        $arreglo = $this->detailRate($markup,$data->twuenty,$data,$rateC,$typeCurrency,$containers);
+      if($containers == '1') {
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$data->twuenty,$data,$rateC,$typeCurrency,$containt);
         $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
         $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
       }
 
 
-      if($containers == '40'){
-        $arreglo = $this->detailRate($markup,$data->forty,$data,$rateC,$typeCurrency,$containers);
+      if($containers == '2'){
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$data->forty,$data,$rateC,$typeCurrency,$containt);
         $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
         $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
       }
 
-      if($containers == '40HC'){
-        $arreglo = $this->detailRate($markup,$data->fortyhc,$data,$rateC,$typeCurrency,$containers);
+      if($containers == '3'){
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$data->fortyhc,$data,$rateC,$typeCurrency,$containt);
         $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
         $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
       }
 
 
-      if($containers == '40NOR')
-        $arregloRate = array_merge($arregloRate,$this->detailRate($markup,$data->fortynor,$data,$rateC,$typeCurrency,$containers));
-      if($containers == '45')
-        $arregloRate = array_merge($arregloRate,$this->detailRate($markup,$data->fortyfive,$data,$rateC,$typeCurrency,$containers));
+      if($containers == '5'){
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$data->fortynor,$data,$rateC,$typeCurrency,$containt);
+        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+      }
+      if($containers == '4'){
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$data->fortyfive,$data,$rateC,$typeCurrency,$containt);
+        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+      }
+
     }
 
     $arregloG = array('arregloRate' => $arregloRate , 'arregloSaveR' => $arregloSaveR , 'arregloSaveM' =>$arregloSaveM );
@@ -436,6 +451,10 @@ trait SearchTrait {
 
 
     $tot_F = $markup['monto'.$containers] / $rateC;
+    //Formato decimal 
+    $tot_F = number_format($tot_F, 2, '.', '');
+    $amount = number_format($amount, 2, '.', '');
+    
     $arrayDetail = array('price'.$containers => $amount, 'currency'.$containers  => $data->currency->alphacode ,'idCurrency'.$containers => $data->currency_id,'total'.$containers => $tot_F );
 
     // Arreglos para guardar los rates
@@ -471,9 +490,9 @@ trait SearchTrait {
     $local = $params['local'];
     $data = $params['data'];
     $localCarrier = $params['localCarrier'];
-    
+
     $arreglo = array('surcharge_terms' => $params['terminos'],'surcharge_id' => $local->surcharge->id,'surcharge_name' => $local->surcharge->name, 'monto' => 0.00, 'markup' => 0.00,'montoMarkup' => 0.00,'montoMarkupO' => 0.00,'currency' => $local->currency->alphacode, 'calculation_name' => $calculation_name,'contract_id' => $data->contract_id,'carrier_id' => $localCarrier->carrier_id,'type'=>'99','rate_id' => $data->id  ,'calculation_id'=>$calculation_id, 'montoOrig' => 0.00, 'typecurrency' => $params['typeCurrency'] ,'currency_id' => $local->currency->id   ,'currency_orig_id' => $params['idCurrency'],'markupConvert' => 0.00 );
-    
+
     return $arreglo;
   }
 
