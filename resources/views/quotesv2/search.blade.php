@@ -412,7 +412,7 @@
 
 							<div class="col-lg-2" id="equipment_id">
 								<label>Equipment</label>
-								{{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
+								{{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
 							</div>
 
 							<div class="col-lg-2">
