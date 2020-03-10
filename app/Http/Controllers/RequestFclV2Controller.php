@@ -51,8 +51,6 @@ class RequestFclV2Controller extends Controller
 		//$date_start = '2019-08-26 00:00:00';
 		//$date_end	= '2020-03-03 12:39:54';
 		$Ncontracts = DB::select('call  select_request_fcl("'.$date_start.'","'.$date_end.'")');
-		//        dd($Ncontracts);
-		//dd($Ncontracts[0]['Requestcarriers']->pluck('carrier')->pluck('name'));
 		$permiso_eliminar = false;
 		$user  = \Auth::user();
 		if($user->hasAnyPermission([1])){
@@ -122,7 +120,7 @@ class RequestFclV2Controller extends Controller
 
 				$buttons = '
                 &nbsp;&nbsp;
-				<a href="'.route("RequestImportation.show",$Ncontracts->id).'" title="Download File">
+				<a href="'.route("RequestFcl.show",$Ncontracts->id).'" title="Download File">
                     <samp class="la la-cloud-download" style="font-size:20px; color:#031B4E"></samp>
                 </a>
                 &nbsp;&nbsp;';
@@ -136,25 +134,28 @@ class RequestFclV2Controller extends Controller
 				}
 
 				if(empty($Ncontracts->contract) != true){
-					$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>
-                      <i style='color:#b90000' class='la la-copy'></i>
-                    </a>";   
-					$butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
-                    <samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp>
-                    </a>
+					if(strnatcasecmp($Ncontracts->status,'Pending')!=0){
+						$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>                      <i style='color:#b90000' class='la la-copy'></i></a>";   
 
-                    '.$buttonDp.'
-                    &nbsp;&nbsp;
-                    <a href="#" title="Edit FCL Contract">
+						$butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+					} else{
+						$butPrCt 	= '';
+						$buttonDp	= '';
+					}
+
+					$buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
                     </a>
                     ';
-					$buttons = $butPrCt . $buttons;
+
+					$buttons = $butPrCt . $buttonDp . $buttoEdit . $buttons;
 				} else{
-					$butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
+					if(strnatcasecmp($Ncontracts->status,'Pending')!=0){
+						$butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
-					$buttons = $butPrRq . $buttons;
+						$buttons = $butPrRq . $buttons;
+					}
 				}
 				return $buttons;
 			})->make();
@@ -202,13 +203,6 @@ class RequestFclV2Controller extends Controller
 			$contract->status           = 'incomplete';
 			$contract->company_user_id  = $CompanyUserId;
 			$contract->save();
-
-			foreach($carriers as $carrierVal){
-				ContractCarrier::create([
-					'carrier_id'    => $carrierVal,
-					'contract_id'   => $contract->id
-				]);
-			}
 
 			$Ncontract  = new NewContractRequest();
 			$Ncontract->namecontract    = $name;
@@ -272,9 +266,18 @@ class RequestFclV2Controller extends Controller
 		return view('RequestV2.Fcl.index',compact('carrier','user','direction','groupContainer','containers'));
 	}
 
-	public function show($id)
+	public function show($mediaItem)
 	{
-		//
+		$Ncontract	= NewContractRequest::find($mediaItem);
+		$Ncontract->load('companyuser');
+		$time       = new \DateTime();
+		$now        = $time->format('d-m-y');
+		$mediaItem = $Ncontract->getFirstMedia('document');
+		$extObj     = new \SplFileInfo($mediaItem->file_name);
+		$ext        = $extObj->getExtension();
+		$name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$now.'-FLC.'.$ext;
+		return \Storage::disk('contracts3')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
+
 	}
 
 	public function edit($id)
