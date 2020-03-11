@@ -152,7 +152,7 @@ Sea Freight LCL
             <ul class="m-menu__subnav">
               @role('administrator|data_entry')
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                <a  href="{{ route('RequestFcl.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>
                   <span class="m-menu__link-text">
                     Request Imp. FCL
