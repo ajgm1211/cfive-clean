@@ -442,7 +442,7 @@ class ContractsController extends Controller
         $directions = Direction::pluck('name','id');
         $carriers   = Carrier::pluck('name','id');
         //dd($contract);
-        return view('Requests.Body-Modals.editContract',compact('contract','directions','carriers'));
+        return view('RequestV2.Fcl.Body-Modals.editContract',compact('contract','directions','carriers'));
     }
     public function updateContractRequest(Request $request,$id){
         //dd($request->all()); 
