@@ -1090,6 +1090,7 @@ class QuoteV2Controller extends Controller
     $hidden40hc = 'hidden';
     $hidden40nor = 'hidden';
     $hidden45 = 'hidden';
+    $hidden20R = 'hidden';
     // Clases para reordenamiento de la tabla y ajuste
     $originClass = 'col-md-2';
     $destinyClass = 'col-md-1';
@@ -1138,6 +1139,9 @@ class QuoteV2Controller extends Controller
       if($val == '4'){
         $hidden45 = '';
       }
+      if($val == '6'){
+        $hidden20R = '';
+      }
     }
     $equipment->put('originClass',$originClass);
     $equipment->put('destinyClass',$destinyClass);
@@ -1147,6 +1151,7 @@ class QuoteV2Controller extends Controller
     $equipment->put('40hc',$hidden40hc);
     $equipment->put('40nor',$hidden40nor);
     $equipment->put('45',$hidden45);
+    $equipment->put('20R',$hidden20R);
     return($equipment);
   }
 
@@ -4082,24 +4087,17 @@ class QuoteV2Controller extends Controller
     }
 
     $formulario = $request;
-
-
     $arrayContainers =  array('1','2','3','4','7','8'); 
-
 
     $containers = Container::get();
     $totalesCont = array();
-    foreach($containers as $cont){
 
+    foreach($containers as $cont){
       $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
       $totalesCont = array_merge($totalesContainer,$totalesCont);
-
       $var = 'array'.$cont->code;
       $$var = $container_calculation->where('container_id',$cont->id)->pluck('calculationtype_id')->toArray();
     }
-
-
-
 
     foreach($arreglo as $data){
       $contractStatus = $data->contract->status;
@@ -4893,15 +4891,15 @@ class QuoteV2Controller extends Controller
     $chargeAPI_M = ($chargesAPI_M != null ) ? true : false;
 
     // Ordenar por prioridad 
-    if(in_array('20',$equipment))
+    if(in_array('1',$equipment))
       $arreglo  =  $arreglo->sortBy('total20');
-    else if(in_array('40',$equipment))
+    else if(in_array('2',$equipment))
       $arreglo  =  $arreglo->sortBy('total40');
-    else if(in_array('40HC',$equipment))
+    else if(in_array('3',$equipment))
       $arreglo  =  $arreglo->sortBy('total40hc');
-    else if(in_array('40NOR',$equipment))
+    else if(in_array('5',$equipment))
       $arreglo  =  $arreglo->sortBy('total40nor');
-    else if(in_array('45',$equipment))
+    else if(in_array('4',$equipment))
       $arreglo  =  $arreglo->sortBy('total45');
 
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain'));
