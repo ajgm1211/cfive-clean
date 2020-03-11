@@ -964,16 +964,19 @@ Route::get('/testRoute',function(){
 
 // RequestFcl V2
 Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
-	route::get('index','RequestFclV2Controller@index')->name('RequestFcl.index');
-	route::get('create','RequestFclV2Controller@create')->name('RequestFcl.create');
+	route::get('index','RequestFclV2Controller@index')->name('RequestFcl.index')->middleware(['role:administrator|data_entry']);
+	route::get('create','RequestFclV2Controller@create')->name('RequestFcl.create')->middleware(['role:administrator|data_entry']);
 	route::post('store','RequestFclV2Controller@store')->name('RequestFcl.store')->middleware(['role:administrator|company|subuser|data_entry']);
-	route::get('show/{id}','RequestFclV2Controller@show')->name('RequestFcl.show');
-	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit');
-	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update');
-	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy');
-	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request');
+	route::get('show/{id}','RequestFclV2Controller@show')->name('RequestFcl.show')->middleware(['role:administrator|data_entry']);
+	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::get('getContainers','RequestFclV2Controller@getContainers')->name('request.fcl.get.containers');
 	route::post('storeMediaRqFcl','RequestFclV2Controller@storeMedia')->name('request.fcl.storeMedia');
+	route::get('donwloadFilesRFCL/{id}/{selector}','RequestFclV2Controller@donwloadFiles')->name('RequestFcl.donwload.files');
+    Route::get('StatusRFCL','RequestFclV2Controller@UpdateStatusRequest')->name('request.fcl.status')
+		->middleware(['auth','role:administrator|data_entry']);
 });
 
 Route::prefix('ContainerCalculation')->group(function () {
