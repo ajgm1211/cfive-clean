@@ -4302,6 +4302,22 @@ class QuoteV2Controller extends Controller
                   $totalesCont['45HC']['tot_45HC_O']  +=  $markup45['montoMarkup'];
 
                 }
+                // Refeer
+
+                if(in_array($local->calculationtype_id, $array20RF) && in_array( '6',$equipment)){
+
+                  $montoOrig = $local->ammount;
+                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $monto =   $local->ammount  / $rateMount ;
+                  $monto = $this->perTeu($monto,$local->calculationtype_id);
+                  $monto = number_format($monto, 2, '.', '');
+                  $markup20R = $this->localMarkupsFCL($markup['charges']['localPercentage'],$markup['charges']['localAmmount'],$markup['charges']['localMarkup'],$monto,$montoOrig,$typeCurrency,$markup['charges']['markupLocalCurre'],$local->currency->id);
+                  $arregloOrigin = $this->ChargesArray($localParams,$monto,$montoOrig,'20R');
+                  $arregloOrigin = array_merge($arregloOrigin,$markup20R);
+                  $collectionOrigin->push($arregloOrigin);
+                  $totalesCont['20RF']['tot_20RF_O']  +=  $markup20R['montoMarkup'];
+
+                }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
                   $arregloOrigin =  $this->ChargesArray99($localParams,'5','Per Container');
@@ -4380,6 +4396,21 @@ class QuoteV2Controller extends Controller
                   $collectionDestiny->push($arregloDestiny);
                   $totalesCont['45HC']['tot_45HC_D']  +=  $markup45['montoMarkup'];
                   $montoOrig = $local->ammount;
+                }
+                // Refeer
+                if(in_array($local->calculationtype_id, $array20RF) && in_array( '6',$equipment)){
+
+                  $montoOrig = $local->ammount;
+                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $monto =   $local->ammount  / $rateMount ;
+                  $monto = $this->perTeu($monto,$local->calculationtype_id);
+                  $monto = number_format($monto, 2, '.', '');
+                  $markup20R = $this->localMarkupsFCL($markup['charges']['localPercentage'],$markup['charges']['localAmmount'],$markup['charges']['localMarkup'],$monto,$montoOrig,$typeCurrency,$markup['charges']['markupLocalCurre'],$local->currency->id);
+                  $arregloDestiny = $this->ChargesArray($localParams,$monto,$montoOrig,'20R');
+                  $arregloDestiny = array_merge($arregloDestiny,$markup20R);
+                  $collectionDestiny->push($arregloDestiny);
+                  $totalesCont['20RF']['tot_20RF_D']  +=  $markup20R['montoMarkup'];
+
                 }
 
                 if(in_array($local->calculationtype_id,$arrayContainers)){
@@ -4460,6 +4491,21 @@ class QuoteV2Controller extends Controller
                   $arregloFreight = array_merge($arregloFreight,$markup45);
                   $collectionFreight->push($arregloFreight);
                   $totalesCont['45HC']['tot_45HC_F'] +=  $markup45['montoMarkup'];
+
+                }
+                //Refeer
+                if(in_array($local->calculationtype_id, $array20RF) && in_array( '6',$equipment)){
+
+                  $montoOrig = $local->ammount;
+                  $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id);
+                  $monto =   $local->ammount  / $rateMount ;
+                  $monto = $this->perTeu($monto,$local->calculationtype_id);
+                  $monto = number_format($monto, 2, '.', '');
+                  $markup20R = $this->localMarkupsFCL($markup['charges']['localPercentage'],$markup['charges']['localAmmount'],$markup['charges']['localMarkup'],$monto,$montoOrig,$typeCurrency,$markup['charges']['markupLocalCurre'],$local->currency->id);
+                  $arregloFreight = $this->ChargesArray($localParams,$monto,$montoOrig,'20R');
+                  $arregloFreight = array_merge($arregloFreight,$markup20R);
+                  $collectionFreight->push($arregloFreight);
+                  $totalesCont['20RF']['tot_20RF_F']  +=  $markup20R['montoMarkup'];
 
                 }
 
@@ -4850,6 +4896,18 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('total40hc', number_format($totalT40hc, 2, '.', ''));
       $data->setAttribute('total40nor', number_format($totalT40nor, 2, '.', ''));
       $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
+
+
+      foreach($containers as $cont){
+
+        $data->setAttribute('tot'.$cont->code.'F', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_F'], 2, '.', ''));
+        $data->setAttribute('tot'.$cont->code.'O', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_O'], 2, '.', ''));
+        $data->setAttribute('tot'.$cont->code.'D', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_D'], 2, '.', ''));
+
+      }
+
+
+
 
       // Freight
       $data->setAttribute('tot20F', number_format($totalesCont['20DV']['tot_20DV_F'], 2, '.', ''));
