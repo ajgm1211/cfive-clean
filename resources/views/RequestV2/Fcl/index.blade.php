@@ -454,7 +454,7 @@
 		},
 		init: function() {
 			this.on("maxfilesexceeded", function(file){
-				file.previewElement.remove()
+				file.previewElement.remove();
 				toastr.error('You can’t upload more than 1 file!');
 			});
 		}
