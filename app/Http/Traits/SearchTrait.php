@@ -416,7 +416,6 @@ trait SearchTrait {
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
       }
 
-
       if($containers == '5'){
         $containt = $contain->where('id',$containers)->pluck('code')->first();
         $arreglo = $this->detailRate($markup,$data->fortynor,$data,$rateC,$typeCurrency,$containt);
@@ -427,6 +426,15 @@ trait SearchTrait {
       if($containers == '4'){
         $containt = $contain->where('id',$containers)->pluck('code')->first();
         $arreglo = $this->detailRate($markup,$data->fortyfive,$data,$rateC,$typeCurrency,$containt);
+        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+      }
+      if($containers == '6'){
+        $jsonContainer = json_decode($data->containers);
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$jsonContainer->C20RF,$data,$rateC,$typeCurrency,$containt);
+
         $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
         $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
@@ -454,7 +462,7 @@ trait SearchTrait {
     //Formato decimal 
     $tot_F = number_format($tot_F, 2, '.', '');
     $amount = number_format($amount, 2, '.', '');
-    
+
     $arrayDetail = array('price'.$containers => $amount, 'currency'.$containers  => $data->currency->alphacode ,'idCurrency'.$containers => $data->currency_id,'total'.$containers => $tot_F );
 
     // Arreglos para guardar los rates
