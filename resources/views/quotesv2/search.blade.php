@@ -91,6 +91,11 @@
 
 		background-color: #41B0D5;    
 	}
+
+	.bg-safmarine {
+
+		background-color: #f99702;    
+	}
 	.btn-detail__quotes:hover {
 		border-color: #0072fc;
 		background-color: #0072fc;    
@@ -532,6 +537,11 @@
 							<div class="col-lg-2 for-check" id="maerskdiv">
 								{{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
 								<label for="mode5" class="label-check">Include MAERSK Price Finder</label>
+							</div>
+
+							<div class="col-lg-2 for-check" id="safmarinediv">
+								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode5', 'class' => 'include-checkbox']) }}
+								<label for="mode5" class="label-check">Include SAFMARINE Price Finder</label>
 							</div>
 
 						</div><br>
