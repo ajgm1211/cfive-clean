@@ -977,9 +977,15 @@ Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
 	route::get('donwloadFilesRFCL/{id}/{selector}','RequestFclV2Controller@donwloadFiles')->name('RequestFcl.donwload.files');
     Route::get('StatusRFCL','RequestFclV2Controller@UpdateStatusRequest')->name('request.fcl.status')
 		->middleware(['auth','role:administrator|data_entry']);
+	Route::post('ExportRFCL/','RequestFclV2Controller@export')->name('export.request.fcl.v2')
+		->middleware(['auth','role:administrator|data_entry']);
 });
 
 Route::prefix('ContainerCalculation')->group(function () {
-	Route::resource('ContainerCalculation','ContainerCalculationController')->middleware(['role:administrator|company|subuser|data_entry']);
-	route::get('AddCCalculationT','ContainerCalculationController@loadBodymodalAdd')->name('add.conatiner.calculation')->middleware(['role:administrator|company|subuser|data_entry']);
+	Route::resource('ContainerCalculation','ContainerCalculationController')->middleware(['role:administrator|data_entry']);
+	route::get('AddCCalculationT','ContainerCalculationController@loadBodymodalAdd')->name('add.conatiner.calculation')->middleware(['role:administrator|data_entry']);
+});
+
+Route::prefix('CalculationType')->group(function () {
+	Route::resource('CalculationType','CalculationTypeController')->middleware(['role:administrator|data_entry']);
 });
