@@ -1083,6 +1083,55 @@ class QuoteV2Controller extends Controller
    * @param integer $tipo 
    * @return type
    */
+  public function hideContainerV2($equipmentForm,$tipo,$container){
+
+    $equipment = new Collection();
+    foreach($container as $cont){
+      $hidden = 'hidden'.$cont->code;
+      $$hidden = 'hidden';      
+      foreach($equipmentForm as $val){
+        if($val ==$cont->code){
+          $$hidden = '';
+        }
+      }
+      $equipment->put($cont->code,$$hidden);
+    }
+
+    // Clases para reordenamiento de la tabla y ajuste
+    $originClass = 'col-md-2';
+    $destinyClass = 'col-md-1';
+    $dataOrigDest = 'col-md-3';
+
+    $countEquipment = count($equipmentForm);
+    $countEquipment = 5 - $countEquipment;
+    if($countEquipment == 1 ){
+      $originClass = 'col-md-3';
+      $destinyClass = 'col-md-1';
+      $dataOrigDest = 'col-md-4';
+    }
+    if($countEquipment == 2 ){
+      $originClass = 'col-md-3';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-5';
+    }
+    if($countEquipment == 3){
+      $originClass = 'col-md-4';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-6';
+    }
+    if($countEquipment == 4){
+      $originClass = 'col-md-5';
+      $destinyClass = 'col-md-2';
+      $dataOrigDest = 'col-md-7';
+    }
+
+    $equipment->put('originClass',$originClass);
+    $equipment->put('destinyClass',$destinyClass);
+    $equipment->put('dataOrigDest',$dataOrigDest);
+    return($equipment);
+  }
+
+
   public function hideContainer($equipmentForm,$tipo){
     $equipment = new Collection();
     $hidden20 = 'hidden';
@@ -3620,7 +3669,7 @@ class QuoteV2Controller extends Controller
     $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-    $equipmentHides = $this->hideContainer($equipment,'');
+    $equipmentHides = $this->hideContainerV2($equipment,'',);
     //Colecciones 
     $inlandDestiny = new collection();
     $inlandOrigin = new collection();
@@ -4091,6 +4140,8 @@ class QuoteV2Controller extends Controller
 
     $containers = Container::get();
     $totalesCont = array();
+    
+    $equipmentHides = $this->hideContainerV2($equipment,'',$containers);
 
     foreach($containers as $cont){
       $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
@@ -4120,8 +4171,6 @@ class QuoteV2Controller extends Controller
         $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
         $totalesCont = array_merge($totalesContainer,$totalesCont);
       }
-
-
 
       $carrier[] = $data->carrier_id;
       $orig_port = array($data->origin_port);
@@ -4535,10 +4584,6 @@ class QuoteV2Controller extends Controller
         $data->setAttribute('tot'.$cont->code.'D', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_D'], 2, '.', ''));
 
       }
-
-
-
-
       // Freight
       $data->setAttribute('tot20F', number_format($totalesCont['20DV']['tot_20DV_F'], 2, '.', ''));
       $data->setAttribute('tot40F', number_format($totalesCont['40DV']['tot_40DV_F'], 2, '.', ''));
@@ -4569,8 +4614,6 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('idContract',$idContract);
       //COlor
       $data->setAttribute('color',$color);
-
-
     }
     $chargeOrigin = ($chargesOrigin != null ) ? true : false;
     $chargeDestination = ($chargesDestination != null ) ? true : false;
@@ -4590,9 +4633,7 @@ class QuoteV2Controller extends Controller
     else if(in_array('4',$equipment))
       $arreglo  =  $arreglo->sortBy('total45');
 
-
-
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain','containers'));
 
   }
 
