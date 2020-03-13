@@ -3512,10 +3512,11 @@ class QuoteV2Controller extends Controller
         $chargeFreight= 'true';
         $chargeAPI= 'true';
         $chargeAPI_M = 'false';
+        $chargeAPI_SF = 'false';
         $form['equipment'] = array('20','40','40HC');
         $form['company_id_quote'] ='';
 
-        return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','form','chargeAPI_M'));
+        return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','form','chargeAPI_M', 'chargeAPI_SF'));
 
 
     }
@@ -3548,6 +3549,7 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
+        $chargesAPI_SF = $request->input('chargeAPI_SF');
 
 
         $form  = $request->all();
@@ -4148,10 +4150,11 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}';
-                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-                    $response = $client->request('GET', $url);
+                  $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
 
+                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
+
+                  $response = $client->request('GET', $url);
 
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4169,9 +4172,10 @@ class QuoteV2Controller extends Controller
 
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
+                  $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
 
-                    $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}';
-                    $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
+
                     try {
                         $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
@@ -4183,6 +4187,32 @@ class QuoteV2Controller extends Controller
 
             $arreglo3 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
                 $q->where('validity', '>=',$dateSince)->where('number','MAERSK');
+            });
+        }
+
+        if($chargesAPI_SF != null){
+
+            $client = new Client();
+
+
+            foreach($origin_port as $orig){
+                foreach($destiny_port as $dest){
+
+                  $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+
+                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
+
+                    try {
+                        $response = $client->request('GET', $url);
+                    } catch (\Exception $e) {
+
+                    }  
+
+                }
+            }
+
+            $arreglo4 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+                $q->where('validity', '>=',$dateSince)->where('number','SAFMARINE');
             });
         }
 
@@ -4220,6 +4250,12 @@ class QuoteV2Controller extends Controller
             $arreglo3 = $arreglo3->get();
 
             $arreglo = $arreglo->merge($arreglo3);
+        }
+
+        if($chargesAPI_SF != null){
+            $arreglo4 = $arreglo4->get();
+
+            $arreglo = $arreglo->merge($arreglo4);
         }
 
 
@@ -5081,12 +5117,13 @@ class QuoteV2Controller extends Controller
             if($data->contract->status == 'api'){
                 if($data->contract->number == 'MAERSK'){
                     $color = 'bg-maersk';
-                }else{
+                } else if($data->contract->number == 'SAFMARINE') {
+                    $color = 'bg-safmarine';
+                } else {
                     $color = 'bg-danger';
                 }
 
             }
-
 
             // Valores
             $data->setAttribute('excelRequest',$excelRequestId);
@@ -5141,7 +5178,7 @@ class QuoteV2Controller extends Controller
         $chargeFreight = ($chargesFreight != null ) ? true : false;
         $chargeAPI = ($chargesAPI != null ) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null ) ? true : false;
-
+        $chargeAPI_SF = ($chargesAPI_SF != null ) ? true : false;
 
 
         // Ordenar por prioridad 
@@ -5157,7 +5194,7 @@ class QuoteV2Controller extends Controller
             $arreglo  =  $arreglo->sortBy('total45');
 
 
-        return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M'));
+        return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M', 'chargeAPI_SF'));
 
     }
 
@@ -5584,6 +5621,7 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
+        $chargesAPI_SF = $request->input('chargeAPI_SF');
 
         $form  = $request->all();
 
@@ -7992,6 +8030,7 @@ class QuoteV2Controller extends Controller
         $chargeFreight = ($chargesFreight != null ) ? true : false;
         $chargeAPI = ($chargesAPI != null ) ? true : false;
         $chargeAPI_M =  ($chargesAPI_M != null ) ? true : false;
+        $chargeAPI_SF =  ($chargesAPI_SF != null ) ? true : false;
 
         $hideO = 'hide';
         $hideD = 'hide';
@@ -8000,7 +8039,7 @@ class QuoteV2Controller extends Controller
         $objharbor = new Harbor();
         $harbor = $objharbor->all()->pluck('name','id');
 
-        return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M'));
+        return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M', 'chargeAPI_SF'));
 
     }
 
