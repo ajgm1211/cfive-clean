@@ -11543,8 +11543,8 @@ class HarborsTableSeeder extends Seeder
         array (
             'id' => 1728,
             'name' => 'Johannesburgo',
-            'code' => 'ZAJBN',
-            'display_name' => 'Johannesburgo, ZAJBN',
+            'code' => 'ZAJNB',
+            'display_name' => 'Johannesburgo, ZAJNB',
             'coordinates' => NULL,
             'country_id' => 244,
             'varation' => '{"type": ["johannesburg"]}',
