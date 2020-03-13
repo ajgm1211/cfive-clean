@@ -540,8 +540,8 @@
 							</div>
 
 							<div class="col-lg-2 for-check" id="safmarinediv">
-								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode5', 'class' => 'include-checkbox']) }}
-								<label for="mode5" class="label-check">Include SAFMARINE Price Finder</label>
+								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
+								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
 							</div>
 
 						</div><br>
