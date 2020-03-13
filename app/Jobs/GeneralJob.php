@@ -92,6 +92,7 @@ class GeneralJob implements ShouldQueue
                 $account->namefile          = 'N/A';
                 $account->company_user_id   = $requestArray['company_user_id'];
                 $account->request_id        = $requestArray['request_id'];
+                $account->request_dp_id     = $requestArray['request_dp_id'];
                 $account->save();
                 $contract_new->account_id   = $account->id;
             }
