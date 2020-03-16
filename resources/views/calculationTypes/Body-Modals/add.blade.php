@@ -1,7 +1,7 @@
- {!! Form::open(['route'=>'ContainerCalculation.store','method'=>'POST','id'=>'form'])!!}
+ {!! Form::open(['route'=>'CalculationType.store','method'=>'POST','id'=>'form'])!!}
 <div class="modal-header">
     <h5 class="modal-title" id="exampleModalLongTitle">
-        Add Container Calculation Type
+        Add Calculation Type
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
@@ -14,22 +14,22 @@
 
         <div class="col-md-1"></div>
         <div class="col-md-5">
-            <label class="">Conatiner</label>
+            <label class="">Name</label>
             <div class="" id="conatiner_class">
-                {!! Form::select('container_id',$containers,null,['class'=>'m-select2-general form-control','required','id'=>'conatiner'])!!}
+                {!! Form::text('name',null,['class'=>'form-control','required','id'=>'nameCal'])!!}
             </div>
         </div>
         <div class="col-md-5">
-            <label class="">Calculation Type</label>
+            <label class="">Code</label>
             <div class="" id="calculationT_class">
-                {!! Form::select('calculationTs[]',$calculationts,null,['class'=>'m-select2-general form-control','required','id'=>'calculationT','multiple' => 'multiple'])!!}
+                {!! Form::text('code',null,['class'=>'form-control','required','id'=>'codeCal'])!!}
             </div>
         </div>
 
     </div>
 </div>
 <div class="modal-footer">
-    <input type="submit" class="btn btn-primary" value="Create">
+    <input type="submit" class="btn btn-primary" value="Save">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">
         Close
     </button>

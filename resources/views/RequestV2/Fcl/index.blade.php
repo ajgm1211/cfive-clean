@@ -204,64 +204,6 @@
 	</div>
 	<!--End::Main Portlet-->
 	<!--  begin modal editar rate -->
-
-	<div class="modal fade bd-example-modal-lg" id="modaledit"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLongTitle">
-						Load Request
-					</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">
-							&times;
-						</span>
-					</button>
-				</div>
-				<div id="edit-modal-body" class="modal-body">
-					<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-						<div class="row align-items-center">
-							<div class="col-xl-12 order-2 order-xl-1 conten_load">
-								<center>
-									<div class="form-group">
-										<div class="col-sm-6">
-											<h2 id="mjsH"> Please Wait...</h2>
-										</div>
-										<div class="col-sm-6">
-											<img src="{{asset('images/ship.gif')}}" style="height:170px">
-										</div>
-									</div>
-									<div id="uploadStatus"></div>
-									<div class="col-sm-8">
-										<div class="percent">0%</div> Complete
-									</div>
-									<div class="col-sm-8">
-										<div class="progress">
-											<div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-											</div>
-										</div>
-									</div>
-								</center>
-							</div>
-						</div>
-
-
-					</div>
-				</div>
-				<div class="modal-footer">
-					<center>
-						<h7>Do not leave this window, we will redirect you Thank you.</h7>
-					</center>
-				</div>
-			</div>
-
-			<!--  end modal editar rate -->
-
-
-		</div>
-	</div>
-
-
 </div>
 
 @endsection
@@ -284,6 +226,32 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+    
+    function AbrirModal(action,id,request_id){
+		action = $.trim(action);
+		if(action == "DuplicatedContractOtherCompany"){
+			var url = '{{ route("contract.duplicated.other.company",[":id","*id"]) }}';
+			url = url.replace(':id', id);
+			url = url.replace('*id', request_id);
+			$('#global-body').load(url,function(){
+				$('#global-modal').modal({show:true});
+			});
+		} else if(action == "showRequestDp"){
+			var url = '{{ route("show.request.dp.cfcl",":id") }}';
+			url = url.replace(':id', id);
+			$('#global-body').load(url,function(){
+				$('#global-modal').modal({show:true});
+			});
+		}
+	}
+    
+    function editcontract(id){
+		var url = '{{ route("show.contract.edit",":id") }}';
+		url = url.replace(':id',id);
+		$('#modal-bodys').load(url,function(){
+			$('#contrac').modal();
+		});
+	}
 
 	function loadContainers(){
 		var groupContainers  = $("#groupContainers").select2('val');
@@ -327,6 +295,55 @@
 		}
 
 	});
+    
+    var uploadedDocumentMap = {}
+
+	function existsFiles(){
+		var  files = null;
+		var  files = $('#files').val();
+		//console.log(files);
+		if(files != null){
+			$('#submitRequest').removeAttr('disabled');
+			$('#submitRequest').removeAttr('hidden');
+		} else {
+			$('#submitRequest').attr('disabled','disabled');
+			$('#submitRequest').attr('hidden','hidden');
+		}
+	}
+
+	Dropzone.options.documentDropzone = {
+		url: '{{ route("request.fcl.storeMedia") }}',
+		maxFilesize: 15, // MB
+		maxFiles: 1,
+		addRemoveLinks: true,
+		headers: {
+			'X-CSRF-TOKEN': "{{ csrf_token() }}"
+		},
+		success: function (file, response) {
+			$('#form').append('<input type="hidden" id="files" name="document" value="' + response.name + '">')
+			uploadedDocumentMap[file.name] = response.name
+			// $('#submitRequest').removeAttr('disabled');
+			existsFiles();
+		},
+		removedfile: function (file) {
+			file.previewElement.remove()
+			var name = ''
+			if (typeof file.file_name !== 'undefined') {
+				name = file.file_name
+			} else {
+				name = uploadedDocumentMap[file.name]
+			}
+			$('#form').find('input[name="document"][value="' + name + '"]').remove();
+			existsFiles();
+		},
+		init: function() {
+			this.on("maxfilesexceeded", function(file){
+				file.previewElement.remove();
+				toastr.error('You can’t upload more than 1 file!');
+			});
+		}
+	}
+    
 	// submit ajax original
 	//    $("#form").on('submit', function(e){
 	//        var date = $('#m_daterangepicker_1').val().split(' / ');
@@ -412,53 +429,7 @@
 	//
 	//    });
 
-	var uploadedDocumentMap = {}
-
-	function existsFiles(){
-		var  files = null;
-		var  files = $('#files').val();
-		//console.log(files);
-		if(files != null){
-			$('#submitRequest').removeAttr('disabled');
-			$('#submitRequest').removeAttr('hidden');
-		} else {
-			$('#submitRequest').attr('disabled','disabled');
-			$('#submitRequest').attr('hidden','hidden');
-		}
-	}
-
-	Dropzone.options.documentDropzone = {
-		url: '{{ route("request.fcl.storeMedia") }}',
-		maxFilesize: 15, // MB
-		maxFiles: 1,
-		addRemoveLinks: true,
-		headers: {
-			'X-CSRF-TOKEN': "{{ csrf_token() }}"
-		},
-		success: function (file, response) {
-			$('#form').append('<input type="hidden" id="files" name="document" value="' + response.name + '">')
-			uploadedDocumentMap[file.name] = response.name
-			// $('#submitRequest').removeAttr('disabled');
-			existsFiles();
-		},
-		removedfile: function (file) {
-			file.previewElement.remove()
-			var name = ''
-			if (typeof file.file_name !== 'undefined') {
-				name = file.file_name
-			} else {
-				name = uploadedDocumentMap[file.name]
-			}
-			$('#form').find('input[name="document"][value="' + name + '"]').remove();
-			existsFiles();
-		},
-		init: function() {
-			this.on("maxfilesexceeded", function(file){
-				file.previewElement.remove();
-				toastr.error('You can’t upload more than 1 file!');
-			});
-		}
-	}
+	
 
 </script>
 
