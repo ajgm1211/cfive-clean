@@ -452,25 +452,35 @@ class RequestFclV2Controller extends Controller
         $Ncontract  = NewContractRequest::find($id);
         $Ncontract->load('direction','Requestcarriers','companyuser');
         $data = json_decode($Ncontract->data);
-        
-        $columns = [];
+        $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_TMP_FCL';
+
+        $columns = ['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE','TYPE DESTINY','CURRENCY','CARRIER','DIFFERENTIATOR'];
         foreach($data->containers as $container){
             array_push($columns,$container->code);    
         }
+        /*array_push($columns,'TYPE DESTINY');    
+        array_push($columns,'CURRENCY');    
+        array_push($columns,'CARRIER');    
+        array_push($columns,'DIFFERENTIATOR');*/    
         //dd($columns);
-        //dd($Ncontract->Requestcarriers);
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-
         $spreadsheet->getActiveSheet()
             ->fromArray(
             $columns,   // The data to set
             NULL,        // Array values with this value will not be set
             'A1'         // Top left coordinate of the worksheet range where
-            //    we want to set these values (default is A1)
         );
-    
-
+        $sheet->getColumnDimension('A')->setWidth(20);
+        $sheet->getColumnDimension('B')->setWidth(20);
+        $sheet->getColumnDimension('C')->setWidth(10);
+        $sheet->getColumnDimension('D')->setWidth(20);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(10);
+        $sheet->getColumnDimension('G')->setWidth(10);
+        $sheet->getColumnDimension('H')->setWidth(15);
+        
         $writer = new Writer\Xlsx($spreadsheet);
 
         $response =  new StreamedResponse(
@@ -479,7 +489,7 @@ class RequestFclV2Controller extends Controller
             }
         );
         $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        $response->headers->set('Content-Disposition', 'attachment;filename="ExportScan.xlsx"');
+        $response->headers->set('Content-Disposition', 'attachment;filename="'.$name.'.xlsx"');
         $response->headers->set('Cache-Control','max-age=0');
         return $response;
     }
