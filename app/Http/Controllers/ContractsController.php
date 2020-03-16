@@ -1484,14 +1484,14 @@ class ContractsController extends Controller
         return view('contracts.Body-Modals.Duplicatedscontracts',compact('contract','carrier','directions'));
     }
 
-    public function duplicatedContractOtherCompanyShow($id){
+    public function duplicatedContractOtherCompanyShow($id,$request_dp_id){
         $carrier        = Carrier::pluck('name','id');
         $directions     = Direction::pluck('name','id');
         $contract       = Contract::find($id);
         $contract->load('carriers');
         $companyUsers   = CompanyUser::pluck('name','id');
         //dd($companyUser);
-        return view('contracts.Body-Modals.DuplicatedscontractsOtherCompany',compact('contract','carrier','directions','companyUsers'));
+        return view('contracts.Body-Modals.DuplicatedscontractsOtherCompany',compact('contract','carrier','directions','companyUsers','request_dp_id'));
     }
 
     public function duplicatedContractStore(Request $request, $id){
@@ -1512,7 +1512,7 @@ class ContractsController extends Controller
     public function duplicatedContractFromRequestStore(Request $request, $id){
         $requestArray   = $request->all();
         //dd($requestArray);
-        $requestArray['requestChange'] = true;
+        $requestArray['requestChange'] 	= true;
         $time   = new \DateTime();
         $now2   = $time->format('Y-m-d H:i:s');
         $requestFc = NewContractRequest::find($requestArray['request_id']);

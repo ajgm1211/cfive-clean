@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Rate;
+use App\Region;
 use App\Harbor;
 use App\Carrier;
 use App\Country;
 use App\Currency;
+use App\RegionPt;
 use App\Surcharge;
 use App\CompanyUser;
 use App\TypeDestiny;
@@ -272,8 +274,8 @@ class GlobalChargesController extends Controller
     })->with('globalcharport.portOrig','globalcharport.portDest','GlobalCharCarrier.carrier','typedestiny')->get();
 
     return view('globalcharges/index', compact('global','carrier','harbor','currency','calculationT','surcharge','typedestiny'));*/
-        return redirect()->back()->with('globalchar','true');
-    }
+		return redirect()->back()->with('globalchar','true');
+	}
 
 	public function destroyGlobalCharges($id)
 	{
@@ -290,7 +292,7 @@ class GlobalChargesController extends Controller
 		$objcalculation = new CalculationType();
 		$objsurcharge = new Surcharge();
 		$countries = Country::pluck('name','id');
-        $route = 'update-global-charge';
+		$route = 'update-global-charge';
 
 		$calculationT = $objcalculation->all()->pluck('name','id');
 		$typedestiny = $objtypedestiny->all()->pluck('description','id');
@@ -301,7 +303,7 @@ class GlobalChargesController extends Controller
 		$globalcharges = GlobalCharge::find($id);
 		$validation_expire = $globalcharges->validity ." / ". $globalcharges->expire ;
 		$globalcharges->setAttribute('validation_expire',$validation_expire);
-        $amount = $globalcharges->amount;
+		$amount = $globalcharges->amount;
 
 		$activacion = array("rdrouteP" => false,"rdrouteC" => false,"rdroutePC" => false,"rdrouteCP" => false,'act' => '');
 
@@ -336,7 +338,7 @@ class GlobalChargesController extends Controller
 		$objcalculation = new CalculationType();
 		$objsurcharge = new Surcharge();
 		$countries = Country::pluck('name','id');
-        $route = 'globalcharges.store';
+		$route = 'globalcharges.store';
 
 
 		$calculationT = $objcalculation->all()->pluck('name','id');
@@ -477,6 +479,82 @@ class GlobalChargesController extends Controller
 	}
 
 	// CRUD Administarator -----------------------------------------------------------------------------------------------------
+
+	public function loadSelectForRegion(Request $request){
+
+		$typeRoute	= $request->typeRoute;
+		$typeSetect = $request->typeSelect;
+		$dataPCR	= [];
+		$data		= collect();
+		$difer 		= null;
+
+		if($typeRoute == 'port'){
+			$difer 	= 'port';
+			if($typeSetect == 'origin'){
+				$dataPCR= $request->origen_port_reg;
+			} else if($typeSetect == 'destiny'){
+				$dataPCR= $request->destino_port_reg;
+			}
+		}else if($typeRoute == 'country'){
+			$difer 	= 'country';
+			if($typeSetect == 'origin'){
+				$dataPCR= $request->origen_count_reg;
+			} else if($typeSetect == 'destiny'){
+				$dataPCR= $request->destino_count_reg;
+			}
+		}else if($typeRoute == 'portcountry'){
+			if($typeSetect == 'origin'){
+				$difer 	= 'port';
+				$dataPCR= $request->origen_port_reg;
+			} else if($typeSetect == 'destiny'){
+				$difer 	= 'country';
+				$dataPCR= $request->destino_count_reg;
+			}
+		}else if($typeRoute == 'countryport'){
+			if($typeSetect == 'origin'){
+				$difer 	= 'country';
+				$dataPCR= $request->origen_count_reg;
+			} else if($typeSetect == 'destiny'){
+				$difer 	= 'port';
+				$dataPCR= $request->destino_port_reg;
+			}
+		}
+
+		if(!empty($dataPCR)){
+			if($difer == 'port'){
+				$dataR = RegionPt::whereIn('id',$dataPCR)->get();
+				if(!empty($dataR)){
+					$dataR->load('PortRegions');
+					foreach($dataR as $rr){
+						foreach($rr->PortRegions->pluck('harbor_id') as $values){
+							$data->push($values);
+						}
+					}
+				}
+			} elseif ($difer == 'country'){
+				$dataR = Region::whereIn('id',$dataPCR)->get();
+				if(!empty($dataR)){
+					$dataR->load('CountriesRegions');
+					foreach($dataR as $rr){
+						foreach($rr->CountriesRegions->pluck('country_id') as $values){
+							$data->push($values);
+						}
+					}
+				}
+			}
+		}
+
+		if(!empty($data)){
+			$data = $data->toArray();
+			$dataUn = array_unique($data);
+			$data	= [];
+			foreach($dataUn as $dataRe){
+				array_push($data,$dataRe);
+			}
+		}
+
+		return response()->json(['success' => 'ok','data' => ['select' => $typeSetect,'typeValues' => $difer,'type' => $typeRoute,'values' => $data]]);
+	}
 
 	public function indexAdm(Request $request){
 		$companies              = CompanyUser::pluck('name','id');
@@ -800,6 +878,8 @@ class GlobalChargesController extends Controller
 
 		$globalcharges      = GlobalCharge::find($id);
 		$calculationT       = CalculationType::pluck('name','id');
+		$regionCt           = Region::pluck('name','id');
+		$regionPt           = RegionPt::pluck('name','id');
 		$typedestiny        = TypeDestiny::pluck('description','id');
 		$surcharge          = Surcharge::where('company_user_id','=',$globalcharges->company_user_id)->pluck('name','id');
 		$harbor             = Harbor::pluck('display_name','id');
@@ -828,7 +908,7 @@ class GlobalChargesController extends Controller
 			$activacion['act'] = 'divport';
 		}
 
-		return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
+		return view('globalchargesAdm.edit', compact('globalcharges','harbor','carrier','regionPt','regionCt','currency','company_users','calculationT','typedestiny','surcharge','countries','company_user_id_selec','carrier_id_selec','reload_DT','activacion'));
 	}
 
 	public function updateAdm(Request $request, $id){
