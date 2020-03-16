@@ -715,7 +715,49 @@ class ImportationLclController extends Controller
 											} else {
 												$destinyVal = $rando;
 											}
-
+											$countRL = null;
+											$countRL = RateLcl::where('origin_port',$originVal)
+												->where('destiny_port',$destinyVal)
+												->where('carrier_id',$carrierVal)
+												->where('contractlcl_id',$contractIdVal)
+												->where('uom',$wmVal)
+												->where('minimum',$minimunVal)
+												->where('currency_id',$currencyVal)
+												->where('schedule_type_id',$scheduleTResul)
+												->where('transit_time',$transittimeResul)
+												->where('via',$viaResul)
+												->get();
+											if(count($countRL) == 0){
+												$ratesArre = RateLcl::create([
+													'origin_port'       => $originVal,
+													'destiny_port'      => $destinyVal,
+													'carrier_id'        => $carrierVal,
+													'contractlcl_id'    => $contractIdVal,
+													'uom'               => $wmVal,
+													'minimum'           => $minimunVal,
+													'currency_id'       => $currencyVal,
+													'schedule_type_id'  => $scheduleTResul,
+													'transit_time'      => $transittimeResul,
+													'via'               => $viaResul
+												]);
+											}
+										} 
+										//dd($ratesArre);
+									}else {
+										// fila por puerto, sin expecificar origen ni destino manualmente
+										$countRL = null;
+										$countRL = RateLcl::where('origin_port',$originVal)
+											->where('destiny_port',$destinyVal)
+											->where('carrier_id',$carrierVal)
+											->where('contractlcl_id',$contractIdVal)
+											->where('uom',$wmVal)
+											->where('minimum',$minimunVal)
+											->where('currency_id',$currencyVal)
+											->where('schedule_type_id',$scheduleTResul)
+											->where('transit_time',$transittimeResul)
+											->where('via',$viaResul)
+											->get();
+										if(count($countRL) == 0){
 											$ratesArre = RateLcl::create([
 												'origin_port'       => $originVal,
 												'destiny_port'      => $destinyVal,
@@ -728,24 +770,7 @@ class ImportationLclController extends Controller
 												'transit_time'      => $transittimeResul,
 												'via'               => $viaResul
 											]);
-										} 
-										//dd($ratesArre);
-									}else {
-										// fila por puerto, sin expecificar origen ni destino manualmente
-
-										$ratesArre = RateLcl::create([
-											'origin_port'       => $originVal,
-											'destiny_port'      => $destinyVal,
-											'carrier_id'        => $carrierVal,
-											'contractlcl_id'    => $contractIdVal,
-											'uom'               => $wmVal,
-											'minimum'           => $minimunVal,
-											'currency_id'       => $currencyVal,
-											'schedule_type_id'  => $scheduleTResul,
-											'transit_time'      => $transittimeResul,
-											'via'               => $viaResul
-										]);
-
+										}
 										//dd($ratesArre);
 									}
 								} else {
