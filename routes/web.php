@@ -968,7 +968,7 @@ Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
 	route::get('create','RequestFclV2Controller@create')->name('RequestFcl.create')->middleware(['role:administrator|data_entry']);
 	route::post('store','RequestFclV2Controller@store')->name('RequestFcl.store')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::get('show/{id}','RequestFclV2Controller@show')->name('RequestFcl.show')->middleware(['role:administrator|data_entry']);
-	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit')->middleware(['role:administrator|data_entry']);
 	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request')->middleware(['role:administrator|company|subuser|data_entry']);
