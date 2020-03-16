@@ -1092,13 +1092,13 @@ class QuoteV2Controller extends Controller
       foreach($equipmentForm as $val){
 
         if($val == $cont->id){
-                
+
           $$hidden = '';
         }
       }
       $equipment->put($cont->code,$$hidden);
     }
-    
+
 
 
     // Clases para reordenamiento de la tabla y ajuste
@@ -4140,7 +4140,7 @@ class QuoteV2Controller extends Controller
     }
 
     $formulario = $request;
-    $arrayContainers =  array('1','2','3','4','7','8'); 
+    $arrayContainers =  array('1','2','3','4','7','8','12','13'); 
 
     $containers = Container::get();
     $totalesCont = array();
@@ -4171,9 +4171,14 @@ class QuoteV2Controller extends Controller
 
       //Arreglo totalizador de freight , destination , origin por contenedor 
       $totalesCont = array();
+      $arregloRateSum = array();
       foreach($containers as $cont){
         $totalesContainer = array( $cont->code=> array('tot_'.$cont->code.'_F'=>0,'tot_'.$cont->code.'_O'=>0,'tot_'.$cont->code.'_D'=>0));
         $totalesCont = array_merge($totalesContainer,$totalesCont);
+        // Inicializar arreglo rate 
+        $arregloRate = array('c'.$cont->code=> '0');
+        $arregloRateSum = array_merge( $arregloRateSum,$arregloRate);
+
       }
 
       $carrier[] = $data->carrier_id;
@@ -4186,8 +4191,10 @@ class QuoteV2Controller extends Controller
 
       $arregloRate =  array();
       //Arreglos para guardar el rate
-      $arregloRateSave['rate'] = array();
+
+
       $arregloRateSave['markups'] = array();
+      $arregloRateSave['rate'] = array();
       //Arreglo para guardar charges
       $arregloCharges['origin'] =  array();
 
@@ -4202,6 +4209,8 @@ class QuoteV2Controller extends Controller
       $rateC = $this->ratesCurrency($data->currency->id,$typeCurrency);
       // Rates 
       $arregloR = $this->rates($equipment,$markup,$data,$rateC,$typeCurrency,$containers);
+      $arregloRateSum= array_merge($arregloRateSum,$arregloR['arregloSaveR']);
+
       $arregloRateSave['rate'] = array_merge($arregloRateSave['rate'],$arregloR['arregloSaveR']);
       $arregloRateSave['markups'] = array_merge($arregloRateSave['markups'],$arregloR['arregloSaveM'] );
       $arregloRate = array_merge($arregloRate,$arregloR['arregloRate']);
@@ -4486,24 +4495,7 @@ class QuoteV2Controller extends Controller
         $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
       if(!empty($collectionOrigin))
         $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
-
-      // Totales Freight 
-      /*  if(!isset($totales['20F']))
-        $totales['20F'] = 0;
-      if(!isset($totales['40F']))
-        $totales['40F'] = 0;
-      if(!isset($totales['40hcF']))
-        $totales['40hcF'] = 0;
-      if(!isset($totales['40norF']))
-        $totales['40norF'] = 0;
-      if(!isset($totales['45F']))
-        $totales['45F'] = 0;*/
-
-      $totalT20 = $totalesCont['20DV']['tot_20DV_D'] +  $totalesCont['20DV']['tot_20DV_F'] + $totalesCont['20DV']['tot_20DV_O'] ;
-      $totalT40  = $totalesCont['40DV']['tot_40DV_D'] + $totalesCont['40DV']['tot_40DV_F'] + $totalesCont['40DV']['tot_40DV_O'] ;
-      $totalT40hc  = $totalesCont['40HC']['tot_40HC_D'] + $totalesCont['40HC']['tot_40HC_F'] + $totalesCont['40HC']['tot_40HC_O'] ;
-      $totalT40nor  = $totalesCont['40NOR']['tot_40NOR_D'] +  $totalesCont['40NOR']['tot_40NOR_F'] + $totalesCont['40NOR']['tot_40NOR_O'] ;
-      $totalT45  = $totalesCont['45HC']['tot_45HC_D'] + $totalesCont['45HC']['tot_45HC_F'] + $totalesCont['45HC']['tot_45HC_O'] ;
+      
 
 
       $totalRates += $totalT;
@@ -4571,39 +4563,23 @@ class QuoteV2Controller extends Controller
       $data->setAttribute('localdestiny',$collectionDestiny);
       $data->setAttribute('localorigin',$collectionOrigin);
       // Valores totales por contenedor
-      $data->setAttribute('total20', number_format($totalT20, 2, '.', ''));
-      $data->setAttribute('total40', number_format($totalT40, 2, '.', ''));
-      $data->setAttribute('total40hc', number_format($totalT40hc, 2, '.', ''));
-      $data->setAttribute('total40nor', number_format($totalT40nor, 2, '.', ''));
-      $data->setAttribute('total45', number_format($totalT45, 2, '.', ''));
-
 
       foreach($containers as $cont){
 
+        $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] = $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] + $arregloRateSum['c'.$cont->code];
         $data->setAttribute('tot'.$cont->code.'F', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_F'], 2, '.', ''));
+        
         $data->setAttribute('tot'.$cont->code.'O', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_O'], 2, '.', ''));
         $data->setAttribute('tot'.$cont->code.'D', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_D'], 2, '.', ''));
 
-      }
-      // Freight
-      $data->setAttribute('tot20F', number_format($totalesCont['20DV']['tot_20DV_F'], 2, '.', ''));
-      $data->setAttribute('tot40F', number_format($totalesCont['40DV']['tot_40DV_F'], 2, '.', ''));
-      $data->setAttribute('tot40hcF', number_format($totalesCont['40HC']['tot_40HC_F'], 2, '.', ''));
-      $data->setAttribute('tot40norF', number_format($totalesCont['40NOR']['tot_40NOR_F'], 2, '.', ''));
-      $data->setAttribute('tot45F', number_format($totalesCont['45HC']['tot_45HC_F'], 2, '.', ''));
+        // TOTALES 
+        $name_tot = 'totalT'.$cont->code;
+        $$name_tot = $totalesCont[$cont->code]['tot_'.$cont->code.'_D'] +  $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] + $totalesCont[$cont->code]['tot_'.$cont->code.'_O'] ;
+        $data->setAttribute($name_tot, number_format($$name_tot, 2, '.', ''));
 
-      // Origin
-      $data->setAttribute('tot20O', number_format($totalesCont['20DV']['tot_20DV_O'], 2, '.', ''));
-      $data->setAttribute('tot40O', number_format($totalesCont['40DV']['tot_40DV_O'], 2, '.', ''));
-      $data->setAttribute('tot40hcO', number_format($totalesCont['40HC']['tot_40HC_O'], 2, '.', ''));
-      $data->setAttribute('tot40norO', number_format($totalesCont['40NOR']['tot_40NOR_O'], 2, '.', ''));
-      $data->setAttribute('tot45O', number_format($totalesCont['45HC']['tot_45HC_O'], 2, '.', ''));
-      //Destiny
-      $data->setAttribute('tot20D', number_format($totalesCont['20DV']['tot_20DV_D'], 2, '.', ''));
-      $data->setAttribute('tot40D', number_format($totalesCont['40DV']['tot_40DV_D'], 2, '.', ''));
-      $data->setAttribute('tot40hcD', number_format($totalesCont['40HC']['tot_40HC_D'], 2, '.', ''));
-      $data->setAttribute('tot40norD', number_format($totalesCont['40NOR']['tot_40NOR_D'], 2, '.', ''));
-      $data->setAttribute('tot45D', number_format($totalesCont['45HC']['tot_45HC_D'], 2, '.', ''));
+
+      }
+
       // INLANDS
       $data->setAttribute('inlandDestiny',$inlandDestiny);
       $data->setAttribute('inlandOrigin',$inlandOrigin);
@@ -4633,7 +4609,7 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total40nor');
     else if(in_array('4',$equipment))
       $arreglo  =  $arreglo->sortBy('total45');
-//dd($containers);
+  
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain','containers'));
 
   }
