@@ -1090,12 +1090,16 @@ class QuoteV2Controller extends Controller
       $hidden = 'hidden'.$cont->code;
       $$hidden = 'hidden';      
       foreach($equipmentForm as $val){
-        if($val ==$cont->code){
+
+        if($val == $cont->id){
+                
           $$hidden = '';
         }
       }
       $equipment->put($cont->code,$$hidden);
     }
+    
+
 
     // Clases para reordenamiento de la tabla y ajuste
     $originClass = 'col-md-2';
@@ -4180,13 +4184,10 @@ class QuoteV2Controller extends Controller
       $collectionDestiny = new collection();
       $collectionFreight = new collection();
 
-
       $arregloRate =  array();
       //Arreglos para guardar el rate
-
       $arregloRateSave['rate'] = array();
       $arregloRateSave['markups'] = array();
-
       //Arreglo para guardar charges
       $arregloCharges['origin'] =  array();
 
@@ -4632,7 +4633,7 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total40nor');
     else if(in_array('4',$equipment))
       $arreglo  =  $arreglo->sortBy('total45');
-
+//dd($containers);
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain','containers'));
 
   }
