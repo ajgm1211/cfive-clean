@@ -439,6 +439,24 @@ trait SearchTrait {
         $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
         $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
       }
+      if($containers == '7'){
+        $jsonContainer = json_decode($data->containers);
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$jsonContainer->C40RF,$data,$rateC,$typeCurrency,$containt);
+
+        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+      }
+      if($containers == '8'){
+        $jsonContainer = json_decode($data->containers);
+        $containt = $contain->where('id',$containers)->pluck('code')->first();
+        $arreglo = $this->detailRate($markup,$jsonContainer->C40HCRF,$data,$rateC,$typeCurrency,$containt);
+
+        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+      }
 
     }
 
