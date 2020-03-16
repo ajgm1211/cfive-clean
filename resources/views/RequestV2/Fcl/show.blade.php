@@ -308,6 +308,12 @@
 		}
 	}
 	
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+	
 	$('#btnFiterSubmitSearch').click(function(){
         $('#requesttable').DataTable().draw(true);
     });
@@ -377,9 +383,9 @@
 			"paging": true
 		});
 	});
-
-	function showModal(id){
-		var url = '{{ route("show.status.Request",":id") }}';
+    
+    function showModal(id){
+		var url = '{{ route("RequestFcl.show",":id") }}';
 		url = url.replace(':id',id);
 		$('#modal-body').load(url,function(){
 			$('#changeStatus').modal();
@@ -409,12 +415,12 @@
 		}).then(function(result){
 			if (result.value) {
 
-				url='{!! route("destroy.Request",":id") !!}';
+				url='{!! route("RequestFcl.destroy",":id") !!}';
 				url = url.replace(':id', id);
 				// $(this).closest('tr').remove();
 				$.ajax({
 					url:url,
-					method:'get',
+					method:'DELETE',
 					success: function(data){
 						if(data == 1){
 							swal(
@@ -493,7 +499,7 @@
 	});
 
 	function exportjs(){
-		var url = '{!! route("export.Request") !!}';
+		var url = '{!! route("export.request.fcl.v2") !!}';
 		var between = $('#m_daterangepicker_1').val();
 		//alert(date);
 		$.ajaxSetup({

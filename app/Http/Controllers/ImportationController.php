@@ -5671,7 +5671,7 @@ class ImportationController extends Controller
 		$request = NewContractRequest::find($id);
 		$request->load('user','direction','Requestcarriers.carrier','companyuser');
 		//dd($request->Requestcarriers->pluck('carrier')->implode('name',', '));
-		return view('Requests.Body-Modals.ShowRequest',compact('request'));
+		return view('RequestV2.Fcl.Body-Modals.ShowRequest',compact('request'));
 	}
 
 	// Solo Para Testear ----------------------------------------------------------------
