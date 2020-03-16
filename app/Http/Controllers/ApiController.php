@@ -22,6 +22,8 @@ use App\Company;
 use App\Country;
 use App\CompanyUser;
 use App\QuoteV2;
+use App\Carrier;
+use App\Airline;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
@@ -150,7 +152,7 @@ class ApiController extends Controller
         ]);
     }
 
-  /**
+    /**
    * Logout from session
    * @param Request $request 
    * @return JSON
@@ -162,12 +164,12 @@ class ApiController extends Controller
                                  'Successfully logged out']);
     }
 
-  /**
+    /**
    * Show user info
    * @param Request $request 
    * @return JSON
    */
-    
+
     public function user(Request $request)
     {
         return response()->json($request->user());
@@ -208,12 +210,12 @@ class ApiController extends Controller
         }
     }
 
-  /**
+    /**
    * Show FCL Rates list
    * @param Request $request 
    * @return JSON
    */
-    
+
     public function rates(Request $request)
     {
         if($request->size){
@@ -261,14 +263,14 @@ class ApiController extends Controller
 
         return $rates;
     }
-    
-    
-  /**
+
+
+    /**
    * Show charges list
    * @param Request $request 
    * @return JSON
    */
-    
+
     public function charges(Request $request)
     {
 
@@ -325,12 +327,12 @@ class ApiController extends Controller
     }
 
 
-  /**
+    /**
    * Show globalcharge list
    * @param Request $request 
    * @return JSON
    */
-    
+
     public function globalCharges(Request $request)
     {
         if($request->size){
@@ -360,7 +362,7 @@ class ApiController extends Controller
         return $charges;
     }
 
-  /**
+    /**
    * Show contracts list
    * @param Request $request 
    * @return JSON
@@ -375,12 +377,12 @@ class ApiController extends Controller
         return $contracts;
     }
 
-  /**
+    /**
    * Show quotes list
    * @param Request $request 
    * @return JSON
    */
-    
+
     public function quotes(Request $request){
         $company_user = null;
         $currency_cfg = null;
@@ -395,7 +397,7 @@ class ApiController extends Controller
             })->where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air','carrier','airline');
             }])->take($request->size)->get();
         }else{
             $quotes = QuoteV2::when($type,function($query,$type) {
@@ -405,7 +407,7 @@ class ApiController extends Controller
             })->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air','carrier','airline');
             }])->take($request->size)->get();
         }
         $companies = Company::pluck('business_name','id');
@@ -428,5 +430,31 @@ class ApiController extends Controller
         });
 
         return $collection;
+    }
+
+    /**
+   * Show carriers list
+   * @param Request $request 
+   * @return JSON
+   */
+
+    public function carriers(Request $request){
+
+        $carriers = Carrier::all();
+
+        return $carriers;
+    }
+
+    /**
+   * Show airlines list
+   * @param Request $request 
+   * @return JSON
+   */
+
+    public function airlines(Request $request){
+
+        $airlines = Airline::all();
+
+        return $airlines;
     }
 }
