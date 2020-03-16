@@ -3669,7 +3669,7 @@ class QuoteV2Controller extends Controller
     $dateUntil = $dateRange[1];
 
     //Collection Equipment Dinamico
-    $equipmentHides = $this->hideContainerV2($equipment,'',);
+    //$equipmentHides = $this->hideContainerV2($equipment,'',$cont);
     //Colecciones 
     $inlandDestiny = new collection();
     $inlandOrigin = new collection();
@@ -4140,7 +4140,7 @@ class QuoteV2Controller extends Controller
 
     $containers = Container::get();
     $totalesCont = array();
-    
+    //Collection Equipment Dinamico
     $equipmentHides = $this->hideContainerV2($equipment,'',$containers);
 
     foreach($containers as $cont){
