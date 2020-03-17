@@ -168,11 +168,11 @@
                                         <td colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en origen</td>
                                         <td colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{$rate->carrier_id!='' ? $rate->carrier->name:'-'}}</td>
-                                        <td {{ @$equipmentHides['20'] }}>{{@$sum_origin_20+@$inland_origin_20+@$sum_sale20}}</td>
-                                        <td {{ @$equipmentHides['40'] }}>{{@$sum_origin_40+@$inland_origin_40+@$sum_sale40}}</td>
-                                        <td {{ @$equipmentHides['40hc'] }}>{{@$sum_origin_40hc+@$inland_origin_40hc+@$sum_sale40hc}}</td>
-                                        <td {{ @$equipmentHides['40nor'] }}>{{@$sum_origin_40nor+@$inland_origin_40nor+@$sum_sale40nor}}</td>
-                                        <td {{ @$equipmentHides['45'] }}>{{@$sum_origin_45+@$inland_origin_45+@$sum_sale45}}</td>
+                                        <td {{ @$equipmentHides['20'] }}>{{round(@$sum_origin_20+@$inland_origin_20+@$sum_sale20)}}</td>
+                                        <td {{ @$equipmentHides['40'] }}>{{round(@$sum_origin_40+@$inland_origin_40+@$sum_sale40)}}</td>
+                                        <td {{ @$equipmentHides['40hc'] }}>{{round(@$sum_origin_40hc+@$inland_origin_40hc+@$sum_sale40hc)}}</td>
+                                        <td {{ @$equipmentHides['40nor'] }}>{{round(@$sum_origin_40nor+@$inland_origin_40nor+@$sum_sale40nor)}}</td>
+                                        <td {{ @$equipmentHides['45'] }}>{{round(@$sum_origin_45+@$inland_origin_45+@$sum_sale45)}}</td>
                                         @if($quote->pdf_option->grouped_origin_charges==1)
                                             <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                         @else

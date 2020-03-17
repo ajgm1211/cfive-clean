@@ -87,11 +87,11 @@
                                 <td colspan="2" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
                                 <td colspan="2" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
-                                <td {{ @$equipmentHides['20'] }}>{{@$sum_destination_20+@$inland_destination_20+@$sum_sale20}}</td>
-                                <td {{ @$equipmentHides['40'] }}>{{@$sum_destination_40+@$inland_destination_40+@$sum_sale40}}</td>
-                                <td {{ @$equipmentHides['40hc'] }}>{{@$sum_destionation_40hc+@$inland_destination_40hc+@$sum_sale40hc}}</td>
-                                <td {{ @$equipmentHides['40nor'] }}>{{@$sum_destination_40nor+@$inland_destination_40nor+@$sum_sale40nor}}</td>
-                                <td {{ @$equipmentHides['45'] }}>{{@$sum_destination_45+@$inland_destination_45+@$sum_sale45}}</td>
+                                <td {{ @$equipmentHides['20'] }}>{{round(@$sum_destination_20+@$inland_destination_20+@$sum_sale20)}}</td>
+                                <td {{ @$equipmentHides['40'] }}>{{round(@$sum_destination_40+@$inland_destination_40+@$sum_sale40)}}</td>
+                                <td {{ @$equipmentHides['40hc'] }}>{{round(@$sum_destionation_40hc+@$inland_destination_40hc+@$sum_sale40hc)}}</td>
+                                <td {{ @$equipmentHides['40nor'] }}>{{round(@$sum_destination_40nor+@$inland_destination_40nor+@$sum_sale40nor)}}</td>
+                                <td {{ @$equipmentHides['45'] }}>{{round(@$sum_destination_45+@$inland_destination_45+@$sum_sale45)}}</td>
                                 @if($quote->pdf_option->grouped_destination_charges==1)
                                     <td >{{$quote->pdf_option->destination_charges_currency}}</td>
                                 @else
