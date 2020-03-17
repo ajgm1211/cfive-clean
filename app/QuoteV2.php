@@ -97,6 +97,11 @@ class QuoteV2 extends Model
         return $this->hasOne('App\PackageLoadV2','quote_id','id');
     }
 
+    public function integration()
+    {
+        return $this->hasOne('App\IntegrationQuoteStatus','quote_id','id');
+    }
+
     public function scopeExclude($query,$value = array()) 
     {
         return $query->select( array_diff( $this->columns,(array) $value) );
