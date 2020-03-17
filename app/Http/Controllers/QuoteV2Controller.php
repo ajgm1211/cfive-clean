@@ -3892,7 +3892,7 @@ class QuoteV2Controller extends Controller
 
       $dataOrig = array();
       foreach($inlands as $inlandsValue){
-      
+
         $km20 = true;
         $km40 = true;
         $km40hc = true;
@@ -4141,7 +4141,8 @@ class QuoteV2Controller extends Controller
     }
 
     $formulario = $request;
-    $arrayContainers =  array('1','2','3','4','7','8','12','13'); 
+
+    $arrayContainers =   CalculationType::where('options->group',true)->pluck('id')->toArray(); 
 
     $containers = Container::get();
     $totalesCont = array();
@@ -4496,7 +4497,7 @@ class QuoteV2Controller extends Controller
         $collectionDestiny = $this->OrdenarCollection($collectionDestiny);
       if(!empty($collectionOrigin))
         $collectionOrigin = $this->OrdenarCollection($collectionOrigin);
-      
+
 
 
       $totalRates += $totalT;
@@ -4569,7 +4570,7 @@ class QuoteV2Controller extends Controller
 
         $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] = $totalesCont[$cont->code]['tot_'.$cont->code.'_F'] + $arregloRateSum['c'.$cont->code];
         $data->setAttribute('tot'.$cont->code.'F', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_F'], 2, '.', ''));
-        
+
         $data->setAttribute('tot'.$cont->code.'O', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_O'], 2, '.', ''));
         $data->setAttribute('tot'.$cont->code.'D', number_format($totalesCont[$cont->code]['tot_'.$cont->code.'_D'], 2, '.', ''));
 
@@ -4610,13 +4611,32 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total40nor');
     else if(in_array('4',$equipment))
       $arreglo  =  $arreglo->sortBy('total45');
-  
+
     return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M','contain','containers'));
 
   }
 
 
   public function perTeu($monto,$calculation_type,$code){
+    $arrayTeu =   CalculationType::where('options->isteu',true)->pluck('id')->toArray();
+    $codeArray = Container::where('code','like','20%')->pluck('code')->toArray();
+
+  if(!in_array( $code,$codeArray)){
+      if(in_array( $calculation_type,$codeArray)){
+        $monto = $monto * 2;
+        return $monto;
+      }else{
+        return $monto;
+      }
+    }
+    else{
+      return $monto;
+    }
+  }
+
+
+
+  public function perTeu2($monto,$calculation_type,$code){
     $codeArray = array('20DV','20RF');
     if(!in_array( $code,$codeArray)){
       if($calculation_type == 4){
