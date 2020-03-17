@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFieldContainerFieldRate extends Migration
+class AddFieldCalculationtypeOptions extends Migration
 {
   /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddFieldContainerFieldRate extends Migration
      */
   public function up()
   {
-    Schema::table('containers', function (Blueprint $table){
-      $table->json('options')->nullable()->after('gp_container_id');
+    Schema::table('calculationtype', function (Blueprint $table){
+      $table->json('options')->nullable()->after('code');
+
     });
   }
 

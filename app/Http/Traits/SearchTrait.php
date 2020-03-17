@@ -392,14 +392,16 @@ trait SearchTrait {
     foreach($contain as $cont){
       foreach($equipment as $containers){
         if($containers == $cont->id) {
-          if($cont->field_rate == 'containers'){
-            $jsonContainer = json_decode($data->{$cont->field_rate});
+          $options = json_decode($cont->options);
+  
+          if(@$options->field_rate == 'containers'){
+            $jsonContainer = json_decode($data->{$options->field_rate});
             if(isset($jsonContainer->{'C'.$cont->code}))
               $rateMount = $jsonContainer->{'C'.$cont->code};
             else
               $rateMount = 0;
           }else{            
-            $rateMount = $data->{$cont->field_rate};
+            $rateMount = $data->{$options->field_rate};
           }
  
           $arreglo = $this->detailRate($markup,$rateMount,$data,$rateC,$typeCurrency,$cont->code);
