@@ -389,80 +389,28 @@ trait SearchTrait {
     $arregloRate = array();
     $arregloSaveR = array();
     $arregloSaveM = array();
-    foreach($equipment as $containers){
-      //Calculo para los diferentes tipos de contenedores
-      if($containers == '1') {
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$data->twuenty,$data,$rateC,$typeCurrency,$containt);
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+    foreach($contain as $cont){
+      foreach($equipment as $containers){
+        if($containers == $cont->id) {
+          if($cont->field_rate == 'containers'){
+            $jsonContainer = json_decode($data->{$cont->field_rate});
+            if(isset($jsonContainer->{'C'.$cont->code}))
+              $rateMount = $jsonContainer->{'C'.$cont->code};
+            else
+              $rateMount = 0;
+          }else{            
+            $rateMount = $data->{$cont->field_rate};
+          }
+ 
+          $arreglo = $this->detailRate($markup,$rateMount,$data,$rateC,$typeCurrency,$cont->code);
+          $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
+          $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
+          $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
+        }
       }
-
-
-      if($containers == '2'){
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$data->forty,$data,$rateC,$typeCurrency,$containt);
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-
-      if($containers == '3'){
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$data->fortyhc,$data,$rateC,$typeCurrency,$containt);
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-
-      if($containers == '5'){
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$data->fortynor,$data,$rateC,$typeCurrency,$containt);
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-      if($containers == '4'){
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$data->fortyfive,$data,$rateC,$typeCurrency,$containt);
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-      if($containers == '6'){
-        $jsonContainer = json_decode($data->containers);
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$jsonContainer->C20RF,$data,$rateC,$typeCurrency,$containt);
-
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-      if($containers == '7'){
-        $jsonContainer = json_decode($data->containers);
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$jsonContainer->C40RF,$data,$rateC,$typeCurrency,$containt);
-
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-      if($containers == '8'){
-        $jsonContainer = json_decode($data->containers);
-        $containt = $contain->where('id',$containers)->pluck('code')->first();
-        $arreglo = $this->detailRate($markup,$jsonContainer->C40HCRF,$data,$rateC,$typeCurrency,$containt);
-
-        $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
-        $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
-        $arregloSaveM =  array_merge($arreglo['arregloRateSaveM'],$arregloSaveM);
-      }
-
     }
-
+    
     $arregloG = array('arregloRate' => $arregloRate , 'arregloSaveR' => $arregloSaveR , 'arregloSaveM' =>$arregloSaveM );
-
-
     return $arregloG;
 
   }
