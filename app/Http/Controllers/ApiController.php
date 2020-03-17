@@ -24,6 +24,7 @@ use App\CompanyUser;
 use App\QuoteV2;
 use App\Carrier;
 use App\Airline;
+use App\IntegrationQuoteStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as Collection;
@@ -388,12 +389,17 @@ class ApiController extends Controller
         $currency_cfg = null;
         $type = $request->type;
         $status = $request->status;
+        $integration = $request->integration;
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
             $quotes = QuoteV2::when($type,function($query,$type) {
                 return $query->where('type',$type);
             })->when($status,function($query,$status) {
                 return $query->where('status',$status);
+            })->when($integration,function($query,$integration) {
+                return $query->whereHas('integration', function($q) {
+                    $q->where('status', 0);
+                });
             })->where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
@@ -404,6 +410,10 @@ class ApiController extends Controller
                 return $query->where('type',$type);
             })->when($status,function($query,$status) {
                 return $query->where('status',$status);
+            })->when($integration,function($query,$integration) {
+                return $query->whereHas('integration', function($q) {
+                    $q->where('status', 0);
+                });
             })->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
@@ -416,6 +426,13 @@ class ApiController extends Controller
         if(\Auth::user()->company_user_id){
             $company_user=CompanyUser::find(\Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
+        }
+
+        //Update Integration Quote Status
+        if($integration){
+            foreach($quotes as $quote){
+                IntegrationQuoteStatus::where('quote_id',$quote->id)->update(['status'=>1]);   
+            }
         }
 
         $quotes->load('user','company','contact','incoterm');
