@@ -3892,6 +3892,7 @@ class QuoteV2Controller extends Controller
 
       $dataOrig = array();
       foreach($inlands as $inlandsValue){
+      
         $km20 = true;
         $km40 = true;
         $km40hc = true;
