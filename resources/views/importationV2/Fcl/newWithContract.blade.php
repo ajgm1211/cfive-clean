@@ -162,50 +162,9 @@ new registration
                             <div class="form-group m-form__group row">
 
                                 <div class="col-lg-2">
-                                    <label class="col-form-label"><b>TYPE:</b></label>
+                                    <label class="col-form-label"><b>DATA:</b></label>
                                 </div>
 
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="1" id="rdRate" type="radio" checked>
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Rates
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="type" value="2" id="rdRateSurcharge" type="radio" >
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Rates &nbsp; + &nbsp; Surcharges
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group m-form__group row"  id="divvaluescurren">
-                                <div class="col-2"></div>
                                 <div class="col-3">
                                     <label class="m-option">
                                         <span class="m-option__control">
@@ -227,7 +186,7 @@ new registration
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-radio m-radio--brand m-radio--check-bold">
-                                                <input name="valuesCurrency" value="2"  type="radio" checked>
+                                                <input name="valuesCurrency" value="2"  type="radio"    checked>
                                                 <span></span>
                                             </span>
                                         </span>
@@ -239,6 +198,38 @@ new registration
                                             </span>
                                         </span>
                                     </label>
+                                </div>
+                                <div class="col-3">
+                                    <label class="m-option">
+                                        <span class="m-option__control">
+                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
+                                                @if($load_carrier)
+                                                <input name="DatCar" id="carrierchk" type="checkbox" checked>
+                                                @else
+                                                <input name="DatCar" id="carrierchk" type="checkbox">                       
+                                                @endif
+                                                <span></span>
+                                            </span>
+                                        </span>
+                                        <span class="m-option__label">
+                                            <span class="m-option__head">
+                                                <span class="m-option__title">
+                                                    Carrier Not Included
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <div class="col-form-label" hidden="hidden" id="carrierinp">
+                                        @if($load_carrier)
+                                        @if($selector == 1)
+                                        {!! Form::select('carrier',$carrier,$requestfcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                        @elseif($selector == 2)
+                                        {!! Form::select('carrier',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                        @endif
+                                        @else
+                                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group m-form__group row"  id="divvaluesschedules">
@@ -310,141 +301,16 @@ new registration
                                 </div>
 
 
-                                <div class="col-3" id="divorigin">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatOri" id="originchk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Origin Port or Country Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" id="origininp" hidden="hidden" >
-                                        <label for="origin" class=" ">Ports</label>
-                                        {!! Form::select('origin[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'origin','multiple'=>'multiple'])!!}
-                                    </div>
-                                    <div class="col-form-label" id="origininpCount" hidden="hidden" >
-                                        <label for="originCountry" class=" ">Countries</label>
-                                        {!! Form::select('originCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'originCountry','multiple'=>'multiple'])!!}
-                                    </div>
-                                    <div class="col-form-label" id="origininpRegion" hidden="hidden" >
-                                        <label for="originRegion" class=" ">Regions</label>
-                                        {!! Form::select('originRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'originRegion','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
 
-                                <div class="col-3" id="divdestiny">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatDes" id="destinychk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Destiny Port or Country Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" id="destinyinp" hidden="hidden" >
-                                        <label for="destiny" class=" ">Ports</label>
-                                        {!! Form::select('destiny[]',$harbor,null,['class'=>'m-select2-general form-control  ','id'=>'destiny','multiple'=>'multiple'])!!}
-                                    </div>
-                                    <div class="col-form-label" id="destinyinpCount" hidden="hidden" >
-                                        <label for="destiny" class=" ">Countries</label>
-                                        {!! Form::select('destinyCount[]',$country,null,['class'=>'m-select2-general form-control  ','id'=>'destinyCountry','multiple'=>'multiple'])!!}
-                                    </div>
-                                    <div class="col-form-label" id="destinyinpRegion" hidden="hidden" >
-                                        <label for="destinyRegion" class=" ">Regions</label>
-                                        {!! Form::select('destinyRegion[]',$region,null,['class'=>'m-select2-general form-control  ','id'=>'destinyRegion','multiple'=>'multiple'])!!}
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                @if($load_carrier)
-                                                <input name="DatCar" id="carrierchk" type="checkbox" checked>
-                                                @else
-                                                <input name="DatCar" id="carrierchk" type="checkbox">                       
-                                                @endif
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Carrier Not Included
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                    <div class="col-form-label" hidden="hidden" id="carrierinp">
-                                        @if($load_carrier)
-                                            @if($selector == 1)
-                                                {!! Form::select('carrier',$carrier,$requestfcl->Requestcarriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
-                                            @elseif($selector == 2)
-                                                {!! Form::select('carrier',$carrier,$contract->carriers->pluck('carrier_id'),['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
-                                            @endif
-                                        @else
-                                        {!! Form::select('carrier',$carrier,null,['class'=>'m-select2-general form-control','id'=>'carrier'])!!}
-                                        @endif
-                                    </div>
-                                </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2"></div>
 
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="Datftynor" id="fortynorchk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Includes 40'NOR Column
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="col-3">
-                                    <label class="m-option">
-                                        <span class="m-option__control">
-                                            <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="Datftyfive" id="fortyfivechk" type="checkbox">
-                                                <span></span>
-                                            </span>
-                                        </span>
-                                        <span class="m-option__label">
-                                            <span class="m-option__head">
-                                                <span class="m-option__title">
-                                                    Includes 45 Column
-                                                </span>
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
                                 <div class="col-3" id="divtyped">
                                     <label class="m-option">
                                         <span class="m-option__control">
                                             <span class="m-checkbox m-checkbox--brand m-checkbox--check-bold">
-                                                <input name="DatTypeDes" id="typedestinychk" type="checkbox">
+                                                <input name="DatTypeDes" id="typedestinychk" checked type="checkbox">
                                                 <span></span>
                                             </span>
                                         </span>
@@ -456,7 +322,7 @@ new registration
                                             </span>
                                         </span>
                                     </label>
-                                    <div class="col-form-label" hidden="hidden" id="typedestinyinp">
+                                    <div class="col-form-label"  id="typedestinyinp">
                                         {!! Form::select('typedestiny',$typedestiny,null,['class'=>'m-select2-general form-control','id'=>'typedestiny'])!!}
                                     </div>
                                 </div>
@@ -512,7 +378,7 @@ new registration
 @section('js')
 @parent
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
-<script src="{{asset('js/Contracts/ImporContractFcl.js')}}"></script>
+<script src="{{asset('js/importation/import-new-fcl.js')}}"></script>
 
 <script>
     $(document).ready(function(){
