@@ -319,11 +319,11 @@
                                                         <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                         <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
-                                                        <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
-                                                        <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
-                                                        <td {{ @$equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
-                                                        <td {{ @$equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                                        <td {{ @$equipmentHides['20'] }}>{{round($v->total_20)}}</td>
+                                                        <td {{ @$equipmentHides['40'] }}>{{round($v->total_40)}}</td>
+                                                        <td {{ @$equipmentHides['40hc'] }}>{{round($v->total_40hc)}}</td>
+                                                        <td {{ @$equipmentHides['40nor'] }}>{{round($v->total_40nor)}}</td>
+                                                        <td {{ @$equipmentHides['45'] }}>{{round($v->total_45)}}</td>
                                                         @if($quote->pdf_option->grouped_origin_charges==1)
                                                             <td>{{$quote->pdf_option->origin_charges_currency}}</td>
                                                         @else
@@ -347,11 +347,11 @@
                                                                 <td>{{$v->provider}}</td>
                                                                 <td>-</td>
                                                                 <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                                <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
-                                                                <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
-                                                                <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
-                                                                <td {{ @$equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
-                                                                <td {{ @$equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                                                <td {{ @$equipmentHides['20'] }}>{{round($v->total_20)}}</td>
+                                                                <td {{ @$equipmentHides['40'] }}>{{round($v->total_40)}}</td>
+                                                                <td {{ @$equipmentHides['40hc'] }}>{{round($v->total_40hc)}}</td>
+                                                                <td {{ @$equipmentHides['40nor'] }}>{{round($v->total_40nor)}}</td>
+                                                                <td {{ @$equipmentHides['45'] }}>{{round($v->total_45)}}</td>
                                                                 <td>{{$currency_cfg->alphacode}}</td>
                                                             </tr>
                                                         @else
@@ -417,11 +417,11 @@
                                                         <td>{{$v->provider}}</td>
                                                         <td>-</td>
                                                         <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$r->carrier->name}}</td>
-                                                        <td {{ @$equipmentHides['20'] }}>{{$v->total_20}}</td>
-                                                        <td {{ @$equipmentHides['40'] }}>{{$v->total_40}}</td>
-                                                        <td {{ @$equipmentHides['40hc'] }}>{{$v->total_40hc}}</td>
-                                                        <td {{ @$equipmentHides['40nor'] }}>{{$v->total_40nor}}</td>
-                                                        <td {{ @$equipmentHides['45'] }}>{{$v->total_45}}</td>
+                                                        <td {{ @$equipmentHides['20'] }}>{{round($v->total_20)}}</td>
+                                                        <td {{ @$equipmentHides['40'] }}>{{round($v->total_40)}}</td>
+                                                        <td {{ @$equipmentHides['40hc'] }}>{{round($v->total_40hc)}}</td>
+                                                        <td {{ @$equipmentHides['40nor'] }}>{{round($v->total_40nor)}}</td>
+                                                        <td {{ @$equipmentHides['45'] }}>{{round($v->total_45)}}</td>
                                                         <td>{{$currency_cfg->alphacode}}</td>
                                                     </tr>
                                                 @endif
