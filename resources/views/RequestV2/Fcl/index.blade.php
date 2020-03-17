@@ -80,7 +80,7 @@
 								</div>
 								<div class="col-lg-2" >
 									<label class="">Equipments</label>
-									<div class="" id="-----">
+									<div class="" id="containers_div">
 										{!! Form::select('containers[]',$containers,null,['class'=>'b-select form-control','id'=>'containerID','required','multiple'=>'multiple'])!!}
 									</div>
 								</div>
@@ -256,6 +256,10 @@
 	function loadContainers(){
 		var groupContainers  = $("#groupContainers").select2('val');
 		var url = '{!! route("request.fcl.get.containers") !!}';
+//        $('.b-select').remove();
+//        $('#containers_div').load(url,{groupContainers:groupContainers},function(){
+//			
+//		});
 		$.ajax({
 			cache: false,
 			type:'get',

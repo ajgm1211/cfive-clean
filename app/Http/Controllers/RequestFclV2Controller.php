@@ -158,9 +158,12 @@ class RequestFclV2Controller extends Controller
                         $hidden = 'hidden';                        
                     }
                     $buttonDp = "<a href='#' id='statusHiden".$Ncontracts->id."' ".$hidden." class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>                      <i style='color:#b90000' class='la la-copy'></i></a>";   
-                    if(strnatcasecmp($Ncontracts->status,'Pending')!=0){
-                        $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
-                    } 
+                    if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                        $hiddenPrCt = 'hidden';
+                    } else {
+                        $hiddenPrCt = '';
+                    }
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" id="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
@@ -169,12 +172,16 @@ class RequestFclV2Controller extends Controller
 
                     $buttons = $butPrCt . $buttonDp . $buttoEdit . $buttons;
                 } else{
-                    if(strnatcasecmp($Ncontracts->status,'Pending')!=0){
-                        $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" title="Proccess FCL Request">
+
+                    if(strnatcasecmp($Ncontracts->status,'Pending')==0){
+                        $hiddenPrRq = 'hidden';
+                    } else {
+                        $hiddenPrRq = '';
+                    }
+                    $butPrRq = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->id.'/1/0" '.$hiddenPrRq.' id="PrCHidden'.$Ncontracts->id.'" title="Proccess FCL Request">
                     <samp class="la la-cogs" style="font-size:20px; color:#D85F00"></samp>
                     </a>';
-                        $buttons = $butPrRq . $buttons;
-                    }
+                    $buttons = $butPrRq . $buttons;
                 }
 
                 $excel_button = '&nbsp;&nbsp;
@@ -454,14 +461,17 @@ class RequestFclV2Controller extends Controller
         $data = json_decode($Ncontract->data);
         $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_TMP_FCL';
 
-        $columns = ['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE','TYPE DESTINY','CURRENCY','CARRIER','DIFFERENTIATOR'];
+        $columns = ['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE'];
+        $cellDir = ['A','B','C','D','E','F','G','H','I','J','K','L','M','Ñ','O','P','Q','R','S','T','U','V','W','Y','Z'];
+        $countCell = 0;
         foreach($data->containers as $container){
             array_push($columns,$container->code);    
+            $countCell++;
         }
-        /*array_push($columns,'TYPE DESTINY');    
+        array_push($columns,'TYPE DESTINY');    
         array_push($columns,'CURRENCY');    
         array_push($columns,'CARRIER');    
-        array_push($columns,'DIFFERENTIATOR');*/    
+        array_push($columns,'DIFFERENTIATOR');    
         //dd($columns);
 
         $spreadsheet = new Spreadsheet();
@@ -476,11 +486,11 @@ class RequestFclV2Controller extends Controller
         $sheet->getColumnDimension('B')->setWidth(20);
         $sheet->getColumnDimension('C')->setWidth(10);
         $sheet->getColumnDimension('D')->setWidth(20);
-        $sheet->getColumnDimension('E')->setWidth(15);
-        $sheet->getColumnDimension('F')->setWidth(10);
-        $sheet->getColumnDimension('G')->setWidth(10);
-        $sheet->getColumnDimension('H')->setWidth(15);
-        
+        $sheet->getColumnDimension($cellDir[$countCell+4])->setWidth(15);
+        $sheet->getColumnDimension($cellDir[$countCell+5])->setWidth(10);
+        $sheet->getColumnDimension($cellDir[$countCell+6])->setWidth(10);
+        $sheet->getColumnDimension($cellDir[$countCell+7])->setWidth(15);
+
         $writer = new Writer\Xlsx($spreadsheet);
 
         $response =  new StreamedResponse(
