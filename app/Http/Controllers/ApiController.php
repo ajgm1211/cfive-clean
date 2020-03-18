@@ -403,7 +403,13 @@ class ApiController extends Controller
             })->where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air','carrier','airline');
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','carrier','airline');
+                $query->with(['charge'=>function($q){
+                    $q->with('type','surcharge','calculation_type');
+                }]);
+                $query->with(['charge_lcl_air'=>function($q){
+                    $q->with('type','surcharge','calculation_type');
+                }]);
             }])->take($request->size)->get();
         }else{
             $quotes = QuoteV2::when($type,function($query,$type) {
@@ -417,7 +423,13 @@ class ApiController extends Controller
             })->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
             })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air','carrier','airline');
+                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge_lcl_air','carrier','airline');
+                $query->with(['charge'=>function($q){
+                    $q->with('type','surcharge','calculation_type');
+                }]);
+                $query->with(['charge_lcl_air'=>function($q){
+                    $q->with('type','surcharge','calculation_type');
+                }]);
             }])->take($request->size)->get();
         }
         $companies = Company::pluck('business_name','id');
