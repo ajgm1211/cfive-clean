@@ -419,10 +419,10 @@ Route::middleware(['auth'])->prefix('Exportation')->group(function () {
 });
 
 Route::middleware(['auth'])->prefix('Harbors')->group(function () {
-	Route::resource('UploadFile','FileHarborsPortsController');
-	Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
-	Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
-});
+    Route::resource('UploadFile','FileHarborsPortsController');
+    Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
+    Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+}); 
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {
 	Route::resource('Countries','CountryController');
