@@ -1,6 +1,7 @@
 
 $(document).ready(function(){
         checkedCarrier();
+        checkedCurrency();
     });
 
 $('.m-select2-general').select2({
@@ -12,6 +13,10 @@ $('#carrierchk').on('click',function(){
     checkedCarrier();
 });
 
+$('.currencychk').on('click',function(){
+    checkedCurrency();
+});
+
 function checkedCarrier(){
      if($('#carrierchk').prop('checked')){
         $('#carrierinp').removeAttr('hidden');
@@ -19,6 +24,16 @@ function checkedCarrier(){
     } else{
         $('#carrierinp').attr('hidden','hidden');
         $('#carrier').removeAttr('required');
+    }
+}
+
+function checkedCurrency(){
+     if($('.currencychk').prop('checked')){
+        $('#currencyinp').removeAttr('hidden');
+        $('#currency').attr('required','required');
+    } else{
+        $('#currencyinp').attr('hidden','hidden');
+        $('#currency').removeAttr('required');
     }
 }
 
