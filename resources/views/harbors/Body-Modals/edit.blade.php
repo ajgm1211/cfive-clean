@@ -106,7 +106,7 @@
 				alert('error');
 			},
 			success: function(resp){
-				console.log(resp);
+				//console.log(resp);
 				if(resp.success == true){
 					$('#addHarborModal').modal('hide');
 					$('#tdcode'+resp.data.id).text(resp.data.code);
