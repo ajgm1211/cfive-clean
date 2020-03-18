@@ -82,12 +82,12 @@
 		var variation = [];
 		var name		= $('#NameMD').val();
 		var code		= $('#CodeMD').val();
-		var displayname	= $('#DispNamMD').val();
+		var display_name	= $('#DispNamMD').val();
 		var coordinate	= $('#coordinateMD').val();
 		var country		= $('#countryMD').val();
 		variation = $("input[name='variation[]']").map(function(){return $(this).val();}).get();
 
-		var data	= { name:name,code,displayname,coordinate,country,variation};
+		var data	= { name:name,code,display_name,coordinate,country,variation};
 		//console.log(data);
 		$.ajax({
 			url: '{{route("UploadFile.store")}}',
