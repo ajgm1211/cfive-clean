@@ -90,7 +90,7 @@ class FileHarborsPortsController extends Controller
 			'name'          => $harbor->name,
 			'code'          => $harbor->code,
 			'display_name'  => $harbor->display_name,
-			'coordinates'   => $harbor->coordinate,
+			'coordinates'   => $harbor->coordinates,
 			'country_id'    => $harbor->country->name,
 			'varation'      => $json,
 			'action'		=> $buttons
@@ -147,7 +147,7 @@ class FileHarborsPortsController extends Controller
 			'name'          => $harbor->name,
 			'code'          => $harbor->code,
 			'display_name'  => $harbor->display_name,
-			'coordinates'   => $harbor->coordinate,
+			'coordinates'   => $harbor->coordinates,
 			'country_id'    => $harbor->country->name,
 			'varation'      => $json
 		];
