@@ -418,7 +418,8 @@ Route::middleware(['auth'])->prefix('Exportation')->group(function () {
 	Route::resource('Exportation','ExportationController');
 });
 
-Route::middleware(['auth'])->prefix('Harbors')->group(function () {
+// Harbors
+Route::middleware(['auth','role:administrator|data_entry'])->prefix('Harbors')->group(function () {
     Route::resource('UploadFile','FileHarborsPortsController');
     Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
     Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
