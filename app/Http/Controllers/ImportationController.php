@@ -45,6 +45,9 @@ use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\SynchronImgCarrierJob;
 use App\Jobs\ImportationRatesFclJob;
+use Spatie\MediaLibrary\MediaStream;
+use Illuminate\Support\Facades\File;
+use Spatie\MediaLibrary\Models\Media;
 use App\Jobs\ReprocessSurchargersJob;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
@@ -53,7 +56,6 @@ use App\AccountImportationContractFcl as AccountFcl;
 
 class ImportationController extends Controller
 {
-
 
 	public function ReprocesarRates(Request $request, $id){
 		$countfailrates = FailRate::where('contract_id','=',$id)->count();
@@ -567,17 +569,21 @@ class ImportationController extends Controller
 				}
 			}
 		}
-		$harbor         = harbor::all()->pluck('display_name','id');
-		$country        = Country::all()->pluck('name','id');
-		$region         = Region::all()->pluck('name','id');
-		$carrier        = carrier::all()->pluck('name','id');
+		$harbor         = harbor::pluck('display_name','id');
+		$country        = Country::pluck('name','id');
+		$region         = Region::pluck('name','id');
+		$carrier        = carrier::pluck('name','id');
+		$coins          = currency::pluck('alphacode','id');
+		$currency       = currency::where('alphacode','USD')->pluck('id');
 		$direction      = Direction::pluck('name','id');
 		$companysUser   = CompanyUser::all()->pluck('name','id');
 		$typedestiny    = TypeDestiny::all()->pluck('description','id');
 		if($selector == 1){
-			return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
+			return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency'));    
+            
+//            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
 		} elseif($selector == 2){
-			return view('importationV2.Fcl.newWithContract',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
+			return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier','coins','currency'));
             
 //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
 		}
@@ -586,7 +592,7 @@ class ImportationController extends Controller
 
 	// carga el archivo excel y verifica la cabecera para mostrar la vista con las columnas:
 	public function UploadFileNewContract(Request $request){
-		//dd($request->all());
+		dd($request->all());
 		$now                = new \DateTime();
 		$now2               = $now;
 		$now                = $now->format('dmY_His');
@@ -4695,7 +4701,6 @@ class ImportationController extends Controller
 		}
 	}
 
-
 	public function FailSurchargeLoad($id,$selector){
 
 		if($selector == 1){
@@ -5676,6 +5681,26 @@ class ImportationController extends Controller
 		return view('RequestV2.Fcl.Body-Modals.ShowRequest',compact('request'));
 	}
 
+    // Dropzone Importation Fcl----------------------------------------------------------
+    public function storeMedia(Request $request){
+        $path = storage_path('tmp/importation/fcl');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file('file');
+
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+
+        $file->move($path, $name);
+
+        return response()->json([
+            'name'          => $name,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
+    }
+    
 	// Solo Para Testear ----------------------------------------------------------------
 	public function testExcelImportation(){
 
