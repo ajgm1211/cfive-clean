@@ -50,7 +50,7 @@
 </div>
 -->
         </div>
-        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'PUT','files'=>true, 'id' => 'formupload'])!!}
+        {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'POST','files'=>true, 'id' => 'formupload'])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
@@ -481,6 +481,7 @@ Load
         }
     }
 
+    var uploadedDocumentMap = {}
     Dropzone.options.documentDropzone = {
         url: '{{ route("importation.storeMedia.fcl") }}',
         maxFilesize: 15, // MB
@@ -491,8 +492,8 @@ Load
         },
         success: function (file, response) {
             $('#formupload').append('<input type="hidden" id="files" name="document" value="' + response.name + '">')
-            $('#formupload').find('input[name="existsFile"]').val(1);
             uploadedDocumentMap[file.name] = response.name;
+            $('#formupload').find('input[name="existsFile"]').val(1);
         },
         removedfile: function (file) {
             file.previewElement.remove()
@@ -507,6 +508,7 @@ Load
         },
         acceptedFiles: ".xlsx, .xls"
     }
+
 
 </script>
 

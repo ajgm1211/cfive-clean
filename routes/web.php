@@ -226,7 +226,7 @@ Route::prefix('Importation')->group(function () {
 		->middleware(['auth','role:administrator|data_entry']);
 
 	// Importar Contracto
-	Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
+	Route::POST('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
 		->middleware(['auth','role:administrator|data_entry']);
 	Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl')
 		->middleware(['auth','role:administrator|data_entry']);
