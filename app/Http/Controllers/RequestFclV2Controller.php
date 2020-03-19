@@ -415,7 +415,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->load('companyuser');
             $time       = new \DateTime();
             $now        = $time->format('d-m-y');
-            $mediaItem = $Ncontract->getFirstMedia('document');
+            $mediaItem  = $Ncontract->getFirstMedia('document');
             $extObj     = new \SplFileInfo($mediaItem->file_name);
             $ext        = $extObj->getExtension();
             $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$now.'-FLC.'.$ext;
