@@ -86,7 +86,7 @@ class PdfV2Controller extends Controller
       $currency_cfg ="";
     }
 
-    $pdfarray= $this->generatepdf($id,$company_user,$currency_cfg);
+    $pdfarray= $this->generatepdf($id,$company_user,$currency_cfg,\Auth::user()->id);
     $pdf = $pdfarray['pdf'];
     $view = $pdfarray['view'];
     $idQuote= $pdfarray['idQuote'];
