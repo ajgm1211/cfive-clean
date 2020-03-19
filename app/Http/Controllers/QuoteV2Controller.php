@@ -42,6 +42,7 @@ use App\LocalChargeCarrierApi;
 use App\LocalChargePortApi;
 use App\PackageLoad;
 use App\ChargeLclAir;
+use App\Schedule;
 use GoogleMaps;
 use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
@@ -968,6 +969,23 @@ class QuoteV2Controller extends Controller
         }    
         $quote_duplicate->save();
 
+        $this->savePdfOptionsDuplicate($quote, $quote_duplicate);
+
+        $this->saveScheduleQuoteDuplicate($quote, $quote_duplicate);
+
+        $this->saveAutomaticRateDuplicate($quote, $quote_duplicate);
+
+        if($request->ajax()){
+            return response()->json(['message' => 'Ok']);
+        }else{
+            $request->session()->flash('message.nivel', 'success');
+            $request->session()->flash('message.title', 'Well done!');
+            $request->session()->flash('message.content', 'Quote duplicated successfully!');
+            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
+        }
+    }
+
+    public function savePdfOptionsDuplicate($quote, $quote_duplicate){
         $pdf = PdfOption::where('quote_id',$quote->id)->first();
         $pdf_duplicate = new PdfOption();
         $pdf_duplicate->quote_id=$quote_duplicate->id;
@@ -986,7 +1004,24 @@ class QuoteV2Controller extends Controller
         $pdf_duplicate->show_logo=$pdf->show_logo;
         $pdf_duplicate->show_gdp_logo=$pdf->show_gdp_logo;
         $pdf_duplicate->save();
+    }
 
+    public function saveScheduleQuoteDuplicate($quote, $quote_duplicate){
+        $schedule_quote = Schedule::where('quotes_id',$quote->id)->first();
+
+        if($schedule_quote){
+            $schedule = new Schedule();
+            $schedule->vessel = $schedule_quote->vessel;
+            $schedule->etd = $schedule_quote->etd;
+            $schedule->transit_time = $schedule_quote->transit_time;
+            $schedule->type = $schedule_quote->type;
+            $schedule->eta = $schedule_quote->eta;
+            $schedule->quotes_id = $quote_duplicate->id;
+            $schedule->save();
+        }
+    }
+
+    public function saveAutomaticRateDuplicate($quote, $quote_duplicate){
         $rates = AutomaticRate::where('quote_id',$quote->id)->get();
 
         foreach ($rates as $rate){
@@ -1005,6 +1040,9 @@ class QuoteV2Controller extends Controller
             $rate_duplicate->markups=$rate->markups;
             $rate_duplicate->total=$rate->total;
             $rate_duplicate->currency_id=$rate->currency_id;
+            $rate_duplicate->transit_time=$rate->schedule_type;
+            $rate_duplicate->transit_time=$rate->transit_time;
+            $rate_duplicate->transit_time=$rate->via;
             $rate_duplicate->save();
 
             $charges=Charge::where('automatic_rate_id',$rate->id)->get();
@@ -1039,15 +1077,6 @@ class QuoteV2Controller extends Controller
                     $charge_duplicate->save();
                 }
             }
-        }
-
-        if($request->ajax()){
-            return response()->json(['message' => 'Ok']);
-        }else{
-            $request->session()->flash('message.nivel', 'success');
-            $request->session()->flash('message.title', 'Well done!');
-            $request->session()->flash('message.content', 'Quote duplicated successfully!');
-            return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
         }
     }
 
@@ -4150,11 +4179,11 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                  $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
+                    $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
 
-                  $response = $client->request('GET', $url);
+                    $response = $client->request('GET', $url);
 
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4172,9 +4201,9 @@ class QuoteV2Controller extends Controller
 
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
-                  $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
+                    $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
                         $response = $client->request('GET', $url);
@@ -4198,9 +4227,9 @@ class QuoteV2Controller extends Controller
             foreach($origin_port as $orig){
                 foreach($destiny_port as $dest){
 
-                  $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
 
-                  $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
+                    $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
                         $response = $client->request('GET', $url);
