@@ -87,7 +87,7 @@ use App\Http\Traits\QuoteV2Trait;
 use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\MediaLibrary\MediaStream;
-
+use App\Jobs\ProcessPdfApi;
 
 class QuoteV2Controller extends Controller
 {
@@ -688,7 +688,9 @@ class QuoteV2Controller extends Controller
       $name = $request->name;
       $charge->$name=$request->value;
     }
+
     $charge->update();
+    $this->updatePdfApi($charge->quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -716,6 +718,8 @@ class QuoteV2Controller extends Controller
       $charge->$name=$request->value;
     }
     $charge->update();
+    $quote_id= $charge->automatic_rate->quote_id;
+    $this->updatePdfApi($quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -730,7 +734,10 @@ class QuoteV2Controller extends Controller
       $quote=QuoteV2::find($request->pk);
       $name = $request->name;
       $quote->$name=$request->value;
-      $quote->update();   
+      $quote->update();  
+      $this->updatePdfApi($quote->id); 
+      
+
     }
     return response()->json(['success'=>'Ok']);
   }
@@ -830,6 +837,7 @@ class QuoteV2Controller extends Controller
     $quote->origin_address=$request->origin_address;
     $quote->destination_address=$request->destination_address;
     $quote->update();
+    $this->updatePdfApi($quote->id);
 
     if($request->contact_id!=''){
       $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
@@ -2752,6 +2760,27 @@ class QuoteV2Controller extends Controller
   }
 
 
+  function updatePdfApi($id){
+
+    $quote = QuoteV2::find($id);
+    $quote->clearMediaCollection('document'); 
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }else{
+      $company_user="";
+      $currency_cfg ="";
+    }
+    $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+    $pdf = $pdfarray['pdf'];
+    $view = $pdfarray['view'];
+    $idQuote= $pdfarray['idQuote'];
+    $idQ = $pdfarray['idQ'];
+    $pdf->loadHTML($view)->save(public_path().'/pdf/quote-'.$idQuote.'.pdf');
+    ProcessPdfApi::dispatch($quote);
+
+  }
+
   public function store(Request $request){
     if(!empty($request->input('form'))){
       $form =  json_decode($request->input('form'));
@@ -3250,7 +3279,7 @@ class QuoteV2Controller extends Controller
       $language_id = $company->companyUser->pdf_language;
       $this->saveTerms($quote->id,'FCL',$form->mode);
       //$this->saveRemarks($quote->id,$remarksGenerales);
-      
+
       // SAVE PDF FOR API 
       if(\Auth::user()->company_user_id){
         $company_user=CompanyUser::find(\Auth::user()->company_user_id);
@@ -3260,7 +3289,7 @@ class QuoteV2Controller extends Controller
         $currency_cfg ="";
       }
 
-      $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg);
+      $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
       $pdf = $pdfarray['pdf'];
       $view = $pdfarray['view'];
       $idQuote= $pdfarray['idQuote'];
