@@ -1834,7 +1834,7 @@ trait QuoteV2Trait {
   }
 
 
-  public function generatepdf($id,$company_user,$currency_cfg){
+  public function generatepdf($id,$company_user,$currency_cfg,$user_id){
 
 
 
@@ -1969,7 +1969,7 @@ trait QuoteV2Trait {
     $contact_email = Contact::find($quote->contact_id);
     $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
     $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
-    $user = User::where('id',\Auth::id())->with('companyUser')->first();
+    $user = User::where('id',$user_id)->with('companyUser')->first();
     if($quote->equipment!=''){
       $equipmentHides = $this->hideContainer($quote->equipment,'BD');
     }
