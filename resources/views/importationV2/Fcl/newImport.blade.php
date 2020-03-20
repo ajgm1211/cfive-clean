@@ -142,7 +142,12 @@
                             <hr>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2">
-                                    <label class="col-form-label"><b>DATA:</b></label>
+
+                                    {!!  Form::text('chargeVal','FREIGHT',['id'=>'chargeVal',
+                                    'placeholder'=>'Charge Diff',
+                                    'required',
+                                    'class'=>'form-control m-input','onkeyup' => 'javascript:this.value=this.value.toUpperCase();'])!!}
+                                    <label style="margin-top:7px;">&nbsp;<i>Charge Diff</i></label>
                                 </div>
                                 <div class="col-2">
                                     <label class="m-option">

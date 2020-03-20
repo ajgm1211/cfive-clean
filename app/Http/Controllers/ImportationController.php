@@ -44,19 +44,20 @@ use Yajra\Datatables\Datatables;
 use App\Jobs\ProcessContractFile;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\SynchronImgCarrierJob;
+use App\MyClass\Excell\MyReadFilter;
 use App\Jobs\ImportationRatesFclJob;
 use Spatie\MediaLibrary\MediaStream;
 use Illuminate\Support\Facades\File;
 use Spatie\MediaLibrary\Models\Media;
 use App\Jobs\ReprocessSurchargersJob;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Jobs\ImportationRatesSurchargerJob;
 use App\AccountImportationContractFcl as AccountFcl;
 
-class ImportationController extends Controller implements \PhpOffice\PhpSpreadsheet\Reader\IReadFilter
+class ImportationController extends Controller
 {
 
     public function ReprocesarRates(Request $request, $id){
@@ -623,25 +624,9 @@ class ImportationController extends Controller implements \PhpOffice\PhpSpreadsh
         $scheduleinfoBoll   = false;
 
         $data               = collect([]);
-        //        $direction          = Direction::pluck('name','id');
-        //        $typedestiny        = TypeDestiny::pluck('description','id');
-        //        $harbor             = harbor::pluck('display_name','id');
-        //        $country            = Country::pluck('name','id');
-        //        $region             = Region::pluck('name','id');
-        //        $carrier            = carrier::pluck('name','id');
         $Contract_id;
-
-        //		$file       = $request->file('file');
-        //		$ext        = strtolower($file->getClientOriginalExtension());
-        //
-        //		//obtenemos el nombre del archivo
-        //		$nombre     = $file->getClientOriginalName();
-        //		$nombre     = $now.'_'.$nombre;
-        //		$filebool   = \Storage::disk('FclImport')->put($nombre,\File::get($file));
-
+        /*
         if(!empty($file)){
-
-            //			\Storage::disk('FclAccount')->put($nombre,\File::get($file));
 
             $account = new AccountFcl();
             $account->name              = $name;
@@ -651,14 +636,6 @@ class ImportationController extends Controller implements \PhpOffice\PhpSpreadsh
             $account->save();
 
             $account->addMedia(storage_path('tmp/importation/fcl/'.$file))->toMediaCollection('document','FclAccount');
-
-            //			if(env('APP_VIEW') == 'operaciones') {
-            //				ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account')->onQueue('operaciones');
-            //			}else {
-            //				ProcessContractFile::dispatch($account->id,$account->namefile,'fcl','account');
-            //			}
-
-            //Queue::connection("importation")->push(new ProcessContractFile($account->id,$account->namefile,'fcl','account'));
 
             if($selector == 2){
                 $contract = Contract::find($contract_id);
@@ -685,32 +662,116 @@ class ImportationController extends Controller implements \PhpOffice\PhpSpreadsh
             }
             $contract->load('carriers');
             $Contract_id = $contract->id;
-            //			$fileTmp    = new FileTmp();
-            //			$fileTmp->contract_id = $Contract_id;
-            //			$fileTmp->name_file   = $nombre;
-            //			$fileTmp->save(); //*/
 
             if(!empty($request_id)){
                 $requestFile    = NewContractRequest::find($request_id);
                 if(!empty($requestFile->id)){
-                    //					$contractFile   =  new ContractFclFile();
-                    //					$contractFile->contract_id  = $Contract_id;
-                    //					$contractFile->namefile     = $requestFile->namefile;
-                    //					$contractFile->save();
-
                     if(empty($requestFile->contract_id)){
                         $requestFile->contract_id = $Contract_id;
                         $requestFile->update();
                     }
                 }
-
             }
             dd($account,$contract,$requestFile);
         } else {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error File!!');
             return back();
+        }*/
+
+        $requestCont    = NewContractRequest::find($request_id);
+        $data           = json_decode($requestCont->data);
+        $columnsSeleted = collect(['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE']);
+        //dd($data);
+
+        $valuesSelecteds = collect();
+
+        foreach($data->containers as $dataContainers){
+            $columnsSeleted->push($dataContainers->code);
         }
+
+        // ------- TYPE DESTINY -------------------
+
+        if($datTypeDes == false){
+            $columnsSeleted->push('TYPE DESTINY')
+                $valuesSelecteds->push(['select_typeDestiny' => $typedestinyBol]);
+        } else {
+            $typedestinyBol = true;
+            $valuesSelecteds->push(['typeDestinyVal' => $typedestinyVal]);
+            $valuesSelecteds->push(['select_typeDestiny' => $typedestinyBol]);
+        }
+
+
+        // ------- CURRENCY -----------------------
+        if($statustypecurren == 1){
+            $columnsSeleted->push('CURRENCY')
+                $valuesSelecteds->push(['select_currency' => 1]);
+        } elseif($statustypecurren == 2){
+            $valuesSelecteds->push(['select_currency' => 2]);
+        } elseif($statustypecurren == 3){
+            $valuesSelecteds->push(['select_currency' => 3]);            
+            $valuesSelecteds->push(['currencyVal' => $currency]);
+        }
+
+        // ------- CARRIER ------------------------
+        if($dataCarrier == false){
+            $columnsSeleted->push('CARRIER')
+            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+        } else {
+            $carrierBol = true;
+            $valuesSelecteds->push(['carrierVal' => $carrierVal]);
+            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+        }
+        
+        // ------- CARRIER ------------------------
+        
+        if($statusPortCountry == 2){
+            $columnsSeleted->push('DIFFERENTIATOR')
+            $valuesSelecteds->push(['select_PrCtRg' => $carrierBol]);
+        } else {
+            $carrierBol = true;
+            $valuesSelecteds->push(['carrierVal' => $carrierVal]);
+            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+        }
+
+
+
+
+        dd($containerSeleted);
+        $account = AccountFcl::find(29);
+
+        $mediaItem  = $account->getFirstMedia('document');
+        $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
+        Storage::disk('FclImport')->put($mediaItem->file_name,$excel);
+        $excelF     = Storage::disk('FclImport')->url($mediaItem->file_name);
+
+        $extObj     = new \SplFileInfo($mediaItem->file_name);
+        $ext        = $extObj->getExtension();
+        if(strnatcasecmp($ext,'xlsx')==0){
+            $inputFileType = 'Xlsx';
+        } else if(strnatcasecmp($ext,'xls')==0){
+            $inputFileType = 'Xls';
+        } else {
+            $inputFileType = 'Csv';
+        }
+
+        $firstRow   =  new MyReadFilter(1,1);
+        $reader     = IOFactory::createReader($inputFileType);
+        $reader->setReadDataOnly(true);
+        $reader->setReadFilter($firstRow);
+        $spreadsheet = $reader->load($excelF);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray();
+        //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
+        //dd($sheetData); 
+        $confColumn = [];
+        foreach($sheetData as $rowD){
+            foreach($rowD as $key => $cells){
+                dd($key,$cells);
+
+            }
+        }
+
+
 
         $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
 
@@ -5657,7 +5718,7 @@ class ImportationController extends Controller implements \PhpOffice\PhpSpreadsh
         //account 28
         //contracto 44
         //request 13
-        $account = AccountFcl::find(28);
+        $account = AccountFcl::find(29);
 
         $mediaItem  = $account->getFirstMedia('document');
         $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
@@ -5674,27 +5735,17 @@ class ImportationController extends Controller implements \PhpOffice\PhpSpreadsh
             $inputFileType = 'Csv';
         }
 
+        $myacl =  new MyReadFilter(1,5);
         $reader = IOFactory::createReader($inputFileType);
         $reader->setReadDataOnly(true);
-        $reader->setReadFilter($this);
+        $reader->setReadFilter($myacl);
         $spreadsheet = $reader->load($excelF);
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
         //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
         dd($sheetData);
         dd($sheetData[1]['Receipt']);
 
-
-
-
-
     }
-    public function readCell($column, $row, $worksheetName = '') {
-        //  Read rows 1 to 7 and columns A to E only
-        if ($row >= 1 && $row <= 7) {
-            if (in_array($column,range('A','Z'))) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+
 }
