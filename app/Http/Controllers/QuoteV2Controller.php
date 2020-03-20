@@ -690,7 +690,7 @@ class QuoteV2Controller extends Controller
     }
 
     $charge->update();
-    $this->updatePdfApi($charge->quote_id);
+    //$this->updatePdfApi($charge->quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -719,7 +719,7 @@ class QuoteV2Controller extends Controller
     }
     $charge->update();
     $quote_id= $charge->automatic_rate->quote_id;
-    $this->updatePdfApi($quote_id);
+    //$this->updatePdfApi($quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -735,7 +735,7 @@ class QuoteV2Controller extends Controller
       $name = $request->name;
       $quote->$name=$request->value;
       $quote->update();  
-      $this->updatePdfApi($quote->id); 
+     //$this->updatePdfApi($quote->id); 
       
 
     }
@@ -837,7 +837,7 @@ class QuoteV2Controller extends Controller
     $quote->origin_address=$request->origin_address;
     $quote->destination_address=$request->destination_address;
     $quote->update();
-    $this->updatePdfApi($quote->id);
+    //$this->updatePdfApi($quote->id);
 
     if($request->contact_id!=''){
       $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
@@ -3289,7 +3289,7 @@ class QuoteV2Controller extends Controller
         $currency_cfg ="";
       }
 
-      $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+      //$pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
       $pdf = $pdfarray['pdf'];
       $view = $pdfarray['view'];
       $idQuote= $pdfarray['idQuote'];
