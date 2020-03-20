@@ -28,7 +28,7 @@ class Charge extends Model
 
     public function type()
     {
-        return $this->belongsTo('App\Type');
+        return $this->belongsTo('App\TypeDestiny');
     }
 
     public function surcharge()
