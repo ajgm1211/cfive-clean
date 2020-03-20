@@ -21,7 +21,7 @@ class CreateSchedulesTable extends Migration
       $table->string('type');
       $table->date('eta');
       $table->integer('quotes_id')->unsigned();
-      $table->foreign('quotes_id')->references('id')->on('quotes')->onDelete('cascade');
+      $table->foreign('quotes_id')->references('id')->on('quote_v2s')->onDelete('cascade');
       $table->timestamps();
     });
   }
