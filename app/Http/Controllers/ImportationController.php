@@ -672,7 +672,7 @@ class ImportationController extends Controller
                     }
                 }
             }
-            dd($account,$contract,$requestFile);
+            //dd($account,$contract,$requestFile);
         } else {
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error File!!');
@@ -681,64 +681,61 @@ class ImportationController extends Controller
 
         $requestCont    = NewContractRequest::find($request_id);
         $data           = json_decode($requestCont->data);
-        $columnsSeleted = collect(['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE']);
+        $columnsSelected = collect(['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE']);
         //dd($data);
+        $valuesSelecteds = collect([]);
 
-        $valuesSelecteds = collect();
 
         foreach($data->containers as $dataContainers){
-            $columnsSeleted->push($dataContainers->code);
+            $columnsSelected->push($dataContainers->code);
         }
+
+        $valuesSelecteds->put('group_container_id',$data->group_containers->id);
 
         // ------- TYPE DESTINY -------------------
 
         if($datTypeDes == false){
-            $columnsSeleted->push('TYPE DESTINY')
-                $valuesSelecteds->push(['select_typeDestiny' => $typedestinyBol]);
+            $columnsSelected->push('TYPE DESTINY');
+            $valuesSelecteds->put('select_typeDestiny',$typedestinyBol);
         } else {
             $typedestinyBol = true;
-            $valuesSelecteds->push(['typeDestinyVal' => $typedestinyVal]);
-            $valuesSelecteds->push(['select_typeDestiny' => $typedestinyBol]);
+            $valuesSelecteds->put('typeDestinyVal',$typedestinyVal);
+            $valuesSelecteds->put('select_typeDestiny',$typedestinyBol);
         }
-
 
         // ------- CURRENCY -----------------------
         if($statustypecurren == 1){
-            $columnsSeleted->push('CURRENCY')
-                $valuesSelecteds->push(['select_currency' => 1]);
+            $columnsSelected->push('CURRENCY');
+            $valuesSelecteds->put('select_currency',1);
         } elseif($statustypecurren == 2){
-            $valuesSelecteds->push(['select_currency' => 2]);
+            $valuesSelecteds->put('select_currency',2);
         } elseif($statustypecurren == 3){
-            $valuesSelecteds->push(['select_currency' => 3]);            
-            $valuesSelecteds->push(['currencyVal' => $currency]);
+            $valuesSelecteds->put('select_currency',3);           
+            $valuesSelecteds->put('currencyVal',$currency);
         }
 
         // ------- CARRIER ------------------------
         if($dataCarrier == false){
-            $columnsSeleted->push('CARRIER')
-            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+            $columnsSelected->push('CARRIER');
+            $valuesSelecteds->put('select_carrier',$carrierBol);
         } else {
             $carrierBol = true;
-            $valuesSelecteds->push(['carrierVal' => $carrierVal]);
-            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+            $valuesSelecteds->put('carrierVal',$carrierVal);
+            $valuesSelecteds->put('select_carrier',$carrierBol);
         }
-        
+
         // ------- CARRIER ------------------------
-        
+
         if($statusPortCountry == 2){
-            $columnsSeleted->push('DIFFERENTIATOR')
-            $valuesSelecteds->push(['select_PrCtRg' => $carrierBol]);
+            $columnsSelected->push('DIFFERENTIATOR');
+            $valuesSelecteds->put('select_PrCtRg',$carrierBol);
         } else {
             $carrierBol = true;
-            $valuesSelecteds->push(['carrierVal' => $carrierVal]);
-            $valuesSelecteds->push(['select_carrier' => $carrierBol]);
+            $valuesSelecteds->put('carrierVal',$carrierVal);
+            $valuesSelecteds->put('select_carrier',$carrierBol);
         }
 
-
-
-
-        dd($containerSeleted);
-        $account = AccountFcl::find(29);
+        $account    = AccountFcl::find(29);
 
         $mediaItem  = $account->getFirstMedia('document');
         $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
@@ -763,111 +760,21 @@ class ImportationController extends Controller
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
         //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
         //dd($sheetData); 
-        $confColumn = [];
-        foreach($sheetData as $rowD){
-            foreach($rowD as $key => $cells){
-                dd($key,$cells);
-
+        $final_columns = collect([]);
+        foreach($columnsSelected as $columnSelect){
+            foreach($sheetData as $rowD){
+                foreach($rowD as $key => $cells){
+                    //dd($key,$cells);
+                    if($columnSelect ==  $cells){
+                        $final_columns->put($cells,$key);
+                    }
+                }
             }
         }
 
+        dd($final_columns,$valuesSelecteds,$columnsSelected,$sheetData);
 
 
-        $targetsArr =[ 0 => "20'", 1 => "40'", 2 => "40'HC"];
-
-        /* si $statusPortCountry es igual a 2, se agrega una columna que diferencia puertos de paises
-        , si es 1 el solo se mapean puertos        
-        */
-        if($statusPortCountry == 2){
-            array_push($targetsArr,"Differentiator");
-        }
-
-        /* si $statustypecurren es igual a 2, los currencys estan contenidos en la misma columna 
-        con los valores, si es uno el currency viene en una colmna aparte        
-        */
-
-        if($statustypecurren == 1){
-            array_push($targetsArr,"Currency");
-        }
-
-        // ------- CARRIER ------------------------
-        if($dataCarrier == false){
-            array_push($targetsArr,'Carrier');
-        } else {
-            $carrierVal;
-            $carrierBol = true;
-        }
-
-        // ------- TYPE DESTINY -------------------
-
-        if($datTypeDes == false){
-            array_push($targetsArr,'Type Destiny');
-        } else {
-            $typedestinyVal;
-            $typedestinyBol = true;
-        }
-
-        $coordenates = collect([]);
-
-        ini_set('memory_limit', '1024M');
-
-        Excel::selectSheetsByIndex(0)
-            ->Load(\Storage::disk('FclImport')
-                   ->url($nombre),function($reader) use($request,$coordenates) {
-                       $reader->takeRows(2);
-                       $reader->noHeading = true;
-                       $reader->ignoreEmpty();
-
-                       $read = $reader->first();
-                       $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
-                       for($i=0;$i<count($reader->first());$i++){
-                           $coordenates->push($columna[$i].' '.$read[$i]);
-                       }
-                   });
-
-        $boxdinamy = [
-            'existorigin'       => $originBol,
-            'origin'            => $originArr,
-            'originCount'       => $originCountArr,
-            'originRegion'      => $originRegionArr,
-            'existdestiny'      => $destinyBol,
-            'destiny'           => $destinyArr,
-            'destinyCount'      => $destinyCountArr,
-            'destinyRegion'     => $destinyRegionArr,
-            'existcarrier'      => $carrierBol,
-            'carrier'           => $carrierVal,            
-            'existtypedestiny'  => $typedestinyBol,
-            'typedestiny'       => $typedestinyVal,
-            'Contract_id'       => $Contract_id,
-            'number'            => $request->number,
-            'name'              => $request->name,
-            'existfortynor'     => $fortynorBol,
-            'fortynor'          => 0,
-            'existfortyfive'    => $fortyfiveBol,
-            'fortyfive'         => 0,
-            'fileName'          => $nombre,
-            'scheduleinfo'      => $scheduleinfoBoll,
-            'validatiion'       => $request->validation_expire,
-        ];
-        $data->push($boxdinamy);
-        $countTarges = count($targetsArr);
-        //dd($data);
-
-        return view('importation.ContractFclProcess',compact('harbor',
-                                                             'country',
-                                                             'data',
-                                                             'contract',
-                                                             'type',
-                                                             'region',
-                                                             'carrier',
-                                                             'direction',
-                                                             'targetsArr',
-                                                             'coordenates',
-                                                             'countTarges',
-                                                             'CompanyUserId',
-                                                             'statustypecurren',
-                                                             'statusPortCountry',
-                                                             'typedestiny'));
     }
 
     // * proccesa solo cuando son rates --------------------------------------------------
