@@ -1015,7 +1015,7 @@ class QuoteV2Controller extends Controller
   }
 
   public function saveScheduleQuoteDuplicate($quote, $quote_duplicate){
-    $schedule_quote = Schedule::where('quotes_id',$quote->id)->first();
+    $schedule_quote = Schedule::where('quote_id',$quote->id)->first();
 
     if($schedule_quote){
       $schedule = new Schedule();
@@ -1024,7 +1024,7 @@ class QuoteV2Controller extends Controller
       $schedule->transit_time = $schedule_quote->transit_time;
       $schedule->type = $schedule_quote->type;
       $schedule->eta = $schedule_quote->eta;
-      $schedule->quotes_id = $quote_duplicate->id;
+      $schedule->quote_id = $quote_duplicate->id;
       $schedule->save();
     }
   }
