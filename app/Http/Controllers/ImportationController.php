@@ -50,6 +50,7 @@ use Spatie\MediaLibrary\MediaStream;
 use Illuminate\Support\Facades\File;
 use Spatie\MediaLibrary\Models\Media;
 use App\Jobs\ReprocessSurchargersJob;
+use App\MyClass\Excell\ChunkReadFilter;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Storage;
 use App\NewContractRequest as RequestFcl;
@@ -618,13 +619,11 @@ class ImportationController extends Controller
         $direction_id       = $request->direction;
         $file 				= $request->input('document');
 
-        $carrierBol         = false;
-
-        $filebool           = false;
-        $scheduleinfoBoll   = false;
-
-        $data               = collect([]);
-        $Contract_id;
+        $carrierBol             = false;
+        $PortCountryRegionBol   = false;
+        $filebool               = false;
+        $data                   = collect([]);
+        $Contract_id            = 45;
         /*
         if(!empty($file)){
 
@@ -683,8 +682,16 @@ class ImportationController extends Controller
         $data           = json_decode($requestCont->data);
         $columnsSelected = collect(['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE']);
         //dd($data);
-        $valuesSelecteds = collect([]);
 
+        $account    = AccountFcl::find(29);
+
+        $valuesSelecteds = collect([
+            'company_user_id'   => $CompanyUserId,
+            'request_id'        => $request_id,
+            'selector'          => $selector,
+            'contract_id'       => $Contract_id,
+            'acount_id'         => $account->id
+        ]);
 
         foreach($data->containers as $dataContainers){
             $columnsSelected->push($dataContainers->code);
@@ -724,18 +731,15 @@ class ImportationController extends Controller
             $valuesSelecteds->put('select_carrier',$carrierBol);
         }
 
-        // ------- CARRIER ------------------------
+        // ------- PUERTO/COUNTRY/REGION ----------
 
         if($statusPortCountry == 2){
+            $PortCountryRegionBol = true;
             $columnsSelected->push('DIFFERENTIATOR');
-            $valuesSelecteds->put('select_PrCtRg',$carrierBol);
+            $valuesSelecteds->put('select_portCountryRegion',$PortCountryRegionBol);
         } else {
-            $carrierBol = true;
-            $valuesSelecteds->put('carrierVal',$carrierVal);
-            $valuesSelecteds->put('select_carrier',$carrierBol);
+            $valuesSelecteds->put('select_portCountryRegion',$PortCountryRegionBol);
         }
-
-        $account    = AccountFcl::find(29);
 
         $mediaItem  = $account->getFirstMedia('document');
         $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
@@ -772,7 +776,29 @@ class ImportationController extends Controller
             }
         }
 
-        dd($final_columns,$valuesSelecteds,$columnsSelected,$sheetData);
+        //dd($final_columns,$valuesSelecteds,$columnsSelected,$sheetData);
+
+
+        ///////////////////////////////// JOB IMPORTATION ///////////////////////////////////////////////////////////////////
+
+        $chunkRow   =  new ChunkReadFilter();
+        $readerJob  = IOFactory::createReader($inputFileType);
+        $readerJob->setReadDataOnly(true);
+        //$readerJob->setReadFilter($chunkRow);
+
+        $chunkSize = 2;
+
+        $spreadsheetJob = $readerJob->load($excelF);
+        $sheetData = $spreadsheetJob->getActiveSheet()->toArray();
+
+        $countRow = 1;
+        foreach($sheetData as $row){
+            if($countRow > 1){
+                dd($row);
+            }
+            $countRow++;
+        }
+
 
 
     }
@@ -5622,8 +5648,8 @@ class ImportationController extends Controller
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
 
-        //account 28
-        //contracto 44
+        //account 29
+        //contracto 45
         //request 13
         $account = AccountFcl::find(29);
 
