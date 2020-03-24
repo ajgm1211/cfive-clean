@@ -4,6 +4,8 @@ namespace App\Http\Traits;
 use Illuminate\Support\Collection as Collection;
 use App\Price;
 use App\Currency;
+use App\Inland;
+use GoogleMaps;
 trait SearchTrait {
 
 
@@ -32,6 +34,7 @@ trait SearchTrait {
 
 
     $inlands = $inlands->get();
+
     $dataDest = array();
     // se agregan los aditional km
     foreach($inlands as $inlandsValue){
@@ -52,6 +55,7 @@ trait SearchTrait {
           $var = json_decode($response);
           foreach($var->routes as $resp) {
             foreach($resp->legs as $dist) {
+ 
               $km = explode(" ",$dist->distance->text);
               $distancia = str_replace ( ".", "", $km[0]);
               $distancia = floatval($distancia);
@@ -63,7 +67,7 @@ trait SearchTrait {
                 $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
 
                 foreach($contain as $cont){
-                  foreach($equipment as $containers){
+              
 
                     $km = 'km'.$cont->code;
                     $$km = true;
@@ -74,10 +78,12 @@ trait SearchTrait {
                     }else{
                       $tipo = $cont->code;                    
                     }
-
-                    if($details->type == $tipo &&  in_array( $cont->code,$equipment) ){
+                   
+                    if($details->type == $tipo &&  in_array( $cont->id,$equipment) ){
+          
 
                       if( $distancia >= $details->lower && $distancia  <= $details->upper){
+                         
                         $sub_20 = number_format( $details->ammount / $rateI, 2, '.', ''); 
                         $monto += number_format($sub_20, 2, '.', ''); 
                         $amount_inland = number_format($details->ammount, 2, '.', ''); 
@@ -94,7 +100,7 @@ trait SearchTrait {
 
                     }
 
-                  }
+                  
                 }
               }
 
@@ -106,23 +112,28 @@ trait SearchTrait {
                 $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
 
                 foreach($contain as $cont){
-                  foreach($equipment as $containers){
+                
                     $km = 'km'.$cont->code;
                     $options = json_decode($cont->options);
+
                     $texto20 = 'Inland '.$cont->code.' x 1' ; 
 
                     if(isset($options->field_inland)){
                       
-                      if($$km &&  in_array( $cont->code,$equipment) ){
+                      if($$km &&  in_array( $cont->id,$equipment) ){
+                  
                         $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland}) / $rateGeneral;
+                          
                         $sub_20 =  number_format($montoKm, 2, '.', '');
                         $monto += $sub_20;
                         $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland};
                         $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                         $amount_inland = number_format($amount_inland, 2, '.', '');
                         // CALCULO MARKUPS 
-                        $markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
+                        //$markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
+                        $markupI20 = array();  
                         // FIN CALCULO MARKUPS 
+                        
                         $sub_20 = number_format($sub_20, 2, '.', '');
                         $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
 
@@ -131,7 +142,7 @@ trait SearchTrait {
                       }  
                       
                     }  
-                  }
+                  
                 }
               }
 
@@ -147,6 +158,7 @@ trait SearchTrait {
                 });
 
                 $dataDest[] =$arregloInland;
+                return $dataDest;
               }
 
 
