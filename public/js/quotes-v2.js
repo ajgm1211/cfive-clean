@@ -583,6 +583,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -667,7 +671,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -751,6 +760,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -832,7 +845,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -914,6 +932,10 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
             }
 
             //Seteando nuevo valor
@@ -997,7 +1019,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -1083,8 +1110,11 @@ $(document).ready(function() {
             if(newValue==''){
                 newValue=0;
             }
-            console.log(newValue);
-            console.log(markup_m40nor);
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Calculando total de la línea dinámico
             total =  parseFloat(newValue) + markup_m40nor;
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -1167,8 +1197,11 @@ $(document).ready(function() {
             if(newValue==''){
                 newValue=0;
             }
-            console.log(newValue);
-            console.log(amount_c40nor);
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Calculando total de la línea dinámico
             total =  parseFloat(newValue) + amount_c40nor;
 
@@ -1251,6 +1284,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -1332,7 +1369,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
