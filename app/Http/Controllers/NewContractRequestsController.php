@@ -139,7 +139,7 @@ class NewContractRequestsController extends Controller
 				}
 
 				if(empty($Ncontracts->contract) != true){
-					$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.")'  title='Duplicate to another company'>
+					$buttonDp = "<a href='#' class='m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill' onclick='AbrirModal(\"DuplicatedContractOtherCompany\",".$Ncontracts->contract.",".$Ncontracts->id.")'  title='Duplicate to another company'>
                       <i style='color:#b90000' class='la la-copy'></i>
                     </a>";   
 					$butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" title="Proccess FCL Contract">
