@@ -3692,10 +3692,9 @@ class QuoteV2Controller extends Controller
 
 
     if($delivery_type == "2" || $delivery_type == "4" ){ 
+     
       $hideD = '';
-      $inlands = $inlands->get();
       $dataDest = array();
-
       $dataDest = $this->inlands($inlandParams,$markup,$equipment,$containers);
       
       dd($dataDest);
