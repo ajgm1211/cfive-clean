@@ -1135,11 +1135,17 @@ class ImportationGlobalChargerLclController extends Controller
 			{
 				foreach($port_dest as $dest => $valuedest)
 				{
-					$detailport = new GlobalCharPortLcl();
-					$detailport->port_orig          = $valueorig;
-					$detailport->port_dest          = $valuedest;
-					$detailport->globalchargelcl_id    = $id;
-					$detailport->save();
+					$globalPtr = GlobalCharPortLcl::where('port_orig',$valueorig)
+						->where('port_dest',$valuedest)
+						->where('globalchargelcl_id',$id)
+						->get();
+					if(count($globalPtr) == 0 || $globalPtr == null){
+						$detailport = new GlobalCharPortLcl();
+						$detailport->port_orig          = $valueorig;
+						$detailport->port_dest          = $valuedest;
+						$detailport->globalchargelcl_id    = $id;
+						$detailport->save();
+					}
 				}
 			}
 
@@ -1152,11 +1158,17 @@ class ImportationGlobalChargerLclController extends Controller
 			{
 				foreach($detailCountryDest as $dest => $valuedestC)
 				{
-					$detailcountry = new GlobalCharCountryLcl();
-					$detailcountry->country_orig = $valueC;
-					$detailcountry->country_dest =  $valuedestC;
-					$detailcountry->globalchargelcl_id = $id;
-					$detailcountry->save();
+					$globalCtr = GlobalCharCountryLcl::where('country_orig',$valueC)
+						->where('country_dest',$valuedestC)
+						->where('globalchargelcl_id',$id)
+						->get();
+					if(count($globalCtr) == 0 || $globalCtr == null){
+						$detailcountry = new GlobalCharCountryLcl();
+						$detailcountry->country_orig = $valueC;
+						$detailcountry->country_dest =  $valuedestC;
+						$detailcountry->globalchargelcl_id = $id;
+						$detailcountry->save();
+					}
 				}
 			}
 		}
@@ -1172,9 +1184,9 @@ class ImportationGlobalChargerLclController extends Controller
 			}
 		}
 
-		if(empty($detailcountry->globalchargelcl_id) != true){
+		//if(empty($detailcountry->globalchargelcl_id) != true){
 			$failglobal->delete();
-		}
+		//}
 
 		$counfail = FailedGlobalchargerLcl::where('account_imp_gclcl_id','=',$global->account_imp_gclcl_id)->count();
 

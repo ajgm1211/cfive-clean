@@ -36,5 +36,8 @@ class DatabaseSeeder extends Seeder
         $this->call(StatusAlertsTableSeeder::class);
         $this->call(ContractApisTableSeeder::class);
 
+        $this->call(ContainersTableSeeder::class);
+        $this->call(GroupContainersTableSeeder::class);
+        $this->call(ContainerCalculationsTableSeeder::class);
     }
 }
