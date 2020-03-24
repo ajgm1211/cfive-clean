@@ -1104,7 +1104,7 @@
                         @endforeach
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="portalphacode">{{ $arr->typeCurrency }}</span></div>
+                    <div class="col-lg-1" ><span class="portalphacode">{{$rates['currency_rate']}}</span></div>
                   </div>
                 </div>
               </div>
