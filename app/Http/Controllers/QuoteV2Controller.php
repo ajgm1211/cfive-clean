@@ -3683,6 +3683,7 @@ class QuoteV2Controller extends Controller
     // Fin Markups
 
     // Calculo de los inlands
+    
     $modality_inland = '1';// FALTA AGREGAR EXPORT
     $company_inland = $request->input('company_id_quote');
     $texto20 = 'Inland 20 x' .$request->input('twuenty'); 
@@ -4061,7 +4062,10 @@ class QuoteV2Controller extends Controller
         });*/
         //dd($inlandOrigin); // filtraor por el minimo
       }
-    }// Fin del calculo de los inlands
+    }
+    
+    
+    // Fin del calculo de los inlands
 
     // Consulta base de datos rates
 
@@ -4329,7 +4333,14 @@ class QuoteV2Controller extends Controller
             //Freight
             if($chargesFreight != null){
               if($local->typedestiny_id == '3'){
-
+                
+                //Se ajusta el calculo para freight tomando en cuenta el rate currency
+                $rateMount_Freight = $this->ratesCurrency($local->currency->id,$data->currency->alphacode);
+                $localParams['typeCurrency'] = $data->currency->alphacode;
+                $localParams['idCurrency'] = $data->currency->id;
+                //Fin Variables
+                
+                
                 foreach($containers as $cont){
 
                   $name_arreglo = 'array'.$cont->code;
@@ -4337,7 +4348,7 @@ class QuoteV2Controller extends Controller
                   if(in_array($local->calculationtype_id, $$name_arreglo) && in_array( $cont->id,$equipment) ){
                     $montoOrig = $local->ammount;
                     $montoOrig = $this->perTeu($montoOrig,$local->calculationtype_id,$cont->code);
-                    $monto =   $local->ammount  / $rateMount ;
+                    $monto =   $local->ammount  / $rateMount_Freight ;
                     $monto = number_format($monto, 2, '.', '');
                     $monto = $this->perTeu($monto,$local->calculationtype_id,$cont->code);
                     $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'],$markup['charges']['localAmmount'],$markup['charges']['localMarkup'],$monto,$montoOrig,$typeCurrency,$markup['charges']['markupLocalCurre'],$local->currency->id);   
