@@ -18,6 +18,7 @@ use App\Contact;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use App\Container;
 use PrvValidation;
 use App\Direction;
 use App\Surcharge;
@@ -695,11 +696,14 @@ class ImportationController extends Controller
             'acount_id'         => $account->id
         ]);
 
+        $request_columns = [];
         foreach($data->containers as $dataContainers){
             $columnsSelected->push($dataContainers->code);
+            array_push($request_columns,$dataContainers->code);
         }
 
         $valuesSelecteds->put('group_container_id',$data->group_containers->id);
+        $valuesSelecteds->put('request_columns',$request_columns);
 
         // ------- TYPE DESTINY -------------------
 
@@ -797,6 +801,7 @@ class ImportationController extends Controller
         $originExc              = $final_columns["ORIGIN"];// lectura de excel
         $destinyExc             = $final_columns["DESTINY"];// lectura de excel
         $chargeExc              = $final_columns["CHARGE"];// lectura de excel
+        $calculationtypeExc     = $final_columns["CALCULATION TYPE"];// lectura de excel
         $differentiator         = $final_columns["DIFFERENTIATOR"];
 
         $company_user_id        = $valuesSelecteds['company_user_id'];
@@ -804,6 +809,7 @@ class ImportationController extends Controller
         $statusTypeDestiny      = $valuesSelecteds['select_typeDestiny'];
         $statusCarrier          = $valuesSelecteds['select_carrier'];
         $chargeVal              = $valuesSelecteds['chargeVal'];
+        $groupContainer_id      = $valuesSelecteds['group_container_id'];
 
         if(!$statusTypeDestiny){
             $typedestinyExc     = $final_columns["TYPE DESTINY"];            
@@ -999,20 +1005,20 @@ class ImportationController extends Controller
                             $surchargeVal = $row[$chargeExc].'_E_E';
                         }
 
-                        //------------------ CALCULATION TYPE ---------------------------------------------------
-                        if(group_container_id){
-                            if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_SHIPMENT') == 0){
+                        //------------------ CALCULATION TYPE -----------------------------------------------------
+                        /*if(group_container_id){
+                            if( strnatcasecmp($row[$calculationtypeExc],'PER_SHIPMENT') == 0){
                                 $calculationvalvaration = 'Per Shipment';
-                            } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_CONTAINER') == 0){
+                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
                                 $calculationvalvaration = 'Per Container';
-                            } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TON') == 0){
+                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TON') == 0){
                                 $calculationvalvaration = 'Per TON';
-                            } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_BL') == 0){
+                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_BL') == 0){
                                 $calculationvalvaration = 'Per BL';
-                            } else if( strnatcasecmp($read[$requestobj[$CalculationType]],'PER_TEU') == 0){
+                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TEU') == 0){
                                 $calculationvalvaration = 'Per TEU';
                             } else{
-                                $calculationvalvaration = $read[$requestobj[$CalculationType]];
+                                $calculationvalvaration = $row[$requestobj[$CalculationType]];
                             }
 
                             $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
@@ -1022,7 +1028,11 @@ class ImportationController extends Controller
                             } else{
                                 $calculationtypeVal = $read[$requestobj[$CalculationType]].'_E_E';
                             }
-                        }
+                        }*/
+                        
+                        //------------------ COLUMNS SELECTEDS ----------------------------------------------------
+                        $contenedores = Container::where('gp_container_id',$groupContainer_id)->get();
+                        
                         $datos_finales = [
                             'originVal'             => $originVal,
                             'destinyVal'            => $destinyVal,
@@ -1033,6 +1043,7 @@ class ImportationController extends Controller
                             'destiExitBol'          => $destiExitBol,       // true si encontro el valor
                             'typedestinyExitBol'    => $typedestinyExitBol, // true si encontro el valor
                             'carriExitBol'          => $carriExitBol,       // true si encontro el valor
+                            'typeChargeExiBol'      => $typeChargeExiBol,   // true si el valor es distinto de vacio
                             'typeChargeExiBol'      => $typeChargeExiBol,   // true si el valor es distinto de vacio
                             'differentiatorBol'     => $differentiatorBol, // falso par  port, true  para country o region
                             'statusPortCountry'     => $statusPortCountry, // true status de activacion port contry region, false port
@@ -5926,6 +5937,8 @@ class ImportationController extends Controller
         //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
         dd($sheetData);
         dd($sheetData[1]['Receipt']);
+        
+        
 
     }
 
