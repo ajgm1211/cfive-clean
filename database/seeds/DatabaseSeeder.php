@@ -38,5 +38,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ContainersTableSeeder::class);
         $this->call(GroupContainersTableSeeder::class);
+        $this->call(ContainerCalculationsTableSeeder::class);
     }
 }
