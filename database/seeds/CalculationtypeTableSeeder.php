@@ -23,17 +23,19 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40 "',
                 'code' => '40',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 17:23:11',
+                'updated_at' => NULL,
             ),
             1 => 
             array (
                 'id' => 2,
-                'name' => 'Per 20"',
+                'name' => 'Per 20 "',
                 'code' => '20',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 17:23:03',
+                'updated_at' => NULL,
             ),
             2 => 
             array (
@@ -41,8 +43,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40 HC',
                 'code' => '40HC',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:51:02',
+                'updated_at' => NULL,
             ),
             3 => 
             array (
@@ -50,8 +53,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per TEU',
                 'code' => 'TEU',
                 'options' => '{"group": true, "isteu": true}',
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:51:11',
+                'updated_at' => NULL,
             ),
             4 => 
             array (
@@ -59,8 +63,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per Container',
                 'code' => 'CONT',
                 'options' => '{"group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:52:19',
+                'updated_at' => NULL,
             ),
             5 => 
             array (
@@ -68,8 +73,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per Shipment',
                 'code' => 'SHIP',
                 'options' => '{"group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:52:26',
+                'updated_at' => NULL,
             ),
             6 => 
             array (
@@ -77,8 +83,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40 NOR',
                 'code' => '40NOR',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:51:34',
+                'updated_at' => NULL,
             ),
             7 => 
             array (
@@ -86,8 +93,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 45',
                 'code' => '45',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:51:42',
+                'updated_at' => NULL,
             ),
             8 => 
             array (
@@ -95,6 +103,7 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per BL',
                 'code' => 'BL',
                 'options' => NULL,
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -104,6 +113,7 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per TON',
                 'code' => 'TON',
                 'options' => NULL,
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -113,8 +123,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per Invoice',
                 'code' => 'INV',
                 'options' => '{"group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:52:10',
+                'updated_at' => NULL,
             ),
             11 => 
             array (
@@ -122,8 +133,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 20Refeer',
                 'code' => '20R',
                 'options' => '{"group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => '2020-03-17 18:51:52',
+                'updated_at' => NULL,
             ),
             12 => 
             array (
@@ -131,8 +143,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40Refeer',
                 'code' => '40RF',
                 'options' => '{"group": true, "isteu": false}',
-                'created_at' => '2020-03-16 17:26:48',
-                'updated_at' => '2020-03-17 19:48:31',
+                'gp_pcontainer' => 1,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             13 => 
             array (
@@ -140,8 +153,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40HCRef',
                 'code' => '40HCRF',
                 'options' => NULL,
-                'created_at' => '2020-03-16 21:10:14',
-                'updated_at' => '2020-03-16 21:10:14',
+                'gp_pcontainer' => 1,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             14 => 
             array (
@@ -149,8 +163,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'ModidicacionBL',
                 'code' => 'MBL',
                 'options' => NULL,
-                'created_at' => '2020-03-16 21:11:26',
-                'updated_at' => '2020-03-16 21:11:26',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             15 => 
             array (
@@ -158,8 +173,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 20OT',
                 'code' => '20OT',
                 'options' => '{"group": true, "isteu": false}',
-                'created_at' => '2020-03-18 14:37:10',
-                'updated_at' => '2020-03-18 14:49:38',
+                'gp_pcontainer' => 1,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             16 => 
             array (
@@ -167,8 +183,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per Tracking',
                 'code' => 'TRCK',
                 'options' => '{"group": false, "isteu": false}',
-                'created_at' => '2020-03-18 14:41:43',
-                'updated_at' => '2020-03-18 14:41:43',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
             17 => 
             array (
@@ -176,8 +193,9 @@ class CalculationtypeTableSeeder extends Seeder
                 'name' => 'Per 40OT',
                 'code' => '40OT',
                 'options' => '{"group": true, "isteu": false}',
-                'created_at' => '2020-03-18 14:47:28',
-                'updated_at' => '2020-03-18 14:49:44',
+                'gp_pcontainer' => 1,
+                'created_at' => NULL,
+                'updated_at' => NULL,
             ),
         ));
         
