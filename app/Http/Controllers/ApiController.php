@@ -485,5 +485,18 @@ class ApiController extends Controller
         $airlines = Airline::all();
 
         return $airlines;
+    } 
+    
+    /**
+   * Show surcharges list
+   * @param Request $request 
+   * @return JSON
+   */
+
+    public function surcharges(Request $request){
+
+        $surcharges = Sucharge::where('company_user_id',\Auth::user()->company_user_id)->get();
+
+        return $airlines;
     }
 }
