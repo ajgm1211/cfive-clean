@@ -796,13 +796,12 @@ class ImportationController extends Controller
 
         $spreadsheetJob = $readerJob->load($excelF);
         $sheetData = $spreadsheetJob->getActiveSheet()->toArray();
-        dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$sheetData);
+        //dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray());
 
         $originExc              = $final_columns["ORIGIN"];// lectura de excel
         $destinyExc             = $final_columns["DESTINY"];// lectura de excel
         $chargeExc              = $final_columns["CHARGE"];// lectura de excel
         $calculationtypeExc     = $final_columns["CALCULATION TYPE"];// lectura de excel
-        $differentiator         = $final_columns["DIFFERENTIATOR"];
 
         $company_user_id        = $valuesSelecteds['company_user_id'];
         $statusPortCountry      = $valuesSelecteds['select_portCountryRegion'];
@@ -810,6 +809,20 @@ class ImportationController extends Controller
         $statusCarrier          = $valuesSelecteds['select_carrier'];
         $chargeVal              = $valuesSelecteds['chargeVal'];
         $groupContainer_id      = $valuesSelecteds['group_container_id'];
+        $request_columns        = $valuesSelecteds['request_columns'];
+        $statusCurrency         = $valuesSelecteds['select_currency'];
+
+        $currencyVal            = '';
+
+        if($statusPortCountry){
+            $differentiator = $final_columns["DIFFERENTIATOR"];            
+        }
+
+        if($statusCurrency == 3){
+            $currencyVal    = $valuesSelecteds['currencyVal'];            
+        } else if($statusCurrency == 1){
+            $currencyExc    = $final_columns["CURRENCY"];                        
+        }
 
         if(!$statusTypeDestiny){
             $typedestinyExc     = $final_columns["TYPE DESTINY"];            
@@ -822,8 +835,64 @@ class ImportationController extends Controller
         $countRow = 1;
         foreach($sheetData as $row){
             if($countRow > 1){
-                dd($row,$final_columns,$final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$sheetData);
+                // dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$row);
 
+
+                //------------------ COLUMNS SELECTEDS ----------------------------------------------------
+                $contenedores = Container::where('gp_container_id',$groupContainer_id)->get();
+                $columna_cont = [];
+                $currency_bol = [];
+                foreach($contenedores as $contenedor){
+                    if(in_array($contenedor->code,$request_columns)){ // Asociamos en una matriz llaves Valores y moneda que exista en la seleccion
+                        if($statusCurrency == 3){ //currency seleccionado en el panel(select) no hay columna en el excel
+                            $value_ = null;
+                            $value_ = floatval($row[$final_columns[$contenedor->code]]);
+                            $columna_cont[$contenedor->code] = [$value_,$currencyVal];
+                            $currency_bol[$contenedor->code] = true;
+                        } else if($statusCurrency == 2){ // valor y currency en la misma columna del excel
+                            $value_arr = null;
+                            $value_arr = explode(' ',$row[$final_columns[$contenedor->code]]);
+                            if(count($value_arr) == 1){
+                                array_push($value_arr,'_E_E');
+                                $currency_bol[$contenedor->code] = false;
+                                $value_arr[0] = floatval($value_arr[0]);
+                                $columna_cont[$contenedor->code] = $value_arr;
+                            } else if(count($value_arr) > 1){
+                                $curren_obj = Currency::where('alphacode','=',$value_arr[1])->first();
+                                if(!empty($curren_obj->id)){
+                                    $value_arr[1] = $curren_obj->id;
+                                    $currency_bol[$contenedor->code] = true;
+                                } else {
+                                    $value_arr[1] = $value_arr[1].'_E_E';                                    
+                                    $currency_bol[$contenedor->code] = false;
+                                }
+                                $value_arr[0] = floatval($value_arr[0]);
+                                $columna_cont[$contenedor->code] = $value_arr;
+                            } else {
+                                $columna_cont[$contenedor->code] = [0.00,'_E_E'];
+                                $currency_bol[$contenedor->code] = false;
+                            }
+                        } else if($statusCurrency == 1){// columna sola de currency en el excel
+                            $value_cur  = null;
+                            $value_cur  = trim($row[$currencyExc]);
+                            $curren_obj = Currency::where('alphacode','=',$value_cur)->first();
+                            if(!empty($curren_obj->id)){
+                                $value_cur = $curren_obj->id;
+                                $currency_bol[$contenedor->code] = true;
+                            } else {
+                                $value_cur = $value_cur.'_E_E';                                    
+                                $currency_bol[$contenedor->code] = false;
+                            }
+                            $columna_cont[$contenedor->code] = [floatval($row[$final_columns[$contenedor->code]]),$value_cur];
+                        }
+                    } else { // Agregamos en una matriz llaves Valores y moneda que no existen en la seleccion pero si en el equipo Dry,RF,FR,OP....
+                        $currency_bol[$contenedor->code] = true;
+                        $columna_cont[$contenedor->code] = [0.00,149];
+                    }
+                }
+
+                dd($columna_cont,$currency_bol,$statusCurrency);
+                //--- PORT/CONTRY/REGION BOOL -------------------------------------
                 $differentiatorVal = '';
                 if($statusPortCountry){
                     $differentiatorVal = $row[$differentiator];
@@ -1029,10 +1098,8 @@ class ImportationController extends Controller
                                 $calculationtypeVal = $read[$requestobj[$CalculationType]].'_E_E';
                             }
                         }*/
-                        
-                        //------------------ COLUMNS SELECTEDS ----------------------------------------------------
-                        $contenedores = Container::where('gp_container_id',$groupContainer_id)->get();
-                        
+
+
                         $datos_finales = [
                             'originVal'             => $originVal,
                             'destinyVal'            => $destinyVal,
@@ -5937,8 +6004,8 @@ class ImportationController extends Controller
         //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
         dd($sheetData);
         dd($sheetData[1]['Receipt']);
-        
-        
+
+
 
     }
 
