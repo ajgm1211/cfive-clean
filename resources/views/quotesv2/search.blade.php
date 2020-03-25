@@ -909,7 +909,9 @@
                     <div class="col-lg-6" style="padding-right: 35px;">
                       <div class="table-r__quotes">
                         @foreach($containers as $container)
-                        <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate">{{$arr->{'totalT'.$container->code}  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
+                        <div class="wth " {{ $equipmentHides[$container->code] }}><span class="darkblue validate tot{{$container->code}}-{{$arr->id}}">{{$arr->{'totalT'.$container->code}  }} </span><span class="currency" style="margin-left:5px"> {{ $arr->typeCurrency }}</span></div>
+                        <input type='hidden' id='tot{{$container->code}}-{{$arr->id}}' value="{{$arr->{'totalT'.$container->code}  }}">
+                        
                         @endforeach
 
 
