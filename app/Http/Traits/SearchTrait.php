@@ -10,31 +10,35 @@ trait SearchTrait {
 
 
 
-  public function inlands($inlandParams,$markups,$equipment,$contain){
+  public function inlands($inlandParams,$markups,$equipment,$contain,$type){
 
 
     $modality_inland = '1';// FALTA AGREGAR EXPORT
     $company_inland = $inlandParams['company_id_quote'];
-    $destiny_port= $inlandParams['destiny_port'];
+
     $company_user_id = $inlandParams['company_user_id'];
     $address = $inlandParams['destination_address']; 
     $typeCurrency = $inlandParams['typeCurrency']; 
+
+    if($type == 'destino'){
+      $port =  $inlandParams['destiny_port'];
+       }elseif($type == 'origen'){
+      $port =  $inlandParams['origin_port'];
+    }
 
 
     $hideD = '';
     $inlands = Inland::whereHas('inland_company_restriction', function($a) use($company_inland){
       $a->where('company_id', '=',$company_inland);
-    })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($destiny_port) {
-      $q->whereIn('port', $destiny_port);
+    })->orDoesntHave('inland_company_restriction')->whereHas('inlandports', function($q) use($port) {
+      $q->whereIn('port', $port);
     })->where('company_user_id','=',$company_user_id)->with('inlandadditionalkms','inlandports.ports','inlanddetails.currency');
 
     $inlands->where(function ($query) use($modality_inland)  {
       $query->where('type',$modality_inland)->orwhere('type','3');
     });
 
-
     $inlands = $inlands->get();
-
     $dataDest = array();
     // se agregan los aditional km
     foreach($inlands as $inlandsValue){
@@ -42,9 +46,16 @@ trait SearchTrait {
       $inlandDetails = array();
       foreach($inlandsValue->inlandports as $ports){
         $monto = 0;
-        if (in_array($ports->ports->id, $destiny_port )) {
-          $origin =  $ports->ports->coordinates;
-          $destination = $address;
+        if (in_array($ports->ports->id, $port )) {
+
+          if($type == 'destino'){
+            $origin =  $ports->ports->coordinates;
+            $destination = $inlandParams['destination_address'];
+          }elseif($type == 'origen'){
+            $origin =  $inlandParams['origin_address'];
+            $destination = $ports->ports->coordinates;
+          }
+
           $response = GoogleMaps::load('directions')
             ->setParam([
               'origin'          => $origin,
@@ -55,7 +66,7 @@ trait SearchTrait {
           $var = json_decode($response);
           foreach($var->routes as $resp) {
             foreach($resp->legs as $dist) {
- 
+
               $km = explode(" ",$dist->distance->text);
               $distancia = str_replace ( ".", "", $km[0]);
               $distancia = floatval($distancia);
@@ -67,44 +78,36 @@ trait SearchTrait {
                 $rateI = $this->ratesCurrency($details->currency->id,$typeCurrency);
 
                 foreach($contain as $cont){
-              
 
-                    $km = 'km'.$cont->code;
-                    $$km = true;
-                  
-                    $options = json_decode($cont->options);
-                    if(@$options->field_rate != 'containers'){
-                      $tipo = $options->field_rate;
-                    }else{
-                      $tipo = $cont->code;                    
+                  $km = 'km'.$cont->code;
+                  $$km = true;
+                  $options = json_decode($cont->options);
+                  if(@$options->field_rate != 'containers'){
+                    $tipo = $options->field_rate;
+                  }else{
+                    $tipo = $cont->code;                    
+                  }
+
+                  if($details->type == $tipo &&  in_array( $cont->id,$equipment) ){
+
+                    if( $distancia >= $details->lower && $distancia  <= $details->upper){
+
+                      $sub_20 = number_format( $details->ammount / $rateI, 2, '.', ''); 
+                      $monto += number_format($sub_20, 2, '.', ''); 
+                      $amount_inland = number_format($details->ammount, 2, '.', ''); 
+                      $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
+                      $$km = false;
+                      // CALCULO MARKUPS 
+                      // $markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
+                      $markupI20 = array();
+                      // FIN CALCULO MARKUPS 
+                      $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code) ; 
+                      $arrayInland20 = array_merge($markupI20,$arrayInland20);
+                      $inlandDetails[] = $arrayInland20;
                     }
-                   
-                    if($details->type == $tipo &&  in_array( $cont->id,$equipment) ){
-          
-
-                      if( $distancia >= $details->lower && $distancia  <= $details->upper){
-                         
-                        $sub_20 = number_format( $details->ammount / $rateI, 2, '.', ''); 
-                        $monto += number_format($sub_20, 2, '.', ''); 
-                        $amount_inland = number_format($details->ammount, 2, '.', ''); 
-                        $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
-                        $$km = false;
-                        // CALCULO MARKUPS 
-                        // $markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
-                        $markupI20 = array();
-                        // FIN CALCULO MARKUPS 
-                        $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code) ; 
-                        $arrayInland20 = array_merge($markupI20,$arrayInland20);
-                        $inlandDetails[] = $arrayInland20;
-                      }
-
-                    }
-
-                  
+                  }
                 }
               }
-
-
               // KILOMETROS ADICIONALES 
 
               if(isset($inlandsValue->inlandadditionalkms)){
@@ -112,37 +115,31 @@ trait SearchTrait {
                 $rateGeneral = $this->ratesCurrency($inlandsValue->inlandadditionalkms->currency_id,$typeCurrency);
 
                 foreach($contain as $cont){
-                
-                    $km = 'km'.$cont->code;
-                    $options = json_decode($cont->options);
 
-                    $texto20 = 'Inland '.$cont->code.' x 1' ; 
+                  $km = 'km'.$cont->code;
+                  $options = json_decode($cont->options);
+                  $texto20 = 'Inland '.$cont->code.' x 1' ; 
 
-                    if(isset($options->field_inland)){
-                      
-                      if($$km &&  in_array( $cont->id,$equipment) ){
-                  
-                        $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland}) / $rateGeneral;
-                          
-                        $sub_20 =  number_format($montoKm, 2, '.', '');
-                        $monto += $sub_20;
-                        $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland};
-                        $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
-                        $amount_inland = number_format($amount_inland, 2, '.', '');
-                        // CALCULO MARKUPS 
-                        //$markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
-                        $markupI20 = array();  
-                        // FIN CALCULO MARKUPS 
-                        
-                        $sub_20 = number_format($sub_20, 2, '.', '');
-                        $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
+                  if(isset($options->field_inland)){
 
-                        $arrayInland20 = array_merge($markupI20,$arrayInland20);
-                        $inlandDetails[] = $arrayInland20;
-                      }  
-                      
+                    if($$km &&  in_array( $cont->id,$equipment) ){
+
+                      $montoKm = ($distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland}) / $rateGeneral;
+                      $sub_20 =  number_format($montoKm, 2, '.', '');
+                      $monto += $sub_20;
+                      $amount_inland = $distancia * $inlandsValue->inlandadditionalkms->{$options->field_inland};
+                      $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
+                      $amount_inland = number_format($amount_inland, 2, '.', '');
+                      // CALCULO MARKUPS 
+                      //$markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
+                      $markupI20 = array();  
+                      // FIN CALCULO MARKUPS 
+                      $sub_20 = number_format($sub_20, 2, '.', '');
+                      $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
+                      $arrayInland20 = array_merge($markupI20,$arrayInland20);
+                      $inlandDetails[] = $arrayInland20;
                     }  
-                  
+                  }  
                 }
               }
 
@@ -160,16 +157,11 @@ trait SearchTrait {
                 $dataDest[] =$arregloInland;
                 return $dataDest;
               }
-
-
             }
           }
         }
       } 
     }
-
-
-
   }
 
 

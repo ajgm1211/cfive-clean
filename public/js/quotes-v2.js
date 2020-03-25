@@ -3925,6 +3925,7 @@ $('.inlandsO').on('click', function(){
     $('.card-p__quotes').toggleClass('border-card-p');
     var id = $(this).attr('data-inland');
     var idRate = $(this).attr('data-rate');
+  
 
     var theElement = $(this);
 
@@ -3947,7 +3948,12 @@ $('.inlandsO').on('click', function(){
     var  i40= $("#valor-o40"+id+"-"+idRate).html();
     var  i40h= $("#valor-o40h"+id+"-"+idRate).html();
 
+
     var  sub20o= $("#sub_inland_20_o"+idRate);
+  
+    
+    alert(sub20o);
+
     var  sub40o= $("#sub_inland_40_o"+idRate);
     var  sub40ho= $("#sub_inland_40h_o"+idRate);
 
