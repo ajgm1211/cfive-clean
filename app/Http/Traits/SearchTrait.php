@@ -10,7 +10,7 @@ trait SearchTrait {
 
 
 
-  public function inlands($inlandParams,$markups,$equipment,$contain,$type){
+  public function inlands($inlandParams,$markup,$equipment,$contain,$type){
 
 
     $modality_inland = '1';// FALTA AGREGAR EXPORT
@@ -22,7 +22,7 @@ trait SearchTrait {
 
     if($type == 'destino'){
       $port =  $inlandParams['destiny_port'];
-       }elseif($type == 'origen'){
+    }elseif($type == 'origen'){
       $port =  $inlandParams['origin_port'];
     }
 
@@ -98,8 +98,8 @@ trait SearchTrait {
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $$km = false;
                       // CALCULO MARKUPS 
-                      // $markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
-                      $markupI20 = array();
+                      $markupI20=$this->inlandMarkup($markup['inland']['inlandPercentage'],$markup['inland']['inlandAmmount'],$markup['inland']['inlandMarkup'],$sub_20,$typeCurrency,$markup['inland']['inlandMarkup']);
+
                       // FIN CALCULO MARKUPS 
                       $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code) ; 
                       $arrayInland20 = array_merge($markupI20,$arrayInland20);
@@ -131,8 +131,8 @@ trait SearchTrait {
                       $price_per_unit = number_format($amount_inland / $distancia, 2, '.', '');
                       $amount_inland = number_format($amount_inland, 2, '.', '');
                       // CALCULO MARKUPS 
-                      //$markupI20=$this->inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$sub_20,$typeCurrency,$markupInlandCurre);
-                      $markupI20 = array();  
+                      $markupI20=$this->inlandMarkup($markup['inland']['inlandPercentage'],$markup['inland']['inlandAmmount'],$markup['inland']['inlandMarkup'],$sub_20,$typeCurrency,$markup['inland']['inlandMarkup']);
+
                       // FIN CALCULO MARKUPS 
                       $sub_20 = number_format($sub_20, 2, '.', '');
                       $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
@@ -155,13 +155,14 @@ trait SearchTrait {
                 });
 
                 $dataDest[] =$arregloInland;
-                return $dataDest;
+
               }
             }
           }
         }
       } 
     }
+    return $dataDest;
   }
 
 
@@ -407,6 +408,25 @@ trait SearchTrait {
 
   }
 
+  public function inlandMarkup($inlandPercentage,$inlandAmmount,$inlandMarkup,$monto,$typeCurrency,$markupInlandCurre){
+
+    if($inlandPercentage != 0){
+      $markup = ( $monto *  $inlandPercentage ) / 100 ;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += $markup ;
+      $monto = number_format($monto, 2, '.', '');
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $markup, "typemarkup" => "$typeCurrency ($inlandPercentage%)",'montoInlandT' => $monto,'montoMarkupO' => $markup ) ;
+    }else{
+
+      $markup =$inlandAmmount;
+      $markup = number_format($markup, 2, '.', '');
+      $monto += number_format($inlandMarkup, 2, '.', '');
+      $arraymarkupI = array("markup" => $markup , "markupConvert" => $inlandMarkup, "typemarkup" => $markupInlandCurre,'montoInlandT' => $monto ,'montoMarkupO' => $markup) ;
+
+    }
+    return $arraymarkupI;
+
+  }
 
 
 

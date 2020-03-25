@@ -3679,6 +3679,8 @@ class QuoteV2Controller extends Controller
     $inlandOrigin = new collection();
 
     $markup =  $this->markups($price_id,$typeCurrency,$request); // 'share this post' 
+    
+    
 
     // Fin Markups
 
@@ -3709,10 +3711,12 @@ class QuoteV2Controller extends Controller
       $hideO = '';
       $dataOrig = array();
       $dataOrig = $this->inlands($inlandParams,$markup,$equipment,$containers,'origen');
+
       if(!empty($dataOrig)){
         $inlandOrigin = Collection::make($dataOrig);
       }
     }
+   // dd($inlandOrigin);
 
 
     // Fin del calculo de los inlands
