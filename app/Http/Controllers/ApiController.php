@@ -497,6 +497,6 @@ class ApiController extends Controller
 
         $surcharges = Sucharge::where('company_user_id',\Auth::user()->company_user_id)->get();
 
-        return $airlines;
+        return $surcharges;
     }
 }
