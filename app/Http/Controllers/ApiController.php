@@ -24,6 +24,7 @@ use App\CompanyUser;
 use App\QuoteV2;
 use App\Carrier;
 use App\Airline;
+use App\Surcharge;
 use App\IntegrationQuoteStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -495,7 +496,7 @@ class ApiController extends Controller
 
     public function surcharges(Request $request){
 
-        $surcharges = Sucharge::where('company_user_id',\Auth::user()->company_user_id)->get();
+        $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->get();
 
         return $surcharges;
     }
