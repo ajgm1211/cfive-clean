@@ -891,7 +891,7 @@ class ImportationController extends Controller
                     }
                 }
 
-                dd($columna_cont,$currency_bol,$statusCurrency);
+                //dd($columna_cont,$currency_bol,$statusCurrency);
                 //--- PORT/CONTRY/REGION BOOL -------------------------------------
                 $differentiatorVal = '';
                 if($statusPortCountry){
@@ -965,11 +965,12 @@ class ImportationController extends Controller
                 foreach($originMultps as $originMult){
                     foreach($destinyMultps as $destinyMult){
 
-                        $originVal           = '';
-                        $destinyVal          = '';
-                        $carrierVal          = '';
-                        $typedestinyVal      = '';
-                        $surchargeVal        = '';
+                        $originVal              = '';
+                        $destinyVal             = '';
+                        $carrierVal             = '';
+                        $typedestinyVal         = '';
+                        $surchargeVal           = '';
+                        $calculationtypeVal     = '';
 
                         $differentiatorBol       = false;
                         $origExiBol              = false;
@@ -977,6 +978,7 @@ class ImportationController extends Controller
                         $typeExiBol              = false;
                         $carriExitBol            = false;
                         $typeChargeExiBol        = false;
+                        $calculationtypeExiBol   = false;
 
                         //--------------- DIFRENCIADOR HARBOR COUNTRY ---------------------------------------------
                         if($statusPortCountry){
@@ -1075,50 +1077,81 @@ class ImportationController extends Controller
                         }
 
                         //------------------ CALCULATION TYPE -----------------------------------------------------
-                        /*if(group_container_id){
-                            if( strnatcasecmp($row[$calculationtypeExc],'PER_SHIPMENT') == 0){
-                                $calculationvalvaration = 'Per Shipment';
-                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
-                                $calculationvalvaration = 'Per Container';
-                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TON') == 0){
-                                $calculationvalvaration = 'Per TON';
-                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_BL') == 0){
-                                $calculationvalvaration = 'Per BL';
-                            } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TEU') == 0){
-                                $calculationvalvaration = 'Per TEU';
-                            } else{
-                                $calculationvalvaration = $row[$requestobj[$CalculationType]];
+                        $calculation_name = '';
+                        if($groupContainer_id == 1){ //DRY
+                            $calculation_name = ' DRY';
+                        } else if($groupContainer_id == 2){ // REEFER
+                            $calculation_name = ' Rf';
+                        } else if($groupContainer_id == 3){ //OPEN TOP
+                            $calculation_name = ' OP';
+                        } else if($groupContainer_id == 4){ //FLAT RACK
+                            $calculation_name = ' FR';
+                        }
+
+                        if( strnatcasecmp($row[$calculationtypeExc],'PER_SHIPMENT') == 0){
+                            $calculationtypeVal = 'Per Shipment';
+                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
+                            $calculationtypeVal = 'Per Container'.$calculation_name;
+                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TON') == 0){
+                            $calculationtypeVal = 'Per TON';
+                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_BL') == 0){
+                            $calculationtypeVal = 'Per BL';
+                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TEU') == 0){
+                            $calculationtypeVal = 'Per TEU'.$calculation_name;
+                        } else{
+                            $calculationtypeVal = $row[$calculationtypeExc].'_E_E';
+                        }
+
+                        $calculationtype = CalculationType::where('name','=',$calculationtypeVal)->first();
+                        if(empty($calculationtype) != true){
+                            $calculationtypeExiBol = true;
+                            $calculationtypeVal = $calculationtype['id'];
+                        } else{
+                            $calculationtypeVal = $row[$calculationtypeExc].'_E_E';
+                        }
+                        
+                        //------------------ VALIDACION DE CAMPOS VACIOS COLUMNAS 20 40 ...------------------------
+                        
+                        $contador_values = 1;
+                        $values = true; 
+                        $a = null;
+                        foreach($columna_cont as $columnaRow){
+                            if($contador_values == 1){
+                                $a = floatval($columnaRow[0]);
+                            } else {
+                                if($a == floatval($columnaRow[0]) && $a == 0.00){
+                                    $values = false; 
+                                    break;
+                                }                                
                             }
-
-                            $calculationtype = CalculationType::where('name','=',$calculationvalvaration)->first();
-                            if(empty($calculationtype) != true){
-                                $calculationtypeExiBol = true;
-                                $calculationtypeVal = $calculationtype['id'];
-                            } else{
-                                $calculationtypeVal = $read[$requestobj[$CalculationType]].'_E_E';
-                            }
-                        }*/
-
-
+                            $contador_values++;
+                        }
+                        
                         $datos_finales = [
                             'originVal'             => $originVal,
                             'destinyVal'            => $destinyVal,
                             'typedestinyVal'        => $typedestinyVal,  
                             'carrierVal'            => $carrierVal,  
                             'surchargeVal'          => $surchargeVal,  
-                            'origExiBol'            => $origExiBol,         // true si encontro el valor
-                            'destiExitBol'          => $destiExitBol,       // true si encontro el valor
-                            'typedestinyExitBol'    => $typedestinyExitBol, // true si encontro el valor
-                            'carriExitBol'          => $carriExitBol,       // true si encontro el valor
-                            'typeChargeExiBol'      => $typeChargeExiBol,   // true si el valor es distinto de vacio
-                            'typeChargeExiBol'      => $typeChargeExiBol,   // true si el valor es distinto de vacio
+                            'calculationtypeVal'    => $calculationtypeVal,
+                            'valores_por_columna'   => $columna_cont,       // valores por columna, incluye el currency por columna
+                            'currencyBol_por_colum' => $currency_bol,
+                            'origExiBol'            => $origExiBol,         // true si encontro el valor origen
+                            'destiExitBol'          => $destiExitBol,       // true si encontro el valor destino
+                            'typedestinyExitBol'    => $typedestinyExitBol, // true si encontro el valor type destiny
+                            'carriExitBol'          => $carriExitBol,       // true si encontro el valor carrier
+                            'calculationtypeExiBol' => $calculationtypeExiBol, // true si encontro el valor calculation type
+                            'values'                => $values,            // true si si todos los valore son distintos de cero
+                            'typeChargeExiBol'      => $typeChargeExiBol,  // true si el valor es distinto de vacio
                             'differentiatorBol'     => $differentiatorBol, // falso par  port, true  para country o region
                             'statusPortCountry'     => $statusPortCountry, // true status de activacion port contry region, false port
                             'statusTypeDestiny'     => $statusTypeDestiny, // true para Seleccion desde panel, false para mapeo de excel 
-                            'statusCarrier'         => $statusCarrier       // true para seleccion desde el panel, falso para mapear excel 
+                            'statusCarrier'         => $statusCarrier,     // true para seleccion desde el panel, falso para mapear excel 
+                            'typeCurrency'          => $statusCurrency     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
+                            
                         ];
 
-                        dd($datos_finales);
+                        dd($datos_finales,array_unique([1,1,1,2,3]));
 
                     }
                 }
