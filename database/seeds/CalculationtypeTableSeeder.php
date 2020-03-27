@@ -32,10 +32,10 @@ class CalculationtypeTableSeeder extends Seeder
                 'id' => 2,
                 'name' => 'Per 20 "',
                 'code' => '20',
-                'options' => '{"group": true, "isteu": false}',
+                'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:18:20',
             ),
             2 => 
             array (
@@ -50,32 +50,32 @@ class CalculationtypeTableSeeder extends Seeder
             3 => 
             array (
                 'id' => 4,
-                'name' => 'Per TEU',
+                'name' => 'Per TEU Dry',
                 'code' => 'TEU',
-                'options' => '{"group": true, "isteu": true}',
+                'options' => '{"name": "PER_TEU", "group": true, "isteu": true}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:38:26',
             ),
             4 => 
             array (
                 'id' => 5,
-                'name' => 'Per Container',
+                'name' => 'Per Container DRY',
                 'code' => 'CONT',
-                'options' => '{"group": false, "isteu": false}',
+                'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:57:10',
             ),
             5 => 
             array (
                 'id' => 6,
                 'name' => 'Per Shipment',
                 'code' => 'SHIP',
-                'options' => '{"group": false, "isteu": false}',
+                'options' => '{"name": "PER_SHIPMENT", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:39:43',
             ),
             6 => 
             array (
@@ -102,20 +102,20 @@ class CalculationtypeTableSeeder extends Seeder
                 'id' => 9,
                 'name' => 'Per BL',
                 'code' => 'BL',
-                'options' => NULL,
+                'options' => '{"name": "PER_BL", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:40:41',
             ),
             9 => 
             array (
                 'id' => 10,
                 'name' => 'Per TON',
                 'code' => 'TON',
-                'options' => NULL,
+                'options' => '{"name": "PER_TON", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-27 15:40:12',
             ),
             10 => 
             array (
@@ -196,6 +196,66 @@ class CalculationtypeTableSeeder extends Seeder
                 'gp_pcontainer' => 1,
                 'created_at' => NULL,
                 'updated_at' => NULL,
+            ),
+            18 => 
+            array (
+                'id' => 19,
+                'name' => 'Per container Reefer',
+                'code' => 'CONT RF',
+                'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:20:55',
+            ),
+            19 => 
+            array (
+                'id' => 20,
+                'name' => 'Per container OP',
+                'code' => 'CONT OP',
+                'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:19:57',
+            ),
+            20 => 
+            array (
+                'id' => 21,
+                'name' => 'Per container FR',
+                'code' => 'CONT FR',
+                'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:19:45',
+            ),
+            21 => 
+            array (
+                'id' => 22,
+                'name' => 'Per TEU Reefer',
+                'code' => 'TEU RF',
+                'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:38:59',
+            ),
+            22 => 
+            array (
+                'id' => 23,
+                'name' => 'Per TEU OP',
+                'code' => 'TEU OP',
+                'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:38:50',
+            ),
+            23 => 
+            array (
+                'id' => 24,
+                'name' => 'Per TEU FR',
+                'code' => 'TEU FR',
+                'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
+                'gp_pcontainer' => 0,
+                'created_at' => NULL,
+                'updated_at' => '2020-03-27 15:38:37',
             ),
         ));
         
