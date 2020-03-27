@@ -451,6 +451,7 @@ class ContractsController extends Controller
     $contract->company_user_id  = $request->company_user_id;
     $validation                 = explode('/',$request->validation_expire);
     $contract->direction_id     = $request->direction_id;
+    $contract->status           = $request->status;
     $contract->validity         = $validation[0];
     $contract->expire           = $validation[1];
     $contract->update();
