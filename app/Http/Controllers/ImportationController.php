@@ -843,17 +843,20 @@ class ImportationController extends Controller
                 $columna_cont = [];
                 $currency_bol = [];
                 foreach($contenedores as $contenedor){
+                    $options_cont = null;
+                    $options_cont = json_decode($contenedor->options);
                     if(in_array($contenedor->code,$request_columns)){ // Asociamos en una matriz llaves Valores y moneda que exista en la seleccion
                         if($statusCurrency == 3){ //currency seleccionado en el panel(select) no hay columna en el excel
                             $value_ = null;
                             $value_ = floatval($row[$final_columns[$contenedor->code]]);
-                            $columna_cont[$contenedor->code] = [$value_,$currencyVal];
+                            $columna_cont[$contenedor->code] = [$value_,$currencyVal,$options_cont->optional];
                             $currency_bol[$contenedor->code] = true;
                         } else if($statusCurrency == 2){ // valor y currency en la misma columna del excel
                             $value_arr = null;
                             $value_arr = explode(' ',$row[$final_columns[$contenedor->code]]);
                             if(count($value_arr) == 1){
                                 array_push($value_arr,'_E_E');
+                                array_push($value_arr,$options_cont->optional);
                                 $currency_bol[$contenedor->code] = false;
                                 $value_arr[0] = floatval($value_arr[0]);
                                 $columna_cont[$contenedor->code] = $value_arr;
@@ -861,16 +864,24 @@ class ImportationController extends Controller
                                 $curren_obj = Currency::where('alphacode','=',$value_arr[1])->first();
                                 if(!empty($curren_obj->id)){
                                     $value_arr[1] = $curren_obj->id;
-                                    $currency_bol[$contenedor->code] = true;
+                                    if(count($value_arr) == 2){
+                                        $currency_bol[$contenedor->code] = true;
+                                    } else {
+                                        $value_arr[1] = $value_arr[1].'_E_E'; 
+                                        $currency_bol[$contenedor->code] = false;
+                                    }
+
+                                    if(count($value_arr) == 2){
+                                        array_push($value_arr,$options_cont->optional);
+                                    } else if(count($value_arr) >= 3){
+                                        $value_arr[2] = options_cont['optional'];
+                                    }
+                                    $value_arr[0] = floatval($value_arr[0]);
+                                    $columna_cont[$contenedor->code] = $value_arr;
                                 } else {
-                                    $value_arr[1] = $value_arr[1].'_E_E';                                    
+                                    $columna_cont[$contenedor->code] = [0.00,'_E_E',$options_cont->optional];
                                     $currency_bol[$contenedor->code] = false;
                                 }
-                                $value_arr[0] = floatval($value_arr[0]);
-                                $columna_cont[$contenedor->code] = $value_arr;
-                            } else {
-                                $columna_cont[$contenedor->code] = [0.00,'_E_E'];
-                                $currency_bol[$contenedor->code] = false;
                             }
                         } else if($statusCurrency == 1){// columna sola de currency en el excel
                             $value_cur  = null;
@@ -883,15 +894,16 @@ class ImportationController extends Controller
                                 $value_cur = $value_cur.'_E_E';                                    
                                 $currency_bol[$contenedor->code] = false;
                             }
-                            $columna_cont[$contenedor->code] = [floatval($row[$final_columns[$contenedor->code]]),$value_cur];
+                            $columna_cont[$contenedor->code] = [floatval($row[$final_columns[$contenedor->code]]),$value_cur,$options_cont->optional];
                         }
+                        array_push($columna_cont[$contenedor->code],false);
                     } else { // Agregamos en una matriz llaves Valores y moneda que no existen en la seleccion pero si en el equipo Dry,RF,FR,OP....
                         $currency_bol[$contenedor->code] = true;
-                        $columna_cont[$contenedor->code] = [0.00,149];
+                        $columna_cont[$contenedor->code] = [0.00,149,$options_cont->optional,true];
                     }
                 }
 
-                //dd($columna_cont,$currency_bol,$statusCurrency);
+                dd($columna_cont,$currency_bol,$statusCurrency);
                 //--- PORT/CONTRY/REGION BOOL -------------------------------------
                 $differentiatorVal = '';
                 if($statusPortCountry){
@@ -1098,7 +1110,7 @@ class ImportationController extends Controller
                         } else{
                             $calculationtypeVal = $row[$calculationtypeExc].'_E_E';
                         }
-                        
+
                         //------------------ VALIDACION DE CAMPOS VACIOS COLUMNAS 20 40 ...------------------------
 
                         $contador_values = 1;
@@ -1142,6 +1154,24 @@ class ImportationController extends Controller
                         ];
 
                         dd($datos_finales,array_unique([1,1,1,2,3]));
+
+                        /////////////////////////////////
+
+                        // INICIO IF PARA FALLIDOS O BUENOS
+
+                        /////////////////////////////////
+
+                        if(strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
+
+                        } else {
+
+                        }
+
+                        /////////////////////////////////
+
+                        // ELSE O FIN DEL IF PARA FALLIDOS O BUENOS
+
+                        /////////////////////////////////
 
                     }
                 }
