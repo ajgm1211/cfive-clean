@@ -2114,9 +2114,9 @@ trait QuoteV2Trait {
 
     public function updateIntegrationQuoteStatus($quote_id){
         $status = IntegrationQuoteStatus::where('quote_id',$quote_id)->first();
-        $status->status = 0;
-        $status->update();
+        if($status){
+            $status->status = 0;
+            $status->update();
+        }
     }
-
-
 }
