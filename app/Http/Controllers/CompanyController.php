@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
+use App\Http\Requests\StoreCompany;
 use App\ViewQuoteV2;
 use Illuminate\Support\Collection as Collection;
 
@@ -104,8 +105,10 @@ class CompanyController extends Controller
         return view('companies.show', compact('company','companies','contacts','quotes','users','prices'));
     }
 
-    public function store(Request $request)
+    public function store(StoreCompany $request)
     {
+        $validated = $request->validated();
+
         $rules = array(
             'logo' => 'max:1000',
         );

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection as Collection;
 use App\Contact;
 use App\Company;
-
+use App\Http\Requests\StoreContact;
 
 class ContactController extends Controller
 {
@@ -96,8 +96,11 @@ class ContactController extends Controller
         return view('contacts.add', ['companies'=>$companies,'company_id'=>$company_id]);
     }
 
-    public function store(Request $request)
+    public function store(StoreContact $request)
     {
+
+        $validated = $request->validated();
+
         Contact::create($request->all());
 
         if($request->ajax()) {
