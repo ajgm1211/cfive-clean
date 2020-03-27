@@ -8,5 +8,9 @@ class Container extends Model
 {
     protected $table    = "containers";
     protected $fillable = ['id','name','code','gp_container_id'];
+    
+    public function groupContainer(){
+        return $this->belongsTo('App\GroupContainer','gp_container_id');
+    }
 	
 }
