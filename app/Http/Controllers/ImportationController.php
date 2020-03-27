@@ -1077,41 +1077,30 @@ class ImportationController extends Controller
                         }
 
                         //------------------ CALCULATION TYPE -----------------------------------------------------
-                        $calculation_name = '';
-                        if($groupContainer_id == 1){ //DRY
-                            $calculation_name = ' DRY';
-                        } else if($groupContainer_id == 2){ // REEFER
-                            $calculation_name = ' Rf';
-                        } else if($groupContainer_id == 3){ //OPEN TOP
-                            $calculation_name = ' OP';
-                        } else if($groupContainer_id == 4){ //FLAT RACK
-                            $calculation_name = ' FR';
+                        $calculationtype = null;
+                        if(strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0 ||
+                           strnatcasecmp($row[$calculationtypeExc],'PER_TEU') == 0){
+                            $calculationtype = CalculationType::where('options->name','=',$row[$calculationtypeExc])
+                                ->whereHas('containersCalculation.container', function ($query) use($groupContainer_id){
+                                    $query->whereHas('groupContainer', function ($queryTw) use($groupContainer_id){
+                                        $queryTw->where('gp_container_id',$groupContainer_id);
+                                    });
+                                })->get();
+                        } else {
+                            $calculationtype = CalculationType::where('options->name','=',$row[$calculationtypeExc])->get();
                         }
 
-                        if( strnatcasecmp($row[$calculationtypeExc],'PER_SHIPMENT') == 0){
-                            $calculationtypeVal = 'Per Shipment';
-                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
-                            $calculationtypeVal = 'Per Container'.$calculation_name;
-                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TON') == 0){
-                            $calculationtypeVal = 'Per TON';
-                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_BL') == 0){
-                            $calculationtypeVal = 'Per BL';
-                        } else if( strnatcasecmp($row[$calculationtypeExc],'PER_TEU') == 0){
-                            $calculationtypeVal = 'Per TEU'.$calculation_name;
-                        } else{
-                            $calculationtypeVal = $row[$calculationtypeExc].'_E_E';
-                        }
-
-                        $calculationtype = CalculationType::where('name','=',$calculationtypeVal)->first();
-                        if(empty($calculationtype) != true){
+                        if(count($calculationtype) == 1){
                             $calculationtypeExiBol = true;
-                            $calculationtypeVal = $calculationtype['id'];
+                            $calculationtypeVal = $calculationtype[0]['id'];
+                        } else if(count($calculationtype) > 1){
+                            $calculationtypeVal = $row[$calculationtypeExc].'F.R + '.count($calculationtype).'_E_E';
                         } else{
                             $calculationtypeVal = $row[$calculationtypeExc].'_E_E';
                         }
                         
                         //------------------ VALIDACION DE CAMPOS VACIOS COLUMNAS 20 40 ...------------------------
-                        
+
                         $contador_values = 1;
                         $values = true; 
                         $a = null;
@@ -1126,7 +1115,7 @@ class ImportationController extends Controller
                             }
                             $contador_values++;
                         }
-                        
+
                         $datos_finales = [
                             'originVal'             => $originVal,
                             'destinyVal'            => $destinyVal,
@@ -1134,6 +1123,7 @@ class ImportationController extends Controller
                             'carrierVal'            => $carrierVal,  
                             'surchargeVal'          => $surchargeVal,  
                             'calculationtypeVal'    => $calculationtypeVal,
+                            'columnas_por_request'  => $request_columns,    // valores por columna, incluye el currency por columna
                             'valores_por_columna'   => $columna_cont,       // valores por columna, incluye el currency por columna
                             'currencyBol_por_colum' => $currency_bol,
                             'origExiBol'            => $origExiBol,         // true si encontro el valor origen
@@ -1148,7 +1138,7 @@ class ImportationController extends Controller
                             'statusTypeDestiny'     => $statusTypeDestiny, // true para Seleccion desde panel, false para mapeo de excel 
                             'statusCarrier'         => $statusCarrier,     // true para seleccion desde el panel, falso para mapear excel 
                             'typeCurrency'          => $statusCurrency     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
-                            
+
                         ];
 
                         dd($datos_finales,array_unique([1,1,1,2,3]));
@@ -6011,34 +6001,42 @@ class ImportationController extends Controller
         //account 29
         //contracto 45
         //request 13
-        $account = AccountFcl::find(29);
+        //        $account = AccountFcl::find(29);
+        //
+        //        $mediaItem  = $account->getFirstMedia('document');
+        //        $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
+        //        Storage::disk('FclImport')->put($mediaItem->file_name,$excel);
+        //        $excelF     = Storage::disk('FclImport')->url($mediaItem->file_name);
+        //
+        //        $extObj     = new \SplFileInfo($mediaItem->file_name);
+        //        $ext        = $extObj->getExtension();
+        //        if(strnatcasecmp($ext,'xlsx')==0){
+        //            $inputFileType = 'Xlsx';
+        //        } else if(strnatcasecmp($ext,'xls')==0){
+        //            $inputFileType = 'Xls';
+        //        } else {
+        //            $inputFileType = 'Csv';
+        //        }
+        //
+        //        $myacl =  new MyReadFilter(1,5);
+        //        $reader = IOFactory::createReader($inputFileType);
+        //        $reader->setReadDataOnly(true);
+        //        $reader->setReadFilter($myacl);
+        //        $spreadsheet = $reader->load($excelF);
+        //        $sheetData = $spreadsheet->getActiveSheet()->toArray();
+        //        //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
+        //        dd($sheetData);
+        //        dd($sheetData[1]['Receipt']);
 
-        $mediaItem  = $account->getFirstMedia('document');
-        $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
-        Storage::disk('FclImport')->put($mediaItem->file_name,$excel);
-        $excelF     = Storage::disk('FclImport')->url($mediaItem->file_name);
-
-        $extObj     = new \SplFileInfo($mediaItem->file_name);
-        $ext        = $extObj->getExtension();
-        if(strnatcasecmp($ext,'xlsx')==0){
-            $inputFileType = 'Xlsx';
-        } else if(strnatcasecmp($ext,'xls')==0){
-            $inputFileType = 'Xls';
-        } else {
-            $inputFileType = 'Csv';
-        }
-
-        $myacl =  new MyReadFilter(1,5);
-        $reader = IOFactory::createReader($inputFileType);
-        $reader->setReadDataOnly(true);
-        $reader->setReadFilter($myacl);
-        $spreadsheet = $reader->load($excelF);
-        $sheetData = $spreadsheet->getActiveSheet()->toArray();
-        //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
-        dd($sheetData);
-        dd($sheetData[1]['Receipt']);
-
-
+        $calculationtype = CalculationType::where('options->name','=','PER_CONTAINER')
+            //container calculation first
+            ->whereHas('containersCalculation.container', function ( $query) {
+                $query->whereHas('groupContainer', function ( $queryTw) {
+                    $queryTw->where('gp_container_id',1);
+                });
+            })->get();
+        //->with('containersCalculation.container.groupContainer')->get();
+        dd($calculationtype);
 
     }
 
