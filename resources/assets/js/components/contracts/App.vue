@@ -30,12 +30,7 @@
   </div>
 
 </template>
-let $ports = [];
 
-                        value.forEach(function(val){
-                            $ports.push(val.name);
-                        });
-                        return $ports.join(', ');
 <script>
   export default {
     data() {
