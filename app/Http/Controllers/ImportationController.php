@@ -802,8 +802,10 @@ class ImportationController extends Controller
         $destinyExc             = $final_columns["DESTINY"];// lectura de excel
         $chargeExc              = $final_columns["CHARGE"];// lectura de excel
         $calculationtypeExc     = $final_columns["CALCULATION TYPE"];// lectura de excel
+        $chargeExc              = $final_columns["CHARGE"];// lectura de excel
 
         $company_user_id        = $valuesSelecteds['company_user_id'];
+        $contract_id            = $valuesSelecteds['contract_id'];
         $statusPortCountry      = $valuesSelecteds['select_portCountryRegion'];
         $statusTypeDestiny      = $valuesSelecteds['select_typeDestiny'];
         $statusCarrier          = $valuesSelecteds['select_carrier'];
@@ -835,7 +837,7 @@ class ImportationController extends Controller
         $countRow = 1;
         foreach($sheetData as $row){
             if($countRow > 1){
-                // dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$row);
+                //dd($final_columns->toArray(),$valuesSelecteds->toArray(),$columnsSelected->toArray(),$row);
 
 
                 //------------------ COLUMNS SELECTEDS ----------------------------------------------------
@@ -849,7 +851,7 @@ class ImportationController extends Controller
                         if($statusCurrency == 3){ //currency seleccionado en el panel(select) no hay columna en el excel
                             $value_ = null;
                             $value_ = floatval($row[$final_columns[$contenedor->code]]);
-                            $columna_cont[$contenedor->code] = [$value_,$currencyVal,$options_cont->optional];
+                            $columna_cont[$contenedor->code] = [$value_,$currencyVal,$options_cont->optional,false,$options_cont->column];
                             $currency_bol[$contenedor->code] = true;
                         } else if($statusCurrency == 2){ // valor y currency en la misma columna del excel
                             $value_arr = null;
@@ -857,6 +859,8 @@ class ImportationController extends Controller
                             if(count($value_arr) == 1){
                                 array_push($value_arr,'_E_E');
                                 array_push($value_arr,$options_cont->optional);
+                                array_push($value_arr,false);
+                                array_push($value_arr,$options_cont->column);
                                 $currency_bol[$contenedor->code] = false;
                                 $value_arr[0] = floatval($value_arr[0]);
                                 $columna_cont[$contenedor->code] = $value_arr;
@@ -873,13 +877,22 @@ class ImportationController extends Controller
 
                                     if(count($value_arr) == 2){
                                         array_push($value_arr,$options_cont->optional);
-                                    } else if(count($value_arr) >= 3){
-                                        $value_arr[2] = options_cont['optional'];
+                                        array_push($value_arr,false);
+                                        array_push($value_arr,$options_cont->column);
+                                    } else if(count($value_arr) == 3){
+                                        $value_arr[2] = $options_cont->optional;
+                                        array_push($value_arr,false);
+                                        array_push($value_arr,$options_cont->column);
+                                    } else if(count($value_arr) == 4){
+                                        $value_arr[2] = $options_cont->optional;
+                                        $value_arr[3] = false;
+                                        array_push($value_arr,$options_cont->column);
                                     }
                                     $value_arr[0] = floatval($value_arr[0]);
                                     $columna_cont[$contenedor->code] = $value_arr;
                                 } else {
-                                    $columna_cont[$contenedor->code] = [0.00,'_E_E',$options_cont->optional];
+                                    $value_arr[0] = floatval($value_arr[0]);
+                                    $columna_cont[$contenedor->code] = [$value_arr[0],$value_arr[1].'_E_E',$options_cont->optional,false,$options_cont->column];
                                     $currency_bol[$contenedor->code] = false;
                                 }
                             }
@@ -894,16 +907,23 @@ class ImportationController extends Controller
                                 $value_cur = $value_cur.'_E_E';                                    
                                 $currency_bol[$contenedor->code] = false;
                             }
-                            $columna_cont[$contenedor->code] = [floatval($row[$final_columns[$contenedor->code]]),$value_cur,$options_cont->optional];
+                            $columna_cont[$contenedor->code] = [floatval($row[$final_columns[$contenedor->code]]),$value_cur,$options_cont->optional,false,$options_cont->column];
                         }
-                        array_push($columna_cont[$contenedor->code],false);
+                        //array_push($columna_cont[$contenedor->code],false);
                     } else { // Agregamos en una matriz llaves Valores y moneda que no existen en la seleccion pero si en el equipo Dry,RF,FR,OP....
                         $currency_bol[$contenedor->code] = true;
-                        $columna_cont[$contenedor->code] = [0.00,149,$options_cont->optional,true];
+                        $columna_cont[$contenedor->code] = [0.00,149,$options_cont->optional,true,$options_cont->column];
                     }
                 }
 
-                dd($columna_cont,$currency_bol,$statusCurrency);
+                //  0 --->  valor.
+                //  1 --->  moneda.
+                //  2 --->  opcional en el comparador (nor y 45) (true si es opcional).
+                //  3 --->  la columna se agrego automaticamente(true) porque el usuario no la agrego, false no se agreo A.
+                //  5 --->  la columna pertenece a una columna(true) o a un json (false).
+
+
+                //dd($columna_cont,$currency_bol,$statusCurrency);
                 //--- PORT/CONTRY/REGION BOOL -------------------------------------
                 $differentiatorVal = '';
                 if($statusPortCountry){
@@ -1135,8 +1155,15 @@ class ImportationController extends Controller
                             'carrierVal'            => $carrierVal,  
                             'surchargeVal'          => $surchargeVal,  
                             'calculationtypeVal'    => $calculationtypeVal,
+                            'contract_id'           => $contract_id,
+                            'chargeVal'             => $chargeVal,          // indica la diferencia entre "rate" o surcharge
                             'columnas_por_request'  => $request_columns,    // valores por columna, incluye el currency por columna
-                            'valores_por_columna'   => $columna_cont,       // valores por columna, incluye el currency por columna
+                            'valores_por_columna'   => $columna_cont,       // valores por columna, incluye el currency por columna:
+                            //  0 --->  valor.
+                            //  1 --->  moneda.
+                            //  2 --->  opcional en el comparador (nor y 45) (true si es opcional).
+                            //  3 --->  la columna se agrego automaticamente(true) porque el usuario no la agrego, false no se agreo A.
+                            //  5 --->  la columna pertenece a una columna(true) o a un json (false).
                             'currencyBol_por_colum' => $currency_bol,
                             'origExiBol'            => $origExiBol,         // true si encontro el valor origen
                             'destiExitBol'          => $destiExitBol,       // true si encontro el valor destino
@@ -1145,7 +1172,7 @@ class ImportationController extends Controller
                             'calculationtypeExiBol' => $calculationtypeExiBol, // true si encontro el valor calculation type
                             'values'                => $values,            // true si si todos los valore son distintos de cero
                             'typeChargeExiBol'      => $typeChargeExiBol,  // true si el valor es distinto de vacio
-                            'differentiatorBol'     => $differentiatorBol, // falso par  port, true  para country o region
+                            'differentiatorBol'     => $differentiatorBol, // falso para port, true  para country o region
                             'statusPortCountry'     => $statusPortCountry, // true status de activacion port contry region, false port
                             'statusTypeDestiny'     => $statusTypeDestiny, // true para Seleccion desde panel, false para mapeo de excel 
                             'statusCarrier'         => $statusCarrier,     // true para seleccion desde el panel, falso para mapear excel 
@@ -1153,18 +1180,88 @@ class ImportationController extends Controller
 
                         ];
 
-                        dd($datos_finales,array_unique([1,1,1,2,3]));
+                        //dd($datos_finales,array_unique([1,1,1,2,3]));
 
                         /////////////////////////////////
 
                         // INICIO IF PARA FALLIDOS O BUENOS
 
                         /////////////////////////////////
+                        $twuenty        = 0;
+                        $forty          = 0;
+                        $fortyhc        = 0;
+                        $fortynor       = 0;
+                        $fortyfive      = 0;
+                        $container_json = null;
 
-                        if(strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
-
+                        if($groupContainer_id != 1){ //DISTINTO A DRY
+                            foreach($columna_cont as $key => $conta_row){
+                                if($conta_row[4] == false){
+                                    $container_json['C'.$key] = ''.$conta_row[0];
+                                }                                    
+                            }
+                            $container_json = json_encode($container_json);
                         } else {
 
+                            foreach($columna_cont as $key => $conta_row){
+                                if($conta_row[4] == false){
+                                    $container_json['C'.$key] = ''.$conta_row[0];
+                                }                                    
+                            }
+                            $container_json = json_encode($container_json);
+
+
+                            $contenedores_rt = Container::where('gp_container_id',$groupContainer_id)->where('options->column',false)->get();
+                            foreach($contenedores_rt as $contenedor_rt){
+                                dd($contenedor_rt);
+                            }
+
+                        }
+
+                        if(strnatcasecmp($row[$chargeExc],$chargeVal) == 0){ // Rates 
+                            if($differentiatorBol == false){
+
+                                foreach($columna_cont as $conta_row){
+                                    dd($conta_row);
+                                }
+
+
+                                $exists = null;
+                                //                                $exists = Rate::where('origin_port',$originVal)
+                                //                                    ->where('destiny_port',$destinyVal)
+                                //                                    ->where('carrier_id',$carrierVal)
+                                //                                    ->where('contract_id',$contract_id)
+                                //                                    ->where('twuenty',)
+                                //                                    ->where('forty',)
+                                //                                    ->where('fortyhc',)
+                                //                                    ->where('fortynor',)
+                                //                                    ->where('fortyfive',)
+                                //                                    ->where('currency_id',)
+                                //                                    ->get();
+                                if(count($exists) == 0){
+                                    //                                    $ratesArre =  Rate::create([
+                                    //                                        'origin_port'       => $originVal,
+                                    //                                        'destiny_port'      => $destinyVal,
+                                    //                                        'carrier_id'        => $carrierVal,
+                                    //                                        'contract_id'       => $contractIdVal,
+                                    //                                        'twuenty'           => $twentyVal,
+                                    //                                        'forty'             => $fortyVal,
+                                    //                                        'fortyhc'           => $fortyhcVal,
+                                    //                                        'fortynor'          => $fortynorVal,
+                                    //                                        'fortyfive'         => $fortyfiveVal,
+                                    //                                        'currency_id'       => $currencyVal,
+                                    //                                        'schedule_type_id'  => $scheduleTResul,
+                                    //                                        'transit_time'      => $transittimeResul,
+                                    //                                        'via'               => $viaResul
+                                    //                                    ]);
+                                }
+                            }
+                        }else { //Surcharges
+                            if(strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
+
+                            } else {
+
+                            }
                         }
 
                         /////////////////////////////////
