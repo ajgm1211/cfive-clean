@@ -7,6 +7,7 @@ use Illuminate\Support\Collection as Collection;
 use App\Contact;
 use App\Company;
 use App\Http\Requests\StoreContact;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ContactController extends Controller
 {
@@ -148,7 +149,18 @@ class ContactController extends Controller
 
     public function show(Request $request, $id)
     {
-        $contact = Contact::find($id);
+        $contact = Contact::with(array('company'=>function($query){
+            $query->select('id','business_name','phone','address','email','tax_number','company_user_id','owner');
+            $query->with(['owner'=>function($q){
+                $q->select('id','name','lastname','email','phone','position','state','company_user_id');
+            }]);
+            $query->with(['company_user'=>function($q){
+                $q->select('id','name','address','phone','currency_id');
+                $q->with(['currency'=>function($qy){
+                    $qy->select('id','name','alphacode','api_code_eur','api_code','rates','rates_eur');
+                }]);
+            }]);
+        }))->where('id',$id)->first();
 
         if($request->ajax()){
             $collection = Collection::make($contact);
@@ -168,7 +180,7 @@ class ContactController extends Controller
     public function destroy(Request $request,$id)
     {
         try {
-            $contact = Contact::find($id);
+            $contact = Contact::findOrFail($id);
             $contact->delete();
 
             if($request->ajax()) {
@@ -178,6 +190,12 @@ class ContactController extends Controller
             return response()->json(['message' => 'Ok']);
         }
         catch (\Exception $e) {
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json([
+                    'message' => 'Record not found',
+                ], 404);
+            }
+
             return response()->json(['message' => $e]);
         }
     }

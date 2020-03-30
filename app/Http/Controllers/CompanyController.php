@@ -18,6 +18,7 @@ use Intervention\Image\Facades\Image;
 use App\ApiIntegrationSetting;
 use App\Http\Requests\StoreCompany;
 use App\ViewQuoteV2;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection as Collection;
 
 
@@ -86,7 +87,22 @@ class CompanyController extends Controller
     public function show(Request $request, $id)
     {
         $id = obtenerRouteKey($id);
-        $company = Company::find($id);
+        if($request->ajax()){
+            $company = Company::with(array('owner'=>function($query){
+                $query->select('id','name','lastname','email','phone','position','state','company_user_id');
+            },'company_user'=>function($query){
+                $query->select('id','name','address','phone','currency_id');
+                $query->with(['currency'=>function($q){
+                    $q->select('id','name','alphacode','api_code_eur','api_code','rates','rates_eur');
+                }]);
+            }))->where('id',$id)->first();
+
+            $collection = Collection::make($company);
+            return $collection;
+        }else{
+            $company = Company::find($id);
+        }
+
         $companies = Company::where('company_user_id', \Auth::user()->company_user_id)->get();
         $company_user_id = \Auth::user()->company_user_id;
         if(\Auth::user()->hasRole('subuser')){
@@ -96,11 +112,6 @@ class CompanyController extends Controller
         }
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
         $prices = Price::where('company_user_id',\Auth::user()->company_user_id)->pluck('name','id');
-
-        if($request->ajax()){
-            $collection = Collection::make($company);
-            return $collection;
-        }
 
         return view('companies.show', compact('company','companies','contacts','quotes','users','prices'));
     }
@@ -291,6 +302,11 @@ class CompanyController extends Controller
                     $userCompany_group->save();
                 }
             }
+            
+            if($request->ajax()){
+                return response()->json($company);
+            }
+
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             $request->session()->flash('message.content', 'Register updated successfully!');
@@ -312,16 +328,22 @@ class CompanyController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $company = Company::find($id);
+            $company = Company::findOrFail($id);
             $company->delete();
 
             if($request->ajax()) {
-                return response()->json('Company deleted successfully!');
+                return response()->json('Company deleted successfully!',200);
             }
 
             return response()->json(['message' => 'Ok']);
         }
         catch (\Exception $e) {
+            if ($e instanceof ModelNotFoundException) {
+                return response()->json([
+                    'message' => 'Record not found',
+                ], 404);
+            }
+
             return response()->json(['message' => $e]);
         }
     }
