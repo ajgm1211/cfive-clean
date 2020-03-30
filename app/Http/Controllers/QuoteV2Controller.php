@@ -3679,6 +3679,8 @@ class QuoteV2Controller extends Controller
     $inlandOrigin = new collection();
 
     $markup =  $this->markups($price_id,$typeCurrency,$request); // 'share this post' 
+    
+    
 
     // Fin Markups
 
@@ -3687,22 +3689,19 @@ class QuoteV2Controller extends Controller
     $hideO = 'hide';
     $hideD = 'hide';
     $inlandParams = array('company_id_quote'=>$company_id,'destiny_port'=>$destiny_port,
-                          'company_user_id'=>$company_user_id,'origin_address'=>$origin_address,
-                          'destination_address'=>$destination_address,'typeCurrency'=>$typeCurrency);
-
+                          'origin_port'=>$origin_port,'company_user_id'=>$company_user_id,
+                          'origin_address'=>$origin_address,'destination_address'=>$destination_address,
+                          'typeCurrency'=>$typeCurrency);
 
     if($delivery_type == "2" || $delivery_type == "4" ){ 
-      $hideD = '';
-      $inlands = $inlands->get();
-      $dataDest = array();
 
-      $dataDest = $this->inlands($inlandParams,$markup,$equipment,$containers);
-      
-      dd($dataDest);
+      $hideD = '';
+      $dataDest = array();
+      $dataDest = $this->inlands($inlandParams,$markup,$equipment,$containers,'destino');
 
       if(!empty($dataDest)){
         $inlandDestiny = Collection::make($dataDest);
-
+      
       }
 
     }
@@ -3711,11 +3710,13 @@ class QuoteV2Controller extends Controller
     if($delivery_type == "3" || $delivery_type == "4" ){
       $hideO = '';
       $dataOrig = array();
+      $dataOrig = $this->inlands($inlandParams,$markup,$equipment,$containers,'origen');
 
       if(!empty($dataOrig)){
         $inlandOrigin = Collection::make($dataOrig);
       }
     }
+   // dd($inlandOrigin);
 
 
     // Fin del calculo de los inlands
