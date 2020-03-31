@@ -3,7 +3,7 @@ import '../../sass/custom_app.scss';
 
 import Vue from 'vue';
 
-
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 /* Config files */
 import Show from '../components/contracts/Show';  // Main Component
