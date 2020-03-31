@@ -170,12 +170,12 @@ class CalculationtypeTableSeeder extends Seeder
             15 => 
             array (
                 'id' => 16,
-                'name' => 'Per 20OT',
+                'name' => 'Per 20 OT',
                 'code' => '20OT',
-                'options' => '{"group": true, "isteu": false}',
+                'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-31 20:47:26',
             ),
             16 => 
             array (
@@ -190,12 +190,12 @@ class CalculationtypeTableSeeder extends Seeder
             17 => 
             array (
                 'id' => 18,
-                'name' => 'Per 40OT',
+                'name' => 'Per 40 OT',
                 'code' => '40OT',
-                'options' => '{"group": true, "isteu": false}',
+                'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
                 'gp_pcontainer' => 1,
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-31 20:47:34',
             ),
             18 => 
             array (
@@ -210,8 +210,8 @@ class CalculationtypeTableSeeder extends Seeder
             19 => 
             array (
                 'id' => 20,
-                'name' => 'Per container OP',
-                'code' => 'CONT OP',
+                'name' => 'Per container OT',
+                'code' => 'CONT OT',
                 'options' => '{"name": "PER_CONTAINER", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
@@ -240,8 +240,8 @@ class CalculationtypeTableSeeder extends Seeder
             22 => 
             array (
                 'id' => 23,
-                'name' => 'Per TEU OP',
-                'code' => 'TEU OP',
+                'name' => 'Per TEU OT',
+                'code' => 'TEU OT',
                 'options' => '{"name": "PER_TEU", "group": false, "isteu": false}',
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
@@ -256,6 +256,26 @@ class CalculationtypeTableSeeder extends Seeder
                 'gp_pcontainer' => 0,
                 'created_at' => NULL,
                 'updated_at' => '2020-03-27 15:38:37',
+            ),
+            24 => 
+            array (
+                'id' => 25,
+                'name' => 'Per 20 FR',
+                'code' => '20FR',
+                'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
+                'created_at' => '2020-03-31 20:32:56',
+                'updated_at' => '2020-03-31 20:32:56',
+            ),
+            25 => 
+            array (
+                'id' => 26,
+                'name' => 'Per 40 FR',
+                'code' => '40FR',
+                'options' => '{"name": "N\\\\A", "group": true, "isteu": false}',
+                'gp_pcontainer' => 1,
+                'created_at' => '2020-03-31 20:33:28',
+                'updated_at' => '2020-03-31 20:34:19',
             ),
         ));
         
