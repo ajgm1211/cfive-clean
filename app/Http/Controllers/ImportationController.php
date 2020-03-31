@@ -39,6 +39,7 @@ use App\LocalCharCountry;
 use App\LocalCharCarrier;
 use App\NewContractRequest;
 use Illuminate\Http\Request;
+use App\ContainerCalculation;
 use App\Jobs\ReprocessRatesJob;
 use App\Notifications\N_general;
 use Yajra\Datatables\Datatables;
@@ -815,6 +816,7 @@ class ImportationController extends Controller
         $statusCurrency         = $valuesSelecteds['select_currency'];
 
         $currencyVal            = '';
+        $column_calculatioT_bol = true;
 
         // DIFERENCIADOR DE PUERTO CONTRY/REGION ---------------
         if($statusPortCountry){
@@ -844,7 +846,24 @@ class ImportationController extends Controller
                 $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
             }
         }
-        //dd($columns_rt_ident);
+
+        // LOAD CALCULATIONS FOR COLUMN ------------------------
+        $contenedores_to_cal = Container::where('gp_container_id',3)->get();
+        $conatiner_calculation_id = [];
+        foreach($contenedores_to_cal as $row_cont_calcult){
+            //            $contenedores_calcult =  ContainerCalculation::where('container_id',12)
+            $contenedores_calcult =  ContainerCalculation::where('container_id',$row_cont_calcult->id)
+                ->whereHas('calculationtype', function ( $query) {
+                    $query->where('gp_pcontainer',true);
+                })->get();
+            // dd($contenedores_to_cal,$row_cont_calcult->code,$contenedores_calcult);
+            if(count($contenedores_calcult) == 1){
+                $conatiner_calculation_id[$row_cont_calcult->code] = $contenedores_calcult->calculationtype_id;
+            } else if(count($contenedores_calcult) > 1 || count($contenedores_calcult) == 0){
+                $column_calculatioT_bol = false;
+            }
+        }
+        dd($conatiner_calculation_id);
 
         $countRow = 1;
         foreach($sheetData as $row){
@@ -1189,11 +1208,13 @@ class ImportationController extends Controller
                             'statusPortCountry'     => $statusPortCountry, // true status de activacion port contry region, false port
                             'statusTypeDestiny'     => $statusTypeDestiny, // true para Seleccion desde panel, false para mapeo de excel 
                             'statusCarrier'         => $statusCarrier,     // true para seleccion desde el panel, falso para mapear excel 
-                            'typeCurrency'          => $statusCurrency     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
+                            'typeCurrency'          => $statusCurrency,     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
+                            'conatiner_calculation_id' => $conatiner_calculation_id // asocia los calculations con las columnas. relacion columna => calculation_id
+                            'column_calculatioT_bol'   => $column_calculatioT_bol // False si falla la asociacion, true si esta asociado correctamente
 
                         ];
 
-                        dd($datos_finales,array_unique([1,1,1,2,3]));
+                        dd($datos_finales);
 
                         /////////////////////////////////
 
@@ -1273,13 +1294,131 @@ class ImportationController extends Controller
                                 }
                             }
                         } else { //Surcharges
+
+                            if($differentiatorBol == false){ //si es puerto verificamos si exite uno creado con puerto
+                                $typeplace = 'localcharports';
+                            }else {  //si es country verificamos si exite uno creado con country 
+                                $typeplace = 'localcharcountries';
+                            }
+
                             if(strnatcasecmp($row[$calculationtypeExc],'PER_CONTAINER') == 0){
-//                                foreach($columna_cont as $key => $conta_row){
-//                                    if($conta_row[4] == false){
-//                                        $container_json['C'.$key] = ''.$conta_row[0];
-//                                    }              
-//                                    $currency_val = $conta_row[1];
-//                                }
+
+                                // ESTOS ARREGLOS SON DE EJEMPLO PARA IGUALDAD DE VALORES EN PER_CONTAINER / Solo condicional -------
+                                //                                $columna_cont['20DV'][0]    = 1200;
+                                //                                $columna_cont['20DV'][3]    = false;
+                                //                                $columna_cont['40DV'][0]    = 1200;
+                                //                                $columna_cont['40HC'][0]    = 1200;
+                                //                                $columna_cont['40NOR'][0]   = 1200;
+                                //                                $columna_cont['45HC'][0]    = 1200;
+                                //                                $columna_cont['40NOR'][3]   = true;
+                                //                                $columna_cont['45HC'][3]    = true;
+
+                                // Comparamos si todos los valores son iguales (PER_CONTAINER) o si son distintos, dependiendo de equipo DRY,RF...
+                                $equals_values = [];
+                                $key = null;
+                                foreach($columna_cont as $key => $conta_row){
+                                    if($conta_row[3] == true && $conta_row[2] != true){
+                                        array_push($equals_values,$conta_row[0]);
+                                    } else if($conta_row[3] == false){
+                                        array_push($equals_values,$conta_row[0]);                                        
+                                    }
+                                }
+                                //dd($columna_cont,$equals_values,array_unique($equals_values),count(array_unique($equals_values)));
+
+                                if(count(array_unique($equals_values)) == 1){ //Calculation PER_CONTAINER 1 solo registro
+                                    $currency_val   = null;
+                                    $ammount        = null;
+                                    $key            = null;
+                                    foreach($columna_cont as $key => $conta_row){
+                                        $ammount        = $conta_row[0];
+                                        $currency_val   = $conta_row[1];
+                                        break;
+                                    }
+
+                                    if($ammount != 0 || $ammount != 0.00){
+                                        //Se verifica si existe un surcharge asociado con puerto o country dependiendo del diferenciador
+                                        $surchargeObj = null;
+                                        $surchargeObj = LocalCharge::where('surcharge_id',$surchargeVal)
+                                            ->where('typedestiny_id',$typedestinyVal)
+                                            ->where('contract_id',$contract_id)
+                                            ->where('calculationtype_id',$calculationtypeVal)
+                                            ->where('ammount',$ammount)
+                                            ->where('currency_id',$currencyVal)
+                                            ->has($typeplace)
+                                            ->first();
+
+                                        if(count($surchargeObj) == 0){
+                                            $surchargeObj = LocalCharge::create([ // tabla localcharges
+                                                'surcharge_id'       => $surchargeVal,
+                                                'typedestiny_id'     => $typedestinyVal,
+                                                'contract_id'        => $contract_id,
+                                                'calculationtype_id' => $calculationtypeVal,
+                                                'ammount'            => $ammount,
+                                                'currency_id'        => $currencyVal
+                                            ]);
+                                        }
+
+                                        //----------------------- CARRIERS -------------------------------------------
+                                        $existsCar = null;
+                                        $existsCar = LocalCharCarrier::where('carrier_id',$carrierVal)
+                                            ->where('localcharge_id',$SurchargArreG->id)->first();
+                                        if(count($existsCar) == 0){
+                                            LocalCharCarrier::create([ // tabla localcharcarriers
+                                                'carrier_id'        => $carrierVal,
+                                                'localcharge_id'    => $surchargeObj->id
+                                            ]);
+                                        }
+
+                                        //----------------------- ORIGEN DESTINO PUETO PAÍS --------------------------
+
+                                        if($differentiatorBol){ // country
+                                            $existCount = null;
+                                            $existCount = LocalCharCountry::where('country_orig',$originVal)
+                                                ->where('country_dest',$destinyVal)
+                                                ->where('localcharge_id',$surchargeObj->id)
+                                                ->first();
+                                            if(count($existCount) == 0){
+                                                $SurchargPortArreG = LocalCharCountry::create([ // tabla LocalCharCountry country
+                                                    'country_orig'      => $originVal,
+                                                    'country_dest'      => $destinyVal,
+                                                    'localcharge_id'    => $surchargeObj->id
+                                                ]);
+                                            }
+                                        } else { // port
+                                            $existPort = null;
+                                            $existPort = LocalCharPort::where('port_orig',$originVal)
+                                                ->where('port_dest',$destinyVal)
+                                                ->where('localcharge_id',$surchargeObj->id)
+                                                ->first();
+                                            if(count($existPort) == 0){
+                                                $SurchargPortArreG = LocalCharPort::create([ // tabla localcharports harbor
+                                                    'port_orig'      => $originVal,
+                                                    'port_dest'      => $destinyVal,
+                                                    'localcharge_id' => $surchargeObj->id
+                                                ]);
+                                            }
+                                        }
+                                    }
+
+
+                                } else if(count(array_unique($equals_values)) > 1){ //Calculation PER_ + "Contenedor o columna" registro por contenedor
+                                    $key                = null;
+                                    $rows_calculations   = [];
+                                    foreach($columna_cont as $key => $conta_row){
+                                        $rows_calculations[$key] = [
+                                            //'type'            => $key,
+                                            'calculationtype' => $calculationtypeVal,
+                                            'ammount'         => $conta_row[0],
+                                            'currency'        => $conta_row[1]
+                                        ];
+                                    }
+                                    dd($rows_calculations);
+                                    $key = null;
+                                    foreach($rows_calculations as $key => $row_calculation){
+
+                                    }
+                                }
+
                             } else {
 
                             }
