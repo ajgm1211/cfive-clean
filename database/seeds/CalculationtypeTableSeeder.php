@@ -22,70 +22,79 @@ class CalculationtypeTableSeeder extends Seeder
                 'id' => 1,
                 'name' => 'Per 40 "',
                 'code' => '40',
+                'options' => '{"group": true, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 17:23:11',
             ),
             1 => 
             array (
                 'id' => 2,
-                'name' => 'Per 20 "',
+                'name' => 'Per 20"',
                 'code' => '20',
+                'options' => '{"group": true, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 17:23:03',
             ),
             2 => 
             array (
                 'id' => 3,
                 'name' => 'Per 40 HC',
                 'code' => '40HC',
+                'options' => '{"group": true, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:51:02',
             ),
             3 => 
             array (
                 'id' => 4,
                 'name' => 'Per TEU',
                 'code' => 'TEU',
+                'options' => '{"group": true, "isteu": true}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:51:11',
             ),
             4 => 
             array (
                 'id' => 5,
                 'name' => 'Per Container',
                 'code' => 'CONT',
+                'options' => '{"group": false, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:52:19',
             ),
             5 => 
             array (
                 'id' => 6,
                 'name' => 'Per Shipment',
                 'code' => 'SHIP',
+                'options' => '{"group": false, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:52:26',
             ),
             6 => 
             array (
                 'id' => 7,
                 'name' => 'Per 40 NOR',
                 'code' => '40NOR',
+                'options' => '{"group": true, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:51:34',
             ),
             7 => 
             array (
                 'id' => 8,
                 'name' => 'Per 45',
                 'code' => '45',
+                'options' => '{"group": true, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:51:42',
             ),
             8 => 
             array (
                 'id' => 9,
                 'name' => 'Per BL',
                 'code' => 'BL',
+                'options' => NULL,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -94,6 +103,7 @@ class CalculationtypeTableSeeder extends Seeder
                 'id' => 10,
                 'name' => 'Per TON',
                 'code' => 'TON',
+                'options' => NULL,
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
@@ -102,8 +112,72 @@ class CalculationtypeTableSeeder extends Seeder
                 'id' => 11,
                 'name' => 'Per Invoice',
                 'code' => 'INV',
+                'options' => '{"group": false, "isteu": false}',
                 'created_at' => NULL,
-                'updated_at' => NULL,
+                'updated_at' => '2020-03-17 18:52:10',
+            ),
+            11 => 
+            array (
+                'id' => 12,
+                'name' => 'Per 20Refeer',
+                'code' => '20R',
+                'options' => '{"group": true, "isteu": false}',
+                'created_at' => NULL,
+                'updated_at' => '2020-03-17 18:51:52',
+            ),
+            12 => 
+            array (
+                'id' => 13,
+                'name' => 'Per 40Refeer',
+                'code' => '40RF',
+                'options' => '{"group": true, "isteu": false}',
+                'created_at' => '2020-03-16 17:26:48',
+                'updated_at' => '2020-03-17 19:48:31',
+            ),
+            13 => 
+            array (
+                'id' => 14,
+                'name' => 'Per 40HCRef',
+                'code' => '40HCRF',
+                'options' => NULL,
+                'created_at' => '2020-03-16 21:10:14',
+                'updated_at' => '2020-03-16 21:10:14',
+            ),
+            14 => 
+            array (
+                'id' => 15,
+                'name' => 'ModidicacionBL',
+                'code' => 'MBL',
+                'options' => NULL,
+                'created_at' => '2020-03-16 21:11:26',
+                'updated_at' => '2020-03-16 21:11:26',
+            ),
+            15 => 
+            array (
+                'id' => 16,
+                'name' => 'Per 20OT',
+                'code' => '20OT',
+                'options' => '{"group": true, "isteu": false}',
+                'created_at' => '2020-03-18 14:37:10',
+                'updated_at' => '2020-03-18 14:49:38',
+            ),
+            16 => 
+            array (
+                'id' => 17,
+                'name' => 'Per Tracking',
+                'code' => 'TRCK',
+                'options' => '{"group": false, "isteu": false}',
+                'created_at' => '2020-03-18 14:41:43',
+                'updated_at' => '2020-03-18 14:41:43',
+            ),
+            17 => 
+            array (
+                'id' => 18,
+                'name' => 'Per 40OT',
+                'code' => '40OT',
+                'options' => '{"group": true, "isteu": false}',
+                'created_at' => '2020-03-18 14:47:28',
+                'updated_at' => '2020-03-18 14:49:44',
             ),
         ));
         
