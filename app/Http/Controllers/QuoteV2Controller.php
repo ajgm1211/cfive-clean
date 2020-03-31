@@ -1054,6 +1054,10 @@ class QuoteV2Controller extends Controller
             $rate_duplicate->schedule_type=$rate->schedule_type;
             $rate_duplicate->transit_time=$rate->transit_time;
             $rate_duplicate->via=$rate->via;
+            $rate_duplicate->remarks=$rate->remarks;
+            $rate_duplicate->remarks_spanish=$rate->remarks_spanish;
+            $rate_duplicate->remarks_english=$rate->remarks_english;
+            $rate_duplicate->remarks_portuguese=$rate->remarks_portuguese;
             $rate_duplicate->save();
 
             $charges=Charge::where('automatic_rate_id',$rate->id)->get();
