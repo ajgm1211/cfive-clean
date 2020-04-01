@@ -89,6 +89,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\MediaLibrary\MediaStream;
 use App\Jobs\ProcessPdfApi;
+use App\Jobs\UpdatePdf;
 
 class QuoteV2Controller extends Controller
 {
@@ -2798,26 +2799,9 @@ class QuoteV2Controller extends Controller
 
     }
 
-
     function updatePdfApi($id){
-
-        $quote = QuoteV2::find($id);
-        $quote->clearMediaCollection('document'); 
-        if(\Auth::user()->company_user_id){
-            $company_user=CompanyUser::find(\Auth::user()->company_user_id);
-            $currency_cfg = Currency::find($company_user->currency_id);
-        }else{
-            $company_user="";
-            $currency_cfg ="";
-        }
-        $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
-        $pdf = $pdfarray['pdf'];
-        $view = $pdfarray['view'];
-        $idQuote= $pdfarray['idQuote'];
-        $idQ = $pdfarray['idQ'];
-        $pdf->loadHTML($view)->save(public_path().'/pdf/quote-'.$idQuote.'.pdf');
-        ProcessPdfApi::dispatch($quote);
-
+        //$this->dispatch((new UpdatePdf($id, Auth::user()->company_user_id, Auth::user()->id))->onQueue('default'));
+        UpdatePdf::dispatch($id,Auth::user()->company_user_id, Auth::user()->id)->onQueue('default');
     }
 
     public function store(Request $request){
