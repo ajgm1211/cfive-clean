@@ -212,16 +212,11 @@ font-family: sans-serif !important;
                 </tr>
             </table>
             <!-- Email Header : END -->
-
+            <br>
             <!-- Email Body : BEGIN -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
 
                 <!-- 1 Column Text + Button : BEGIN -->
-                <tr>
-                    <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                        <!--<h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">Maintenance notification</h1>-->
-                    </td>
-                </tr>
                 <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
                         <p>Hey there! We hope you're doing well.</p>
