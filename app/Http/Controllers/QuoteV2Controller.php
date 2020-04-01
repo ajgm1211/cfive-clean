@@ -691,7 +691,8 @@ class QuoteV2Controller extends Controller
         }
 
         $charge->update();
-        //$this->updatePdfApi($charge->quote_id);
+        $this->updatePdfApi($charge->quote_id);
+        $this->updateIntegrationQuoteStatus($charge->quote_id);
         return response()->json(['success'=>'Ok']);
     }
 
@@ -722,7 +723,7 @@ class QuoteV2Controller extends Controller
         }
         $charge->update();
         $quote_id= $charge->automatic_rate->quote_id;
-        //$this->updatePdfApi($quote_id);
+        $this->updatePdfApi($quote_id);
         $this->updateIntegrationQuoteStatus($quote_id);
         return response()->json(['success'=>'Ok']);
     }
@@ -739,9 +740,7 @@ class QuoteV2Controller extends Controller
             $name = $request->name;
             $quote->$name=$request->value;
             $quote->update();  
-            //$this->updatePdfApi($quote->id); 
-
-
+            $this->updatePdfApi($quote->id); 
         }
         return response()->json(['success'=>'Ok']);
     }
@@ -841,7 +840,7 @@ class QuoteV2Controller extends Controller
         $quote->origin_address=$request->origin_address;
         $quote->destination_address=$request->destination_address;
         $quote->update();
-        //$this->updatePdfApi($quote->id);
+        $this->updatePdfApi($quote->id);
 
         if($request->contact_id!=''){
             $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
@@ -872,7 +871,7 @@ class QuoteV2Controller extends Controller
 
         $quote->payment_conditions=$request->payments;
         $quote->update();
-
+        $this->updatePdfApi($quote->id);
         return response()->json(['message'=>'Ok','quote'=>$quote]);
     }
 
@@ -888,7 +887,8 @@ class QuoteV2Controller extends Controller
         $name = $request->name;
         $quote->$name=$request->terms;
         $quote->update();
-
+        $this->updatePdfApi($quote->id);
+        $this->updateIntegrationQuoteStatus($quote->id);
         return response()->json(['message'=>'Ok','quote'=>$quote]);
     }
 
@@ -916,6 +916,9 @@ class QuoteV2Controller extends Controller
         }
 
         $rate->update();
+
+        $this->updatePdfApi($rate->quote_id);
+        $this->updateIntegrationQuoteStatus($rate->quote_id);
 
         return response()->json(['message'=>'Ok','rate'=>$rate]);
     }
