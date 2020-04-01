@@ -995,4 +995,5 @@ Route::prefix('CalculationType')->group(function () {
 
 Route::get('api/contracts', 'ContractController@index');
 Route::get('api/v2/contracts', 'ContractController@list');
+Route::get('api/v2/quotes/{id}', 'QuoteV2Controller@show');
 
