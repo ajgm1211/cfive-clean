@@ -1,18 +1,19 @@
 <template>
-  <div class="container bg-container">
+  <div class="container-fluid bg-container">
     <div class="row mt-5">
-      <div class="col-12">
-        <b-card>
-          <div class="row">
-            <div class="col-6">
-              <b-card-title>Quote's details</b-card-title>
-            </div>
-          </div>
-
+      <div class="container-fluid">
+        <b-card-group deck>
+          <b-card
+            border-variant="secondary"
+            header="Quote's details"
+            header-border-variant="secondary"
+            header-bg-variant="transparent"
+            align="justify"
+          >
           
-
-          
-        </b-card>
+            
+          </b-card>
+        </b-card-group>
       </div>
     </div>
   </div>
@@ -50,7 +51,8 @@ export default {
     };
   },
   created() {
-    api.getData({}, "/api/v2/contracts", (err, data) => {
+    let id = 1;
+    api.getData({}, "/api/v2/quotes/"+id, (err, data) => {
       this.setData(err, data);
     });
   },
@@ -62,6 +64,7 @@ export default {
         this.error = err.toString();
       } else {
         this.data = records;
+        console.log(this.data);
       }
     }
   }

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="app"></div>
+    <div id="app">
+        <show-component></show-component>
+    </div>
 @endsection
 
 @section('js')
