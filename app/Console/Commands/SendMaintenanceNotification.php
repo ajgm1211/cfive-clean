@@ -14,7 +14,7 @@ class SendMaintenanceNotification extends Command
      *
      * @var string
      */
-    protected $signature = 'maintenanceNotification:send {day} {month} {date} {hour} {duration}';
+    protected $signature = 'maintenanceNotification:send {day} {month} {day_spanish} {month_spanish} {date} {hour} {duration}';
 
     /**
      * The console command description.
@@ -43,12 +43,14 @@ class SendMaintenanceNotification extends Command
         $day = $this->argument('day');
         $month = $this->argument('month');
         $date = $this->argument('date');
+        $day_spanish = $this->argument('day_spanish');
+        $month_spanish = $this->argument('month_spanish');
         $hour = $this->argument('hour');
         $duration = $this->argument('duration');
         try{
             $users=User::where('state',1)->get();
             foreach ($users as $item) {
-                Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $date, $hour, $duration));
+                Mail::to($item->email)->send(new SendMaintenanceNotificationEmail($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration));
             }
         } catch(\Exception $e){
             return $this->info($e->getMessage());
