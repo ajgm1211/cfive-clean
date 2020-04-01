@@ -2801,7 +2801,7 @@ class QuoteV2Controller extends Controller
 
     function updatePdfApi($id){
         //$this->dispatch((new UpdatePdf($id, Auth::user()->company_user_id, Auth::user()->id))->onQueue('default'));
-        UpdatePdf::dispatch($id,Auth::user()->company_user_id, Auth::user()->id)->onQueue('default');
+        UpdatePdf::dispatch($id,Auth::user()->company_user_id, Auth::user()->id)->onQueue('default')->delay(now()->addMinutes(3));
     }
 
     public function store(Request $request){
