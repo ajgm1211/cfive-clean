@@ -812,13 +812,13 @@ class QuoteV2Controller extends Controller
         $validity_end = $validation[1];
         $contact_name='';
         $price_name='';
+        
         $gdp='No';
 
         $quote=QuoteV2::find($id);
+        $quote->custom_quote_id='';
         if($quote->quote_id!=$request->quote_id){
             $quote->custom_quote_id=$request->quote_id;
-        }else{
-            $quote->custom_quote_id='';
         }
         $quote->type=$request->type;
         $quote->company_id=$request->company_id;
