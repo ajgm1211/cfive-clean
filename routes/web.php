@@ -226,7 +226,7 @@ Route::prefix('Importation')->group(function () {
 		->middleware(['auth','role:administrator|data_entry']);
 
 	// Importar Contracto
-	Route::PUT('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
+	Route::POST('UploadFileNewContracts','ImportationController@UploadFileNewContract')->name('Upload.File.New.Contracts')
 		->middleware(['auth','role:administrator|data_entry']);
 	Route::get('ProcessContractFcl','ImportationController@ProcessContractFcl')->name('process.contract.fcl')
 		->middleware(['auth','role:administrator|data_entry']);
@@ -333,10 +333,13 @@ Route::prefix('Importation')->group(function () {
 	Route::get('/UpdateFContact/{id}','ImportationController@UpdateFailedContact')->name('update.fail.contact')->middleware(['auth']);
 
 	// Srucharge for contract
-	Route::get('/ProcessImpSurcharge','ImportationController@ProcessSurchargeForContract')->name('process.imp.surcharge')
+	Route::post('/storeMediaIFCL','ImportationController@storeMedia')->name('importation.storeMedia.fcl')
 		->middleware(['auth','role:administrator|data_entry']);
 
 	// Test
+	Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
+    
+    // Test
 	Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
 
 });
@@ -418,11 +421,12 @@ Route::middleware(['auth'])->prefix('Exportation')->group(function () {
 	Route::resource('Exportation','ExportationController');
 });
 
-Route::middleware(['auth'])->prefix('Harbors')->group(function () {
-	Route::resource('UploadFile','FileHarborsPortsController');
-	Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
-	Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
-});
+// Harbors
+Route::middleware(['auth','role:administrator|data_entry'])->prefix('Harbors')->group(function () {
+    Route::resource('UploadFile','FileHarborsPortsController');
+    Route::get('/loadViewAdd','FileHarborsPortsController@loadviewAdd')->name('load.View.Add');
+    Route::get('/destroyharbor/{id}','FileHarborsPortsController@destroyharbor')->name('destroy.harbor');
+}); 
 
 Route::middleware(['auth'])->prefix('Countries')->group(function () {
 	Route::resource('Countries','CountryController');
@@ -968,7 +972,7 @@ Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
 	route::get('create','RequestFclV2Controller@create')->name('RequestFcl.create')->middleware(['role:administrator|data_entry']);
 	route::post('store','RequestFclV2Controller@store')->name('RequestFcl.store')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::get('show/{id}','RequestFclV2Controller@show')->name('RequestFcl.show')->middleware(['role:administrator|data_entry']);
-	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit')->middleware(['role:administrator|company|subuser|data_entry']);
+	route::get('edit/{id}','RequestFclV2Controller@edit')->name('RequestFcl.edit')->middleware(['role:administrator|data_entry']);
 	route::put('update/{id}','RequestFclV2Controller@update')->name('RequestFcl.update')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::delete('destroy/{id}','RequestFclV2Controller@destroy')->name('RequestFcl.destroy')->middleware(['role:administrator|company|subuser|data_entry']);
 	route::get('NewRqFcl','RequestFclV2Controller@newRequest')->name('request.fcl.new.request')->middleware(['role:administrator|company|subuser|data_entry']);
