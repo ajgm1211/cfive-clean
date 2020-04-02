@@ -42,6 +42,7 @@ use App\LocalChargeCarrierApi;
 use App\LocalChargePortApi;
 use App\PackageLoad;
 use App\ChargeLclAir;
+use App\Schedule;
 use GoogleMaps;
 use Illuminate\Support\Facades\Input;
 use GuzzleHttp\Exception\GuzzleException;
@@ -87,7 +88,7 @@ use App\Http\Traits\QuoteV2Trait;
 use Illuminate\Support\Facades\Log;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\MediaLibrary\MediaStream;
-
+use App\Jobs\ProcessPdfApi;
 
 class QuoteV2Controller extends Controller
 {
@@ -104,33 +105,17 @@ class QuoteV2Controller extends Controller
     $currency_cfg = null;
     $company_user_id = \Auth::user()->company_user_id;
     if(\Auth::user()->hasRole('subuser')){
-      if($request->size){
-        $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-          $q->where('company_user_id','=',$company_user_id);
-        })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-          $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-        }])->take($request->size)->get();
-      }else{
-        $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
-          $q->where('company_user_id','=',$company_user_id);
-        })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-          $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-        }])->get();
-      }
+      $quotes = QuoteV2::where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
+        $q->where('company_user_id','=',$company_user_id);
+      })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+        $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+      }])->get();
     }else{
-      if($request->size){
-        $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-          $q->where('company_user_id','=',$company_user_id);
-        })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-          $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-        }])->take($request->size)->get();
-      }else{
-        $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
-          $q->where('company_user_id','=',$company_user_id);
-        })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-          $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
-        }])->get();
-      }
+      $quotes = QuoteV2::whereHas('user', function($q) use($company_user_id){
+        $q->where('company_user_id','=',$company_user_id);
+      })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
+        $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge','charge_lcl_air');
+      }])->get();
     }
     $companies = Company::pluck('business_name','id');
     $harbors = Harbor::pluck('display_name','id');
@@ -704,7 +689,9 @@ class QuoteV2Controller extends Controller
       $name = $request->name;
       $charge->$name=$request->value;
     }
+
     $charge->update();
+    //$this->updatePdfApi($charge->quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -732,6 +719,8 @@ class QuoteV2Controller extends Controller
       $charge->$name=$request->value;
     }
     $charge->update();
+    $quote_id= $charge->automatic_rate->quote_id;
+    //$this->updatePdfApi($quote_id);
     return response()->json(['success'=>'Ok']);
   }
 
@@ -746,7 +735,10 @@ class QuoteV2Controller extends Controller
       $quote=QuoteV2::find($request->pk);
       $name = $request->name;
       $quote->$name=$request->value;
-      $quote->update();   
+      $quote->update();  
+      //$this->updatePdfApi($quote->id); 
+
+
     }
     return response()->json(['success'=>'Ok']);
   }
@@ -846,6 +838,7 @@ class QuoteV2Controller extends Controller
     $quote->origin_address=$request->origin_address;
     $quote->destination_address=$request->destination_address;
     $quote->update();
+    //$this->updatePdfApi($quote->id);
 
     if($request->contact_id!=''){
       $contact_name=$quote->contact->first_name.' '.$quote->contact->last_name;
@@ -906,7 +899,19 @@ class QuoteV2Controller extends Controller
   {
     $rate=AutomaticRate::find($id);
 
-    $rate->remarks=$request->remarks;
+    if($request->language == 'all'){
+      $rate->remarks=$request->remarks;
+    }
+    if($request->language == 'english'){
+      $rate->remarks_english=$request->remarks;
+    }
+    if($request->language == 'spanish'){
+      $rate->remarks_spanish=$request->remarks;
+    }
+    if($request->language == 'portuguese'){
+      $rate->remarks_portuguese=$request->remarks;
+    }
+
     $rate->update();
 
     return response()->json(['message'=>'Ok','rate'=>$rate]);
@@ -972,6 +977,23 @@ class QuoteV2Controller extends Controller
     }    
     $quote_duplicate->save();
 
+    $this->savePdfOptionsDuplicate($quote, $quote_duplicate);
+
+    $this->saveScheduleQuoteDuplicate($quote, $quote_duplicate);
+
+    $this->saveAutomaticRateDuplicate($quote, $quote_duplicate);
+
+    if($request->ajax()){
+      return response()->json(['message' => 'Ok']);
+    }else{
+      $request->session()->flash('message.nivel', 'success');
+      $request->session()->flash('message.title', 'Well done!');
+      $request->session()->flash('message.content', 'Quote duplicated successfully!');
+      return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
+    }
+  }
+
+  public function savePdfOptionsDuplicate($quote, $quote_duplicate){
     $pdf = PdfOption::where('quote_id',$quote->id)->first();
     $pdf_duplicate = new PdfOption();
     $pdf_duplicate->quote_id=$quote_duplicate->id;
@@ -990,7 +1012,24 @@ class QuoteV2Controller extends Controller
     $pdf_duplicate->show_logo=$pdf->show_logo;
     $pdf_duplicate->show_gdp_logo=$pdf->show_gdp_logo;
     $pdf_duplicate->save();
+  }
 
+  public function saveScheduleQuoteDuplicate($quote, $quote_duplicate){
+    $schedule_quote = Schedule::where('quotes_id',$quote->id)->first();
+
+    if($schedule_quote){
+      $schedule = new Schedule();
+      $schedule->vessel = $schedule_quote->vessel;
+      $schedule->etd = $schedule_quote->etd;
+      $schedule->transit_time = $schedule_quote->transit_time;
+      $schedule->type = $schedule_quote->type;
+      $schedule->eta = $schedule_quote->eta;
+      $schedule->quotes_id = $quote_duplicate->id;
+      $schedule->save();
+    }
+  }
+
+  public function saveAutomaticRateDuplicate($quote, $quote_duplicate){
     $rates = AutomaticRate::where('quote_id',$quote->id)->get();
 
     foreach ($rates as $rate){
@@ -1009,6 +1048,9 @@ class QuoteV2Controller extends Controller
       $rate_duplicate->markups=$rate->markups;
       $rate_duplicate->total=$rate->total;
       $rate_duplicate->currency_id=$rate->currency_id;
+      $rate_duplicate->transit_time=$rate->schedule_type;
+      $rate_duplicate->transit_time=$rate->transit_time;
+      $rate_duplicate->transit_time=$rate->via;
       $rate_duplicate->save();
 
       $charges=Charge::where('automatic_rate_id',$rate->id)->get();
@@ -1043,15 +1085,6 @@ class QuoteV2Controller extends Controller
           $charge_duplicate->save();
         }
       }
-    }
-
-    if($request->ajax()){
-      return response()->json(['message' => 'Ok']);
-    }else{
-      $request->session()->flash('message.nivel', 'success');
-      $request->session()->flash('message.title', 'Well done!');
-      $request->session()->flash('message.content', 'Quote duplicated successfully!');
-      return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote_duplicate->id));
     }
   }
 
@@ -2564,6 +2597,156 @@ class QuoteV2Controller extends Controller
 
   }
 
+  function saveRemarks($rateId,$orig,$dest,$carrier,$modo){
+
+    $carrier_all = 26;
+    $port_all = harbor::where('name','ALL')->first();
+    $nameOrig = $orig->name;
+    $rem_port_orig[] =$orig->id;
+    $nameDest = $dest->name;
+    $rem_port_dest[] = $dest->id;
+    $rem_carrier_id[] = $carrier;
+    array_push($rem_carrier_id,$carrier_all);
+
+    $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
+    $language_id = $company->companyUser->pdf_language;
+
+    $remarks_all = RemarkHarbor::where('port_id',$port_all->id)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+
+    $remarks_origin = RemarkHarbor::wherein('port_id',$rem_port_orig)->with('remark')->whereHas('remark', function($q) use($rem_carrier_id,$language_id)  {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+    $remarks_destination = RemarkHarbor::wherein('port_id',$rem_port_dest)->with('remark')->whereHas('remark', function($q)  use($rem_carrier_id,$language_id) {
+      $q->where('remark_conditions.company_user_id',\Auth::user()->company_user_id)->whereHas('remarksCarriers', function($b) use($rem_carrier_id)  {
+        $b->wherein('carrier_id',$rem_carrier_id);
+      });
+    })->get();
+
+
+
+
+    $remarks_english="";
+    $remarks_spanish="";
+    $remarks_portuguese="";
+
+    foreach($remarks_all as $remAll){
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
+      if($modo == '1'){
+        if($remAll->remark->language_id == '1')
+          $remarks_english .=$remAll->remark->export."<br>";
+        if($remAll->remark->language_id == '2')
+          $remarks_spanish .=$remAll->remark->export."<br>";
+        if($remAll->remark->language_id == '3')
+          $remarks_portuguese .=$remAll->remark->export."<br>";
+      }else{ // import
+
+        if($remAll->remark->language_id == '1')
+          $remarks_english .=$remAll->remark->import."<br>";
+        if($remAll->remark->language_id == '2')
+          $remarks_spanish .=$remAll->remark->import."<br>";
+        if($remAll->remark->language_id == '3')
+          $remarks_portuguese .=$remAll->remark->import."<br>";
+      }
+
+    }
+
+    foreach($remarks_origin as $remOrig){
+
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
+
+      if($modo == '1'){
+        if($remOrig->remark->language_id == '1')
+          $remarks_english .=$remOrig->remark->export."<br>";
+        if($remOrig->remark->language_id == '2')
+          $remarks_spanish .=$remOrig->remark->export."<br>";
+        if($remOrig->remark->language_id == '3')
+          $remarks_portuguese .=$remOrig->remark->export."<br>";
+      }else{ // import
+
+        if($remOrig->remark->language_id == '1')
+          $remarks_english .=$remOrig->remark->import."<br>";
+        if($remOrig->remark->language_id == '2')
+          $remarks_spanish .=$remOrig->remark->import."<br>";
+        if($remOrig->remark->language_id == '3')
+          $remarks_portuguese .=$remOrig->remark->import."<br>";
+      }
+
+    }
+
+    foreach($remarks_destination as $remDest){
+
+      $remarks_english .="<br>";
+      $remarks_spanish .="<br>";
+      $remarks_portuguese .="<br>";
+
+      if($modo == '1'){
+        if($remDest->remark->language_id == '1')
+          $remarks_english .=$remDest->remark->export."<br>";
+        if($remDest->remark->language_id == '2')
+          $remarks_spanish .=$remDest->remark->export."<br>";
+        if($remDest->remark->language_id == '3')
+          $remarks_portuguese .=$remDest->remark->export."<br>";
+      }else{ // import
+
+        if($remDest->remark->language_id == '1')
+          $remarks_english .=$remDest->remark->import."<br>";
+        if($remDest->remark->language_id == '2')
+          $remarks_spanish .=$remDest->remark->import."<br>";
+        if($remDest->remark->language_id == '3')
+          $remarks_portuguese .=$remDest->remark->import."<br>";
+      }
+    }
+
+    //   $remarkGenerales = array('english' => $remarks_english , 'spanish' => $remarks_spanish , 'portuguese' => $remarks_portuguese ,'origen' => $nameOrig , 'destino' => $nameDest  );
+
+    //return $remarkGenerales ; 
+
+
+    $quoteEdit = AutomaticRate::find($rateId);
+    $quoteEdit->remarks_english= $remarks_english;
+    $quoteEdit->remarks_spanish = $remarks_spanish;
+    $quoteEdit->remarks_portuguese = $remarks_portuguese;
+    $quoteEdit->update();
+
+
+
+  }
+
+  /*function saveRemarks($quoteId,$remarkGenerales){
+
+    $remarks_english="";
+    $remarks_spanish="";
+    $remarks_portuguese="";
+
+    foreach($remarkGenerales as  $remark){
+      $titulo = $remark['origen']." / ".$remark['destino']."<br>";
+
+      $remarks_english.= $titulo."<br>". $remark['english']."<br>";
+      $remarks_spanish.=$titulo."<br>". $remark['english']."<br>";
+      $remarks_portuguese.=$titulo."<br>". $remark['english']."<br>";
+
+    }
+    $quoteEdit = QuoteV2::find($quoteId);
+    $quoteEdit->remarks_english= $remarks_english;
+    $quoteEdit->remarks_spanish = $remarks_spanish;
+    $quoteEdit->remarks_portuguese = $remarks_portuguese;
+    $quoteEdit->update();
+
+
+  }*/
+
   function saveTerms($quoteId,$type,$modo){
 
     $companyUser = CompanyUser::All();
@@ -2605,6 +2788,27 @@ class QuoteV2Controller extends Controller
 
   }
 
+
+  function updatePdfApi($id){
+
+    $quote = QuoteV2::find($id);
+    $quote->clearMediaCollection('document'); 
+    if(\Auth::user()->company_user_id){
+      $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+      $currency_cfg = Currency::find($company_user->currency_id);
+    }else{
+      $company_user="";
+      $currency_cfg ="";
+    }
+    $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+    $pdf = $pdfarray['pdf'];
+    $view = $pdfarray['view'];
+    $idQuote= $pdfarray['idQuote'];
+    $idQ = $pdfarray['idQ'];
+    $pdf->loadHTML($view)->save(public_path().'/pdf/quote-'.$idQuote.'.pdf');
+    ProcessPdfApi::dispatch($quote);
+
+  }
 
   public function store(Request $request){
     if(!empty($request->input('form'))){
@@ -2873,6 +3077,7 @@ class QuoteV2Controller extends Controller
         foreach($info_D->rates as $rateO){
 
           $rates =   json_encode($rateO->rate);
+
           $markups =   json_encode($rateO->markups);
           $arregloNull = array();
 
@@ -2986,7 +3191,7 @@ class QuoteV2Controller extends Controller
             }  
           }
 
-
+          $this->saveRemarks($rate->id,$info_D->port_origin,$info_D->port_destiny,$info_D->carrier->id,$form->mode);
 
         }
         //CHARGES ORIGIN
@@ -3094,19 +3299,35 @@ class QuoteV2Controller extends Controller
           $chargeFreight->save();
         }
 
+
       }  
+
 
       // Terminos Automatica
       $company = User::where('id',\Auth::id())->with('companyUser.currency')->first();
       $language_id = $company->companyUser->pdf_language;
       $this->saveTerms($quote->id,'FCL',$form->mode);
+      //$this->saveRemarks($quote->id,$remarksGenerales);
+
+      // SAVE PDF FOR API 
+      if(\Auth::user()->company_user_id){
+        $company_user=CompanyUser::find(\Auth::user()->company_user_id);
+        $currency_cfg = Currency::find($company_user->currency_id);
+      }else{
+        $company_user="";
+        $currency_cfg ="";
+      }
+
+      //$pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+      $pdf = $pdfarray['pdf'];
+      $view = $pdfarray['view'];
+      $idQuote= $pdfarray['idQuote'];
+      $idQ = $pdfarray['idQ'];
+
+      $pdf->loadHTML($view)->save('pdf/quote-'.$idQuote.'.pdf');
+      $quote->addMedia('pdf/quote-'.$idQuote.'.pdf')->toMediaCollection('document','pdfApiS3');
+
     }
-
-    //$request->session()->flash('message.nivel', 'success');
-    //$request->session()->flash('message.title', 'Well done!');
-    //$request->session()->flash('message.content', 'Register completed successfully!');
-    //return redirect()->route('quotes.index');
-
     return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
   }
 
@@ -3368,10 +3589,11 @@ class QuoteV2Controller extends Controller
     $chargeFreight= 'true';
     $chargeAPI= 'true';
     $chargeAPI_M = 'false';
+    $chargeAPI_SF = 'false';
     $form['equipment'] = array('20','40','40HC');
     $form['company_id_quote'] ='';
 
-    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','form','chargeAPI_M'));
+    return view('quotesv2/search',  compact('companies','carrierMan','hideO','hideD','countries','harbors','prices','company_user','currencies','currency_name','incoterm','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','form','chargeAPI_M', 'chargeAPI_SF'));
 
 
   }
@@ -3404,6 +3626,7 @@ class QuoteV2Controller extends Controller
     $chargesFreight = $request->input('chargeFreight');
     $chargesAPI = $request->input('chargeAPI');
     $chargesAPI_M = $request->input('chargeAPI_M');
+    $chargesAPI_SF = $request->input('chargeAPI_SF');
 
 
     $form  = $request->all();
@@ -4004,10 +4227,9 @@ class QuoteV2Controller extends Controller
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
 
-          $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}';
-          $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+          $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+          $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
           $response = $client->request('GET', $url);
-
 
           //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4026,8 +4248,9 @@ class QuoteV2Controller extends Controller
       foreach($origin_port as $orig){
         foreach($destiny_port as $dest){
 
-          $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}';
-          $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
+          $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+          $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
+
           try {
             $response = $client->request('GET', $url);
           } catch (\Exception $e) {
@@ -4039,6 +4262,29 @@ class QuoteV2Controller extends Controller
 
       $arreglo3 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
         $q->where('validity', '>=',$dateSince)->where('number','MAERSK');
+      });
+    }
+
+    if($chargesAPI_SF != null){
+
+      $client = new Client();
+      foreach($origin_port as $orig){
+        foreach($destiny_port as $dest){
+
+          $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+          $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
+
+          try {
+            $response = $client->request('GET', $url);
+          } catch (\Exception $e) {
+
+          }  
+
+        }
+      }
+
+      $arreglo4 = RateApi::whereIn('origin_port',$origin_port)->whereIn('destiny_port',$destiny_port)->with('port_origin','port_destiny','contract','carrier')->whereHas('contract', function($q) use($dateSince,$dateUntil,$company_user_id){
+        $q->where('validity', '>=',$dateSince)->where('number','SAFMARINE');
       });
     }
 
@@ -4076,6 +4322,12 @@ class QuoteV2Controller extends Controller
       $arreglo3 = $arreglo3->get();
 
       $arreglo = $arreglo->merge($arreglo3);
+    }
+
+    if($chargesAPI_SF != null){
+      $arreglo4 = $arreglo4->get();
+
+      $arreglo = $arreglo->merge($arreglo4);
     }
 
 
@@ -4895,11 +5147,12 @@ class QuoteV2Controller extends Controller
 
 
 
+      $remarksGeneral = "";
+      $remarksGeneral .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
 
-      $remarks .= $this->remarksCondition($data->port_origin,$data->port_destiny,$data->carrier,$typeMode);
-      $remarks = trim($remarks);
 
       $data->setAttribute('remarks',$remarks);
+      $data->setAttribute('remarksG',$remarksGeneral);
 
       // EXCEL REQUEST 
 
@@ -4936,12 +5189,13 @@ class QuoteV2Controller extends Controller
       if($data->contract->status == 'api'){
         if($data->contract->number == 'MAERSK'){
           $color = 'bg-maersk';
-        }else{
+        } else if($data->contract->number == 'SAFMARINE') {
+          $color = 'bg-safmarine';
+        } else {
           $color = 'bg-danger';
         }
 
       }
-
 
       // Valores
       $data->setAttribute('excelRequest',$excelRequestId);
@@ -4996,7 +5250,7 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null ) ? true : false;
     $chargeAPI = ($chargesAPI != null ) ? true : false;
     $chargeAPI_M = ($chargesAPI_M != null ) ? true : false;
-
+    $chargeAPI_SF = ($chargesAPI_SF != null ) ? true : false;
 
 
     // Ordenar por prioridad 
@@ -5012,7 +5266,7 @@ class QuoteV2Controller extends Controller
       $arreglo  =  $arreglo->sortBy('total45');
 
 
-    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M'));
+    return view('quotesv2/search',  compact('arreglo','form','companies','quotes','countries','harbors','prices','company_user','currencies','currency_name','incoterm','equipmentHides','carrierMan','hideD','hideO','airlines','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M', 'chargeAPI_SF'));
 
   }
 
@@ -5439,6 +5693,7 @@ class QuoteV2Controller extends Controller
     $chargesFreight = $request->input('chargeFreight');
     $chargesAPI = $request->input('chargeAPI');
     $chargesAPI_M = $request->input('chargeAPI_M');
+    $chargesAPI_SF = $request->input('chargeAPI_SF');
 
     $form  = $request->all();
 
@@ -7847,6 +8102,7 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null ) ? true : false;
     $chargeAPI = ($chargesAPI != null ) ? true : false;
     $chargeAPI_M =  ($chargesAPI_M != null ) ? true : false;
+    $chargeAPI_SF =  ($chargesAPI_SF != null ) ? true : false;
 
     $hideO = 'hide';
     $hideD = 'hide';
@@ -7855,7 +8111,7 @@ class QuoteV2Controller extends Controller
     $objharbor = new Harbor();
     $harbor = $objharbor->all()->pluck('name','id');
 
-    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M'));
+    return view('quotesv2/searchLCL', compact('harbor','formulario','arreglo','form','companies','harbors','hideO','hideD','incoterm','simple','paquete','chargeOrigin','chargeDestination','chargeFreight','chargeAPI','chargeAPI_M', 'chargeAPI_SF'));
 
   }
 
