@@ -256,7 +256,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
+                                                                {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -277,7 +277,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_freight_40hc">{{number_format(@$sum40hc+@$sum_m40hc, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
-                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
                                                 <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
                                                 <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
                                                 <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
@@ -513,7 +513,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
+                                                                {{ Form::select('origin_ammount_currency[]',$currencies,$company_user->currency->id,['class'=>'form-control currency_id local_currency select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -534,7 +534,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_origin_40hc">{{number_format(@$sum_origin_40hc+@$sum_origin_m40hc, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_origin_40nor">{{number_format(@$sum_origin_40nor+@$sum_origin_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_origin_45">{{number_format(@$sum_origin_45+@$sum_origin_m45, 2, '.', '')}}</span></td>
-                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
                                                 <input type="hidden" name="subtotal_c20_origin" value="{{$sum_origin_20}}" class="subtotal_c20_origin"/>
                                                 <input type="hidden" name="subtotal_c40_origin" value="{{$sum_origin_40}}" class="subtotal_c40_origin"/>
                                                 <input type="hidden" name="subtotal_c40hc_origin" value="{{$sum_origin_40hc}}" class="subtotal_c40hc_origin"/>
@@ -773,7 +773,7 @@ $v=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control local_currency currency_id select-2-width']) }}
+                                                                {{ Form::select('destination_ammount_currency[]',$currencies,$company_user->currency->id,['class'=>'form-control local_currency currency_id select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
@@ -794,7 +794,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_destination_40hc">{{number_format(@$sum_destination_40hc+@$sum_destination_m40hc, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_destination_40nor">{{number_format(@$sum_destination_40nor+@$sum_destination_m40nor, 2, '.', '')}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_destination_45">{{number_format(@$sum_destination_45+@$sum_destination_m45, 2, '.', '')}}</span></td>
-                                                <td class="tds"><span class="td-a">{{$currency_cfg->alphacode}}</span></td>
+                                                <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
                                                 
                                                 <input type="hidden" name="subtotal_c20_destination" value="{{$sum_destination_20}}" class="subtotal_c20_destination"/>
                                                 <input type="hidden" name="subtotal_c40_destination" value="{{$sum_destination_40}}" class="subtotal_c40_destination"/>
@@ -872,7 +872,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a sum_total_amount_40hc">{{$amount_40hc}}</span> + <span class=" td-a sum_total_markup_40hc">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_40hc td-a">{{$amount_markup_40hc}}</span></td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a sum_total_amount_40nor">{{$amount_40nor}}</span> + <span class=" td-a sum_total_markup_40nor">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i><span class="sum_total_40nor td-a">{{$amount_markup_40nor}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class=" td-a sum_total_amount_45">{{$amount_45}}</span> + <span class=" td-a sum_total_markup_45 td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_45">{{$amount_markup_45}}</span></td>
-                                                <td class="tds"><span class="td-a global-currency">{{$currency_cfg->alphacode}}</span></td>
+                                                <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -928,7 +928,7 @@ $v=0;
                                                 <td {{ @$equipmentHides['40hc'] }} class="tds"><span class=" td-a sum_total_amount_40hc">{{$amount_40hc}}</span> + <span class=" td-a sum_total_markup_40hc">{{$markup_40hc}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_40hc td-a">{{$amount_markup_40hc}}</span></td>
                                                 <td {{ @$equipmentHides['40nor'] }} class="tds"><span class=" td-a sum_total_amount_40nor">{{$amount_40nor}}</span> + <span class=" td-a sum_total_markup_40nor">{{$markup_40nor}}</span> <i class="la la-caret-right arrow-down"></i><span class="sum_total_40nor td-a">{{$amount_markup_40nor}}</span></td>
                                                 <td {{ @$equipmentHides['45'] }} class="tds"><span class=" td-a sum_total_amount_45">{{$amount_45}}</span> + <span class=" td-a sum_total_markup_45 td-a">{{$markup_45}}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_45">{{$amount_markup_45}}</span></td>
-                                                <td class="tds"><span class="td-a global-currency">{{$currency_cfg->alphacode}}</span></td>
+                                                <td class="tds"><span class="td-a global-currency">{{$company_user->currency->alphacode}}</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1082,7 +1082,7 @@ $v=0;
                                                                 </td>
                                                                 <td class="tds">
                                                                     <div class="btn-group">
-                                                                        {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                        {{ Form::select('destination_ammount_currency[]',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                                     </div>
                                                                     <br>
                                                                     <a class="btn btn-xs btn-primary-plus store_charge">
