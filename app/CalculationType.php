@@ -17,6 +17,10 @@ class CalculationType extends Model
 
         return $this->hasOne('App\LocalCharge');
     }
+    
+    public function containersCalculation(){
+        return $this->hasMany('App\ContainerCalculation','calculationtype_id');
+    }
 
 
 }
