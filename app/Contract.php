@@ -7,6 +7,10 @@ use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Filters\ContractFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use App\ContractCarrier;
 
 class Contract extends Model implements HasMedia
 {
@@ -56,7 +60,7 @@ class Contract extends Model implements HasMedia
 
   public function carriers()
   {
-    //return $this->belongsToMany('App\Carrier','contracts_carriers', 'carrier_id');
+    //return $this->hasManyThrough('App\Carrier', 'App\ContractCarrier', 'carrier_id', 'id', 'contract_id', 'id');
     return $this->hasMany('App\ContractCarrier','contract_id');
   }
 
@@ -107,4 +111,35 @@ class Contract extends Model implements HasMedia
         $company_id = Auth::user('web')->company_user_id;
         return $query->where( 'company_user_id', '=', $company_id );
     }
+
+    /**
+     * Scope a query filter
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Http\Request $request;
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter(Builder $builder, Request $request)
+    {
+        return (new ContractFilter($request, $builder))->filter();
+    }
+
+    /**
+     * Sync Contract Carriers
+     *
+     * @param  Array  $carrier
+     * @return void
+     */
+    public function ContractCarrierSync($carriers)
+    {
+        DB::table('contracts_carriers')->where('contract_id', '=', $this->id)->delete(); 
+
+        foreach($carriers as $carrier_id){
+            ContractCarrier::create([
+                'carrier_id'    => $carrier_id,
+                'contract_id'   => $contract->id
+            ]);
+        }
+    }
+            
 }
