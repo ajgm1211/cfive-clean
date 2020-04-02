@@ -993,3 +993,7 @@ Route::prefix('ContainerCalculation')->group(function () {
 Route::prefix('CalculationType')->group(function () {
 	Route::resource('CalculationType','CalculationTypeController')->middleware(['role:administrator|data_entry']);
 });
+
+Route::get('api/contracts', 'ContractController@index');
+Route::get('api/v2/contracts', 'ContractController@list');
+
