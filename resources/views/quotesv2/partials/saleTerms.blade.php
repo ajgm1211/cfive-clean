@@ -104,7 +104,7 @@ $x=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_sale_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
