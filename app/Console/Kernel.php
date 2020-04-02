@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         Commands\UpdateCurrenciesEur::class,
         Commands\SendQuotes::class,
         Commands\ProcessExpiredContracts::class,
+        Commands\mappingMaerskCode::class,
         'Laravel\Passport\Console\ClientCommand',
     ];
 
