@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class AccountImportationContractFcl extends Model
+class AccountImportationContractFcl extends Model implements HasMedia
 {
+    use HasMediaTrait;
     protected $table    = "accounts_import_cfcl";
     protected $fillable = ['id',
                            'name',
