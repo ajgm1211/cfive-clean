@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class AccountImportationContractFcl extends Model
+class AccountImportationContractFcl extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    
     protected $table    = "accounts_import_cfcl";
     protected $fillable = ['id',
                            'name',
@@ -18,8 +21,8 @@ class AccountImportationContractFcl extends Model
     public function companyuser(){
         return $this->belongsTo('App\CompanyUser','company_user_id');
     }
-    
-    
+
+
     public function FilesTmps(){
         return $thid->hasMany('App\FileTmp');  
     }
