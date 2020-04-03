@@ -33,6 +33,11 @@ class Company extends Model implements Auditable
         return $this->belongsTo('App\user','owner');
     }
 
+    public function owner()
+    {
+        return $this->belongsTo('App\user','owner');
+    }
+
     public function company_price()
     {
         return $this->hasOne('App\CompanyPrice');
@@ -46,6 +51,5 @@ class Company extends Model implements Auditable
     public function company_user(){
 
         return $this->belongsTo('App\CompanyUser');
-
     }
 }
