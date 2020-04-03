@@ -308,11 +308,11 @@ class QuoteV2Controller extends Controller
         $calculation_types_lcl_air = CalculationTypeLcl::pluck('name', 'id');
         $surcharges = Surcharge::where('company_user_id', \Auth::user()->company_user_id)->orwhere('company_user_id', NULL)->orderBy('name', 'Asc')->pluck('name', 'id');
         $email_templates = EmailTemplate::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
-        $equipmentHides = $this->hideContainerV2($quote->equipment, '', $containers);
+        $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
         $sale_terms = SaleTermV2::where('quote_id', $quote->id)->get();
         $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
         $sale_terms_destination = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
-
+        //dd($equipmentHides);
         if ($quote->delivery_type == 2 || $quote->delivery_type == 4) {
             $destinationAddressHides = null;
         }
@@ -355,8 +355,9 @@ class QuoteV2Controller extends Controller
         $hideO = 'hide';
         $hideD = 'hide';
         $rates = $quote->rates_v2;
-        $this->processShowQuoteRates($rates, $company_user);
-
+  
+        $this->processShowQuoteRates($rates, $company_user, $containers);
+        
         if (!$quote->rates_v2->isEmpty()) {
             foreach ($quote->rates_v2 as $item) {
                 $quote->rates_v2->map(function ($item) {
@@ -402,7 +403,7 @@ class QuoteV2Controller extends Controller
             return $collection;
         }
 
-        return view('quotesv2/show', compact('quote', 'companies', 'company_user', 'incoterms', 'users', 'prices', 'contacts', 'currencies', 'equipmentHides', 'freight_charges', 'origin_charges', 'destination_charges', 'calculation_types', 'calculation_types_lcl_air', 'rates', 'surcharges', 'email_templates', 'inlands', 'emaildimanicdata', 'package_loads', 'countries', 'harbors', 'prices', 'airlines', 'carrierMan', 'currency_name', 'hideO', 'hideD', 'sale_terms', 'rate_origin_ports', 'rate_destination_ports', 'rate_origin_airports', 'rate_destination_airports', 'destinationAddressHides', 'originAddressHides'));
+        return view('quotesv2/show', compact('quote','containers', 'companies', 'company_user', 'incoterms', 'users', 'prices', 'contacts', 'currencies', 'equipmentHides', 'freight_charges', 'origin_charges', 'destination_charges', 'calculation_types', 'calculation_types_lcl_air', 'rates', 'surcharges', 'email_templates', 'inlands', 'emaildimanicdata', 'package_loads', 'countries', 'harbors', 'prices', 'airlines', 'carrierMan', 'currency_name', 'hideO', 'hideD', 'sale_terms', 'rate_origin_ports', 'rate_destination_ports', 'rate_origin_airports', 'rate_destination_airports', 'destinationAddressHides', 'originAddressHides'));
     }
     /**
      * Update charges by rate
@@ -825,10 +826,15 @@ class QuoteV2Controller extends Controller
     {
 
         $equipment = new Collection();
+
+        if ($tipo == 'BD') {
+            $equipmentForm = json_decode($equipmentForm);
+        }
+
         foreach ($container as $cont) {
             $hidden = 'hidden' . $cont->code;
             $hidden = 'hidden';
-
+            
             foreach ($equipmentForm as $val) {
 
                 if ($val == $cont->id) {
@@ -838,8 +844,6 @@ class QuoteV2Controller extends Controller
             }
             $equipment->put($cont->code, $hidden);
         }
-
-
 
         // Clases para reordenamiento de la tabla y ajuste
         $originClass = 'col-md-2';

@@ -48,11 +48,13 @@ $v=0;
                                             <tr style="height: 40px;">
                                                 <td class="td-table" style="padding-left: 30px">Charge</td>
                                                 <td class="td-table">Detail</td>
-                                                <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
-                                                <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
+                                                @foreach ($equipmentHides as $key=>$item)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            <td class="td-table" {{$item}}>{{$key}}</td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td class="td-table" >Currency</td>
                                             </tr>
                                         </thead>
@@ -73,6 +75,8 @@ $v=0;
                                                 $sum_m45=0;
 
                                             @endphp
+
+                                            
 
                                             @foreach($rate->charge as $item)
                                                 @if($item->type_id==3)
@@ -131,45 +135,20 @@ $v=0;
                                                             @else
                                                             Per Container
                                                             @endif
-                                                        </td>
-                                                        <td {{ @$equipmentHides['20'] }} class="tds">
-                                                            <a href="#" class="editable-amount-20 amount_20 td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            +
-                                                            <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            <i class="la la-caret-right arrow-down"></i>
-                                                            <span class="total_20 td-a">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
-                                                        </td>
-                                                        <td {{ @$equipmentHides['40'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            +
-                                                            <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-
-                                                            <i class="la la-caret-right arrow-down"></i>
-                                                            <span class="total_40 td-a">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
-                                                        </td>
-                                                        <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            +
-                                                            <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            <i class="la la-caret-right arrow-down"></i>
-                                                            <span class="total_40hc td-a">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
-                                                        </td>
-                                                        <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                            <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            +
-                                                            <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-
-                                                            <i class="la la-caret-right arrow-down"></i>
-                                                            <span class="total_40nor td-a">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
-                                                        </td>
-                                                        <td {{ @$equipmentHides['45'] }} class="tds">
-                                                            <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                            +
-                                                            <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-
-                                                            <i class="la la-caret-right arrow-down"></i>
-                                                            <span class="total_45 td-a">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
-                                                        </td>
+                                                        </td>                                                        
+                                                        @foreach ($equipmentHides as $key=>$hide)
+                                                            @foreach ($containers as $c)
+                                                                @if($c->code == $key)
+                                                                    <td {{$hide}} class="tds">
+                                                                        <a href="#" class="editable-amount-20 amount_20 td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c'.$c->code]}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                                        +
+                                                                        <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m'.$c->code]}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                                        <i class="la la-caret-right arrow-down"></i>
+                                                                        <span class="total_20 td-a">{{@$freight_amounts['c'.$c->code]+@$freight_markups['m'.$c->code]}}</span>
+                                                                    </td>
+                                                                @endif
+                                                            @endforeach
+                                                        @endforeach
                                                         <td class="tds">
                                                             <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
                                                             &nbsp;
@@ -272,11 +251,15 @@ $v=0;
                                             <tr class="total_freight_{{$v}}">
                                                 <td></td>
                                                 <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                <td {{ @$equipmentHides['20'] }} class="tds"><span class="td-a total_freight_20">{{number_format(@$sum20+@$sum_m20, 2, '.', '')}}</span></td>
-                                                <td {{ @$equipmentHides['40'] }} class="tds"><span class="td-a total_freight_40">{{number_format(@$sum40+@$sum_m40, 2, '.', '')}}</span></td>
-                                                <td {{ @$equipmentHides['40hc'] }} class="tds"><span class="td-a total_freight_40hc">{{number_format(@$sum40hc+@$sum_m40hc, 2, '.', '')}}</span></td>
-                                                <td {{ @$equipmentHides['40nor'] }} class="tds"><span class="td-a total_freight_40nor">{{number_format(@$sum40nor+@$sum_m40nor, 2, '.', '')}}</span></td>
-                                                <td {{ @$equipmentHides['45'] }} class="tds"><span class="td-a total_freight_45">{{number_format(@$sum45+@$sum_m45, 2, '.', '')}}</span></td>
+                                                @foreach ($equipmentHides as $key=>$hide)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            <td {{$hide}} class="tds">
+                                                                Total
+                                                            </td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
                                                 <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
                                                 <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
