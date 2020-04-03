@@ -36,8 +36,6 @@ class ProcessPdfApi implements ShouldQueue
      */
   public function handle()
   {
-
-
     $quote = $this->quote;
     $quote->addMedia(public_path().'/pdf/quote-'.$quote->quote_id.'.pdf')->toMediaCollection('document','pdfApiS3');
   }

@@ -212,25 +212,34 @@ font-family: sans-serif !important;
                 </tr>
             </table>
             <!-- Email Header : END -->
-
+            <br>
             <!-- Email Body : BEGIN -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="600" style="margin: auto;" class="email-container">
 
                 <!-- 1 Column Text + Button : BEGIN -->
                 <tr>
-                    <td bgcolor="#ffffff" style="padding: 40px 40px 20px; text-align: center;">
-                        <h1 style="margin: 0; font-family: sans-serif; font-size: 24px; line-height: 125%; color: #001728; font-weight: bold;">Maintenance notification</h1>
-                    </td>
-                </tr>
-                <tr>
                     <td bgcolor="#ffffff" style="padding: 0 40px 40px; font-family: sans-serif; font-size: 15px; line-height: 140%; color: #001728; text-align: left;">
-                        <p>Hey there,</p>
+                        <p>Hey there! We hope you're doing well.</p>
                         
-                        <p>On {{$day}}, {{$month}} {{$date}}, Cargofive will be undergoing scheduled maintenance. We may be offline for about {{$duration}} minutes starting {{$hour}} UTC.</p>
+                        <p>As you know, at Cargofive we work really hard to provide you the best service possible. So, we will be adding new features and correcting some issues.</p>
 
-                        <p>This is due we will be adding new features and correcting some issues.</p>
+                        <p>This is why we want you to be aware that on {{$day}}, {{$month}} {{$date}}, our system will be down for about {{$duration}} minutes starting at {{$hour}} UTC, in order to perform maintenance on the platform</p>
 
-                        <p>We hope this will not be too much of a disruption and appreciate your patience and understanding. If you have any questions or concerns, please email us at info@cargofive.com</p>
+                        <p>We are sorry for the inconvenience and we appreciate your patience and understanding. If you have any questions or concerns, please contact us at info@cargofive.com.</p>
+                    
+                        <p>Have a great week!</p>
+
+                        <p>---</p>
+
+                        <p>¡Hola! Esperamos que estés bien.</p>
+                        
+                        <p>Como bien sabes, en Cargofive trabajamos duro para ofrecerte el mejor servicio posible, por lo que estaremos agregando nuevas funcionalidades y corrigiendo algunos detalles.</p>
+
+                        <p>En este sentido, queremos informarte que este {{$day_spanish}} {{$date}} de {{$month_spanish}} nuestro servicio será interrumpido por {{$duration}} minutos aproximadamente empezando a las {{$hour}} UTC. Esto con la intención de realizar mantenimiento a la plataforma.</p>                        
+
+                        <p>Pedimos disculpas por los inconvenientes y agradecemos por tu paciencia y comprensión. Si tienes alguna duda, por favor comunícate con nosotros a través de info@cargofive.com.</p>
+                    
+                        <p>¡Que tengas una excelente semana!</p>
                     </td>
                 </tr>
                 <!-- 1 Column Text + Button : END -->

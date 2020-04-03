@@ -2,7 +2,7 @@
     $i=0;
 ?>
 @foreach($rates as $rate)
-    @if($rate->remarks != '' && $rate->remarks!='<br>')
+    @if(($rate->remarks != '' && $rate->remarks!='<br>') || ($rate->remarks_english!= '' && $rate->remarks_english!='<br>') || ($rate->remarks_portuguese!= '' && $rate->remarks_portuguese!='<br>') || ($rate->remarks_spanish!= '' && $rate->remarks_spanish!='<br>'))
         <?php
             $i++;
         ?>
