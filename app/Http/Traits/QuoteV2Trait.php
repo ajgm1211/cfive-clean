@@ -1826,32 +1826,19 @@ trait QuoteV2Trait
         }
     }
 
-    public function processShowQuoteRates($rates, $company_user)
+    public function processShowQuoteRates($rates, $company_user, $containers)
     {
         foreach ($rates as $item) {
-            $sum20 = 0;
-            $sum40 = 0;
-            $sum40hc = 0;
-            $sum40nor = 0;
-            $sum45 = 0;
-
-            $total_markup20 = 0;
-            $total_markup40 = 0;
-            $total_markup40hc = 0;
-            $total_markup40nor = 0;
-            $total_markup45 = 0;
-
-            $total_rate20 = 0;
-            $total_rate40 = 0;
-            $total_rate40hc = 0;
-            $total_rate40nor = 0;
-            $total_rate45 = 0;
-
-            $total_rate_markup20 = 0;
-            $total_rate_markup40 = 0;
-            $total_rate_markup40hc = 0;
-            $total_rate_markup40nor = 0;
-            $total_rate_markup45 = 0;
+            $sum = 'sum';
+            $markup = 'markup';
+            $total = 'total';
+            foreach ($containers as $c) {
+                ${$sum . '_' . $c->code} = 0;
+                ${$total . '_' . $c->code} = 0;
+                ${$total . '_markup_' . $c->code} = 0;
+            }
+            /*$arr = get_defined_vars();
+            dd($arr);*/
 
             $total_lcl_air_freight = 0;
             $total_lcl_air_origin = 0;
@@ -1867,85 +1854,37 @@ trait QuoteV2Trait
 
             //Charges
             foreach ($item->charge as $value) {
-
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                 $array_amounts = json_decode($value->amount, true);
                 $array_markups = json_decode($value->markups, true);
+                $amount = 'amount';
+                $pre = 'c';
+                $sumary = 0;
+                foreach ($containers as $c) {
+                    ${$pre.$c->code} = 'c'.$c->code;
+                    ${$pre.$c->code.'_markup'} = 'c'.$c->code.'_markup';
+                    if (isset($array_amounts['c'.$c->code])) {
+                        ${$amount.'_'.$c->code} = $array_amounts['c'.$c->code];
+                        ${$amount.'_'.$total.'_'.$c->code} = ${$amount.'_'.$c->code} / $currency_rate;
+                        ${$total.'_'.$c->code} = number_format(${$amount.'_'.$total.'_'.$c->code}, 2, '.', '');
+                    }
 
-                if (isset($array_amounts['c20'])) {
-                    $amount20 = $array_amounts['c20'];
-                    $total20 = $amount20 / $currency_rate;
-                    $sum20 = number_format($total20, 2, '.', '');
+                    if (isset($array_markups['m'.$c->code])) {
+                        ${$markup.'_'.$c->code} = $array_markups['m'.$c->code];
+                        ${$total . '_markup_' . $c->code} = ${$markup.'_'.$c->code} / $currency_rate;
+                    }
+                    
+                    $value->${$pre.$c->code} = number_format(${$total.'_'.$c->code}, 2, '.', '');
+                    $value->${$pre.$c->code.'_markup'} = number_format(${$total . '_markup_' . $c->code}, 2, '.', '');
                 }
-
-                if (isset($array_markups['m20'])) {
-                    $markup20 = $array_markups['m20'];
-                    $total_markup20 = $markup20 / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40'])) {
-                    $amount40 = $array_amounts['c40'];
-                    $total40 = $amount40 / $currency_rate;
-                    $sum40 = number_format($total40, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40'])) {
-                    $markup40 = $array_markups['m40'];
-                    $total_markup40 = $markup40 / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40hc'])) {
-                    $amount40hc = $array_amounts['c40hc'];
-                    $total40hc = $amount40hc / $currency_rate;
-                    $sum40hc = number_format($total40hc, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40hc'])) {
-                    $markup40hc = $array_markups['m40hc'];
-                    $total_markup40hc = $markup40hc / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40nor'])) {
-                    $amount40nor = $array_amounts['c40nor'];
-                    $total40nor = $amount40nor / $currency_rate;
-                    $sum40nor = number_format($total40nor, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40nor'])) {
-                    $markup40nor = $array_markups['m40nor'];
-                    $total_markup40nor = $markup40nor / $currency_rate;
-                }
-
-                if (isset($array_amounts['c45'])) {
-                    $amount45 = $array_amounts['c45'];
-                    $total45 = $amount45 / $currency_rate;
-                    $sum45 = number_format($total45, 2, '.', '');
-                }
-
-                if (isset($array_markups['m45'])) {
-                    $markup45 = $array_markups['m45'];
-                    $total_markup45 = $markup45 / $currency_rate;
-                }
-
-                $value->total_20 = number_format($sum20, 2, '.', '');
-                $value->total_40 = number_format($sum40, 2, '.', '');
-                $value->total_40hc = number_format($sum40hc, 2, '.', '');
-                $value->total_40nor = number_format($sum40nor, 2, '.', '');
-                $value->total_45 = number_format($sum45, 2, '.', '');
-
-                $value->total_markup20 = number_format($total_markup20, 2, '.', '');
-                $value->total_markup40 = number_format($total_markup40, 2, '.', '');
-                $value->total_markup40hc = number_format($total_markup40hc, 2, '.', '');
-                $value->total_markup40nor = number_format($total_markup40nor, 2, '.', '');
-                $value->total_markup45 = number_format($total_markup45, 2, '.', '');
 
                 $currency_charge = Currency::find($value->currency_id);
                 $value->currency_usd = $currency_charge->rates;
                 $value->currency_eur = $currency_charge->rates_eur;
             }
 
-            //Charges
+            //Charges LCL/AIR
             foreach ($item->charge_lcl_air as $value) {
 
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
