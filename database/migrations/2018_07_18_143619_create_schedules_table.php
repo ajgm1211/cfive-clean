@@ -20,8 +20,8 @@ class CreateSchedulesTable extends Migration
       $table->string('transit_time');
       $table->string('type');
       $table->date('eta');
-      $table->integer('quotes_id')->unsigned();
-      $table->foreign('quotes_id')->references('id')->on('quote_v2s')->onDelete('cascade');
+      $table->integer('quote_id')->unsigned();
+      $table->foreign('quote_id')->references('id')->on('quote_v2s')->onDelete('cascade');
       $table->timestamps();
     });
   }
