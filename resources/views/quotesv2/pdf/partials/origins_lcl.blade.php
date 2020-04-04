@@ -1,6 +1,5 @@
         <!-- ALL in origin table -->
         @if($quote->pdf_option->grouped_origin_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
-            <br>
             @forelse($origin_charges_grouped as $origin=>$detail)
             <br>
                 <div>
@@ -124,7 +123,7 @@
                                             <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en origen</td>
                                             <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td >{{number_format(@$total_origin, 2, '.', '')}}</td>
+                                            <td >{{round(@$total_origin)}}</td>
                                             @if($quote->pdf_option->grouped_origin_charges==1)
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
@@ -184,7 +183,7 @@
                         <tbody>
                         @foreach($value->charge as $rate)
                             <?php
-                                $total_origin += @$rate->total_sale_origin;
+                                @$total_origin += @$rate->total_sale_origin;
                             ?>
                             <tr class="text-center color-table">
                                 <td>{{$rate->charge}}</td>
@@ -251,16 +250,11 @@
                                 @foreach($r->charge_lcl_air as $v)
                                     @if($v->type_id==1)
                                         <?php
-                                            $total_origin+=@$v->total_origin;
+                                            @$total_origin+=@$v->total_origin;
                                         ?>
                                         <tr class="text-center color-table">
                                             <td>{{$v->surcharge->name}}</td>
-                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>
-                                                @php
-                                                    //echo str_replace("Per", "Por", $v->calculation_type->name); 
-                                                @endphp
-                                                {{@$v->calculation_type->display_name}}
-                                            </td>
+                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
                                             @if($quote->type=='LCL')
@@ -312,7 +306,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_origin+@$total_inland_origin, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_origin+@$total_inland_origin)}}</b></td>
                             @if($quote->pdf_option->grouped_origin_charges==1)
                                 <td><b>{{$quote->pdf_option->origin_charges_currency}}</b></td>
                             @else

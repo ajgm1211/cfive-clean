@@ -59,8 +59,8 @@ class GlobalCharge extends Model implements Auditable
 
   public function globalcharcarrier(){
     return $this->hasMany('App\GlobalCharCarrier','globalcharge_id');
-
   }
+  
   public function carrier(){
     return $this->hasOne('App\GlobalCharCarrier','globalcharge_id');
 

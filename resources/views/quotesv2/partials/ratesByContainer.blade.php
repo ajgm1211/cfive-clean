@@ -18,7 +18,7 @@ $v=0;
                             <li class="size-12px long-text m-width-200"><b>POD:</b> &nbsp;{{$rate->destination_port->name.', '.$rate->destination_port->code}} &nbsp;<img class="rounded" style="width: 15px !important; padding-top: 0 0 0 0!important; margin-top: -5px !important;" src="/images/flags/1x1/{{$rate->destination_country_code}}.svg"/></li>
                             <li class="size-12px long-text m-width-200 desktop"><b>Contract:</b> &nbsp;{{$rate->contract}}</li>
                             <li class="size-12px long-text m-width-100 desktop"><b>Type:</b> &nbsp;{{$rate->schedule_type}}</li>
-                            <li class="size-12px m-width-50 desktop"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
+                            <li class="size-12px m-width-100 desktop"><b>TT:</b> &nbsp;{{$rate->transit_time}}</li>
                             <li class="size-12px m-width-100 desktop" style="text-overflow: scroll;"><b>Via:</b> &nbsp;{{$rate->via}}</li>
                             <li class="size-12px no-border-left d-flex justify-content-end m-width-50">
                                 <div onclick="show_hide_element('details_{{$v}}')"><i class="fa fa-angle-down"></i></div>
@@ -59,129 +59,129 @@ $v=0;
                                         <tbody style="background-color: white;">
                                             @php
 
-                                            $i=0;
-                                            $sum20=0;
-                                            $sum40=0;
-                                            $sum40hc=0;
-                                            $sum40nor=0;
-                                            $sum45=0;
+                                                $i=0;
+                                                $sum20=0;
+                                                $sum40=0;
+                                                $sum40hc=0;
+                                                $sum40nor=0;
+                                                $sum45=0;
 
-                                            $sum_m20=0;
-                                            $sum_m40=0;
-                                            $sum_m40hc=0;
-                                            $sum_m40nor=0;
-                                            $sum_m45=0;
+                                                $sum_m20=0;
+                                                $sum_m40=0;
+                                                $sum_m40hc=0;
+                                                $sum_m40nor=0;
+                                                $sum_m45=0;
 
                                             @endphp
 
                                             @foreach($rate->charge as $item)
-                                            @if($item->type_id==3)
-                                            <?php
-                                            $rate_id=$item->automatic_rate_id;
+                                                @if($item->type_id==3)
+                                                    <?php
+                                                        $rate_id=$item->automatic_rate_id;
 
-                                            $freight_amounts = json_decode($item->amount,true);
-                                            $freight_markups = json_decode($item->markups,true);
+                                                        $freight_amounts = json_decode($item->amount,true);
+                                                        $freight_markups = json_decode($item->markups,true);
 
-                                            if(isset($freight_amounts['c20'])){
-                                                $sum20+=$item->total_20;
-                                            }
-                                            if(isset($freight_amounts['c40'])){
-                                                $sum40+=@$item->total_40;
-                                            }
-                                            if(isset($freight_amounts['c40hc'])){
-                                                $sum40hc+=@$item->total_40hc;
-                                            }
-                                            if(isset($freight_amounts['c40nor'])){
-                                                $sum40nor+=@$item->total_40nor;
-                                            }
-                                            if(isset($freight_amounts['c45'])){
-                                                $sum45+=@$item->total_45;
-                                            }
+                                                        if(isset($freight_amounts['c20'])){
+                                                            $sum20+=$item->total_20;
+                                                        }
+                                                        if(isset($freight_amounts['c40'])){
+                                                            $sum40+=@$item->total_40;
+                                                        }
+                                                        if(isset($freight_amounts['c40hc'])){
+                                                            $sum40hc+=@$item->total_40hc;
+                                                        }
+                                                        if(isset($freight_amounts['c40nor'])){
+                                                            $sum40nor+=@$item->total_40nor;
+                                                        }
+                                                        if(isset($freight_amounts['c45'])){
+                                                            $sum45+=@$item->total_45;
+                                                        }
 
-                                            if(isset($freight_markups['m20'])){
-                                                $sum_m20+=$item->total_markup20;
-                                            }
-                                            if(isset($freight_markups['m40'])){
-                                                $sum_m40+=@$item->total_markup40;
-                                            }
-                                            if(isset($freight_markups['m40hc'])){
-                                                $sum_m40hc+=@$item->total_markup40hc;
-                                            }
-                                            if(isset($freight_markups['m40nor'])){
-                                                $sum_m40nor+=@$item->total_markup40nor;
-                                            }
-                                            if(isset($freight_markups['m45'])){
-                                                $sum_m45+=@$item->total_markup45;
-                                            }
-                                            ?>
-                                            <tr class="tr-freight" style="height:40px;">
-                                                <td class="tds" style="padding-left: 30px">
-                                                    <input name="charge_id" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
-                                                    @if($item->surcharge_id!='')
-                                                    <input name="type" value="1" class="form-control type" type="hidden" />
-                                                    <a href="#" class="editable td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
-                                                    @else
-                                                    <input name="type" value="2" class="form-control type" type="hidden" />
-                                                    Ocean freight
-                                                    @endif
-                                                </td>
-                                                <td class="tds">
-                                                    @if($item->surcharge_id!='')
-                                                    <a href="#" class="editable td-a" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
-                                                    @else
-                                                    Per Container
-                                                    @endif
-                                                </td>
-                                                <td {{ @$equipmentHides['20'] }} class="tds">
-                                                    <a href="#" class="editable-amount-20 amount_20 td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    +
-                                                    <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_20 td-a">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }} class="tds">
-                                                    <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    +
-                                                    <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                        if(isset($freight_markups['m20'])){
+                                                            $sum_m20+=$item->total_markup20;
+                                                        }
+                                                        if(isset($freight_markups['m40'])){
+                                                            $sum_m40+=@$item->total_markup40;
+                                                        }
+                                                        if(isset($freight_markups['m40hc'])){
+                                                            $sum_m40hc+=@$item->total_markup40hc;
+                                                        }
+                                                        if(isset($freight_markups['m40nor'])){
+                                                            $sum_m40nor+=@$item->total_markup40nor;
+                                                        }
+                                                        if(isset($freight_markups['m45'])){
+                                                            $sum_m45+=@$item->total_markup45;
+                                                        }
+                                                    ?>
+                                                    <tr class="tr-freight" style="height:40px;">
+                                                        <td class="tds" style="padding-left: 30px">
+                                                            <input name="charge_id" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
+                                                            @if($item->surcharge_id!='')
+                                                            <input name="type" value="1" class="form-control type" type="hidden" />
+                                                            <a href="#" class="editable td-a" data-source="{{$surcharges}}" data-type="select" data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                            @else
+                                                            <input name="type" value="2" class="form-control type" type="hidden" />
+                                                            Ocean freight
+                                                            @endif
+                                                        </td>
+                                                        <td class="tds">
+                                                            @if($item->surcharge_id!='')
+                                                            <a href="#" class="editable td-a" data-source="{{$calculation_types}}" data-type="select" data-name="calculation_type_id" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
+                                                            @else
+                                                            Per Container
+                                                            @endif
+                                                        </td>
+                                                        <td {{ @$equipmentHides['20'] }} class="tds">
+                                                            <a href="#" class="editable-amount-20 amount_20 td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            +
+                                                            <a href="#" class="editable-markup-20 markup_20  td-a" data-type="text" data-name="markups->m20" data-value="{{@$freight_markups['m20']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            <i class="la la-caret-right arrow-down"></i>
+                                                            <span class="total_20 td-a">{{@$freight_amounts['c20']+@$freight_markups['m20']}}</span>
+                                                        </td>
+                                                        <td {{ @$equipmentHides['40'] }} class="tds">
+                                                            <a href="#" class="editable-amount-40 amount_40  td-a" data-type="text" data-name="amount->c40" data-value="{{@$freight_amounts['c40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            +
+                                                            <a href="#" class="editable-markup-40 markup_40  td-a" data-type="text" data-name="markups->m40" data-value="{{@$freight_markups['m40']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
-                                                    <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40 td-a">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
-                                                </td>
-                                                <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                    <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    +
-                                                    <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40hc td-a">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
-                                                </td>
-                                                <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                    <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    +
-                                                    <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            <i class="la la-caret-right arrow-down"></i>
+                                                            <span class="total_40 td-a">{{@$freight_amounts['c40']+@$freight_markups['m40']}}</span>
+                                                        </td>
+                                                        <td {{ @$equipmentHides['40hc'] }} class="tds">
+                                                            <a href="#" class="editable-amount-40hc amount_40hc  td-a" data-type="text" data-name="amount->c40hc" data-value="{{@$freight_amounts['c40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            +
+                                                            <a href="#" class="editable-markup-40hc markup_40hc  td-a" data-type="text" data-name="markups->m40hc" data-value="{{@$freight_markups['m40hc']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            <i class="la la-caret-right arrow-down"></i>
+                                                            <span class="total_40hc td-a">{{@$freight_amounts['c40hc']+@$freight_markups['m40hc']}}</span>
+                                                        </td>
+                                                        <td {{ @$equipmentHides['40nor'] }} class="tds">
+                                                            <a href="#" class="editable-amount-40nor amount_40nor  td-a" data-type="text" data-name="amount->c40nor" data-value="{{@$freight_amounts['c40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            +
+                                                            <a href="#" class="editable-markup-40nor markup_40nor  td-a" data-type="text" data-name="markups->m40nor" data-value="{{@$freight_markups['m40nor']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
-                                                    <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_40nor td-a">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
-                                                </td>
-                                                <td {{ @$equipmentHides['45'] }} class="tds">
-                                                    <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
-                                                    +
-                                                    <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            <i class="la la-caret-right arrow-down"></i>
+                                                            <span class="total_40nor td-a">{{@$freight_amounts['c40nor']+@$freight_markups['m40nor']}}</span>
+                                                        </td>
+                                                        <td {{ @$equipmentHides['45'] }} class="tds">
+                                                            <a href="#" class="editable-amount-45 amount_45  td-a" data-type="text" data-name="amount->c45" data-value="{{@$freight_amounts['c45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
+                                                            +
+                                                            <a href="#" class="editable-markup-45 markup_45  td-a" data-type="text" data-name="markups->m45" data-value="{{@$freight_markups['m45']}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
 
-                                                    <i class="la la-caret-right arrow-down"></i>
-                                                    <span class="total_45 td-a">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
-                                                </td>
-                                                <td class="tds">
-                                                    <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
-                                                    &nbsp;
-                                                    <a class="delete-charge" style="cursor: pointer;" title="Delete">
-                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $i++;
-                                            @endphp
-                                            @endif
+                                                            <i class="la la-caret-right arrow-down"></i>
+                                                            <span class="total_45 td-a">{{@$freight_amounts['c45']+@$freight_markups['m45']}}</span>
+                                                        </td>
+                                                        <td class="tds">
+                                                            <a href="#" class="editable td-a local_currency" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$item->currency_id}}" data-pk="{{$item->id}}" data-title="Select currency"></a>
+                                                            &nbsp;
+                                                            <a class="delete-charge" style="cursor: pointer;" title="Delete">
+                                                                <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                        $i++;
+                                                    @endphp
+                                                @endif
                                             @endforeach
 
                                             <!-- Hide Freight -->
@@ -385,7 +385,7 @@ $v=0;
                                                     <input name="type" value="1" class="form-control type" type="hidden" />
                                                     <input name="charge_id td-a" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
 
-                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select"  data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
@@ -647,7 +647,7 @@ $v=0;
                                                     <input name="type" value="1" class="form-control type" type="hidden" />
                                                     <input name="charge_id" value="{{$item->id}}" class="form-control charge_id td-a" type="hidden" />
 
-                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
+                                                    <a href="#" class="editable surcharge_id td-a" data-source="{{$surcharges}}" data-type="select"  data-name="surcharge_id" data-value="{{$item->surcharge_id}}" data-pk="{{$item->id}}" data-title="Select surcharge"></a>
                                                 </td>
                                                 <td class="tds">
                                                     <a href="#" class="editable calculation_type_id td-a" data-source="{{$calculation_types}}" data-name="calculation_type_id" data-type="select" data-value="{{$item->calculation_type_id}}" data-pk="{{$item->id}}" data-title="Select calculation type"></a>
@@ -1128,45 +1128,8 @@ $v=0;
                             </div>
                         </div>
                         <br>
-
                         <!-- Remarks -->
-                        <div class="row">
-                            <div class="col-md-12 ">
-                                <div class="">
-                                    <div class="header-charges" >
-                                        <div class="row " style="padding-left: 20px;">
-                                            <h5 class="title-quote size-12px">Remarks</h5>
-                                        </div>
-                                    </div>
-                                    <div class="m-portlet__body">
-                                        <div class="remarks_span_{{$v}}">
-                                            <button class="btn btn-primary-v2 edit-remarks btn-edit" onclick="edit_remark('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')" style="margin-bottom: 12px;">
-                                                Edit&nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                            </button>
-                                            <div class="card card-body bg-light remarks_box_{{$v}}">
-                                                <span>{!! $rate->remarks !!}</span>
-                                                <br>
-                                            </div>
-                                        </div>
-                                        <div class="remarks_textarea_{{$v}}" hidden>
-                                            <textarea name="remarks_{{$v}}" class="form-control remarks_{{$v}} editor">{!!$rate->remarks!!}</textarea>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12 text-center update_remarks_{{$v}}"  hidden>
-                                                <br>
-                                                <button class="btn btn-danger cancel-remarks_{{$v}}" onclick="cancel_update('remarks_span_{{$v}}','remarks_textarea_{{$v}}','update_remarks_{{$v}}')">
-                                                    Cancel&nbsp;&nbsp;<i class="fa fa-close"></i>
-                                                </button>
-                                                <button class="btn btn-primary update-remarks_{{$v}}" onclick="update_remark({{$rate->id}},'remarks_{{$v}}',{{$v}})">
-                                                    Update&nbsp;&nbsp;<i class="fa fa-pencil"></i>
-                                                </button>
-                                                <br>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @include('quotesv2.partials.remarks')
                     </div>
                 </div>
             </div>

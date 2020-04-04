@@ -17,7 +17,7 @@ use App\VerifyUser;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
-use Intercom\IntercomClient;
+use EventCrisp;
 
 class UsersController extends Controller
 {
@@ -84,32 +84,6 @@ class UsersController extends Controller
 
       \Mail::to($user->email)->send(new VerifyMail($user));
 
-      // INTERCOM CLIENTE
-
-      $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
-      $this->intercom($client,$user);
-
-      if($user->company_user_id != ''){
-        
-        $client->users->create([
-          "email" => $user->email,
-          "user_id" => $user->id,
-          "name" => $user->name,
-          "companies" => [
-            [
-              "company_id" => $user->company_user_id,
-            ]
-          ]
-        ]);
-
-      }else{
-
-        $client->users->create([
-          "email" => $user->email,
-          "user_id" =>$user->id,
-          "name" => $user->name,
-        ]);
-      }
 
 
       $request->session()->flash('message.nivel', 'success');
@@ -205,6 +179,10 @@ class UsersController extends Controller
 
     $user->update($requestForm);
 
+    if($request->ajax()) {
+      return response()->json('User updated successfully!');
+    }
+
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You upgrade has been success ');
@@ -218,15 +196,22 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
   public function destroy($id)
   {
     $user = User::find($id);
     $user->delete();
-    $client=  new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=', null, ['Intercom-Version' => '1.1']);
-    $cliente =  $client->users->getUsers(["email" => $user->email]);
-    $client->users->archiveUser($cliente->id);
+
+    //Crisp Delete 
+    $CrispClient = new EventCrisp();
+    $exist =  $CrispClient->checkIfExist($user->email);
+    if($exist == 'true'){//Eliminamos el perfil
+      $people = $CrispClient->deleteProfile($user->email);
+    }
     return $user;
   }
+
+
   public function destroyUser(Request $request,$id)
   {
     if($request->user_id){
@@ -340,21 +325,6 @@ class UsersController extends Controller
       $request->session()->flash('message.title', 'Alert!');
       $request->session()->flash('message.content', 'This user has been placed as unverified!');
       return redirect()->route('users.home');
-    }
-  }
-
-
-  public function intercom($client,$user){ 
-
-    $cliente =  $client->users->getUsers(["email" => $user->email]);
-    if($cliente->total_count > 1 ){
-      foreach($cliente->users as $u){
-        if($u->type == "user" ){
-          if($u->user_id != $user->id ){
-            $client->users->archiveUser($u->id);
-          }
-        }
-      }
     }
   }
 

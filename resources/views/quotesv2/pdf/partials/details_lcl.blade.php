@@ -48,6 +48,13 @@
             </div>
         @endif      
         <br>
+        @if(($quote->delivery_type==2 || $quote->delivery_type==3 || $quote->delivery_type==4) && ($quote->origin_address!='' || $quote->destination_address!=''))
+            <div>
+                @if($quote->origin_address!='')<p><span class="title" >Origin Address: </span>{{@$quote->origin_address}}</p>@endif
+                @if($quote->destination_address!='')<p><span class="title" >Destination Address: </span>{{@$quote->destination_address}}</p>@endif
+            </div>
+        @endif
+        <br>
         <div class="company" style="color: #1D3A6E;">
             <p class="title"><b>Cargo details</b></p>
             <br>
@@ -89,7 +96,7 @@
                 @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
                   <div class="row">
                       <div class="col-md-12 ">
-                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} kg
+                          <b class="title">Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
                       </div>
                   </div>
                 @endif
@@ -118,7 +125,7 @@
                       <td>{{$quote->total_quantity != '' ? $quote->total_quantity : ''}}</td>
                       <td>{{$quote->total_weight != '' ? $quote->total_weight.' Kg' : ''}}</td>
                       <td>{!!$quote->total_volume != '' ? $quote->total_volume.' m<sup>3</sup>' : ''!!}</td>
-                      <td>{{$quote->chargeable_weight}} kg</td>
+                      <td>{{$quote->chargeable_weight}} m<sup>3</sup></td>
                     </tr>
                   </tbody>
                 </table>
