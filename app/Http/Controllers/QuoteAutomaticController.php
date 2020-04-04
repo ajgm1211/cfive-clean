@@ -40,7 +40,6 @@ use App\Mail\SendQuotePdf;
 use App\Quote;
 use App\SearchRate;
 use App\SearchPort;
-use EventIntercom;
 use App\Repositories\Schedules;
 
 class QuoteAutomaticController extends Controller
@@ -128,9 +127,7 @@ class QuoteAutomaticController extends Controller
         $q->where('termsAndConditions.company_user_id',\Auth::user()->company_user_id);
       })->get();
     }
-    // Intercom SEARCH 
-    $event = new  EventIntercom();
-    $event->event_selectRate();
+
 
     $emaildimanicdata = json_encode([
       'quote_bool'   => 'false',
@@ -182,9 +179,7 @@ class QuoteAutomaticController extends Controller
       }
 
     }
-    // Intercom SEARCH 
-    $event = new  EventIntercom();
-    $event->event_searchRate();
+
 
   }
 

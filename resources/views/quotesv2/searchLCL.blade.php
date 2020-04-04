@@ -522,15 +522,15 @@
           <div class="col-lg-10">
             <ul class="nav nav-tabs" role="tablist" style="text-transform: uppercase; letter-spacing: 1px;">
               <li class="nav-item">
-                <a href="#tab_1_1" class="nav-link {{ $simple }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
+                <a href="#tab_1_1" class="nav-link {{ @$simple }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(1)"> Calculate by total shipment </a>
               </li>
               <li class="nav-item">
-                <a href="#tab_1_2" class="nav-link {{ $paquete }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
+                <a href="#tab_1_2" class="nav-link {{ @$paquete }}" data-toggle="tab" style=" font-weight: bold;" onclick="change_tab(2)"> Calculate by packaging </a>
               </li>
             </ul>
             <div class="tab-content">
               <!-- Simple -->
-              <div class="tab-pane fade  {{ $simple }}"   id="tab_1_1"  >
+              <div class="tab-pane fade  {{ @$simple }}"   id="tab_1_1"  >
                 <div class="row">
                   <div class="col-md-4">
                     <label>
@@ -933,7 +933,14 @@
                         <div class="col-lg-3 no-padding d-flex justify-content-end">
                           @if(($arr->excelRequest  !="0") || ($arr->excelRequestLCL !="0") )
                           <div class="downexcel" style="margin-right: 10px;">
+<!--
                             <a  id='excel_l{{$loop->iteration}}' href="/v2/quotes/excelLcl/{{ $arr->excelRequest }}/{{ $arr->excelRequestLCL }}"  class="l detailed-cost"  title="Cancel" >
+                              <span class="workgreen"><i class="icon-excel"></i></span>
+
+                              <i class="la la-file-excel-o"></i>
+                            </a>
+-->
+							  <a  id='excel_l{{$loop->iteration}}' href="#" onclick="downlodRequest({{ $arr->excelRequest }},{{ $arr->excelRequestLCL }})" class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
 
                               <i class="la la-file-excel-o"></i>
@@ -1254,7 +1261,27 @@
 <script src="/assets/demo/default/custom/components/base/dropdown.js" type="text/javascript"></script>
 <script src="/assets/demo/default/custom/components/datatables/base/html-table-quotesrates.js" type="text/javascript"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCVgHV1pi7UVCHZS_wMEckVZkj_qXW7V0&libraries=places&callback=initAutocomplete" async defer></script>
+<script type="application/x-javascript" src="/js/toarts-config.js"></script>
 <script>
+	
+	function downlodRequest(id,id2){
+		url='{!! route("quotes-v2.excel-lcl",[":id","*id"]) !!}';
+		url = url.replace(':id', id);
+		url = url.replace('*id', id2);
+		$.ajax({
+			url:url,
+			method:'get',
+			success: function(response){
+				if(response.success == true){
+					window.location = response.url;
+				}else {
+					toastr.error('File not found');
+				}
+				//console.log(response);
+			}
+		});
+	}
+	
   $('.selected').on('click', function(){
     $(this).toggleClass('selected-class');
 

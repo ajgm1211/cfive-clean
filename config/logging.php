@@ -35,7 +35,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single','slack'],
+            //'channels' => ['single'],
+			'channels' => explode(',',env('LOGGING_CHANNELS')),
         ],
 
         'single' => [
@@ -54,7 +55,7 @@ return [
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
-            'username' => 'CARGOFIVE LOG',
+            'username' => env('NAME_LOG','CARGOFIVE LOG'),
             'emoji' => ':bear:',
             'level' => 'error',
         ],

@@ -8,6 +8,7 @@ use PrvCarrier;
 use App\FailRate;
 use App\Currency;
 use App\Contract;
+use \Carbon\Carbon;
 use App\LocalCharge;
 use App\ScheduleType;
 use App\LocalCharPort;
@@ -15,8 +16,10 @@ use App\ContractAddons;
 use App\ContractCarrier;
 use App\LocalCharCountry;
 use App\LocalCharCarrier;
+use App\NewContractRequest;
 use App\ContractUserRestriction;
 use App\ContractCompanyRestriction;
+use App\AccountImportationContractFcl as AccountFcl;
 // LCL
 use App\RateLcl;
 use App\FailRateLcl;
@@ -78,8 +81,29 @@ class GeneralJob implements ShouldQueue
             $contract_new->validity         = $validity;
             $contract_new->expire           = $expire;
             $contract_new->status           = 'publish';
+
+            if($requestArray['requestChange'] == true){   
+                $now                        = new \DateTime();
+                $now                        = $now->format('Y-m-d');
+                $requestFc                  = NewContractRequest::find($requestArray['request_id']);
+                $account                    = new AccountFcl();
+                $account->name              = $requestArray['reference'];
+                $account->date              = $now;
+                $account->namefile          = 'N/A';
+                $account->company_user_id   = $requestArray['company_user_id'];
+                $account->request_id        = $requestArray['request_id'];
+                $account->request_dp_id     = $requestArray['request_dp_id'];
+                $account->save();
+                $contract_new->account_id   = $account->id;
+            }
+
             $contract_new->save();
             $contract_new_id                = $contract_new->id;
+
+            if($requestArray['requestChange'] == true){   
+                $requestFc->contract_id     = $contract_new_id;
+                $requestFc->update();
+            }
 
             foreach($requestArray['carrier_id'] as $carrier_id){
                 $carrier_contract               = new ContractCarrier();
@@ -186,6 +210,29 @@ class GeneralJob implements ShouldQueue
                     }
                 }
 
+            }
+
+            if($requestArray['requestChange'] == true){
+                $time   = new \DateTime();
+                $now2   = $time->format('Y-m-d H:i:s');
+                $requestFc->status        = 'Review';
+                if($requestFc->time_total == null){
+                    $fechaEnd = Carbon::parse($now2);
+                    if(empty($requestFc->time_star) == true){
+                        $requestFc->time_total = 'It did not go through the processing state';
+                    } else{
+                        $time_exacto = '';
+                        $fechaStar = Carbon::parse($requestFc->time_star);
+                        $time_exacto = $fechaEnd->diffInMinutes($fechaStar);
+                        if($time_exacto == 0 || $time_exacto == '0'){
+                            $time_exacto = '1 minute';
+                        } else {
+                            $time_exacto = $time_exacto.' minutes';							
+                        }				
+                        $requestFc->time_total = $time_exacto;
+                    }
+                }
+                $requestFc->update();
             }
 
         } else if(strnatcasecmp($this->accion,'duplicated_lcl') == 0){

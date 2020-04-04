@@ -41,7 +41,6 @@
   use App\Quote;
   use App\SearchRate;
   use App\SearchPort;
-  use EventIntercom;
   use App\Repositories\Schedules;
 
   class QuoteAutoController extends Controller{

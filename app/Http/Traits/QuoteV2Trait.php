@@ -13,6 +13,26 @@ use App\Charge;
 use App\ChargeLclAir;
 use App\Jobs\SendQuotes;
 use App\SendQuote;
+use App\SaleTermV2;
+use App\SaleTermV2Charge;
+use App\CalculationType;
+use App\CalculationTypeLcl;
+use App\Company;
+use App\CompanyUser;
+use App\Contact;
+use App\Country;
+use App\EmailTemplate;
+use App\Harbor;
+use App\Incoterm;
+use App\Price;
+use App\Inland;
+use App\Quote;
+use App\Carrier;
+use App\User;
+use App\PdfOption;
+use App\IntegrationQuoteStatus;
+
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait {
@@ -151,7 +171,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_markups['m20'])){
                     $markup_inland20=$array_markups['m20'];
-                    $total_markup20=$markup20/$currency_rate;
+                    $total_inland_markup20=$markup_inland20/$currency_rate;
                 }
 
                 if(isset($array_amounts['c40'])){
@@ -167,8 +187,8 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c40hc'])){
                     $amount_inland40hc=$array_amounts['c40hc'];
-                    $total_inland40hc=$amount40hc/$currency_rate;          
-                    $sum_inland_40hc = number_format($total_inland40hc, 2, '.', '');
+                    $total_inland40hc=$amount_inland40hc/$currency_rate;          
+                    $sum_inland40hc = number_format($total_inland40hc, 2, '.', '');
                 }
 
                 if(isset($array_markups['m40hc'])){
@@ -178,7 +198,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c40nor'])){
                     $amount_inland40nor=$array_amounts['c40nor'];
-                    $total_inland40nor=$amount40nor/$currency_rate;
+                    $total_inland40nor=$amount_inland40nor/$currency_rate;
                     $sum_inland40nor = number_format($total_inland40nor, 2, '.', '');
                 }
 
@@ -189,7 +209,7 @@ trait QuoteV2Trait {
 
                 if(isset($array_amounts['c45'])){
                     $amount_inland45=$array_amounts['c45'];
-                    $total_inland45=$amount45/$currency_rate;
+                    $total_inland45=$amount_inland45/$currency_rate;
                     $sum_inland45 = number_format($total_inland45, 2, '.', '');
                 }
 
@@ -1783,34 +1803,320 @@ trait QuoteV2Trait {
 
     public function saveEmailNotification($to, $email_from, $subject, $body, $quote, $sign_type, $sign, $contact_email){
         if($to!=''){
-          $explode=explode(';',$to);
-          foreach($explode as $item) {
+            $explode=explode(';',$to);
+            foreach($explode as $item) {
+                $send_quote = new SendQuote();
+                $send_quote->to = trim($item);
+                $send_quote->from = $email_from;
+                $send_quote->subject = $subject;
+                $send_quote->body = $body;
+                $send_quote->quote_id = $quote->id;
+                if($sign_type!=''){
+                    $send_quote->sign_type = $sign_type;
+                }
+                $send_quote->sign = $sign;
+                $send_quote->status = 0;
+                $send_quote->save();
+            }
+        }else{
             $send_quote = new SendQuote();
-            $send_quote->to = trim($item);
+            $send_quote->to = $contact_email->email;
             $send_quote->from = $email_from;
             $send_quote->subject = $subject;
             $send_quote->body = $body;
             $send_quote->quote_id = $quote->id;
             if($sign_type!=''){
-              $send_quote->sign_type = $sign_type;
+                $send_quote->sign_type = $sign_type;
             }
             $send_quote->sign = $sign;
             $send_quote->status = 0;
             $send_quote->save();
-          }
-        }else{
-          $send_quote = new SendQuote();
-          $send_quote->to = $contact_email->email;
-          $send_quote->from = $email_from;
-          $send_quote->subject = $subject;
-          $send_quote->body = $body;
-          $send_quote->quote_id = $quote->id;
-          if($sign_type!=''){
-            $send_quote->sign_type = $sign_type;
-          }
-          $send_quote->sign = $sign;
-          $send_quote->status = 0;
-          $send_quote->save();
         }
     }
+
+
+    public function generatepdf($id,$company_user,$currency_cfg,$user_id){
+
+
+
+
+        $quote = QuoteV2::findOrFail($id);
+        $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+
+        /* Sale terms */
+
+        $sale_terms_origin = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+        $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
+        $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
+
+        foreach($sale_terms_origin_grouped as $origin_sale){
+            foreach($origin_sale->charge as $origin_charge){
+                if($origin_charge->currency_id!=''){
+                    if($quote->pdf_option->grouped_total_currency==1){
+                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
+                    $origin_charge->sum20 += $origin_charge->c20/$currency_rate;
+                    $origin_charge->sum40 += $origin_charge->c40/$currency_rate;
+                    $origin_charge->sum40hc += $origin_charge->c40hc/$currency_rate;
+                    $origin_charge->sum40nor += $origin_charge->c40nor/$currency_rate;
+                    $origin_charge->sum45 += $origin_charge->c45/$currency_rate;
+                }
+            }
+        }
+
+        foreach($sale_terms_destination_grouped as $value){
+            foreach($value->charge as $item){
+                if($item->currency_id!=''){
+                    if($quote->pdf_option->grouped_total_currency==1){
+                        $typeCurrency =  $quote->pdf_option->total_in_currency;
+                    }else{
+                        $typeCurrency =  $currency_cfg->alphacode;
+                    }
+                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                    $item->sum20 += $item->c20/$currency_rate;
+                    $item->sum40 += $item->c40/$currency_rate;
+                    $item->sum40hc += $item->c40hc/$currency_rate;
+                    $item->sum40nor += $item->c40nor/$currency_rate;
+                    $item->sum45 += $item->c45/$currency_rate;
+                }
+            }
+        }
+
+        $sale_terms_origin = collect($sale_terms_origin);
+
+        $sale_terms_origin = $sale_terms_origin->groupBy([   
+            function ($item) {
+                return $item['port']['name'].', '.$item['port']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_origin as $value){
+            foreach($value as $origin_sale){
+                foreach($origin_sale->charge as $origin_charge){
+
+                    if($origin_charge->currency_id!=''){
+                        if($quote->pdf_option->grouped_origin_charges==1){
+                            $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
+                        $origin_charge->sum20 += $origin_charge->c20/$currency_rate;
+                        $origin_charge->sum40 += $origin_charge->c40/$currency_rate;
+                        $origin_charge->sum40hc += $origin_charge->c40hc/$currency_rate;
+                        $origin_charge->sum40nor += $origin_charge->c40nor/$currency_rate;
+                        $origin_charge->sum45 += $origin_charge->c45/$currency_rate;
+                    }
+                }
+            }
+        }
+
+        $sale_terms_destination = collect($sale_terms_destination);
+
+        $sale_terms_destination = $sale_terms_destination->groupBy([   
+            function ($item) {
+                return $item['port']['name'].', '.$item['port']['code'];
+            },     
+        ], $preserveKeys = true);
+
+        foreach($sale_terms_destination as $destination_sale){
+            foreach($destination_sale as $value){
+                foreach($value->charge as $item){
+                    if($item->currency_id!=''){
+                        if($quote->pdf_option->grouped_destination_charges==1){
+                            $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                        }else{
+                            $typeCurrency =  $currency_cfg->alphacode;
+                        }
+                        $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
+                        $item->sum20 += $item->c20/$currency_rate;
+                        $item->sum40 += $item->c40/$currency_rate;
+                        $item->sum40hc += $item->c40hc/$currency_rate;
+                        $item->sum40nor += $item->c40nor/$currency_rate;
+                        $item->sum45 += $item->c45/$currency_rate;
+                    }
+                }
+            }
+        }
+
+        /* Fin Saleterms */
+
+        /* Arrays de puertos incluidos en los Saleterms */
+
+        $origin_ports = $this->getPortsInArray($sale_terms_origin_grouped);
+
+        $destination_ports = $this->getPortsInArray($sale_terms_destination_grouped);
+
+        /* Fin arrays */
+
+        /* Consulta de charges relacionados al Rate */
+
+        $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_ports)->where('quote_id',$quote->id)
+            ->Charge(1,'Origin')->with('charge')->get();
+
+        $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_ports)->where('quote_id',$quote->id)
+            ->Charge(2,'Destination')->with('charge')->get();
+
+        $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
+            $query->where('type_id', 3);
+        })->with('charge')->where('quote_id',$quote->id)->get();
+
+        /* Fin consulta de charges */
+
+        $contact_email = Contact::find($quote->contact_id);
+        $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
+        $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
+        $user = User::where('id',$user_id)->with('companyUser')->first();
+        if($quote->equipment!=''){
+            $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+        }
+
+        /** Rates **/
+
+        $rates = $this->processGlobalRates($rates, $quote, $currency_cfg);
+
+        /* Se manipula la colección de rates para añadir los valores de saleterms */
+        $rates = $rates->map(function ($item, $key) use($origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
+            if(in_array($item->origin_port_id,$origin_ports)){
+                if(!$item->charge->whereIn('type_id',1)->isEmpty()){
+                    $item->charge->map(function ($value, $key) use($sale_terms_origin_grouped,$item){
+                        if($value->type_id==1){
+                            //Seteamos valores de los charges originales a 0
+                            $value->total_20=0;
+                            $value->total_40=0;
+                            $value->total_40hc=0;
+                            $value->total_40nor=0;
+                            $value->total_45=0;
+                            $value->total_markup20=0;
+                            $value->total_markup40=0;
+                            $value->total_markup40hc=0;
+                            $value->total_markup40nor=0;
+                            $value->total_markup45=0;
+
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 1;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }else{
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_origin_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 1;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }
+            }
+            if(in_array($item->destination_port_id,$destination_ports)){
+                if(!$item->charge->whereIn('type_id',2)->isEmpty()){
+                    $item->charge->map(function ($value, $key) use($sale_terms_destination_grouped,$item){
+                        if($value->type_id==2){
+                            //Seteamos valores de los charges originales a 0
+                            $value->total_20=0;
+                            $value->total_40=0;
+                            $value->total_40hc=0;
+                            $value->total_40nor=0;
+                            $value->total_45=0;
+                            $value->total_markup20=0;
+                            $value->total_markup40=0;
+                            $value->total_markup40hc=0;
+                            $value->total_markup40nor=0;
+                            $value->total_markup45=0;
+
+                        }
+                    });
+                    //Añadimos los saleterms a la colección de Rates
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 2;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }else{
+                    //Añadimos los saleterms a la colección de Rates si esta vacío la relación con Charges
+                    $sale_terms_destination_grouped->map(function ($a) use($item) {
+                        $a->charge->map(function ($x) use($item) {
+                            $charge = new Charge();
+                            $charge->type_id = 2;
+                            $charge->total_20 = $x->sum20;
+                            $charge->total_40 = $x->sum40;
+                            $charge->total_40hc = $x->sum40hc;
+                            $charge->total_40nor = $x->sum40nor;
+                            $charge->total_45 = $x->sum45;
+                            $charge->currency_id = $x->currency_id;
+                            $item->charge->push($charge);
+                        });
+                    });
+                }
+            }
+
+            return $item;       
+
+        });
+
+        /** Origin Charges **/
+
+        $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote, $currency_cfg);
+
+        $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote, $currency_cfg);
+
+        /** Destination Charges **/
+
+        $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote, $currency_cfg);
+
+        $destination_charges=$this->processDestinationDetailed($destination_charges, $quote, $currency_cfg);
+
+        /** Freight Charges **/
+
+        $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg);
+
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
+
+        $pdf = \App::make('dompdf.wrapper');
+
+        $pdfarray = array('pdf'=>$pdf,'view'=>$view,'idQuote'=>$quote->quote_id,'idQ'=>$quote->id);
+
+        return $pdfarray;
+
+
+
+    }
+
+    public function updateIntegrationQuoteStatus($quote_id){
+        $status = IntegrationQuoteStatus::where('quote_id',$quote_id)->first();
+        $status->status = 0;
+        $status->update();
+    }
+
+
 }
