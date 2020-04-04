@@ -386,7 +386,7 @@
                                         Type Calculation 
                                     </th>
                                     <th >
-                                        Ammount
+                                        Amount
                                     </th>
                                     <th >
                                         Currency

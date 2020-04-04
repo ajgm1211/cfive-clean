@@ -154,6 +154,7 @@ return [
     /*
          * Application Service Providers...
          */
+
     App\Providers\AppServiceProvider::class,
     App\Providers\AuthServiceProvider::class,
     App\Providers\BroadcastServiceProvider::class,
@@ -181,11 +182,14 @@ return [
     Barryvdh\Debugbar\ServiceProvider::class,
     App\Providers\CarrierServiceProvider::class,
     App\Providers\UserConfigurationProvider::class,
-
     App\Providers\RouteServiceProvider::class,
     App\Providers\RequetsProvider::class,
     App\Providers\ValidationsProvider::class,
     Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
+    Kordy\Ticketit\TicketitServiceProvider::class,
+    App\Providers\CrispServiceProvider::class,
+    
+
 
 
 
@@ -257,6 +261,7 @@ return [
     'PrvValidation' => App\Helpers\HelperValidations::class,
     'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
     'Debugbar' => Barryvdh\Debugbar\Facade::class,
+    'EventCrisp' => App\Helpers\EventCrisp::class,
 
   ],
 

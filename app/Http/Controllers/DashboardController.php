@@ -8,7 +8,7 @@ use App\User;
 use App\Quote;
 use App\CompanyUser;
 use App\Currency;
-use Intercom\IntercomClient;
+
 
 class DashboardController extends Controller
 {
@@ -19,33 +19,7 @@ class DashboardController extends Controller
      */
   public function index()
   {
-    $client = new IntercomClient('dG9rOmVmN2IwNzI1XzgwMmFfNDdlZl84NzUxX2JlOGY5NTg4NGIxYjoxOjA=');
-    /*$test = $client->conversations->getConversations([
-      "type" => "admin",
-      "admin_id" => "2892028"
-    ]);*/
-    
-    //dd($test = $client->users->getUser("10"));
 
-    /*    $client->users->create([
-      "email" => "jon@example.com",
-      "user_id" => "11",
-    ]);*/
-
-    /*
-    $client->conversations->replyToConversation("20461985095", [
-      "intercom_user_id" => "5c40cbb3e359424a8155da38",
-      "body" => "Ejemplo Juan",
-      "type" => "user",
-      "message_type" => "comment"
-    ]);*/
-
-    
-    //$test = $client->users->getUsers(["user_id" => "10"]);
-
-
-
-//    dd($test);
     $company = CompanyUser::where('id', \Auth::User()->company_user_id)->pluck('currency_id');
     $cur = Currency::where('id', $company[0])->pluck('alphacode');
     $currency = $cur[0];

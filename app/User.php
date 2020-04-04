@@ -74,6 +74,6 @@ class User extends Authenticatable implements Auditable
     }
     public function routeNotificationForSlack()
     {
-        return 'https://hooks.slack.com/services/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';
+        return 'https://hooks.slack.com/services/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';
     }
 }

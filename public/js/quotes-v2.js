@@ -97,6 +97,7 @@ $(document).ready(function() {
     $("#total").html(sum_origin+sum_destination+sum_freight+" USD");   
 
 
+    //Edición en línea
     $('.editable').editable({
         url:'/v2/quotes/charges/update',
         emptytext:0,
@@ -147,6 +148,29 @@ $(document).ready(function() {
         emptytext:0,
         success: function(response, newValue) {
             //setTimeout(location.reload.bind(location), 3000);
+            var total_volume=parseFloat($('#total-volume').html());
+            var weight=parseFloat($('#total-weight').html());
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
             if(!response) {
                 return "Unknown error!";
             }
@@ -156,6 +180,97 @@ $(document).ready(function() {
             }
         }
     });
+
+    $('.editable-quote-weight').editable({
+        url:'/v2/quotes/info/update',
+        emptytext:0,
+        success: function(response, newValue) {
+
+            var total_volume=parseFloat($('#total-volume').html());
+            var weight=newValue;
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=total_volume;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    $('.editable-quote-volume').editable({
+        url:'/v2/quotes/info/update',
+        emptytext:0,
+        success: function(response, newValue) {
+            //setTimeout(location.reload.bind(location), 3000);
+            var total_volume=newValue;
+            var weight=parseFloat($('#total-weight').html());
+            var chargeable_weight = 0;
+
+            if($('#quote-type').val()=='LCL'){
+                total_weight=weight/1000;
+
+                if(total_volume>total_weight){
+                    chargeable_weight=newValue;
+                }else{
+                    chargeable_weight=total_weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }else if($('#quote-type').val()=='AIR'){
+                total_volume=total_volume*166.67;
+                if(total_volume>weight){
+                    chargeable_weight=newValue;
+                }else{
+                    chargeable_weight=weight;
+                }
+                $('#chargeable-weight').html(chargeable_weight);
+            }
+            update_cw(parseFloat(chargeable_weight));
+            if(!response) {
+                return "Unknown error!";
+            }
+
+            if(response.success === false) {
+                return response.msg;
+            }
+        }
+    });
+
+    function update_cw(chargeable_weight) {
+        var id = $('#quote-id').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/v2/quotes/update/chargeable/' + id,
+            data:{
+                "chargeable_weight":chargeable_weight,
+            },
+            success: function(data) {
+                //
+            }
+        });
+    };
 
     //Edición en línea para montos/markups en LCL/AIR
     $('.editable-lcl-air').editable({
@@ -468,6 +583,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -552,7 +671,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -636,6 +760,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -717,7 +845,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -799,6 +932,10 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
             }
 
             //Seteando nuevo valor
@@ -882,7 +1019,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -968,8 +1110,11 @@ $(document).ready(function() {
             if(newValue==''){
                 newValue=0;
             }
-            console.log(newValue);
-            console.log(markup_m40nor);
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Calculando total de la línea dinámico
             total =  parseFloat(newValue) + markup_m40nor;
             $(this).closest('tr').find('.total_40nor').html(total);
@@ -1052,8 +1197,11 @@ $(document).ready(function() {
             if(newValue==''){
                 newValue=0;
             }
-            console.log(newValue);
-            console.log(amount_c40nor);
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Calculando total de la línea dinámico
             total =  parseFloat(newValue) + amount_c40nor;
 
@@ -1136,6 +1284,10 @@ $(document).ready(function() {
                 newValue=0;
             }
 
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -1217,7 +1369,12 @@ $(document).ready(function() {
 
             if(newValue==''){
                 newValue=0;
-            }            
+            }
+            
+            if(newValue.indexOf(',') > -1){
+                notification('Must use period (.) instead of comma (,)','error');
+            }
+            
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
@@ -2205,6 +2362,25 @@ $(document).on('click', '.delete-rate', function () {
             });
         }
     });
+});
+
+//Guardar Sale Terms
+
+$('#saveSaleTerm').on('click',function(e){
+    e.preventDefault();
+    var origin_port=$("#origin_port_select").val();
+    var destination_port=$("#destination_port_select").val();
+    var origin_airport=$("#origin_airport_select").val();
+    var destination_airport=$("#destination_airport_select").val();
+
+    var form = $(this).parents('form');
+
+    if(origin_port!='' || destination_port!='' || origin_airport!='' || destination_airport!=''){
+        form.submit();
+    }else{
+        notification('You must select a port/airport','error');
+    }
+
 });
 
 //Borrar sale terms
@@ -4694,7 +4870,7 @@ function cancel_update($span,$textarea,$update_box){
 }
 
 //Actualizar remarks
-function update_remark($id,$content,$v){
+function update_remark($id,$content,$v,$language){
     var id=$(".id").val();
     var remarks = tinymce.get($content).getContent();
     $.ajax({
@@ -4702,6 +4878,7 @@ function update_remark($id,$content,$v){
         url: '/v2/quotes/update/remarks/'+$id,
         data: {
             'remarks': remarks,
+            'language': $language,
         },
         success: function(data) {
             if(data.message=='Ok'){
@@ -4710,11 +4887,28 @@ function update_remark($id,$content,$v){
                     'The remarks has been updated.',
                     'success'
                 )
+                if($language=='all'){
+                    $(".remarks_box_"+$v).html(data.rate['remarks']);
+                    $(".remarks_span_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_"+$v).attr('hidden','true');
+                    $(".update_remarks_"+$v).attr('hidden','true');
+                }else if($language=='english'){
+                    $(".remarks_box_english_"+$v).html(data.rate['remarks_english']);
+                    $(".remarks_span_english_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_english_"+$v).attr('hidden','true');
+                    $(".update_remarks_english_"+$v).attr('hidden','true');
+                }else if($language=='spanish'){
+                    $(".remarks_box_spanish_"+$v).html(data.rate['remarks_spanish']);
+                    $(".remarks_span_spanish_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_spanish_"+$v).attr('hidden','true');
+                    $(".update_remarks_spanish_"+$v).attr('hidden','true');
+                }else if($language=='portuguese'){
+                    $(".remarks_box_portuguese_"+$v).html(data.rate['remarks_portuguese']);
+                    $(".remarks_span_portuguese_"+$v).removeAttr('hidden');
+                    $(".remarks_textarea_portuguese_"+$v).attr('hidden','true');
+                    $(".update_remarks_portuguese_"+$v).attr('hidden','true');
+                }
 
-                $(".remarks_box_"+$v).html(data.rate['remarks']);
-                $(".remarks_span_"+$v).removeAttr('hidden');
-                $(".remarks_textarea_"+$v).attr('hidden','true');
-                $(".update_remarks_"+$v).attr('hidden','true');
             }
         }
     });
