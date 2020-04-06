@@ -27,8 +27,7 @@ class ContractController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function list(Request $request)
-    {
-        
+    {        
         $results = Contract::filterByCurrentCompany()->filter($request);
 
     	return ContractResource::collection($results);
@@ -63,6 +62,7 @@ class ContractController extends Controller
             'expire' => 'required',
             'status' => 'required',
             'remarks' => 'sometimes',
+            'gp_container' => 'required',
             'carriers' => 'required'
         ]);
 
@@ -75,6 +75,7 @@ class ContractController extends Controller
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => $data['status'],
+            'gp_container_id' => $data['gp_container'],
             'remarks' => $data['remarks']
         ]);
 
@@ -89,7 +90,7 @@ class ContractController extends Controller
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(Request $request, Contract $contract)
     {
         return view('contract.edit');
     }
@@ -110,19 +111,18 @@ class ContractController extends Controller
             'expire' => 'required',
             'status' => 'required',
             'remarks' => 'present',
+            'gp_container' => 'required',
             'carriers' => 'required'
         ]);
         
         $contract->update([
             'name' => $data['name'],
-            'number' => null,
-            'company_user_id' => $company_user_id,
-            'account_id' => null,
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
             'status' => $data['status'],
-            'remarks' => $data['remarks']
+            'remarks' => $data['remarks'],
+            'gp_container_id' => $data['gp_container'],
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);
