@@ -57,7 +57,7 @@ class ContractController extends Controller
 
         $data = $request->validate([
             'name' => 'required',
-            'direction' => 'required'
+            'direction' => 'required',
             'validity' => 'required',
             'expire' => 'required',
             'status' => 'required',
@@ -106,7 +106,7 @@ class ContractController extends Controller
     {
         $data = $request->validate([
             'name' => 'required',
-            'direction' => 'required'
+            'direction' => 'required',
             'validity' => 'required',
             'expire' => 'required',
             'status' => 'required',
