@@ -41,15 +41,21 @@
 				<div class="m-portlet__head-tools">
 					<ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
 						<li class="nav-item m-tabs__item">
-							<a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#conatinersCT" role="tab">
+							<a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#containersTab" role="tab">
 								<i class="la la-briefcase"></i>
-								Containers Calculation Types
+								Containers
 							</a>
 						</li>
-						<li class="nav-item m-tabs__item">
+                        <li class="nav-item m-tabs__item">
 							<a class="nav-link m-tabs__link addS " data-toggle="tab" href="#calculationts" role="tab">
 								<i class="la la-briefcase"></i>
 								Calculation Types
+							</a>
+						</li>
+						<li class="nav-item m-tabs__item">
+							<a class="nav-link m-tabs__link addS" data-toggle="tab" href="#conatinersCT" role="tab">
+								<i class="la la-briefcase"></i>
+								Containers Calculation Types
 							</a>
 						</li>
 					</ul>
@@ -57,7 +63,60 @@
 			</div>
 
 			<div class="tab-content">
-				<div class="tab-pane active" id="conatinersCT" role="tabpanel">
+                <div class="tab-pane active" id="containersTab" role="tabpanel">
+                    <div class="m-portlet__body">
+						<!--begin: Search Form -->
+						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+							<div class="row align-items-center">
+								<div class="col-xl-12 order-2 order-xl-1 conten_load">
+
+									<div class="col-xl-12 order-1 order-xl-2 m--align-right">
+										<a href="#" onclick="showModal('addContainer',0)">
+											<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
+												<span>
+													<span>
+														Add&nbsp;
+													</span>
+													<i class="la la-plus"></i>
+												</span>
+											</button>
+										</a>
+
+									</div>
+								</div>
+							</div>
+							<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+								<div class="row align-items-center">
+									<div class="col-xl-12 order-2 order-xl-1 conten_load">
+										<table class="table tableData"  id="containersTable" width="100%">
+											<thead width="100%">
+												<tr>
+													<th width="5%" >
+														Id
+													</th>
+													<th width="15%" >
+														Name
+													</th>
+													<th width="15%" >
+														Code
+													</th>
+                                                    <th width="15%" >
+														Group
+													</th>
+													<th width="5%" >
+														Options
+													</th>
+												</tr>
+											</thead>
+
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+				<div class="tab-pane" id="conatinersCT" role="tabpanel">
 					<div class="m-portlet__body">
 						<!--begin: Search Form -->
 						<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
@@ -82,7 +141,7 @@
 							<div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
 								<div class="row align-items-center">
 									<div class="col-xl-12 order-2 order-xl-1 conten_load">
-										<table class="table tableData"  id="containersTable" width="100%">
+										<table class="table tableData"  id="containersCTTable" width="100%">
 											<thead width="100%">
 												<tr>
 													<th width="5%" >
@@ -188,8 +247,19 @@
 			$('#modal-content').load(url,function(){
 				$('#changeStatus').modal({show:true});
 			});
+		} else if(action == "addContainer"){
+            var url = '{{ route("Container.index") }}';
+			$('#modal-content').load(url,function(){
+				$('#changeStatus').modal({show:true});
+			});
 		} else if(action == "addCalculation"){
 			var url = '{{ route("CalculationType.index") }}';
+			$('#modal-content').load(url,function(){
+				$('#changeStatus').modal({show:true});
+			});
+		} else if(action == "updateContainer"){
+            var url = '{{ route("Container.edit",":id") }}';
+			url = url.replace(':id', id);
 			$('#modal-content').load(url,function(){
 				$('#changeStatus').modal({show:true});
 			});
@@ -214,8 +284,30 @@
 		}
 	});
 
-
-	var databableCC = $('#containersTable').DataTable({
+    var databableCC = $('#containersTable').DataTable({
+		processing: true,
+		ajax: '{!! route("Container.create") !!}',
+		columns: [
+			{ data: 'id', name: 'id' },
+			{ data: 'name', name: 'name' },
+			{ data: 'code', name: 'code' },
+			{ data: 'group', name: 'group' },
+			{ data: 'action', name: 'action', orderable: false, searchable: false },
+		],
+		"order": [[0, 'asc']],
+		"lengthChange": false,
+		"searching": true,
+		"ordering": true,
+		"width": true,
+		"autoWidth": false,
+		"stateSave": true,
+		"processing": true,
+		"serverSide": true,
+		"paging": true
+		//"scrollX": true,
+	});
+    
+	var databableCC = $('#containersCTTable').DataTable({
 		processing: true,
 		ajax: '{!! route("ContainerCalculation.create") !!}',
 		columns: [
