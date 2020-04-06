@@ -994,6 +994,11 @@ Route::prefix('CalculationType')->group(function () {
 	Route::resource('CalculationType','CalculationTypeController')->middleware(['role:administrator|data_entry']);
 });
 
+/** Contracts V2 routes **/
 Route::get('api/contracts', 'ContractController@index');
 Route::get('api/v2/contracts', 'ContractController@list');
-
+Route::get('api/contracts/create', 'ContractController@create');
+Route::get('api/v2/contracts/store', 'ContractController@store');
+Route::get('api/contracts/{id}/edit', 'ContractController@edit');
+Route::get('api/v2/contracts/{id}/update', 'ContractController@update');
+/** End Contracts V2 routes **/
