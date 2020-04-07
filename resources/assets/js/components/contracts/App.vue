@@ -12,7 +12,7 @@
     <div class="row my-3">
       <div class="col-4">
          <b-form inline>
-             <i class="fa fa-search" aria-hidden="true"></i>
+            <i class="fa fa-search" aria-hidden="true"></i>
             <b-input
               id="inline-form-input-name"
               class="mb-2 mr-sm-2 mb-sm-0"
@@ -21,20 +21,25 @@
           </b-form>
       </div>
     </div>
-      <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
-      <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-</b-button>
-  <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-<button class="btn-action">Edit</button>
+    <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
+    <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+    </b-button>
+    <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+      <button class="btn-action">Edit</button>
       <button class="btn-action">Duplicate</button>
       <button class="btn-action">Delete</button>
-       </b-popover>
-       <span class="status-st published">published</span>
-        <span class="status-st expired">expired</span>
-        <span class="status-st incompleted">incompleted</span>
-        <input type="checkbox" class="input-check" id="check">
-        <label  for="check"></label>
-      <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
+    </b-popover>
+    <!-- status -->
+    <span class="status-st published">published</span>
+    <span class="status-st expired">expired</span>
+    <span class="status-st incompleted">incompleted</span>
+    <!-- status end -->
+    <!-- checkbox -->
+    <input type="checkbox" class="input-check" id="check">
+    <label  for="check"></label>
+    <!-- checkbox end -->
+    <!-- paginator -->
+    <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
   </b-card>
     
   </div>
@@ -53,6 +58,9 @@
 
         fields: [
             { key: 'name', label: 'Reference', sortable: true },
+            { key: 'status', label: 'Status', sortable: true },
+            { key: 'from', label: 'Valid From', sortable: true },
+            { key: 'until', label: 'Valid Until', sortable: true },
             { key: 'carriers', label: 'Carriers', 
                 formatter: value => {
                     let $carriers = [];
@@ -63,8 +71,10 @@
                     return $carriers.join(', ');
                 } 
             },
+            { key: 'equipment', label: 'Equipment', sortable: false },
             { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
             }
+            
         ]
       }
     },
