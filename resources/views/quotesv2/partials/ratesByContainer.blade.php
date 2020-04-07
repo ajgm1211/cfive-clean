@@ -76,8 +76,6 @@ $v=0;
 
                                             @endphp
 
-                                            
-
                                             @foreach($rate->charge as $item)
                                                 @if($item->type_id==3)
                                                     <?php
@@ -139,6 +137,9 @@ $v=0;
                                                         @foreach ($equipmentHides as $key=>$hide)
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
+                                                                    @php
+                                                                        ${'sum'.$c->code} = 0;
+                                                                    @endphp
                                                                     <td {{$hide}} class="tds">
                                                                         <a href="#" class="editable-amount-20 amount_20 td-a" data-type="text" data-name="amount->c20" data-value="{{@$freight_amounts['c'.$c->code]}}" data-pk="{{$item->id}}" data-cargo-type="freight" data-title="Total"></a>
                                                                         +
@@ -146,6 +147,9 @@ $v=0;
                                                                         <i class="la la-caret-right arrow-down"></i>
                                                                         <span class="total_20 td-a">{{@$freight_amounts['c'.$c->code]+@$freight_markups['m'.$c->code]}}</span>
                                                                     </td>
+                                                                    @php
+                                                                        ${'sum'.$c->code} += @$freight_amounts['c'.$c->code];
+                                                                    @endphp
                                                                 @endif
                                                             @endforeach
                                                         @endforeach
@@ -175,62 +179,24 @@ $v=0;
                                                 <td>
                                                     {{ Form::select('calculation_type_id[]',$calculation_types,null,['class'=>'form-control calculation_type_id','required'=>true]) }}
                                                 </td>
-                                                <td {{ @$equipmentHides['20'] }} style="width: 20%">
-                                                    <div class="row ">
-                                                        <div class="col-12">
-                                                            <div class="input-group">
-                                                                <input name="hide_20" value="{{ @$equipmentHides['20'] }}" class="form-control hide_20" type="hidden" min="0" step="0.0000001" />
-                                                                <input name="amount_c20" class="amount_c20 form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
+                                                @foreach ($equipmentHides as $key=>$hide)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            <td {{$hide}} class="tds">
+                                                                <div class="row ">
+                                                                    <div class="col-12">
+                                                                        <div class="input-group">
+                                                                            <input name="hide_{{$key}}" value="{{ $key }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
+                                                                            <input name="amount_c{{$key}}" class="amount_c{{$key}} form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
 
-                                                                <input name="markup_m20" class="form-control markup_m20" type="number" min="0" step="0.0000001" placeholder="Markup"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40'] }} style="width: 20%">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="input-group">
-                                                                <input name="hide_40" value="{{ @$equipmentHides['40'] }}" class="form-control hide_40" type="hidden" min="0" step="0.0000001"/>
-                                                                <input name="amount_c40" class="form-control amount_c40" type="number" min="0" step="0.0000001" placeholder="Rate" />
-                                                                <input name="markup_m40" class="form-control markup_m40" type="number" min="0" step="0.0000001" placeholder="Markup" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40hc'] }} style="width: 20%">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="input-group">
-                                                                <input name="hide_40hc" value="{{ @$equipmentHides['40hc'] }}" class="form-control hide_40hc" type="hidden" min="0" step="0.0000001" style=""/>
-                                                                <input name="amount_c40hc" class="form-control amount_c40hc" type="number" min="0" step="0.0000001" placeholder="Rate"/>
-                                                                <input name="markup_m40hc" class="form-control markup_m40hc" type="number" min="0" step="0.0000001" placeholder="Markup"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['40nor'] }} style="width: 20%">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="input-group">
-                                                                <input name="hide_40nor" value="{{ @$equipmentHides['40nor'] }}" class="form-control hide_40nor" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                                <input name="amount_c40nor" class="form-control amount_c40nor" type="number" min="0" step="0.0000001" placeholder="Rate" />
-                                                                <input name="markup_m40nor" class="form-control markup_m40nor" type="number" min="0" step="0.0000001" placeholder="Markup" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td {{ @$equipmentHides['45'] }} style="width: 20%">
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input name="hide_45" value="{{ @$equipmentHides['45'] }}" class="form-control hide_45" type="hidden" min="0" step="0.0000001" style="max-width: 50px;"/>
-                                                            <input name="amount_c45" class="form-control amount_c45" type="number" min="0" step="0.0000001" placeholder="Rate" />
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <input name="markup_m45" class="form-control markup_m45" type="number" min="0" step="0.0000001" placeholder="Markup" />
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                                            <input name="markup_m{{$key}}" class="form-control markup_m{{$key}}" type="number" min="0" step="0.0000001" placeholder="Markup"/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td>
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
@@ -248,31 +214,31 @@ $v=0;
                                                 </td>
                                             </tr>
                                             @if($rate->id == @$rate_id )
-                                            <tr class="total_freight_{{$v}}">
-                                                <td></td>
-                                                <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
-                                                @foreach ($equipmentHides as $key=>$hide)
-                                                    @foreach ($containers as $c)
-                                                        @if($c->code == $key)
-                                                            <td {{$hide}} class="tds">
-                                                                Total
-                                                            </td>
-                                                        @endif
+                                                <tr class="total_freight_{{$v}}">
+                                                    <td></td>
+                                                    <td class="title-quote size-12px tds" colspan=""><span class="td-a">Total</span></td>
+                                                    @foreach ($equipmentHides as $key=>$hide)
+                                                        @foreach ($containers as $c)
+                                                            @if($c->code == $key)
+                                                                <td {{$hide}} class="tds">
+                                                                    {{ ${'sum'.$c->code} }}
+                                                                </td>
+                                                            @endif
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                                <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
-                                                <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
-                                                <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
-                                                <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
-                                                <input type="hidden" name="subtotal_c40nor_freight" value="{{$sum40nor}}" class="subtotal_c40nor_freight"/>
-                                                <input type="hidden" name="subtotal_c45_freight" value="{{$sum45}}" class="subtotal_c45_freight"/>
+                                                    <td class="tds"><span class="td-a">{{$company_user->currency->alphacode}}</span></td>
+                                                    <input type="hidden" name="subtotal_c20_freight" value="{{$sum20}}" class="subtotal_c20_freight"/>
+                                                    <input type="hidden" name="subtotal_c40_freight" value="{{$sum40}}" class="subtotal_c40_freight"/>
+                                                    <input type="hidden" name="subtotal_c40hc_freight" value="{{$sum40hc}}" class="subtotal_c40hc_freight"/>
+                                                    <input type="hidden" name="subtotal_c40nor_freight" value="{{$sum40nor}}" class="subtotal_c40nor_freight"/>
+                                                    <input type="hidden" name="subtotal_c45_freight" value="{{$sum45}}" class="subtotal_c45_freight"/>
 
-                                                <input type="hidden" name="subtotal_m20_freight" value="{{$sum_m20}}" class="subtotal_m20_freight"/>
-                                                <input type="hidden" name="subtotal_m40_freight" value="{{$sum_m40}}" class="subtotal_m40_freight"/>
-                                                <input type="hidden" name="subtotal_m40hc_freight" value="{{$sum_m40hc}}" class="subtotal_m40hc_freight"/>
-                                                <input type="hidden" name="subtotal_m40nor_freight" value="{{$sum_m40nor}}" class="subtotal_m40nor_freight"/>
-                                                <input type="hidden" name="subtotal_m45_freight" value="{{$sum_m45}}" class="subtotal_m45_freight"/>
-                                            </tr>
+                                                    <input type="hidden" name="subtotal_m20_freight" value="{{$sum_m20}}" class="subtotal_m20_freight"/>
+                                                    <input type="hidden" name="subtotal_m40_freight" value="{{$sum_m40}}" class="subtotal_m40_freight"/>
+                                                    <input type="hidden" name="subtotal_m40hc_freight" value="{{$sum_m40hc}}" class="subtotal_m40hc_freight"/>
+                                                    <input type="hidden" name="subtotal_m40nor_freight" value="{{$sum_m40nor}}" class="subtotal_m40nor_freight"/>
+                                                    <input type="hidden" name="subtotal_m45_freight" value="{{$sum_m45}}" class="subtotal_m45_freight"/>
+                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
