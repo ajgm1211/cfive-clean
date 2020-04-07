@@ -167,16 +167,22 @@
                             <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                             <span class="equipment_span">
                                 @if($quote->type=='FCL')
-                                @if($quote->equipment!='')
-                                <?php
-                                $equipment=json_decode($quote->equipment);
-                                ?>
-                                @foreach($equipment as $item)
-                                {{$item}}@unless($loop->last),@endunless
-                                @endforeach
-                                @endif
+                                    @if($quote->equipment!='')
+                                        <?php
+                                            $equipment=json_decode($quote->equipment);
+                                        ?>
+                                        @foreach ($equipmentHides as $key=>$hide)
+                                            @if($hide != 'hidden')
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+                                                        {{$key}}
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @else
-                                N/A
+                                    N/A
                                 @endif
                             </span>
                             {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}
