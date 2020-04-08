@@ -299,14 +299,43 @@ class QuoteV2Controller extends Controller
                 $q->where('status', 0);
             });
         })->with(['rates_v2' => function ($query) {
-            $query->with('origin_port', 'destination_port', 'origin_airport', 'destination_airport', 'currency');
+            $query->with('origin_airport', 'destination_airport', 'currency','carrier','airline');
+            $query->with(['origin_port'=>function($q){
+                $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                $q->with('country');
+            }]);
+            $query->with(['destination_port' => function ($q) {
+                $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                $q->with('country');
+            }]);
             $query->with(['charge' => function ($q) {
-                $q->with('type', 'surcharge', 'calculation_type');
+                $q->with('type', 'surcharge', 'calculation_type', 'currency');
             }]);
             $query->with(['charge_lcl_air' => function ($q) {
-                $q->with('type', 'surcharge', 'calculation_type');
+                $q->with('type', 'surcharge', 'calculation_type', 'currency');
             }]);
-        }])->findOrFail($id);
+        }])->with(['user' => function ($query) {
+            $query->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state','company_user_id');
+            $query->with(['companyUser' => function ($q) {
+                $q->select('id','name','address','phone','currency_id');
+                $q->with('currency');
+            }]);
+        }])->with(['company' => function ($query) {
+            $query->with(['company_user' => function ($q) {
+                $q->select('id','name','address','phone','currency_id');
+                $q->with('currency');
+            }]);
+            $query->with(['owner' => function ($q) {
+                $q->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state');
+            }]);
+        }])->with(['contact' => function ($query) {
+            $query->with(['company' => function ($q) {
+                $q->select('id','business_name','phone','address','email','tax_number');
+            }]);
+        }])->with(['price' => function ($q) {
+            $q->select('id','name','description');
+        }])->with('incoterm')->findOrFail($id);
+
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
         $inlands = AutomaticInland::where('quote_id', $quote->id)->get();
         $rates = AutomaticRate::where('quote_id', $quote->id)->with('charge', 'automaticInlandLclAir', 'charge_lcl_air')->get();
@@ -682,7 +711,7 @@ class QuoteV2Controller extends Controller
         ]);
 
         if ($request->ajax()) {
-            $quote->load('user', 'company', 'contact', 'incoterm');
+            //$quote->load('user', 'company', 'contact', 'incoterm');
             $collection = Collection::make($quote);
             return $collection;
         }
@@ -3565,7 +3594,7 @@ class QuoteV2Controller extends Controller
 
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
-        $incoterm->prepend('Select at option', '');
+        $incoterm->prepend('Select an option', '');
         if (\Auth::user()->hasRole('subuser')) {
             $companies = Company::where('company_user_id', '=', $company_user_id)->whereHas('groupUserCompanies', function ($q) {
                 $q->where('user_id', \Auth::user()->id);
@@ -3573,7 +3602,7 @@ class QuoteV2Controller extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
-        $companies->prepend('Select at option', '0');
+        $companies->prepend('Select an option', '0');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
 
@@ -5648,7 +5677,7 @@ class QuoteV2Controller extends Controller
         } else {
             $companies = Company::where('company_user_id', '=', $company_user_id)->pluck('business_name', 'id');
         }
-        $companies->prepend('Select at option', '0');
+        $companies->prepend('Select an option', '0');
         $airlines = Airline::all()->pluck('name', 'id');
         $harbors = Harbor::get()->pluck('display_name', 'id_complete');
         $countries = Country::all()->pluck('name', 'id');
