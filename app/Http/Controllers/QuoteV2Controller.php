@@ -3346,14 +3346,14 @@ class QuoteV2Controller extends Controller
                 $currency_cfg = "";
             }
 
-            //$pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
-            /*$pdf = $pdfarray['pdf'];
-      $view = $pdfarray['view'];
-      $idQuote= $pdfarray['idQuote'];
-      $idQ = $pdfarray['idQ'];
+            $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+            $pdf = $pdfarray['pdf'];
+            $view = $pdfarray['view'];
+            $idQuote= $pdfarray['idQuote'];
+            $idQ = $pdfarray['idQ'];
 
-      $pdf->loadHTML($view)->save('pdf/quote-'.$idQuote.'.pdf');
-      $quote->addMedia('pdf/quote-'.$idQuote.'.pdf')->toMediaCollection('document','pdfApiS3');*/
+            $pdf->loadHTML($view)->save('pdf/quote-'.$idQuote.'.pdf');
+            $quote->addMedia('pdf/quote-'.$idQuote.'.pdf')->toMediaCollection('document','pdfApiS3');
         }
         return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
     }
