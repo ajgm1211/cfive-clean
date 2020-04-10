@@ -1,0 +1,195 @@
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<template>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+
+                <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
+                    <div class="row">
+                        <div class="col-12 col-sm-2">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Reference"
+                                          label-for="reference"
+                                          invalid-feedback="Reference date is required"
+                                          >
+                                <multiselect v-model="reference" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Carrier"></multiselect>
+                            </b-form-group> 
+                        </div>
+                        <div class="col-12 col-sm-2">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Direction"
+                                          label-for="direction"
+                                          invalid-feedback="Direction is required"
+                                          >
+                                <multiselect v-model="direction" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
+
+
+                            </b-form-group>
+                        </div>
+                        <div class="col-12 col-sm-2 ">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Carrier"
+                                          label-for="carrier"
+                                          invalid-feedback="Carrier is required"
+                                          >
+                                <multiselect v-model="carrier" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Carrier"></multiselect>
+
+
+
+                            </b-form-group>
+                        </div>
+                        <div class="col-12 col-sm-2">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Validity"
+                                          label-for="validity"
+                                          invalid-feedback="Validity is required"
+                                          >
+                                <multiselect v-model="validity" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
+
+
+                            </b-form-group>
+                        </div>
+                        <div class="col-12 col-sm-2">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Equipment"
+                                          label-for="equipment"
+                                          invalid-feedback="Equipment is required"
+                                          >
+                                <multiselect v-model="equipment" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Equipment"></multiselect>
+
+                            </b-form-group>
+                        </div>
+
+
+                        <div class="col-12 col-sm-2">
+                            <b-form-group
+                                          :state="nameState"
+                                          label="Status"
+                                          label-for="status"
+                                          invalid-feedback="Direction is required"
+                                          >
+                                <span class="status-st published"></span>
+                                <span class="status-st expired"></span>
+                                <span class="status-st incompleted"></span>
+
+                            </b-form-group>
+                        </div>
+                    </div>
+                </form>
+
+                <b-card no-body class="card-tabs">
+                    <b-tabs card>
+                        <b-tab title="Ocean Freight" active>
+                            <ocean-freight></ocean-freight>
+                        </b-tab>
+                        <b-tab title="Surcharges">
+                            <b-card-text>Surcharges</b-card-text>
+                        </b-tab>
+                         <b-tab title="Restrictions">
+                            <b-card-text>Restrictions</b-card-text>
+                        </b-tab>
+                        <b-tab title="Remarks">
+                            <b-card-text>Remarks</b-card-text>
+                        </b-tab>
+                         <b-tab title="Files">
+                            <b-card-text>Files</b-card-text>
+                        </b-tab>
+                    </b-tabs>
+                </b-card>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+<script>
+    import Multiselect from 'vue-multiselect';
+    import DateRangePicker from 'vue2-daterange-picker';
+    import OceanFreight from './Freight';
+    Vue.component('multiselect', Multiselect);
+    Vue.component('ocean-freight', OceanFreight);
+    export default {
+        components: { 
+            DateRangePicker,
+            Multiselect,
+            OceanFreight
+        },
+        data() {
+            return {
+                isBusy:true, // Loader
+                data: null,
+
+                fields: [
+                    { key: 'name', label: 'Reference', sortable: true },
+                    { key: 'status', label: 'Status', sortable: true },
+                    { key: 'from', label: 'Valid From', sortable: true },
+                    { key: 'until', label: 'Valid Until', sortable: true },
+                    { key: 'carriers', label: 'Carriers', 
+                     formatter: value => {
+                         let $carriers = [];
+
+                         value.forEach(function(val){
+                             $carriers.push(val.name);
+                         });
+                         return $carriers.join(', ');
+                     } 
+                    },
+                    { key: 'equipment', label: 'Equipment', sortable: false },
+                    { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
+                    }
+
+                ],
+                carrier: '',
+                equipment: '',
+                direction: '',
+                reference: '',
+                options: [
+                    'opcion 1',
+                    'opcion 2',
+                    'opcion 3'
+                ],
+                startDate: '2017-09-05',
+                endDate: '2017-09-15',
+                locale: {
+                    direction: 'ltr', //direction of text
+                    format: 'DD-MM-YYYY', //fomart of the dates displayed
+                    separator: ' - ', //separator between the two ranges
+                    applyLabel: 'Apply',
+                    cancelLabel: 'Cancel',
+                    weekLabel: 'W',
+                    customRangeLabel: 'Custom Range',
+                    daysOfWeek: moment.weekdaysMin(), //array of days - see moment documenations for details
+                    monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
+                    firstDay: 1 //ISO first day of week - see moment documenations for details
+                }
+            }
+        },
+        created() {
+
+            api.getData({}, '/api/v2/contracts', (err, data) => {
+                this.setData(err, data);
+            });
+
+        },
+        methods: {
+            setData(err, { data: records, links, meta }) {
+                this.isBusy = false;
+
+                if (err) {
+                    this.error = err.toString();
+                } else {
+                    this.data = records;
+                }
+            },
+            confirmAction() {
+                console.log('hola');
+            }
+        }
+    }
+</script>

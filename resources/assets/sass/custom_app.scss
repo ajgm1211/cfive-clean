@@ -1,12 +1,18 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
+a,input,h1,h2,h3,h4,h5.h6,span,li,p,label,textarea,td,th,tr {
+    font-family: "Sailec" !important;
+}
+
+
+
 /*** genetal styles ***/
 .m-body {
     background-color: #f8f8fc !important;
 }
+
 .status-st {
-    font-weight: bold;
     color: #fff; 
     font-size: 9px;
     border-radius: 10px;
@@ -22,12 +28,24 @@
 .expired {
     background-color: #ff6464;
 }
+.incompleted::before {
+    content: 'incompleted';
+    font-weight: bold;
+}
+.published::before {
+    content: 'published';
+    font-weight: bold;
+}
+.expired::before {
+    content: 'expired';
+    font-weight: bold;
+}
 
-/**** --------- ****/
+/**** --- Table Card--- ****/
 
 .card {
-  border: 2px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.50rem;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.50rem;
 }
 .card-title {
     color: #031b4e;
@@ -75,44 +93,44 @@ table tr th:focus {
     padding-left: 33px;
 }
 .input-check[type=checkbox] + label {
-  display: block;
-  margin: 0.2em;
-  cursor: pointer;
-  padding: 0.2em;
+    display: block;
+    margin: 0.2em;
+    cursor: pointer;
+    padding: 0.2em;
 }
 
 .input-check[type=checkbox] {
-  display: none;
+    display: none;
 }
 .input-check[type=checkbox] + label:before {
-  content: "\2714";
-  border: 0.15em solid #006bf9;
-  border-radius: 0.2em;
-  display: flex; 
-  align-items: center;
-  justify-content: center;
-  width: 1.5em;
-  height: 1.5em;
-  padding-left: 0.15em;
-  margin-right: 0.15em;
-  color: transparent;
-  transition: .2s;
-  font-size: 16px;
+    content: "\2714";
+    border: 0.15em solid #006bf9;
+    border-radius: 0.2em;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    padding-left: 0.15em;
+    margin-right: 0.15em;
+    color: transparent;
+    transition: .2s;
+    font-size: 16px;
 }
 .input-check[type=checkbox] + label:active:before {
-  transform: scale(0);
+    transform: scale(0);
 }
 .input-check[type=checkbox]:checked + label:before {
-  color: #006bf9;
+    color: #006bf9;
 }
 .input-check[type=checkbox]:disabled + label:before {
-  transform: scale(1);
-  border-color: #006bf9;
+    transform: scale(1);
+    border-color: #006bf9;
 }
 .input-check[type=checkbox]:checked:disabled + label:before {
-  transform: scale(1);
-  background-color: transparent;
-  border-color: #006bf9;
+    transform: scale(1);
+    background-color: transparent;
+    border-color: #006bf9;
 }
 .btn.btn-secondary {
     background-color: transparent!important;
@@ -135,9 +153,116 @@ table tr th:focus {
     background: transparent;
 }
 .btn-action:hover {
-     text-decoration: underline;
+    text-decoration: underline;
 }
 
 .btn-action:nth-child(3) {
     color:  #ff6464;
+}
+
+
+/**** Modal Add Contract ***/
+.modal-body {
+    background-color: #f8f8fc !important;
+}
+.modal-footer button:nth-child(1) {
+    border: none !important;
+    color: #ff6464;
+    font-weight: bold;
+}
+.modal-footer button:nth-child(2) {
+    background-color: #006bf9 !important;
+    border: none !important;
+}
+.add-fcl input {
+    border-width: 2px;
+}
+.mx-datepicker-range {
+    width: 100% !important;
+}
+.mx-input {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    padding-right: 6px !important;
+    padding-left: 30px !important;
+}
+i.mx-icon-calendar {
+    left: 8px;
+    right: 0px;
+}
+.modal-input input {
+    border: 2px solid #eee !important;
+}
+.modal-header h5 {
+    font-weight: bold !important;
+    color: #031b4e !important;
+}
+.multiselect__option--highlight {
+    background-color: #eeeeee !important;
+    color: #525f7e !important;
+}
+.multiselect__tags {
+    font-size: 13px !important;
+    height: 33.5px;
+    min-height: 33.5px !important;
+    border: 2px solid #eee !important;
+    padding:  4px 40px 5px 10px !important;
+    border-radius: 0.25rem !important;
+}
+.multiselect__option {
+    font-size: 13px;
+    padding: 6px !important; 
+    min-height: 30px !important;
+}
+.modal-input label {
+    color: #626e8b;
+    font-weight: medium;
+}
+.multiselect__select {
+    right: 5px !important;
+    top: 0px !important;
+}
+.multiselect__select::before {
+    font-family: 'FontAwesome' !important;
+    content: "\f107" !important;
+    border: none !important;
+    font-size: 16px;
+    color: #525f7f;
+    top: 17% !important;
+}
+.multiselect__single {
+    color: #626e8b;
+    font-size: 14px !important;
+}
+.multiselect__content-wrapper {
+    box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 3px !important;
+}
+
+/*** --- Tabs --- ***/
+.tabs ul {
+    margin-bottom: -0.75rem !important;
+}
+.card-tabs {
+    margin-top: 25px;
+    background: transparent !important;
+    border: none !important;
+}
+.card-tabs .card-header {
+    border-width: 2px !important;
+    background: transparent !important;
+}
+.nav-tabs .nav-link.active {
+    background: transparent !important;
+    border-color: #006bf9 !important;
+    border-width: 4px !important;
+    font-weight: bold !important;
+}
+.nav-tabs .nav-link {
+    border: none;
+    font-size: 16px;
+    color: #031b4e !important;
+}
+.multiselect__placeholder {
+    white-space: nowrap;
 }
