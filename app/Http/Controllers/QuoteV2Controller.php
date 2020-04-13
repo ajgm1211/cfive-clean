@@ -757,7 +757,8 @@ class QuoteV2Controller extends Controller
     {
         $charge = Charge::find($request->pk);
         $name = explode("->", $request->name);
-        $value = str_replace(",", ".", $request->value);
+        //$value = str_replace(",", ".", $request->value);
+        $value = $this->tofloat($request->value);
 
         if (strpos($request->name, '->') == true) {
             if ($name[0] == 'amount') {
@@ -781,7 +782,7 @@ class QuoteV2Controller extends Controller
     }
 
     /**
-     * Update LCL Quotes info
+     * Update Quotes info
      * @param Request $request 
      * @return array json
      */
@@ -790,7 +791,12 @@ class QuoteV2Controller extends Controller
         if ($request->value) {
             $quote = QuoteV2::find($request->pk);
             $name = $request->name;
-            $quote->$name = $request->value;
+            if($name=='total_weight' || $name=='total_volume' || $name=='chargeable_weight'){
+                $value = $this->tofloat($request->value);
+                $quote->$name = $value;
+            }else{
+                $quote->$name = $request->value;
+            }
             $quote->update();
             $this->updatePdfApi($quote->id);
         }
