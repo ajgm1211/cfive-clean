@@ -6,23 +6,26 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddFieldContactApi extends Migration
 {
-    /**
+  /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        //
-    }
+  public function up()
+  {
+    Schema::table('contacts', function (Blueprint $table){
+      $table->json('options')->nullable()->after('company_id');
 
-    /**
+    });
+  }
+
+  /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-        //
-    }
+  public function down()
+  {
+    //
+  }
 }
