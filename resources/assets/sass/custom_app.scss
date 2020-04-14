@@ -1,7 +1,7 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
-a,input,h1,h2,h3,h4,h5.h6,span,li,p,label,textarea,td,th,tr {
+a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     font-family: "Sailec" !important;
 }
 
@@ -190,6 +190,10 @@ i.mx-icon-calendar {
     left: 8px;
     right: 0px;
 }
+.modal-input {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
 .modal-input input {
     border: 2px solid #eee !important;
 }
@@ -292,22 +296,35 @@ i.mx-icon-calendar {
     top: 15px;
     left: 35px;
 }
-.separator {
-  position: relative;
-}
-.separator:after {
-  position: absolute;
-  content: "";
-  height: 1px;
-  width: 200px;
-  background: #d8d8d8;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.title-card {
+    color: #031b4e;
 }
 #dropzone {
     border: none;
 }
-.no-padding {
+.no-padding .card-body{
     padding: 0px;
+}
+.reportrange-text {
+    border: 2px solid #eee !important;
+}
+.vue-daterange-picker {
+    width: 100%;
+    white-space: nowrap;
+}
+
+@media only screen and (max-width: 425px) {
+    .nav-tabs .nav-item {
+        width: 48% !important;
+    }
+    .nav-tabs .nav-link {
+        font-size: 14px !important;
+    }
+    .card-body {
+        overflow-x: scroll;
+    }
+    .form-inline i {
+        bottom: 16px;
+    }
+
 }

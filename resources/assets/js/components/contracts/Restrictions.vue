@@ -2,7 +2,7 @@
     <b-card>
         <div class="row">
             <div class="col-12">
-                <h6>Restrictions</h6>
+                <h6 class="title-card">Restrictions</h6>
             </div>
             <div class="col-12">
                 <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
