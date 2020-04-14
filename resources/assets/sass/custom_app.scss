@@ -266,3 +266,48 @@ i.mx-icon-calendar {
 .multiselect__placeholder {
     white-space: nowrap;
 }
+
+
+/*** --- REMARK --- ***/
+.remarks {
+    min-height: 150px;
+}
+.update-remark {
+    width: 30px;
+    height: 30px;
+    bottom: 3%;
+    right: 2%;
+    border-radius: 100px; 
+    background: #19c39b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #fff;
+}
+.title-dropzone {
+    font-weight: bold;
+    color: #031b4e;
+    position: absolute;
+    top: 15px;
+    left: 35px;
+}
+.separator {
+  position: relative;
+}
+.separator:after {
+  position: absolute;
+  content: "";
+  height: 1px;
+  width: 200px;
+  background: #d8d8d8;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#dropzone {
+    border: none;
+}
+.no-padding {
+    padding: 0px;
+}
