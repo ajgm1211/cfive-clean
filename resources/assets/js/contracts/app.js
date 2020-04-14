@@ -1,7 +1,9 @@
 import '../bootstrap';
 import '../../sass/custom_app.scss';
 
+
 import Vue from 'vue';
+
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
@@ -19,5 +21,5 @@ window.api = new Api();
 
 const app = new Vue({
     el: '#app',
-    render: h => h(App),
+    render: h => h(Contracts),
 });
