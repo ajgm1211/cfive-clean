@@ -2,7 +2,7 @@
     <b-card>
         <div class="row">
             <div class="col-6">
-                <b-card-title>Ocean Freight</b-card-title>
+                <b-card-title>Surcharges</b-card-title>
             </div>
             <div class="col-6">
                 <div class="float-right">
@@ -55,14 +55,10 @@
                 data: null,
 
                 fields: [
-                    { key: 'name', label: 'Origin Port', sortable: false },
-                    { key: 'status', label: 'Destination Port', sortable: false },
-                    { key: 'from', label: '20 DV', sortable: false },
-                    { key: 'until', label: '40 DV', sortable: false },
-                     { key: 'until', label: '40 HC', sortable: false },
-                     { key: 'until', label: '40 NOR', sortable: false },
-                    { key: 'until', label: '45 HC', sortable: false },
-                     { key: 'currency', label: 'Currency', sortable: false },
+                    { key: 'name', label: 'Reference', sortable: true },
+                    { key: 'status', label: 'Status', sortable: true },
+                    { key: 'from', label: 'Valid From', sortable: true },
+                    { key: 'until', label: 'Valid Until', sortable: true },
                     { key: 'carriers', label: 'Carriers', 
                      formatter: value => {
                          let $carriers = [];
@@ -73,10 +69,11 @@
                          return $carriers.join(', ');
                      } 
                     },
-                     { key: 'until', label: '45 HC', sortable: true }
-                   
+                    { key: 'equipment', label: 'Equipment', sortable: false },
+                    { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
+                    }
 
-                ]
+                ],
                 
             }
         },

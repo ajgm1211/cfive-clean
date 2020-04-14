@@ -1,6 +1,6 @@
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <template>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row mt-5">
             <div class="col-12">
 
@@ -88,16 +88,16 @@
                             <ocean-freight></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
-                            <b-card-text>Surcharges</b-card-text>
+                            <surcharges></surcharges>
                         </b-tab>
-                         <b-tab title="Restrictions">
-                            <b-card-text>Restrictions</b-card-text>
+                        <b-tab title="Restrictions">
+                            <restrictions></restrictions>
                         </b-tab>
                         <b-tab title="Remarks">
-                            <b-card-text>Remarks</b-card-text>
+                            <remarks></remarks>
                         </b-tab>
-                         <b-tab title="Files">
-                            <b-card-text>Files</b-card-text>
+                        <b-tab title="Files">
+                            <files></files>
                         </b-tab>
                     </b-tabs>
                 </b-card>
@@ -112,39 +112,27 @@
     import Multiselect from 'vue-multiselect';
     import DateRangePicker from 'vue2-daterange-picker';
     import OceanFreight from './Freight';
-    Vue.component('multiselect', Multiselect);
-    Vue.component('ocean-freight', OceanFreight);
+    import Surcharges from './Surcharges';
+    import Restrictions from './Restrictions';
+    import Remarks from './Remarks';
+    import Files from './Files';
+
+
     export default {
         components: { 
             DateRangePicker,
             Multiselect,
-            OceanFreight
+            OceanFreight,
+            Surcharges,
+            Restrictions,
+            Remarks,
+            Files
+            
         },
         data() {
             return {
                 isBusy:true, // Loader
                 data: null,
-
-                fields: [
-                    { key: 'name', label: 'Reference', sortable: true },
-                    { key: 'status', label: 'Status', sortable: true },
-                    { key: 'from', label: 'Valid From', sortable: true },
-                    { key: 'until', label: 'Valid Until', sortable: true },
-                    { key: 'carriers', label: 'Carriers', 
-                     formatter: value => {
-                         let $carriers = [];
-
-                         value.forEach(function(val){
-                             $carriers.push(val.name);
-                         });
-                         return $carriers.join(', ');
-                     } 
-                    },
-                    { key: 'equipment', label: 'Equipment', sortable: false },
-                    { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
-                    }
-
-                ],
                 carrier: '',
                 equipment: '',
                 direction: '',
