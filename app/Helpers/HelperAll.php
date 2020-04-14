@@ -21,7 +21,7 @@ class HelperAll {
 
   public static function currencyJoin($statusCurrency,$currency_bol,$val_ps,$curr_ps){
     $data = null;
-    if($statusCurrency == 2){ // Valores junto con la moneda
+    if($statusCurrency == 2 ){ // Valores junto con la moneda
       if($currency_bol == true){
         $currencyObj  = Currency::find($curr_ps);
         $currency_val = $currencyObj->alphacode;

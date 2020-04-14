@@ -626,10 +626,11 @@ class ImportationController extends Controller
 
         $carrierBol             = false;
         $PortCountryRegionBol   = false;
+        $typedestinyBol         = false;
         $filebool               = false;
         $data                   = collect([]);
-        $Contract_id            = 45;
-        /*
+        //$contract_id            = 45;
+
         if(!empty($file)){
 
             $account = new AccountFcl();
@@ -665,13 +666,13 @@ class ImportationController extends Controller
                 }
             }
             $contract->load('carriers');
-            $Contract_id = $contract->id;
+            $contract_id = $contract->id;
 
             if(!empty($request_id)){
                 $requestFile    = NewContractRequest::find($request_id);
                 if(!empty($requestFile->id)){
                     if(empty($requestFile->contract_id)){
-                        $requestFile->contract_id = $Contract_id;
+                        $requestFile->contract_id = $contract_id;
                         $requestFile->update();
                     }
                 }
@@ -681,21 +682,21 @@ class ImportationController extends Controller
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.content', 'Error File!!');
             return back();
-        }*/
+        }
 
         $requestCont    = NewContractRequest::find($request_id);
         $data           = json_decode($requestCont->data);
         $columnsSelected = collect(['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE']);
         //dd($data);
 
-        $account    = AccountFcl::find(29);
+        //$account    = AccountFcl::find(29);
 
         $valuesSelecteds = collect([
             'company_user_id'   => $CompanyUserId,
             'request_id'        => $request_id,
             'selector'          => $selector,
             'chargeVal'         => $chargeVal,
-            'contract_id'       => $Contract_id,
+            'contract_id'       => $contract_id,
             'acount_id'         => $account->id
         ]);
 
@@ -808,7 +809,7 @@ class ImportationController extends Controller
             $account->update();
             // colocar contract_id al despachar para evitar el borrado mientras se importa el contracto
         } else {
-            
+
             Log::error('Container calculation type relationship error. Check Relationship in the module "Containers Calculation Types"');
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Error in the relation Container-CalculationType');
@@ -817,15 +818,22 @@ class ImportationController extends Controller
 
         //dd($final_columns,$valuesSelecteds,$columnsSelected,$sheetData);
         ///////////////////////////////// JOB IMPORTATION ///////////////////////////////////////////////////////////////////
-        $account                = AccountFcl::find(29);
+        // Id de cuenta, pasar parametro Job.
+        $account_id             = $account->id;
+
+        ///
+
+        //$account                = AccountFcl::find(29);
+        $account                = AccountFcl::find($account_id);
         $json_account_dc        = json_decode($account->data,true);
         $valuesSelecteds        = $json_account_dc['valuesSelecteds'];
         $final_columns          = $json_account_dc['final_columns'];
         //dd($valuesSelecteds,$final_columns);
-        
+
         $contract_id            = $valuesSelecteds['contract_id'];
         $groupContainer_id      = $valuesSelecteds['group_container_id'];
         $column_calculatioT_bol = true;
+        $caracteres             = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':','1','2','3','4','5','6','7','8','9','0'];
 
         // LOAD CALCULATIONS FOR COLUMN ------------------------
         $contenedores_to_cal = Container::where('gp_container_id',$groupContainer_id)->get();
@@ -998,6 +1006,11 @@ class ImportationController extends Controller
                                 $value_cur  = null;
                                 $value_cur  = trim($row[$currencyExc]);
                                 $curren_obj = Currency::where('alphacode','=',$value_cur)->first();
+                                //                                try{
+                                //                                    $curren_obj->id;
+                                //                                } catch(\Exception $e){
+                                //                                    dd($statusCurrency,$currencyExc,$value_cur,$curren_obj,empty($curren_obj->id));
+                                //                                }
                                 if(!empty($curren_obj->id)){
                                     $value_cur = $curren_obj->id;
                                     $currency_bol[$contenedor->code] = true;
@@ -1109,6 +1122,7 @@ class ImportationController extends Controller
                             $carriExitBol            = false;
                             $typeChargeExiBol        = false;
                             $calculationtypeExiBol   = false;
+                            $typedestinyExitBol      = false;
 
                             $calculation_type_exc   = null;
                             $chargeExc_val          = null;
@@ -1198,7 +1212,6 @@ class ImportationController extends Controller
                                     if(empty($surchargelist) != true){
                                         $surchargeVal = $surchargelist['id'];
                                     }else{
-                                        $companyUserId = $companyUserIdVal;
                                         $surchargelist = Surcharge::create([
                                             'name'              => $chargeExc_val,
                                             'description'       => $chargeExc_val,
@@ -1317,12 +1330,14 @@ class ImportationController extends Controller
                                 'statusPortCountry'     => $statusPortCountry, // true status de activacion port contry region, false port
                                 'statusTypeDestiny'     => $statusTypeDestiny, // true para Seleccion desde panel, false para mapeo de excel 
                                 'statusCarrier'         => $statusCarrier,     // true para seleccion desde el panel, falso para mapear excel 
-                                'typeCurrency'          => $statusCurrency,     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
+                                'statusCurrency'        => $statusCurrency,     // 3. val. por SELECT,1. columna de  currency, 2. currency mas valor juntos
                                 'conatiner_calculation_id' => $conatiner_calculation_id, // asocia los calculations con las columnas. relacion columna => calculation_id
                                 'column_calculatioT_bol'   => $column_calculatioT_bol // False si falla la asociacion, true si esta asociado correctamente
 
                             ];
-
+                            if(strnatcasecmp($chargeExc_val,$chargeVal) == 0 && $statusTypeDestiny == false){
+                                $statusTypeDestiny = true;
+                            }
                             //dd($datos_finales);
 
                             /////////////////////////////////
@@ -1461,7 +1476,7 @@ class ImportationController extends Controller
                                                     ->where('contract_id',$contract_id)
                                                     ->where('calculationtype_id',$calculationtypeVal)
                                                     ->where('ammount',$ammount)
-                                                    ->where('currency_id',$currencyVal)
+                                                    ->where('currency_id',$currency_val)
                                                     ->has($typeplace)
                                                     ->first();
 
@@ -1472,8 +1487,8 @@ class ImportationController extends Controller
                                                         'contract_id'        => $contract_id,
                                                         'calculationtype_id' => $calculationtypeVal,
                                                         'ammount'            => $ammount,
-                                                        'currency_id'        => $currencyVal
-                                                    ]);
+                                                        'currency_id'        => $currency_val
+                                                    ]);                                                    
                                                 }
 
                                                 //----------------------- CARRIERS -------------------------------------------
@@ -1683,7 +1698,7 @@ class ImportationController extends Controller
                                 ///////////////////////////////// END GOOD
 
                             } else {
-
+                                //dd($datos_finales);
                                 if($values != false){
                                     // ORIGIN -------------------------------------------------------------
                                     if($origExiBol){
@@ -1724,8 +1739,12 @@ class ImportationController extends Controller
                                     }
                                     //---------------------------- TYPE DESTINY ---------------------------
                                     if($typedestinyExitBol){
-                                        $typedestinyVal = TypeDestiny::find($typedestinyVal);
-                                        $typedestinyVal = $typedestinyVal->description;
+                                        try{
+                                            $typedestinyVal = TypeDestiny::find($typedestinyVal);
+                                            $typedestinyVal = $typedestinyVal->description;
+                                        } catch(\Exception $e){
+                                            dd($datos_finales);
+                                        }
                                     }
 
                                     if(strnatcasecmp($chargeExc_val,$chargeVal) == 0){
@@ -1746,8 +1765,10 @@ class ImportationController extends Controller
                                                                                           $conta_row[0],
                                                                                           $conta_row[1]); 
                                                         $container_json['C'.$key] = ''.$rspVal;
-                                                    }              
-                                                    $currency_val = $conta_row[1];
+                                                    }
+                                                    if($conta_row[3] != true){
+                                                        $currency_val = $conta_row[1];
+                                                    }
                                                 }
                                                 $container_json = json_encode($container_json);
 
@@ -1788,7 +1809,9 @@ class ImportationController extends Controller
                                                                                                      $conta_row[1]);
                                                         }
                                                     }  
-                                                    $currency_val = $conta_row[1];
+                                                    if($conta_row[3] != true){
+                                                        $currency_val = $conta_row[1];                                                        
+                                                    }
                                                 }
                                                 $container_json = json_encode($container_json);
 
@@ -1866,6 +1889,10 @@ class ImportationController extends Controller
                                                                                        $currency_bol_f,
                                                                                        $ammount,
                                                                                        $currency_val);
+                                                    if($currency_bol_f){
+                                                        $currencyObj  = Currency::find($currency_val);
+                                                        $currency_val = $currencyObj->alphacode;
+                                                    }
 
                                                     //dd($ammount,$currency_val);
                                                     $exists = null;
@@ -1981,10 +2008,15 @@ class ImportationController extends Controller
                                                     }
                                                 }
 
+
                                                 $ammount = HelperAll::currencyJoin($statusCurrency,
                                                                                    $currency_bol_f,
                                                                                    $ammount,
                                                                                    $currency_val);
+                                                if($currency_bol_f){
+                                                    $currencyObj  = Currency::find($currency_val);
+                                                    $currency_val = $currencyObj->alphacode;
+                                                }
                                                 //dd('registro pr ship',$variant_currency,$columna_cont,$currency_val,$ammount);
                                                 $exists = null;
                                                 $exists = FailSurCharge::where('surcharge_id',$surchargeVal)
