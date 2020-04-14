@@ -28,7 +28,74 @@ class OceanFreightController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Contract $contract)
+    {
+        $vdata = [
+            'origin' => 'required',
+            'destination' => 'required'
+            'carrier' => 'required',
+            'currency' => 'required',
+            'schedule_type' => 'sometimes|nullable',
+            'transit_time' => 'sometimes|nullable',
+            'via' => 'sometimes|nullable',
+            'containers' => 'containers'
+        ];
+
+        $data = $this->validateContainers($request, $vdata, $contract);
+        
+        $prepared_data = [
+            'origin_port' => $data['origin'],
+            'destiny_port' => $data['destination'],
+            'carrier_id' => $data['carrier'],
+            'contract_id' => $contract->id,
+            'currency_id' => $data['currency'],
+            'schedule_type_id' => $data['schedule_type'],
+            'transit_time' => $data['transit_time'],
+            'via' => $data['via']
+        ];
+
+        $contract = Rate::create($prepared_data);
+
+        return new OceanFreightResource($contract);
+    }
+
+    public function validateContainers($request, $vdata, $contract){
+    	$container_code = $contract->group_containers->code;
+
+    	switch ($container_code) {
+    		case 'dry':
+    			$vdata['20DV'] => 'sometimes|nullable';
+    			$vdata['40DV'] => 'sometimes|nullable';
+    			$vdata['40HC'] => 'sometimes|nullable';
+    			$vdata['45HC'] => 'sometimes|nullable';
+    			$vdata['40NOR'] => 'sometimes|nullable';
+    			break;
+    		case 'refeer':
+    			$vdata['20RF'] => 'sometimes|nullable';
+    			$vdata['40RF'] => 'sometimes|nullable';
+    			$vdata['40HCRF'] => 'sometimes|nullable';
+    			break;
+    		case 'opentop':
+    			$vdata['20OT'] => 'sometimes|nullable';
+    			$vdata['40OT'] => 'sometimes|nullable';
+    			break;
+    		case 'flatrack':
+    			$vdata['20FR'] => 'sometimes|nullable';
+    			$vdata['40FR'] => 'sometimes|nullable';
+    			break;
+    	}
+
+    	return $request->validate($vdata);
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
     {
         $data = $request->validate([
             'origin' => 'required',
@@ -44,7 +111,7 @@ class OceanFreightController extends Controller
             'via' => 'present'
         ]);
 
-        $contract = Contract::create([
+        $contract = Contract::update([
             'name' => $data['name'],
             'number' => null,
             'company_user_id' => $company_user_id,
