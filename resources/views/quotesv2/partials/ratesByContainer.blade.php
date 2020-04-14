@@ -264,6 +264,10 @@
                                                             @foreach ($equipmentHides as $key=>$hide)
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
+                                                                        @php
+                                                                            ${$pre.$c->code} = 'c'.$c->code;
+                                                                            ${$pre.$c->code.$post} = 'c'.$c->code.'_markup';
+                                                                        @endphp
                                                                         <td {{$hide}} class="tds">
                                                                             <a href="#" class="editable-amount-rate amount_{{$key}} td-a" data-type="text" data-name="amount->c{{$key}}" data-value="{{@$origin_amounts['c'.$key]}}" data-pk="{{$item->id}}" data-container="{{$key}}" data-cargo-type="origin" data-title="Total"></a>
                                                                             +
@@ -272,8 +276,8 @@
                                                                             <span class="total_{{$key}} td-a">{{@$origin_amounts['c'.$c->code]+@$origin_markups['m'.$c->code]}}</span>
                                                                         </td>
                                                                         @php
-                                                                            ${'sum_origin'.$c->code} += @$origin_amounts['c'.$c->code];
-                                                                            ${'sum_origin_m'.$c->code} += @$origin_markups['m'.$c->code];
+                                                                            ${'sum_origin'.$c->code} += @$item->${$pre.$c->code};
+                                                                            ${'sum_origin_m'.$c->code} += @$item->${$pre.$c->code.$post};
                                                                         @endphp
                                                                     @endif
                                                                 @endforeach
@@ -429,6 +433,10 @@
                                                             @foreach ($equipmentHides as $key=>$hide)
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
+                                                                        @php
+                                                                            ${$pre.$c->code} = 'c'.$c->code;
+                                                                            ${$pre.$c->code.$post} = 'c'.$c->code.'_markup';
+                                                                        @endphp
                                                                         <td {{$hide}} class="tds">
                                                                             <a href="#" class="editable-amount-rate amount_{{$key}} td-a" data-type="text" data-name="amount->c{{$key}}" data-value="{{@$destination_amounts['c'.$key]}}" data-pk="{{$item->id}}" data-container="{{$key}}" data-cargo-type="destination" data-title="Total"></a>
                                                                             +
@@ -437,8 +445,8 @@
                                                                             <span class="total_{{$key}} td-a">{{@$destination_amounts['c'.$c->code]+@$destination_markups['m'.$c->code]}}</span>
                                                                         </td>
                                                                         @php
-                                                                            ${'sum_destination'.$c->code} += @$destination_amounts['c'.$c->code];
-                                                                            ${'sum_destination_m'.$c->code} += @$destination_markups['m'.$c->code];
+                                                                            ${'sum_destination'.$c->code} += @$item->${$pre.$c->code};
+                                                                            ${'sum_destination_m'.$c->code} += @$item->${$pre.$c->code.$post};
                                                                         @endphp
                                                                     @endif
                                                                 @endforeach
