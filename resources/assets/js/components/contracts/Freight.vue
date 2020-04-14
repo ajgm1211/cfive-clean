@@ -13,7 +13,7 @@
         </div>
         
         <div class="row my-3">
-            <div class="col-4">
+            <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <b-input
@@ -55,13 +55,13 @@
                 data: null,
 
                 fields: [
-                    { key: 'name', label: 'Origin Port', sortable: false },
-                    { key: 'status', label: 'Destination Port', sortable: false },
-                    { key: 'from', label: '20 DV', sortable: false },
-                    { key: 'until', label: '40 DV', sortable: false },
-                     { key: 'until', label: '40 HC', sortable: false },
-                     { key: 'until', label: '40 NOR', sortable: false },
-                    { key: 'until', label: '45 HC', sortable: false },
+                    { key: 'form', label: 'Origin Port', sortable: false },
+                    { key: 'until', label: 'Destination Port', sortable: false },
+                    { key: 'tdv', label: '20 DV', sortable: false },
+                    { key: 'fdv', label: '40 DV', sortable: false },
+                     { key: 'fhc', label: '40 HC', sortable: false },
+                     { key: 'fnor', label: '40 NOR', sortable: false },
+                    { key: 'ffhc', label: '45 HC', sortable: false },
                      { key: 'currency', label: 'Currency', sortable: false },
                     { key: 'carriers', label: 'Carriers', 
                      formatter: value => {
@@ -73,7 +73,6 @@
                          return $carriers.join(', ');
                      } 
                     },
-                     { key: 'until', label: '45 HC', sortable: true }
                    
 
                 ]

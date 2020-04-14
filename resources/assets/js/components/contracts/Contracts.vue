@@ -1,4 +1,3 @@
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <template>
     <div class="container-fluid">
         <div class="row mt-5">
@@ -6,9 +5,8 @@
 
                 <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
                     <div class="row">
-                        <div class="col-12 col-sm-2">
+                        <div class="col-12 col-sm-3 col-lg-2">
                             <b-form-group
-                                          :state="nameState"
                                           label="Reference"
                                           label-for="reference"
                                           invalid-feedback="Reference date is required"
@@ -16,21 +14,19 @@
                                 <multiselect v-model="reference" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Carrier"></multiselect>
                             </b-form-group> 
                         </div>
-                        <div class="col-12 col-sm-2">
+                        <div class="col-12 col-sm-3 col-lg-2">
                             <b-form-group
-                                          :state="nameState"
                                           label="Direction"
                                           label-for="direction"
                                           invalid-feedback="Direction is required"
                                           >
-                                <multiselect v-model="direction" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
+                                <multiselect v-model="directions" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
 
 
                             </b-form-group>
                         </div>
-                        <div class="col-12 col-sm-2 ">
+                        <div class="col-12 col-sm-3 col-lg-2">
                             <b-form-group
-                                          :state="nameState"
                                           label="Carrier"
                                           label-for="carrier"
                                           invalid-feedback="Carrier is required"
@@ -41,34 +37,47 @@
 
                             </b-form-group>
                         </div>
-                        <div class="col-12 col-sm-2">
+                        <div class="col-12 col-sm-3 col-lg-2">
                             <b-form-group
-                                          :state="nameState"
                                           label="Validity"
                                           label-for="validity"
                                           invalid-feedback="Validity is required"
                                           >
-                                <multiselect v-model="validity" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
+                                <date-range-picker
+                                                   ref="picker"
+                                                   :opens="opens"
+                                                   :locale-data="{ firstDay: 1 }"
+                                                   :singleDatePicker="singleDatePicker"
+                                                   v-model="dateRange"
+                                                   @update="updateValues"
+                                                   @toggle="checkOpen"
+                                                   :linkedCalendars="linkedCalendars"
+                                                   :dateFormat="dateFormat"
+                                                   >
+
+                                    <template v-slot:input="picker"  style="min-width: 350px;">
+                                        <i class="fa fa-calendar"></i>
+                                        {{ picker.startDate | date }} - {{ picker.endDate | date }}
+                                    </template>
+                                </date-range-picker>
 
 
                             </b-form-group>
                         </div>
-                        <div class="col-12 col-sm-2">
+                        <div class="col-12 col-sm-3 col-lg-2">
                             <b-form-group
-                                          :state="nameState"
                                           label="Equipment"
                                           label-for="equipment"
                                           invalid-feedback="Equipment is required"
                                           >
-                                <multiselect v-model="equipment" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Equipment"></multiselect>
-
+                                <multiselect v-model="equipment" @click="prueba" :options="equipments" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Equipment"></multiselect>
                             </b-form-group>
                         </div>
 
 
-                        <div class="col-12 col-sm-2">
+                        <div class="col-12 col-sm-3 col-lg-2">
+
                             <b-form-group
-                                          :state="nameState"
                                           label="Status"
                                           label-for="status"
                                           invalid-feedback="Direction is required"
@@ -117,6 +126,8 @@
     import Remarks from './Remarks';
     import Files from './Files';
 
+    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
+    import 'vue-multiselect/dist/vue-multiselect.min.css';
 
     export default {
         components: { 
@@ -127,7 +138,7 @@
             Restrictions,
             Remarks,
             Files
-            
+
         },
         data() {
             return {
@@ -135,26 +146,34 @@
                 data: null,
                 carrier: '',
                 equipment: '',
-                direction: '',
+                directions: '',
                 reference: '',
                 options: [
                     'opcion 1',
                     'opcion 2',
                     'opcion 3'
                 ],
-                startDate: '2017-09-05',
-                endDate: '2017-09-15',
-                locale: {
-                    direction: 'ltr', //direction of text
-                    format: 'DD-MM-YYYY', //fomart of the dates displayed
-                    separator: ' - ', //separator between the two ranges
+                equipments: [
+                    'Dry',
+                    'Reefer',
+                    'Open Top',
+                    'Flat Rack'
+                ],
+                
+                dateRange: { 
+                    startDate: '', 
+                    endDate:  ''
+                }, 
+                locale:{
+                    direction: 'ltr',
+                    format: 'mm/dd/yyyy',
+                    separator: ' - ',
                     applyLabel: 'Apply',
                     cancelLabel: 'Cancel',
-                    weekLabel: 'W',
                     customRangeLabel: 'Custom Range',
-                    daysOfWeek: moment.weekdaysMin(), //array of days - see moment documenations for details
-                    monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
-                    firstDay: 1 //ISO first day of week - see moment documenations for details
+                    daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    firstDay: 1
                 }
             }
         },
@@ -174,9 +193,6 @@
                 } else {
                     this.data = records;
                 }
-            },
-            confirmAction() {
-                console.log('hola');
             }
         }
     }

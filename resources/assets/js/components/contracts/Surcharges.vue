@@ -7,13 +7,13 @@
             <div class="col-6">
                 <div class="float-right">
                     <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
-                    <button class="btn btn-primary btn-bg">+ Add Freight</button>
+                    <button class="btn btn-primary btn-bg">+ Add Surcharge</button>
                 </div>
             </div>
         </div>
         
         <div class="row my-3">
-            <div class="col-4">
+             <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <b-input
@@ -55,10 +55,13 @@
                 data: null,
 
                 fields: [
-                    { key: 'name', label: 'Reference', sortable: true },
-                    { key: 'status', label: 'Status', sortable: true },
-                    { key: 'from', label: 'Valid From', sortable: true },
-                    { key: 'until', label: 'Valid Until', sortable: true },
+                    { key: 'charges', label: 'Charges', sortable: false },
+                    { key: 'from', label: 'Origin Port', sortable: false },
+                    { key: 'until', label: 'Destination Port', sortable: false },
+                    { key: 'chargeType', label: 'Charge Type', sortable: false },
+                    { key: 'calculation', label: 'Calculation Type', sortable: false },
+                    { key: 'amount', label: 'Amount', sortable: false },
+                    { key: 'currency', label: 'Currency', sortable: false },
                     { key: 'carriers', label: 'Carriers', 
                      formatter: value => {
                          let $carriers = [];
@@ -69,9 +72,8 @@
                          return $carriers.join(', ');
                      } 
                     },
-                    { key: 'equipment', label: 'Equipment', sortable: false },
-                    { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
-                    }
+                    
+                
 
                 ],
                 

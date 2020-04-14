@@ -70,33 +70,33 @@
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                              :state="nameState"
-                                              label="Validity"
-                                              label-for="date"
-                                              invalid-feedback="Validity date is required"
-                                              >
-                                    <date-range-picker
-                                                       ref="picker"
-                                                       :opens="opens"
-                                                       :locale-data="{ firstDay: 1, format: 'DD-MM-YYYY HH:mm:ss' }"
-                                                       :minDate="minDate" :maxDate="maxDate"
-                                                       :singleDatePicker="singleDatePicker"
-                                                       :timePicker="timePicker"
-                                                       :timePicker24Hour="timePicker24Hour"
-                                                       :showWeekNumbers="showWeekNumbers"
-                                                       :showDropdowns="showDropdowns"
-                                                       :autoApply="autoApply"
-                                                       v-model="dateRange"
-                                                       @update="updateValues"
-                                                       @toggle="checkOpen"
-                                                       :linkedCalendars="linkedCalendars"
-                                                       :dateFormat="dateFormat"
-                                                       >
-                                        <template v-slot:input="picker" style="min-width: 350px;">
-                                            {{ picker.startDate | date }} - {{ picker.endDate | date }}
-                                        </template>
-                                    </date-range-picker>
-                                </b-form-group> 
+                                          :state="nameState"
+                                          label="Validity"
+                                          label-for="validity"
+                                          invalid-feedback="Validity is required"
+                                          >
+                                <date-range-picker
+                                                   ref="picker"
+                                                   :opens="opens"
+                                                   :locale-data="{ firstDay: 1 }"
+                                                   :singleDatePicker="singleDatePicker"
+                                                   :showWeekNumbers="showWeekNumbers"
+                                                   :showDropdowns="showDropdowns"
+                                                   v-model="dateRange"
+                                                   @update="updateValues"
+                                                   @toggle="checkOpen"
+                                                   :linkedCalendars="linkedCalendars"
+                                                   :dateFormat="dateFormat"
+                                                   >
+
+                                    <template v-slot:input="picker"  style="min-width: 350px;">
+                                        <i class="fa fa-calendar"></i>
+                                        {{ picker.startDate | date }} - {{ picker.endDate | date }}
+                                    </template>
+                                </date-range-picker>
+
+
+                            </b-form-group>
                             </div>
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
@@ -149,7 +149,7 @@
     import Multiselect from 'vue-multiselect';
     import DateRangePicker from 'vue2-daterange-picker';
 
-    Vue.component('multiselect', Multiselect);
+    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
     export default {
         components: { 
             DateRangePicker,
@@ -188,19 +188,20 @@
                     'opcion 2',
                     'opcion 3'
                 ],
-                startDate: '2017-09-05',
-                endDate: '2017-09-15',
-                locale: {
-                    direction: 'ltr', //direction of text
-                    format: 'DD-MM-YYYY', //fomart of the dates displayed
-                    separator: ' - ', //separator between the two ranges
+                dateRange: { 
+                    startDate: '', 
+                    endDate:  ''
+                }, 
+                locale:{
+                    direction: 'ltr',
+                    format: 'mm/dd/yyyy',
+                    separator: ' - ',
                     applyLabel: 'Apply',
                     cancelLabel: 'Cancel',
-                    weekLabel: 'W',
                     customRangeLabel: 'Custom Range',
-                    daysOfWeek: moment.weekdaysMin(), //array of days - see moment documenations for details
-                    monthNames: moment.monthsShort(), //array of month names - see moment documenations for details
-                    firstDay: 1 //ISO first day of week - see moment documenations for details
+                    daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    firstDay: 1
                 }
             }
         },
