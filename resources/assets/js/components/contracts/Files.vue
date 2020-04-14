@@ -145,7 +145,7 @@
             </svg>
           </figure>
           Drop Or Add Files Here
-          <p class="separator"><span> or </span></p>
+          <p><span> or </span></p>
           <button type="button" class="btn btn-primary btn-bg">Choose file</button>
         </div>
       </div>
