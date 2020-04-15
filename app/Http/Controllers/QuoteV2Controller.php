@@ -355,9 +355,9 @@ class QuoteV2Controller extends Controller
         $hideO = 'hide';
         $hideD = 'hide';
         $rates = $quote->rates_v2;
-  
+
         $this->processShowQuoteRates($rates, $company_user, $containers);
-        
+
         if (!$quote->rates_v2->isEmpty()) {
             foreach ($quote->rates_v2 as $item) {
                 $quote->rates_v2->map(function ($item) {
@@ -403,7 +403,7 @@ class QuoteV2Controller extends Controller
             return $collection;
         }
 
-        return view('quotesv2/show', compact('quote','containers', 'companies', 'company_user', 'incoterms', 'users', 'prices', 'contacts', 'currencies', 'equipmentHides', 'freight_charges', 'origin_charges', 'destination_charges', 'calculation_types', 'calculation_types_lcl_air', 'rates', 'surcharges', 'email_templates', 'inlands', 'emaildimanicdata', 'package_loads', 'countries', 'harbors', 'prices', 'airlines', 'carrierMan', 'currency_name', 'hideO', 'hideD', 'sale_terms', 'rate_origin_ports', 'rate_destination_ports', 'rate_origin_airports', 'rate_destination_airports', 'destinationAddressHides', 'originAddressHides'));
+        return view('quotesv2/show', compact('quote', 'containers', 'companies', 'company_user', 'incoterms', 'users', 'prices', 'contacts', 'currencies', 'equipmentHides', 'freight_charges', 'origin_charges', 'destination_charges', 'calculation_types', 'calculation_types_lcl_air', 'rates', 'surcharges', 'email_templates', 'inlands', 'emaildimanicdata', 'package_loads', 'countries', 'harbors', 'prices', 'airlines', 'carrierMan', 'currency_name', 'hideO', 'hideD', 'sale_terms', 'rate_origin_ports', 'rate_destination_ports', 'rate_origin_airports', 'rate_destination_airports', 'destinationAddressHides', 'originAddressHides'));
     }
     /**
      * Update charges by rate
@@ -834,7 +834,7 @@ class QuoteV2Controller extends Controller
         foreach ($container as $cont) {
             $hidden = 'hidden' . $cont->code;
             $hidden = 'hidden';
-            
+
             foreach ($equipmentForm as $val) {
 
                 if ($val == $cont->id) {
@@ -1044,51 +1044,32 @@ class QuoteV2Controller extends Controller
 
     public function storeCharge(Request $request)
     {
-
-        $array_amount_20 = array();
-        $array_markup_20 = array();
-        $array_amount_40 = array();
-        $array_markup_40 = array();
-        $array_amount_40hc = array();
-        $array_markup_40hc = array();
-        $array_amount_40nor = array();
-        $array_markup_40nor = array();
-        $array_amount_45 = array();
-        $array_markup_45 = array();
+        $containers = Container::all();
+        $array_amount = 'array_amount_';
+        $array_markup = 'array_markup_';
         $merge_amounts = array();
         $merge_markups = array();
-        if ($request->amount_c20) {
-            $array_amount_20 = array('c20' => $request->amount_c20);
+
+        foreach ($containers as $value) {
+            ${$array_amount.$value->code} = array();
+            ${$array_markup.$value->code} = array();
         }
-        if ($request->markup_m20) {
-            $array_markup_20 = array('m20' => $request->markup_m20);
+        
+        foreach ($containers as $value) {
+            foreach ($request->equipments as $key=>$equipment) {
+                if (($key == 'amount_'.$value->code) && $equipment != null) {
+                    ${$array_amount.$value->code} = array('c'.$value->code => $equipment);
+                }
+                if (($key == 'markup_'.$value->code) && $equipment != null) {
+                    ${$array_markup.$value->code} = array('m'.$value->code => $equipment);
+                }
+            }
         }
-        if ($request->amount_c40) {
-            $array_amount_40 = array('c40' => $request->amount_c40);
+
+        foreach ($containers as $value) {
+            $merge_amounts = array_merge($merge_amounts,${$array_amount.$value->code});
+            $merge_markups = array_merge($merge_markups,${$array_markup.$value->code});
         }
-        if ($request->markup_m40) {
-            $array_markup_40 = array('m40' => $request->markup_m40);
-        }
-        if ($request->amount_c40hc) {
-            $array_amount_40hc = array('c40hc' => $request->amount_c40hc);
-        }
-        if ($request->markup_m40hc) {
-            $array_markup_40hc = array('m40hc' => $request->markup_m40hc);
-        }
-        if ($request->amount_c40nor) {
-            $array_amount_40nor = array('c40nor' => $request->amount_c40nor);
-        }
-        if ($request->markup_m40nor) {
-            $array_markup_40nor = array('m40nor' => $request->markup_m40nor);
-        }
-        if ($request->amount_c45) {
-            $array_amount_45 = array('c45' => $request->amount_c45);
-        }
-        if ($request->markup_m45) {
-            $array_markup_45 = array('m45' => $request->markup_m45);
-        }
-        $merge_amounts = array_merge($array_amount_20, $array_amount_40, $array_amount_40hc, $array_amount_40nor, $array_amount_45);
-        $merge_markups = array_merge($array_markup_20, $array_markup_40, $array_markup_40hc, $array_markup_40nor, $array_markup_45);
 
         $charge = new Charge();
         $charge->automatic_rate_id = $request->automatic_rate_id;
@@ -1099,6 +1080,8 @@ class QuoteV2Controller extends Controller
         $charge->markups = json_encode($merge_markups);
         $charge->currency_id = $request->currency_id;
         $charge->save();
+
+        dd('Estamos aquí!');
 
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
         $currency_cfg = Currency::find($company_user->currency_id);

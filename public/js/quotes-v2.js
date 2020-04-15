@@ -394,15 +394,15 @@ $(document).ready(function () {
             if (newValue == '') {
                 newValue = 0;
             }
-            
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
             //Calculando total de la línea dinámico
             total = parseFloat(newValue) + amount;
-            
-            $(this).closest('tr').find('.total_inland_'+code).html(total);
-            
+
+            $(this).closest('tr').find('.total_inland_' + code).html(total);
+
             if (!response) {
                 return "Unknown error!";
             }
@@ -427,14 +427,14 @@ $(document).ready(function () {
             if (newValue == '') {
                 newValue = 0;
             }
-            
+
             //Seteando nuevo valor
             $(this).editable('setValue', newValue);
 
             //Calculando total de la línea dinámico
             total = parseFloat(newValue) + amount;
-            
-            $(this).closest('tr').find('.total_inland_'+code).html(total);
+
+            $(this).closest('tr').find('.total_inland_' + code).html(total);
 
             if (!response) {
                 return "Unknown error!";
@@ -461,7 +461,7 @@ $(document).ready(function () {
             var total = 0;
             var total_currency = 0;
             var markup = parseFloat($(this).closest('tr').find('.markup_' + code).html());
-            
+
             if (markup == '') {
                 markup = 0;
             }
@@ -486,7 +486,7 @@ $(document).ready(function () {
                 total_currency = currencyRateAlphacode(currency, currency_cfg, value);
                 sum += parseFloat(total_currency);
             });
-            
+
             //Subtotal dinámico
             $(this).closest('table').find('.total_' + type + '_' + code).html(sum);
 
@@ -547,7 +547,7 @@ $(document).ready(function () {
 
             //Calculando total de la línea dinámico
             total = parseFloat(newValue) + amount;
-            
+
             $(this).closest('tr').find('.total_' + code).html(total);
 
             //Conversión de monedas dinámica
@@ -948,25 +948,20 @@ $(document).on('click', '.store_charge', function () {
     var theElement = $(this);
     var surcharge_id = $(this).closest("tr").find(".surcharge_id").val();
     var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
-    var hide_20 = $(this).closest("tr").find(".hide_20").val();
-    var amount_c20 = $(this).closest("tr").find(".amount_c20").val();
-    var markup_m20 = $(this).closest("tr").find(".markup_m20").val();
-    var hide_40 = $(this).closest("tr").find(".hide_40").val();
-    var amount_c40 = $(this).closest("tr").find(".amount_c40").val();
-    var markup_m40 = $(this).closest("tr").find(".markup_m40").val();
-    var hide_40hc = $(this).closest("tr").find(".hide_40hc").val();
-    var amount_c40hc = $(this).closest("tr").find(".amount_c40hc").val();
-    var markup_m40hc = $(this).closest("tr").find(".markup_m40hc").val();
-    var hide_40nor = $(this).closest("tr").find(".hide_40nor").val();
-    var amount_c40nor = $(this).closest("tr").find(".amount_c40nor").val();
-    var markup_m40nor = $(this).closest("tr").find(".markup_m40nor").val();
-    var hide_45 = $(this).closest("tr").find(".hide_45").val();
-    var amount_c45 = $(this).closest("tr").find(".amount_c45").val();
-    var markup_m45 = $(this).closest("tr").find(".markup_m45").val();
+    var containers = ['20DV', '40DV', '40HC', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'];
+    var types = {};
+    
+    $.each(containers, function (index, value) {
+        window['hide_'+value] = theElement.closest("tr").find(".hide_"+value).val();
+        window['amount_'+value] = theElement.closest("tr").find(".amount_c"+value).val();
+        window['markup_'+value] = theElement.closest("tr").find(".markup_m"+value).val();
+        types['hide_'+value] = theElement.closest("tr").find(".hide_"+value).val();
+        types['amount_'+value] = theElement.closest("tr").find(".amount_c"+value).val();
+        types['markup_'+value] = theElement.closest("tr").find(".markup_m"+value).val();
+    });
+
     var type_id = $(this).closest("tr").find(".type_id").val();
     var currency_id = $(this).closest("tr").find(".currency_id").val();
-    var sum_c20 = 0;
-    var sum_c40 = 0;
     var self = $(this);
     var amount_20_curr = 0;
 
@@ -977,22 +972,12 @@ $(document).on('click', '.store_charge', function () {
             "automatic_rate_id": id,
             "surcharge_id": surcharge_id,
             "calculation_type_id": calculation_type_id,
-            "amount_c20": amount_c20,
-            "markup_m20": markup_m20,
-            "amount_c40": amount_c40,
-            "markup_m40": markup_m40,
-            "amount_c40hc": amount_c40hc,
-            "markup_m40hc": markup_m40hc,
-            "amount_c40nor": amount_c40nor,
-            "markup_m40nor": markup_m40nor,
-            "amount_c45": amount_c45,
-            "markup_m45": markup_m45,
+            "equipments": types,
             "type_id": type_id,
             "currency_id": currency_id
         },
         success: function (data) {
             if (data.message == 'Ok') {
-                //alert(data.total_20);
                 swal(
                     'Done!',
                     'Charge saved successfully',
@@ -1000,11 +985,10 @@ $(document).on('click', '.store_charge', function () {
                 )
             }
             $(theElement).closest('tr').remove();
-            line_total_20 = parseFloat(data.amount20) + parseFloat(data.markup20);
-            line_total_40 = parseFloat(data.amount40) + parseFloat(data.markup40);
-            line_total_40hc = parseFloat(data.amount40hc) + parseFloat(data.markup40hc);
-            line_total_40nor = parseFloat(data.amount40nor) + parseFloat(data.markup40nor);
-            line_total_45 = parseFloat(data.amount45) + parseFloat(data.markup45);
+            $.each(containers, function (index, value) {
+                window['line_total_'+value] = parseFloat(data.value) + parseFloat(data.value+'_markup');
+            });
+            //line_total_20 = parseFloat(data.amount20) + parseFloat(data.markup20);
             if (type_id == 3) {
                 $('<tr style="height:40px;">' +
                     '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' +
@@ -1016,16 +1000,10 @@ $(document).on('click', '.store_charge', function () {
                     '<td ' + hide_45 + ' class="tds"><span class="td-a">' + data.amount45 + '</span> + <span class="td-a">' + data.markup45 + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_45 + '</td>' +
                     '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' +
                     '</tr>').insertBefore('.total_freight_' + number);
-                $('.total_freight_' + number).find('.total_freight_20').html('');
-                $('.total_freight_' + number).find('.total_freight_20').html(data.sum_total_20);
-                $('.total_freight_' + number).find('.total_freight_40').html('');
-                $('.total_freight_' + number).find('.total_freight_40').html(data.sum_total_40);
-                $('.total_freight_' + number).find('.total_freight_40hc').html('');
-                $('.total_freight_' + number).find('.total_freight_40hc').html(data.sum_total_40hc);
-                $('.total_freight_' + number).find('.total_freight_40nor').html('');
-                $('.total_freight_' + number).find('.total_freight_40nor').html(data.sum_total_40nor);
-                $('.total_freight_' + number).find('.total_freight_45').html('');
-                $('.total_freight_' + number).find('.total_freight_45').html(data.sum_total_45);
+                $.each(containers, function (index, value) {
+                    $('.total_freight_' + number).find('.total_freight_'+value).html('');
+                    $('.total_freight_' + number).find('.total_freight_'+value).html(data.sum_total_+value);
+                });
 
                 //Calculando total dinámico
                 sum_total_20 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.total_freight_20').html()) + parseFloat($('.total_freight_' + number).closest('div.rates').find('.total_origin_20').html()) + parseFloat($('.total_freight_' + number).closest('div.rates').find('.total_destination_20').html());
