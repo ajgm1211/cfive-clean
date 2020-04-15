@@ -58,4 +58,8 @@ class Rate extends Model
     {
         return $query->where( 'contract_id', '=', $contract_id );
     }
+
+    protected $casts = [
+        'containers' => 'array'
+    ];
 }
