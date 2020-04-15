@@ -18,7 +18,7 @@ class OceanFreightController extends Controller
      */
     public function list(Request $request, Contract $contract)
     {
-        $results = Rate::filter($request);
+        $results = Rate::filterByContract($contract->id)->filter($request);
 
     	return OceanFreightResource::collection($results);
     }

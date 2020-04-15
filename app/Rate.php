@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Http\Filters\RateFilter;
+use App\Http\Filters\OceanFreightFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -45,7 +45,7 @@ class Rate extends Model
     */
     public function scopeFilter(Builder $builder, Request $request)
     {
-        return (new RateFilter($request, $builder))->filter();
+        return (new OceanFreightFilter($request, $builder))->filter();
     }
 
     /**
