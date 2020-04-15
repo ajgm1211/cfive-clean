@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Rate;
+use App\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OceanFreightResource;
 
@@ -17,7 +18,7 @@ class OceanFreightController extends Controller
      */
     public function list(Request $request, Contract $contract)
     {
-        $results = Rate::filterByContract($contract->id)->filter($request);
+        $results = Rate::filter($request);
 
     	return OceanFreightResource::collection($results);
     }
@@ -30,6 +31,60 @@ class OceanFreightController extends Controller
      */
     public function store(Request $request, Contract $contract)
     {
+        $data = $this->validateData($request, $contract);
+
+        $prepared_data = $this->preparedData($data, $contract);
+
+        $rate = Rate::create($prepared_data);
+
+        return new OceanFreightResource($rate);
+    }
+
+    public function preparedData($request, $contract)
+    {
+        $prepared_data = [
+            'origin_port' => $data['origin'],
+            'destiny_port' => $data['destination'],
+            'carrier_id' => $data['carrier'],
+            'contract_id' => $contract->id,
+            'currency_id' => $data['currency'],
+            'schedule_type_id' => isset($data['schedule_type']) ? $data['schedule_type'] : null,
+            'transit_time' => isset($data['transit_time']) ? $data['transit_time'] : null,
+            'via' => isset($data['via']) ? $data['via'] : null
+        ];
+
+        $containers = [];
+        
+        if($contract->isDRY()){
+
+            $prepared_data['twuenty'] = $data['rates_20V'],
+            $prepared_data['forty'] = $data['rates_40V'],
+            $prepared_data['fortyhc'] = $data['rates_40HC'],
+            $prepared_data['fortynor'] = $data['rates_20NOR'],
+            $prepared_data['fortyfive'] = $data['rates_45HC'],
+
+        } else {
+
+            $prepared_data['twuenty'] = '-',
+            $prepared_data['forty'] = '-',
+            $prepared_data['fortyhc'] = '-',
+            $prepared_data['fortynor'] = '-',
+            $prepared_data['fortyfive'] = '-'
+
+            foreach ($data as $key => $value) {
+
+            if(strpos($key, "rates_") === 0 and !empty($value))
+                $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
+            }
+        }
+
+        $prepared_data['containers'] = $containers;
+
+        return $prepared_data;
+    }
+
+    public function validateData($request, $contract)
+    {
         $vdata = [
             'origin' => 'required',
             'destination' => 'required'
@@ -37,53 +92,14 @@ class OceanFreightController extends Controller
             'currency' => 'required',
             'schedule_type' => 'sometimes|nullable',
             'transit_time' => 'sometimes|nullable',
-            'via' => 'sometimes|nullable',
-            'containers' => 'containers'
+            'via' => 'sometimes|nullable'
         ];
+    	
+        $available_containers = Container::all()->pluck('code');
 
-        $data = $this->validateContainers($request, $vdata, $contract);
-        
-        $prepared_data = [
-            'origin_port' => $data['origin'],
-            'destiny_port' => $data['destination'],
-            'carrier_id' => $data['carrier'],
-            'contract_id' => $contract->id,
-            'currency_id' => $data['currency'],
-            'schedule_type_id' => $data['schedule_type'],
-            'transit_time' => $data['transit_time'],
-            'via' => $data['via']
-        ];
-
-        $contract = Rate::create($prepared_data);
-
-        return new OceanFreightResource($contract);
-    }
-
-    public function validateContainers($request, $vdata, $contract){
-    	$container_code = $contract->group_containers->code;
-
-    	switch ($container_code) {
-    		case 'dry':
-    			$vdata['20DV'] => 'sometimes|nullable';
-    			$vdata['40DV'] => 'sometimes|nullable';
-    			$vdata['40HC'] => 'sometimes|nullable';
-    			$vdata['45HC'] => 'sometimes|nullable';
-    			$vdata['40NOR'] => 'sometimes|nullable';
-    			break;
-    		case 'refeer':
-    			$vdata['20RF'] => 'sometimes|nullable';
-    			$vdata['40RF'] => 'sometimes|nullable';
-    			$vdata['40HCRF'] => 'sometimes|nullable';
-    			break;
-    		case 'opentop':
-    			$vdata['20OT'] => 'sometimes|nullable';
-    			$vdata['40OT'] => 'sometimes|nullable';
-    			break;
-    		case 'flatrack':
-    			$vdata['20FR'] => 'sometimes|nullable';
-    			$vdata['40FR'] => 'sometimes|nullable';
-    			break;
-    	}
+        foreach ($available_containers as $container) {
+           $vdata['rates_'.$container] = 'sometimes|nullable';
+        }
 
     	return $request->validate($vdata);
 
@@ -95,37 +111,25 @@ class OceanFreightController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Contract $contract, Rate $rate)
     {
-        $data = $request->validate([
-            'origin' => 'required',
-            'destination' => 'required'
-            'carrier' => 'required',
-            'forty' => 'sometimes',
-			'fortyhc' => 'sometimes'
-			'fortynor' => 'sometimes'
-			'fortyfive' => 'sometimes',
-            'currency' => 'required',
-            'schedule_type' => 'sometimes',
-            'transit_time' => 'present',
-            'via' => 'present'
-        ]);
+        $data = $this->validateData($request, $contract);
 
-        $contract = Contract::update([
-            'name' => $data['name'],
-            'number' => null,
-            'company_user_id' => $company_user_id,
-            'account_id' => null,
-            'direction_id' => $data['direction'],
-            'validity' => $data['validity'],
-            'expire' => $data['expire'],
-            'status' => $data['status'],
-            'gp_container_id' => $data['gp_container'],
-            'remarks' => $data['remarks']
-        ]);
+        $prepared_data = $this->preparedData($data, $contract);
 
-        $contract->ContractCarrierSync($data['carriers']);
+        $rate->update($prepared_data);
 
-        return new ContractResource($contract);
+        return new OceanFreightResource($rate);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function retrieve(Contract $contract, Rate $rate)
+    {
+        return new OceanFreightResource($rate);
     }
 }
