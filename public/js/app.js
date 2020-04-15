@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 284);
+/******/ 	return __webpack_require__(__webpack_require__.s = 289);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -71,8 +71,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(40);
-var isBuffer = __webpack_require__(73);
+var bind = __webpack_require__(41);
+var isBuffer = __webpack_require__(76);
 
 /*global toString:true*/
 
@@ -404,16 +404,126 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 284:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ 24:
+/***/ (function(module, exports) {
 
-__webpack_require__(285);
-module.exports = __webpack_require__(292);
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
 
 
 /***/ }),
 
-/***/ 285:
+/***/ 289:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(290);
+module.exports = __webpack_require__(297);
+
+
+/***/ }),
+
+/***/ 290:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -423,9 +533,9 @@ module.exports = __webpack_require__(292);
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(286);
+__webpack_require__(291);
 
-window.Vue = __webpack_require__(45);
+window.Vue = __webpack_require__(46);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -433,7 +543,11 @@ window.Vue = __webpack_require__(45);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(289));
+Vue.component('example-component', __webpack_require__(294));
+//Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
+//Vue.component('restrictions', require('./components/Restrictions.vue'));
+//Vue.component('remarkes', require('./components/Remarkes.vue'));
+//Vue.component('files', require('./components/Files.vue'));
 
 var app = new Vue({
   el: '#app'
@@ -441,15 +555,15 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 286:
+/***/ 291:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(287);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(292);
 
-window._ = __webpack_require__(69);
-window.Popper = __webpack_require__(38).default;
+window._ = __webpack_require__(72);
+window.Popper = __webpack_require__(39).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -458,9 +572,9 @@ window.Popper = __webpack_require__(38).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(39);
+  window.$ = window.jQuery = __webpack_require__(40);
 
-  __webpack_require__(71);
+  __webpack_require__(74);
 } catch (e) {}
 
 /**
@@ -469,7 +583,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(50);
+window.axios = __webpack_require__(52);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -506,7 +620,7 @@ if (token) {
 
 
 
-window.Pusher = __webpack_require__(288);
+window.Pusher = __webpack_require__(293);
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */]({
   broadcaster: 'pusher',
   key: "1a64b121010c1eb64623",
@@ -607,7 +721,7 @@ function getUrl() {
 
 /***/ }),
 
-/***/ 287:
+/***/ 292:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1862,7 +1976,7 @@ var Echo = function () {
 
 /***/ }),
 
-/***/ 288:
+/***/ 293:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -10752,15 +10866,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ 289:
+/***/ 294:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(92)
+var normalizeComponent = __webpack_require__(24)
 /* script */
-var __vue_script__ = __webpack_require__(290)
+var __vue_script__ = __webpack_require__(295)
 /* template */
-var __vue_template__ = __webpack_require__(291)
+var __vue_template__ = __webpack_require__(296)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -10800,7 +10914,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 290:
+/***/ 295:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10830,7 +10944,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 291:
+/***/ 296:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -10874,21 +10988,21 @@ if (false) {
 
 /***/ }),
 
-/***/ 292:
+/***/ 297:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 30:
+/***/ 31:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(11);
-var normalizeHeaderName = __webpack_require__(75);
+var normalizeHeaderName = __webpack_require__(78);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -10904,10 +11018,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(41);
+    adapter = __webpack_require__(42);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(41);
+    adapter = __webpack_require__(42);
   }
   return adapter;
 }
@@ -10982,11 +11096,11 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(32)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(33)))
 
 /***/ }),
 
-/***/ 32:
+/***/ 33:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -11177,7 +11291,7 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ 38:
+/***/ 39:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13791,7 +13905,7 @@ Popper.Defaults = Defaults;
 
 /***/ }),
 
-/***/ 39:
+/***/ 40:
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -24397,7 +24511,7 @@ return jQuery;
 
 /***/ }),
 
-/***/ 40:
+/***/ 41:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24416,18 +24530,18 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 
-/***/ 41:
+/***/ 42:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(11);
-var settle = __webpack_require__(76);
-var buildURL = __webpack_require__(78);
-var parseHeaders = __webpack_require__(79);
-var isURLSameOrigin = __webpack_require__(80);
-var createError = __webpack_require__(42);
+var settle = __webpack_require__(79);
+var buildURL = __webpack_require__(81);
+var parseHeaders = __webpack_require__(82);
+var isURLSameOrigin = __webpack_require__(83);
+var createError = __webpack_require__(43);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -24507,7 +24621,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(81);
+      var cookies = __webpack_require__(84);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -24586,13 +24700,13 @@ module.exports = function xhrAdapter(config) {
 
 /***/ }),
 
-/***/ 42:
+/***/ 43:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(77);
+var enhanceError = __webpack_require__(80);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -24612,7 +24726,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24625,7 +24739,7 @@ module.exports = function isCancel(value) {
 
 /***/ }),
 
-/***/ 44:
+/***/ 45:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24652,26 +24766,26 @@ module.exports = Cancel;
 
 /***/ }),
 
-/***/ 45:
+/***/ 46:
 /***/ (function(module, exports, __webpack_require__) {
 
 if (false) {
   module.exports = require('./vue.common.prod.js')
 } else {
-  module.exports = __webpack_require__(89)
+  module.exports = __webpack_require__(92)
 }
 
 
 /***/ }),
 
-/***/ 50:
+/***/ 52:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(72);
+module.exports = __webpack_require__(75);
 
 /***/ }),
 
-/***/ 69:
+/***/ 72:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -41783,11 +41897,11 @@ module.exports = __webpack_require__(72);
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(70)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(73)(module)))
 
 /***/ }),
 
-/***/ 70:
+/***/ 73:
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -41816,7 +41930,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 71:
+/***/ 74:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -41825,7 +41939,7 @@ module.exports = function(module) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(39), __webpack_require__(38)) :
+   true ? factory(exports, __webpack_require__(40), __webpack_require__(39)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (global = global || self, factory(global.bootstrap = {}, global.jQuery, global.Popper));
 }(this, (function (exports, $, Popper) { 'use strict';
@@ -46344,16 +46458,16 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 72:
+/***/ 75:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(11);
-var bind = __webpack_require__(40);
-var Axios = __webpack_require__(74);
-var defaults = __webpack_require__(30);
+var bind = __webpack_require__(41);
+var Axios = __webpack_require__(77);
+var defaults = __webpack_require__(31);
 
 /**
  * Create an instance of Axios
@@ -46386,15 +46500,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(44);
-axios.CancelToken = __webpack_require__(87);
-axios.isCancel = __webpack_require__(43);
+axios.Cancel = __webpack_require__(45);
+axios.CancelToken = __webpack_require__(90);
+axios.isCancel = __webpack_require__(44);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(88);
+axios.spread = __webpack_require__(91);
 
 module.exports = axios;
 
@@ -46404,7 +46518,7 @@ module.exports.default = axios;
 
 /***/ }),
 
-/***/ 73:
+/***/ 76:
 /***/ (function(module, exports) {
 
 /*!
@@ -46422,16 +46536,16 @@ module.exports = function isBuffer (obj) {
 
 /***/ }),
 
-/***/ 74:
+/***/ 77:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(30);
+var defaults = __webpack_require__(31);
 var utils = __webpack_require__(11);
-var InterceptorManager = __webpack_require__(82);
-var dispatchRequest = __webpack_require__(83);
+var InterceptorManager = __webpack_require__(85);
+var dispatchRequest = __webpack_require__(86);
 
 /**
  * Create a new instance of Axios
@@ -46509,7 +46623,7 @@ module.exports = Axios;
 
 /***/ }),
 
-/***/ 75:
+/***/ 78:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46529,13 +46643,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 /***/ }),
 
-/***/ 76:
+/***/ 79:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(42);
+var createError = __webpack_require__(43);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -46563,7 +46677,7 @@ module.exports = function settle(resolve, reject, response) {
 
 /***/ }),
 
-/***/ 77:
+/***/ 80:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46592,7 +46706,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 /***/ }),
 
-/***/ 78:
+/***/ 81:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46666,7 +46780,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 /***/ }),
 
-/***/ 79:
+/***/ 82:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46727,7 +46841,7 @@ module.exports = function parseHeaders(headers) {
 
 /***/ }),
 
-/***/ 80:
+/***/ 83:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46803,7 +46917,7 @@ module.exports = (
 
 /***/ }),
 
-/***/ 81:
+/***/ 84:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46864,7 +46978,7 @@ module.exports = (
 
 /***/ }),
 
-/***/ 82:
+/***/ 85:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46924,18 +47038,18 @@ module.exports = InterceptorManager;
 
 /***/ }),
 
-/***/ 83:
+/***/ 86:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(11);
-var transformData = __webpack_require__(84);
-var isCancel = __webpack_require__(43);
-var defaults = __webpack_require__(30);
-var isAbsoluteURL = __webpack_require__(85);
-var combineURLs = __webpack_require__(86);
+var transformData = __webpack_require__(87);
+var isCancel = __webpack_require__(44);
+var defaults = __webpack_require__(31);
+var isAbsoluteURL = __webpack_require__(88);
+var combineURLs = __webpack_require__(89);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -47018,7 +47132,7 @@ module.exports = function dispatchRequest(config) {
 
 /***/ }),
 
-/***/ 84:
+/***/ 87:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47046,7 +47160,7 @@ module.exports = function transformData(data, headers, fns) {
 
 /***/ }),
 
-/***/ 85:
+/***/ 88:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47068,7 +47182,7 @@ module.exports = function isAbsoluteURL(url) {
 
 /***/ }),
 
-/***/ 86:
+/***/ 89:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47090,13 +47204,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 /***/ }),
 
-/***/ 87:
+/***/ 90:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(44);
+var Cancel = __webpack_require__(45);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -47155,7 +47269,7 @@ module.exports = CancelToken;
 
 /***/ }),
 
-/***/ 88:
+/***/ 91:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -47190,7 +47304,7 @@ module.exports = function spread(callback) {
 
 /***/ }),
 
-/***/ 89:
+/***/ 92:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -59154,11 +59268,11 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(90).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(93).setImmediate))
 
 /***/ }),
 
-/***/ 90:
+/***/ 93:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
@@ -59214,7 +59328,7 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(91);
+__webpack_require__(94);
 // On some exotic environments, it's not clear which object `setimmediate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
@@ -59229,7 +59343,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ 91:
+/***/ 94:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -59419,117 +59533,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(32)))
-
-/***/ }),
-
-/***/ 92:
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21), __webpack_require__(33)))
 
 /***/ })
 

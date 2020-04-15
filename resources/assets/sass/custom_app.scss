@@ -1,15 +1,330 @@
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
-.david{
-  color: #FFF000;
+a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
+    font-family: "Sailec" !important;
 }
+
+
+
+/*** genetal styles ***/
+.m-body {
+    background-color: #f8f8fc !important;
+}
+
+.status-st {
+    color: #fff; 
+    font-size: 9px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+}
+.published {
+    background-color: #5fe2a0;
+}
+.incompleted {
+    background-color: #969cc0;
+}
+.expired {
+    background-color: #ff6464;
+}
+.incompleted::before {
+    content: 'incompleted';
+    font-weight: bold;
+}
+.published::before {
+    content: 'published';
+    font-weight: bold;
+}
+.expired::before {
+    content: 'expired';
+    font-weight: bold;
+}
+
+/**** --- Table Card--- ****/
 
 .card {
-  border: 2px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0.50rem;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.50rem;
+}
+.card-title {
+    color: #031b4e;
+    font-weight: bold;
+}
+.btn-bg {
+    background-color: #006bf9 !important;
+    color: #fff;
+    font-weight: bold;
+    border: none !important;
+}
+.btn-bg:hover {
+    opacity: 0.8;
+}
+.btn-link {
+    font-weight: bold;
+}
+.form-control:focus {
+    box-shadow: none;
+}
+table thead {
+    background-color: transparent !important;
+    border-bottom: 1px solid #eee;
+}
+table tr th {
+    color: #031b4e;
+    font-weight: bold !important;
+}
+table tr td {
+    color: #031b4e;
+}
+table tr th:focus {
+    outline: none;
+}
+.form-inline {
+    position: relative;
+}
+.form-inline i {
+    position: absolute;
+    left: 12px;
+    color: #525f7e;
+}
+.form-inline input {
+    border: 2px solid #eee;
+    padding-left: 33px;
+}
+.input-check[type=checkbox] + label {
+    display: block;
+    margin: 0.2em;
+    cursor: pointer;
+    padding: 0.2em;
 }
 
-.bg-container {
-  background-color: #eceff3;
+.input-check[type=checkbox] {
+    display: none;
+}
+.input-check[type=checkbox] + label:before {
+    content: "\2714";
+    border: 0.15em solid #006bf9;
+    border-radius: 0.2em;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    padding-left: 0.15em;
+    margin-right: 0.15em;
+    color: transparent;
+    transition: .2s;
+    font-size: 16px;
+}
+.input-check[type=checkbox] + label:active:before {
+    transform: scale(0);
+}
+.input-check[type=checkbox]:checked + label:before {
+    color: #006bf9;
+}
+.input-check[type=checkbox]:disabled + label:before {
+    transform: scale(1);
+    border-color: #006bf9;
+}
+.input-check[type=checkbox]:checked:disabled + label:before {
+    transform: scale(1);
+    background-color: transparent;
+    border-color: #006bf9;
+}
+.btn.btn-secondary {
+    background-color: transparent!important;
+    border: 2px solid #eee !important;
+}
+.btn.btn-secondary:focus i {
+    color: #006bf9;
+}
+.action-app i {
+    color: #eee;
+}
+.btn-action {
+    width: 100%;
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+    color: #525f7e;
+    border: none;
+    background: transparent;
+}
+.btn-action:hover {
+    text-decoration: underline;
+}
+
+.btn-action:nth-child(3) {
+    color:  #ff6464;
+}
+
+
+/**** Modal Add Contract ***/
+.modal-body {
+    background-color: #f8f8fc !important;
+}
+.modal-footer button:nth-child(1) {
+    border: none !important;
+    color: #ff6464;
+    font-weight: bold;
+}
+.modal-footer button:nth-child(2) {
+    background-color: #006bf9 !important;
+    border: none !important;
+}
+.add-fcl input {
+    border-width: 2px;
+}
+.mx-datepicker-range {
+    width: 100% !important;
+}
+.mx-input {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    padding-right: 6px !important;
+    padding-left: 30px !important;
+}
+i.mx-icon-calendar {
+    left: 8px;
+    right: 0px;
+}
+.modal-input {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+.modal-input input {
+    border: 2px solid #eee !important;
+}
+.modal-header h5 {
+    font-weight: bold !important;
+    color: #031b4e !important;
+}
+.multiselect__option--highlight {
+    background-color: #eeeeee !important;
+    color: #525f7e !important;
+}
+.multiselect__tags {
+    font-size: 13px !important;
+    height: 33.5px;
+    min-height: 33.5px !important;
+    border: 2px solid #eee !important;
+    padding:  4px 40px 5px 10px !important;
+    border-radius: 0.25rem !important;
+}
+.multiselect__option {
+    font-size: 13px;
+    padding: 6px !important; 
+    min-height: 30px !important;
+}
+.modal-input label {
+    color: #626e8b;
+    font-weight: medium;
+}
+.multiselect__select {
+    right: 5px !important;
+    top: 0px !important;
+}
+.multiselect__select::before {
+    font-family: 'FontAwesome' !important;
+    content: "\f107" !important;
+    border: none !important;
+    font-size: 16px;
+    color: #525f7f;
+    top: 17% !important;
+}
+.multiselect__single {
+    color: #626e8b;
+    font-size: 14px !important;
+}
+.multiselect__content-wrapper {
+    box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 3px !important;
+}
+
+/*** --- Tabs --- ***/
+.tabs ul {
+    margin-bottom: -0.75rem !important;
+}
+.card-tabs {
+    margin-top: 25px;
+    background: transparent !important;
+    border: none !important;
+}
+.card-tabs .card-header {
+    border-width: 2px !important;
+    background: transparent !important;
+}
+.nav-tabs .nav-link.active {
+    background: transparent !important;
+    border-color: #006bf9 !important;
+    border-width: 4px !important;
+    font-weight: bold !important;
+}
+.nav-tabs .nav-link {
+    border: none;
+    font-size: 16px;
+    color: #031b4e !important;
+}
+.multiselect__placeholder {
+    white-space: nowrap;
+}
+
+
+/*** --- REMARK --- ***/
+.remarks {
+    min-height: 150px;
+}
+.update-remark {
+    width: 30px;
+    height: 30px;
+    bottom: 3%;
+    right: 2%;
+    border-radius: 100px; 
+    background: #19c39b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    color: #fff;
+}
+.title-dropzone {
+    font-weight: bold;
+    color: #031b4e;
+    position: absolute;
+    top: 15px;
+    left: 35px;
+}
+.title-card {
+    color: #031b4e;
+}
+#dropzone {
+    border: none;
+}
+.no-padding .card-body{
+    padding: 0px;
+}
+.reportrange-text {
+    border: 2px solid #eee !important;
+}
+.vue-daterange-picker {
+    width: 100%;
+    white-space: nowrap;
+}
+
+@media only screen and (max-width: 425px) {
+    .nav-tabs .nav-item {
+        width: 48% !important;
+    }
+    .nav-tabs .nav-link {
+        font-size: 14px !important;
+    }
+    .card-body {
+        overflow-x: scroll;
+    }
+    .form-inline i {
+        bottom: 16px;
+    }
+
 }
