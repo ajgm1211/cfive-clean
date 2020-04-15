@@ -17,7 +17,7 @@ class OceanFreightResource extends JsonResource
         // Ensure you call the parent constructor
         parent::__construct($resource);
         $this->resource = $resource;
-        
+
         // Get the available containers except dry
         $this->available_containers = Container::where('gp_container_id', '!=', 1)->pluck('code');
     }
@@ -32,8 +32,10 @@ class OceanFreightResource extends JsonResource
     {
         $data = [
             'id' => $this->id,
-            'origin_port' => $this->origin_port,
-            'destiny_port' => $this->destiny_port,
+            'origin' => $this->port_origin, 
+            'destination' => $this->port_destiny,
+            'carrier' => $this->carrier,
+            'contract' => $this->contract,
             'currency' => $this->currency,
             'schedule_type' => $this->schedule_type,
             'transit_time' => $this->transit_time,
