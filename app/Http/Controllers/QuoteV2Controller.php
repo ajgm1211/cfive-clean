@@ -4254,9 +4254,14 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('CMA_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
-                    $response = $client->request('GET', $url);
+                    
+                    try {
+                        $response = $client->request('GET', $url);
+                    } catch (\Exception $e) {
+                        //
+                    }
 
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4275,7 +4280,7 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('MAERSK_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
@@ -4296,7 +4301,7 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('SAFMARINE_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
