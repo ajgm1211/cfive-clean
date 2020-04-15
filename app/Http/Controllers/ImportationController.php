@@ -605,7 +605,7 @@ class ImportationController extends Controller
         $now2               = $now;
         $now                = $now->format('dmY_His');
         $now2               = $now2->format('Y-m-d');
-
+        $datTypeDes         = false;
         $name               = $request->name;
         $CompanyUserId      = $request->CompanyUserId;
         $request_id         = $request->request_id;
@@ -711,12 +711,12 @@ class ImportationController extends Controller
 
         // ------- TYPE DESTINY -------------------
 
-        if($datTypeDes == false){
-            $columnsSelected->push('TYPE DESTINY');
-            $valuesSelecteds->put('select_typeDestiny',$typedestinyBol);
-        } else {
+        if($datTypeDes){
             $typedestinyBol = true;
             $valuesSelecteds->put('typeDestinyVal',$typedestinyVal);
+            $valuesSelecteds->put('select_typeDestiny',$typedestinyBol);
+        } else {
+            $columnsSelected->push('TYPE DESTINY');
             $valuesSelecteds->put('select_typeDestiny',$typedestinyBol);
         }
 
@@ -932,9 +932,9 @@ class ImportationController extends Controller
             if(!$statusCarrier){
                 $carrierExc     = $final_columns["CARRIER"];            
             }
+            $columns_rt_ident = [];
             if($groupContainer_id == 1){
                 $contenedores_rt = Container::where('gp_container_id',$groupContainer_id)->where('options->column',true)->get();
-                $columns_rt_ident = [];
                 foreach($contenedores_rt as $conten_rt){
                     $conten_rt->options = json_decode($conten_rt->options);
                     $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
@@ -1335,8 +1335,8 @@ class ImportationController extends Controller
                                 'column_calculatioT_bol'   => $column_calculatioT_bol // False si falla la asociacion, true si esta asociado correctamente
 
                             ];
-                            if(strnatcasecmp($chargeExc_val,$chargeVal) == 0 && $statusTypeDestiny == false){
-                                $statusTypeDestiny = true;
+                            if(strnatcasecmp($chargeExc_val,$chargeVal) == 0 && $typedestinyExitBol == false){
+                                $typedestinyExitBol = true;
                             }
                             //dd($datos_finales);
 
@@ -1373,7 +1373,7 @@ class ImportationController extends Controller
                                                 $currency_val = $conta_row[1];
                                             }
                                             $container_json = json_encode($container_json);
-
+                                           
                                         } else { // DRY
                                             foreach($columna_cont as $key => $conta_row){
                                                 if($conta_row[4] == false){ // columna contenedores
@@ -1738,7 +1738,7 @@ class ImportationController extends Controller
                                         $carrierVal = $carrierVal->name;
                                     }
                                     //---------------------------- TYPE DESTINY ---------------------------
-                                    if($typedestinyExitBol){
+                                    if($typedestinyExitBol == true && strnatcasecmp($chargeExc_val,$chargeVal) != 0){
                                         try{
                                             $typedestinyVal = TypeDestiny::find($typedestinyVal);
                                             $typedestinyVal = $typedestinyVal->description;
@@ -1817,6 +1817,7 @@ class ImportationController extends Controller
 
                                             }
 
+                                            
                                             $exists = null;
                                             $exists = FailRate::where('origin_port',$originVal)
                                                 ->where('destiny_port',$destinyVal)
@@ -1832,7 +1833,7 @@ class ImportationController extends Controller
                                                 ->get();
 
                                             if(count($exists) == 0){
-                                                FailRate::create([
+                                                $respFR = FailRate::create([
                                                     'origin_port'       => $originVal,
                                                     'destiny_port'      => $destinyVal,
                                                     'carrier_id'        => $carrierVal,
@@ -6985,50 +6986,27 @@ class ImportationController extends Controller
 
         //$extObj     = new \SplFileInfo($mediaItem->file_name);
         //$ext        = $extObj->getExtension();
-        $ext        = 'xlsx';
-        if(strnatcasecmp($ext,'xlsx')==0){
-            $inputFileType = 'Xlsx';
-        } else if(strnatcasecmp($ext,'xls')==0){
-            $inputFileType = 'Xls';
-        } else {
-            $inputFileType = 'Csv';
-        }
-
-        $myacl =  new MyReadFilter(1,5);
-        $reader = IOFactory::createReader($inputFileType);
+        //        $ext        = 'xlsx';
+        //        if(strnatcasecmp($ext,'xlsx')==0){
+        //            $inputFileType = 'Xlsx';
+        //        } else if(strnatcasecmp($ext,'xls')==0){
+        //            $inputFileType = 'Xls';
+        //        } else {
+        //            $inputFileType = 'Csv';
+        //        }
+        //
+        //        $myacl =  new MyReadFilter(1,5);
+        //        $reader = IOFactory::createReader($inputFileType);
         //$reader->setReadDataOnly(true);
         //$reader->setReadFilter($myacl);
         //$spreadsheet = $reader->load($excelF);
-        $spreadsheet = $reader->load(storage_path('app/public/Account/Fcl/TestLuis.xlsx'));
         //        $sheetData = $spreadsheet->getActiveSheet()->toArray();
         //        //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
         //        dd($sheetData);
         //        dd($sheetData[1]['Receipt']);
 
-        //    $calculationtype = CalculationType::where('options->name','=','PER_CONTAINER')
-        //      //container calculation first
-        //      ->whereHas('containersCalculation.container', function ( $query) {
-        //        $query->whereHas('groupContainer', function ( $queryTw) {
-        //          $queryTw->where('gp_container_id',1);
-        //        });
-        //      })->get();
-        //    //->with('containersCalculation.container.groupContainer')->get();
-        //    dd($calculationtype);
-        //        $prueba = HelperAll::currencyJoin(2,
-        //                                          true,
-        //                                          1000,
-        //                                          149
-        //                                         );  
-        //        dd($prueba);
-
-        // Read the Excel file.
-
-        // Export to CSV file.
-        $writer = IOFactory::createWriter($spreadsheet, "Csv");
-        $writer->setSheetIndex(0);   // Select which sheet to export.
-        //$writer->setDelimiter(',');  // Set delimiter.
-
-        $writer->save(storage_path('app/public/Import/Fcl/')."my-excel-file.csv");
+        $resp = PrvHarbor::get_harbor('MOSCÚ');
+        dd($resp);
 
     }
 
