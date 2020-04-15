@@ -229,51 +229,51 @@ class ContainerCalculationsTableSeeder extends Seeder
             ),
             35 => 
             array (
-                'id' => 37,
-                'container_id' => 6,
-                'calculationtype_id' => 21,
-            ),
-            36 => 
-            array (
                 'id' => 38,
                 'container_id' => 6,
                 'calculationtype_id' => 12,
             ),
-            37 => 
+            36 => 
             array (
                 'id' => 39,
                 'container_id' => 7,
                 'calculationtype_id' => 13,
             ),
-            38 => 
+            37 => 
             array (
                 'id' => 40,
                 'container_id' => 8,
                 'calculationtype_id' => 14,
             ),
-            39 => 
+            38 => 
             array (
                 'id' => 41,
                 'container_id' => 11,
                 'calculationtype_id' => 25,
             ),
-            40 => 
+            39 => 
             array (
                 'id' => 42,
                 'container_id' => 12,
                 'calculationtype_id' => 26,
             ),
-            41 => 
+            40 => 
             array (
                 'id' => 44,
                 'container_id' => 10,
                 'calculationtype_id' => 18,
             ),
-            42 => 
+            41 => 
             array (
                 'id' => 45,
                 'container_id' => 9,
                 'calculationtype_id' => 16,
+            ),
+            42 => 
+            array (
+                'id' => 46,
+                'container_id' => 6,
+                'calculationtype_id' => 19,
             ),
         ));
         
