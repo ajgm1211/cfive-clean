@@ -149,4 +149,20 @@ class Contract extends Model implements HasMedia
 		}
 	}
 
+	public function isDry(){
+		return $this->group_containers->isDry();
+	}
+
+	public function isReefer(){
+		return $this->group_containers->isReefer();
+	}
+
+	public function isOpenTop(){
+		return $this->group_containers->isOpenTop();
+	}
+
+	public function isFlatRack(){
+		return $this->group_containers->isFlatRack();
+	}
+
 }
