@@ -997,14 +997,15 @@ Route::prefix('CalculationType')->group(function () {
 /** Contracts V2 routes **/
 Route::get('api/contracts', 'ContractController@index');
 Route::get('api/v2/contracts', 'ContractController@list');
+Route::get('api/v2/contracts/data', 'ContractController@data');
 Route::get('api/contracts/create', 'ContractController@create');
-Route::get('api/v2/contracts/store', 'ContractController@store');
+Route::post('api/v2/contracts/store', 'ContractController@store');
 Route::get('api/v2/contracts/{contract}', 'ContractController@retrieve');
 Route::get('api/contracts/{contract}/edit', 'ContractController@edit');
-Route::get('api/v2/contracts/{contract}/update', 'ContractController@update');
+Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
 
 Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@list');
 Route::get('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
-Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
+Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
 /** End Contracts V2 routes **/

@@ -47,14 +47,13 @@
                     <label  for="check"></label>
                     <!-- checkbox end -->
                     <!-- paginator -->
-                    <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
+                    <!--<b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>-->
                 </b-card>
                 <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
                          title="Add FCL Contract">
 
                     <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
                         <b-form-group
-                                      :state="nameState"
                                       label="Reference"
                                       label-for="reference"
                                       invalid-feedback="Reference is required"
@@ -70,24 +69,23 @@
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                          :state="nameState"
                                           label="Validity"
                                           label-for="validity"
                                           invalid-feedback="Validity is required"
                                           >
                                 <date-range-picker
-                                                   ref="picker"
-                                                   :opens="opens"
-                                                   :locale-data="{ firstDay: 1 }"
-                                                   :singleDatePicker="singleDatePicker"
-                                                   :showWeekNumbers="showWeekNumbers"
-                                                   :showDropdowns="showDropdowns"
-                                                   v-model="dateRange"
-                                                   @update="updateValues"
-                                                   @toggle="checkOpen"
-                                                   :linkedCalendars="linkedCalendars"
-                                                   :dateFormat="dateFormat"
-                                                   >
+                                     ref="picker"
+                                     :opens="opens"
+                                     :locale-data="{ firstDay: 1 }"
+                                     :singleDatePicker="singleDatePicker"
+                                     :showWeekNumbers="showWeekNumbers"
+                                     :showDropdowns="showDropdowns"
+                                     v-model="dateRange"
+                                     @update="updateValues"
+                                     @toggle="checkOpen"
+                                     :linkedCalendars="linkedCalendars"
+                                     :dateFormat="dateFormat"
+                                     >
 
                                     <template v-slot:input="picker"  style="min-width: 350px;">
                                         <i class="fa fa-calendar"></i>
@@ -100,12 +98,11 @@
                             </div>
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
-                                              :state="nameState"
                                               label="Carrier"
                                               label-for="carrier"
                                               invalid-feedback="Carrier is required"
                                               >
-                                    <multiselect v-model="carrier" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Carrier"></multiselect>
+                                    <multiselect v-model="carrier" :options="carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier"></multiselect>
 
 
 
@@ -113,23 +110,21 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                              :state="nameState"
                                               label="Equipment"
                                               label-for="equipment"
                                               invalid-feedback="Equipment is required"
                                               >
-                                    <multiselect v-model="equipment" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Equipment"></multiselect>
+                                    <multiselect v-model="equipment" :options="equipments" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Equipment"></multiselect>
 
                                 </b-form-group>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                              :state="nameState"
                                               label="Direction"
                                               label-for="direction"
                                               invalid-feedback="Direction is required"
                                               >
-                                    <multiselect v-model="direction" :options="options" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Select Direction"></multiselect>
+                                    <multiselect v-model="direction" :options="directions" :searchable="false" :close-on-select="true"  track-by="id" label="name" :show-labels="false" placeholder="Select Direction"></multiselect>
 
 
                                 </b-form-group>
@@ -159,12 +154,22 @@
             return {
                 isBusy:true, // Loader
                 data: null,
-
+                currentPage: 1,
+                nameState: true,
                 fields: [
                     { key: 'name', label: 'Reference', sortable: true },
-                    { key: 'status', label: 'Status', sortable: true },
-                    { key: 'from', label: 'Valid From', sortable: true },
-                    { key: 'until', label: 'Valid Until', sortable: true },
+                    { key: 'status', label: 'Status', sortable: true, isHtml: true,                     
+                    formatter: value => {
+                        if (value == 'publish')
+                          return '<span class="status-st published"></span>';
+                        else if (value == 'expired')
+                          return '<span class="status-st expired"></span>';
+                        else if (value == 'incompleted')
+                         return '<span class="status-st incompleted"></span>';
+                     } 
+                    },
+                    { key: 'validity', label: 'Valid From', sortable: true },
+                    { key: 'expire', label: 'Valid Until', sortable: true },
                     { key: 'carriers', label: 'Carriers', 
                      formatter: value => {
                          let $carriers = [];
@@ -175,7 +180,10 @@
                          return $carriers.join(', ');
                      } 
                     },
-                    { key: 'equipment', label: 'Equipment', sortable: false },
+                    { key: 'gp_container', label: 'Equipment', sortable: false, formatter: value => {
+                      return value.name;
+                      }
+                    },
                     { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
                     }
 
@@ -183,11 +191,9 @@
                 carrier: '',
                 equipment: '',
                 direction: '',
-                options: [
-                    'opcion 1',
-                    'opcion 2',
-                    'opcion 3'
-                ],
+                carriers: [],
+                directions: [],
+                equipments: [],
                 dateRange: { 
                     startDate: '', 
                     endDate:  ''
@@ -211,8 +217,17 @@
                 this.setData(err, data);
             });
 
+            api.getData({}, '/api/v2/contracts/data', (err, data) => {
+              this.setDropdownLists(err, data.data);
+            });
+
         },
         methods: {
+            setDropdownLists(err, data){
+              this.carriers = data.carriers;
+              this.equipments = data.equipments;
+              this.directions = data.directions;
+            },
             setData(err, { data: records, links, meta }) {
                 this.isBusy = false;
 
@@ -221,6 +236,32 @@
                 } else {
                     this.data = records;
                 }
+            },
+            prepareData(){
+
+                /*return {
+                  'name': this.reference,
+                  'direction': this.direction,
+                  'validity': this.date[0],
+                  'expire': this.date[1],
+                  'status': 'publish',
+                  'remarks': '',
+                  'gp_container': this.equipment,
+                  'carriers': this.carrier
+                }*/
+            },
+            handleSubmit(){
+
+              const data = this.prepareData();
+
+              api.call('post', 'api/v2/contracts/', { data: this.data })
+              .then( ( response ) => {
+                  
+              })
+              .catch(( data ) => {
+                  this.$refs.observer.setErrors(data.data.errors);
+              });
+
             },
             confirmAction() {
                 console.log('hola');
