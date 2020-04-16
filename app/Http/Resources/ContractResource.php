@@ -25,7 +25,7 @@ class ContractResource extends JsonResource
             'expire' => $this->expire,
             'remarks' => $this->remarks ? $this->remarks : '',
             'carriers' => $this->carriers->pluck('carrier'),
-            'gp_container' => $this->group_containers
+            'gp_container' => $this->gpContainer
         ];
     }
 }
