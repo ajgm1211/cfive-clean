@@ -115,13 +115,14 @@
 											<tr>
 												<th >ID</th>
 												<th >Company</th>
+												<th >Equiment</th>
 												<th >Reference</th>
 												<th >Direction</th>
 												<th >Carrier</th>
 												<th >C. Validation</th>
 												<th >Date</th>
 												<th >User</th>
-												<th width="14%">Time elapsed</th>
+												<th width="8%">Time elapsed</th>
 												<th >Username Load</th>
 												<th >Status</th>
 												<th >Options</th>
@@ -360,6 +361,7 @@
 			columns: [
 				{ data: 'id', name: 'id' },
 				{ data: 'Company', name: 'Company' },
+				{ data: 'equiment', name: 'equiment' },
 				{ data: 'name', name: 'name' },
 				{ data: 'direction', name: 'direction' },
 				{ data: 'carrier', name: 'carrier' },
