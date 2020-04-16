@@ -32,6 +32,7 @@ use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
 use App\FailSurCharge;
+use App\GroupContainer;
 use App\Jobs\GeneralJob;
 use App\ContractFclFile;
 use App\ContractCarrier;
@@ -1373,7 +1374,7 @@ class ImportationController extends Controller
                                                 $currency_val = $conta_row[1];
                                             }
                                             $container_json = json_encode($container_json);
-                                           
+
                                         } else { // DRY
                                             foreach($columna_cont as $key => $conta_row){
                                                 if($conta_row[4] == false){ // columna contenedores
@@ -1817,7 +1818,7 @@ class ImportationController extends Controller
 
                                             }
 
-                                            
+
                                             $exists = null;
                                             $exists = FailRate::where('origin_port',$originVal)
                                                 ->where('destiny_port',$destinyVal)
@@ -7005,8 +7006,12 @@ class ImportationController extends Controller
         //        dd($sheetData);
         //        dd($sheetData[1]['Receipt']);
 
-        $resp = PrvHarbor::get_harbor('MOSCÚ');
-        dd($resp);
+        $resp = NewContractRequest::find(9);
+        //$name = json_decode($resp->data,true);
+        //dd($name['group_containers']['name']);
+        $groupContainers = GroupContainer::all();
+        $data = $groupContainers->firstWhere('id', 1);
+        dd(json_decode(null,true),$data);
 
     }
 
