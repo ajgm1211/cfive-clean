@@ -1518,7 +1518,7 @@ var hasIntersectionObserverSupport = isBrowser && 'IntersectionObserver' in wind
 
 var getEnv = function getEnv(key) {
   var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  var env = typeof process !== 'undefined' && process ? Object({"MIX_PUSHER_APP_KEY":"","MIX_PUSHER_APP_CLUSTER":"mt1","NODE_ENV":"development"}) || {} : {};
+  var env = typeof process !== 'undefined' && process ? Object({"MIX_PUSHER_APP_KEY":"b74324bf3d783ed40021","MIX_PUSHER_APP_CLUSTER":"us2","NODE_ENV":"development"}) || {} : {};
 
   if (!key) {
     /* istanbul ignore next */
@@ -89711,9 +89711,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             isBusy: true, // Loader
             data: null,
+<<<<<<< HEAD
             prueba: '<span class="status-st published"></span>',
 
             fields: [{ key: 'name', label: '<input type="checkbox" class="input-check" id="check"                    <label  for="check"></label> Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true }, { key: 'from', label: 'Valid From', sortable: true }, { key: 'until', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
+=======
+            currentPage: 1,
+            nameState: true,
+            fields: [{ key: 'name', label: 'Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true, isHtml: true,
+                formatter: function formatter(value) {
+                    if (value == 'publish') return '<span class="status-st published"></span>';else if (value == 'expired') return '<span class="status-st expired"></span>';else if (value == 'incompleted') return '<span class="status-st incompleted"></span>';
+                }
+            }, { key: 'validity', label: 'Valid From', sortable: true }, { key: 'expire', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
+>>>>>>> a67b07f9bbe0a7764c524a6496bbf247e89350f6
                 formatter: function formatter(value) {
                     var $carriers = [];
 
@@ -89722,14 +89732,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                     return $carriers.join(', ');
                 }
-            }, { key: 'equipment', label: 'Equipment', sortable: false }, { key: 'direction', label: 'Direction', formatter: function formatter(value) {
+            }, { key: 'gp_container', label: 'Equipment', sortable: false, formatter: function formatter(value) {
+                    return value.name;
+                }
+            }, { key: 'direction', label: 'Direction', formatter: function formatter(value) {
                     return value.name;
                 }
             }],
             carrier: '',
             equipment: '',
             direction: '',
-            options: ['opcion 1', 'opcion 2', 'opcion 3'],
+            carriers: [],
+            directions: [],
+            equipments: [],
             dateRange: {
                 startDate: '',
                 endDate: ''
@@ -89753,9 +89768,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         api.getData({}, '/api/v2/contracts', function (err, data) {
             _this.setData(err, data);
         });
+
+        api.getData({}, '/api/v2/contracts/data', function (err, data) {
+            _this.setDropdownLists(err, data.data);
+        });
     },
 
     methods: {
+        setDropdownLists: function setDropdownLists(err, data) {
+            this.carriers = data.carriers;
+            this.equipments = data.equipments;
+            this.directions = data.directions;
+        },
         setData: function setData(err, _ref) {
             var records = _ref.data,
                 links = _ref.links,
@@ -89930,18 +89954,7 @@ var render = function() {
                 attrs: { type: "checkbox", id: "check" }
               }),
               _vm._v(" "),
-              _c("label", { attrs: { for: "check" } }),
-              _vm._v(" "),
-              _c("b-pagination", {
-                attrs: { "total-rows": _vm.rows, align: "right" },
-                model: {
-                  value: _vm.currentPage,
-                  callback: function($$v) {
-                    _vm.currentPage = $$v
-                  },
-                  expression: "currentPage"
-                }
-              })
+              _c("label", { attrs: { for: "check" } })
             ],
             1
           ),
@@ -90089,9 +90102,11 @@ var render = function() {
                           [
                             _c("multiselect", {
                               attrs: {
-                                options: _vm.options,
+                                options: _vm.carriers,
                                 searchable: false,
                                 "close-on-select": true,
+                                "track-by": "id",
+                                label: "name",
                                 "show-labels": false,
                                 placeholder: "Select Carrier"
                               },
@@ -90127,9 +90142,11 @@ var render = function() {
                           [
                             _c("multiselect", {
                               attrs: {
-                                options: _vm.options,
+                                options: _vm.equipments,
                                 searchable: false,
                                 "close-on-select": true,
+                                "track-by": "id",
+                                label: "name",
                                 "show-labels": false,
                                 placeholder: "Select Equipment"
                               },
@@ -90165,9 +90182,11 @@ var render = function() {
                           [
                             _c("multiselect", {
                               attrs: {
-                                options: _vm.options,
+                                options: _vm.directions,
                                 searchable: false,
                                 "close-on-select": true,
+                                "track-by": "id",
+                                label: "name",
                                 "show-labels": false,
                                 placeholder: "Select Direction"
                               },
