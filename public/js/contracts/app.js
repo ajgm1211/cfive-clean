@@ -83734,7 +83734,7 @@ window.api = new __WEBPACK_IMPORTED_MODULE_6__api_js__["a" /* default */]();
 var app = new __WEBPACK_IMPORTED_MODULE_2_vue___default.a({
     el: '#app',
     render: function render(h) {
-        return h(__WEBPACK_IMPORTED_MODULE_5__components_contracts_Contracts___default.a);
+        return h(__WEBPACK_IMPORTED_MODULE_4__components_contracts_App___default.a);
     }
 });
 
@@ -89711,8 +89711,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             isBusy: true, // Loader
             data: null,
+            prueba: '<span class="status-st published"></span>',
 
-            fields: [{ key: 'name', label: 'Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true }, { key: 'from', label: 'Valid From', sortable: true }, { key: 'until', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
+            fields: [{ key: 'name', label: '<input type="checkbox" class="input-check" id="check"                    <label  for="check"></label> Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true }, { key: 'from', label: 'Valid From', sortable: true }, { key: 'until', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
                 formatter: function formatter(value) {
                     var $carriers = [];
 
