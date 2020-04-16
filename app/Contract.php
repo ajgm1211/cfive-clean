@@ -102,7 +102,7 @@ class Contract extends Model implements HasMedia
 	*
 	* @return \Illuminate\Database\Eloquent\Builder
 	*/
-	public function group_containers()
+	public function gpContainer()
 	{
 		return $this->belongsTo('App\GroupContainer');
 	}
@@ -147,6 +147,22 @@ class Contract extends Model implements HasMedia
 				'contract_id'   => $contract->id
 			]);
 		}
+	}
+
+	public function isDry(){
+		return $this->gpContainer->isDry();
+	}
+
+	public function isReefer(){
+		return $this->gpContainer->isReefer();
+	}
+
+	public function isOpenTop(){
+		return $this->gpContainer->isOpenTop();
+	}
+
+	public function isFlatRack(){
+		return $this->gpContainer->isFlatRack();
 	}
 
 }
