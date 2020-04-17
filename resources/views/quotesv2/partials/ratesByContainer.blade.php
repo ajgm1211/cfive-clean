@@ -150,7 +150,7 @@
                                                                     <div class="row ">
                                                                         <div class="col-12">
                                                                             <div class="input-group">
-                                                                                <input name="hide_{{$key}}" value="{{ $key }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
+                                                                                <input name="hide_{{$key}}" value="{{ $hide }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
                                                                                 <input name="amount_c{{$key}}" class="amount_c{{$key}} form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
 
                                                                                 <input name="markup_m{{$key}}" class="form-control markup_m{{$key}}" type="number" min="0" step="0.0000001" placeholder="Markup"/>
@@ -315,7 +315,7 @@
                                                                     <div class="row ">
                                                                         <div class="col-12">
                                                                             <div class="input-group">
-                                                                                <input name="hide_{{$key}}" value="{{ $key }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
+                                                                                <input name="hide_{{$key}}" value="{{ $hide }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
                                                                                 <input name="amount_c{{$key}}" class="amount_c{{$key}} form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
 
                                                                                 <input name="markup_m{{$key}}" class="form-control markup_m{{$key}}" type="number" min="0" step="0.0000001" placeholder="Markup"/>
@@ -484,7 +484,7 @@
                                                                     <div class="row ">
                                                                         <div class="col-12">
                                                                             <div class="input-group">
-                                                                                <input name="hide_{{$key}}" value="{{ $key }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
+                                                                                <input name="hide_{{$key}}" value="{{ $hide }}" class="form-control hide_{{$key}}" type="hidden" min="0" step="0.0000001" />
                                                                                 <input name="amount_c{{$key}}" class="amount_c{{$key}} form-control" type="number" min="0" step="0.0000001" placeholder="Rate"/>
 
                                                                                 <input name="markup_m{{$key}}" class="form-control markup_m{{$key}}" type="number" min="0" step="0.0000001" placeholder="Markup"/>
