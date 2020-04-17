@@ -1047,28 +1047,29 @@ class QuoteV2Controller extends Controller
         $containers = Container::all();
         $array_amount = 'array_amount_';
         $array_markup = 'array_markup_';
+        $total_amount_markup = 'total_amount_markup';
         $merge_amounts = array();
         $merge_markups = array();
 
         foreach ($containers as $value) {
-            ${$array_amount.$value->code} = array();
-            ${$array_markup.$value->code} = array();
+            ${$array_amount . $value->code} = array();
+            ${$array_markup . $value->code} = array();
         }
-        
+
         foreach ($containers as $value) {
-            foreach ($request->equipments as $key=>$equipment) {
-                if (($key == 'amount_'.$value->code) && $equipment != null) {
-                    ${$array_amount.$value->code} = array('c'.$value->code => $equipment);
+            foreach ($request->equipments as $key => $equipment) {
+                if (($key == 'amount_' . $value->code) && $equipment != null) {
+                    ${$array_amount . $value->code} = array('c' . $value->code => $equipment);
                 }
-                if (($key == 'markup_'.$value->code) && $equipment != null) {
-                    ${$array_markup.$value->code} = array('m'.$value->code => $equipment);
+                if (($key == 'markup_' . $value->code) && $equipment != null) {
+                    ${$array_markup . $value->code} = array('m' . $value->code => $equipment);
                 }
             }
         }
 
         foreach ($containers as $value) {
-            $merge_amounts = array_merge($merge_amounts,${$array_amount.$value->code});
-            $merge_markups = array_merge($merge_markups,${$array_markup.$value->code});
+            $merge_amounts = array_merge($merge_amounts, ${$array_amount . $value->code});
+            $merge_markups = array_merge($merge_markups, ${$array_markup . $value->code});
         }
 
         $charge = new Charge();
@@ -1081,11 +1082,7 @@ class QuoteV2Controller extends Controller
         $charge->currency_id = $request->currency_id;
         $charge->save();
 
-        dd('Estamos aquí!');
-
-        $company_user = CompanyUser::find(\Auth::user()->company_user_id);
-        $currency_cfg = Currency::find($company_user->currency_id);
-
+        $company_user = CompanyUser::find(Auth::user()->company_user_id);
         $surcharge = Surcharge::find($request->surcharge_id);
         $calculation_type = CalculationType::find($request->calculation_type_id);
         $currency_charge = Currency::find($request->currency_id);
@@ -1095,126 +1092,62 @@ class QuoteV2Controller extends Controller
         })->where('id', $request->automatic_rate_id)->get();
 
         $charges = Charge::where('automatic_rate_id', $request->automatic_rate_id)->where('type_id', $request->type_id)->get();
+        
+        $amount = 'amount';
+        $markup = 'markup';
+        $total_markup = 'total_markup';
+        $total_amount = 'total_amount';
+        $total_amount_markup = 'total_amount_markup';
+        $sum_total = 'sum_total_';
+        $sum_amount_markup = 'sum_amount_markup';
+        $sum_total_array = array();
 
-        //foreach ($rates as $item) {
-
-        $sum_total_20 = 0;
-        $sum_total_40 = 0;
-        $sum_total_40hc = 0;
-        $sum_total_40nor = 0;
-        $sum_total_45 = 0;
+        foreach ($containers as $container) {
+            ${$sum_total . $container->code} = 0;
+        }
 
         //Charges
         foreach ($charges as $value) {
 
-            $typeCurrency =  $currency_cfg->alphacode;
-
-            $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
-
-            $sum20 = 0;
-            $sum40 = 0;
-            $sum40hc = 0;
-            $sum40nor = 0;
-            $sum45 = 0;
-
-            $amount20 = 0;
-            $amount40 = 0;
-            $amount40hc = 0;
-            $amount40nor = 0;
-            $amount45 = 0;
-
-            $markup20 = 0;
-            $markup40 = 0;
-            $markup40hc = 0;
-            $markup40nor = 0;
-            $markup45 = 0;
-
-            $total_20 = 0;
-            $total_40 = 0;
-            $total_40hc = 0;
-            $total_40nor = 0;
-            $total_45 = 0;
-
-            $total_markup20 = 0;
-            $total_markup40 = 0;
-            $total_markup40hc = 0;
-            $total_markup40nor = 0;
-            $total_markup45 = 0;
+            $typeCurrency =  $company_user->currency->alphacode;
 
             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
             $array_amounts = json_decode($value->amount, true);
             $array_markups = json_decode($value->markups, true);
 
-            if (isset($array_amounts['c20'])) {
-                $amount20 = $array_amounts['c20'];
-                $total20 = $amount20 / $currency_rate;
-                $sum20 = number_format($total20, 2, '.', '');
+            foreach ($containers as $container) {
+                ${$amount . $container->code} = 0;
+                ${$markup . $container->code} = 0;
+                ${$total_amount . $container->code} = 0;
+                ${$total_markup . $container->code} = 0;
+                ${$total_amount_markup . $container->code} = 0;
+                ${$sum_amount_markup . $container->code} = 0;
             }
 
-            if (isset($array_markups['m20'])) {
-                $markup20 = $array_markups['m20'];
-                $total_markup20 = number_format($markup20 / $currency_rate, 2, '.', '');
+            foreach ($containers as $container) {
+                if (isset($array_amounts['c' . $container->code])) {
+                    ${$amount . $container->code} = $array_amounts['c' . $container->code];
+                    ${$total_amount . $container->code} = number_format(${$amount . $container->code} / $currency_rate, 2, '.', '');
+                }
+
+                if (isset($array_markups['m' . $container->code])) {
+                    ${$markup . $container->code}  = $array_markups['m' . $container->code];
+                    ${$total_markup . $container->code} = number_format(${$markup . $container->code} / $currency_rate, 2, '.', '');
+                }
+
+                //Calculando el total de tarifas+recargos
+                ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code} + ${$total_markup . $container->code};
+
+                //Sumando totales
+                ${$sum_total . $container->code} += number_format(${$sum_amount_markup . $container->code}, 2, '.', '');
+                
+                //Añadiendo totales al array
+                $sum_total_array[$container->code]=${$sum_total . $container->code};
             }
-
-            if (isset($array_amounts['c40'])) {
-                $amount40 = $array_amounts['c40'];
-                $total40 = $amount40 / $currency_rate;
-                $sum40 = number_format($total40, 2, '.', '');
-            }
-
-            if (isset($array_markups['m40'])) {
-                $markup40 = $array_markups['m40'];
-                $total_markup40 = number_format($markup40 / $currency_rate, 2, '.', '');
-            }
-
-            if (isset($array_amounts['c40hc'])) {
-                $amount40hc = $array_amounts['c40hc'];
-                $total40hc = $amount40hc / $currency_rate;
-                $sum40hc = number_format($total40hc, 2, '.', '');
-            }
-
-            if (isset($array_markups['m40hc'])) {
-                $markup40hc = $array_markups['m40hc'];
-                $total_markup40hc = number_format($markup40hc / $currency_rate, 2, '.', '');
-            }
-
-            if (isset($array_amounts['c40nor'])) {
-                $amount40nor = $array_amounts['c40nor'];
-                $total40nor = $amount40nor / $currency_rate;
-                $sum40nor = number_format($total40nor, 2, '.', '');
-            }
-
-            if (isset($array_markups['m40nor'])) {
-                $markup40nor = $array_markups['m40nor'];
-                $total_markup40nor = number_format($markup40nor / $currency_rate, 2, '.', '');
-            }
-
-            if (isset($array_amounts['c45'])) {
-                $amount45 = $array_amounts['c45'];
-                $total45 = $amount45 / $currency_rate;
-                $sum45 = number_format($total45, 2, '.', '');
-            }
-
-            if (isset($array_markups['m45'])) {
-                $markup45 = $array_markups['m45'];
-                $total_markup45 = number_format($markup45 / $currency_rate, 2, '.', '');
-            }
-
-            $total_20 = $sum20 + $total_markup20;
-            $total_40 = $sum40 + $total_markup40;
-            $total_40hc = $sum40hc + $total_markup40hc;
-            $total_40nor = $sum40nor + $total_markup40nor;
-            $total_45 = $sum45 + $total_markup45;
-
-            $sum_total_20 += number_format($total_20, 2, '.', '');
-            $sum_total_40 += number_format($total_40, 2, '.', '');
-            $sum_total_40hc += number_format($total_40hc, 2, '.', '');
-            $sum_total_40nor += number_format($total_40nor, 2, '.', '');
-            $sum_total_45 += number_format($total_45, 2, '.', '');
         }
-
-        return response()->json(['message' => 'Ok', 'amount20' => $amount20, 'markup20' => $markup20, 'total_20' => $total_20, 'amount40' => $amount40, 'markup40' => $markup40, 'total_40' => $total_40, 'amount40hc' => $amount40hc, 'markup40hc' => $markup40hc, 'total_40hc' => $total_40hc, 'amount40nor' => $amount40nor, 'markup40nor' => $markup40nor, 'total_40nor' => $total_40nor, 'amount45' => $amount45, 'markup45' => $markup45, 'total_45' => $total_45, 'surcharge' => $surcharge->name, 'calculation_type' => $calculation_type->name, 'currency' => $currency_charge->alphacode, 'sum_total_20' => $sum_total_20, 'sum_total_40' => $sum_total_40, 'sum_total_40hc' => $sum_total_40hc, 'sum_total_40nor' => $sum_total_40nor, 'sum_total_45' => $sum_total_45, 'id' => $charge->id]);
+        
+        return response()->json(['message' => 'Ok', 'charge' => $charge, 'surcharge' => $surcharge->name, 'calculation_type' => $calculation_type->name, 'currency' => $currency_charge->alphacode, 'sum_total' => $sum_total_array, 'id' => $charge->id]);
     }
 
     public function storeChargeLclAir(Request $request)
