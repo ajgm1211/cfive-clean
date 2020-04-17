@@ -1048,15 +1048,31 @@ class QuoteV2Controller extends Controller
         $array_amount = 'array_amount_';
         $array_markup = 'array_markup_';
         $total_amount_markup = 'total_amount_markup';
+        $amount = 'amount';
+        $markup = 'markup';
+        $total_markup = 'total_markup';
+        $total_amount = 'total_amount';
+        $total_amount_markup = 'total_amount_markup';
+        $sum_total = 'sum_total_';
+        $sum_total_freight = 'sum_total_freight';
+        $sum_total_origin = 'sum_total_origin';
+        $sum_total_destination = 'sum_total_destination';
+        $sum_amount_markup = 'sum_amount_markup';
+        $sum_total_array = array();
+        $sum_total_freight_array = array();
+        $sum_total_origin_array = array();
+        $sum_total_destination_array = array();
         $merge_amounts = array();
         $merge_markups = array();
 
         foreach ($containers as $value) {
+            ${$sum_total . $value->code} = 0;
+            ${$sum_total_freight . $value->code} = 0;
+            ${$sum_total_origin . $value->code} = 0;
+            ${$sum_total_destination . $value->code} = 0;
             ${$array_amount . $value->code} = array();
             ${$array_markup . $value->code} = array();
-        }
 
-        foreach ($containers as $value) {
             foreach ($request->equipments as $key => $equipment) {
                 if (($key == 'amount_' . $value->code) && $equipment != null) {
                     ${$array_amount . $value->code} = array('c' . $value->code => $equipment);
@@ -1065,9 +1081,6 @@ class QuoteV2Controller extends Controller
                     ${$array_markup . $value->code} = array('m' . $value->code => $equipment);
                 }
             }
-        }
-
-        foreach ($containers as $value) {
             $merge_amounts = array_merge($merge_amounts, ${$array_amount . $value->code});
             $merge_markups = array_merge($merge_markups, ${$array_markup . $value->code});
         }
@@ -1091,20 +1104,7 @@ class QuoteV2Controller extends Controller
             $query->where('type_id', $request->type_id);
         })->where('id', $request->automatic_rate_id)->get();
 
-        $charges = Charge::where('automatic_rate_id', $request->automatic_rate_id)->where('type_id', $request->type_id)->get();
-        
-        $amount = 'amount';
-        $markup = 'markup';
-        $total_markup = 'total_markup';
-        $total_amount = 'total_amount';
-        $total_amount_markup = 'total_amount_markup';
-        $sum_total = 'sum_total_';
-        $sum_amount_markup = 'sum_amount_markup';
-        $sum_total_array = array();
-
-        foreach ($containers as $container) {
-            ${$sum_total . $container->code} = 0;
-        }
+        $charges = Charge::where('automatic_rate_id', $request->automatic_rate_id)->get();
 
         //Charges
         foreach ($charges as $value) {
@@ -1139,15 +1139,31 @@ class QuoteV2Controller extends Controller
                 //Calculando el total de tarifas+recargos
                 ${$sum_amount_markup . $container->code} = ${$total_amount . $container->code} + ${$total_markup . $container->code};
 
-                //Sumando totales
+                //Sumando totales de freight
+                if($value->type_id == 3){
+                    ${$sum_total_freight . $container->code} += number_format(${$sum_amount_markup . $container->code}, 2, '.', '');
+                }
+                //Sumando totales de origin
+                if($value->type_id == 1){
+                    ${$sum_total_origin . $container->code} += number_format(${$sum_amount_markup . $container->code}, 2, '.', '');
+                }
+                //Sumando totales de destination
+                if($value->type_id == 2){
+                    ${$sum_total_destination . $container->code} += number_format(${$sum_amount_markup . $container->code}, 2, '.', '');
+                }
+
+                //Sumando totales generales
                 ${$sum_total . $container->code} += number_format(${$sum_amount_markup . $container->code}, 2, '.', '');
                 
                 //Añadiendo totales al array
                 $sum_total_array[$container->code]=${$sum_total . $container->code};
+                $sum_total_freight_array[$container->code]=${$sum_total_freight . $container->code};
+                $sum_total_origin_array[$container->code]=${$sum_total_origin . $container->code};
+                $sum_total_destination_array[$container->code]=${$sum_total_destination . $container->code};
             }
         }
         
-        return response()->json(['message' => 'Ok', 'charge' => $charge, 'surcharge' => $surcharge->name, 'calculation_type' => $calculation_type->name, 'currency' => $currency_charge->alphacode, 'sum_total' => $sum_total_array, 'id' => $charge->id]);
+        return response()->json(['message' => 'Ok', 'charge' => $charge, 'amounts' => $merge_amounts,'surcharge' => $surcharge->name, 'calculation_type' => $calculation_type->name, 'currency' => $currency_charge->alphacode, 'sum_total' => $sum_total_array, 'sum_total_freight' => $sum_total_freight_array, 'sum_total_origin' => $sum_total_origin_array, 'sum_total_destination' => $sum_total_destination_array, 'id' => $charge->id]);
     }
 
     public function storeChargeLclAir(Request $request)

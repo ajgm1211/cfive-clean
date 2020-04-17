@@ -950,14 +950,14 @@ $(document).on('click', '.store_charge', function () {
     var calculation_type_id = $(this).closest("tr").find(".calculation_type_id").val();
     var containers = ['20DV', '40DV', '40HC', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'];
     var equipments = {};
-    
+
     $.each(containers, function (index, value) {
-        window['hide_'+value] = theElement.closest("tr").find(".hide_"+value).val();
-        window['amount_'+value] = theElement.closest("tr").find(".amount_c"+value).val();
-        window['markup_'+value] = theElement.closest("tr").find(".markup_m"+value).val();
-        equipments['hide_'+value] = theElement.closest("tr").find(".hide_"+value).val();
-        equipments['amount_'+value] = theElement.closest("tr").find(".amount_c"+value).val();
-        equipments['markup_'+value] = theElement.closest("tr").find(".markup_m"+value).val();
+        window['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
+        window['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
+        window['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
+        equipments['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
+        equipments['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
+        equipments['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
     });
 
     var type_id = $(this).closest("tr").find(".type_id").val();
@@ -985,7 +985,7 @@ $(document).on('click', '.store_charge', function () {
                 )
             }
             $(theElement).closest('tr').remove();
-            
+
             var amounts = $.parseJSON(data.charge.amount);
             var markups = $.parseJSON(data.charge.markups);
 
@@ -1017,117 +1017,52 @@ $(document).on('click', '.store_charge', function () {
                     '<td ' + hide_20OT + ' class="tds"><span class="td-a">' + amounts.c20OT + '</span> + <span class="td-a">' + markups.m20OT + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20OT + '</td>' +
                     '<td ' + hide_40OT + ' class="tds"><span class="td-a">' + amounts.c40OT + '</span> + <span class="td-a">' + markups.m40OT + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40OT + '</td>' +
                     '<td ' + hide_20FR + ' class="tds"><span class="td-a">' + amounts.c20FR + '</span> + <span class="td-a">' + markups.m20FR + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20FR + '</td>' +
-                    '<td ' + hide_40FR + ' class="tds"><span class="td-a">' + amounts.c40FR + '</span> + <span class="td-a">' + markups.m40FR+ '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40FR + '</td>' +
+                    '<td ' + hide_40FR + ' class="tds"><span class="td-a">' + amounts.c40FR + '</span> + <span class="td-a">' + markups.m40FR + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40FR + '</td>' +
                     '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' +
                     '</tr>').insertBefore('.total_freight_' + number);
 
                 $.each(containers, function (index, value) {
-                    $('.total_freight_' + number).find('.total_freight_'+value).html('');
-                    $('.total_freight_' + number).find('.total_freight_'+value).html(data.sum_total[value]);
+                    $('.total_freight_' + number).find('.total_freight_' + value).html('');
+                    $('.total_freight_' + number).find('.total_freight_' + value).html(data.sum_total_freight[value]);
                 });
 
-                //Mostrando total dinámico
-                $.each(containers, function (index, value) {
-                    $('.total_freight_' + number).closest('div.rates').find('.sum_total_'+value).html(data.sum_total[value]);
-                });
-
-                /**** ESTOY AQUÍ ****/
-                
                 var currency = $(theElement).closest('tr').find('.local_currency').val();
                 var currency_cfg = $("#currency_id").val();
 
-                amount_20_curr = currencyRate(currency, currency_cfg, data.amount20);
-                markup_20_curr = currencyRate(currency, currency_cfg, data.markup20);
-                amount_40_curr = currencyRate(currency, currency_cfg, data.amount40);
-                markup_40_curr = currencyRate(currency, currency_cfg, data.markup40);
-                amount_40hc_curr = currencyRate(currency, currency_cfg, data.amount40hc);
-                markup_40hc_curr = currencyRate(currency, currency_cfg, data.markup40hc);
-                amount_40nor_curr = currencyRate(currency, currency_cfg, data.amount40nor);
-                markup_40nor_curr = currencyRate(currency, currency_cfg, data.markup40nor);
-                amount_45_curr = currencyRate(currency, currency_cfg, data.amount45);
-                markup_45_curr = currencyRate(currency, currency_cfg, data.markup45);
+                $.each(containers, function (index, value) {
+                    window['subtotal_c' + value] = 0;
+                    window["amount_currency_" + value] = 0;
+                    window["subtotal_m" + value] = 0;
+                    window["markup_currency_" + value] = 0;
+                    window["sum_total_amount_" + value] = 0;
+                    window["sum_total_markup_" + value] = 0;
+                });
 
-                //Calculando subtotal de rates 20'
-                subtotal_c20 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c20_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_c20_freight').val(subtotal_c20 + parseFloat(amount_20_curr));
+                $.each(containers, function (index, value) {
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
+                    
+                    //Calculando subtotal de rates
+                    window["subtotal_c" + value] = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c' + value + '_freight').val());
+                    $('.total_freight_' + number).closest('div.rates').find('.subtotal_c' + value + '_freight').val(window["subtotal_c" + value] + parseFloat(window["amount_currency_" + value]));
 
-                //Calculando sum de subtotal de rates 20'
-                sum_total_amount_20 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_20').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr) + sum_total_amount_20);
+                    //Calculando sum de subtotal de rates
+                    window["sum_total_amount_" + value] = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_' + value).html());
+                    $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_' + value).html(parseFloat(window["amount_currency_" + value]) + window["sum_total_amount_" + value]);
 
-                //Calculando subtotal de markups 20'
-                subtotal_m20 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m20_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_m20_freight').val(subtotal_m20 + parseFloat(markup_20_curr));
+                    //Calculando subtotal de markups
+                    window["subtotal_m" + value] = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m' + value + '_freight').val());
+                    $('.total_freight_' + number).closest('div.rates').find('.subtotal_m' + value + '_freight').val(window["subtotal_m" + value] + parseFloat(window["markup_currency_" + value]));
 
-                //Calculando sum de subtotal de markups 20'
-                sum_total_markup_20 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_20').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr) + sum_total_markup_20);
+                    //Calculando sum de subtotal de markups
+                    window["sum_total_markup_" + value] = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_' + value).html());
+                    $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_' + value).html(parseFloat(window["markup_currency_" + value]) + window["sum_total_markup_" + value]);
 
-                //Calculando subtotal de rates 40'
-                subtotal_c40 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c40_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_c40_freight').val(subtotal_c40 + parseFloat(amount_40_curr));
-
-                //Calculando sum de subtotal de rates 40'
-                sum_total_amount_40 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr) + sum_total_amount_40);
-
-                //Calculando subtotal de markups 40'
-                subtotal_m40 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m40_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_m40_freight').val(subtotal_m40 + parseFloat(markup_40_curr));
-
-                //Calculando sum de subtotal de markups 40'
-                sum_total_markup_40 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr) + sum_total_markup_40);
-
-                //Calculando subtotal de rates 40hc'
-                subtotal_c40hc = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c40hc_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_c40hc_freight').val(subtotal_c40hc + parseFloat(amount_40hc_curr));
-
-                //Calculando sum de subtotal de rates 40hc'
-                sum_total_amount_40hc = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40hc').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr) + sum_total_amount_40hc);
-
-                //Calculando subtotal de markups 40hc'
-                subtotal_m40hc = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m40hc_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_m40hc_freight').val(subtotal_m40hc + parseFloat(markup_40hc_curr));
-
-                //Calculando sum de subtotal de markups 40hc'
-                sum_total_markup_40hc = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40hc').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr) + sum_total_markup_40hc);
-
-                //Calculando subtotal de rates 40nor'
-                subtotal_c40nor = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c40nor_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_c40nor_freight').val(subtotal_c40nor + parseFloat(amount_40nor_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_40nor = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40nor').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr) + sum_total_amount_40nor);
-
-                //Calculando subtotal de markups 40nor'
-                subtotal_m40nor = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m40nor_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_m40nor_freight').val(subtotal_m40nor + parseFloat(markup_40nor_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_40nor = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40nor').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr) + sum_total_markup_40nor);
-
-                //Calculando subtotal de rates 45'
-                subtotal_c45 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_c45_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_c45_freight').val(subtotal_c45 + parseFloat(amount_45_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_45 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_45').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr) + sum_total_amount_45);
-
-                //Calculando subtotal de markups 45'
-                subtotal_m45 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.subtotal_m45_freight').val());
-                $('.total_freight_' + number).closest('div.rates').find('.subtotal_m45_freight').val(subtotal_m45 + parseFloat(markup_45_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_45 = parseFloat($('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_45').html());
-                $('.total_freight_' + number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr) + sum_total_markup_45);
-
+                    //Mostrando total dinámico
+                    $('.total_freight_' + number).closest('div.rates').find('.sum_total_' + value).html(data.sum_total[value]);
+                });
             }
+            /**  ESTOY AQUÍ **/
             if (type_id == 2) {
                 $('<tr style="height:40px;">' +
                     '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' +
