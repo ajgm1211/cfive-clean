@@ -1768,10 +1768,16 @@ class ImportationController extends Controller
                                                         $container_json['C'.$key] = ''.$rspVal;
                                                     }
                                                     if($conta_row[3] != true){
-                                                        $currency_val = $conta_row[1];
+                                                        if($currency_bol[$key] == false){
+                                                            $currency_val   = $conta_row[1];
+                                                        } else{
+                                                            $currencyObj  = Currency::find($conta_row[1]);
+                                                            $currency_val = $currencyObj->alphacode;
+                                                        }
                                                     }
                                                 }
                                                 $container_json = json_encode($container_json);
+
 
                                             } else { // DRY
                                                 foreach($columna_cont as $key => $conta_row){
