@@ -585,7 +585,7 @@
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a sum_total_amount_{{$c->code}}">{{ ${'amount_'.$key} }}</span> + <span class=" td-a sum_total_markup_20">{{ ${'markup_'.$key} }}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_20 td-a">{{ ${'amount_markup_'.$key} }}</span>
+                                                                        <span class="td-a sum_total_amount_{{$c->code}}">{{ ${'amount_'.$key} }}</span> + <span class=" td-a sum_total_markup_{{$c->code}}">{{ ${'markup_'.$key} }}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_{{$c->code}} td-a">{{ ${'amount_markup_'.$key} }}</span>
                                                                     </td>
                                                                 @endif
                                                             @endforeach
@@ -639,7 +639,7 @@
                                                             @foreach ($containers as $c)
                                                                 @if($c->code == $key)
                                                                     <td {{$hide}} class="tds">
-                                                                        <span class="td-a sum_total_amount_{{$c->code}}">{{ ${'amount_'.$key} }}</span> + <span class=" td-a sum_total_markup_20">{{ ${'markup_'.$key} }}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_20 td-a">{{ ${'amount_markup_'.$key} }}</span>
+                                                                        <span class="td-a sum_total_amount_{{$c->code}}">{{ ${'amount_'.$key} }}</span> + <span class=" td-a sum_total_markup_{{$c->code}}">{{ ${'markup_'.$key} }}</span> <i class="la la-caret-right arrow-down"></i> <span class="sum_total_{{$c->code}} td-a">{{ ${'amount_markup_'.$key} }}</span>
                                                                     </td>
                                                                 @endif
                                                             @endforeach
