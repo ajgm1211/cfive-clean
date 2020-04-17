@@ -38,19 +38,19 @@
                         <button class="btn-action">Delete</button>
                     </b-popover>
                     <!-- status -->
-                    <span class="status-st published"></span>
+                    <!-- <span class="status-st published"></span>
                     <span class="status-st expired"></span>
-                    <span class="status-st incompleted"></span>
+                    <span class="status-st incompleted"></span> -->
                     <!-- status end -->
                     <!-- checkbox -->
-                    <input type="checkbox" class="input-check" id="check">
-                    <label  for="check"></label>
+                    <!-- <input type="checkbox" class="input-check" id="check">
+                    <label  for="check"></label> -->
                     <!-- checkbox end -->
                     <!-- paginator -->
                     <!--<b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>-->
                 </b-card>
                 <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
-                         title="Add FCL Contract">
+                         title="Add FCL Contract" hide-footer>
 
                     <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
                         <b-form-group
@@ -69,32 +69,32 @@
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                          label="Validity"
-                                          label-for="validity"
-                                          invalid-feedback="Validity is required"
-                                          >
-                                <date-range-picker
-                                     ref="picker"
-                                     :opens="opens"
-                                     :locale-data="{ firstDay: 1 }"
-                                     :singleDatePicker="singleDatePicker"
-                                     :showWeekNumbers="showWeekNumbers"
-                                     :showDropdowns="showDropdowns"
-                                     v-model="dateRange"
-                                     @update="updateValues"
-                                     @toggle="checkOpen"
-                                     :linkedCalendars="linkedCalendars"
-                                     :dateFormat="dateFormat"
-                                     >
+                                              label="Validity"
+                                              label-for="validity"
+                                              invalid-feedback="Validity is required"
+                                              >
+                                    <date-range-picker
+                                                       ref="picker"
+                                                       :opens="'center'"
+                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
+                                                       :singleDatePicker="false"
+                                                       :timePicker="false"
+                                                       v-model="selectedDates"
+                                                       :linkedCalendars="true">
+                                    </date-range-picker>
+                                    <!-- <ValidationProvider :vid="name" :rules="rules" :name="label" v-slot="{ errors }">
+                                        <b-form-input v-show="false"
+                                                      class="border-light"
+                                                      :class="{'is-invalid': errors.length }"
+                                                      :name="name"
+                                                      v-model="model">                                  
+                                        </b-form-input>
+                                        <span class="invalid-feedback">{{ errors[0] }}</span>
+                                    </ValidationProvider> -->
 
-                                    <template v-slot:input="picker"  style="min-width: 350px;">
-                                        <i class="fa fa-calendar"></i>
-                                        {{ picker.startDate | date }} - {{ picker.endDate | date }}
-                                    </template>
-                                </date-range-picker>
 
 
-                            </b-form-group>
+                                </b-form-group>
                             </div>
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
@@ -130,6 +130,12 @@
                                 </b-form-group>
                             </div>
                         </div>
+
+                        <div class="btns-form-modal">
+                            <button class="btn" @click="modalClose" type="button">Cancel</button>
+
+                            <button class="btn btn-primary btn-bg">Add Contract</button>
+                        </div>
                     </form>
                 </b-modal>
 
@@ -146,26 +152,50 @@
 
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
     export default {
+        props: {
+            label: String,
+            value: Array | String | Object,
+            name: String,
+            startDate: String,
+            endDate: String,
+            rules: String,
+            placeholder: {
+                type: String,
+                required: false,
+                default: 'Select Dates Range'
+            }
+        },
         components: { 
             DateRangePicker,
             Multiselect
         },
+
         data() {
             return {
                 isBusy:true, // Loader
                 data: null,
                 currentPage: 1,
                 nameState: true,
+
                 fields: [
+                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
+                        var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
+                       $('.checkbox-add-fcl').append(checkbox);
+                    }  
+                    },
                     { key: 'name', label: 'Reference', sortable: true },
-                    { key: 'status', label: 'Status', sortable: true, isHtml: true,                     
-                    formatter: value => {
-                        if (value == 'publish')
-                          return '<span class="status-st published"></span>';
-                        else if (value == 'expired')
-                          return '<span class="status-st expired"></span>';
-                        else if (value == 'incompleted')
-                         return '<span class="status-st incompleted"></span>';
+                    { key: 'status', label: 'Status', sortable: true, isHtml: true, tdClass: 'status-add-fcl',
+                     formatter: value => {
+                         var publish ='<span class="status-st published"></span>';
+                         var expired ='<span class="status-st expired"></span>';
+                         var incompleted ='<span class="status-st incompleted"></span>';
+                        
+                         if (value == 'publish')
+                             $('.status-add-fcl').append(publish);
+                         else if (value == 'expired')
+                             $('.status-add-fcl').append(expired);
+                         else if (value == 'incompleted')
+                             $('.status-add-fcl').append(incompleted);
                      } 
                     },
                     { key: 'validity', label: 'Valid From', sortable: true },
@@ -181,11 +211,16 @@
                      } 
                     },
                     { key: 'gp_container', label: 'Equipment', sortable: false, formatter: value => {
-                      return value.name;
-                      }
+                        return value.name;
+                    }
                     },
                     { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
-                    }
+                    },
+                    { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
+                        var actions = '<b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft"><button class="btn-action">Edit</button><button class="btn-action">Duplicate</button><button class="btn-action">Delete</button></b-popover>';
+                        $('.actions-add-fcl').append(actions);
+                    }  
+                    } 
 
                 ],
                 carrier: '',
@@ -194,21 +229,11 @@
                 carriers: [],
                 directions: [],
                 equipments: [],
-                dateRange: { 
+                selectedDates: { 
                     startDate: '', 
                     endDate:  ''
                 }, 
-                locale:{
-                    direction: 'ltr',
-                    format: 'mm/dd/yyyy',
-                    separator: ' - ',
-                    applyLabel: 'Apply',
-                    cancelLabel: 'Cancel',
-                    customRangeLabel: 'Custom Range',
-                    daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                    monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    firstDay: 1
-                }
+
             }
         },
         created() {
@@ -218,15 +243,29 @@
             });
 
             api.getData({}, '/api/v2/contracts/data', (err, data) => {
-              this.setDropdownLists(err, data.data);
+                this.setDropdownLists(err, data.data);
             });
+
+            this.$emit('input', { startDate: null, endDate: null });
+            this.setDates();
 
         },
         methods: {
+            modalClose() {
+                this.$bvModal.hide('add-fcl');
+            },
+            setDates() {
+                if(this.startDate && this.endDate){
+                    this.selectedDates = {
+                        startDate: moment(this.startDate).format('MMM DD, YYYY'),
+                        endDate: moment(this.endDate).format('MMM DD, YYYY')
+                    }
+                }
+            },
             setDropdownLists(err, data){
-              this.carriers = data.carriers;
-              this.equipments = data.equipments;
-              this.directions = data.directions;
+                this.carriers = data.carriers;
+                this.equipments = data.equipments;
+                this.directions = data.directions;
             },
             setData(err, { data: records, links, meta }) {
                 this.isBusy = false;
@@ -252,19 +291,29 @@
             },
             handleSubmit(){
 
-              const data = this.prepareData();
+                const data = this.prepareData();
 
-              api.call('post', 'api/v2/contracts/', { data: this.data })
-              .then( ( response ) => {
-                  
-              })
-              .catch(( data ) => {
-                  this.$refs.observer.setErrors(data.data.errors);
-              });
+                api.call('post', 'api/v2/contracts/', { data: this.data })
+                    .then( ( response ) => {
+
+                })
+                    .catch(( data ) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
 
             },
             confirmAction() {
                 console.log('hola');
+            }
+
+        },
+        watch: {
+            selectedDates: {
+                handler: function (val, oldVal) {
+                    this.$emit('input', val);
+                    this.model = 'example';
+                },
+                deep: true
             }
         }
     }
