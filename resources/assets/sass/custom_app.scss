@@ -155,7 +155,7 @@ table tr th:focus {
     background-color: transparent;
     border-color: #006bf9;
 }
-td.checkbox-add-fcl {
+td.checkbox-add-fcl, td.actions-add-fcl {
     width: 45px;
 }
 .btn.btn-secondary {
@@ -167,6 +167,40 @@ td.checkbox-add-fcl {
 }
 .action-app i {
     color: #eee;
+}
+#actions-box[type=checkbox]:checked + .popup-actions  {
+    display: inline-block;
+}
+.table-hover tbody tr:hover {
+    background-color: transparent !important;
+}
+#actions-box {
+    display: none;
+}
+.actions-box {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid #eee;
+    z-index: 100;
+}
+.actions-box:hover .icon-add-fcl {
+    color: #006bf9;
+}
+.popup-actions {
+    display: none;
+    top: 30px;
+    right: 0;
+    padding: 5px 10px;
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 5px;
+    position: absolute;
+     z-index: 100;
 }
 .btn-action {
     width: 100%;
@@ -180,6 +214,10 @@ td.checkbox-add-fcl {
 }
 .btn-action:hover {
     text-decoration: underline;
+}
+
+.btn-action:focus {
+    outline: none;
 }
 
 .btn-action:nth-child(3) {
