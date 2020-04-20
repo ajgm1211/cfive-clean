@@ -47,12 +47,13 @@
                     <label  for="check"></label>
                     <!-- checkbox end -->
                     <!-- paginator -->
-                    <!--<b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>-->
+                    <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
                 </b-card>
+
                 <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
                          title="Add FCL Contract">
 
-                    <form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
+                    <b-form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
                         <b-form-group
                                       label="Reference"
                                       label-for="reference"
@@ -64,8 +65,11 @@
                                           :state="nameState"
                                           placeholder="Reference" 
                                           required
-                                          ></b-form-input>
+                                          >
+                                            
+                            </b-form-input>
                         </b-form-group>
+
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <b-form-group
@@ -130,7 +134,10 @@
                                 </b-form-group>
                             </div>
                         </div>
-                    </form>
+
+                        <b-button type="submit" variant="primary">Submit</b-button>
+
+                    </b-form>
                 </b-modal>
 
             </div>
@@ -188,16 +195,20 @@
                     }
 
                 ],
-                carrier: '',
+                // Models Data
+                name: null,
+                carrier: [],
                 equipment: '',
                 direction: '',
-                carriers: [],
-                directions: [],
-                equipments: [],
                 dateRange: { 
                     startDate: '', 
                     endDate:  ''
                 }, 
+
+                //List Data
+                carriers: [],
+                directions: [],
+                equipments: [],
                 locale:{
                     direction: 'ltr',
                     format: 'mm/dd/yyyy',
@@ -213,21 +224,25 @@
         },
         created() {
 
+            /* Return the Contracts lists data*/
             api.getData({}, '/api/v2/contracts', (err, data) => {
                 this.setData(err, data);
             });
 
+            /* Return the lists data for dropdowns */
             api.getData({}, '/api/v2/contracts/data', (err, data) => {
               this.setDropdownLists(err, data.data);
             });
 
         },
         methods: {
+            /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
               this.carriers = data.carriers;
               this.equipments = data.equipments;
               this.directions = data.directions;
             },
+            /* Set the data response in table */ 
             setData(err, { data: records, links, meta }) {
                 this.isBusy = false;
 
@@ -237,29 +252,33 @@
                     this.data = records;
                 }
             },
+            /* Prepare the data to create a new Contract */
             prepareData(){
 
-                /*return {
-                  'name': this.reference,
-                  'direction': this.direction,
-                  'validity': this.date[0],
-                  'expire': this.date[1],
+                return {
+                  'name': this.name,
+                  'direction': this.direction.id,
+                  'validity': '2020-02-20', //this.dateRange.startDate,
+                  'expire': '2020-02-20', //this.dateRange.endDate,
                   'status': 'publish',
                   'remarks': '',
-                  'gp_container': this.equipment,
-                  'carriers': this.carrier
-                }*/
+                  'gp_container': this.equipment.id,
+                  'carriers': [this.carrier.id]
+                }
             },
+            /* Handle the submit of Create Form and 
+              send the data to store a new contract */
             handleSubmit(){
 
               const data = this.prepareData();
 
-              api.call('post', 'api/v2/contracts/', { data: this.data })
+              api.call('post', '/api/v2/contracts/store', data)
               .then( ( response ) => {
+                app.$router.push('http:/app.cargofive.com/');
                   
               })
               .catch(( data ) => {
-                  this.$refs.observer.setErrors(data.data.errors);
+                  //this.$refs.observer.setErrors(data.data.errors);
               });
 
             },
