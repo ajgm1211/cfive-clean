@@ -22,6 +22,7 @@ class FailRate extends Model
         'currency_id',
         'fortynor',
         'fortyfive',
+        'containers',
         'schedule_type',
         'transit_time',
         'via'

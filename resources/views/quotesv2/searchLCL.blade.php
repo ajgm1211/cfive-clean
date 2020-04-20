@@ -403,7 +403,7 @@
 
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',['20' => '20\'','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
+                {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
 
               <div class="col-lg-2">
@@ -998,10 +998,10 @@
                           <span class="bg-rates"> {{ $localorigin['cantidad']}} </span> 
                         </div>
                         <div class="wth" >
-                          <span class="bg-rates"> {{ number_format($localorigin['monto'] /   $localorigin['cantidad'], 2, '.', '') }} </span> 
+                          <span class="bg-rates"> {{ number_format($localorigin['subtotal_local'] /   $localorigin['cantidad'], 2, '.', '') }} </span> 
                         </div>
                         <div class="wth" >
-                          <span class="bg-rates"> {{ $localorigin['monto']}} </span> 
+                          <span class="bg-rates"> {{ $localorigin['subtotal_local']}} </span> 
                         </div>
 
                         <div class="wth" >  
@@ -1012,7 +1012,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['montoMarkup']}}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localorigin['montoMarkup']}} {{ $arr->quoteCurrency }}</span></div>
 
                   </div>
                   @endforeach
@@ -1094,10 +1094,10 @@
                         </div>
 
                         <div class="wth" >
-                          <span class="bg-rates"> {{ number_format($localfreight['monto'] /   $localfreight['cantidad'], 2, '.', '') }}  </span> 
+                          <span class="bg-rates"> {{ number_format($localfreight['subtotal_local'] /   $localfreight['cantidad'], 2, '.', '') }}  </span> 
                         </div> 
                         <div class="wth" >
-                          <span class="bg-rates"> {{ $localfreight['monto']}} </span> 
+                          <span class="bg-rates"> {{ $localfreight['subtotal_local']}} </span> 
                         </div>
 
                         <div class="wth" >  
@@ -1108,7 +1108,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['montoMarkup']}}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localfreight['montoMarkup']}} {{ $arr->quoteCurrency }}</span></div>
                   </div>
                   @endforeach
                   @endforeach
@@ -1159,10 +1159,10 @@
                           <span class="bg-rates"> {{ $localdestiny['cantidad']}} </span> 
                         </div>
                         <div class="wth" >
-                          <span class="bg-rates">  {{ number_format($localdestiny['monto'] /   $localdestiny['cantidad'], 2, '.', '') }}  </span> 
+                          <span class="bg-rates">  {{ number_format($localdestiny['subtotal_local'] /   $localdestiny['cantidad'], 2, '.', '') }}  </span> 
                         </div> 
                         <div class="wth" >
-                          <span class="bg-rates"> {{ $localdestiny['monto']}} </span> 
+                          <span class="bg-rates"> {{ $localdestiny['subtotal_local']}} </span> 
                         </div>
 
                         <div class="wth" >  
@@ -1173,7 +1173,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['montoMarkup']}}</span></div>
+                    <div class="col-lg-1" ><span class="colorphacode">{{ $localdestiny['montoMarkup']}} {{ $arr->quoteCurrency }}</span></div>
 
                   </div>
                   @endforeach
