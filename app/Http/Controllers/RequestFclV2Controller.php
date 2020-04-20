@@ -67,9 +67,28 @@ class RequestFclV2Controller extends Controller
         if($user->hasAnyPermission([1])){
             $permiso_eliminar = true;
         }
+        $groupContainers = GroupContainer::all();
         return Datatables::of($Ncontracts)
             ->addColumn('Company', function ($Ncontracts) {
                 return $Ncontracts->company_user;
+            })
+            ->addColumn('equiment', function ($Ncontracts) use($groupContainers) {
+                $color = '#012586';
+                //$color = '#058b0a';
+                if(json_decode($Ncontracts->request_data,true) != null){
+                    $data               = json_decode($Ncontracts->request_data,true);
+                    if(!empty($data['group_containers'])){
+                        $name               = $data['group_containers']['name'];
+                        $groupContainers    = $groupContainers->firstWhere('id', $data['group_containers']['id']);
+                        $data_gp            = json_decode($groupContainers->data,true);
+                        $color              = $data_gp['color'];
+                    } else{
+                        $name = 'DRY \\';
+                    }
+                } else {
+                    $name = 'DRY \\';
+                }
+                return '<span style="color:'.$color.'"><strong>'.$name.'</strong></span>';
             })
             ->addColumn('name', function ($Ncontracts) {
                 return $Ncontracts->namecontract;
