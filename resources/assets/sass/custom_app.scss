@@ -10,6 +10,29 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
 /*** genetal styles ***/
 .m-body {
     background-color: #f8f8fc !important;
+    height: auto;
+}
+.btns-form-modal {
+    padding: 25px 40px 25px 40px;
+    position: absolute;
+    bottom: -82.5px;
+    left: 0;
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+    width: 100%;
+    border-radius: 0px 0px 3.2px 3.2px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.btns-form-modal button:nth-child(1) {
+    background: transparent;
+    border:none;
+    color: #ff6464;
+    margin-right: 15px;
+}
+.btns-form-modal button:nth-child(1):hover:not(:disabled) {
+    color: #ff6464 !important;
 }
 
 .status-st {
@@ -93,7 +116,7 @@ table tr th:focus {
     padding-left: 33px;
 }
 .input-check[type=checkbox] + label {
-    display: block;
+    //display: block;
     margin: 0.2em;
     cursor: pointer;
     padding: 0.2em;
@@ -109,13 +132,13 @@ table tr th:focus {
     display: flex; 
     align-items: center;
     justify-content: center;
-    width: 1.5em;
-    height: 1.5em;
+    width: 1.3em;
+    height: 1.3em;
     padding-left: 0.15em;
     margin-right: 0.15em;
     color: transparent;
     transition: .2s;
-    font-size: 16px;
+    font-size: 14px;
 }
 .input-check[type=checkbox] + label:active:before {
     transform: scale(0);
@@ -132,6 +155,9 @@ table tr th:focus {
     background-color: transparent;
     border-color: #006bf9;
 }
+td.checkbox-add-fcl, td.actions-add-fcl {
+    width: 45px;
+}
 .btn.btn-secondary {
     background-color: transparent!important;
     border: 2px solid #eee !important;
@@ -141,6 +167,40 @@ table tr th:focus {
 }
 .action-app i {
     color: #eee;
+}
+#actions-box[type=checkbox]:checked + .popup-actions  {
+    display: inline-block;
+}
+.table-hover tbody tr:hover {
+    background-color: transparent !important;
+}
+#actions-box {
+    display: none;
+}
+.actions-box {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid #eee;
+    z-index: 100;
+}
+.actions-box:hover .icon-add-fcl {
+    color: #006bf9;
+}
+.popup-actions {
+    display: none;
+    top: 30px;
+    right: 0;
+    padding: 5px 10px;
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 5px;
+    position: absolute;
+     z-index: 100;
 }
 .btn-action {
     width: 100%;
@@ -154,6 +214,10 @@ table tr th:focus {
 }
 .btn-action:hover {
     text-decoration: underline;
+}
+
+.btn-action:focus {
+    outline: none;
 }
 
 .btn-action:nth-child(3) {

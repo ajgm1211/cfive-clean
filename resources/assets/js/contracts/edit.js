@@ -21,5 +21,5 @@ window.api = new Api();
 
 const app = new Vue({
     el: '#app',
-    render: h => h(Contracts),
+    render: h => h(App),
 });

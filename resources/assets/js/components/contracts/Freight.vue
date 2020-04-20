@@ -55,6 +55,11 @@
                 data: null,
 
                 fields: [
+                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
+                        var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
+                        $('.checkbox-add-fcl').append(checkbox);
+                    }  
+                    },
                     { key: 'form', label: 'Origin Port', sortable: false },
                     { key: 'until', label: 'Destination Port', sortable: false },
                     { key: 'tdv', label: '20 DV', sortable: false },
@@ -73,6 +78,11 @@
                          return $carriers.join(', ');
                      } 
                     },
+                    { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
+                        var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
+                        $('.actions-add-fcl').append(actions);
+                    }  
+                    } 
                    
 
                 ]
