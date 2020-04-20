@@ -89711,6 +89711,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             isBusy: true, // Loader
             data: null,
+<<<<<<< HEAD
+            prueba: '<span class="status-st published"></span>',
+
+            fields: [{ key: 'name', label: '<input type="checkbox" class="input-check" id="check"                    <label  for="check"></label> Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true }, { key: 'from', label: 'Valid From', sortable: true }, { key: 'until', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
+=======
             currentPage: 1,
             nameState: true,
             fields: [{ key: 'name', label: 'Reference', sortable: true }, { key: 'status', label: 'Status', sortable: true, isHtml: true,
@@ -89718,6 +89723,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     if (value == 'publish') return '<span class="status-st published"></span>';else if (value == 'expired') return '<span class="status-st expired"></span>';else if (value == 'incompleted') return '<span class="status-st incompleted"></span>';
                 }
             }, { key: 'validity', label: 'Valid From', sortable: true }, { key: 'expire', label: 'Valid Until', sortable: true }, { key: 'carriers', label: 'Carriers',
+>>>>>>> a67b07f9bbe0a7764c524a6496bbf247e89350f6
                 formatter: function formatter(value) {
                     var $carriers = [];
 
