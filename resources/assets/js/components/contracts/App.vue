@@ -29,25 +29,27 @@
                             </b-form>
                         </div>
                     </div>
-                    <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
-                    <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                    <!-- <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
+                    <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button> -->
 
-                    <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                    <!-- <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                         <button class="btn-action">Edit</button>
                         <button class="btn-action">Duplicate</button>
                         <button class="btn-action">Delete</button>
-                    </b-popover>
+                    </b-popover> -->
                     <!-- status -->
                     <!-- <span class="status-st published"></span>
-                    <span class="status-st expired"></span>
-                    <span class="status-st incompleted"></span> -->
+<span class="status-st expired"></span>
+<span class="status-st incompleted"></span> -->
                     <!-- status end -->
                     <!-- checkbox -->
                     <!-- <input type="checkbox" class="input-check" id="check">
-                    <label  for="check"></label> -->
+<label  for="check"></label> -->
                     <!-- checkbox end -->
                     <!-- paginator -->
                     <!--<b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>-->
+                    
+
                 </b-card>
                 <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
                          title="Add FCL Contract" hide-footer>
@@ -83,14 +85,14 @@
                                                        :linkedCalendars="true">
                                     </date-range-picker>
                                     <!-- <ValidationProvider :vid="name" :rules="rules" :name="label" v-slot="{ errors }">
-                                        <b-form-input v-show="false"
-                                                      class="border-light"
-                                                      :class="{'is-invalid': errors.length }"
-                                                      :name="name"
-                                                      v-model="model">                                  
-                                        </b-form-input>
-                                        <span class="invalid-feedback">{{ errors[0] }}</span>
-                                    </ValidationProvider> -->
+<b-form-input v-show="false"
+class="border-light"
+:class="{'is-invalid': errors.length }"
+:name="name"
+v-model="model">                                  
+</b-form-input>
+<span class="invalid-feedback">{{ errors[0] }}</span>
+</ValidationProvider> -->
 
 
 
@@ -147,6 +149,7 @@
 
 </template>
 <script>
+
     import Multiselect from 'vue-multiselect';
     import DateRangePicker from 'vue2-daterange-picker';
 
@@ -180,16 +183,16 @@
                 fields: [
                     { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
                         var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
-                       $('.checkbox-add-fcl').append(checkbox);
+                        $('.checkbox-add-fcl').append(checkbox);
                     }  
                     },
-                    { key: 'name', label: 'Reference', sortable: true },
-                    { key: 'status', label: 'Status', sortable: true, isHtml: true, tdClass: 'status-add-fcl',
+                    { key: 'name', label: 'Reference', sortable: false },
+                    { key: 'status', label: 'Status', sortable: false, isHtml: true, tdClass: 'status-add-fcl',
                      formatter: value => {
                          var publish ='<span class="status-st published"></span>';
                          var expired ='<span class="status-st expired"></span>';
                          var incompleted ='<span class="status-st incompleted"></span>';
-                        
+
                          if (value == 'publish')
                              $('.status-add-fcl').append(publish);
                          else if (value == 'expired')
@@ -198,8 +201,8 @@
                              $('.status-add-fcl').append(incompleted);
                      } 
                     },
-                    { key: 'validity', label: 'Valid From', sortable: true },
-                    { key: 'expire', label: 'Valid Until', sortable: true },
+                    { key: 'validity', label: 'Valid From', sortable: false },
+                    { key: 'expire', label: 'Valid Until', sortable: false },
                     { key: 'carriers', label: 'Carriers', 
                      formatter: value => {
                          let $carriers = [];
@@ -217,7 +220,7 @@
                     { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
                     },
                     { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
-                        var actions = '<b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft"><button class="btn-action">Edit</button><button class="btn-action">Duplicate</button><button class="btn-action">Delete</button></b-popover>';
+                        var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
                         $('.actions-add-fcl').append(actions);
                     }  
                     } 
