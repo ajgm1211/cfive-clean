@@ -255,6 +255,7 @@ class RequestFclV2Controller extends Controller
             $contract->direction_id     = $direction_id;
             $contract->status           = 'incomplete';
             $contract->company_user_id  = $CompanyUserId;
+            $contract->gp_container_id  = $gpContainer->id;
             $contract->save();
 
             $Ncontract  = new NewContractRequest();
