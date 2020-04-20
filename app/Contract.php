@@ -11,6 +11,7 @@ use App\Http\Filters\ContractFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\ContractCarrier;
+use Illuminate\Support\Facades\DB;
 
 class Contract extends Model implements HasMedia
 {
@@ -144,7 +145,7 @@ class Contract extends Model implements HasMedia
 		foreach($carriers as $carrier_id){
 			ContractCarrier::create([
 				'carrier_id'    => $carrier_id,
-				'contract_id'   => $contract->id
+				'contract_id'   => $this->id
 			]);
 		}
 	}

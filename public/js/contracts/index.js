@@ -89767,6 +89767,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -89803,16 +89810,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     return value.name;
                 }
             }],
-            carrier: '',
+            // Models Data
+            name: null,
+            carrier: [],
             equipment: '',
             direction: '',
-            carriers: [],
-            directions: [],
-            equipments: [],
             dateRange: {
                 startDate: '',
                 endDate: ''
             },
+
+            //List Data
+            carriers: [],
+            directions: [],
+            equipments: [],
             locale: {
                 direction: 'ltr',
                 format: 'mm/dd/yyyy',
@@ -89829,21 +89840,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         var _this = this;
 
+        console.log(this.$router);
+        console.log(this.$route);
+
+        /* Return the Contracts lists data*/
         api.getData({}, '/api/v2/contracts', function (err, data) {
             _this.setData(err, data);
         });
 
+        /* Return the lists data for dropdowns */
         api.getData({}, '/api/v2/contracts/data', function (err, data) {
             _this.setDropdownLists(err, data.data);
         });
     },
 
     methods: {
+        /* Set the Dropdown lists to use in form */
         setDropdownLists: function setDropdownLists(err, data) {
             this.carriers = data.carriers;
             this.equipments = data.equipments;
             this.directions = data.directions;
         },
+
+        /* Set the data response in table */
         setData: function setData(err, _ref) {
             var records = _ref.data,
                 links = _ref.links,
@@ -89857,26 +89876,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.data = records;
             }
         },
+
+        /* Prepare the data to create a new Contract */
         prepareData: function prepareData() {
 
-            /*return {
-              'name': this.reference,
-              'direction': this.direction,
-              'validity': this.date[0],
-              'expire': this.date[1],
-              'status': 'publish',
-              'remarks': '',
-              'gp_container': this.equipment,
-              'carriers': this.carrier
-            }*/
+            return {
+                'name': this.name,
+                'direction': this.direction.id,
+                'validity': '2020-02-20', //this.dateRange.startDate,
+                'expire': '2020-02-20', //this.dateRange.endDate,
+                'status': 'publish',
+                'remarks': '',
+                'gp_container': this.equipment.id,
+                'carriers': [this.carrier.id]
+            };
         },
+
+        /* Handle the submit of Create Form and 
+          send the data to store a new contract */
         handleSubmit: function handleSubmit() {
-            var _this2 = this;
 
             var data = this.prepareData();
 
-            api.call('post', 'api/v2/contracts/', { data: this.data }).then(function (response) {}).catch(function (data) {
-                _this2.$refs.observer.setErrors(data.data.errors);
+            api.call('post', '/api/v2/contracts/store', data).then(function (response) {
+                app.$router.push('http:/app.cargofive.com/');
+            }).catch(function (data) {
+                //this.$refs.observer.setErrors(data.data.errors);
             });
         },
         confirmAction: function confirmAction() {
@@ -90026,7 +90051,18 @@ var render = function() {
                 attrs: { type: "checkbox", id: "check" }
               }),
               _vm._v(" "),
-              _c("label", { attrs: { for: "check" } })
+              _c("label", { attrs: { for: "check" } }),
+              _vm._v(" "),
+              _c("b-pagination", {
+                attrs: { "total-rows": _vm.rows, align: "right" },
+                model: {
+                  value: _vm.currentPage,
+                  callback: function($$v) {
+                    _vm.currentPage = $$v
+                  },
+                  expression: "currentPage"
+                }
+              })
             ],
             1
           ),
@@ -90045,7 +90081,7 @@ var render = function() {
             },
             [
               _c(
-                "form",
+                "b-form",
                 {
                   ref: "form",
                   staticClass: "modal-input",
@@ -90271,11 +90307,18 @@ var render = function() {
                       ],
                       1
                     )
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "b-button",
+                    { attrs: { type: "submit", variant: "primary" } },
+                    [_vm._v("Submit")]
+                  )
                 ],
                 1
               )
-            ]
+            ],
+            1
           )
         ],
         1
