@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CompanyUsersTableSeeder::class);
         $this->call(ScheduleTypeTableSeeder::class);
         $this->call(StatusAlertsTableSeeder::class);
+//        $this->call(ContractApisTableSeeder::class);
         $this->call(GroupContainersTableSeeder::class);
         $this->call(ContainersTableSeeder::class);
         $this->call(ContainerCalculationsTableSeeder::class);
