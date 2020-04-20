@@ -534,31 +534,48 @@ class ImportationController extends Controller
         }
     }
 
-    // precarga la vista para importar rates o rates mas surchargers
-    public function LoadViewImporContractFcl(){
-        $harbor         = harbor::all()->pluck('display_name','id');
-        $country        = Country::all()->pluck('name','id');
-        $region         = Region::all()->pluck('name','id');
-        $carrier        = carrier::all()->pluck('name','id');
-        $direction      = [null=>'Please Select'];
-        $direction2      = Direction::all();
-        foreach($direction2 as $d){
-            $direction[$d['id']]=$d->name;
-        }
-        $companysUser   = CompanyUser::all()->pluck('name','id');
-        $typedestiny    = TypeDestiny::all()->pluck('description','id');
-        return view('importation.ImporContractFcl',compact('harbor','direction','country','region','carrier','companysUser','typedestiny'));
-    }
+    ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
+    //    // precarga la vista para importar rates o rates mas surchargers
+    //    public function LoadViewImporContractFcl(){
+    //        $harbor         = harbor::all()->pluck('display_name','id');
+    //        $country        = Country::all()->pluck('name','id');
+    //        $region         = Region::all()->pluck('name','id');
+    //        $carrier        = carrier::all()->pluck('name','id');
+    //        $direction      = [null=>'Please Select'];
+    //        $direction2      = Direction::all();
+    //        foreach($direction2 as $d){
+    //            $direction[$d['id']]=$d->name;
+    //        }
+    //        $companysUser   = CompanyUser::all()->pluck('name','id');
+    //        $typedestiny    = TypeDestiny::all()->pluck('description','id');
+    //        return view('importation.ImporContractFcl',compact('harbor','direction','country','region','carrier','companysUser','typedestiny'));
+    //    }
 
-    // precarga la vista para importar rates o rates mas surchargers desde Request
+    // precarga la vista para importar rates mas surchargers desde Request
     public function requestProccess($id,$selector,$request_id){
-        $load_carrier = false;
-        $carrier_exec = Carrier::where('name','ALL')->first();
-        $carrier_exec = $carrier_exec->id;
+        $load_carrier   = false;
+        $carrier_exec   = Carrier::where('name','ALL')->first();
+        $carrier_exec   = $carrier_exec->id;
+        $equiment       = ['id' => null,'name' => null,'color' => null];
+        $json_rq        = null;
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
             @$requestfcl->load('Requestcarriers');
-            //dd($requestfcl);
+            if(json_decode($requestfcl->request_data,true) != null){
+                $json_rq = json_decode($requestfcl->request_data,true);
+                if(!empty($json_rq['group_containers'])){
+                    $equiment['id']     = $json_rq['group_containers']['id'];
+                    $equiment['name']   = $json_rq['group_containers']['name'];
+                    $equiment['color']  = $json_rq['group_containers']['color'];
+                }
+            } else {
+                $groupContainer = GroupContainer::find(1);
+                $json_rq        = json_decode($groupContainer->data,true);
+                $equiment['id']     = $groupContainer->id;
+                $equiment['name']   = $groupContainer->name;
+                $equiment['color']  = $json_rq['color'];
+            }
+            //dd($requestfcl,$equiment);
             if(count($requestfcl->Requestcarriers) == 1){
                 foreach($requestfcl->Requestcarriers as $carrier_uniq){
                     if($carrier_uniq->id != $carrier_exec){
@@ -569,7 +586,20 @@ class ImportationController extends Controller
         } elseif($selector == 2){
             $contract     = Contract::find($id);
             @$contract->load('carriers');
-            //dd($contract);
+            if(!empty($contract->gp_container_id)){
+                $groupContainer = GroupContainer::find($contract->gp_container_id);
+                $json_rq        = json_decode($groupContainer->data,true);
+                $equiment['id']     = $groupContainer->id;
+                $equiment['name']   = $groupContainer->name;
+                $equiment['color']  = $json_rq['color'];
+            } else {
+                $groupContainer = GroupContainer::find(1);
+                $json_rq        = json_decode($groupContainer->data,true);
+                $equiment['id']     = $groupContainer->id;
+                $equiment['name']   = $groupContainer->name;
+                $equiment['color']  = $json_rq['color'];
+            }
+            //dd($contract,$equiment);
             if(count($contract->carriers) == 1){
                 foreach($contract->carriers as $carrier_uniq){
                     if($carrier_uniq->id != $carrier_exec){
@@ -588,11 +618,11 @@ class ImportationController extends Controller
         $companysUser   = CompanyUser::all()->pluck('name','id');
         $typedestiny    = TypeDestiny::all()->pluck('description','id');
         if($selector == 1){
-            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency'));    
+            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier','coins','currency','equiment'));    
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','requestfcl','selector','load_carrier'));    
         } elseif($selector == 2){
-            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier','coins','currency'));
+            return view('importationV2.Fcl.newImport',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier','coins','currency','equiment'));
 
             //            return view('importation.ImportContractFCLRequest',compact('harbor','direction','country','region','carrier','companysUser','typedestiny','contract','selector','request_id','load_carrier'));
         }
@@ -617,6 +647,7 @@ class ImportationController extends Controller
         $datTypeDes         = $request->DatTypeDes;
         $typedestinyVal     = $request->typedestiny;
         $chargeVal          = $request->chargeVal;
+        $gp_container_id    = $request->gp_container_id;
         $validity           = explode('/',$request->validation_expire);
 
         $statustypecurren   = $request->valuesCurrency;
@@ -657,6 +688,7 @@ class ImportationController extends Controller
                 $contract->status           = 'incomplete';
                 $contract->company_user_id  = $CompanyUserId;
                 $contract->account_id       = $account->id;
+                $contract->$gp_container_id = $gp_container_id;
                 $contract->save();
 
                 foreach($request->carrierM as $carrierVal){
@@ -809,6 +841,12 @@ class ImportationController extends Controller
             $account->data = $json_account;
             $account->update();
             // colocar contract_id al despachar para evitar el borrado mientras se importa el contracto
+            if(env('APP_VIEW') == 'operaciones') {
+                ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id)->onQueue('operaciones'); //NO BORRAR!!
+            }else {
+                ImportationRatesSurchargerJob::dispatch($account->id,$contract_id,\Auth::user()->id); //NO BORRAR!!
+            }
+            return redirect()->route('redirect.Processed.Information',$contract_id);
         } else {
 
             Log::error('Container calculation type relationship error. Check Relationship in the module "Containers Calculation Types"');
@@ -2136,20 +2174,22 @@ class ImportationController extends Controller
 
     }
 
-    // * proccesa solo cuando son rates --------------------------------------------------
-    public function ProcessContractFcl(Request $request){
-        //dd($request->all());
-        $requestobj = $request->all();
-        /*Rate::where('contract_id',$request->Contract_id)->forceDelete();
-        FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
-        $errors = 0;
-        if(env('APP_VIEW') == 'operaciones') {
-            ImportationRatesFclJob::dispatch($requestobj)->onQueue('operaciones');
-        } else {
-            ImportationRatesFclJob::dispatch($requestobj);
-        }
-        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
-    }
+    ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
+    //    // * proccesa solo cuando son rates --------------------------------------------------
+    //    public function ProcessContractFcl(Request $request){
+    //        //dd($request->all());
+    //        $requestobj = $request->all();
+    //        /*Rate::where('contract_id',$request->Contract_id)->forceDelete();
+    //        FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
+    //        $errors = 0;
+    //        if(env('APP_VIEW') == 'operaciones') {
+    //            ImportationRatesFclJob::dispatch($requestobj)->onQueue('operaciones');
+    //        } else {
+    //            ImportationRatesFclJob::dispatch($requestobj);
+    //        }
+    //        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$requestobj['Contract_id'],1]);
+    //    }
+
     public function FailedRatesDeveloper($id,$tab){
         //$id se refiere al id del contracto
         $countrates     = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
@@ -2158,304 +2198,306 @@ class ImportationController extends Controller
         return view('importation.TestFailRates2',compact('countfailrates','countrates','contract','id','tab'));
     }
 
-    // * proccesa solo cuando es Surchargers, Se envia a cola de trabajos 2do. plano
-    public function ProcessContractFclRatSurch(Request $request){
-        $companyUserId = $request->CompanyUserId;
-        $UserId =\Auth::user()->id;
+    ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
+    //    // * proccesa solo cuando es Surchargers, Se envia a cola de trabajos 2do. plano
+    //    public function ProcessContractFclRatSurch(Request $request){
+    //        $companyUserId = $request->CompanyUserId;
+    //        $UserId =\Auth::user()->id;
+    //
+    //        $requestobj = $request;
+    //        $companyUserIdVal = $companyUserId;
+    //        $errors = 0;
+    //        $NameFile = $requestobj['FileName'];
+    //        $path = \Storage::disk('FclImport')->url($NameFile);
+    //        /*
+    //        FailSurCharge::where('contract_id',$request->Contract_id)->forceDelete();
+    //        LocalCharge::where('contract_id',$request->Contract_id)->forceDelete();
+    //        Rate::where('contract_id',$request->Contract_id)->forceDelete();
+    //        FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
+    //
+    //        if(env('APP_VIEW') == 'operaciones') {
+    //            ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId)->onQueue('operaciones'); //NO BORRAR!!
+    //        }else {
+    //            ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
+    //        }
+    //        $id = $request['Contract_id'];
+    //        return redirect()->route('redirect.Processed.Information',$id);
+    //    }
 
-        $requestobj = $request;
-        $companyUserIdVal = $companyUserId;
-        $errors = 0;
-        $NameFile = $requestobj['FileName'];
-        $path = \Storage::disk('FclImport')->url($NameFile);
-        /*
-        FailSurCharge::where('contract_id',$request->Contract_id)->forceDelete();
-        LocalCharge::where('contract_id',$request->Contract_id)->forceDelete();
-        Rate::where('contract_id',$request->Contract_id)->forceDelete();
-        FailRate::where('contract_id',$request->Contract_id)->forceDelete();*/
-
-        if(env('APP_VIEW') == 'operaciones') {
-            ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId)->onQueue('operaciones'); //NO BORRAR!!
-        }else {
-            ImportationRatesSurchargerJob::dispatch($request->all(),$companyUserId,$UserId); //NO BORRAR!!
-        }
-        $id = $request['Contract_id'];
-        return redirect()->route('redirect.Processed.Information',$id);
-    }
     public function redirectProcessedInformation($id){
         $contract       = Contract::find($id);
         return view('importation.ProcessedInformation',compact('id','contract'));
     }
 
     // Rates ----------------------------------------------------------------------------
-
-    public function UploadFileRateForContract(Request $request){
-        $requestobj = $request;
-        $nombre='';
-        try {
-
-            $now = new \DateTime();
-            $now = $now->format('dmY_His');
-            $file = $requestobj->file('file');
-            $ext = strtolower($file->getClientOriginalExtension());
-            $validator = \Validator::make(
-                array('ext' => $ext),
-                array('ext' => 'in:xls,xlsx,csv')
-            );
-            if ($validator->fails()) {
-                $requestobj->session()->flash('message.nivel', 'danger');
-                $requestobj->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-                return redirect()->route('contracts.edit',$requestobj->contract_id);
-            }
-            //obtenemos el nombre del archivo
-            $nombre = $file->getClientOriginalName();
-            $nombre = $now.'_'.$nombre;
-            $dd = \Storage::disk('FclImport')->put($nombre,\File::get($file));
-            //dd(\Storage::disk('UpLoadFile')->url($nombre));
-            $contract = $requestobj->contract_id;
-            $errors=0;
-            Excel::Load(\Storage::disk('FclImport')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
-
-                $originResul  = '';
-                $destinResul  = '';
-                $currencResul = '';
-
-                if($reader->get()->isEmpty() != true){
-                    Rate::where('contract_id','=',$contract)
-                        ->delete();
-                    FailRate::where('contract_id','=',$contract)
-                        ->delete();
-                } else{
-                    $requestobj->session()->flash('message.nivel', 'danger');
-                    $requestobj->session()->flash('message.content', 'The file is it empty');
-                    return redirect()->route('contracts.edit',$contract);   
-                }
-                foreach ($reader->get() as $book) {
-                    $originVdul = '';
-                    $destinationVdul = '';
-
-                    $carrier = Carrier::where('name','=',$book->carrier)->first();
-                    $twuenty = "20";
-                    $forty = "40";
-                    $fortyhc = "40hc";
-                    $origin = "origin";
-                    $destination = "destiny";
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
-
-                    $resultadoPortOri = PrvHarbor::get_harbor($book->$origin);
-                    if($resultadoPortOri['boolean']){
-                        $origB = true;    
-                    }
-                    $originVdul  = $resultadoPortOri['puerto'];
-
-
-                    $resultadoPortDes = PrvHarbor::get_harbor($book->$destination);
-                    if($resultadoPortDes['boolean']){
-                        $destiB = true;    
-                    }
-                    $destinationVdul  = $resultadoPortDes['puerto'];
-
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    $duplicate =  Rate::where('origin_port','=',$originVdul)
-                        ->where('destiny_port','=',$destinationVdul)
-                        ->where('carrier_id','=',$carrier['id'])
-                        ->where('contract_id','=',$contract)
-                        ->count();
-                    if($duplicate <= 0){
-                        $originResul  = '';
-                        $destinResul  = '';
-                        $currencResul = '';
-                        $carrierResul = '';
-                        $origB=false;
-                        $destiB=false;
-                        $carriB=false;
-                        $twuentyB=false;
-                        $fortyB=false;
-                        $fortyhcB=false;
-                        $curreB=false;
-                        $originV;
-                        $destinationV;
-                        $carrierV;
-                        $twuentyV;
-                        $fortyV;
-                        $fortyhcV;
-                        $currencyV;
-                        $values = true;
-
-                        $currencResul = str_replace($caracteres,'',$book->currency);
-                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
-
-                        $carrierResul = str_replace($caracteres,'',$book->carrier);
-                        $carrier = Carrier::where('name','=',$carrierResul)->first();
-
-                        $originResul = str_replace($caracteres,'',strtolower($book->$origin));
-                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
-                            ->get();
-                        if(count($originExits) == 1){
-                            $origB=true;
-                            foreach($originExits as $originRc){
-                                $originV = $originRc['id'];
-                            }
-                        }else{
-                            $originV = $book->$origin.'_E_E';
-                        }
-
-                        $destinResul = str_replace($caracteres,'',strtolower($book->$destination));
-                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
-                            ->get();
-                        if(count($destinationExits) == 1){
-                            $destiB=true;
-                            foreach($destinationExits as $destinationRc){
-                                $destinationV = $destinationRc['id'];
-                                // dd($destinationV);
-                            }
-                        }else{
-                            $destinationV = $book->$destination.'_E_E';
-                        }
-                        if(empty($carrier->id) != true){
-                            $carriB=true;
-                            $carrierV = $carrier->id;
-                        }else{
-                            $carrierV = $book->carrier.'_E_E';
-                        }
-                        //////
-                        if(empty($book->$twuenty) != true || (int)$book->$twuenty == 0){
-                            $twuentyB=true;
-                            $twuentyV = (int)$book->$twuenty;
-                        }
-                        else{
-                            $twuentyV = $book->$twuenty.'_E_E';
-                        }
-                        /////
-                        if(empty($book->$forty) != true || (int)$book->$forty == 0){
-                            $fortyB=true;
-                            $fortyV = (int)$book->$forty;
-                        }
-                        else{
-                            $fortyV = $book->$forty.'_E_E';
-                        }
-                        /////
-                        if(empty($book->$fortyhc) != true || (int)$book->$fortyhc == 0){
-                            $fortyhcB=true;
-                            $fortyhcV = (int)$book->$fortyhc;
-                        }
-                        else{
-                            $fortyhcV = $book->$fortyhc.'_E_E';
-                        }
-
-                        if((int)$book->$twuenty == 0
-                           && (int)$book->$forty == 0
-                           && (int)$book->$fortyhc == 0){
-                            $values = false;
-                        }
-
-                        if(empty($currenc->id) != true){
-                            $curreB=true;
-                            $currencyV =  $currenc->id;
-                        }
-                        else{
-                            $currencyV = $book->currency.'_E_E';
-                        }
-                        if( $origB == true && $destiB == true
-                           && $carriB == true && $twuentyB == true
-                           && $fortyB == true && $fortyhcB == true
-                           && $curreB == true
-                           && $values == true) {
-                            Rate::create([
-                                'origin_port'   => $originV,
-                                'destiny_port'  => $destinationV,
-                                'carrier_id'    => $carrierV,
-                                'contract_id'   => $contract,
-                                'twuenty'       => $twuentyV,
-                                'forty'         => $fortyV,
-                                'fortyhc'       => $fortyhcV,
-                                'currency_id'   => $currencyV,
-                            ]);
-                        }
-                        else{
-                            if($origB == true){
-                                $originV = $book->$origin;
-                            }
-                            if($destiB == true){
-                                $destinationV = $book->$destination;
-                            }
-                            if($curreB == true){
-                                $currencyV = $book->currency;
-                            }
-                            if($carriB == true){
-                                $carrierV = $book->carrier;
-                            }
-                            if( empty($book->$origin) == true
-                               && empty($book->$destination) == true
-                               && empty($book->carrier) == true
-                               && empty($book->currency) == true
-                               && empty($book->$twuenty) == true
-                               && empty($book->$forty) == true
-                               && empty($book->$fortyhc) == true ) {
-                            }else{
-                                $duplicateFail =  FailRate::where('origin_port','=',$originV)
-                                    ->where('destiny_port','=',$destinationV)
-                                    ->where('carrier_id','=',$carrierV)
-                                    ->where('contract_id','=',$contract)
-                                    ->count();
-                                if($duplicateFail <= 0){
-                                    if((int)$book->$twuenty == 0
-                                       && (int)$book->$forty == 0
-                                       && (int)$book->$fortyhc == 0){
-
-                                    }else {
-                                        FailRate::create([
-                                            'origin_port'   => $originV,
-                                            'destiny_port'  => $destinationV,
-                                            'carrier_id'    => $carrierV,
-                                            'contract_id'   => $contract,
-                                            'twuenty'       => $twuentyV,
-                                            'forty'         => $fortyV,
-                                            'fortyhc'       => $fortyhcV,
-                                            'currency_id'   => $currencyV,
-                                        ]);
-                                        $errors++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } //***
-                if($errors > 0){
-                    $requestobj->session()->flash('message.content', 'You successfully added the rate ');
-                    $requestobj->session()->flash('message.nivel', 'danger');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                    if($errors == 1){
-                        $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
-                    }else{
-                        $requestobj->session()->flash('message.content', $errors.' Rates did not load correctly');
-                    }
-                }
-                else{
-                    $requestobj->session()->flash('message.nivel', 'success');
-                    $requestobj->session()->flash('message.title', 'Well done!');
-                }
-            });
-            Storage::delete($nombre);
-            Rate::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            FailRate::onlyTrashed()->where('contract_id','=',$contract)
-                ->forceDelete();
-            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$contract,1]);
-            //dd($res);*/
-        } catch (\Illuminate\Database\QueryException $e) {
-            Storage::delete($nombre);
-            Rate::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
-            FailRate::onlyTrashed()->where('contract_id','=',$contract)
-                ->restore();
-            $requestobj->session()->flash('message.nivel', 'danger');
-            $requestobj->session()->flash('message.content', 'There was an error loading the file');
-            return redirect()->route('contracts.edit',$requestobj->contract_id);
-        }
-    }
+    ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
+    //    public function UploadFileRateForContract(Request $request){
+    //        $requestobj = $request;
+    //        $nombre='';
+    //        try {
+    //
+    //            $now = new \DateTime();
+    //            $now = $now->format('dmY_His');
+    //            $file = $requestobj->file('file');
+    //            $ext = strtolower($file->getClientOriginalExtension());
+    //            $validator = \Validator::make(
+    //                array('ext' => $ext),
+    //                array('ext' => 'in:xls,xlsx,csv')
+    //            );
+    //            if ($validator->fails()) {
+    //                $requestobj->session()->flash('message.nivel', 'danger');
+    //                $requestobj->session()->flash('message.content', 'just archive with extension xlsx xls csv');
+    //                return redirect()->route('contracts.edit',$requestobj->contract_id);
+    //            }
+    //            //obtenemos el nombre del archivo
+    //            $nombre = $file->getClientOriginalName();
+    //            $nombre = $now.'_'.$nombre;
+    //            $dd = \Storage::disk('FclImport')->put($nombre,\File::get($file));
+    //            //dd(\Storage::disk('UpLoadFile')->url($nombre));
+    //            $contract = $requestobj->contract_id;
+    //            $errors=0;
+    //            Excel::Load(\Storage::disk('FclImport')->url($nombre),function($reader) use($contract,$errors,$requestobj) {
+    //
+    //                $originResul  = '';
+    //                $destinResul  = '';
+    //                $currencResul = '';
+    //
+    //                if($reader->get()->isEmpty() != true){
+    //                    Rate::where('contract_id','=',$contract)
+    //                        ->delete();
+    //                    FailRate::where('contract_id','=',$contract)
+    //                        ->delete();
+    //                } else{
+    //                    $requestobj->session()->flash('message.nivel', 'danger');
+    //                    $requestobj->session()->flash('message.content', 'The file is it empty');
+    //                    return redirect()->route('contracts.edit',$contract);   
+    //                }
+    //                foreach ($reader->get() as $book) {
+    //                    $originVdul = '';
+    //                    $destinationVdul = '';
+    //
+    //                    $carrier = Carrier::where('name','=',$book->carrier)->first();
+    //                    $twuenty = "20";
+    //                    $forty = "40";
+    //                    $fortyhc = "40hc";
+    //                    $origin = "origin";
+    //                    $destination = "destiny";
+    //                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //                    $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
+    //
+    //                    $resultadoPortOri = PrvHarbor::get_harbor($book->$origin);
+    //                    if($resultadoPortOri['boolean']){
+    //                        $origB = true;    
+    //                    }
+    //                    $originVdul  = $resultadoPortOri['puerto'];
+    //
+    //
+    //                    $resultadoPortDes = PrvHarbor::get_harbor($book->$destination);
+    //                    if($resultadoPortDes['boolean']){
+    //                        $destiB = true;    
+    //                    }
+    //                    $destinationVdul  = $resultadoPortDes['puerto'];
+    //
+    //                    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //                    $duplicate =  Rate::where('origin_port','=',$originVdul)
+    //                        ->where('destiny_port','=',$destinationVdul)
+    //                        ->where('carrier_id','=',$carrier['id'])
+    //                        ->where('contract_id','=',$contract)
+    //                        ->count();
+    //                    if($duplicate <= 0){
+    //                        $originResul  = '';
+    //                        $destinResul  = '';
+    //                        $currencResul = '';
+    //                        $carrierResul = '';
+    //                        $origB=false;
+    //                        $destiB=false;
+    //                        $carriB=false;
+    //                        $twuentyB=false;
+    //                        $fortyB=false;
+    //                        $fortyhcB=false;
+    //                        $curreB=false;
+    //                        $originV;
+    //                        $destinationV;
+    //                        $carrierV;
+    //                        $twuentyV;
+    //                        $fortyV;
+    //                        $fortyhcV;
+    //                        $currencyV;
+    //                        $values = true;
+    //
+    //                        $currencResul = str_replace($caracteres,'',$book->currency);
+    //                        $currenc = Currency::where('alphacode','=',$currencResul)->first();
+    //
+    //                        $carrierResul = str_replace($caracteres,'',$book->carrier);
+    //                        $carrier = Carrier::where('name','=',$carrierResul)->first();
+    //
+    //                        $originResul = str_replace($caracteres,'',strtolower($book->$origin));
+    //                        $originExits = Harbor::where('varation->type','like','%'.$originResul.'%')
+    //                            ->get();
+    //                        if(count($originExits) == 1){
+    //                            $origB=true;
+    //                            foreach($originExits as $originRc){
+    //                                $originV = $originRc['id'];
+    //                            }
+    //                        }else{
+    //                            $originV = $book->$origin.'_E_E';
+    //                        }
+    //
+    //                        $destinResul = str_replace($caracteres,'',strtolower($book->$destination));
+    //                        $destinationExits = Harbor::where('varation->type','like','%'.$destinResul.'%')
+    //                            ->get();
+    //                        if(count($destinationExits) == 1){
+    //                            $destiB=true;
+    //                            foreach($destinationExits as $destinationRc){
+    //                                $destinationV = $destinationRc['id'];
+    //                                // dd($destinationV);
+    //                            }
+    //                        }else{
+    //                            $destinationV = $book->$destination.'_E_E';
+    //                        }
+    //                        if(empty($carrier->id) != true){
+    //                            $carriB=true;
+    //                            $carrierV = $carrier->id;
+    //                        }else{
+    //                            $carrierV = $book->carrier.'_E_E';
+    //                        }
+    //                        //////
+    //                        if(empty($book->$twuenty) != true || (int)$book->$twuenty == 0){
+    //                            $twuentyB=true;
+    //                            $twuentyV = (int)$book->$twuenty;
+    //                        }
+    //                        else{
+    //                            $twuentyV = $book->$twuenty.'_E_E';
+    //                        }
+    //                        /////
+    //                        if(empty($book->$forty) != true || (int)$book->$forty == 0){
+    //                            $fortyB=true;
+    //                            $fortyV = (int)$book->$forty;
+    //                        }
+    //                        else{
+    //                            $fortyV = $book->$forty.'_E_E';
+    //                        }
+    //                        /////
+    //                        if(empty($book->$fortyhc) != true || (int)$book->$fortyhc == 0){
+    //                            $fortyhcB=true;
+    //                            $fortyhcV = (int)$book->$fortyhc;
+    //                        }
+    //                        else{
+    //                            $fortyhcV = $book->$fortyhc.'_E_E';
+    //                        }
+    //
+    //                        if((int)$book->$twuenty == 0
+    //                           && (int)$book->$forty == 0
+    //                           && (int)$book->$fortyhc == 0){
+    //                            $values = false;
+    //                        }
+    //
+    //                        if(empty($currenc->id) != true){
+    //                            $curreB=true;
+    //                            $currencyV =  $currenc->id;
+    //                        }
+    //                        else{
+    //                            $currencyV = $book->currency.'_E_E';
+    //                        }
+    //                        if( $origB == true && $destiB == true
+    //                           && $carriB == true && $twuentyB == true
+    //                           && $fortyB == true && $fortyhcB == true
+    //                           && $curreB == true
+    //                           && $values == true) {
+    //                            Rate::create([
+    //                                'origin_port'   => $originV,
+    //                                'destiny_port'  => $destinationV,
+    //                                'carrier_id'    => $carrierV,
+    //                                'contract_id'   => $contract,
+    //                                'twuenty'       => $twuentyV,
+    //                                'forty'         => $fortyV,
+    //                                'fortyhc'       => $fortyhcV,
+    //                                'currency_id'   => $currencyV,
+    //                            ]);
+    //                        }
+    //                        else{
+    //                            if($origB == true){
+    //                                $originV = $book->$origin;
+    //                            }
+    //                            if($destiB == true){
+    //                                $destinationV = $book->$destination;
+    //                            }
+    //                            if($curreB == true){
+    //                                $currencyV = $book->currency;
+    //                            }
+    //                            if($carriB == true){
+    //                                $carrierV = $book->carrier;
+    //                            }
+    //                            if( empty($book->$origin) == true
+    //                               && empty($book->$destination) == true
+    //                               && empty($book->carrier) == true
+    //                               && empty($book->currency) == true
+    //                               && empty($book->$twuenty) == true
+    //                               && empty($book->$forty) == true
+    //                               && empty($book->$fortyhc) == true ) {
+    //                            }else{
+    //                                $duplicateFail =  FailRate::where('origin_port','=',$originV)
+    //                                    ->where('destiny_port','=',$destinationV)
+    //                                    ->where('carrier_id','=',$carrierV)
+    //                                    ->where('contract_id','=',$contract)
+    //                                    ->count();
+    //                                if($duplicateFail <= 0){
+    //                                    if((int)$book->$twuenty == 0
+    //                                       && (int)$book->$forty == 0
+    //                                       && (int)$book->$fortyhc == 0){
+    //
+    //                                    }else {
+    //                                        FailRate::create([
+    //                                            'origin_port'   => $originV,
+    //                                            'destiny_port'  => $destinationV,
+    //                                            'carrier_id'    => $carrierV,
+    //                                            'contract_id'   => $contract,
+    //                                            'twuenty'       => $twuentyV,
+    //                                            'forty'         => $fortyV,
+    //                                            'fortyhc'       => $fortyhcV,
+    //                                            'currency_id'   => $currencyV,
+    //                                        ]);
+    //                                        $errors++;
+    //                                    }
+    //                                }
+    //                            }
+    //                        }
+    //                    }
+    //                } //***
+    //                if($errors > 0){
+    //                    $requestobj->session()->flash('message.content', 'You successfully added the rate ');
+    //                    $requestobj->session()->flash('message.nivel', 'danger');
+    //                    $requestobj->session()->flash('message.title', 'Well done!');
+    //                    if($errors == 1){
+    //                        $requestobj->session()->flash('message.content', $errors.' fee is not charged correctly');
+    //                    }else{
+    //                        $requestobj->session()->flash('message.content', $errors.' Rates did not load correctly');
+    //                    }
+    //                }
+    //                else{
+    //                    $requestobj->session()->flash('message.nivel', 'success');
+    //                    $requestobj->session()->flash('message.title', 'Well done!');
+    //                }
+    //            });
+    //            Storage::delete($nombre);
+    //            Rate::onlyTrashed()->where('contract_id','=',$contract)
+    //                ->forceDelete();
+    //            FailRate::onlyTrashed()->where('contract_id','=',$contract)
+    //                ->forceDelete();
+    //            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$contract,1]);
+    //            //dd($res);*/
+    //        } catch (\Illuminate\Database\QueryException $e) {
+    //            Storage::delete($nombre);
+    //            Rate::onlyTrashed()->where('contract_id','=',$contract)
+    //                ->restore();
+    //            FailRate::onlyTrashed()->where('contract_id','=',$contract)
+    //                ->restore();
+    //            $requestobj->session()->flash('message.nivel', 'danger');
+    //            $requestobj->session()->flash('message.content', 'There was an error loading the file');
+    //            return redirect()->route('contracts.edit',$requestobj->contract_id);
+    //        }
+    //    }
 
     //Edita solo el origen y destino para rates fallidos, solo se coloca una vez
     public function EdicionRatesMultiples(Request $request){
@@ -3139,8 +3181,6 @@ class ImportationController extends Controller
         // dd($request->all());
         $requestobj = $request;
         $fileName   = $requestobj['fileName'];
-
-
         $contract_id = $requestobj['contractId'];
 
         $path = \Storage::disk('FclImport')->url($fileName);
