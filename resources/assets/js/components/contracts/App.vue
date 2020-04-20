@@ -29,8 +29,8 @@
                             </b-form>
                         </div>
                     </div>
-                    <!-- <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
-                    <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button> -->
+                     <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
+                    <!--<b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>-->
 
                     <!-- <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                         <button class="btn-action">Edit</button>
