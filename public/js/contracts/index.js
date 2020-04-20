@@ -90020,25 +90020,7 @@ var render = function() {
                   items: _vm.data,
                   "current-page": _vm.currentPage
                 }
-              }),
-              _vm._v(" "),
-              _c(
-                "b-button",
-                {
-                  staticClass: "action-app",
-                  attrs: {
-                    id: "popover-button-variant",
-                    href: "#",
-                    tabindex: "0"
-                  }
-                },
-                [
-                  _c("i", {
-                    staticClass: "fa fa-ellipsis-h",
-                    attrs: { "aria-hidden": "true" }
-                  })
-                ]
-              )
+              })
             ],
             1
           ),
