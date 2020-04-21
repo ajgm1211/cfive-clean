@@ -21,9 +21,10 @@ class InlandDistanceController extends Controller
 
 
     $company_user_id = Auth::user()->company_user_id;
-    $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
+  /*  $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
       $a->where('company_user_id', '=',$company_user_id);
-    })->get();
+    })->get();*/
+       $data = InlandDistance::get();
     return view('inlandDistances/index', compact('data'));
 
   }
