@@ -12,7 +12,7 @@
     </div>
     <div class="form-group m-form__group">
       {!! Form::label('location', 'Location') !!}<br> 
-      {{ Form::select('inland_location_id',$inlandL,$inlandD->inland_location_id,['class'=>'m-select-2 form-control','id' => 'inland_location_id','placeholder'=>'Select an option','required'=>'true']) }}
+      {{ Form::select('inland_location_id',$inlandL,$inlandD->inland_location_id,['class'=>'m-select-2 form-control','id' => 'inland_location_id','placeholder'=>'Select an option']) }}
 
     </div>           
     </div>
