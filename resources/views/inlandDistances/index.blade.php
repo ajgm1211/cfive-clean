@@ -76,15 +76,23 @@
           <table class="m-datatable" id="html_table" width="100%">
             <thead>
               <tr>
-
                 <th title="Field #1">
+                  ID
+                </th>
+                <th title="Field #1">
+                  Zip Code
+                </th>
+                <th title="Field #2">
+                  Address
+                </th>
+                <th title="Field #2">
+                  Province/State
+                </th>
+                <th title="Field #2">
+                  Display Name
+                </th>
+                <th title="Field #6">
                   Distance
-                </th>
-                <th title="Field #2">
-                  Harbor
-                </th>
-                <th title="Field #2">
-                  Location
                 </th>
                 <th title="Field #6">
                   Options
@@ -95,9 +103,12 @@
             <tbody>
               @foreach ($data as $arr)
               <tr>
+                <td>{{ $arr->id }}</td>
+                <td>{{ $arr->zip }}</td>
+                <td>{{ $arr->address }}</td>
+                <td>{{ $arr->province }}</td>
+                <td>{{ $arr->zip }}, {{ $arr->address }}, {{ $arr->province }} </td>
                 <td>{{ $arr->distance }}</td>
-                <td>{{ $arr->harbor->name }}</td>
-                <td>{{ $arr->inlandLocation->name }}</td>
                 <td>
                   <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"  onclick="AbrirModal('edit',{{  $arr->id }})" title="Edit ">
                     <i class="la la-edit"></i>
