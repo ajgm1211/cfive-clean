@@ -121,13 +121,15 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         } else {
             $inputFileType = 'Csv';
         }
-        $reader = IOFactory::createReader($inputFileType);
-        $spreadsheet = $reader->load($excelF);
-        $writer = IOFactory::createWriter($spreadsheet, "Csv");
-        $writer->setSheetIndex(0);
-        $excelF = str_replace($ext,'csv',$excelF);
-        $inputFileType = 'Csv';
-        $writer->save($excelF);
+        if(strnatcasecmp($ext,'csv') !=0){   
+            $reader = IOFactory::createReader($inputFileType);
+            $spreadsheet = $reader->load($excelF);
+            $writer = IOFactory::createWriter($spreadsheet, "Csv");
+            $writer->setSheetIndex(0);
+            $excelF = str_replace($ext,'csv',$excelF);
+            $inputFileType = 'Csv';
+            $writer->save($excelF);
+        }
         //dd($excelF,$extObj,$ext);
         // --------------- AL FINALIZAR  CARGAR LA EXATRACCION DESDE S3 -----------------
 
@@ -1406,6 +1408,12 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         } else {
             //imprimir en el log error
             Log::error('Container calculation type relationship error');
+        }
+
+        Storage::disk('FclImport')->Delete($mediaItem->file_name);
+        if(strnatcasecmp($ext,'csv') !=0){ 
+            $file_csv = str_replace(['.xlsx','.xls'],'.csv',$mediaItem->file_name);
+            Storage::disk('FclImport')->Delete($file_csv);
         }
 
     }

@@ -100,7 +100,7 @@
                                         </div>
                                     </div>
                                     <br />
-                                    <table class="table m-table m-table--head-separator-primary"  id="requesttable" width="100%" style="width:100%">
+                                    <table class="table tableData "  id="requesttable" width="100%" style="width:100%">
                                         <thead >
                                             <tr>
                                                 <th >ID</th>

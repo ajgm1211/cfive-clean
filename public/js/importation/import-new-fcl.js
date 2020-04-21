@@ -1,8 +1,9 @@
 
 $(document).ready(function(){
-        checkedCarrier();
-        checkedCurrency();
-    });
+    checkedCarrier();
+    checkedCurrency();
+    checkedTypeDestiny();
+});
 
 $('.m-select2-general').select2({
     placeholder: "Select an option"
@@ -18,7 +19,7 @@ $('.currencychk').on('click',function(){
 });
 
 function checkedCarrier(){
-     if($('#carrierchk').prop('checked')){
+    if($('#carrierchk').prop('checked')){
         $('#carrierinp').removeAttr('hidden');
         $('#carrier').attr('required','required');
     } else{
@@ -28,7 +29,7 @@ function checkedCarrier(){
 }
 
 function checkedCurrency(){
-     if($('.currencychk').prop('checked')){
+    if($('.currencychk').prop('checked')){
         $('#currencyinp').removeAttr('hidden');
         $('#currency').attr('required','required');
     } else{
@@ -36,6 +37,16 @@ function checkedCurrency(){
         $('#currency').removeAttr('required');
     }
 }
+function checkedTypeDestiny(){
+    if($('#typedestinychk').prop('checked')){
+        $('#typedestinyinp').removeAttr('hidden');
+        $('#typedestiny').attr('required','required');
+    } else{
+        $('#typedestinyinp').attr('hidden','hidden');
+        $('#typedestiny').removeAttr('required');
+    }
+}
+
 
 $('#typedestinychk').on('click',function(){
     if($('#typedestinychk').prop('checked')){
