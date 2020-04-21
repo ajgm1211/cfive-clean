@@ -264,6 +264,20 @@
 </script>
 <script>
 	$(function() {
+        columnas = [{ data: null, render:function(){return "";}},
+				{ data: 'origin_portLb', name: 'origin_portLb' },
+				{ data: 'destiny_portLb', name: 'destiny_portLb' },
+				{ data: 'carrierLb', name: 'carrierLb' },
+				{ data: 'twuenty', name: 'twuenty' },
+				{ data: 'forty', name: "forty" },
+				{ data: 'fortyhc', name: "fortyhc" },
+				{ data: 'fortynor', name: "fortynor" },
+				{ data: 'fortyfive', name: "fortyfive" },
+				{ data: 'currency_id', name: 'currency_id' },
+				{ data: 'schedule_type', name: 'schedule_type' },
+				{ data: 'transit_time', name: 'transit_time' },
+				{ data: 'via', name: 'via' },
+				{ data: 'action', name: 'action', orderable: false, searchable: false }];
 		table =  $('#myatest').DataTable({
 			processing: true,
 			//serverSide: true,
@@ -298,22 +312,7 @@
 				}
 			],
 			ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,1]) !!}',
-			columns: [
-				{ data: null, render:function(){return "";}},
-				{ data: 'origin_portLb', name: 'origin_portLb' },
-				{ data: 'destiny_portLb', name: 'destiny_portLb' },
-				{ data: 'carrierLb', name: 'carrierLb' },
-				{ data: 'twuenty', name: 'twuenty' },
-				{ data: 'forty', name: "forty" },
-				{ data: 'fortyhc', name: "fortyhc" },
-				{ data: 'fortynor', name: "fortynor" },
-				{ data: 'fortyfive', name: "fortyfive" },
-				{ data: 'currency_id', name: 'currency_id' },
-				{ data: 'schedule_type', name: 'schedule_type' },
-				{ data: 'transit_time', name: 'transit_time' },
-				{ data: 'via', name: 'via' },
-				{ data: 'action', name: 'action', orderable: false, searchable: false },
-			],
+			columns: columnas,
 			//"scrollX": true,
 			"lengthChange": false,
 			"searching": true,

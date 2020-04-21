@@ -427,6 +427,7 @@ Load
 @endsection
 @section('js')
 @parent
+
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script type="application/x-javascript" src="/js/toarts-config.js"></script>
 <script src="{{asset('js/importation/import-new-fcl.js')}}"></script>
