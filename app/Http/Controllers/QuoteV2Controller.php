@@ -5553,7 +5553,7 @@ class QuoteV2Controller extends Controller
                       $mont = number_format($mont, 2, '.', '');
                     }
                   }
-                  
+
                   $totalAmmount = number_format($totalAmmount, 2, '.', '');
 
                   $markupTONM3 = $this->localMarkups($localPercentage,$localAmmount,$localMarkup,$totalAmmount,$typeCurrency,$markupLocalCurre);
@@ -6632,7 +6632,7 @@ class QuoteV2Controller extends Controller
                   $totalDestiny += $totalAmmount;
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
-                  
+
 
                   $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDestKg = array_merge($arregloDestKg,$markupKG);
@@ -6755,7 +6755,7 @@ class QuoteV2Controller extends Controller
                   $subtotal_global =  number_format($subtotal_global, 2, '.', '');
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
 
-                  
+
                   $arregloDestKg = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
                   $arregloDestPack = array_merge($arregloDestPack,$markupKG);
                   $collectionDest->push($arregloDestPack);
@@ -6878,7 +6878,7 @@ class QuoteV2Controller extends Controller
                   $totalAmmount =  number_format($totalAmmount, 2, '.', '');
 
                   $arregloDestPallet = array('surcharge_terms' => $terminos,'surcharge_name' => $global->surcharge->name,'cantidad' => $unidades , 'monto' => $totalAmmount, 'currency' => $global->currency->alphacode,'totalAmmount' =>  $totalAmmount.' '.$typeCurrency   , 'calculation_name' => $global->calculationtypelcl->name,'carrier_id' => $carrierGlobal->carrier_id,'type'=>'destination'  , 'subtotal_global' => $subtotal_global , 'cantidad' => $unidades , 'typecurrency' => $typeCurrency  ,'idCurrency' => $global->currency->id,'currency_orig_id' => $idCurrency ,'montoOrig' =>$totalAmmount);
-          
+
                   $arregloDestPallet = array_merge($arregloDestPallet,$markupKG);
                   $collectionDest->push($arregloDestPallet);
                   // ARREGLO GENERAL 99 
