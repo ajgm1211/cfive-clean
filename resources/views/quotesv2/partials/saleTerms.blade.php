@@ -65,6 +65,9 @@ $x=0;
                                                 $pre = 'c';
                                             @endphp
                                             @foreach($item->charge as $v)
+                                            @php
+                                                $amounts = json_decode($v->rate, true);
+                                            @endphp
                                             <tr class="tr-freight" style="height:40px;">
                                                 <td class="tds" style="padding-left: 30px">
                                                     <a href="#" class="editable-saleterms td-a" data-type="text" data-name="charge" data-value="{{$v->charge}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="Charge" data-emptyText="-"></a>
@@ -77,8 +80,9 @@ $x=0;
                                                         @if($c->code == $key)
                                                             @php
                                                                 ${$pre.$c->code} = 'c'.$c->code;
+                                                                
                                                             @endphp
-                                                            <td class="tds" {{ $hide }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c{{$key}}" data-value="{{ $v->${$pre.$c->code} }}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="{{$key}}"></a></td>
+                                                            <td class="tds" {{ $hide }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="rate->c{{$key}}" data-value="{{@$amounts['c'.$key]}}" data-pk="{{$v->id}}" data-title="{{$key}}"></a></td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
