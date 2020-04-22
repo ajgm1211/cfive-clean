@@ -845,8 +845,9 @@ Route::resource('inlandL', 'InlandLocationController')->middleware('auth');
 
 // Inlands Distances
 Route::group(['prefix' => 'inlandD', 'middleware' => ['auth']], function () {
-	Route::get('add', 'InlandDistanceController@add')->name('inlandD.add');
+	Route::get('add/{id}', 'InlandDistanceController@add')->name('inlandD.add');
 	Route::get('delete/{inlandd_id}', ['uses' => 'InlandDistanceController@destroy', 'as' => 'delete-inlandd']);
+  Route::get('find/{id}', ['uses' => 'InlandDistanceController@index', 'as' => 'inlandD.find']);
 });
 Route::resource('inlandD', 'InlandDistanceController')->middleware('auth');
 

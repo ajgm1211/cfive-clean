@@ -16,22 +16,24 @@ class InlandDistanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-  public function index()
+  public function index($harbor_id)
   {
 
+    $harbor_id = obtenerRouteKey($harbor_id);
+    $harbor = Harbor::where('id',$harbor_id)->first();
 
     $company_user_id = Auth::user()->company_user_id;
-  /*  $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
+    /*  $data = InlandDistance::whereHas('InlandLocation', function($a) use($company_user_id){
       $a->where('company_user_id', '=',$company_user_id);
     })->get();*/
-       $data = InlandDistance::get();
-    return view('inlandDistances/index', compact('data'));
+    $data = InlandDistance::where('harbor_id',$harbor_id)->get();
+    return view('inlandDistances/index', compact('data','harbor'));
 
   }
 
-  public function add()
+  public function add($id)
   {
-    $harbor = Harbor::pluck('name','id');
+    $harbor = $id;
     $inlandL = InlandLocation::pluck('region','id');
     return view('inlandDistances/add',compact('harbor','inlandL'));
   }
@@ -57,7 +59,12 @@ class InlandDistanceController extends Controller
   {
     $inlandD = new InlandDistance($request->all());
     $inlandD->save();
-    return redirect()->action('InlandDistanceController@index');
+    $harbor_id = setearRouteKey($request->harbor_id);
+
+    return redirect()->route('inlandD.find', ['id' => $harbor_id]);
+
+    
+    
   }
 
   /**
@@ -82,6 +89,7 @@ class InlandDistanceController extends Controller
     $inlandD = InlandDistance::find($id);
     $harbor = Harbor::pluck('name','id');
     $inlandL = InlandLocation::pluck('region','id');
+    
     return view('inlandDistances/edit', compact('inlandL','harbor','inlandD'));
   }
 
@@ -97,11 +105,11 @@ class InlandDistanceController extends Controller
     $requestForm = $request->all();
     $inlandD = InlandDistance::find($id);
     $inlandD->update($requestForm);
-
+    $harbor_id = setearRouteKey($request->harbor_id);
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
     $request->session()->flash('message.content', 'You upgrade has been success ');
-    return redirect()->action('InlandDistanceController@index');
+        return redirect()->route('inlandD.find', ['id' => $harbor_id]);
   }
 
   /**
