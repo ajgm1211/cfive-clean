@@ -3817,6 +3817,8 @@ $(".quote_search").on("click", function() {
         $('#FormQuote').attr('action', '/v2/quotes/processSearchLCL');
     }
     $(".quote_search").attr("type","submit");
+    $("#quote_search").addClass('hide');
+    $("#quote_searching").removeClass('hide');
 
 });
 
