@@ -384,8 +384,22 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_20').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            total = parseFloat(newValue) + amount;
+
             $(this).closest('tr').find('.total_20').html(total);
 
             if (!response) {
@@ -402,8 +416,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_20').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+
             $(this).closest('tr').find('.total_20').html(total);
 
             if (!response) {
@@ -420,8 +449,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+
             $(this).closest('tr').find('.total_40').html(total);
 
             if (!response) {
@@ -438,8 +482,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+            
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+            
             $(this).closest('tr').find('.total_40').html(total);
 
             if (!response) {
@@ -457,7 +516,23 @@ $(document).ready(function () {
         emptytext: 0,
         success: function (response, newValue) {
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.markup_40hc').attr('data-value'));
+
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+            
             $(this).closest('tr').find('.total_40hc').html(total);
 
             if (!response) {
@@ -474,8 +549,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40hc').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+            
             $(this).closest('tr').find('.total_40hc').html(total);
 
             if (!response) {
@@ -492,8 +582,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_40nor').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+            
             $(this).closest('tr').find('.total_40nor').html(total);
 
             if (!response) {
@@ -510,8 +615,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_40nor').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+            
             $(this).closest('tr').find('.total_40nor').html(total);
 
             if (!response) {
@@ -528,8 +648,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.markup_45').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+
             $(this).closest('tr').find('.total_45').html(total);
 
             if (!response) {
@@ -546,8 +681,23 @@ $(document).ready(function () {
         url: '/v2/quotes/inland/update',
         emptytext: 0,
         success: function (response, newValue) {
+            var total = 0;
+            var amount = parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
 
-            total = parseFloat(newValue) + parseFloat($(this).closest('tr').find('.amount_45').attr('data-value'));
+            if (amount == '') {
+                amount = 0;
+            }
+
+            if (newValue == '') {
+                newValue = 0;
+            }
+
+            //Seteando nuevo valor
+            $(this).editable('setValue', newValue);
+
+            //Calculando total de la línea dinámico
+            total = parseFloat(newValue) + amount;
+
             $(this).closest('tr').find('.total_45').html(total);
 
             if (!response) {
