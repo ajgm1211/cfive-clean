@@ -59,9 +59,23 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="form-group m-form__group row align-items-center">
+                  <div class="col-md-4">
+                    <div class="m-input-icon m-input-icon--left">
+                        <h5 >
+															Harbor 
+														</h5>
+                      <h5 class="m--font-primary">
+															 {{ $harbor->name }}
+														</h5>
+                    </div>
+                  </div>
+                </div>
+
               </div>
               <div class="col-xl-4 order-1 order-xl-2 m--align-right">
-                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',0)">
+                <button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" onclick="AbrirModal('add',{{  $harbor->id }})">
                   <span>
                     <i class="la la-plus"></i>
                     <span>
@@ -176,7 +190,8 @@
       });
     }
     if(action == "add"){
-      var url = 'inlandD/add';
+      var url = '{{ route("inlandD.add", ":id") }}';
+      url = url.replace(':id', id);
       $('.modal-body').load(url,function(){
         $('#m_modal_6').modal({show:true});
       });
