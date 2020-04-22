@@ -794,7 +794,8 @@
 						<div class="row">
 							<div class="col-lg-12">   
 								<center>
-									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search" id="quote_search">Search</button>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide" id="quote_searching">Searching &nbsp;<i class="fa fa-spinner fa-spin"></i></button>
 									<button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
 								</center>
 						</div>
