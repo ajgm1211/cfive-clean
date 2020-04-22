@@ -3810,7 +3810,7 @@ class QuoteV2Controller extends Controller
 
             // Inlands
             $fclInland = $freight->inland_markup->where('price_type_id', '=', 1);
-            if ($request->modality == "1") {
+            if ($request->mode == "1") {
                 $markupInlandCurre =  $this->skipPluck($fclInland->pluck('currency_export'));
                 // valor de la conversion segun la moneda
                 $inlandMarkup = $this->ratesCurrency($markupInlandCurre, $typeCurrency);
@@ -3843,7 +3843,7 @@ class QuoteV2Controller extends Controller
         // Fin Markups
 
         // Calculo de los inlands
-        $modality_inland = '1'; // FALTA AGREGAR EXPORT
+        $modality_inland = $request->mode;
         $company_inland = $request->input('company_id_quote');
         $texto20 = 'Inland 20 x' . $request->input('twuenty');
         $texto40 = 'Inland 40 x' . $request->input('forty');
