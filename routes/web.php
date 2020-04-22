@@ -234,7 +234,7 @@ Route::prefix('Importation')->group(function () {
     //		->middleware(['auth','role:administrator|data_entry']); ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
     Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information')
         ->middleware(['auth','role:administrator|data_entry']);
-    Route::get('fcl/rate/{id}/{bo}','ImportationController@FailedRatesDeveloper')->name('Failed.Rates.Developer.For.Contracts')
+    Route::get('fcl/rate/{id}/{bo}','ImportationController@LoadFails')->name('Failed.Rates.Developer.For.Contracts')
         ->middleware(['auth','role:administrator|data_entry']);
     //	Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl')
     //		->middleware(['auth','role:administrator|data_entry']); ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
