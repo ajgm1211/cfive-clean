@@ -248,14 +248,13 @@
                     { data: 'currency_id', name: 'currency_id' },                                                
                     { data: 'action', name: 'action', orderable: false, searchable: false }];
         */
-        
+
         var columnas = [{ data: null, render:function(){return "";}}];
-        console.log(columnas.toString());
-        @foreach($equiment["columns"] as $column)
-        valor = {!!$column!!};
-        console.log(columnas);
-        columnas.push({!!$column!!})
-        @endforeach
+        values={!!$equiment["columns"]!!};
+        //console.log(values);
+        for(i=0; i < values.length;i++){
+            columnas.push(values[i]);    
+        }
         //console.log(columnas);
 
         table =  $('#myatest').DataTable({
