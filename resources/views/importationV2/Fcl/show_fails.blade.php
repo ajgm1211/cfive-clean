@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
 @endsection
-@section('title', 'Failed Rates FCL '.$contract['id'].' - '.$contract['number'].' / '.$contract['name'])
+@section('title', 'Failed FCL '.$contract['id'].' - '.$contract['name'])
 @section('content')
 
 <div class="m-content">
@@ -15,7 +15,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Rates
+                        Failed Rate - Surcharge
                     </h3><br>
 
                 </div>
@@ -53,7 +53,6 @@
             <div class="m-portlet__head">
                 <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
-                        @if($tab)
                         <li class="nav-item m-tabs__item">
                             <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailRates" role="tab">
                                 <i class="la la-cog"></i>
@@ -66,178 +65,134 @@
                                 Good Rates
                             </a>
                         </li>
-                        <!--
-<li class="nav-item m-tabs__item">
-<a class="nav-link m-tabs__link addS " data-toggle="tab" href="#editMultRates" role="tab">
-<i class="la la-briefcase"></i>
-Edit Fail Rates
-</a>
-</li>
--->
-                        @else
-                        <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link " data-toggle="tab" href="#FailRates" role="tab">
-                                <i class="la la-cog"></i>
-                                Fail Rates 
-                            </a>
-                        </li>
-                        <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS active" data-toggle="tab" href="#GoodRates" role="tab">
-                                <i class="la la-briefcase"></i>
-                                Good Rates
-                            </a>
-                        </li>
-                        @endif
                     </ul>
                 </div>
             </div>
 
             <div class="tab-content">
-                @if($tab)
                 <div class="tab-pane active" id="FailRates" role="tabpanel">
-                    @else
-                    <div class="tab-pane " id="FailRates" role="tabpanel">
-                        @endif
-                        <br>
-                        <div class="m-portlet__head">
-                            <div class="form-group row ">
-                                <div class="col-lg-12">
-                                    <label >
-                                        <i class="fa fa-dot-circle-o" style="color:red;"> </i>
-                                        <strong >
-                                            Rates Failed: 
-                                        </strong>
-                                        <strong id="strfail">{{$countfailrates}}</strong>
-                                        <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
-                                    </label>
-                                    &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="{{route('Reprocesar.Rates',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
-                                    &nbsp; &nbsp;
-                                    <a href="#" onclick="showModalsavetorate({{$id}},'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>
-                                    &nbsp; &nbsp;
-                                    <a href="#" onclick="showModalsavetorate({{$id}},'editRatesByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a>
-                                </div>
-                            </div>
-                            <br>
-
-                        </div>
-                        <a href="#" class="toggle-vis" data-column="1" >Origin</a>
-                        <a href="#" class="toggle-vis" data-column="2">Destiny</a>
-                        <div class="m-portlet__body">
-                            <!--begin: tab body -->
-
-                            <table class="table tableData" class="display" id="myatest" width="100%">
-                                <thead width="100%">
-                                    <tr>
-                                        <th></th>
-                                        <th>Origin</th>
-                                        <th>Destiny</th>
-                                        <th>Carrier</th>
-                                        <th>20</th>
-                                        <th>40</th>
-                                        <th>40'HC</th>
-                                        <th>40'NOR</th>
-                                        <th>45'</th>
-                                        <th>Currency</th>
-                                        <th>Schedule Type</th>
-                                        <th>Transit time</th>
-                                        <th>Via</th>
-                                        <th>Option</th>
-                                    </tr>
-                                </thead>
-
-                            </table>
-
-                            <!--end: tab body -->
-
-                        </div>
-                        <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                            <div class="row align-items-center"></div>
-                        </div>
-
-                    </div>
-
-                    <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
-                    @if($tab)
-                    <div class="tab-pane " id="GoodRates" role="tabpanel">
-                        @else
-                        <div class="tab-pane active" id="GoodRates" role="tabpanel">
-                            @endif
-                            <br>
-                            <div class="m-portlet__head">
-                                <label>
-                                    <i class="fa fa-dot-circle-o" style="color:green;"> </i>
-                                    <strong id="">
-                                        Good Rates: 
+                    <br>
+                    <div class="m-portlet__head">
+                        <div class="form-group row ">
+                            <div class="col-lg-12">
+                                <label >
+                                    <i class="fa fa-dot-circle-o" style="color:red;"> </i>
+                                    <strong >
+                                        Rates Failed: 
                                     </strong>
-                                    <strong id="strgood">
-                                        {{$countrates}}
-                                    </strong>
-                                    <input type="hidden" value="{{$countrates}}" id="strgoodinput" />
+                                    <strong id="strfail">{{$countfailrates}}</strong>
+                                    <input type="hidden" value="{{$countfailrates}}" id="strfailinput" />
                                 </label>
-                            </div>
-
-                            <div class="m-portlet__body">
-                                <!--begin: tab body -->
-
-                                <table class="table tableData"  id="myatest2" width="100%">
-                                    <thead width="100%">
-                                        <tr>
-                                            <th>Origin</th>
-                                            <th>Destiny</th>
-                                            <th>Carrier</th>
-                                            <th>20</th>
-                                            <th>40</th>
-                                            <th>40'HC</th>
-                                            <th>40'NOR</th>
-                                            <th>45'</th>
-                                            <th>Currency</th>
-                                            <th>Schedule Type</th>
-                                            <th>Transit time</th>
-                                            <th>Via</th>
-                                            <th>Option</th>
-                                        </tr>
-                                    </thead>
-
-                                </table>
-
-                                <!--end: tab body -->
-                            </div>
-                            <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
-                                <div class="row align-items-center"></div>
+                                &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{{route('Reprocesar.Rates',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>
+                                &nbsp; &nbsp;
+                                <a href="#" onclick="showModalsavetorate({{$id}},'editMultRates')" class="btn btn-primary">Edit Multiple &nbsp;<span class="la la-edit"></span></a>
+                                &nbsp; &nbsp;
+                                <a href="#" onclick="showModalsavetorate({{$id}},'editRatesByDetalls')"  class="btn btn-primary">Edit Multiple By Detalls &nbsp;<span class="la la-edit"></span></a>
                             </div>
                         </div>
+                        <br>
+
                     </div>
-                    <div class="tab-pane ShEditMultRates" id="editMultRates" hidden role="tabpanel"></div>
+                    <a href="#" class="toggle-vis" data-column="1" >Origin</a>
+                    <a href="#" class="toggle-vis" data-column="2">Destiny</a>
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+
+                        <table class="table tableData" class="display" id="myatest" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    @foreach($equiment['thead'] as $thead)
+                                    <th>{{$thead}}</th>
+                                    @endforeach
+                                </tr>
+                            </thead>
+
+                        </table>
+
+                        <!--end: tab body -->
+
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
 
                 </div>
-            </div>
-            <input type="hidden" value="{{$id}}" id="idcontract" />
-        </div>
-
-        <!--  begin modal editar rate -->
-
-        <div class="modal fade bd-example-modal-lg" id="modaleditRate"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-lg" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">
-                            Edit Rates
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">
-                                &times;
-                            </span>
-                        </button>
-                    </div>
-                    <div id="edit-modal-body" class="modal-body">
-
+                <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
+                <div class="tab-pane " id="GoodRates" role="tabpanel">
+                    <br>
+                    <div class="m-portlet__head">
+                        <label>
+                            <i class="fa fa-dot-circle-o" style="color:green;"> </i>
+                            <strong id="">
+                                Good Rates: 
+                            </strong>
+                            <strong id="strgood">
+                                {{$countrates}}
+                            </strong>
+                            <input type="hidden" value="{{$countrates}}" id="strgoodinput" />
+                        </label>
                     </div>
 
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+
+                        <table class="table tableData"  id="myatest2" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    <th>Origin</th>
+                                    <th>Destiny</th>
+                                    <th>Carrier</th>
+                                    <th>20</th>
+                                    <th>40</th>
+                                    <th>40'HC</th>
+                                    <th>40'NOR</th>
+                                    <th>45'</th>
+                                    <th>Currency</th>
+                                    <th>Schedule Type</th>
+                                    <th>Transit time</th>
+                                    <th>Via</th>
+                                    <th>Option</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+
+                        <!--end: tab body -->
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
                 </div>
+            </div>
+            <div class="tab-pane ShEditMultRates" id="editMultRates" hidden role="tabpanel"></div>
+
+        </div>
+    </div>
+    <input type="hidden" value="{{$id}}" id="idcontract" />
+</div>
+
+<!--  begin modal editar rate -->
+
+<div class="modal fade bd-example-modal-lg" id="modaleditRate"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                    Edit Rates
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                        &times;
+                    </span>
+                </button>
+            </div>
+            <div id="edit-modal-body" class="modal-body">
 
             </div>
+
         </div>
+
     </div>
 </div>
 
@@ -262,9 +217,9 @@ Edit Fail Rates
     });
     $(document).ready(function() {
         table = '';
-//        var table = $('#myatest').DataTable( {
-//            "paging": false
-//        } );
+        //        var table = $('#myatest').DataTable( {
+        //            "paging": false
+        //        } );
 
         $('a.toggle-vis').on( 'click', function (e) {
             e.preventDefault();
@@ -281,7 +236,7 @@ Edit Fail Rates
 </script>
 <script>
     $(function() {
-        columnas = [{ data: null, render:function(){return "";}},
+        /* columnas = [{ data: null, render:function(){return "";}},
                     { data: 'origin_portLb', name: 'origin_portLb' },
                     { data: 'destiny_portLb', name: 'destiny_portLb' },
                     { data: 'carrierLb', name: 'carrierLb' },
@@ -290,11 +245,19 @@ Edit Fail Rates
                     { data: 'fortyhc', name: "fortyhc" },
                     { data: 'fortynor', name: "fortynor" },
                     { data: 'fortyfive', name: "fortyfive" },
-                    { data: 'currency_id', name: 'currency_id' },
-                    { data: 'schedule_type', name: 'schedule_type' },
-                    { data: 'transit_time', name: 'transit_time' },
-                    { data: 'via', name: 'via' },
+                    { data: 'currency_id', name: 'currency_id' },                                                
                     { data: 'action', name: 'action', orderable: false, searchable: false }];
+        */
+        
+        var columnas = [{ data: null, render:function(){return "";}}];
+        console.log(columnas.toString());
+        @foreach($equiment["columns"] as $column)
+        valor = {!!$column!!};
+        console.log(columnas);
+        columnas.push({!!$column!!})
+        @endforeach
+        //console.log(columnas);
+
         table =  $('#myatest').DataTable({
             processing: true,
             //serverSide: true,
@@ -343,40 +306,40 @@ Edit Fail Rates
             "paging": true
         });
 
-        $('#myatest2').DataTable({
-            processing: true,
-            //serverSide: true,
-
-            buttons: [],
-            ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,2]) !!}',
-            columns: [
-                // { data: null, render:function(){return "";}},
-                { data: 'origin_portLb', name: 'origin_portLb' },
-                { data: 'destiny_portLb', name: 'destiny_portLb' },
-                { data: 'carrierLb', name: 'carrierLb' },
-                { data: 'twuenty', name: 'twuenty' },
-                { data: 'forty', name: "forty" },
-                { data: 'fortyhc', name: "fortyhc" },
-                { data: 'fortynor', name: "fortynor" },
-                { data: 'fortyfive', name: "fortyfive" },
-                { data: 'currency_id', name: 'currency_id' },
-                { data: 'schedule_type_id', name: 'schedule_type_id' },
-                { data: 'transit_time', name: 'transit_time' },
-                { data: 'via', name: 'via' },
-                { data: 'action', name: 'action', orderable: false, searchable: false },
-            ],
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "deferLoading": 57,
-            "autoWidth": true,
-            "stateSave": true,
-            "processing": true,
-            "dom": 'Bfrtip',
-            "paging": true,
-            //"scrollX": true
-        });
+        //        $('#myatest2').DataTable({
+        //            processing: true,
+        //            //serverSide: true,
+        //
+        //            buttons: [],
+        //            ajax: '{!! route("Failed.Rates.Developer.view.For.Contracts",[$id,2]) !!}',
+        //            columns: [
+        //                // { data: null, render:function(){return "";}},
+        //                { data: 'origin_portLb', name: 'origin_portLb' },
+        //                { data: 'destiny_portLb', name: 'destiny_portLb' },
+        //                { data: 'carrierLb', name: 'carrierLb' },
+        //                { data: 'twuenty', name: 'twuenty' },
+        //                { data: 'forty', name: "forty" },
+        //                { data: 'fortyhc', name: "fortyhc" },
+        //                { data: 'fortynor', name: "fortynor" },
+        //                { data: 'fortyfive', name: "fortyfive" },
+        //                { data: 'currency_id', name: 'currency_id' },
+        //                { data: 'schedule_type_id', name: 'schedule_type_id' },
+        //                { data: 'transit_time', name: 'transit_time' },
+        //                { data: 'via', name: 'via' },
+        //                { data: 'action', name: 'action', orderable: false, searchable: false },
+        //            ],
+        //            "lengthChange": false,
+        //            "searching": true,
+        //            "ordering": true,
+        //            "info": true,
+        //            "deferLoading": 57,
+        //            "autoWidth": true,
+        //            "stateSave": true,
+        //            "processing": true,
+        //            "dom": 'Bfrtip',
+        //            "paging": true,
+        //            //"scrollX": true
+        //        });
     });
 
     function showModalsavetorate(id,operation){
