@@ -757,7 +757,8 @@ class QuoteV2Controller extends Controller
     {
         $charge = Charge::find($request->pk);
         $name = explode("->", $request->name);
-        $value = str_replace(",", ".", $request->value);
+        //$value = str_replace(",", ".", $request->value);
+        $value = $this->tofloat($request->value);
 
         if (strpos($request->name, '->') == true) {
             if ($name[0] == 'amount') {
@@ -781,7 +782,7 @@ class QuoteV2Controller extends Controller
     }
 
     /**
-     * Update LCL Quotes info
+     * Update Quotes info
      * @param Request $request 
      * @return array json
      */
@@ -790,7 +791,12 @@ class QuoteV2Controller extends Controller
         if ($request->value) {
             $quote = QuoteV2::find($request->pk);
             $name = $request->name;
-            $quote->$name = $request->value;
+            if($name=='total_weight' || $name=='total_volume' || $name=='chargeable_weight'){
+                $value = $this->tofloat($request->value);
+                $quote->$name = $value;
+            }else{
+                $quote->$name = $request->value;
+            }
             $quote->update();
             $this->updatePdfApi($quote->id);
         }
@@ -4248,9 +4254,14 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('CMA_API_URL', 'http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('CMA_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
-                    $response = $client->request('GET', $url);
+                    
+                    try {
+                        $response = $client->request('GET', $url);
+                    } catch (\Exception $e) {
+                        //
+                    }
 
                     //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
                     //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -4269,7 +4280,7 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('MAERSK_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('MAERSK_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
                     try {
@@ -4290,7 +4301,7 @@ class QuoteV2Controller extends Controller
             foreach ($origin_port as $orig) {
                 foreach ($destiny_port as $dest) {
 
-                    $url = env('SAFMARINE_API_URL', 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                    $url = env('SAFMARINE_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
 
                     try {

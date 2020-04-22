@@ -167,7 +167,6 @@ class EmailsTemplateController extends Controller
      */
     public function preview(Request $request)
     {
-        //$template = EmailTemplate::find(2);
         $template = EmailTemplate::find($request->id);
         $data             = $request->data;
         //$data             = '{"quote_bool":"false","company_id":2,"contact_id":2,"quote_id":""}';
@@ -196,11 +195,19 @@ class EmailsTemplateController extends Controller
             $contact = Contact::find($contact_id);          
         }
 
+        if($quote->custom_quote_id != ''){
+            $quote_id = $quote->custom_quote_id;
+        }else{
+            $quote_id = $quote->quote_id;
+        }
+
         $body = str_replace('{First Name}',@$contact->first_name,$template->menssage);
         $body = str_replace('{Last Name}',@$contact->last_name,$body);
         $body = str_replace('{Company Name}',@$company->business_name,$body);
+        $body = str_replace('{Quote ID}',@$quote_id,$body);
+        $subject = str_replace('{Quote ID}',@$quote_id,$template->subject);
 
-        return response()->json(['id'=>$template->id,'subject'=>$template->subject,'message'=>$body]);
+        return response()->json(['id'=>$template->id,'subject'=>$subject,'message'=>$body]);
     }    
 
     /**
