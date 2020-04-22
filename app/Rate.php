@@ -54,7 +54,7 @@ class Rate extends Model
     * @param  \Illuminate\Database\Eloquent\Builder $query
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeFilterByContract( $contract_id )
+    public function scopeFilterByContract( $query, $contract_id )
     {
         return $query->where( 'contract_id', '=', $contract_id );
     }
