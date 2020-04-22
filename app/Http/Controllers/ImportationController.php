@@ -858,38 +858,21 @@ class ImportationController extends Controller
         }
         array_push($equiment['thead'],'Currency');  
         array_push($equiment['thead'],'Option');  
-        $equiment['columns'] = [
+        $equiment['columns'] = json_encode([
             //json_encode(['data'=>null,'render'=>'function(){return "";}']),
-            json_encode(['data'=>'origin_portLb','name'=>'origin_portLb']),
-            json_encode(['data'=>'destiny_portLb','name'=>'destiny_portLb']),
-            json_encode(['data'=>'carrierLb','name'=>'carrierLb']),
-            json_encode(['data'=>'twuenty','name'=>'twuenty']),
-            json_encode(['data'=>'forty','name'=>'forty']),
-            json_encode(['data'=>'fortyhc','name'=>'fortyhc']),
-            json_encode(['data'=>'fortynor','name'=>'fortynor']),
-            json_encode(['data'=>'fortyfive','name'=>'fortyfive']),
-            json_encode(['data'=>'currency_id','name'=>'currency_id']),
-            json_encode(['data'=>'action','name'=>'action','orderable'=>false,'searchable'=>false])
-        ];
-        //        $equiment['columns'] = [
-//            json_encode(['data'=>null,'render'=>'unction(){return "";']),
-//            json_encode(['data'=>'origin_portLb','name'=>'origin_portLb']),
-//            json_encode(['data'=>'action','name'=>'action','orderable'=>false,'searchable'=>false])
-//        ];
-       // dd($equiment['columns']);
-            
-//        $equiment['columns'] = ["{ data: null, render:function(){return \"\";}}",
-//                    "{ data: 'origin_portLb', name: 'origin_portLb' }",
-//                    "{ data: 'destiny_portLb', name: 'destiny_portLb' }",
-//                    "{ data: 'carrierLb', name: 'carrierLb' }",
-//                    "{ data: 'twuenty', name: 'twuenty' }",
-//                    "{ data: 'forty', name: 'forty' }",
-//                    "{ data: 'fortyhc', name: 'fortyhc' }",
-//                    "{ data: 'fortynor', name: 'fortynor' }",
-//                    "{ data: 'fortyfive', name: 'fortyfive' }",
-//                    "{ data: 'currency_id', name: 'currency_id' }",                                                
-//                    "{ data: 'action', name: 'action', orderable: false, searchable: false }"];
-//        //$equiment['columns'] = json_encode($equiment['columns']);
+            ['data'=>'origin_portLb','name'=>'origin_portLb'],
+            ['data'=>'destiny_portLb','name'=>'destiny_portLb'],
+            ['data'=>'carrierLb','name'=>'carrierLb'],
+            ['data'=>'twuenty','name'=>'twuenty'],
+            ['data'=>'forty','name'=>'forty'],
+            ['data'=>'fortyhc','name'=>'fortyhc'],
+            ['data'=>'fortynor','name'=>'fortynor'],
+            ['data'=>'fortyfive','name'=>'fortyfive'],
+            ['data'=>'currency_id','name'=>'currency_id'],
+            ['data'=>'action','name'=>'action','orderable'=>false,'searchable'=>false]
+        ]);
+
+        // dd($equiment['columns']);
 
         return view('importationV2.Fcl.show_fails',compact('countfailrates','countrates','contract','id','tab','equiment'));
     }
