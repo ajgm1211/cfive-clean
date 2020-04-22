@@ -25,11 +25,30 @@
                                          id="inline-form-input-name"
                                          class="mb-2 mr-sm-2 mb-sm-0"
                                          placeholder="Search"
+                                         v-model="search"
                                          ></b-input>
                             </b-form>
                         </div>
                     </div>
-                     <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
+                     <b-table borderless hover 
+                     :fields="fields" 
+                     :items="data" 
+                     :busy="isBusy">
+
+                      <div slot="table-busy" class="text-center text-primary my-2">
+                          <b-spinner class="align-middle"></b-spinner>
+                          <strong>Loading...</strong>
+                      </div>
+
+                      <template v-slot:cell(status)="data">
+                              <span v-html="data.value"></span>
+                      </template>
+
+                      <template v-slot:cell(carriers)="data">
+                              <span v-html="data.value"></span>
+                      </template>
+
+                     </b-table>
                     <!--<b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>-->
 
                     <!-- <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
@@ -47,12 +66,29 @@
 <label  for="check"></label> -->
                     <!-- checkbox end -->
                     <!-- paginator -->
+
+                    <!-- Pagination -->
+                    <paginate
+                      :page-count="pageCount"
+                      :click-handler="clickCallback"
+                      :prev-text="'Prev'"
+                      :next-text="'Next'"
+                      :page-class="'page-item'"
+                      :page-link-class="'page-link'"
+                      :container-class="'pagination justify-content-end'"
+                      :prev-class="'page-item'"
+                      :prev-link-class="'page-link'"
+                      :next-class="'page-item'"
+                      :next-link-class="'page-link'"
+                      :initialPage="initialPage">
+                    </paginate>
+                    <!-- Pagination -->
                 </b-card>
 
                 <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
                          title="Add FCL Contract" hide-footer>
 
-                    <b-form ref="form" @submit.stop.prevent="handleSubmit" class="modal-input">
+                    <b-form ref="form" @submit.stop.prevent="onSubmit" class="modal-input">
                         <b-form-group
                                       label="Reference"
                                       label-for="reference"
@@ -60,8 +96,7 @@
                                       >
                             <b-form-input
                                           id="reference"
-                                          v-model="name"
-                                          :state="nameState"
+                                          v-model="reference"
                                           placeholder="Reference" 
                                           required
                                           >
@@ -105,7 +140,10 @@ v-model="model">
                                               label-for="carrier"
                                               invalid-feedback="Carrier is required"
                                               >
-                                    <multiselect v-model="carrier" :options="carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier"></multiselect>
+                                    <multiselect v-model="carrier" :multiple="true" :options="carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier">
+                                      
+                                       <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+                                    </multiselect>
 
 
 
@@ -153,6 +191,7 @@ v-model="model">
 
     import Multiselect from 'vue-multiselect';
     import DateRangePicker from 'vue2-daterange-picker';
+    import paginate from '../paginate';
 
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
     export default {
@@ -171,57 +210,44 @@ v-model="model">
         },
         components: { 
             DateRangePicker,
-            Multiselect
+            Multiselect,
+            paginate
         },
 
         data() {
             return {
                 isBusy:true, // Loader
                 data: null,
-                currentPage: 1,
                 nameState: true,
+                search: null,
 
                 fields: [
                     { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
-                        var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
+                        $('.checkbox-add-fcl').empty();
+
+                        let checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
                         $('.checkbox-add-fcl').append(checkbox);
                     }  
                     },
                     { key: 'name', label: 'Reference', sortable: false },
-                    { key: 'status', label: 'Status', sortable: false, isHtml: true, tdClass: 'status-add-fcl',
+                    { key: 'status', label: 'Status', sortable: false, isHtml: true,
                      formatter: value => {
-                         var publish ='<span class="status-st published"></span>';
-                         var expired ='<span class="status-st expired"></span>';
-                         var incompleted ='<span class="status-st incompleted"></span>';
-
-                         if (value == 'publish')
-                             $('.status-add-fcl').append(publish);
-                         else if (value == 'expired')
-                             $('.status-add-fcl').append(expired);
-                         else if (value == 'incompleted')
-                             $('.status-add-fcl').append(incompleted);
+                          return '<span class="status-st '+value+'"></span>';
                      } 
                     },
                     { key: 'validity', label: 'Valid From', sortable: false },
                     { key: 'expire', label: 'Valid Until', sortable: false },
                     { key: 'carriers', label: 'Carriers', 
-                     formatter: value => {
-                         let $carriers = [];
-
-                         value.forEach(function(val){
-                             $carriers.push(val.name);
-                         });
-                         return $carriers.join(', ');
-                     } 
+                        formatter: (...params) => { return this.badgecarriers(params) }
                     },
-                    { key: 'gp_container', label: 'Equipment', sortable: false, formatter: value => {
-                        return value.name;
-                    }
+                    { key: 'gp_container', label: 'Equipment', sortable: false, 
+                      formatter: value => { return value.name; }
                     },
                     { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
                     },
                     { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
-                        var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
+                      $('.actions-add-fcl').empty();
+                        let actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
                         $('.actions-add-fcl').append(actions);
                     }  
                     } 
@@ -229,7 +255,7 @@ v-model="model">
                 ],
 
                 // Models Data
-                name: null,
+                reference: null,
                 carrier: [],
                 equipment: '',
                 direction: '',
@@ -252,13 +278,21 @@ v-model="model">
                     daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                     monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     firstDay: 1
-                }
+                },
+
+                //Pagination
+                pageCount: 0,
+                initialPage: 1
             }
         },
         created() {
 
+            let params = this.$route.query;
+
+            if(params.page) this.initialPage = Number(params.page);
+
             /* Return the Contracts lists data*/
-            api.getData({}, '/api/v2/contracts', (err, data) => {
+            api.getData(params, '/api/v2/contracts', (err, data) => {
                 this.setData(err, data);
             });
 
@@ -299,38 +333,81 @@ v-model="model">
                     this.error = err.toString();
                 } else {
                     this.data = records;
+                    this.pageCount = Math.ceil(meta.total/meta.per_page); 
                 }
             },
+
             /* Prepare the data to create a new Contract */
             prepareData(){
+                let carriers = [];
+                this.carrier.forEach(e => carriers.push(e.id));
 
                 return {
-                  'name': this.name,
+                  'name': this.reference,
                   'direction': this.direction.id,
                   'validity': '2020-02-20', //this.dateRange.startDate,
                   'expire': '2020-02-20', //this.dateRange.endDate,
                   'status': 'publish',
                   'remarks': '',
                   'gp_container': this.equipment.id,
-                  'carriers': [this.carrier.id]
+                  'carriers': carriers
                 }
             },
+
             /* Handle the submit of Create Form and 
               send the data to store a new contract */
-            handleSubmit(){
+            onSubmit(){
 
                 const data = this.prepareData();
 
                 api.call('post', '/api/v2/contracts/store', data)
                 .then( ( response ) => {
-                  app.$router.push('http:/app.cargofive.com/');
-                    
+                  window.location = 'http://127.0.0.1:8000/api/contracts/'+response.data.data.id+'/edit';
                 })
                 .catch(( data ) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
 
-            }
+            },
+
+            /* Pagination Callback */
+            clickCallback (pageNum) {
+                this.isBusy = true;
+
+                let qs = {
+                  page: pageNum
+                };
+
+                if(this.$route.query.sort) qs.sort = this.$route.query.sort;
+                if(this.$route.query.q) qs.q = this.$route.query.q;
+
+                this.routerPush(qs);
+            },
+
+            /* Update url and execute api call */
+            routerPush(qs) {
+              this.$router.push({query: qs});
+
+              api.getData(qs, '/api/v2/contracts', (err, data) => {
+                this.setData(err, data);
+              });
+
+            },
+
+            badgecarriers([value, key, item]){
+                let variation = "";
+                
+                if(value){
+                    value.forEach(function(val){
+                        variation += "<span class='badge badge-primary'>"+val.name+"</span> ";
+                    });
+                    
+                    return variation;
+                } else {
+                    return '-';
+                }
+                
+            },
 
         },
         watch: {
@@ -340,6 +417,13 @@ v-model="model">
                     this.model = 'example';
                 },
                 deep: true
+            },
+            search: {
+              handler: function (val, oldVal) {
+                let qs = { q: val };
+
+                this.routerPush(qs);
+              }
             }
         }
     }

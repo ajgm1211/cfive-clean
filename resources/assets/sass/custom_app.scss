@@ -42,7 +42,7 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     padding: 5px 10px;
     text-transform: uppercase;
 }
-.published {
+.publish {
     background-color: #5fe2a0;
 }
 .incompleted {
@@ -55,8 +55,8 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     content: 'incompleted';
     font-weight: bold;
 }
-.published::before {
-    content: 'published';
+.publish::before {
+    content: 'publish';
     font-weight: bold;
 }
 .expired::before {

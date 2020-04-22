@@ -46,6 +46,10 @@
 
 <script>
     export default {
+        props: {
+            equipment: Object,
+            containers: Object
+        },
         components: { 
             
         },
@@ -53,30 +57,27 @@
             return {
                 isBusy:true, // Loader
                 data: null,
+                fields: [],
 
-                fields: [
+                start_fields: [
                     { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
                         var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
                         $('.checkbox-add-fcl').append(checkbox);
                     }  
                     },
-                    { key: 'form', label: 'Origin Port', sortable: false },
-                    { key: 'until', label: 'Destination Port', sortable: false },
-                    { key: 'tdv', label: '20 DV', sortable: false },
-                    { key: 'fdv', label: '40 DV', sortable: false },
-                     { key: 'fhc', label: '40 HC', sortable: false },
-                     { key: 'fnor', label: '40 NOR', sortable: false },
-                    { key: 'ffhc', label: '45 HC', sortable: false },
-                     { key: 'currency', label: 'Currency', sortable: false },
-                    { key: 'carriers', label: 'Carriers', 
-                     formatter: value => {
-                         let $carriers = [];
-
-                         value.forEach(function(val){
-                             $carriers.push(val.name);
-                         });
-                         return $carriers.join(', ');
-                     } 
+                    { key: 'origin', label: 'Origin Port', sortable: false,
+                        formatter: value => { return value.name; }
+                    },
+                    { key: 'destination', label: 'Destination Port', sortable: false,
+                        formatter: value => { return value.name; }
+                    }
+                ],
+                end_fields: [
+                    { key: 'currency', label: 'Currency', sortable: false,
+                        formatter: value => { return value.alphacode; }
+                    },
+                    { key: 'carrier', label: 'Carrier', 
+                        formatter: value => { return value.name; }
                     },
                     { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
                         var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
@@ -90,8 +91,8 @@
             }
         },
         created() {
-
-            api.getData({}, '/api/v2/contracts', (err, data) => {
+            const contract_id = this.$route.params.id;
+            api.getData({}, '/api/v2/contracts/'+contract_id+'/ocean_freight', (err, data) => {
                 this.setData(err, data);
             });
 
@@ -108,6 +109,23 @@
             },
             confirmAction() {
                 console.log('hola');
+            }
+        },
+        watch: {
+            equipment: function(val, oldVal) {
+                let data = this;
+                this.fields = [];
+
+                this.start_fields.forEach(item => data.fields.push(item));
+
+                this.containers.forEach(function(item){
+                    if(item.gp_container_id === val.id)
+                    {
+                        data.fields.push( { key: item.code, label: item.name, sortable: false } );
+                    }
+                });
+
+                this.end_fields.forEach(item => data.fields.push(item));
             }
         }
     }
