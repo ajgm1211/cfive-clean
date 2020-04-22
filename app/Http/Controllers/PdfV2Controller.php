@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use App\PackageLoadV2;
 use App\Airline;
+use App\Container;
 use App\TermsPort;
 use App\TermsAndCondition;
 use App\TermAndConditionV2;
@@ -83,6 +84,7 @@ class PdfV2Controller extends Controller
         }
         $quote = QuoteV2::findOrFail($id);
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
+        $containers = Container::all();
 
         /* Sale terms */
 
@@ -91,38 +93,42 @@ class PdfV2Controller extends Controller
         $sale_terms_origin_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Origin')->with('charge')->get();
         $sale_terms_destination_grouped = SaleTermV2::where('quote_id',$quote->id)->where('type','Destination')->with('charge')->get();
 
+        $sum = 'sum_';
+
+        foreach($containers as $container){
+            ${$sum.$container} = $sum.$container->code;
+        }
+        
         foreach($sale_terms_origin_grouped as $origin_sale){
             foreach($origin_sale->charge as $origin_charge){
+                $sale_rates = json_decode($origin_charge->rate, true);
                 if($origin_charge->currency_id!=''){
                     if($quote->pdf_option->grouped_total_currency==1){
                         $typeCurrency =  $quote->pdf_option->total_in_currency;
                     }else{
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency =  $company_user->currency->alphacode;
                     }
                     $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
-                    $origin_charge->sum20 += $origin_charge->c20/$currency_rate;
-                    $origin_charge->sum40 += $origin_charge->c40/$currency_rate;
-                    $origin_charge->sum40hc += $origin_charge->c40hc/$currency_rate;
-                    $origin_charge->sum40nor += $origin_charge->c40nor/$currency_rate;
-                    $origin_charge->sum45 += $origin_charge->c45/$currency_rate;
+                    foreach($containers as $container){
+                        $origin_charge->${$sum.$container} += @$sale_rates['c'.$container->code]/$currency_rate;
+                    }
                 }
             }
         }
-
-        foreach($sale_terms_destination_grouped as $value){
-            foreach($value->charge as $item){
-                if($item->currency_id!=''){
+        
+        foreach($sale_terms_destination_grouped as $destination_sale){
+            foreach($destination_sale->charge as $destination_charge){
+                $sale_rates = json_decode($destination_charge->rate, true);  
+                if($destination_charge->currency_id!=''){
                     if($quote->pdf_option->grouped_total_currency==1){
                         $typeCurrency =  $quote->pdf_option->total_in_currency;
                     }else{
-                        $typeCurrency =  $currency_cfg->alphacode;
+                        $typeCurrency =  $company_user->currency->alphacode;
                     }
-                    $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
-                    $item->sum20 += $item->c20/$currency_rate;
-                    $item->sum40 += $item->c40/$currency_rate;
-                    $item->sum40hc += $item->c40hc/$currency_rate;
-                    $item->sum40nor += $item->c40nor/$currency_rate;
-                    $item->sum45 += $item->c45/$currency_rate;
+                    $currency_rate=$this->ratesCurrency($destination_charge->currency_id,$typeCurrency);
+                    foreach($containers as $container){
+                        $destination_charge->${$sum.$container} += @$sale_rates['c'.$container->code]/$currency_rate;
+                    }
                 }
             }
         }
@@ -138,7 +144,7 @@ class PdfV2Controller extends Controller
         foreach($sale_terms_origin as $value){
             foreach($value as $origin_sale){
                 foreach($origin_sale->charge as $origin_charge){
-
+                    $sale_rates = json_decode($origin_charge->rate, true);
                     if($origin_charge->currency_id!=''){
                         if($quote->pdf_option->grouped_origin_charges==1){
                             $typeCurrency =  $quote->pdf_option->origin_charges_currency;
@@ -146,11 +152,9 @@ class PdfV2Controller extends Controller
                             $typeCurrency =  $currency_cfg->alphacode;
                         }
                         $currency_rate=$this->ratesCurrency($origin_charge->currency_id,$typeCurrency);
-                        $origin_charge->sum20 += $origin_charge->c20/$currency_rate;
-                        $origin_charge->sum40 += $origin_charge->c40/$currency_rate;
-                        $origin_charge->sum40hc += $origin_charge->c40hc/$currency_rate;
-                        $origin_charge->sum40nor += $origin_charge->c40nor/$currency_rate;
-                        $origin_charge->sum45 += $origin_charge->c45/$currency_rate;
+                        foreach($containers as $container){
+                            $origin_charge->${$sum.$container} += @$sale_rates['c'.$container->code]/$currency_rate;
+                        }
                     }
                 }
             }
@@ -167,6 +171,7 @@ class PdfV2Controller extends Controller
         foreach($sale_terms_destination as $destination_sale){
             foreach($destination_sale as $value){
                 foreach($value->charge as $item){
+                    $sale_rates = json_decode($item->rate, true);
                     if($item->currency_id!=''){
                         if($quote->pdf_option->grouped_destination_charges==1){
                             $typeCurrency =  $quote->pdf_option->destination_charges_currency;
@@ -174,11 +179,9 @@ class PdfV2Controller extends Controller
                             $typeCurrency =  $currency_cfg->alphacode;
                         }
                         $currency_rate=$this->ratesCurrency($item->currency_id,$typeCurrency);
-                        $item->sum20 += $item->c20/$currency_rate;
-                        $item->sum40 += $item->c40/$currency_rate;
-                        $item->sum40hc += $item->c40hc/$currency_rate;
-                        $item->sum40nor += $item->c40nor/$currency_rate;
-                        $item->sum45 += $item->c45/$currency_rate;
+                        foreach($containers as $container){
+                            $item->${$sum.$container} += @$sale_rates['c'.$container->code]/$currency_rate;
+                        }
                     }
                 }
             }
@@ -212,13 +215,14 @@ class PdfV2Controller extends Controller
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        
         if($quote->equipment!=''){
-            $equipmentHides = $this->hideContainer($quote->equipment,'BD');
+            $equipmentHides = $this->hideContainerV2($quote->equipment,'BD', $containers);
         }
 
         /** Rates **/
 
-        $rates = $this->processGlobalRates($rates, $quote, $currency_cfg);
+        $rates = $this->processGlobalRates($rates, $quote, $company_user->currency->alphacode, $containers);
 
         /* Se manipula la colección de rates para añadir los valores de saleterms */
         $rates = $rates->map(function ($item, $key) use($origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
