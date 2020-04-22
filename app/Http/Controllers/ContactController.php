@@ -102,10 +102,10 @@ class ContactController extends Controller
 
         $validated = $request->validated();
 
-        Contact::create($request->all());
+        $contact = Contact::create($request->all());
 
         if($request->ajax()) {
-            return response()->json('Contact created successfully!');
+            return $contact;
         }
 
         $request->session()->flash('message.nivel', 'success');
