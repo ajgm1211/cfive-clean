@@ -849,31 +849,10 @@ class ImportationController extends Controller
         $countrates     = Rate::where('contract_id','=',$id)->count();
         $countfailrates = FailRate::where('contract_id','=',$id)->count();
         $contract       = Contract::find($id);
-        $equiments      = GroupContainer::with('containers')->find($contract->gp_container_id);
-        //dd($equiment->containers->pluck('code'));
-        $equiment   = [];
-        $equiment   = ['thead' => [null,'Origin','Destiny','Carrier']];
-        foreach($equiments->containers as $containers){
-            array_push($equiment['thead'],$containers->code);            
-        }
-        array_push($equiment['thead'],'Currency');  
-        array_push($equiment['thead'],'Option');  
-        $equiment['columns'] = json_encode([
-            //json_encode(['data'=>null,'render'=>'function(){return "";}']),
-            ['data'=>'origin_portLb','name'=>'origin_portLb'],
-            ['data'=>'destiny_portLb','name'=>'destiny_portLb'],
-            ['data'=>'carrierLb','name'=>'carrierLb'],
-            ['data'=>'twuenty','name'=>'twuenty'],
-            ['data'=>'forty','name'=>'forty'],
-            ['data'=>'fortyhc','name'=>'fortyhc'],
-            ['data'=>'fortynor','name'=>'fortynor'],
-            ['data'=>'fortyfive','name'=>'fortyfive'],
-            ['data'=>'currency_id','name'=>'currency_id'],
-            ['data'=>'action','name'=>'action','orderable'=>false,'searchable'=>false]
-        ]);
-
-        // dd($equiment['columns']);
-
+        $equiment_id    = $contract->gp_container_id;
+        $equiment       = HelperAll::LoadHearderDataTable($equiment_id,'rates');
+        
+        //dd($equiment);
         return view('importationV2.Fcl.show_fails',compact('countfailrates','countrates','contract','id','tab','equiment'));
     }
 
@@ -4219,15 +4198,18 @@ class ImportationController extends Controller
         $fortyhcA;
         $fortynorA;
         $fortyfiveA;
-        $failrates = collect([]);
-
+        $failrates      = collect([]);
+        $contract       = Contract::find($id);
+        $equiment_id    = $contract->gp_container_id;
+        $equiments      = GroupContainer::with('containers')->find($equiment_id);
         if($selector == 1){
             $failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
 
             //$failratesFor = FailRate::where('contract_id','=',$id)->get();
             foreach( $failratesFor as $failrate){
                 $carrAIn;
-                $pruebacurre = "";
+                $pruebacurre    = "";
+                $containers     = null;
                 $originA        = explode("_",$failrate->origin_port);
                 $destinationA   = explode("_",$failrate->destiny_port);
                 $carrierA       = explode("_",$failrate->carrier_id);
@@ -4237,14 +4219,13 @@ class ImportationController extends Controller
                 $fortyhcA       = explode("_",$failrate->fortyhc);
                 $fortynorA      = explode("_",$failrate->fortynor);
                 $fortyfiveA     = explode("_",$failrate->fortyfive);
+                $containers     = $failrate->containers;
 
-                $schedule_typeA = explode("_",$failrate->schedule_type);
-                $transit_timeA  = explode("_",$failrate->transit_time);
-                $viaA           = explode("_",$failrate->via);
-
-                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                    ->first();
-                //$originAIn = $originOb['id'];
+                //                $schedule_typeA = explode("_",$failrate->schedule_type);
+                //                $transit_timeA  = explode("_",$failrate->transit_time);
+                //                $viaA           = explode("_",$failrate->via);
+                // ORIGIN -------------------------------------------------------------------------------
+                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')->first();
                 $originC   = count($originA);
                 if($originC <= 1){
                     $originA = $originOb['name'];
@@ -4252,83 +4233,86 @@ class ImportationController extends Controller
                     $originA = $originA[0].' (error)';
                     $classdorigin='color:red';
                 }
-
+                // DESTINY ------------------------------------------------------------------------------
                 $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
                     ->first();
-                //$destinationAIn = $destinationOb['id'];
                 $destinationC   = count($destinationA);
                 if($destinationC <= 1){
                     $destinationA = $destinationOb['name'];
                 } else{
                     $destinationA = $destinationA[0].' (error)';
                 }
+                if($equiment_id == 1){
+                    $twuentyC   = count($twuentyA);
+                    if($twuentyC <= 1){
+                        $twuentyA = $twuentyA[0];
+                    } else{
+                        $twuentyA = $twuentyA[0].' (error)';
+                    }
 
-                $twuentyC   = count($twuentyA);
-                if($twuentyC <= 1){
-                    $twuentyA = $twuentyA[0];
-                } else{
-                    $twuentyA = $twuentyA[0].' (error)';
+                    $fortyC   = count($fortyA);
+                    if($fortyC <= 1){
+                        $fortyA = $fortyA[0];
+                    } else{
+                        $fortyA = $fortyA[0].' (error)';
+                    }
+
+                    $fortyhcC   = count($fortyhcA);
+                    if($fortyhcC <= 1){
+                        $fortyhcA = $fortyhcA[0];
+                    } else{
+                        $fortyhcA = $fortyhcA[0].' (error)';
+                    }
+
+                    $fortynorC   = count($fortynorA);
+                    if($fortynorC <= 1){
+                        $fortynorA = $fortynorA[0];
+                    } else{
+                        $fortynorA = $fortynorA[0].' (error)';
+                    }
+
+                    $fortyfiveC   = count($fortyfiveA);
+                    if($fortyfiveC <= 1){
+                        $fortyfiveA = $fortyfiveA[0];
+                    } else{
+                        $fortyfiveA = $fortyfiveA[0].' (error)';
+                    }
+                } else {
+                    foreach($equiments->containers as $containers){
+                        array_push($equiment['thead'],$containers->code);            
+                    }
                 }
-
-                $fortyC   = count($fortyA);
-                if($fortyC <= 1){
-                    $fortyA = $fortyA[0];
-                } else{
-                    $fortyA = $fortyA[0].' (error)';
-                }
-
-                $fortyhcC   = count($fortyhcA);
-                if($fortyhcC <= 1){
-                    $fortyhcA = $fortyhcA[0];
-                } else{
-                    $fortyhcA = $fortyhcA[0].' (error)';
-                }
-
-                $fortynorC   = count($fortynorA);
-                if($fortynorC <= 1){
-                    $fortynorA = $fortynorA[0];
-                } else{
-                    $fortynorA = $fortynorA[0].' (error)';
-                }
-
-                $fortyfiveC   = count($fortyfiveA);
-                if($fortyfiveC <= 1){
-                    $fortyfiveA = $fortyfiveA[0];
-                } else{
-                    $fortyfiveA = $fortyfiveA[0].' (error)';
-                }
-
                 //-------------------------------------------
 
-                if(count($schedule_typeA) <= 1){
-                    if(empty($schedule_typeA[0]) != true){
-                        $schedule_typeA = $schedule_typeA[0];
-                    } else {
-                        $schedule_typeA = '---------';
-                    }
-                } else{
-                    $schedule_typeA = $schedule_typeA[0].' (error)';
-                }
-
-                if(count($transit_timeA) <= 1){
-                    if(empty($transit_timeA[0]) != true){
-                        $transit_timeA = $transit_timeA[0];
-                    } else {
-                        $transit_timeA = '0';
-                    }
-                } else{
-                    $transit_timeA = $transit_timeA[0].' (error)';
-                }
-
-                if(count($viaA) <= 1){
-                    if(empty($viaA[0]) != true){
-                        $viaA = $viaA[0];
-                    } else {
-                        $viaA = '---------';
-                    }
-                } else{
-                    $viaA = $viaA[0].' (error)';
-                }
+                //                if(count($schedule_typeA) <= 1){
+                //                    if(empty($schedule_typeA[0]) != true){
+                //                        $schedule_typeA = $schedule_typeA[0];
+                //                    } else {
+                //                        $schedule_typeA = '---------';
+                //                    }
+                //                } else{
+                //                    $schedule_typeA = $schedule_typeA[0].' (error)';
+                //                }
+                //
+                //                if(count($transit_timeA) <= 1){
+                //                    if(empty($transit_timeA[0]) != true){
+                //                        $transit_timeA = $transit_timeA[0];
+                //                    } else {
+                //                        $transit_timeA = '0';
+                //                    }
+                //                } else{
+                //                    $transit_timeA = $transit_timeA[0].' (error)';
+                //                }
+                //
+                //                if(count($viaA) <= 1){
+                //                    if(empty($viaA[0]) != true){
+                //                        $viaA = $viaA[0];
+                //                    } else {
+                //                        $viaA = '---------';
+                //                    }
+                //                } else{
+                //                    $viaA = $viaA[0].' (error)';
+                //                }
 
                 //-------------------------------------------
                 $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
@@ -4350,25 +4334,19 @@ class ImportationController extends Controller
                 else{
                     $currencyA = $currencyA[0].' (error)';
                 }        
-                $colec = ['id'              =>  $failrate->id,
-                          'contract_id'     =>  $id,
-                          'origin_portLb'   =>  $originA,       //
-                          'destiny_portLb'  =>  $destinationA,  // 
-                          'carrierLb'       =>  $carrierA,      //
-                          'twuenty'         =>  $twuentyA,      //    
-                          'forty'           =>  $fortyA,        //  
-                          'fortyhc'         =>  $fortyhcA,      //
-                          'fortynor'        =>  $fortynorA,     //
-                          'fortyfive'       =>  $fortyfiveA,    //
-                          'currency_id'     =>  $currencyA,     //
-                          'operation'       =>  '1',
-                          'schedule_type'   =>  $schedule_typeA,
-                          'transit_time'    =>  $transit_timeA,
-                          'via'             =>  $viaA
+                $colec = ['id'          =>  $failrate->id,
+                          'contract_id' =>  $id,
+                          'origin'      =>  $originA,       //
+                          'destiny'     =>  $destinationA,  // 
+                          'carrier'     =>  $carrierA,      //
+                          'C20DV'       =>  $twuentyA,      //    
+                          'C40DV'       =>  $fortyA,        //  
+                          'C40HC'       =>  $fortyhcA,      //
+                          'C40NOR'      =>  $fortynorA,     //
+                          'C45HC'       =>  $fortyfiveA,    //
+                          'currency'    =>  $currencyA,     //
+                          'operation'   =>  '1'
                          ];
-
-                $pruebacurre = "";
-                $carrAIn = "";
                 $failrates->push($colec);
 
             }
@@ -4584,7 +4562,132 @@ class ImportationController extends Controller
     }
 
     public function LoadDataTable($id,$selector,$type){
+        if(strnatcasecmp($type,'rates')==0){
+            //$id se refiere al id del contracto
+            $objharbor = new Harbor();
+            $objcurrency = new Currency();
+            $objcarrier = new Carrier();
+            $failrates      = collect([]);
+            $contract       = Contract::find($id);
+            $equiment_id    = $contract->gp_container_id;
+            $equiments      = GroupContainer::with('containers')->find($equiment_id);
+            $columns_rt_ident = [];
+            if($equiment_id == 1){
+                $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+                foreach($contenedores_rt as $conten_rt){
+                    $conten_rt->options = json_decode($conten_rt->options);
+                    $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+                }
+            }
 
+            if($selector == 1){
+                $failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
+                ///$failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
+                //$failratesFor = FailRate::where('contract_id','=',$id)->get();
+                foreach( $failratesFor as $failrate){
+                    $carrAIn;
+                    $pruebacurre    = "";
+                    $containers     = null;
+                    $originA        = explode("_",$failrate->origin_port);
+                    $destinationA   = explode("_",$failrate->destiny_port);
+                    $carrierA       = explode("_",$failrate->carrier_id);
+                    $currencyA      = explode("_",$failrate->currency_id);
+                    $containers     = json_decode($failrate->containers,true);
+
+                    $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')->first();
+                    $originC   = count($originA);
+                    if($originC <= 1){
+                        $originA = $originOb['name'];
+                    } else{
+                        $originA = $originA[0].' (error)';
+                        $classdorigin='color:red';
+                    }
+                    // DESTINY ------------------------------------------------------------------------------
+                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
+                        ->first();
+                    $destinationC   = count($destinationA);
+                    if($destinationC <= 1){
+                        $destinationA = $destinationOb['name'];
+                    } else{
+                        $destinationA = $destinationA[0].' (error)';
+                    }
+
+                    $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
+                    $carrierC = count($carrierA);
+                    if($carrierC <= 1){
+                        //dd($carrierAIn);
+                        $carrierA = $carrierA[0];
+                    }else{
+                        $carrierA = $carrierA[0].' (error)';
+                    }
+
+                    $currencyC = count($currencyA);
+                    if($currencyC <= 1){
+                        $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
+                        $currencyA = $currenc['alphacode'];
+                    } else{
+                        $currencyA = $currencyA[0].' (error)';
+                    }
+
+                    $colec = ['id'          =>  $failrate->id,
+                              'contract_id' =>  $id,
+                              'origin'      =>  $originA,       //
+                              'destiny'     =>  $destinationA,  // 
+                              'carrier'     =>  $carrierA,      //
+                              'operation'   =>  '1'
+                             ];
+                    if($equiment_id == 1){
+                        foreach($equiments->containers as $containersEq){
+                            if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($failrate->twuenty);
+                            }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($failrate->forty);
+                            } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($failrate->fortyhc);
+                            } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($failrate->fortynor);
+                            } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($failrate->fortyfive);
+                            }
+                        }
+                    } else {
+                        foreach($equiments->containers as $containersEq){
+                            if(array_key_exists('C'.$containersEq->code,$containers)){
+                                $colec['C'.$containersEq->code] = HelperAll::validatorError($containers['C'.$containersEq->code]);
+                            } else{
+                                $colec['C'.$containersEq->code] = 0;          
+                            }
+                        }
+                    }
+                    $colec['currency'] = $currencyA;
+                    //dd($colec,$equiments->containers,$containers,$failrate->id);
+                    
+                    $failrates->push($colec);
+
+                }
+                return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
+                    return '<a href="#" class="" onclick="showModalsavetorate('.$failrate['id'].','.$failrate['operation'].')"><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-trash"></i></a>';
+                })
+                    ->editColumn('id', '{{$id}}')->toJson();
+
+
+
+            } else if($selector == 2){
+
+                $ratescol = PrvRates::get_rates($id);
+
+                return DataTables::of($ratescol)
+                    ->addColumn('action', function ($ratescol) {
+                        return '
+                <a href="#" onclick="showModalsavetorate('.$ratescol['id'].','.$ratescol['operation'].')" class=""><i class="la la-edit"></i></a>
+                &nbsp;
+                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-trash"></i></a>';
+                    })
+                    ->editColumn('id', '{{$id}}')->toJson();
+            }
+        }
     }
 
     // Descargar Archivos de referencia para la importacion -----------------------------
@@ -5326,7 +5429,7 @@ class ImportationController extends Controller
                 }
                 if($account->status != 'Contract erased'){
                     return '
-                <a href="/Importation/fcl/rate/'.$account->contract_id.'/1" class=""><i class="la la-credit-card" title="Rates"></i></a>
+                <a href="'.route('Failed.Developer.For.Contracts',[$account->contract_id,1]).'" class=""><i class="la la-credit-card" title="Rates"></i></a>
                 &nbsp;
                 <a href="/Importation/fcl/surcharge/'.$account->contract_id.'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
                 &nbsp;
