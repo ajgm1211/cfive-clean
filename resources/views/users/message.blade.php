@@ -7,7 +7,7 @@
 @if(isset($users) && $users->count()>0)
     <div class="m-form__section m-form__section--first">
         <div class="form-group m-form__group" style="font-size: 14px; font-weight: 500;">
-            Can you choose an user to transfer the information before delete this user?
+            Would you like to transfer data before delete this user?
         </div>
     </div>
 
@@ -37,7 +37,7 @@
 </div>
 
 <div class="m-form__actions m-form__actions">
-    {!! Form::submit('Delete user and data', ['class'=> 'btn btn-warning']) !!}
+    {!! Form::submit('Delete user and data', ['class'=> 'btn btn-danger']) !!}
 </div>
 
 <br>

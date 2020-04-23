@@ -98,7 +98,7 @@ class LoginController extends Controller
     }else if($user->state!=1){
       auth()->logout();
       return back()->with('warning', 'This user has been disabled.');
-    }else if(env('APP_VIEW') == 'operaciones' && !$user->hasRole('administrator')){
+    }else if(env('APP_VIEW') == 'operaciones' && ($user->hasRole('company') || $user->hasRole('subuser'))){
       auth()->logout();
       return back()->with('warning', 'This user does not have administrator permission.');
     }else  if($user->company_user_id==''){
