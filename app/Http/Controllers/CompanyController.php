@@ -152,6 +152,7 @@ class CompanyController extends Controller
             $company->owner = \Auth::user()->id;
             $company->pdf_language = $request->pdf_language;
             $company->payment_conditions = $request->payment_conditions;
+            $company->options = $request->options;
             if ($file != "") {
                 $company->logo = $filepath_tmp;
             }
@@ -186,7 +187,7 @@ class CompanyController extends Controller
             }
 
             if ($request->ajax()) {
-                return response()->json('Company created successfully!');
+                return $company;
             }
 
             $request->session()->flash('message.nivel', 'success');

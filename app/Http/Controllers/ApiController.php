@@ -403,15 +403,46 @@ class ApiController extends Controller
                 });
             })->where('user_id',\Auth::user()->id)->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','carrier','airline');
-                $query->with(['charge'=>function($q){
-                    $q->with('type','surcharge','calculation_type');
+            })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
+                $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                $query->with(['origin_port'=>function($q){
+                    $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                    $q->with('country');
                 }]);
-                $query->with(['charge_lcl_air'=>function($q){
-                    $q->with('type','surcharge','calculation_type');
+                $query->with(['destination_port' => function ($q) {
+                    $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                    $q->with('country');
                 }]);
-            }])->take($request->size)->get();
+                $query->with(['charge' => function ($q) {
+                    $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                }]);
+                $query->with(['charge_lcl_air' => function ($q) {
+                    $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                }]);
+                $query->with(['carrier'=>function($q){
+                    $q->select('id', 'name', 'uncode', 'varation as variation');
+                }]);
+            }])->with(['user' => function ($query) {
+                $query->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state','company_user_id');
+                $query->with(['companyUser' => function ($q) {
+                    $q->select('id','name','address','phone','currency_id');
+                    $q->with('currency');
+                }]);
+            }])->with(['company' => function ($query) {
+                $query->with(['company_user' => function ($q) {
+                    $q->select('id','name','address','phone','currency_id');
+                    $q->with('currency');
+                }]);
+                $query->with(['owner' => function ($q) {
+                    $q->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state');
+                }]);
+            }])->with(['contact' => function ($query) {
+                $query->with(['company' => function ($q) {
+                    $q->select('id','business_name','phone','address','email','tax_number');
+                }]);
+            }])->with(['price' => function ($q) {
+                $q->select('id','name','description');
+            }])->with('incoterm')->take($request->size)->get();
         }else{
             $quotes = QuoteV2::when($type,function($query,$type) {
                 return $query->where('type',$type);
@@ -423,15 +454,46 @@ class ApiController extends Controller
                 });
             })->whereHas('user', function($q) use($company_user_id){
                 $q->where('company_user_id','=',$company_user_id);
-            })->orderBy('created_at', 'desc')->with(['rates_v2'=>function($query){
-                $query->with('origin_port','destination_port','origin_airport','destination_airport','currency','charge_lcl_air','carrier','airline');
-                $query->with(['charge'=>function($q){
-                    $q->with('type','surcharge','calculation_type');
+            })->orderBy('created_at', 'desc')->with(['rates_v2' => function ($query) {
+                $query->with('origin_airport', 'destination_airport', 'currency', 'airline');
+                $query->with(['origin_port'=>function($q){
+                    $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                    $q->with('country');
                 }]);
-                $query->with(['charge_lcl_air'=>function($q){
-                    $q->with('type','surcharge','calculation_type');
+                $query->with(['destination_port' => function ($q) {
+                    $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                    $q->with('country');
                 }]);
-            }])->take($request->size)->get();
+                $query->with(['charge' => function ($q) {
+                    $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                }]);
+                $query->with(['charge_lcl_air' => function ($q) {
+                    $q->with('type', 'surcharge', 'calculation_type', 'currency');
+                }]);
+                $query->with(['carrier'=>function($q){
+                    $q->select('id','name','uncode','varation as variation');
+                }]);
+            }])->with(['user' => function ($query) {
+                $query->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state','company_user_id');
+                $query->with(['companyUser' => function ($q) {
+                    $q->select('id','name','address','phone','currency_id');
+                    $q->with('currency');
+                }]);
+            }])->with(['company' => function ($query) {
+                $query->with(['company_user' => function ($q) {
+                    $q->select('id','name','address','phone','currency_id');
+                    $q->with('currency');
+                }]);
+                $query->with(['owner' => function ($q) {
+                    $q->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state');
+                }]);
+            }])->with(['contact' => function ($query) {
+                $query->with(['company' => function ($q) {
+                    $q->select('id','business_name','phone','address','email','tax_number');
+                }]);
+            }])->with(['price' => function ($q) {
+                $q->select('id','name','description');
+            }])->with('incoterm')->take($request->size)->get();
         }
         $companies = Company::pluck('business_name','id');
         $harbors = Harbor::pluck('display_name','id');
@@ -448,7 +510,6 @@ class ApiController extends Controller
             }
         }
 
-        $quotes->load('user','company','contact','incoterm');
         $collection = Collection::make($quotes);
         $collection->transform(function ($quote, $key) {
             unset($quote['origin_port_id']);
