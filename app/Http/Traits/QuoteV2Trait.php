@@ -104,17 +104,17 @@ trait QuoteV2Trait
 
                 foreach ($containers as $c) {
                     if (isset($array_amounts['c20'])) {
-                        ${$amount . '_' . $inland . $c->code} = $array_amounts['c'.$c->code];
+                        ${$amount . '_' . $inland . $c->code} = $array_amounts['c' . $c->code];
                         ${$total . '_' . $inland . $c->code} = ${$amount . '_' . $inland . $c->code} / $currency_rate;
                         ${$sum . '_' . $total . '_' . $inland . $c->code} = number_format(${$total . '_' . $inland . $c->code}, 2, '.', '');
                     }
                     if (isset($array_markups['m20'])) {
-                        ${$markup . '_' . $inland . $c->code} = $array_markups['m'.$c->code];
+                        ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
                         ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
                     }
 
-                    $inland->${$total.'_c'.$c->code} = number_format(${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
-                    $inland->${$total.'_m'.$c->code} = number_format(${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
+                    $inland->${$total . '_c' . $c->code} = number_format(${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
+                    $inland->${$total . '_m' . $c->code} = number_format(${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
                 }
                 //REVISAR INLANDS
                 $currency_charge = Currency::find($inland->currency_id);
@@ -126,25 +126,21 @@ trait QuoteV2Trait
         return $rates;
     }
 
-    public function processGlobalRatesWithSales($rates, $quote, $currency_cfg, $origin_ports, $destination_ports)
+    public function processGlobalRatesWithSales($rates, $quote, $currency_cfg, $origin_ports, $destination_ports, $containers)
     {
 
+        $sum = 'sum';
+        $markup = 'markup';
+        $inland = 'inland';
+        $amount = 'amount';
+        $total = 'total';
+
         foreach ($rates as $item) {
-            $sum_rate_20 = 0;
-            $sum_rate_40 = 0;
-            $sum_rate_40hc = 0;
-            $sum_rate_40nor = 0;
-            $sum_rate_45 = 0;
-
-            $total_markup_rate_20 = 0;
-            $total_markup_rate_40 = 0;
-            $total_markup_rate_40hc = 0;
-            $total_markup_rate_40nor = 0;
-            $total_markup_rate_45 = 0;
-
-            $total_lcl_air_freight = 0;
-            $total_lcl_air_origin = 0;
-            $total_lcl_air_destination = 0;
+            foreach ($containers as $c) {
+                ${$sum . '_' . $c->code} = 0;
+                ${$total . '_' . $c->code} = 0;
+                ${$total . '_markup_' . $c->code} = 0;
+            }
 
             $currency = Currency::find($item->currency_id);
             $item->currency_usd = $currency->rates;
@@ -156,76 +152,28 @@ trait QuoteV2Trait
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency =  $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency =  $currency_cfg;
                 }
                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
 
                 $array_amounts = json_decode($value->amount, true);
                 $array_markups = json_decode($value->markups, true);
 
-                if (isset($array_amounts['c20'])) {
-                    $amount20 = $array_amounts['c20'];
-                    $total20 = $amount20 / $currency_rate;
-                    $sum20 = number_format($total20, 2, '.', '');
-                    $value->total_20 = number_format($sum20, 2, '.', '');
-                }
+                foreach ($containers as $c) {
+                    ${$pre_c . $c->code} = 'total_c' . $c->code;
+                    ${$pre_m . $c->code} = 'total_m' . $c->code;
+                    if (isset($array_amounts['c' . $c->code])) {
+                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                        ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
+                        ${$total . '_' . $c->code} = number_format(${$amount . '_' . $total . '_' . $c->code}, 2, '.', '');
+                        $value->${$pre_c . $c->code} = ${$total . '_' . $c->code};
+                    }
 
-                if (isset($array_markups['m20'])) {
-                    $markup20 = $array_markups['m20'];
-                    $total_markup20 = $markup20 / $currency_rate;
-                    $value->total_markup20 = number_format($total_markup20, 2, '.', '');
-                }
-
-                if (isset($array_amounts['c40'])) {
-                    $amount40 = $array_amounts['c40'];
-                    $total40 = $amount40 / $currency_rate;
-                    $sum40 = number_format($total40, 2, '.', '');
-                    $value->total_40 = number_format($sum40, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40'])) {
-                    $markup40 = $array_markups['m40'];
-                    $total_markup40 = $markup40 / $currency_rate;
-                    $value->total_markup40 = number_format($total_markup40, 2, '.', '');
-                }
-
-                if (isset($array_amounts['c40hc'])) {
-                    $amount40hc = $array_amounts['c40hc'];
-                    $total40hc = $amount40hc / $currency_rate;
-                    $sum40hc = number_format($total40hc, 2, '.', '');
-                    $value->total_40hc = number_format($sum40hc, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40hc'])) {
-                    $markup40hc = $array_markups['m40hc'];
-                    $total_markup40hc = $markup40hc / $currency_rate;
-                    $value->total_markup40hc = number_format($total_markup40hc, 2, '.', '');
-                }
-
-                if (isset($array_amounts['c40nor'])) {
-                    $amount40nor = $array_amounts['c40nor'];
-                    $total40nor = $amount40nor / $currency_rate;
-                    $sum40nor = number_format($total40nor, 2, '.', '');
-                    $value->total_40nor = number_format($sum40nor, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40nor'])) {
-                    $markup40nor = $array_markups['m40nor'];
-                    $total_markup40nor = $markup40nor / $currency_rate;
-                    $value->total_markup40nor = number_format($total_markup40nor, 2, '.', '');
-                }
-
-                if (isset($array_amounts['c45'])) {
-                    $amount45 = $array_amounts['c45'];
-                    $total45 = $amount45 / $currency_rate;
-                    $sum45 = number_format($total45, 2, '.', '');
-                    $value->total_45 = number_format($sum45, 2, '.', '');
-                }
-
-                if (isset($array_markups['m45'])) {
-                    $markup45 = $array_markups['m45'];
-                    $total_markup45 = $markup45 / $currency_rate;
-                    $value->total_markup45 = number_format($total_markup45, 2, '.', '');
+                    if (isset($array_markups['m' . $c->code])) {
+                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                        ${$total . '_markup_' . $c->code} = ${$markup . '_' . $c->code} / $currency_rate;
+                        $value->${$pre_m . $c->code} = ${$total . '_markup_' . $c->code};
+                    }
                 }
 
                 $currency_charge = Currency::find($value->currency_id);
@@ -235,91 +183,35 @@ trait QuoteV2Trait
 
             //Inland
             foreach ($item->inland as $inland) {
-                $sum_inland20 = 0;
-                $sum_inland40 = 0;
-                $sum_inland40hc = 0;
-                $sum_inland40nor = 0;
-                $sum_inland45 = 0;
+                foreach ($containers as $c) {
+                    ${$sum . '_' . $inland . '_' . $c->code} = 0;
+                    ${$total . '_' . $inland . '_' . $markup . '_' . $c->code} = 0;
+                }
 
-                $total_inland_markup20 = 0;
-                $total_inland_markup40 = 0;
-                $total_inland_markup40hc = 0;
-                $total_inland_markup40nor = 0;
-                $total_inland_markup45 = 0;
                 if ($quote->pdf_option->grouped_total_currency == 1) {
                     $typeCurrency =  $quote->pdf_option->total_in_currency;
                 } else {
-                    $typeCurrency =  $currency_cfg->alphacode;
+                    $typeCurrency =  $currency_cfg;
                 }
                 $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
+
                 $array_amounts = json_decode($inland->rate, true);
                 $array_markups = json_decode($inland->markup, true);
-                if (isset($array_amounts['c20'])) {
-                    $amount_inland20 = $array_amounts['c20'];
-                    $total_inland20 = $amount_inland20 / $currency_rate;
-                    $sum_inland20 = number_format($total_inland20, 2, '.', '');
+
+                foreach ($containers as $c) {
+                    if (isset($array_amounts['c' . $c->code])) {
+                        ${$amount . '_' . $inland . $c->code} = $array_amounts['c' . $c->code];
+                        ${$total . '_' . $inland . $c->code} = ${$amount . '_' . $inland . $c->code} / $currency_rate;
+                        ${$sum . '_' . $total . '_' . $inland . $c->code} = number_format(${$total . '_' . $inland . $c->code}, 2, '.', '');
+                    }
+                    if (isset($array_markups['m' . $c->code])) {
+                        ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
+                        ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
+                    }
+
+                    $inland->${$total . '_c' . $c->code} = number_format(${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
+                    $inland->${$total . '_m' . $c->code} = number_format(${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
                 }
-
-                if (isset($array_markups['m20'])) {
-                    $markup_inland20 = $array_markups['m20'];
-                    $total_markup20 = $markup20 / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40'])) {
-                    $amount_inland40 = $array_amounts['c40'];
-                    $total_inland40 = $amount_inland40 / $currency_rate;
-                    $sum_inland40 = number_format($total_inland40, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40'])) {
-                    $markup_inland40 = $array_markups['m40'];
-                    $total_inland_markup40 = $markup_inland40 / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40hc'])) {
-                    $amount_inland40hc = $array_amounts['c40hc'];
-                    $total_inland40hc = $amount40hc / $currency_rate;
-                    $sum_inland_40hc = number_format($total_inland40hc, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40hc'])) {
-                    $markup_inland40hc = $array_markups['m40hc'];
-                    $total_inland_markup40hc = $markup_inland40hc / $currency_rate;
-                }
-
-                if (isset($array_amounts['c40nor'])) {
-                    $amount_inland40nor = $array_amounts['c40nor'];
-                    $total_inland40nor = $amount40nor / $currency_rate;
-                    $sum_inland40nor = number_format($total_inland40nor, 2, '.', '');
-                }
-
-                if (isset($array_markups['m40nor'])) {
-                    $markup_inland40nor = $array_markups['m40nor'];
-                    $total_inland_markup40nor = $markup_inland40nor / $currency_rate;
-                }
-
-                if (isset($array_amounts['c45'])) {
-                    $amount_inland45 = $array_amounts['c45'];
-                    $total_inland45 = $amount45 / $currency_rate;
-                    $sum_inland45 = number_format($total_inland45, 2, '.', '');
-                }
-
-                if (isset($array_markups['m45'])) {
-                    $markup_inland45 = $array_markups['m45'];
-                    $total_inland_markup45 = $markup_inland45 / $currency_rate;
-                }
-
-                $inland->total_20 = number_format($sum_inland20, 2, '.', '');
-                $inland->total_40 = number_format($sum_inland40, 2, '.', '');
-                $inland->total_40hc = number_format($sum_inland40hc, 2, '.', '');
-                $inland->total_40nor = number_format($sum_inland40nor, 2, '.', '');
-                $inland->total_45 = number_format($sum_inland45, 2, '.', '');
-
-                $inland->total_m20 = number_format($total_inland_markup20, 2, '.', '');
-                $inland->total_m40 = number_format($total_inland_markup40, 2, '.', '');
-                $inland->total_m40hc = number_format($total_inland_markup40hc, 2, '.', '');
-                $inland->total_m40nor = number_format($total_inland_markup40nor, 2, '.', '');
-                $inland->total_m45 = number_format($total_inland_markup45, 2, '.', '');
 
                 $currency_charge = Currency::find($inland->currency_id);
                 $inland->currency_usd = $currency_charge->rates;
@@ -336,7 +228,7 @@ trait QuoteV2Trait
      * @param  collection $quote
      * @return collection
      */
-    public function processOriginDetailed($origin_charges, $quote, $currency_cfg)
+    public function processOriginDetailed($origin_charges, $quote, $currency_cfg, $containers)
     {
         $origin_charges_detailed = collect($origin_charges);
 
@@ -354,189 +246,90 @@ trait QuoteV2Trait
 
         ], $preserveKeys = true);
 
+        $sum = 'sum';
+        $markup = 'markup';
+        $inland = 'inland';
+        $amount = 'amount';
+        $total = 'total';
+        $pre_c = 'total_c';
+        $pre_m = 'total_m';
+
         foreach ($origin_charges_detailed as $origin => $item) {
             foreach ($item as $destination => $items) {
                 foreach ($items as $carrier => $itemsDetail) {
                     foreach ($itemsDetail as $value) {
                         foreach ($value->charge as $amounts) {
-                            $sum20 = 0;
-                            $sum40 = 0;
-                            $sum40hc = 0;
-                            $sum40nor = 0;
-                            $sum45 = 0;
-                            $total40 = 0;
-                            $total20 = 0;
-                            $total40hc = 0;
-                            $total40nor = 0;
-                            $total45 = 0;
+                            foreach ($containers as $c) {
+                                ${$sum . '_' . $c->code} = 0;
+                                ${$total . '_' . $c->code} = 0;
+                                ${$total . '_markup_' . $c->code} = 0;
+                            }
+
                             if ($amounts->type_id == 1) {
+
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
                                     $typeCurrency =  $quote->pdf_option->origin_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency =  $currency_cfg;
                                 }
+
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
                                 $array_amounts = json_decode($amounts->amount, true);
                                 $array_markups = json_decode($amounts->markups, true);
-                                if (isset($array_amounts['c20']) && isset($array_markups['m20'])) {
-                                    $sum20 = $array_amounts['c20'] + $array_markups['m20'];
-                                    $total20 = $sum20 / $currency_rate;
-                                } else if (isset($array_amounts['c20']) && !isset($array_markups['m20'])) {
-                                    $sum20 = $array_amounts['c20'];
-                                    $total20 = $sum20 / $currency_rate;
-                                } else if (!isset($array_amounts['c20']) && isset($array_markups['m20'])) {
-                                    $sum20 = $array_markups['m20'];
-                                    $total20 = $sum20 / $currency_rate;
+
+                                foreach ($containers as $c) {
+                                    ${$pre_c . $c->code} = 'total_c' . $c->code;
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    }
                                 }
 
-                                if (isset($array_amounts['c40']) && isset($array_markups['m40'])) {
-                                    $sum40 = $array_amounts['c40'] + $array_markups['m40'];
-                                    $total40 = $sum40 / $currency_rate;
-                                } else if (isset($array_amounts['c40']) && !isset($array_markups['m40'])) {
-                                    $sum40 = $array_amounts['c40'];
-                                    $total40 = $sum40 / $currency_rate;
-                                } else if (!isset($array_amounts['c40']) && isset($array_markups['m40'])) {
-                                    $sum40 = $array_markups['m40'];
-                                    $total40 = $sum40 / $currency_rate;
-                                }
-
-                                if (isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])) {
-                                    $sum40hc = $array_amounts['c40hc'] + $array_markups['m40hc'];
-                                    $total40hc = $sum40hc / $currency_rate;
-                                } else if (isset($array_amounts['c40hc']) && !isset($array_markups['m40hc'])) {
-                                    $sum40hc = $array_amounts['c40hc'];
-                                    $total40hc = $sum40hc / $currency_rate;
-                                } else if (!isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])) {
-                                    $sum40hc = $array_markups['m40hc'];
-                                    $total40hc = $sum40hc / $currency_rate;
-                                }
-
-                                if (isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])) {
-                                    $sum40nor = $array_amounts['c40nor'] + $array_markups['m40nor'];
-                                    $total40nor = $sum40nor / $currency_rate;
-                                } else if (isset($array_amounts['c40nor']) && !isset($array_markups['m40nor'])) {
-                                    $sum40nor = $array_amounts['c40nor'];
-                                    $total40nor = $sum40nor / $currency_rate;
-                                } else if (!isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])) {
-                                    $sum40nor = $array_markups['m40nor'];
-                                    $total40nor = $sum40nor / $currency_rate;
-                                }
-
-                                if (isset($array_amounts['c45']) && isset($array_markups['m45'])) {
-                                    $sum45 = $array_amounts['c45'] + $array_markups['m45'];
-                                    $total45 = $sum45 / $currency_rate;
-                                } else if (isset($array_amounts['c45']) && !isset($array_markups['m45'])) {
-                                    $sum45 = $array_amounts['c45'];
-                                    $total45 = $sum45 / $currency_rate;
-                                } else if (!isset($array_amounts['c45']) && isset($array_markups['m45'])) {
-                                    $sum45 = $array_markups['m45'];
-                                    $total45 = $sum45 / $currency_rate;
-                                }
-
-                                $amounts->total_20 = number_format($total20, 2, '.', '');
-                                $amounts->total_40 = number_format($total40, 2, '.', '');
-                                $amounts->total_40hc = number_format($total40hc, 2, '.', '');
-                                $amounts->total_40nor = number_format($total40nor, 2, '.', '');
-                                $amounts->total_45 = number_format($total45, 2, '.', '');
+                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
+                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
+                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
+                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
+                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
                             }
                         }
                         if (!$value->inland->isEmpty()) {
                             foreach ($value->inland as $value) {
-                                $inland20 = 0;
-                                $inland40 = 0;
-                                $inland40hc = 0;
-                                $inland40nor = 0;
-                                $inland45 = 0;
 
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
                                     $typeCurrency =  $quote->pdf_option->origin_charges_currency;
                                 } else {
-                                    $typeCurrency =  $currency_cfg->alphacode;
+                                    $typeCurrency =  $currency_cfg;
                                 }
+
                                 $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
+
                                 $array_amounts = json_decode($value->rate, true);
                                 $array_markups = json_decode($value->markup, true);
+                                foreach ($containers as $c) {
+                                    ${$inland . '_' . $c->code} = 0;
+                                    ${$total . '_' . $inland . $c->code} = 'total_inland' . $c->code;
+                                    
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format((${$amount . '_' . $c->code} + ${$markup . '_' . $c->code}) / $currency_rate, 2, '.', '');
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format(${$amount . '_' . $c->code} / $currency_rate, 2, '.', '');
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format(${$markup . '_' . $c->code} / $currency_rate, 2, '.', '');
+                                    }
 
-                                if (isset($array_amounts['c20']) && isset($array_markups['m20'])) {
-                                    $amount20 = $array_amounts['c20'];
-                                    $markup20 = $array_markups['m20'];
-                                    $total20 = ($amount20 + $markup20) / $currency_rate;
-                                    $inland20 = number_format($total20, 2, '.', '');
-                                } else if (isset($array_amounts['c20']) && !isset($array_markups['m20'])) {
-                                    $amount20 = $array_amounts['c20'];
-                                    $total20 = $amount20 / $currency_rate;
-                                    $inland20 = number_format($total20, 2, '.', '');
-                                } else if (!isset($array_amounts['c20']) && isset($array_markups['m20'])) {
-                                    $markup20 = $array_markups['m20'];
-                                    $total20 = $markup20 / $currency_rate;
-                                    $inland20 = number_format($total20, 2, '.', '');
+                                    $value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
                                 }
-
-                                if (isset($array_amounts['c40']) && isset($array_markups['m40'])) {
-                                    $amount40 = $array_amounts['c40'];
-                                    $markup40 = $array_markups['m40'];
-                                    $total40 = ($amount40 + $markup40) / $currency_rate;
-                                    $inland40 = number_format($total40, 2, '.', '');
-                                } else if (isset($array_amounts['c40']) && !isset($array_markups['m40'])) {
-                                    $amount40 = $array_amounts['c40'];
-                                    $total40 = $amount40 / $currency_rate;
-                                    $inland40 = number_format($total40, 2, '.', '');
-                                } else if (!isset($array_amounts['c40']) && isset($array_markups['m40'])) {
-                                    $markup40 = $array_markups['m40'];
-                                    $total40 = $markup40 / $currency_rate;
-                                    $inland40 = number_format($total40, 2, '.', '');
-                                }
-
-                                if (isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])) {
-                                    $amount40hc = $array_amounts['c40hc'];
-                                    $markup40hc = $array_markups['m40hc'];
-                                    $total40hc = ($amount40hc + $markup40hc) / $currency_rate;
-                                    $inland40hc = number_format($total40hc, 2, '.', '');
-                                } else if (isset($array_amounts['c40hc']) && !isset($array_markups['m40hc'])) {
-                                    $amount40hc = $array_amounts['c40hc'];
-                                    $total40hc = $amount40hc / $currency_rate;
-                                    $inland40hc = number_format($total40hc, 2, '.', '');
-                                } else if (!isset($array_amounts['c40hc']) && isset($array_markups['m40hc'])) {
-                                    $markup40hc = $array_markups['m40hc'];
-                                    $total40hc = $markup40hc / $currency_rate;
-                                    $inland40hc = number_format($total40hc, 2, '.', '');
-                                }
-
-                                if (isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])) {
-                                    $amount40nor = $array_amounts['c40nor'];
-                                    $markup40nor = $array_markups['m40nor'];
-                                    $total40nor = ($amount40nor + $markup40nor) / $currency_rate;
-                                    $inland40nor = number_format($total40nor, 2, '.', '');
-                                } else if (isset($array_amounts['c40nor']) && !isset($array_markups['m40nor'])) {
-                                    $amount40nor = $array_amounts['c40nor'];
-                                    $total40nor = $amount40nor / $currency_rate;
-                                    $inland40nor = number_format($total40nor, 2, '.', '');
-                                } else if (!isset($array_amounts['c40nor']) && isset($array_markups['m40nor'])) {
-                                    $markup40nor = $array_markups['m40nor'];
-                                    $total40nor = $markup40nor / $currency_rate;
-                                    $inland40nor = number_format($total40nor, 2, '.', '');
-                                }
-
-                                if (isset($array_amounts['c45']) && isset($array_markups['m45'])) {
-                                    $amount45 = $array_amounts['c45'];
-                                    $markup45 = $array_markups['m45'];
-                                    $total45 = ($amount45 + $markup45) / $currency_rate;
-                                    $inland45 = number_format($total45, 2, '.', '');
-                                } else if (isset($array_amounts['c45']) && !isset($array_markups['m45'])) {
-                                    $amount45 = $array_amounts['c45'];
-                                    $total45 = $amount45 / $currency_rate;
-                                    $inland45 = number_format($total45, 2, '.', '');
-                                } else if (!isset($array_amounts['c45']) && isset($array_markups['m45'])) {
-                                    $markup45 = $array_markups['m45'];
-                                    $total45 = $markup45 / $currency_rate;
-                                    $inland45 = number_format($total45, 2, '.', '');
-                                }
-
-                                $value->total_20 = number_format($inland20, 2, '.', '');
-                                $value->total_40 = number_format($inland40, 2, '.', '');
-                                $value->total_40hc = number_format($inland40hc, 2, '.', '');
-                                $value->total_40nor = number_format($inland40nor, 2, '.', '');
-                                $value->total_45 = number_format($inland45, 2, '.', '');
                             }
                         }
                     }
@@ -547,6 +340,8 @@ trait QuoteV2Trait
         return $origin_charges_detailed;
     }
 
+    // ESTOY AQUI ***********************
+    
     /**
      * Process collections origins grouped rates
      * @param  collection $origin_charges
