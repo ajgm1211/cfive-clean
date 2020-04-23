@@ -234,7 +234,7 @@ Route::prefix('Importation')->group(function () {
     //		->middleware(['auth','role:administrator|data_entry']); ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
     Route::get('RedirectProcessedInformation/{id}','ImportationController@redirectProcessedInformation')->name('redirect.Processed.Information')
         ->middleware(['auth','role:administrator|data_entry']);
-    Route::get('fcl/rate/{id}/{bo}','ImportationController@LoadFails')->name('Failed.Rates.Developer.For.Contracts')
+    Route::get('fcl/rs/{id}/{bo}','ImportationController@LoadFails')->name('Failed.Developer.For.Contracts')
         ->middleware(['auth','role:administrator|data_entry']);
     //	Route::get('ImporFcl','ImportationController@LoadViewImporContractFcl')->name('importaion.fcl')
     //		->middleware(['auth','role:administrator|data_entry']); ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
@@ -294,6 +294,8 @@ Route::prefix('Importation')->group(function () {
     // Datatable Rates Y Surchargers
     Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
         ->middleware(['auth','role:administrator|data_entry']);
+    
+    Route::get('LoadDataTable/{id}/{selector}/{type}','ImportationController@LoadDataTable')->name('LoadDataTable.Fcl.Faileds')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreMultFailRatesFCL/','ImportationController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Fcl')
         ->middleware(['auth','role:administrator|data_entry']);
     Route::post('EditMultFailRatesFCL/','ImportationController@EdicionRatesMultiples')->name('Edicion.Multiples.Rates.Fcl')
