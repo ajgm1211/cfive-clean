@@ -66,9 +66,11 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        $api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
-        $api_int->api_key = $request->api_key;
-        $api_int->update();
+        //$api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        ApiIntegrationSetting::updateOrCreate(
+            ['api_key' => $request->api_key],
+            ['company_user_id' => $request->company_user_id]
+        );
 
         return response()->json(['message' => 'Ok']);        
     }
