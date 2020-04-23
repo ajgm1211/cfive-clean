@@ -211,7 +211,7 @@ class ApiIntegrationController extends Controller
             return $api_response;
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Unable to retrieve access token.";
+            return "Error: ". $e;
         }
     }
 }
