@@ -94,7 +94,7 @@ Companies List
                                 </span>
                             </a>
                         </div>
-                        @if(@$api->enable==1)
+                        @if(@$api->enable==1 && @$api->api_key!='')
                             <a href="javascript:void(0)" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                 <span>
                                     <span>

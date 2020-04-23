@@ -29,7 +29,7 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        <b>Api Settings</b> 
+                        <b>External API Settings</b> 
                     </h3>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                         <div class="form-group row">
                             <div class="col-2">
                                 <label class=" col-form-label">
-                                    Enable API Integration
+                                    Enable External API Integration
                                     <input type="hidden" name="company_user_id" value="{{\Auth::user()->company_user_id}}" id="company_user_id">
                                 </label>
                             </div>

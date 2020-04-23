@@ -32,16 +32,15 @@ class ApiIntegrationController extends Controller
      */
     public function enable(Request $request)
     {
-        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->count();
+        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
 
-        if($api>0){
-            $api->enable = $request->value;
+        if(!empty($api)){
+            $api->enable = $request->enable;
             $api->update();
         }else{
             $api_int = new ApiIntegrationSetting();
             $api_int->company_user_id = $request->company_user_id;
-            $api_int->api_integration_id = 1;
-            $api_int->enable = $request->value;
+            $api_int->enable = $request->enable;
             $api_int->save();   
         }
 
@@ -66,13 +65,11 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        //$api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
-        ApiIntegrationSetting::updateOrCreate(
-            ['api_key' => $request->api_key],
-            ['company_user_id' => $request->company_user_id]
-        );
+        $api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        $api_int->api_key = $request->api_key;
+        $api_int->update();
 
-        return response()->json(['message' => 'Ok']);        
+        return response()->json(['message' => 'Ok']);         
     }
 
     /**
@@ -146,7 +143,7 @@ class ApiIntegrationController extends Controller
             return response()->json(['message' => 'Ok']);
 
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Unable to retrieve access token.";
+            return "Error: ". $e;
         }
     }
 
