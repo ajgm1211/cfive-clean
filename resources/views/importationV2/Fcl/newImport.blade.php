@@ -34,7 +34,10 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Importation New Contract 
+                        Importation New Contract - <strong style="color:{{$equiment['color']}};"><i> {{$equiment['name']}} </i></strong>
+                        <div class="progress m-progress--sm">
+                            <div class="progress-bar " role="progressbar" style=" background-color:{{$equiment['color']}};width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
                     </h3>
                 </div>
             </div>
@@ -53,6 +56,7 @@
         {!! Form::open(['route'=>'Upload.File.New.Contracts','method'=>'POST','files'=>true, 'id' => 'formupload'])!!}
         <div class="m-portlet__body">
             <div class="tab-content">
+
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <div class="row">
                         <div class="col-lg-12">
@@ -139,6 +143,7 @@
                             <input type="hidden" name="contract_id" value="{{$contract['id']}}">
                             @endif
                             <input type="hidden" name="selector" value="{{$selector}}">
+                            <input type="hidden" name="gp_container_id" value="{{$equiment['id']}}">
                             <hr>
                             <div class="form-group m-form__group row">
                                 <div class="col-lg-2">
@@ -422,6 +427,7 @@ Load
 @endsection
 @section('js')
 @parent
+
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 <script type="application/x-javascript" src="/js/toarts-config.js"></script>
 <script src="{{asset('js/importation/import-new-fcl.js')}}"></script>
