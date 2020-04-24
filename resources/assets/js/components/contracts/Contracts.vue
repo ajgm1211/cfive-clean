@@ -104,7 +104,11 @@
                 <b-card no-body class="card-tabs">
                     <b-tabs card>
                         <b-tab title="Ocean Freight" active>
-                            <ocean-freight :equipment="equipment" :containers="containers"></ocean-freight>
+                            <ocean-freight 
+                            :equipment="equipment" 
+                            :containers="containers"
+                            :carriers="carriers"
+                            ></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
                             <surcharges></surcharges>
