@@ -25,7 +25,35 @@
             </div>
         </div>
         
-        <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
+        <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage">
+      <template v-slot:head()="scope">
+        <div class="text-nowrap">
+          Heading
+        </div>
+                            <b-form-input
+                                          id="reference"
+                                          v-model="reference"
+                                          placeholder="Reference" 
+                                          required
+                                          >
+                                            
+                            </b-form-input>
+      </template>
+            <template v-slot:cell(origin)="data">
+                <b-form-input v-model="data.value"/>
+            </template>
+            <template v-slot:cell(destination)="data">
+                <b-form-input v-model="data.value"/>
+            </template>
+            <template v-slot:cell(currency)="data">
+                <b-form-input v-model="data.value"/>
+            </template>
+            <template v-slot:cell(carrier)="data">
+                <multiselect v-model="data.value" :options="carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier"></multiselect>
+            </template>
+
+
+        </b-table>
         <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
         <!-- Action BTN -->
         <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
@@ -45,13 +73,16 @@
 
 
 <script>
+    import Multiselect from 'vue-multiselect';
+
     export default {
         props: {
             equipment: Object,
-            containers: Object
+            containers: Object,
+            carriers: Object
         },
         components: { 
-            
+            Multiselect
         },
         data() {
             return {
@@ -77,7 +108,7 @@
                         formatter: value => { return value.alphacode; }
                     },
                     { key: 'carrier', label: 'Carrier', 
-                        formatter: value => { return value.name; }
+                        formatter: value => { return value; }
                     },
                     { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
                         var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
