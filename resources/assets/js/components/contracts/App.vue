@@ -35,16 +35,14 @@
                                          class="select-all"
                                          v-model="allSelected"
                                          :indeterminate="indeterminate"
-                                         aria-describedby="flavours"
-                                         aria-controls="flavours"
                                          @change="toggleAll"
                                          >
                         </b-form-checkbox>
                     </b-form-checkbox-group>
-                    <!-- <p>
-Selected Rows:<br>
-{{ selected }}
-</p> -->
+                   <!--  <p>
+                        
+                        {{ selected }}
+                    </p>  -->
                     <b-table borderless hover 
                              ref="selectableTable"
                              :fields="fields" 
@@ -56,11 +54,12 @@ Selected Rows:<br>
                             <strong>Loading...</strong>
                         </div>
                         <template v-slot:cell(checkbox)="data">
-                            <b-form-checkbox-group v-model="selected">
+                            <b-form-checkbox-group >
                                 <b-form-checkbox 
-                                                 v-bind:value="'check'+data.item.id"
+                                                 v-bind:value="data.item"
                                                  v-bind:id="'check'+data.item.id"
-                                                 stacked>
+                                                 v-model="selected"
+                                                 >
                                 </b-form-checkbox>
                             </b-form-checkbox-group>
                         </template>
@@ -108,17 +107,15 @@ Selected Rows:<br>
 
                     <b-form ref="form" @submit.stop.prevent="onSubmit" class="modal-input">
                         <b-form-group
-
+                                      id="reference"
                                       label="Reference"
                                       label-for="reference"
-                                      invalid-feedback="Reference is required"
+                                      invalid-feedback="Reference is required."
+                                      valid-feedback="Reference is done!"
                                       >
                             <b-form-input
-                                          :state="validateRef" 
-                                          id="reference"
                                           v-model="reference"
                                           placeholder="Reference" 
-                                          required
                                           >
                             </b-form-input>
                         </b-form-group>
@@ -126,10 +123,11 @@ Selected Rows:<br>
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <b-form-group
+                                              id="validity"
                                               label="Validity"
                                               label-for="validity"
-                                              invalid-feedback="Validity is required"
-
+                                              invalid-feedback="Validity is required."
+                                              valid-feedback="Reference is done!"
                                               >
                                     <date-range-picker
                                                        ref="picker"
@@ -141,35 +139,27 @@ Selected Rows:<br>
                                                        v-model="selectedDates"
                                                        :linkedCalendars="true">
                                     </date-range-picker>
-
-                                    <ValidationProvider :vid="name" :rules="rules" :name="label" v-slot="{ errors }">
-                                        <b-form-input v-show="false"
-                                                      class="border-light"
-                                                      :class="{'is-invalid': errors.length }"
-                                                      :name="name"
-                                                      v-model="model">                                  
-                                        </b-form-input>
-                                        <span class="invalid-feedback">{{ errors[0] }}</span>
-                                    </ValidationProvider>
                                 </b-form-group>
                             </div>
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
+                                              id="carrier"
                                               label="Carrier"
                                               label-for="carrier"
-                                              invalid-feedback="Carrier is required"
+                                              invalid-feedback="Carrier is required."
+                                              valid-feedback="Reference is done!"
                                               >
                                     <multiselect 
                                                  v-model="carrier" 
                                                  :multiple="true" 
                                                  :options="carriers" 
-                                                 :searchable="false" 
-                                                 :close-on-select="true" 
+                                                 :searchable="false"
+                                                 :close-on-select="false"
+                                                 :clear-on-select="false"
                                                  track-by="id" label="name" 
                                                  :show-labels="false" 
                                                  placeholder="Select Carrier">
-
-                                        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+                                        <!-- <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template> -->
                                     </multiselect>
 
 
@@ -178,9 +168,11 @@ Selected Rows:<br>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
+                                              id="equipment"
                                               label="Equipment"
                                               label-for="equipment"
-                                              invalid-feedback="Equipment is required"
+                                              invalid-feedback="Equipment is required."
+                                              valid-feedback="Reference is done!"
                                               >
                                     <multiselect v-model="equipment" :options="equipments" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Equipment"></multiselect>
 
@@ -188,9 +180,11 @@ Selected Rows:<br>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
+                                              id="direction"
                                               label="Direction"
                                               label-for="direction"
-                                              invalid-feedback="Direction is required"
+                                              invalid-feedback="Direction is required."
+                                              valid-feedback="Reference is done!"
                                               >
                                     <multiselect v-model="direction" :options="directions" :searchable="false" :close-on-select="true"  track-by="id" label="name" :show-labels="false" placeholder="Select Direction"></multiselect>
 
@@ -201,7 +195,6 @@ Selected Rows:<br>
 
                         <div class="btns-form-modal">
                             <button class="btn" @click="modalClose" type="button">Cancel</button>
-
                             <button class="btn btn-primary btn-bg">Add Contract</button>
                         </div>
                     </b-form>
@@ -244,6 +237,7 @@ Selected Rows:<br>
 
         data() {
             return {
+                prueba: true,
                 isBusy:true, // Loader
                 data: null,
                 nameState: true,
@@ -284,178 +278,173 @@ Selected Rows:<br>
 
                 //List Data
                 carriers: [],
-                    directions: [],
-                        equipments: [],
-                            //Pagination
-                            pageCount: 0,
-                                initialPage: 1
-        }
-    },
+                directions: [],
+                equipments: [],
+                //Pagination
+                pageCount: 0,
+                initialPage: 1
+            }
+        },
         created() {
 
-        let params = this.$route.query;
+            let params = this.$route.query;
 
-        if(params.page) this.initialPage = Number(params.page);
+            if(params.page) this.initialPage = Number(params.page);
 
-        /* Return the Contracts lists data*/
-        api.getData(params, '/api/v2/contracts', (err, data) => {
-            this.setData(err, data);
-        });
+            /* Return the Contracts lists data*/
+            api.getData(params, '/api/v2/contracts', (err, data) => {
+                this.setData(err, data);
+            });
 
-        /* Return the lists data for dropdowns */
-        api.getData({}, '/api/v2/contracts/data', (err, data) => {
-            this.setDropdownLists(err, data.data);
-        });
+            /* Return the lists data for dropdowns */
+            api.getData({}, '/api/v2/contracts/data', (err, data) => {
+                this.setDropdownLists(err, data.data);
+            });
 
-        this.$emit('input', { startDate: null, endDate: null });
-        this.setDates();
-
-    },
-        computed:{
-            validateRef(){
-                return this.reference.length > 5 ? true : false
-            }
+            this.$emit('input', { startDate: null, endDate: null });
+            this.setDates();
 
         },
-            methods: {
-                toggleAll(checked) {
-                    this.selected = checked ? this.data.slice() : []
-                },
-                    modalClose() {
-                        this.$bvModal.hide('add-fcl');
-                    },
-                        setDates() {
-                            if(this.startDate && this.endDate){
-                                this.selectedDates = {
-                                    startDate: moment(this.startDate, 'YYYY-MM-DD').format('MMM DD, YYYY'),
-                                    endDate: moment(this.endDate, 'YYYY-MM-DD').format('MMM DD, YYYY')
-                                }
-                            }
-                        },
+        methods: {
+            // invalid empty return form
+            invalidFeedback(data) {
+                if(data.carriers == ''){
+                    $('#carrier .invalid-feedback').css({'display':'block'});                
+                }
+                if(data.name == '') {
+                    $('#reference .invalid-feedback').css({'display':'block'});                
+                }  
+                if(data.gp_container == null) { 
+                    $('#equipment .invalid-feedback').css({'display':'block'});                
+                }
+                if(data.direction == null) { 
+                    $('#direction .invalid-feedback').css({'display':'block'});                
+                }
+            }, 
+            toggleAll(checked) {
+                this.selected = checked ? this.data.slice() : [] //Selected all the checkbox
+            },
+            modalClose() {
+                this.$bvModal.hide('add-fcl'); //Close modal 
+            },
+            setDates() {
+                if(this.startDate && this.endDate){
+                    this.selectedDates = {
+                        startDate: moment(this.startDate, 'YYYY-MM-DD').format('MMM DD, YYYY'),
+                        endDate: moment(this.endDate, 'YYYY-MM-DD').format('MMM DD, YYYY')
+                    }
+                }
+            },
 
-                            /* Set the Dropdown lists to use in form */
-                            setDropdownLists(err, data){
-                                this.carriers = data.carriers;
-                                this.equipments = data.equipments;
-                                this.directions = data.directions;
-                            },
+            /* Set the Dropdown lists to use in form */
+            setDropdownLists(err, data){
+                this.carriers = data.carriers;
+                this.equipments = data.equipments;
+                this.directions = data.directions;
+            },
 
-                                /* Set the data response in table */ 
-                                setData(err, { data: records, links, meta }) {
-                                    this.isBusy = false;
+            /* Set the data response in table */ 
+            setData(err, { data: records, links, meta }) {
+                this.isBusy = false;
 
-                                    if (err) {
-                                        this.error = err.toString();
-                                    } else {
-                                        this.data = records;
-                                        this.pageCount = Math.ceil(meta.total/meta.per_page); 
-                                    }
-                                },
+                if (err) {
+                    this.error = err.toString();
+                } else {
+                    this.data = records;
+                    this.pageCount = Math.ceil(meta.total/meta.per_page); 
+                }
+            },
 
-                                    /* Prepare the data to create a new Contract */
-                                    prepareData(){
-                                        let carriers = [];
-                                        this.carrier.forEach(e => carriers.push(e.id));
+            /* Prepare the data to create a new Contract */
+            prepareData(){
+                let carriers = [];
+                this.carrier.forEach(e => carriers.push(e.id));
 
-                                        return {
-                                            'name': this.reference,
-                                            'direction': this.direction.id,
-                                            'validity': '2020-02-20', //this.dateRange.startDate,
-                                            'expire': '2020-02-20', //this.dateRange.endDate,
-                                            'status': 'publish',
-                                            'remarks': '',
-                                            'gp_container': this.equipment.id,
-                                            'carriers': carriers
-                                        }
-                                    },
+                return {
+                    'name': this.reference,
+                    'direction': this.direction.id,
+                    'validity': '2020-02-20', //this.dateRange.startDate,
+                    'expire': '2020-02-20', //this.dateRange.endDate,
+                    'status': 'publish',
+                    'remarks': '',
+                    'gp_container': this.equipment.id,
+                    'carriers': carriers
+                }
+            },
 
-                                        /* Handle the submit of Create Form and 
+            /* Handle the submit of Create Form and 
               send the data to store a new contract */
-                                        onSubmit(){
-
-                                            const data = this.prepareData();
-
-                                            api.call('post', '/api/v2/contracts/store', data)
-                                                .then( ( response ) => {
-                                                window.location = 'http://127.0.0.1:8000/api/contracts/'+response.data.data.id+'/edit';
-                                            })
-                                                .catch(( data ) => {
-                                                this.$refs.observer.setErrors(data.data.errors);
-                                            });
-
-                                        },
-
-                                            /* Pagination Callback */
-                                            clickCallback (pageNum) {
-                                                this.isBusy = true;
-
-                                                let qs = {
-                                                    page: pageNum
-                                                };
-
-                                                if(this.$route.query.sort) qs.sort = this.$route.query.sort;
-                                                if(this.$route.query.q) qs.q = this.$route.query.q;
-
-                                                this.routerPush(qs);
-                                            },
-
-                                                /* Update url and execute api call */
-                                                routerPush(qs) {
-                                                    this.$router.push({query: qs});
-
-                                                    api.getData(qs, '/api/v2/contracts', (err, data) => {
-                                                        this.setData(err, data);
-                                                    });
-
-                                                },
-
-                                                    badgecarriers([value, key, item]){
-                                                        let variation = "";
-
-                                                        if(value){
-                                                            value.forEach(function(val){
-                                                                variation += "<span class='badge badge-primary'>"+val.name+"</span> ";
-                                                            });
-
-                                                            return variation;
-                                                        } else {
-                                                            return '-';
-                                                        }
-
-                                                    },
+            onSubmit(){
+                const data = this.prepareData();
+                this.invalidFeedback(data);
+                api.call('post', '/api/v2/contracts/store', data)
+                    .then( ( response ) => {
+                    window.location = 'http://127.0.0.1:8000/api/contracts/'+response.data.data.id+'/edit';
+                })
+                    .catch(( data ) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
 
             },
-                watch: {
-                    selected(newVal, oldVal) {
-                        // Handle changes in individual checkboxes
-                        if (newVal.length === 0) {
-                            this.indeterminate = false
-                            this.allSelected = false
-                        } else if (newVal.length === this.data.length) {
-                            this.indeterminate = false
-                            this.allSelected = true
-                        } else {
-                            this.indeterminate = true
-                            this.allSelected = false
-                        }
-                    },
-                        selected() {
-                            this.$emit('input', this.selected);
-                        },
-                            selectedDates: {
-                                handler: function (val, oldVal) {
-                                    this.$emit('input', val);
-                                    this.model = 'example';
-                                },
-                                    deep: true
-                            },
-                                search: {
-                                    handler: function (val, oldVal) {
-                                        let qs = { q: val };
 
-                                        this.routerPush(qs);
-                                    }
-                                }
+            /* Pagination Callback */
+            clickCallback (pageNum) {
+                this.isBusy = true;
+
+                let qs = {
+                    page: pageNum
+                };
+
+                if(this.$route.query.sort) qs.sort = this.$route.query.sort;
+                if(this.$route.query.q) qs.q = this.$route.query.q;
+
+                this.routerPush(qs);
+            },
+
+            /* Update url and execute api call */
+            routerPush(qs) {
+                this.$router.push({query: qs});
+
+                api.getData(qs, '/api/v2/contracts', (err, data) => {
+                    this.setData(err, data);
+                });
+
+            },
+
+            badgecarriers([value, key, item]){
+                let variation = "";
+
+                if(value){
+                    value.forEach(function(val){
+                        variation += "<span class='badge badge-primary'>"+val.name+"</span> ";
+                    });
+
+                    return variation;
+                } else {
+                    return '-';
                 }
+
+            },
+
+        },
+        watch: {
+            selected() {
+                this.$emit('input', this.selected);
+            },
+            selectedDates: {
+                handler: function (val, oldVal) {
+                    this.$emit('input', val);
+                    this.model = 'example';
+                },
+                deep: true
+            },
+            search: {
+                handler: function (val, oldVal) {
+                    let qs = { q: val };
+
+                    this.routerPush(qs);
+                }
+            }
+        }
     }
 </script>
