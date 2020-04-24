@@ -98,6 +98,7 @@ class PdfV2Controller extends Controller
 
         foreach($containers as $container){
             ${$sum.$container} = $sum.$container->code;
+            ${$total.$container->code} = $total.$container->code;
         }
         
         foreach($sale_terms_origin_grouped as $origin_sale){
@@ -202,10 +203,10 @@ class PdfV2Controller extends Controller
 
         $origin_charges = AutomaticRate::whereNotIn('origin_port_id',$origin_ports)->where('quote_id',$quote->id)
             ->Charge(1,'Origin')->with('charge')->get();
-
+        
         $destination_charges = AutomaticRate::whereNotIn('destination_port_id',$destination_ports)->where('quote_id',$quote->id)
             ->Charge(2,'Destination')->with('charge')->get();
-
+            
         $freight_charges = AutomaticRate::whereHas('charge', function ($query) {
             $query->where('type_id', 3);
         })->with('charge')->where('quote_id',$quote->id)->get();
@@ -224,7 +225,7 @@ class PdfV2Controller extends Controller
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $company_user->currency->alphacode, $containers);
-
+        
         /* Se manipula la colección de rates para añadir los valores de saleterms */
         $rates = $rates->map(function ($item, $key) use($total, $sum, $containers, $origin_ports, $destination_ports,$sale_terms_origin_grouped, $sale_terms_destination_grouped){
             if(in_array($item->origin_port_id,$origin_ports)){
@@ -233,6 +234,7 @@ class PdfV2Controller extends Controller
                         if($value->type_id==1){
                             //Seteamos valores de los charges originales a 0
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
                                 $value->${$total.$container->code}=0;
                                 $value->${$total.$container->code}=0;
                             }
@@ -244,6 +246,8 @@ class PdfV2Controller extends Controller
                             $charge = new Charge();
                             $charge->type_id = 1;
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
+                                ${$sum.$container->code} = 'sum_'.$container->code;
                                 $charge->${$total.$container->code} = $x->${$sum.$container->code};
                             }
                             $charge->currency_id = $x->currency_id;
@@ -257,6 +261,8 @@ class PdfV2Controller extends Controller
                             $charge = new Charge();
                             $charge->type_id = 1;
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
+                                ${$sum.$container->code} = 'sum_'.$container->code;
                                 $charge->${$total.$container->code} = $x->${$sum.$container->code};
                             }
                             $charge->currency_id = $x->currency_id;
@@ -271,6 +277,7 @@ class PdfV2Controller extends Controller
                         if($value->type_id==2){
                             //Seteamos valores de los charges originales a 0
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
                                 $value->${$total.$container->code}=0;
                                 $value->${$total.$container->code}=0;
                             }
@@ -282,6 +289,8 @@ class PdfV2Controller extends Controller
                             $charge = new Charge();
                             $charge->type_id = 2;
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
+                                ${$sum.$container->code} = 'sum_'.$container->code;
                                 $charge->${$total.$container->code} = $x->${$sum.$container->code};
                             }
                             $charge->currency_id = $x->currency_id;
@@ -295,6 +304,8 @@ class PdfV2Controller extends Controller
                             $charge = new Charge();
                             $charge->type_id = 2;
                             foreach($containers as $container){
+                                ${$total.$container->code} = 'total_'.$container->code;
+                                ${$sum.$container->code} = 'sum_'.$container->code;
                                 $charge->${$total.$container->code} = $x->${$sum.$container->code};
                             }
                             $charge->currency_id = $x->currency_id;
@@ -309,22 +320,22 @@ class PdfV2Controller extends Controller
         });
 
         /** Origin Charges **/
-
-        $origin_charges_grouped=$this->processOriginGrouped($origin_charges, $quote, $currency_cfg, $containers);
-
-        $origin_charges_detailed=$this->processOriginDetailed($origin_charges, $quote, $currency_cfg, $containers);
-
+        
+        $origin_charges_grouped=$this->localChargesGrouped($origin_charges, 'origin', $quote, $currency_cfg, $containers);
+        
+        $origin_charges_detailed=$this->localChargesDetailed($origin_charges, 'origin', $quote, $currency_cfg, $containers);
+        
         /** Destination Charges **/
 
-        $destination_charges_grouped=$this->processDestinationGrouped($destination_charges, $quote, $currency_cfg, $containers);
-
-        $destination_charges=$this->processDestinationDetailed($destination_charges, $quote, $currency_cfg, $containers);
-
+        $destination_charges_grouped=$this->localChargesGrouped($destination_charges, 'destination', $quote, $currency_cfg, $containers);
+        
+        $destination_charges_detailed=$this->localChargesDetailed($destination_charges, 'destination', $quote, $currency_cfg, $containers);
+        
         /** Freight Charges **/
 
         $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg, $containers);
-
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges'=>$destination_charges,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
+        
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges_detailed'=>$destination_charges_detailed,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
