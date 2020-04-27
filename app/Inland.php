@@ -35,6 +35,13 @@ class Inland extends Model implements Auditable
     return $this->HasMany('App\InlandCompanyRestriction');
 
   }
+
+  public function scopeFilterByCurrentCompany( $query )
+  {
+    $company_id = Auth::user('web')->company_user_id;
+    return $query->where( 'company_user_id', '=', $company_id );
+  }
+
   /*public function getRouteKey()
   {
     $hashids = new \Hashids\Hashids('MySecretSalt');
