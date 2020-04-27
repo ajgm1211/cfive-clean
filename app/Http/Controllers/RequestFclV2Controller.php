@@ -183,14 +183,16 @@ class RequestFclV2Controller extends Controller
                     } else {
                         $hiddenPrCt = '';
                     }
-                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" id="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
+                    $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,1]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;';
+                    
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
-                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
-                    </a>
+                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
+                    </a>&nbsp;&nbsp;
                     ';
 
-                    $buttons = $butPrCt . $buttonDp . $buttoEdit . $buttons;
+                    $buttons = $butPrCt . $butFailsR .$buttonDp . $buttoEdit . $buttons;
                 } else{
 
                     if(strnatcasecmp($Ncontracts->status,'Pending')==0){
@@ -231,7 +233,6 @@ class RequestFclV2Controller extends Controller
         $now    			= $time->format('dmY_His');
         $now2   			= $time->format('Y-m-d H:i:s');
         $file 				= $request->input('document');
-
         if(!empty($file)){
             $gpContainer = GroupContainer::find($groupContainer);			
             $ArrayData['group_containers'] = [
@@ -283,8 +284,8 @@ class RequestFclV2Controller extends Controller
                 ]);
             }
 
-            $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','contracts3');
-            $ext_at_sl  = strtolower($file->getClientOriginalExtension());
+            $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','FclRequest-New');
+            $ext_at_sl  = strtolower(pathinfo($file,PATHINFO_EXTENSION));
 
             if(strnatcasecmp($ext_at_sl,'xls')  == 0 ||
                strnatcasecmp($ext_at_sl,'xlsx') == 0 ||
@@ -445,13 +446,14 @@ class RequestFclV2Controller extends Controller
         if(strnatcasecmp($selector,'media')==0){
             $Ncontract	= NewContractRequest::find($id);
             $Ncontract->load('companyuser');
+            $data       = json_decode($Ncontract->data,true);
             $time       = new \DateTime();
             $now        = $time->format('d-m-y');
             $mediaItem  = $Ncontract->getFirstMedia('document');
             $extObj     = new \SplFileInfo($mediaItem->file_name);
             $ext        = $extObj->getExtension();
-            $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$now.'-FLC.'.$ext;
-            return Storage::disk('contracts3')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
+            $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
+            return Storage::disk('FclRequest-New')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
 
         } elseif(strnatcasecmp($selector,'storage')==0){
 
@@ -491,7 +493,7 @@ class RequestFclV2Controller extends Controller
         $Ncontract  = NewContractRequest::find($id);
         $Ncontract->load('direction','Requestcarriers','companyuser');
         $data = json_decode($Ncontract->data);
-        $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_TMP_FCL';
+        $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_IMP_FCL';
 
         $columns = ['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE'];
         $cellDir = ['A','B','C','D','E','F','G','H','I','J','K','L','M','Ñ','O','P','Q','R','S','T','U','V','W','Y','Z'];

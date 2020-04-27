@@ -16,7 +16,11 @@ class HelperRates {
      */
     public static function get_rates($id) {
         $contract           = Contract::find($id);
-        $equiment_id        = $contract->gp_container_id;
+        if(!empty($contract->gp_container_id)){            
+            $equiment_id    = $contract->gp_container_id;
+        } else {            
+            $equiment_id    = 1;
+        }
         $equiments          = GroupContainer::with('containers')->find($equiment_id);
         $columns_rt_ident   = [];
         if($equiment_id == 1){
@@ -34,17 +38,17 @@ class HelperRates {
             $containers = null;
             $containers = json_decode($rate->containers,true);
             $containers = json_decode($containers,true);
-           // dd($containers,$rate->containers);
+            // dd($containers,$rate->containers);
             $colec = ['id'              =>  $rate->id,
                       'contract_id'     =>  $id,            //
                       'origin'          =>  $rate->origin,    //
                       'destiny'         =>  $rate->destiny,    //
                       'carrier'         =>  $rate->carrier,   //
-//                      'twuenty'         =>  $rate->twuenty, //    
-//                      'forty'           =>  $rate->forty,   //  
-//                      'fortyhc'         =>  $rate->fortyhc, //
-//                      'fortynor'        =>  $rate->fortynor, //
-//                      'fortyfive'       =>  $rate->fortyfive, //
+                      //                      'twuenty'         =>  $rate->twuenty, //    
+                      //                      'forty'           =>  $rate->forty,   //  
+                      //                      'fortyhc'         =>  $rate->fortyhc, //
+                      //                      'fortynor'        =>  $rate->fortynor, //
+                      //                      'fortyfive'       =>  $rate->fortyfive, //
                       'currency'        =>  $rate->currency,  //
                       'operation'       =>  '2'
                      ];

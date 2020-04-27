@@ -84,9 +84,9 @@
                     }
 
                     if(data.status != 'Pending'){
-                        $('#PrCHidden'+idContract).removeAttr('hidden');
+                        $('.PrCHidden'+idContract).removeAttr('hidden');
                     } else {
-                        $('#PrCHidden'+idContract).attr('hidden','hidden');                        
+                        $('.PrCHidden'+idContract).attr('hidden','hidden');                        
                     }
                     //swal('Deleted!','Your Status has been changed.','success');
                     toastr.success("Your Status has been changed. ID: "+data.request.id+" - "+data.request.namecontract, "Status. ID: "+data.request.id);
