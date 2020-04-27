@@ -1021,3 +1021,14 @@ Route::get('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightContr
 Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
 /** End Contracts V2 routes **/
+
+/** Contracts V2 routes **/
+Route::get('api/inlands', 'InlandController@index');
+Route::get('api/v2/inlands', 'InlandController@list');
+Route::get('api/v2/inlands/data', 'InlandController@data');
+
+/** End Contracts V2 routes **/
+
+
+
+
