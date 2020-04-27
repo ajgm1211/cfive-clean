@@ -45,13 +45,13 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
 .publish {
     background-color: #5fe2a0;
 }
-.incompleted {
+.incomplete {
     background-color: #969cc0;
 }
 .expired {
     background-color: #ff6464;
 }
-.incompleted::before {
+.incomplete::before {
     content: 'incompleted';
     font-weight: bold;
 }
@@ -115,7 +115,19 @@ table tr th:focus {
     border: 2px solid #eee;
     padding-left: 33px;
 }
-.input-check[type=checkbox] + label {
+.custom-control-label::before,
+.custom-control-label::after,
+.custom-control-input {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 2px;
+    border-color: #EEE;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before,
+.custom-checkbox .custom-control-input ~ .custom-control-label::before{
+    box-shadow: none;
+}
+/*.input-check[type=checkbox] + label {
     //display: block;
     margin: 0.2em;
     cursor: pointer;
@@ -154,7 +166,7 @@ table tr th:focus {
     transform: scale(1);
     background-color: transparent;
     border-color: #006bf9;
-}
+}*/
 td.checkbox-add-fcl, td.actions-add-fcl {
     width: 45px;
 }
@@ -164,6 +176,9 @@ td.checkbox-add-fcl, td.actions-add-fcl {
 }
 .btn.btn-secondary:focus i {
     color: #006bf9;
+}
+.action-app {
+    padding: 0.1rem 0.40rem;
 }
 .action-app i {
     color: #eee;
@@ -186,8 +201,22 @@ td.checkbox-add-fcl, td.actions-add-fcl {
     position: relative;
     cursor: pointer;
     border: 2px solid #eee;
-    z-index: 100;
 }
+
+.actions-box span {
+    position: relative;
+    z-index: 1;
+}
+
+.all-action-app {
+    position: absolute;
+    right: 30px;
+}
+
+.popup-actions[data-action="false"] {
+    background: red;
+}
+
 .actions-box:hover .icon-add-fcl {
     color: #006bf9;
 }
@@ -200,7 +229,10 @@ td.checkbox-add-fcl, td.actions-add-fcl {
     border: 2px solid #eee;
     border-radius: 5px;
     position: absolute;
-     z-index: 100;
+    z-index: 10;
+}
+.active {
+    display: block;
 }
 .btn-action {
     width: 100%;
@@ -265,9 +297,9 @@ i.mx-icon-calendar {
     font-weight: bold !important;
     color: #031b4e !important;
 }
-.multiselect__option--highlight {
-    background-color: #eeeeee !important;
-    color: #525f7e !important;
+.multiselect__option--highlight, .multiselect__option--selected {
+    background-color: #dddddd  !important;
+    color: #333333 !important;
 }
 .multiselect__tags {
     font-size: 13px !important;
@@ -276,6 +308,11 @@ i.mx-icon-calendar {
     border: 2px solid #eee !important;
     padding:  4px 40px 5px 10px !important;
     border-radius: 0.25rem !important;
+}
+.multiselect__tags-wrap {
+    width: 100% !important;
+    display: flex;
+    flex-flow: wrap;
 }
 .multiselect__option {
     font-size: 13px;
@@ -334,7 +371,23 @@ i.mx-icon-calendar {
 .multiselect__placeholder {
     white-space: nowrap;
 }
+.select-all {
+    position: relative;
+    top: 25px;
+    left: 11px;
+}
+#carrier .multiselect__tags {
+    height: auto;
+}
+.multiselect__placeholder {
+    margin-bottom: 0px !important;
+}
 
+
+/*** Validations ***/
+.form-control.is-invalid:focus, .form-control.is-valid:focus {
+    box-shadow: none !important;
+}
 
 /*** --- REMARK --- ***/
 .remarks {
