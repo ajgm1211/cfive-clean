@@ -71,7 +71,7 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{ $hide }}>{{@${'destination_'.$c->code}+@${'destination_inland_'.$c->code}+@${'sum_sale'.$c->code}}}</td>
+                                                <td {{ $hide }}>{{ @${'destination_'.$c->code}+@${'destination_inland_'.$c->code}+@${'sum_sale'.$c->code} }}</td>
                                             @endif
                                         @endforeach
                                     @endforeach
