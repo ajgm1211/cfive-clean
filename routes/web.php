@@ -292,8 +292,8 @@ Route::prefix('Importation')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
 
     // Datatable Rates Y Surchargers
-    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
-        ->middleware(['auth','role:administrator|data_entry']);
+//    Route::get('FailedRatesForContractsDeveloperView/{id}/{ids}','ImportationController@FailedRatesDeveloperLoad')->name('Failed.Rates.Developer.view.For.Contracts')
+//        ->middleware(['auth','role:administrator|data_entry']);
     
     Route::get('LoadDataTable/{id}/{selector}/{type}','ImportationController@LoadDataTable')->name('LoadDataTable.Fcl.Faileds')->middleware(['auth','role:administrator|data_entry']);
     Route::post('StoreMultFailRatesFCL/','ImportationController@StoreFailRatesMultiples')->name('store.Multiples.Rates.Fcl')
