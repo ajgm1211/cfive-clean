@@ -171,6 +171,89 @@
                         <div class="row align-items-center"></div>
                     </div>
                 </div>
+
+                <div class="tab-pane " id="FailSurcharge" role="tabpanel">
+                    <br>
+                    <div class="m-portlet__head">
+                        <label >
+                            <i class="fa fa-dot-circle-o" style="color:red;"> </i>
+                            <strong >
+                                Failed Surcharges: 
+                            </strong>
+                            <strong id="strfail">{{$countfailsurcharge}}</strong>
+                            <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
+                        </label>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <br>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+                        <table class="table tableData"  id="failedSurchargeTable" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    <th> Surcharge </th>
+                                    <th> Origin </th>
+                                    <th> Destiny </th>
+                                    <th> Type Destiny </th>
+                                    <th> Type Calculation </th>
+                                    <th> Ammount </th>
+                                    <th> Currency </th>
+                                    <th> Carrier </th>
+                                    <th> Options </th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                        <!--end: tab body -->
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
+                </div>
+                <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
+                <div class="tab-pane" id="GoodSurcharge" role="tabpanel">
+                    <br>
+                    <div class="m-portlet__head">
+                        <label>
+                            <i class="fa fa-dot-circle-o" style="color:green;"> </i>
+                            <strong id="">
+                                Good Surcharges: 
+                            </strong>
+                            <strong id="strgood">
+                                {{$countgoodsurcharge}}
+                            </strong>
+                            <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinput" />
+                        </label>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+
+                        <table class="table tableData"  id="GoodSurchargetable" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    <th> Surcharge </th>
+                                    <th> Origin </th>
+                                    <th> Destiny </th>
+                                    <th> Type Destiny </th>
+                                    <th> Type Calculation </th>
+                                    <th> Ammount </th>
+                                    <th> Currency </th>
+                                    <th> Carrier </th>
+                                    <th> Options </th>
+                                </tr>
+                            </thead>
+
+                        </table>
+
+                        <!--end: tab body -->
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane ShEditMultRates" id="editMultRates" hidden role="tabpanel"></div>
 
@@ -212,7 +295,7 @@
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>
+<!--<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>-->
 <script type="text/javascript" charset="utf8"  src="/js/datatable.conf.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
@@ -338,6 +421,66 @@
             "dom": 'Bfrtip',
             "paging": true
             //"scrollX": true
+        });
+        failedSurchar = $('#failedSurchargeTable').DataTable({
+            processing: true,
+            serverSide: true,
+            columnDefs: [],
+            select: {},
+            buttons: [],
+            ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
+            columns: [
+
+                { data: 'surchargelb', name: 'surchargelb' },
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'typedestinylb', name: "typedestinylb" },
+                { data: 'calculationtypelb', name: 'calculationtypelb' },
+                { data: 'ammount', name: "ammount" },
+                { data: 'currencylb', name: 'currencylb' },
+                { data: 'carrierlb', name: 'carrierlb' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
+            //"scrollX": true,
+        });
+
+        $('#GoodSurchargetable').DataTable({
+            processing: true,
+            serverSide: true,
+            columnDefs: [],
+            select: {},
+            buttons: [],
+            ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,2]) !!}',
+            columns: [
+                { data: 'surchargelb', name: 'surchargelb' },
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'typedestinylb', name: "typedestinylb" },
+                { data: 'calculationtypelb', name: 'calculationtypelb' },
+                { data: 'ammount', name: "ammount" },
+                { data: 'currencylb', name: 'currencylb' },
+                { data: 'carrierlb', name: 'carrierlb' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
+            //"scrollX": true,
         });
     });
 
