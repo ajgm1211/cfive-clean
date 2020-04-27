@@ -217,11 +217,8 @@ class PdfV2Controller extends Controller
         $origin_harbor = Harbor::where('id',$quote->origin_harbor_id)->first();
         $destination_harbor = Harbor::where('id',$quote->destination_harbor_id)->first();
         $user = User::where('id',\Auth::id())->with('companyUser')->first();
+        $equipmentHides = $this->hideContainerV2($quote->equipment,'BD', $containers);
         
-        if($quote->equipment!=''){
-            $equipmentHides = $this->hideContainerV2($quote->equipment,'BD', $containers);
-        }
-
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $company_user->currency->alphacode, $containers);
@@ -321,21 +318,21 @@ class PdfV2Controller extends Controller
 
         /** Origin Charges **/
         
-        $origin_charges_grouped=$this->localChargesGrouped($origin_charges, 'origin', $quote, $currency_cfg, $containers);
+        $origin_charges_grouped=$this->localChargesGrouped($origin_charges, 'origin', $quote, $company_user->currency->alphacode, $containers);
         
-        $origin_charges_detailed=$this->localChargesDetailed($origin_charges, 'origin', $quote, $currency_cfg, $containers);
+        $origin_charges_detailed=$this->localChargesDetailed($origin_charges, 'origin', $quote, $company_user->currency->alphacode, $containers);
         
         /** Destination Charges **/
 
-        $destination_charges_grouped=$this->localChargesGrouped($destination_charges, 'destination', $quote, $currency_cfg, $containers);
+        $destination_charges_grouped=$this->localChargesGrouped($destination_charges, 'destination', $quote, $company_user->currency->alphacode, $containers);
         
-        $destination_charges_detailed=$this->localChargesDetailed($destination_charges, 'destination', $quote, $currency_cfg, $containers);
+        $destination_charges_detailed=$this->localChargesDetailed($destination_charges, 'destination', $quote, $company_user->currency->alphacode, $containers);
         
         /** Freight Charges **/
-
-        $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $currency_cfg, $containers);
+      
+        $freight_charges_grouped = $this->processFreightCharges($freight_charges, $quote, $company_user->currency->alphacode, $containers);
         
-        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges_detailed'=>$destination_charges_detailed,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
+        $view = \View::make('quotesv2.pdf.index', ['quote'=>$quote,'containers'=>$containers,'rates'=>$rates,'origin_harbor'=>$origin_harbor,'destination_harbor'=>$destination_harbor,'user'=>$user,'currency_cfg'=>$currency_cfg, 'equipmentHides'=>$equipmentHides,'freight_charges_grouped'=>$freight_charges_grouped,'destination_charges_detailed'=>$destination_charges_detailed,'origin_charges_grouped'=>$origin_charges_grouped,'origin_charges_detailed'=>$origin_charges_detailed,'destination_charges_grouped'=>$destination_charges_grouped,'sale_terms_origin'=>$sale_terms_origin,'sale_terms_destination'=>$sale_terms_destination,'sale_terms_origin_grouped'=>$sale_terms_origin_grouped,'sale_terms_destination_grouped'=>$sale_terms_destination_grouped,'origin_charges'=>$origin_charges,'destination_charges'=>$destination_charges,'freight_charges'=>$freight_charges]);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($view)->save('pdf/temp_'.$quote->id.'.pdf');
