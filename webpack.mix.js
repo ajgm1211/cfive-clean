@@ -12,6 +12,7 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/contracts/index.js', 'public/js/contracts')
-	.js('resources/assets/js/contracts/edit.js', 'public/js/contracts')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+  .js('resources/assets/js/contracts/index.js', 'public/js/contracts')
+  .js('resources/assets/js/contracts/edit.js', 'public/js/contracts')
+  .js('resources/assets/js/inlands/index.js', 'public/js/inlands')
+  .sass('resources/assets/sass/app.scss', 'public/css');

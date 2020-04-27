@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 344);
+/******/ 	return __webpack_require__(__webpack_require__.s = 375);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -88697,14 +88697,45 @@ module.exports = function listToStyles (parentId, list) {
 /* 341 */,
 /* 342 */,
 /* 343 */,
-/* 344 */
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(345);
+module.exports = __webpack_require__(376);
 
 
 /***/ }),
-/* 345 */
+/* 376 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88716,8 +88747,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_bootstrap_vue__ = __webpack_require__(290);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_contracts_App__ = __webpack_require__(346);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_contracts_App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_contracts_App__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_inlands_App__ = __webpack_require__(377);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_inlands_App___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_inlands_App__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__api_js__ = __webpack_require__(325);
 
 
@@ -88741,24 +88772,24 @@ window.api = new __WEBPACK_IMPORTED_MODULE_5__api_js__["a" /* default */]();
 var app = new __WEBPACK_IMPORTED_MODULE_2_vue___default.a({
     el: '#app',
     render: function render(h) {
-        return h(__WEBPACK_IMPORTED_MODULE_4__components_contracts_App___default.a);
+        return h(__WEBPACK_IMPORTED_MODULE_4__components_inlands_App___default.a);
     }
 });
 
 /***/ }),
-/* 346 */
+/* 377 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(347)
+  __webpack_require__(378)
 }
 var normalizeComponent = __webpack_require__(112)
 /* script */
-var __vue_script__ = __webpack_require__(349)
+var __vue_script__ = __webpack_require__(380)
 /* template */
-var __vue_template__ = __webpack_require__(350)
+var __vue_template__ = __webpack_require__(381)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88775,7 +88806,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/contracts/App.vue"
+Component.options.__file = "resources/assets/js/components/inlands/App.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -88784,9 +88815,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0ba62e8c", Component.options)
+    hotAPI.createRecord("data-v-fc7ae5e4", Component.options)
   } else {
-    hotAPI.reload("data-v-0ba62e8c", Component.options)
+    hotAPI.reload("data-v-fc7ae5e4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -88797,23 +88828,23 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 347 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(348);
+var content = __webpack_require__(379);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(333)("ea339e54", content, false, {});
+var update = __webpack_require__(333)("10f1b4d5", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0ba62e8c\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css", function() {
-     var newContent = require("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0ba62e8c\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css");
+   module.hot.accept("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-fc7ae5e4\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css", function() {
+     var newContent = require("!!../../css-loader/index.js!../../vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-fc7ae5e4\",\"scoped\":false,\"hasInlineConfig\":true}!./vue-multiselect.min.css");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -88823,7 +88854,7 @@ if(false) {
 }
 
 /***/ }),
-/* 348 */
+/* 379 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(113)(false);
@@ -88837,7 +88868,7 @@ exports.push([module.i, "\nfieldset[disabled] .multiselect{pointer-events:none\n
 
 
 /***/ }),
-/* 349 */
+/* 380 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -89095,12 +89126,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         /* Return the Contracts lists data*/
-        api.getData({}, '/api/v2/contracts', function (err, data) {
+        api.getData({}, '/api/v2/inlands', function (err, data) {
             _this.setData(err, data);
         });
 
         /* Return the lists data for dropdowns */
-        api.getData({}, '/api/v2/contracts/data', function (err, data) {
+        api.getData({}, '/api/v2/inlands/data', function (err, data) {
             _this.setDropdownLists(err, data.data);
         });
 
@@ -89186,7 +89217,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 350 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -89526,7 +89557,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0ba62e8c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-fc7ae5e4", module.exports)
   }
 }
 
