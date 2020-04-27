@@ -208,6 +208,11 @@ td.checkbox-add-fcl, td.actions-add-fcl {
     z-index: 1;
 }
 
+.all-action-app {
+    position: absolute;
+    right: 30px;
+}
+
 .popup-actions[data-action="false"] {
     background: red;
 }

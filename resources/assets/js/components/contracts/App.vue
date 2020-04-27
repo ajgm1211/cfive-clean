@@ -29,6 +29,7 @@
                             </b-form>
                         </div>
                     </div>
+
                     <!-- Table -->
                     <b-form-checkbox-group>
                         <b-form-checkbox
@@ -39,10 +40,18 @@
                                          >
                         </b-form-checkbox>
                     </b-form-checkbox-group>
-                   <!--  <p>
-                        
-                        {{ selected }}
-                    </p>  -->
+                    <!--  <p>
+
+{{ selected }}
+</p>  -->
+
+                    <b-button id="popover-all" class="action-app all-action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                    <b-popover target="popover-all" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                        <button class="btn-action">Edit</button>
+                        <button class="btn-action">Duplicate</button>
+                        <button class="btn-action">Delete</button>
+                    </b-popover>
+
                     <b-table borderless hover 
                              ref="selectableTable"
                              :fields="fields" 
