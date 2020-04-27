@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use App\Mail\NewRequestToAdminMail;
 use App\Mail\NotificationAutoImport;
 use App\Jobs\SendEmailRequestFclJob;
+use App\Jobs\SelectionAutoImportJob;
 use Spatie\MediaLibrary\MediaStream;
 use Illuminate\Support\Facades\File;
 use Spatie\MediaLibrary\Models\Media;
@@ -255,6 +256,7 @@ class RequestFclV2Controller extends Controller
             $contract->direction_id     = $direction_id;
             $contract->status           = 'incomplete';
             $contract->company_user_id  = $CompanyUserId;
+            $contract->gp_container_id  = $gpContainer->id;
             $contract->save();
 
             $Ncontract  = new NewContractRequest();
@@ -282,6 +284,17 @@ class RequestFclV2Controller extends Controller
             }
 
             $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','contracts3');
+            $ext_at_sl  = strtolower($file->getClientOriginalExtension());
+
+            if(strnatcasecmp($ext_at_sl,'xls')  == 0 ||
+               strnatcasecmp($ext_at_sl,'xlsx') == 0 ||
+               strnatcasecmp($ext_at_sl,'csv')  == 0 ){
+                if(env('APP_VIEW') == 'operaciones') {
+                    SelectionAutoImportJob::dispatch($Ncontract->id,'fcl')->onQueue('operaciones');
+                }else {
+                    SelectionAutoImportJob::dispatch($Ncontract->id,'fcl');
+                }
+            }
 
             $user 		= User::find($request->user);
             $message 	= "There is a new request from ".$user->name." - ".$user->companyUser->name;

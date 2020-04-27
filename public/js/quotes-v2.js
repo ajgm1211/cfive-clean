@@ -951,10 +951,12 @@ $(document).on('click', '.store_charge', function () {
     var containers = ['20DV', '40DV', '40HC', '45HC', '40NOR', '20RF', '40RF', '40HCRF', '20OT', '40OT', '20FR', '40FR'];
     var equipments = {};
 
+    //Creando variables para guardar en BD
     $.each(containers, function (index, value) {
         window['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
         window['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
         window['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
+        window["total_" + value] = 0;
         equipments['hide_' + value] = theElement.closest("tr").find(".hide_" + value).val();
         equipments['amount_' + value] = theElement.closest("tr").find(".amount_c" + value).val();
         equipments['markup_' + value] = theElement.closest("tr").find(".markup_m" + value).val();
@@ -962,8 +964,6 @@ $(document).on('click', '.store_charge', function () {
 
     var type_id = $(this).closest("tr").find(".type_id").val();
     var currency_id = $(this).closest("tr").find(".currency_id").val();
-    var self = $(this);
-    var amount_20_curr = 0;
 
     $.ajax({
         type: 'POST',
@@ -975,6 +975,9 @@ $(document).on('click', '.store_charge', function () {
             "equipments": equipments,
             "type_id": type_id,
             "currency_id": currency_id
+        },
+        beforeSend: function() {
+            notification('Saving data &nbsp;<i class="fa fa-spinner fa-spin"></i>');
         },
         success: function (data) {
             if (data.message == 'Ok') {
@@ -988,47 +991,39 @@ $(document).on('click', '.store_charge', function () {
 
             var amounts = $.parseJSON(data.charge.amount);
             var markups = $.parseJSON(data.charge.markups);
+            
+            //Creando variables para totalizar
+            var table_first = '';
+            var table_middle = '';
+            var table_last = '';
+            var currency = '';
+            var currency_cfg = '';
 
-            var total_20DV = parseFloat(amounts.c20DV) + parseFloat(markups.m20DV);
-            var total_40DV = parseFloat(amounts.c40DV) + parseFloat(markups.m40DV);
-            var total_40HC = parseFloat(amounts.c40HC) + parseFloat(markups.m40HC);
-            var total_45HC = parseFloat(amounts.c45HC) + parseFloat(markups.m45HC);
-            var total_40NOR = parseFloat(amounts.c40NOR) + parseFloat(markups.m40NOR);
-            var total_20RF = parseFloat(amounts.c20RF) + parseFloat(markups.m20RF);
-            var total_40RF = parseFloat(amounts.c40RF) + parseFloat(markups.m40RF);
-            var total_40HCRF = parseFloat(amounts.c40HCRF) + parseFloat(markups.m40HCRF);
-            var total_20OT = parseFloat(amounts.c20OT) + parseFloat(markups.m20OT);
-            var total_40OT = parseFloat(amounts.c40OT) + parseFloat(markups.m40OT);
-            var total_20FR = parseFloat(amounts.c20FR) + parseFloat(markups.m20FR);
-            var total_40FR = parseFloat(amounts.c40FR) + parseFloat(markups.m40FR);
-
+            $.each(containers, function (index, value) {
+                window["total_" + value] = parseFloat(amounts['c' + value]) + parseFloat(markups['m' + value]);
+            });
+            
+            //Si es Freight
             if (type_id == 3) {
-                $('<tr style="height:40px;">' +
-                    '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' +
-                    '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>' +
-                    '<td ' + hide_20DV + ' class="tds"><span class="td-a">' + amounts.c20DV + '</span> + <span class="td-a">' + markups.m20DV + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20DV + '</td>' +
-                    '<td ' + hide_40DV + ' class="tds"><span class="td-a">' + amounts.c40DV + '</span> + <span class="td-a">' + markups.m40DV + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40DV + '</td>' +
-                    '<td ' + hide_40HC + ' class="tds"><span class="td-a">' + amounts.c40HC + '</span> + <span class="td-a">' + markups.m40HC + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40HC + '</td>' +
-                    '<td ' + hide_45HC + ' class="tds"><span class="td-a">' + amounts.c45HC + '</span> + <span class="td-a">' + markups.m45HC + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_45HC + '</td>' +
-                    '<td ' + hide_40NOR + ' class="tds"><span class="td-a">' + amounts.c40NOR + '</span> + <span class="td-a">' + markups.m40NOR + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40NOR + '</td>' +
-                    '<td ' + hide_20RF + ' class="tds"><span class="td-a">' + amounts.c20RF + '</span> + <span class="td-a">' + markups.m20RF + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20RF + '</td>' +
-                    '<td ' + hide_40RF + ' class="tds"><span class="td-a">' + amounts.c40RF + '</span> + <span class="td-a">' + markups.m40RF + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40RF + '</td>' +
-                    '<td ' + hide_40HCRF + ' class="tds"><span class="td-a">' + amounts.c40HCRF + '</span> + <span class="td-a">' + markups.m40HCRF + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40HCRF + '</td>' +
-                    '<td ' + hide_20OT + ' class="tds"><span class="td-a">' + amounts.c20OT + '</span> + <span class="td-a">' + markups.m20OT + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20OT + '</td>' +
-                    '<td ' + hide_40OT + ' class="tds"><span class="td-a">' + amounts.c40OT + '</span> + <span class="td-a">' + markups.m40OT + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40OT + '</td>' +
-                    '<td ' + hide_20FR + ' class="tds"><span class="td-a">' + amounts.c20FR + '</span> + <span class="td-a">' + markups.m20FR + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_20FR + '</td>' +
-                    '<td ' + hide_40FR + ' class="tds"><span class="td-a">' + amounts.c40FR + '</span> + <span class="td-a">' + markups.m40FR + '</span> <i class="la la-caret-right arrow-down"></i> ' + total_40FR + '</td>' +
-                    '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' +
-                    '</tr>').insertBefore('.total_freight_' + number);
+                table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
+                table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
+                table_middle = '';
+                $.each(containers, function (index, value) {
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                });
+
+                //Uniendo variables
+                $(table_first+table_middle+table_last).insertBefore('.total_freight_' + number);
 
                 $.each(containers, function (index, value) {
                     $('.total_freight_' + number).find('.total_freight_' + value).html('');
                     $('.total_freight_' + number).find('.total_freight_' + value).html(data.sum_total_freight[value]);
                 });
 
-                var currency = $(theElement).closest('tr').find('.local_currency').val();
-                var currency_cfg = $("#currency_id").val();
+                currency = $(theElement).closest('tr').find('.local_currency').val();
+                currency_cfg = $("#currency_id").val();
 
+                //Creando variables para sumatorias de totales y subtotales
                 $.each(containers, function (index, value) {
                     window['subtotal_c' + value] = 0;
                     window["amount_currency_" + value] = 0;
@@ -1062,283 +1057,115 @@ $(document).on('click', '.store_charge', function () {
                     $('.total_freight_' + number).closest('div.rates').find('.sum_total_' + value).html(data.sum_total[value]);
                 });
             }
-            /**  ESTOY AQUÍ **/
+
+            //Si es Destination
             if (type_id == 2) {
-                $('<tr style="height:40px;">' +
-                    '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' +
-                    '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>' +
-                    '<td ' + hide_20 + ' class="tds"><span class="td-a">' + data.amount20 + '</span> + <span class="td-a">' + data.markup20 + '</span> <i class="la la-caret-right arrow-down"></i> ' + line_total_20 + '</td>' +
-                    '<td ' + hide_40 + ' class="tds"><span class="td-a">' + data.amount40 + '</span> + <span class="td-a">' + data.markup40 + '</span> <i class="la la-caret-right arrow-down"></i> ' + line_total_40 + '</td>' +
-                    '<td ' + hide_40hc + ' class="tds"><span class="td-a">' + data.amount40hc + '</span> + <span class="td-a">' + data.markup40hc + '</span> <i class="la la-caret-right arrow-down"></i> ' + line_total_40hc + '</td>' +
-                    '<td ' + hide_40nor + ' class="tds"><span class="td-a">' + data.amount40nor + '</span> + <span class="td-a">' + data.markup40nor + '</span> <i class="la la-caret-right arrow-down"></i> ' + line_total_40nor + '</td>' +
-                    '<td ' + hide_45 + ' class="tds"><span class="td-a">' + data.amount45 + '</span> + <span class="td-a">' + data.markup45 + '</span> <i class="la la-caret-right arrow-down"></i> ' + line_total_45 + '</td>' +
-                    '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' +
-                    '</tr>').insertBefore('.total_destination_' + number);
-                $('.total_destination_' + number).find('.total_destination_20').html('');
-                $('.total_destination_' + number).find('.total_destination_20').html(data.sum_total_20);
-                $('.total_destination_' + number).find('.total_destination_40').html('');
-                $('.total_destination_' + number).find('.total_destination_40').html(data.sum_total_40);
-                $('.total_destination_' + number).find('.total_destination_40hc').html('');
-                $('.total_destination_' + number).find('.total_destination_40hc').html(data.sum_total_40hc);
-                $('.total_destination_' + number).find('.total_destination_40nor').html('');
-                $('.total_destination_' + number).find('.total_destination_40nor').html(data.sum_total_40nor);
-                $('.total_destination_' + number).find('.total_destination_45').html('');
-                $('.total_destination_' + number).find('.total_destination_45').html(data.sum_total_45);
+                table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
+                table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
+                table_middle = '';
+                $.each(containers, function (index, value) {
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                });
 
-                //Calculando total dinámico
-                sum_total_20 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_freight_20').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_origin_20').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_destination_20').html());
+                //Uniendo variables
+                $(table_first+table_middle+table_last).insertBefore('.total_destination_' + number);
 
-                //Calculando total dinámico
-                sum_total_40 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_freight_40').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_origin_40').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_destination_40').html());
+                $.each(containers, function (index, value) {
+                    $('.total_destination_' + number).find('.total_destination_' + value).html('');
+                    $('.total_destination_' + number).find('.total_destination_' + value).html(data.sum_total_destination[value]);
+                });
 
-                //Calculando total dinámico
-                sum_total_40hc = parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_freight_40hc').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_origin_40hc').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_destination_40hc').html());
+                currency = $(theElement).closest('tr').find('.local_currency').val();
+                currency_cfg = $("#currency_id").val();
 
-                //Calculando total dinámico
-                sum_total_40nor = parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_freight_40nor').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_origin_40nor').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_destination_40nor').html());
+                //Creando variables para sumatorias de totales y subtotales
+                $.each(containers, function (index, value) {
+                    window['subtotal_c' + value] = 0;
+                    window["amount_currency_" + value] = 0;
+                    window["subtotal_m" + value] = 0;
+                    window["markup_currency_" + value] = 0;
+                    window["sum_total_amount_" + value] = 0;
+                    window["sum_total_markup_" + value] = 0;
+                });
 
-                //Calculando total dinámico
-                sum_total_45 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_freight_45').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_origin_45').html()) + parseFloat($('.total_destination_' + number).closest('div.rates').find('.total_destination_45').html());
+                $.each(containers, function (index, value) {
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
+                    
+                    //Calculando subtotal de rates
+                    window["subtotal_c" + value] = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c' + value + '_destination').val());
+                    $('.total_destination_' + number).closest('div.rates').find('.subtotal_c' + value + '_destination').val(window["subtotal_c" + value] + parseFloat(window["amount_currency_" + value]));
 
-                //Mostrando total dinámico
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_20').html(sum_total_20);
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_40').html(sum_total_40);
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
+                    //Calculando sum de subtotal de rates
+                    window["sum_total_amount_" + value] = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_' + value).html());
+                    $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_' + value).html(parseFloat(window["amount_currency_" + value]) + window["sum_total_amount_" + value]);
 
-                var currency = $(theElement).closest('tr').find('.local_currency').val();
-                var currency_cfg = $("#currency_id").val();
+                    //Calculando subtotal de markups
+                    window["subtotal_m" + value] = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m' + value + '_destination').val());
+                    $('.total_destination_' + number).closest('div.rates').find('.subtotal_m' + value + '_destination').val(window["subtotal_m" + value] + parseFloat(window["markup_currency_" + value]));
 
-                amount_20_curr = currencyRate(currency, currency_cfg, data.amount20);
-                markup_20_curr = currencyRate(currency, currency_cfg, data.markup20);
-                amount_40_curr = currencyRate(currency, currency_cfg, data.amount40);
-                markup_40_curr = currencyRate(currency, currency_cfg, data.markup40);
-                amount_40hc_curr = currencyRate(currency, currency_cfg, data.amount40hc);
-                markup_40hc_curr = currencyRate(currency, currency_cfg, data.markup40hc);
-                amount_40nor_curr = currencyRate(currency, currency_cfg, data.amount40nor);
-                markup_40nor_curr = currencyRate(currency, currency_cfg, data.markup40nor);
-                amount_45_curr = currencyRate(currency, currency_cfg, data.amount45);
-                markup_45_curr = currencyRate(currency, currency_cfg, data.markup45);
+                    //Calculando sum de subtotal de markups
+                    window["sum_total_markup_" + value] = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_' + value).html());
+                    $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_' + value).html(parseFloat(window["markup_currency_" + value]) + window["sum_total_markup_" + value]);
 
-                //Calculando subtotal de rates 20'
-                subtotal_c20 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c20_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_c20_destination').val(subtotal_c20 + parseFloat(amount_20_curr));
-
-                //Calculando sum de subtotal de rates 20'
-                sum_total_amount_20 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_20').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr) + sum_total_amount_20);
-
-                //Calculando subtotal de markups 20'
-                subtotal_m20 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m20_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_m20_destination').val(subtotal_m20 + parseFloat(markup_20_curr));
-
-                //Calculando sum de subtotal de markups 20'
-                sum_total_markup_20 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_20').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr) + sum_total_markup_20);
-
-                //Calculando subtotal de rates 40'
-                subtotal_c40 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c40_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_c40_destination').val(subtotal_c40 + parseFloat(amount_40_curr));
-
-                //Calculando sum de subtotal de rates 40'
-                sum_total_amount_40 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr) + sum_total_amount_40);
-
-                //Calculando subtotal de markups 40'
-                subtotal_m40 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m40_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_m40_destination').val(subtotal_m40 + parseFloat(markup_40_curr));
-
-                //Calculando sum de subtotal de markups 40'
-                sum_total_markup_40 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr) + sum_total_markup_40);
-
-                //Calculando subtotal de rates 40hc'
-                subtotal_c40hc = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c40hc_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_c40hc_destination').val(subtotal_c40hc + parseFloat(amount_40hc_curr));
-
-                //Calculando sum de subtotal de rates 40hc'
-                sum_total_amount_40hc = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40hc').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr) + sum_total_amount_40hc);
-
-                //Calculando subtotal de markups 40hc'
-                subtotal_m40hc = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m40hc_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_m40hc_destination').val(subtotal_m40hc + parseFloat(markup_40hc_curr));
-
-                //Calculando sum de subtotal de markups 40hc'
-                sum_total_markup_40hc = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40hc').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr) + sum_total_markup_40hc);
-
-                //Calculando subtotal de rates 40nor'
-                subtotal_c40nor = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c40nor_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_c40nor_destination').val(subtotal_c40nor + parseFloat(amount_40nor_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_40nor = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40nor').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr) + sum_total_amount_40nor);
-
-                //Calculando subtotal de markups 40nor'
-                subtotal_m40nor = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m40nor_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_m40nor_destination').val(subtotal_m40nor + parseFloat(markup_40nor_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_40nor = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40nor').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr) + sum_total_markup_40nor);
-
-                //Calculando subtotal de rates 45'
-                subtotal_c45 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_c45_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_c45_destination').val(subtotal_c45 + parseFloat(amount_45_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_45 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_45').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr) + sum_total_amount_45);
-
-                //Calculando subtotal de markups 45'
-                subtotal_m45 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.subtotal_m45_destination').val());
-                $('.total_destination_' + number).closest('div.rates').find('.subtotal_m45_destination').val(subtotal_m45 + parseFloat(markup_45_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_45 = parseFloat($('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_45').html());
-                $('.total_destination_' + number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr) + sum_total_markup_45);
-
+                    //Mostrando total dinámico
+                    $('.total_destination_' + number).closest('div.rates').find('.sum_total_' + value).html(data.sum_total[value]);
+                });
             }
+
+            //Si es Origin
             if (type_id == 1) {
-                $('<tr style="height:40px;">' +
-                    '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' +
-                    '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>' +
-                    '<td ' + hide_20 + ' class="tds"><span class="td-a">' + data.amount20 + '</span> + <span class="td-a">' + data.markup20 + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_20 + '</td>' +
-                    '<td ' + hide_40 + ' class="tds"><span class="td-a">' + data.amount40 + '</span> + <span class="td-a">' + data.markup40 + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_40 + '</td>' +
-                    '<td ' + hide_40hc + ' class="tds"><span class="td-a">' + data.amount40hc + '</span> + <span class="td-a">' + data.markup40hc + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_40hc + '</td>' +
-                    '<td ' + hide_40nor + ' class="tds"><span class="td-a">' + data.amount40nor + '</span> + <span class="td-a">' + data.markup40nor + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_40nor + '</td>' +
-                    '<td ' + hide_45 + ' class="tds"><span class="td-a">' + data.amount45 + '</span> + <span class="td-a">' + data.markup45 + '</span> <i class="la la-caret-right arrow-down"></i> ' + data.total_45 + '</td>' +
-                    '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' +
-                    '</tr>').insertBefore('.total_origin_' + number);
-                $('.total_origin_' + number).find('.total_origin_20').html('');
-                $('.total_origin_' + number).find('.total_origin_20').html(data.sum_total_20);
-                $('.total_origin_' + number).find('.total_origin_40').html('');
-                $('.total_origin_' + number).find('.total_origin_40').html(data.sum_total_40);
-                $('.total_origin_' + number).find('.total_origin_40hc').html('');
-                $('.total_origin_' + number).find('.total_origin_40hc').html(data.sum_total_40hc);
-                $('.total_origin_' + number).find('.total_origin_40nor').html('');
-                $('.total_origin_' + number).find('.total_origin_40nor').html(data.sum_total_40nor);
-                $('.total_origin_' + number).find('.total_origin_45').html('');
-                $('.total_origin_' + number).find('.total_origin_45').html(data.sum_total_45);
+                table_first = '<tr style="height:40px;">' + '<input name="type" value="1" class="form-control type" type="hidden" /><td class="tds" style="padding-left: 30px"><input name="charge_id" value="' + data.id + '" class="form-control charge_id" type="hidden" /><span class="td-a">' + data.surcharge + '</span></td>' + '<td class="tds"><span class="td-a">' + data.calculation_type + '</span></td>';
+                table_last = '<td class="tds"><span class="td-a">' + data.currency + '</span>&nbsp;&nbsp;&nbsp;<a class="delete-charge" style="cursor: pointer;" title="Delete"><span class="fa fa-trash" role="presentation" aria-hidden="true"></span></a></td>' + '</tr>';
+                table_middle = '';
+                $.each(containers, function (index, value) {
+                    table_middle += '<td ' + window["hide_" + value] + ' class="tds"><span class="td-a">' + amounts['c' + value] + '</span> + <span class="td-a">' + markups['m' + value] + '</span> <i class="la la-caret-right arrow-down"></i> <span class="td-a">' + window["total_" + value] + '</span></td>';
+                });
 
-                //Calculando total dinámico
-                sum_total_20 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_freight_20').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_origin_20').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_destination_20').html());
+                //Uniendo variables
+                $(table_first+table_middle+table_last).insertBefore('.total_origin_' + number);
 
-                //Calculando total dinámico
-                sum_total_40 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_freight_40').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_origin_40').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_destination_40').html());
+                $.each(containers, function (index, value) {
+                    $('.total_origin_' + number).find('.total_origin_' + value).html('');
+                    $('.total_origin_' + number).find('.total_origin_' + value).html(data.sum_total_origin[value]);
+                });
 
-                //Calculando total dinámico
-                sum_total_40hc = parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_freight_40hc').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_origin_40hc').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_destination_40hc').html());
+                currency = $(theElement).closest('tr').find('.local_currency').val();
+                currency_cfg = $("#currency_id").val();
 
-                //Calculando total dinámico
-                sum_total_40nor = parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_freight_40nor').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_origin_40nor').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_destination_40nor').html());
+                //Creando variables para sumatorias de totales y subtotales
+                $.each(containers, function (index, value) {
+                    window['subtotal_c' + value] = 0;
+                    window["amount_currency_" + value] = 0;
+                    window["subtotal_m" + value] = 0;
+                    window["markup_currency_" + value] = 0;
+                    window["sum_total_amount_" + value] = 0;
+                    window["sum_total_markup_" + value] = 0;
+                });
 
-                //Calculando total dinámico
-                sum_total_45 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_freight_45').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_origin_45').html()) + parseFloat($('.total_origin_' + number).closest('div.rates').find('.total_destination_45').html());
+                $.each(containers, function (index, value) {
+                    window["amount_currency_" + value] = currencyRate(currency, currency_cfg, amounts['c' + value]);
+                    window["markup_currency_" + value] = currencyRate(currency, currency_cfg, markups['m' + value]);
+                    
+                    //Calculando subtotal de rates
+                    window["subtotal_c" + value] = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c' + value + '_origin').val());
+                    $('.total_origin_' + number).closest('div.rates').find('.subtotal_c' + value + '_origin').val(window["subtotal_c" + value] + parseFloat(window["amount_currency_" + value]));
 
-                //Mostrando total dinámico
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_20').html(sum_total_20);
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_40').html(sum_total_40);
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_40hc').html(sum_total_40hc);
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_40nor').html(sum_total_40nor);
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_45').html(sum_total_45);
+                    //Calculando sum de subtotal de rates
+                    window["sum_total_amount_" + value] = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_' + value).html());
+                    $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_' + value).html(parseFloat(window["amount_currency_" + value]) + window["sum_total_amount_" + value]);
 
-                var currency = $(theElement).closest('tr').find('.local_currency').val();
-                var currency_cfg = $("#currency_id").val();
+                    //Calculando subtotal de markups
+                    window["subtotal_m" + value] = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m' + value + '_origin').val());
+                    $('.total_origin_' + number).closest('div.rates').find('.subtotal_m' + value + '_origin').val(window["subtotal_m" + value] + parseFloat(window["markup_currency_" + value]));
 
-                amount_20_curr = currencyRate(currency, currency_cfg, data.amount20);
-                markup_20_curr = currencyRate(currency, currency_cfg, data.markup20);
-                amount_40_curr = currencyRate(currency, currency_cfg, data.amount40);
-                markup_40_curr = currencyRate(currency, currency_cfg, data.markup40);
-                amount_40hc_curr = currencyRate(currency, currency_cfg, data.amount40hc);
-                markup_40hc_curr = currencyRate(currency, currency_cfg, data.markup40hc);
-                amount_40nor_curr = currencyRate(currency, currency_cfg, data.amount40nor);
-                markup_40nor_curr = currencyRate(currency, currency_cfg, data.markup40nor);
-                amount_45_curr = currencyRate(currency, currency_cfg, data.amount45);
-                markup_45_curr = currencyRate(currency, currency_cfg, data.markup45);
+                    //Calculando sum de subtotal de markups
+                    window["sum_total_markup_" + value] = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_' + value).html());
+                    $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_' + value).html(parseFloat(window["markup_currency_" + value]) + window["sum_total_markup_" + value]);
 
-                //Calculando subtotal de rates 20'
-                subtotal_c20 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c20_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_c20_origin').val(subtotal_c20 + parseFloat(amount_20_curr));
-
-                //Calculando sum de subtotal de rates 20'
-                sum_total_amount_20 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_20').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_20').html(parseFloat(amount_20_curr) + sum_total_amount_20);
-
-                //Calculando subtotal de markups 20'
-                subtotal_m20 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m20_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_m20_origin').val(subtotal_m20 + parseFloat(markup_20_curr));
-
-                //Calculando sum de subtotal de markups 20'
-                sum_total_markup_20 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_20').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_20').html(parseFloat(markup_20_curr) + sum_total_markup_20);
-
-                //Calculando subtotal de rates 40'
-                subtotal_c40 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c40_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_c40_origin').val(subtotal_c40 + parseFloat(amount_40_curr));
-
-                //Calculando sum de subtotal de rates 40'
-                sum_total_amount_40 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40').html(parseFloat(amount_40_curr) + sum_total_amount_40);
-
-                //Calculando subtotal de markups 40'
-                subtotal_m40 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m40_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_m40_origin').val(subtotal_m40 + parseFloat(markup_40_curr));
-
-                //Calculando sum de subtotal de markups 40'
-                sum_total_markup_40 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40').html(parseFloat(markup_40_curr) + sum_total_markup_40);
-
-                //Calculando subtotal de rates 40hc'
-                subtotal_c40hc = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c40hc_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_c40hc_origin').val(subtotal_c40hc + parseFloat(amount_40hc_curr));
-
-                //Calculando sum de subtotal de rates 40hc'
-                sum_total_amount_40hc = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40hc').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40hc').html(parseFloat(amount_40hc_curr) + sum_total_amount_40hc);
-
-                //Calculando subtotal de markups 40hc'
-                subtotal_m40hc = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m40hc_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_m40hc_origin').val(subtotal_m40hc + parseFloat(markup_40hc_curr));
-
-                //Calculando sum de subtotal de markups 40hc'
-                sum_total_markup_40hc = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40hc').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40hc').html(parseFloat(markup_40hc_curr) + sum_total_markup_40hc);
-
-                //Calculando subtotal de rates 40nor'
-                subtotal_c40nor = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c40nor_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_c40nor_origin').val(subtotal_c40nor + parseFloat(amount_40nor_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_40nor = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40nor').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_40nor').html(parseFloat(amount_40nor_curr) + sum_total_amount_40nor);
-
-                //Calculando subtotal de markups 40nor'
-                subtotal_m40nor = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m40nor_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_m40nor_origin').val(subtotal_m40nor + parseFloat(markup_40nor_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_40nor = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40nor').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_40nor').html(parseFloat(markup_40nor_curr) + sum_total_markup_40nor);
-
-                //Calculando subtotal de rates 45'
-                subtotal_c45 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_c45_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_c45_origin').val(subtotal_c45 + parseFloat(amount_45_curr));
-
-                //Calculando sum de subtotal de rates 40nor'
-                sum_total_amount_45 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_45').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_amount_45').html(parseFloat(amount_45_curr) + sum_total_amount_45);
-
-                //Calculando subtotal de markups 45'
-                subtotal_m45 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.subtotal_m45_origin').val());
-                $('.total_origin_' + number).closest('div.rates').find('.subtotal_m45_origin').val(subtotal_m45 + parseFloat(markup_45_curr));
-
-                //Calculando sum de subtotal de markups 40nor'
-                sum_total_markup_45 = parseFloat($('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_45').html());
-                $('.total_origin_' + number).closest('div.rates').find('.sum_total_markup_45').html(parseFloat(markup_45_curr) + sum_total_markup_45);
+                    //Mostrando total dinámico
+                    $('.total_origin_' + number).closest('div.rates').find('.sum_total_' + value).html(data.sum_total[value]);
+                });
             }
             //setTimeout(location.reload.bind(location), 3000);
         }
@@ -4132,14 +3959,10 @@ function notification(message, type) {
         "closeButton": true,
         "debug": false,
         "newestOnTop": false,
-        "progressBar": false,
+        "progressBar": true,
         "positionClass": "toast-bottom-center",
         "preventDuplicates": true,
         "onclick": null,
-        "showDuration": "0",
-        "hideDuration": "0",
-        "timeOut": "0",
-        "extendedTimeOut": "0",
         "showEasing": "swing",
         "hideEasing": "linear",
         "showMethod": "fadeIn",
@@ -4154,6 +3977,6 @@ function notification(message, type) {
             toastr.success(message, 'SUCCESS');
             break;
         default:
-            toastr.info(message, 'IMPORTANT MESSAGE');
+            toastr.info(message, '');
     }
 }
