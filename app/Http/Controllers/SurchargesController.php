@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSurcharge;
 use Illuminate\Http\Request;
 use App\User;
 use App\Surcharge;
 use App\SaleTerm;
 use App\SaleTermSurcharge;
 use Illuminate\Support\Facades\Auth;
+
+
 class SurchargesController extends Controller
 {
     /**
@@ -34,11 +37,17 @@ class SurchargesController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreSurcharge $request)
     {
-        $surcharges = new Surcharge($request->all());
-        $surcharges->company_user_id =Auth::user()->company_user_id ;
-        $surcharges->save();
+        $request->validated();
+
+        $surcharge = new Surcharge($request->all());
+        $surcharge->company_user_id =Auth::user()->company_user_id ;
+        $surcharge->save();
+
+        if ($request->ajax()) {
+            return $surcharge;
+        }
 
         return redirect()->action('SurchargesController@index');
 
