@@ -32,4 +32,6 @@ return [
     "total_estimated" => "Costo total estimado",
     "total_destination" => "Costos totales destino",
     "total_origin" => "Costos totales origen",
+    "origin_inland" => "Inlands en origen",
+    "destination_inland" => "Inlands en destino",
 ];
