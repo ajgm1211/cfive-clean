@@ -53,9 +53,8 @@
                                           label-for="validity"
                                           invalid-feedback="Validity is required"
                                           >
-                                <date-range-picker
+                                 <date-range-picker
                                                    ref="picker"
-                                                   :opens="opens"
                                                    :locale-data="{ firstDay: 1 }"
                                                    :singleDatePicker="singleDatePicker"
                                                    v-model="dateRange"
@@ -64,11 +63,6 @@
                                                    :linkedCalendars="linkedCalendars"
                                                    :dateFormat="dateFormat"
                                                    >
-
-                                    <template v-slot:input="picker"  style="min-width: 350px;">
-                                        <i class="fa fa-calendar"></i>
-                                        {{ picker.startDate | date }} - {{ picker.endDate | date }}
-                                    </template>
                                 </date-range-picker>
 
 
@@ -159,6 +153,8 @@
                 equipment: null,
                 reference: null,
                 statusclass: '',
+                allSelected: false,
+                indeterminate: false,
 
                 // Dropdown Lists
                 directions: [],
@@ -171,7 +167,7 @@
                 }, 
                 locale:{
                     direction: 'ltr',
-                    format: 'mm/dd/yyyy',
+                    format: 'dd/mm/yyyy',
                     separator: ' - ',
                     applyLabel: 'Apply',
                     cancelLabel: 'Cancel',
@@ -238,8 +234,8 @@
                 return {
                   'name': this.reference,
                   'direction': this.direction.id,
-                  'validity': '2020-02-20', //this.dateRange.startDate,
-                  'expire': '2020-02-20', //this.dateRange.endDate,
+                  'validity': this.dateRange.startDate, //this.dateRange.startDate,
+                  'expire': this.dateRange.endDate, //this.dateRange.endDate,
                   'remarks': '',
                   'gp_container': this.equipment.id,
                   'carriers': carriers

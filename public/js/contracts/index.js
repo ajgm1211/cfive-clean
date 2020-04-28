@@ -92396,7 +92396,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* Config files */
  // Main Component
-//import Contracts from '../components/contracts/Contracts';  // Main Component
+//import Contracts from '../components/contracts/Contracts';  // Contract Component
  // Api calls controller
 
 // Install BootstrapVue
@@ -92780,6 +92780,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 //
 //
 //
+//
 
 
 
@@ -92846,7 +92847,21 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             selected: [],
             allSelected: false,
             indeterminate: false,
-            selectedDates: {},
+            dateRange: {
+                startDate: '',
+                endDate: ''
+            },
+            locale: {
+                direction: 'ltr',
+                format: 'YYYY-MM-DD',
+                separator: ' - ',
+                applyLabel: 'Apply',
+                cancelLabel: 'Cancel',
+                customRangeLabel: 'Custom Range',
+                daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                firstDay: 1
+            },
 
             //List Data
             carriers: [],
@@ -92902,9 +92917,10 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
         },
         setDates: function setDates() {
             if (this.startDate && this.endDate) {
+                alert('asdsad');
                 this.selectedDates = {
-                    startDate: moment(this.startDate, 'YYYY-MM-DD').format('MMM DD, YYYY'),
-                    endDate: moment(this.endDate, 'YYYY-MM-DD').format('MMM DD, YYYY')
+                    startDate: moment(this.startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                    endDate: moment(this.endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
                 };
             }
         },
@@ -92945,8 +92961,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             return {
                 'name': this.reference,
                 'direction': this.direction.id,
-                'validity': '2020-02-20', //this.dateRange.startDate,
-                'expire': '2020-02-20', //this.dateRange.endDate,
+                'validity': '2020/04/05', //this.dateRange.startDate,
+                'expire': '2020/04/05', //this.dateRange.endDate,
                 'status': 'publish',
                 'remarks': '',
                 'gp_container': this.equipment.id,
@@ -94195,22 +94211,21 @@ var render = function() {
                             _c("date-range-picker", {
                               ref: "picker",
                               attrs: {
-                                opens: "center",
-                                "locale-data": {
-                                  firstDay: 1,
-                                  format: "MMM DD, YYYY"
-                                },
-                                singleDatePicker: false,
-                                autoApply: true,
-                                timePicker: false,
-                                linkedCalendars: true
+                                "locale-data": { firstDay: 1 },
+                                singleDatePicker: _vm.singleDatePicker,
+                                linkedCalendars: _vm.linkedCalendars,
+                                dateFormat: _vm.dateFormat
+                              },
+                              on: {
+                                update: _vm.updateValues,
+                                toggle: _vm.checkOpen
                               },
                               model: {
-                                value: _vm.selectedDates,
+                                value: _vm.dateRange,
                                 callback: function($$v) {
-                                  _vm.selectedDates = $$v
+                                  _vm.dateRange = $$v
                                 },
-                                expression: "selectedDates"
+                                expression: "dateRange"
                               }
                             })
                           ],
