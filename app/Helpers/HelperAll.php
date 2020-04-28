@@ -43,6 +43,21 @@ class HelperAll {
         }
         return $result;
     }
+    
+    public static function validatorErrorWitdColor($data){
+        $result = null;
+        $Arr    = null;
+        $Arr    = explode("_",$data);
+        $resul  = [];
+        if(count($Arr) <= 1){
+            $result['value'] = $Arr[0];
+            $result['color'] = 'green';
+        } else{
+            $result['value'] = $Arr[0].' (error)';
+            $result['color'] = 'red';
+        }
+        return $result;
+    }
 
     public static function LoadHearderDataTable($equiment_id,$type){
         if(strnatcasecmp($type,'rates')==0){
@@ -72,5 +87,21 @@ class HelperAll {
 
         }
         return $equiment;   
+    }
+
+    public static function statusColorRq($status){
+        $color = null;
+        if(strnatcasecmp($status,'Pending')==0){
+            $color = '#f81538';
+        } else if(strnatcasecmp($status,'Processing')==0){
+            $color = '#5527f0';
+        } else if(strnatcasecmp($status,'Review')==0){
+            $color = '#e07000';
+        } else if(strnatcasecmp($status,'Imp Finished')==0){
+            $color = '#431b02';
+        } else {
+            $color = '#04950f';
+        }
+        return $color;
     }
 }
