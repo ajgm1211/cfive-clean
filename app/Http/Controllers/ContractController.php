@@ -7,6 +7,7 @@ use App\Contract;
 use App\Carrier;
 use App\GroupContainer;
 use App\Direction;
+use App\Container;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 
@@ -55,10 +56,13 @@ class ContractController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
+        $containers = Container::get();
+
         $data = [
             'carriers' => $carriers,
             'equipments' => $equipments,
-            'directions' => $directions
+            'directions' => $directions,
+            'containers' => $containers
  
         ];
 
@@ -141,7 +145,6 @@ class ContractController extends Controller
             'direction' => 'required',
             'validity' => 'required',
             'expire' => 'required',
-            'status' => 'required',
             'remarks' => 'present',
             'gp_container' => 'required',
             'carriers' => 'required'
@@ -152,7 +155,6 @@ class ContractController extends Controller
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
-            'status' => $data['status'],
             'remarks' => $data['remarks'],
             'gp_container_id' => $data['gp_container'],
         ]);
