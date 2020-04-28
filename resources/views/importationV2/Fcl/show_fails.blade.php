@@ -322,7 +322,6 @@
 </script>
 <script>
 
-
     $(function() {
 
         var columnas_failrates  = loadColumns({!!$equiment["columns"]!!},true);
@@ -428,7 +427,7 @@
             columnDefs: [],
             select: {},
             buttons: [],
-            ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,1]) !!}',
+            ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,1,"surcharger"]) !!}',
             columns: [
 
                 { data: 'surchargelb', name: 'surchargelb' },
@@ -453,13 +452,13 @@
             //"scrollX": true,
         });
 
-        $('#GoodSurchargetable').DataTable({
+        goodSurchar = $('#GoodSurchargetable').DataTable({
             processing: true,
             serverSide: true,
             columnDefs: [],
             select: {},
             buttons: [],
-            ajax: '{!! route("Failed.Surcharge.V.F.C",[$id,2]) !!}',
+            ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,2,"surcharger"]) !!}',
             columns: [
                 { data: 'surchargelb', name: 'surchargelb' },
                 { data: 'origin_portLb', name: 'origin_portLb' },

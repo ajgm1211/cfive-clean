@@ -131,18 +131,9 @@ class RequestFclV2Controller extends Controller
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
-                $color='';
-                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
-                    //$color = 'color:#031B4E';
-                    $color = 'color:#f81538';
-                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
-                    $color = 'color:#5527f0';
-                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
-                    $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
-                }
 
+                $color = HelperAll::statusColorRq($Ncontracts->status);
+                $color = 'color:'.$color;
                 return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
                 &nbsp;
                 <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
@@ -339,15 +330,20 @@ class RequestFclV2Controller extends Controller
         $status = $requests->status;
         $status_arr = [];
         if($status == 'Pending'){
-            $status_arr['Pending'] = 'Pending';
-            $status_arr['Processing'] = 'Processing';
+            $status_arr['Pending']      = 'Pending';
+            $status_arr['Processing']   = 'Processing';
         } elseif($status == 'Processing'){
-            $status_arr['Processing'] = 'Processing';
-            $status_arr['Review'] = 'Review';
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Review']       = 'Review';
+        } elseif($status == 'Imp Finished'){
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Imp Finished'] = 'Imp Finished';   
+            $status_arr['Review']       = 'Review';
         } elseif($status == 'Review' || $status == 'Done'){
-            $status_arr['Processing'] = 'Processing';
-            $status_arr['Review'] = 'Review';
-            $status_arr['Done'] = 'Done';
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Imp Finished'] = 'Imp Finished';
+            $status_arr['Review']       = 'Review';
+            $status_arr['Done']         = 'Done';
         }
 
         return view('RequestV2.Fcl.Body-Modals.edit',compact('requests','status_arr'));
@@ -394,7 +390,9 @@ class RequestFclV2Controller extends Controller
                     }
                 }
             } elseif($Ncontract->status == 'Done'){
-
+                $contractObj = Contract::find($Ncontract->contract_id);
+                $contractObj->status = 'publish';
+                $contractObj->update();
                 if($Ncontract->time_manager == null){
                     $fechaEnd = Carbon::parse($now2);
                     $fechaStar = Carbon::parse($Ncontract->created);
@@ -423,16 +421,8 @@ class RequestFclV2Controller extends Controller
                 }
             }
             $Ncontract->save();
-
-            if(strnatcasecmp($Ncontract->status,'Pending')==0){
-                $color = '#f81538';
-            } else if(strnatcasecmp($Ncontract->status,'Processing')==0){
-                $color = '#5527f0';
-            } else if(strnatcasecmp($Ncontract->status,'Review')==0){
-                $color = '#e07000';
-            } else if(strnatcasecmp($Ncontract->status,'Done')==0){
-                $color = '#04950f';
-            }
+            $color = HelperAll::statusColorRq($Ncontract->status);
+            
             return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color,'request' => $Ncontract]);
         } catch (\Exception $e){
             return response()->json($data=['data'=>2]);;

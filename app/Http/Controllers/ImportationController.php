@@ -24,6 +24,7 @@ use PrvValidation;
 use App\Direction;
 use App\Surcharge;
 use PrvSurchargers;
+use \Carbon\Carbon;
 use App\Failcompany;
 use App\LocalCharge;
 use App\TypeDestiny;
@@ -844,8 +845,6 @@ class ImportationController extends Controller
     }
 
     public function LoadFails($id,$tab){
-
-        //$countrates     = Rate::with('carrier','contract')->where('contract_id','=',$id)->count();
         $countrates         = Rate::where('contract_id','=',$id)->count();
         $countfailrates     = FailRate::where('contract_id','=',$id)->count();
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
@@ -857,7 +856,6 @@ class ImportationController extends Controller
             $equiment_id    = 1;
         }
         $equiment       = HelperAll::LoadHearderDataTable($equiment_id,'rates');
-
         //dd($equiment);
         return view('importationV2.Fcl.show_fails',compact('countfailrates','countrates','contract','id','tab','equiment','countfailsurcharge','countgoodsurcharge'));
     }
@@ -1151,59 +1149,39 @@ class ImportationController extends Controller
         return view('importation.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','schedulesT','currency'));
     }
     public function EditRatesFail($id){
-        $objcarrier = new Carrier();
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $harbor = $objharbor->all()->pluck('display_name','id');
-        $carrier = $objcarrier->all()->pluck('name','id');
-        $currency = $objcurrency->all()->pluck('alphacode','id');
-        $schedulesT   = [null=>'Please Select'];
-        $scheduleTo  = ScheduleType::all();
-        foreach($scheduleTo as $d){
-            $schedulesT[$d['id']]=$d->name;
-        }
-        $failrate = FailRate::find($id);
+
+        $harbor     = Harbor::all()->pluck('display_name','id');
+        $carrier    = Carrier::all()->pluck('name','id');
+        $currency   = Currency::all()->pluck('alphacode','id');
+        $schedulesT = HelperAll::addOptionSelect(ScheduleType::all(),'id','name');
+
+        $failrate       = FailRate::find($id);
+        $containers     = json_decode($failrate->containers,true);
+        $contract       = Contract::find($failrate->contract_id);
+        $equiment_id    = $contract->gp_container_id;
         //dd($failrate);
-        $originV;
-        $destinationV;
-        $carrierV;
-        $currencyV;
-        $originA;
-        $destinationA;
-        $carrierA;
-        $currencyA;
-        $twuentyA;
-        $fortyA;
-        $fortyhcA;
-        $fortynorA;
-        $fortyfiveA;
 
         $carrAIn;
-        $pruebacurre    = "";
-        $classdorigin   ='color:green';
-        $classddestination  ='color:green';
-        $classcarrier   ='color:green';
-        $classcurrency  ='color:green';
-        $classtwuenty   ='color:green';
-        $classforty     ='color:green';
-        $classfortyhc   ='color:green';
-        $classfortynor  ='color:green';
-        $classfortyfive ='color:green';
+        $currency_val       = null;
+        $classdorigin       ='green';
+        $classddestination  ='green';
+        $classcarrier       ='green';
+        $classcurrency      ='green';
 
-        $classscheduleT     ='color:green';
-        $classtransittime   ='color:green';
-        $classvia           ='color:green';
+        $classscheduleT     ='green';
+        $classtransittime   ='green';
+        $classvia           ='green';
 
         $originA =  explode("_",$failrate['origin_port']);
         //dd($originA);
         $destinationA   = explode("_",$failrate['destiny_port']);
         $carrierA       = explode("_",$failrate['carrier_id']);
         $currencyA      = explode("_",$failrate['currency_id']);
-        $twuentyA       = explode("_",$failrate['twuenty']);
-        $fortyA         = explode("_",$failrate['forty']);
-        $fortyhcA       = explode("_",$failrate['fortyhc']);
-        $fortynorA      = explode("_",$failrate['fortynor']);
-        $fortyfiveA     = explode("_",$failrate['fortyfive']);
+        //        $twuentyA       = explode("_",$failrate['twuenty']);
+        //        $fortyA         = explode("_",$failrate['forty']);
+        //        $fortyhcA       = explode("_",$failrate['fortyhc']);
+        //        $fortynorA      = explode("_",$failrate['fortynor']);
+        //        $fortyfiveA     = explode("_",$failrate['fortyfive']);
         $schedueleTA    = explode("_",$failrate['schedule_type']);
 
         if(count($schedueleTA) <= 1){
@@ -1211,99 +1189,89 @@ class ImportationController extends Controller
             $schedueleTA = $schedueleTA['id'];
         } else{
             $schedueleTA = '';
-            $classscheduleT='color:red';
+            $classscheduleT='red';
         }
 
         $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
             ->first();
-        $originAIn = $originOb['id'];
-        $originC   = count($originA);
-        if($originC <= 1){
-            $originA = $originOb['name'];
+        $originA = null;
+        if(count($originA) <= 1){
+            $originA    = $originOb['name'];
+            $originAIn = $originOb->id;
         } else{
             $originA = $originA[0].' (error)';
-            $classdorigin='color:red';
+            $classdorigin='red';
         }
+
         $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
             ->first();
-        $destinationAIn = $destinationOb['id'];
-        $destinationC   = count($destinationA);
-        if($destinationC <= 1){
-            $destinationA = $destinationOb['name'];
+        $destinationAIn = null;
+        if(count($destinationA) <= 1){
+            $destinationAIn = $destinationOb->id;
+            $destinationA   = $destinationOb['name'];
         } else{
-            $destinationA = $destinationA[0].' (error)';
-            $classddestination='color:red';
-        }
-        $twuentyC   = count($twuentyA);
-        if($twuentyC <= 1){
-            $twuentyA = $twuentyA[0];
-        } else{
-            $twuentyA = $twuentyA[0].' (error)';
-            $classtwuenty='color:red';
-        }
-        $fortyC   = count($fortyA);
-        if($fortyC <= 1){
-            $fortyA = $fortyA[0];
-        } else{
-            $fortyA = $fortyA[0].' (error)';
-            $classforty='color:red';
-        }
-        $fortyhcC   = count($fortyhcA);
-        if($fortyhcC <= 1){
-            $fortyhcA = $fortyhcA[0];
-        } else{
-            $fortyhcA = $fortyhcA[0].' (error)';
-            $classfortyhc='color:red';
-        }
-
-        $fortynorC   = count($fortynorA);
-        if($fortynorC <= 1){
-            $fortynorA = $fortynorA[0];
-        } else{
-            $fortynorA = $fortynorA[0].' (error)';
-            $classfortynor ='color:red';
-        }
-
-        $fortyfiveC   = count($fortyfiveA);
-        if($fortyfiveC <= 1){
-            $fortyfiveA = $fortyfiveA[0];
-        } else{
-            $fortyfiveA = $fortyfiveA[0].' (error)';
-            $classfortyfive = 'color:red';
+            $destinationA      = $destinationA[0].' (error)';
+            $classddestination = 'red';
         }
 
         $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
         $carrAIn = $carrierOb['id'];
-        $carrierC = count($carrierA);
-        if($carrierC <= 1){
-            //dd($carrierAIn);
+        if(count($carrierA) <= 1){
             $carrierA = $carrierA[0];
-        }
-        else{
+        } else{
             $carrierA = $carrierA[0].' (error)';
-            $classcarrier='color:red';
+            $classcarrier='red';
         }
-        $currencyC = count($currencyA);
-        if($currencyC <= 1){
+
+        if(count($currencyA) <= 1){
             $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
-            $pruebacurre = $currenc['id'];
-            $currencyA = $currencyA[0];
-        }
-        else{
+            $currency_val = $currenc['id'];
+            $currencyA =     $currencyA[0];
+        } else{
             $currencyA = $currencyA[0].' (error)';
-            $classcurrency='color:red';
-        }        
+            $classcurrency='red';
+        } 
+        //dd($destinationAIn);
+        $columns_rt_ident = [];
+        $equiments  = GroupContainer::with('containers')->find($equiment_id);
+        $colec      = [];
+        if($equiment_id == 1){
+            $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+            foreach($contenedores_rt as $conten_rt){
+                $conten_rt->options = json_decode($conten_rt->options);
+                $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+            }
+            foreach($equiments->containers as $containersEq){
+                if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->twuenty);
+                }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->forty);
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortyhc);
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortynor);
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortyfive);
+                }
+            }
+        } else {
+            foreach($equiments->containers as $containersEq){
+                if(array_key_exists('C'.$containersEq->code,$containers)){
+                    $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($containers['C'.$containersEq->code]);
+                } else{
+                    $colec['C'.$containersEq->code] = ['value' => 0,'color'=>'green'];          
+                }
+            }
+        }
+
         $failrates = ['rate_id'         =>  $failrate->id,
-                      'contract_id'     =>  $failrate->contract_id,
+                      'contract_id'     =>  $contract->id,
+                      'equiment_id'     =>  $equiment_id,
                       'origin_port'     =>  $originAIn,   
                       'destiny_port'    =>  $destinationAIn,     
                       'carrierAIn'      =>  $carrAIn,
-                      'twuenty'         =>  $twuentyA,      
-                      'forty'           =>  $fortyA,      
-                      'fortyhc'         =>  $fortyhcA,  
-                      'fortynor'        =>  $fortynorA,  
-                      'fortyfive'       =>  $fortyfiveA,  
-                      'currencyAIn'     =>  $pruebacurre,
+                      'containers'      =>  $colec,
+                      'currencyAIn'     =>  $currency_val,
                       'transit_time'    =>  $failrate->transit_time,
                       'via'             =>  $failrate->via,
                       'schedueleT'      =>  $schedueleTA,
@@ -1313,17 +1281,13 @@ class ImportationController extends Controller
                       'classorigin'     =>  $classdorigin,
                       'classdestiny'    =>  $classddestination,
                       'classcarrier'    =>  $classcarrier,
-                      'classtwuenty'    =>  $classtwuenty,
-                      'classforty'      =>  $classforty,
-                      'classfortyhc'    =>  $classfortyhc,
-                      'classfortynor'   =>  $classfortyhc,
-                      'classfortyfive'  =>  $classfortyhc,
                       'classcurrency'   =>  $classcurrency
                      ];
+
         $pruebacurre = "";
         $carrAIn = "";
-        // dd($failrates);
-        return view('importation.Body-Modals.FailEditRates',compact('failrates','schedulesT','harbor','carrier','currency'));
+        dd($failrates);
+        return view('importation.Body-Modals.FailEditRates',compact('failrates','schedulesT','harbor','carrier','currency','equiment_id'));
     }
     public function CreateRates(Request $request, $id){
         //dd($request->all());
@@ -4185,387 +4149,6 @@ class ImportationController extends Controller
     }
 
     //Datatable Rates Y Surchargers -----------------------------------------------------
-    public function FailedRatesDeveloperLoad($id,$selector){
-        //$id se refiere al id del contracto
-        $objharbor = new Harbor();
-        $objcurrency = new Currency();
-        $objcarrier = new Carrier();
-
-        $originV;
-        $destinationV;
-        $carrierV;
-        $currencyV;
-        $originA;
-        $destinationA;
-        $carrierA;
-        $currencyA;
-        $twuentyA;
-        $fortyA;
-        $fortyhcA;
-        $fortynorA;
-        $fortyfiveA;
-        $failrates      = collect([]);
-        $contract       = Contract::find($id);
-        $equiment_id    = $contract->gp_container_id;
-        $equiments      = GroupContainer::with('containers')->find($equiment_id);
-        if($selector == 1){
-            $failratesFor   = DB::select('call  proc_fail_rates_fcl('.$id.')');
-
-            //$failratesFor = FailRate::where('contract_id','=',$id)->get();
-            foreach( $failratesFor as $failrate){
-                $carrAIn;
-                $pruebacurre    = "";
-                $containers     = null;
-                $originA        = explode("_",$failrate->origin_port);
-                $destinationA   = explode("_",$failrate->destiny_port);
-                $carrierA       = explode("_",$failrate->carrier_id);
-                $currencyA      = explode("_",$failrate->currency_id);
-                $twuentyA       = explode("_",$failrate->twuenty);
-                $fortyA         = explode("_",$failrate->forty);
-                $fortyhcA       = explode("_",$failrate->fortyhc);
-                $fortynorA      = explode("_",$failrate->fortynor);
-                $fortyfiveA     = explode("_",$failrate->fortyfive);
-                $containers     = $failrate->containers;
-
-                //                $schedule_typeA = explode("_",$failrate->schedule_type);
-                //                $transit_timeA  = explode("_",$failrate->transit_time);
-                //                $viaA           = explode("_",$failrate->via);
-                // ORIGIN -------------------------------------------------------------------------------
-                $originOb       = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')->first();
-                $originC   = count($originA);
-                if($originC <= 1){
-                    $originA = $originOb['name'];
-                } else{
-                    $originA = $originA[0].' (error)';
-                    $classdorigin='color:red';
-                }
-                // DESTINY ------------------------------------------------------------------------------
-                $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                    ->first();
-                $destinationC   = count($destinationA);
-                if($destinationC <= 1){
-                    $destinationA = $destinationOb['name'];
-                } else{
-                    $destinationA = $destinationA[0].' (error)';
-                }
-                if($equiment_id == 1){
-                    $twuentyC   = count($twuentyA);
-                    if($twuentyC <= 1){
-                        $twuentyA = $twuentyA[0];
-                    } else{
-                        $twuentyA = $twuentyA[0].' (error)';
-                    }
-
-                    $fortyC   = count($fortyA);
-                    if($fortyC <= 1){
-                        $fortyA = $fortyA[0];
-                    } else{
-                        $fortyA = $fortyA[0].' (error)';
-                    }
-
-                    $fortyhcC   = count($fortyhcA);
-                    if($fortyhcC <= 1){
-                        $fortyhcA = $fortyhcA[0];
-                    } else{
-                        $fortyhcA = $fortyhcA[0].' (error)';
-                    }
-
-                    $fortynorC   = count($fortynorA);
-                    if($fortynorC <= 1){
-                        $fortynorA = $fortynorA[0];
-                    } else{
-                        $fortynorA = $fortynorA[0].' (error)';
-                    }
-
-                    $fortyfiveC   = count($fortyfiveA);
-                    if($fortyfiveC <= 1){
-                        $fortyfiveA = $fortyfiveA[0];
-                    } else{
-                        $fortyfiveA = $fortyfiveA[0].' (error)';
-                    }
-                } else {
-                    foreach($equiments->containers as $containers){
-                        array_push($equiment['thead'],$containers->code);            
-                    }
-                }
-                //-------------------------------------------
-
-                //                if(count($schedule_typeA) <= 1){
-                //                    if(empty($schedule_typeA[0]) != true){
-                //                        $schedule_typeA = $schedule_typeA[0];
-                //                    } else {
-                //                        $schedule_typeA = '---------';
-                //                    }
-                //                } else{
-                //                    $schedule_typeA = $schedule_typeA[0].' (error)';
-                //                }
-                //
-                //                if(count($transit_timeA) <= 1){
-                //                    if(empty($transit_timeA[0]) != true){
-                //                        $transit_timeA = $transit_timeA[0];
-                //                    } else {
-                //                        $transit_timeA = '0';
-                //                    }
-                //                } else{
-                //                    $transit_timeA = $transit_timeA[0].' (error)';
-                //                }
-                //
-                //                if(count($viaA) <= 1){
-                //                    if(empty($viaA[0]) != true){
-                //                        $viaA = $viaA[0];
-                //                    } else {
-                //                        $viaA = '---------';
-                //                    }
-                //                } else{
-                //                    $viaA = $viaA[0].' (error)';
-                //                }
-
-                //-------------------------------------------
-                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
-                //$carrAIn = $carrierOb['id'];
-                $carrierC = count($carrierA);
-                if($carrierC <= 1){
-                    //dd($carrierAIn);
-                    $carrierA = $carrierA[0];
-                }
-                else{
-                    $carrierA = $carrierA[0].' (error)';
-                }
-                $currencyC = count($currencyA);
-                if($currencyC <= 1){
-                    $currenc = Currency::where('alphacode','=',$currencyA[0])->orWhere('id','=',$currencyA[0])->first();
-                    //$pruebacurre = $currenc['id'];
-                    $currencyA = $currenc['alphacode'];
-                }
-                else{
-                    $currencyA = $currencyA[0].' (error)';
-                }        
-                $colec = ['id'          =>  $failrate->id,
-                          'contract_id' =>  $id,
-                          'origin'      =>  $originA,       //
-                          'destiny'     =>  $destinationA,  // 
-                          'carrier'     =>  $carrierA,      //
-                          'C20DV'       =>  $twuentyA,      //    
-                          'C40DV'       =>  $fortyA,        //  
-                          'C40HC'       =>  $fortyhcA,      //
-                          'C40NOR'      =>  $fortynorA,     //
-                          'C45HC'       =>  $fortyfiveA,    //
-                          'currency'    =>  $currencyA,     //
-                          'operation'   =>  '1'
-                         ];
-                $failrates->push($colec);
-
-            }
-            return DataTables::of($failrates)->addColumn('action', function ( $failrate) {
-                return '<a href="#" class="" onclick="showModalsavetorate('.$failrate['id'].','.$failrate['operation'].')"><i class="la la-edit"></i></a>
-                &nbsp;
-                <a href="#" id="delete-FailRate" data-id-failrate="'.$failrate['id'].'" class=""><i class="la la-trash"></i></a>';
-            })
-                ->editColumn('id', '{{$id}}')->toJson();
-
-
-
-        } else if($selector == 2){
-
-            $ratescol = PrvRates::get_rates($id);
-
-            return DataTables::of($ratescol)
-                ->addColumn('via', function ($ratescol) { 
-                    if(empty($ratescol['via']) != true){
-                        return $ratescol['via'];
-                    } else {
-                        return '--------';
-                    }
-                })
-                ->addColumn('action', function ($ratescol) {
-                    return '
-                <a href="#" onclick="showModalsavetorate('.$ratescol['id'].','.$ratescol['operation'].')" class=""><i class="la la-edit"></i></a>
-                &nbsp;
-                <a href="#" id="delete-Rate" data-id-rate="'.$ratescol['id'].'" class=""><i class="la la-trash"></i></a>';
-                })
-                ->editColumn('id', '{{$id}}')->toJson();
-        }
-    }
-
-    public function FailSurchargeLoad($id,$selector){
-
-        if($selector == 1){
-            $objharbor          = new Harbor();
-            $objcurrency        = new Currency();
-            $objcarrier         = new Carrier();
-            $objsurcharge       = new Surcharge();
-            $objtypedestiny     = new TypeDestiny();
-            $objCalculationType = new CalculationType();
-            $typedestiny           = $objtypedestiny->all()->pluck('description','id');
-            $surchargeSelect       = $objsurcharge->where('company_user_id','=', \Auth::user()->company_user_id)->pluck('name','id');
-            $carrierSelect         = $objcarrier->all()->pluck('name','id');
-            $harbor                = $objharbor->all()->pluck('display_name','id');
-            $currency              = $objcurrency->all()->pluck('alphacode','id');
-            $calculationtypeselect = $objCalculationType->all()->pluck('name','id');
-
-            $failsurchargeS   = DB::select('call  proc_fails_surchargers_fcl('.$id.')');
-            //$failsurchargeS = FailSurCharge::where('contract_id','=',$id)->get();
-            $failsurchargecoll = collect([]);
-            foreach($failsurchargeS as $failsurcharge){
-                $classdorigin           =  'color:green';
-                $classddestination      =  'color:green';
-                $classtypedestiny       =  'color:green';
-                $classcarrier           =  'color:green';
-                $classsurcharger        =  'color:green';
-                $classcalculationtype   =  'color:green';
-                $classammount           =  'color:green';
-                $classcurrency          =  'color:green';
-                $surchargeA         =  explode("_",$failsurcharge->surcharge_id);
-                $originA            =  explode("_",$failsurcharge->port_orig);
-                $destinationA       =  explode("_",$failsurcharge->port_dest);
-                $calculationtypeA   =  explode("_",$failsurcharge->calculationtype_id);
-                $ammountA           =  explode("_",$failsurcharge->ammount);
-                $currencyA          =  explode("_",$failsurcharge->currency_id);
-                $carrierA           =  explode("_",$failsurcharge->carrier_id);
-                $typedestinyA       =  explode("_",$failsurcharge->typedestiny_id);
-
-                // -------------- ORIGIN -------------------------------------------------------------
-                if($failsurcharge->differentiator == 1){
-                    $originOb  = Harbor::where('varation->type','like','%'.strtolower($originA[0]).'%')
-                        ->first();
-                } else if($failsurcharge->differentiator == 2){
-                    $originOb  = Country::where('variation->type','like','%'.strtolower($originA[0]).'%')
-                        ->first();
-                }
-                $originAIn = $originOb['id'];
-                $originC   = count($originA);
-                if($originC <= 1){
-                    $originA = $originOb['name'];
-                } else{
-                    $originA = $originA[0].' (error)';
-                    $classdorigin='color:red';
-                }
-
-                // -------------- DESTINY ------------------------------------------------------------
-                if($failsurcharge->differentiator == 1){
-                    $destinationOb  = Harbor::where('varation->type','like','%'.strtolower($destinationA[0]).'%')
-                        ->first();
-                } else if($failsurcharge->differentiator == 2){
-                    $destinationOb  = Country::where('variation->type','like','%'.strtolower($destinationA[0]).'%')
-                        ->first();
-                }
-                $destinationAIn = $destinationOb['id'];
-                $destinationC   = count($destinationA);
-                if($destinationC <= 1){
-                    $destinationA = $destinationOb['name'];
-                } else{
-                    $destinationA = $destinationA[0].' (error)';
-                    $classddestination='color:red';
-                }
-
-                // -------------- SURCHARGE -----------------------------------------------------------
-
-                $surchargeOb = Surcharge::where('name','=',$surchargeA[0])->where('company_user_id','=',\Auth::user()->company_user_id)->first();
-                $surcharAin  = $surchargeOb['id'];
-                $surchargeC = count($surchargeA);
-                if($surchargeC <= 1){
-                    $surchargeA = $surchargeA[0];
-                }else{
-                    $surchargeA         = $surchargeA[0].' (error)';
-                    $classsurcharger    = 'color:red';
-                }
-
-                // -------------- CARRIER -------------------------------------------------------------
-                $carrierOb =   Carrier::where('name','=',$carrierA[0])->first();
-                $carrAIn = $carrierOb['id'];
-                $carrierC = count($carrierA);
-                if($carrierC <= 1){
-                    $carrierA = $carrierA[0];
-                }else{
-                    $carrierA       = $carrierA[0].' (error)';
-                    $classcarrier   ='color:red';
-                }
-
-                // -------------- CALCULATION TYPE ----------------------------------------------------
-                $calculationtypeOb  = CalculationType::where('name','=',$calculationtypeA[0])->first();
-                $calculationtypeAIn = $calculationtypeOb['id'];
-                $calculationtypeC   = count($calculationtypeA);
-                if($calculationtypeC <= 1){
-                    $calculationtypeA = $calculationtypeA[0];
-                }else{
-                    $calculationtypeA       = $calculationtypeA[0].' (error)';
-                    $classcalculationtype   = 'color:red';
-                }
-
-                // -------------- AMMOUNT ------------------------------------------------------------
-                $ammountC = count($ammountA);
-                if($ammountC <= 1){
-                    $ammountA = $failsurcharge->ammount;
-                }else{
-                    $ammountA       = $ammountA[0].' (error)';
-                    $classammount   = 'color:red';
-                }
-
-                // -------------- CURRENCY ----------------------------------------------------------
-                $currencyOb   = Currency::where('alphacode','=',$currencyA[0])->first();
-                $currencyAIn  = $currencyOb['id'];
-                $currencyC    = count($currencyA);
-                if($currencyC <= 1){
-                    $currencyA = $currencyA[0];
-                }else{
-                    $currencyA      = $currencyA[0].' (error)';
-                    $classcurrency  = 'color:red';
-                }
-                // -------------- TYPE DESTINY -----------------------------------------------------
-                //dd($failsurcharge['typedestiny_id']);
-                $typedestinyobj    = TypeDestiny::where('description',$typedestinyA[0])->first();
-                if(count($typedestinyA) <= 1){
-                    $typedestinyLB = $typedestinyobj['description'];
-                }else{
-                    $typedestinyLB      = $typedestinyA[0].' (error)';
-                    $classcurrency  = 'color:red';
-                }
-
-
-                ////////////////////////////////////////////////////////////////////////////////////
-                $arreglo = [
-                    'id'                    => $failsurcharge->id,
-                    'surchargelb'           => $surchargeA,
-                    'origin_portLb'         => $originA,
-                    'destiny_portLb'        => $destinationA,
-                    'carrierlb'             => $carrierA,
-                    'typedestinylb'         => $typedestinyLB,
-                    'ammount'               => $ammountA,
-                    'calculationtypelb'     => $calculationtypeA,
-                    'currencylb'            => $currencyA,
-                    'classsurcharge'        => $classsurcharger,
-                    'classorigin'           => $classdorigin,
-                    'classdestiny'          => $classddestination,
-                    'classtypedestiny'      => $classtypedestiny,
-                    'classcarrier'          => $classcarrier,
-                    'classcalculationtype'  => $classcalculationtype,
-                    'classammount'          => $classammount,
-                    'classcurrency'         => $classcurrency,
-                    'operation'             => 1
-                ];
-                //dd($arreglo);
-                $failsurchargecoll->push($arreglo);
-
-            }
-            //dd($failsurchargecoll);
-            return DataTables::of($failsurchargecoll)->addColumn('action', function ( $failsurchargecoll) {
-                return '<a href="#" class="" onclick="showModalsavetosurcharge('.$failsurchargecoll['id'].','.$failsurchargecoll['operation'].')"><i class="la la-edit"></i></a>
-                &nbsp;
-                <a href="#" id="delete-Fail-Surcharge" data-id-failSurcharge="'.$failsurchargecoll['id'].'" class=""><i class="la la-remove"></i></a>';
-            })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
-
-        }else if($selector == 2){
-            $surchargecollection = '';
-            $surchargecollection = PrvSurchargers::get_surchargers($id);
-            return DataTables::of($surchargecollection)->addColumn('action', function ( $surchargecollection) {
-                return '<a href="#" class="" onclick="showModalsavetosurcharge('.$surchargecollection['id'].','.$surchargecollection['operation'].')"><i class="la la-edit"></i></a>
-                &nbsp;
-                <a href="#" id="delete-Surcharge" data-id-Surcharge="'.$surchargecollection['id'].'" class=""><i class="la la-remove"></i></a>';
-            })
-                ->editColumn('id', 'ID: {{$id}}')->toJson();
-        }
-    }
 
     public function LoadDataTable($id,$selector,$type){
         if(strnatcasecmp($type,'rates')==0){
@@ -5574,10 +5157,13 @@ class ImportationController extends Controller
 
     // Account Importation --------------------------------------------------------------
 
-    public function indexAccount(){
+    public function indexAccount(Request $request){
+        $date_start = $request->dateS;
+        $date_end	= $request->dateE;
+        $date_end   = Carbon::parse($date_end);
+        $date_end   = $date_end->addDay(1);
 
-
-        $account = \DB::select('call  proc_account_fcl');
+        $account = \DB::select('call  proc_account_fcl("'.$date_start.'","'.$date_end.'")');
 
         return DataTables::of($account)
             /*  ->addColumn('status', function ( $account) {
@@ -5613,8 +5199,6 @@ class ImportationController extends Controller
                 if($account->status != 'Contract erased'){
                     return '
                 <a href="'.route('Failed.Developer.For.Contracts',[$account->contract_id,1]).'" class=""><i class="la la-credit-card" title="Failed - FCL"></i></a>
-                &nbsp;
-                <a href="/Importation/fcl/surcharge/'.$account->contract_id.'/1" class=""><i class="la la-rotate-right" title="Surchargers"></i></a>
                 &nbsp;
                 '.$descarga.'
                 &nbsp;
