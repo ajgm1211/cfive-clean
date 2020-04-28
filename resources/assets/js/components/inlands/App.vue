@@ -75,7 +75,7 @@
                             <span v-html="data.value"></span>
                         </template>
 
-                        <template v-slot:cell(carriers)="data">
+                        <template v-slot:cell(type)="data">
                             <span v-html="data.value"></span>
                         </template>
 
@@ -121,7 +121,7 @@
                                       valid-feedback="Reference is done!"
                                       >
                             <b-form-input
-                                          v-model="reference"
+                                          v-model="provider"
                                           placeholder="Reference" 
                                           >
                             </b-form-input>
@@ -130,22 +130,22 @@
                         <div class="row">
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
-                                              id="carrier"
-                                              label="Carrier"
-                                              label-for="carrier"
-                                              invalid-feedback="Carrier is required."
+                                              id="type"
+                                              label="type"
+                                              label-for="type"
+                                              invalid-feedback="type is required."
                                               valid-feedback="Reference is done!"
                                               >
                                     <multiselect 
-                                                 v-model="carrier" 
+                                                 v-model="type" 
                                                  :multiple="true" 
-                                                 :options="carriers" 
+                                                 :options="types" 
                                                  :searchable="false"
                                                  :close-on-select="false"
                                                  :clear-on-select="false"
                                                  track-by="id" label="name" 
                                                  :show-labels="false" 
-                                                 placeholder="Select Carrier">
+                                                 placeholder="Select type">
 
                                     </multiselect>
                                 </b-form-group>
@@ -245,27 +245,28 @@
                 search: null,
                 fields: [
                     { key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true},
-                    { key: 'name', label: 'Reference', sortable: false },
+                    { key: 'provider', label: 'Provider', sortable: false },
                     { key: 'status', label: 'Status', sortable: false, isHtml: true,
                      formatter: value => {
                          return '<span class="status-st '+value+'"></span>';
                      } 
                     },
-                    { key: 'validity', label: 'Valid From', sortable: false },
-                    { key: 'expire', label: 'Valid Until', sortable: false },
-                    { key: 'carriers', label: 'Carriers', 
-                     formatter: (...params) => { return this.badgecarriers(params) }
+                    { key: 'type', label: 'Type', 
+                     formatter: (...params) => { return this.badgetypes(params) }
                     },
                     { key: 'gp_container', label: 'Equipment', sortable: false, 
                      formatter: value => { return value.name; }
                     },
-                    { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
+                    { key: 'validity', label: 'Valid From', sortable: false },
+                    { key: 'expire', label: 'Valid Until', sortable: false },
+                               
+                    { key: 'direction', label: 'Direction', formatter: value => { return '<span class="status-st >otro</span>'; } 
                     },
                     { key: 'actions', label: '', tdClass: 'actions-add-inland'}
                 ],
                 // Models Data
                 reference: '',
-                carrier: [],
+                type: [],
                 equipment: '',
                 direction: '',
                 selectMode: 'multi',
@@ -274,7 +275,7 @@
                 indeterminate: false,
                 selectedDates: {},
                 //List Data
-                carriers: [],
+                types: [],
                 directions: [],
                 equipments: [],
                 //Pagination
@@ -301,10 +302,10 @@
         methods: {
             // invalid empty return form
             invalidFeedback(data) {
-                if(data.carriers == ''){
-                    $('#carrier .invalid-feedback').css({'display':'block'});                
+                if(data.type == ''){
+                    $('#type .invalid-feedback').css({'display':'block'});                
                 }
-                if(data.name == '') {
+                if(data.provider == '') {
                     $('#reference .invalid-feedback').css({'display':'block'});                
                 }  
                 if(data.gp_container == null) { 
@@ -330,7 +331,7 @@
             },
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
-                this.carriers = data.carriers;
+                this.types = data.types;
                 this.equipments = data.equipments;
                 this.directions = data.directions;
             },
@@ -346,17 +347,17 @@
             },
             /* Prepare the data to create a new Contract */
             prepareData(){
-                let carriers = [];
-                this.carrier.forEach(e => carriers.push(e.id));
+                let types = [];
+                this.type.forEach(e => types.push(e.id));
                 return {
-                    'name': this.reference,
-                    'direction': this.direction.id,
+                    'name': this.provider,
+                    'direction': 'xcosa',
                     'validity': '2020-02-20', //this.dateRange.startDate,
                     'expire': '2020-02-20', //this.dateRange.endDate,
                     'status': 'publish',
                     'remarks': '',
                     'gp_container': this.equipment.id,
-                    'carriers': carriers
+                    'type': type
                 }
             },
             /* Handle the submit of Create Form and 
@@ -385,11 +386,11 @@
             /* Update url and execute api call */
             routerPush(qs) {
                 this.$router.push({query: qs});
-                api.getData(qs, '/api/v2/contracts', (err, data) => {
+                api.getData(qs, '/api/v2/inlands', (err, data) => {
                     this.setData(err, data);
                 });
             },
-            badgecarriers([value, key, item]){
+            badgetypes([value, key, item]){
                 let variation = "";
                 if(value){
                     value.forEach(function(val){
