@@ -11,9 +11,9 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row my-3">
-             <div class="col-12 col-sm-4">
+            <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <b-input
@@ -24,30 +24,55 @@
                 </b-form>
             </div>
         </div>
-        
-        <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
-        <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
-        <!-- Action BTN -->
-        <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+
+        <b-form-checkbox-group>
+            <b-form-checkbox
+                             class="select-all"
+                             v-model="allSelected"
+                             :indeterminate="indeterminate"
+                             @change="toggleAll"
+                             >
+            </b-form-checkbox>
+        </b-form-checkbox-group>
+
+        <b-button id="popover-all" class="action-app all-action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+        <b-popover target="popover-all" class="btns-action" variant="" triggers="focus" placement="bottomleft">
             <button class="btn-action">Edit</button>
             <button class="btn-action">Duplicate</button>
             <button class="btn-action">Delete</button>
         </b-popover>
-        <!-- Action BTN END -->
-        <!-- checkbox -->
-        <input type="checkbox" class="input-check" id="check">
-        <label  for="check"></label>
-        <!-- checkbox end -->
+
+        <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage">
+            <template v-slot:cell(checkbox)="data">
+                <b-form-checkbox-group >
+                    <b-form-checkbox 
+                                     v-bind:value="data.item"
+                                     v-bind:id="'check'+data.item.id"
+                                     v-model="selected"
+                                     >
+                    </b-form-checkbox>
+                </b-form-checkbox-group>
+            </template>
+
+            <template v-slot:cell(actions)="data">
+                <b-button v-bind:id="'popover'+data.item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                <b-popover v-bind:target="'popover'+data.item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                    <button class="btn-action">Edit</button>
+                    <button class="btn-action">Duplicate</button>
+                    <button class="btn-action">Delete</button>
+                </b-popover>
+            </template>
+        </b-table>
         <!-- paginator -->
         <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
     </b-card>
-    </template>
+</template>
 
 
 <script>
     export default {
         components: { 
-            
+
         },
         data() {
             return {
@@ -55,11 +80,7 @@
                 data: null,
 
                 fields: [
-                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
-                        var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
-                        $('.checkbox-add-fcl').append(checkbox);
-                    }  
-                    },
+                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', isHtml: true},
                     { key: 'charges', label: 'Charges', sortable: false },
                     { key: 'from', label: 'Origin Port', sortable: false },
                     { key: 'until', label: 'Destination Port', sortable: false },
@@ -77,16 +98,12 @@
                          return $carriers.join(', ');
                      } 
                     },
-                    { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
-                        var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
-                        $('.actions-add-fcl').append(actions);
-                    }  
-                    }
-                    
-                
+                    { key: 'actions', label: '', tdClass: 'actions-add-fcl'}
+
+
 
                 ],
-                
+
             }
         },
         created() {
