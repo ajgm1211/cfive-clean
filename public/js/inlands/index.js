@@ -92146,29 +92146,29 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             data: null,
             nameState: true,
             search: null,
-            fields: [{ key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true }, { key: 'name', label: 'Reference', sortable: false }, { key: 'status', label: 'Status', sortable: false, isHtml: true,
+            fields: [{ key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true }, { key: 'provider', label: 'Provider', sortable: false }, { key: 'status', label: 'Status', sortable: false, isHtml: true,
                 formatter: function formatter(value) {
                     return '<span class="status-st ' + value + '"></span>';
                 }
-            }, { key: 'validity', label: 'Valid From', sortable: false }, { key: 'expire', label: 'Valid Until', sortable: false }, { key: 'carriers', label: 'Carriers',
+            }, { key: 'type', label: 'Type',
                 formatter: function formatter() {
                     for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
                         params[_key] = arguments[_key];
                     }
 
-                    return _this.badgecarriers(params);
+                    return _this.badgetypes(params);
                 }
             }, { key: 'gp_container', label: 'Equipment', sortable: false,
                 formatter: function formatter(value) {
                     return value.name;
                 }
-            }, { key: 'direction', label: 'Direction', formatter: function formatter(value) {
-                    return value.name;
+            }, { key: 'validity', label: 'Valid From', sortable: false }, { key: 'expire', label: 'Valid Until', sortable: false }, { key: 'direction', label: 'Direction', formatter: function formatter(value) {
+                    return '<span class="status-st >otro</span>';
                 }
             }, { key: 'actions', label: '', tdClass: 'actions-add-inland' }],
             // Models Data
             reference: '',
-            carrier: [],
+            type: [],
             equipment: '',
             direction: '',
             selectMode: 'multi',
@@ -92177,7 +92177,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             indeterminate: false,
             selectedDates: {},
             //List Data
-            carriers: [],
+            types: [],
             directions: [],
             equipments: [],
             //Pagination
@@ -92205,10 +92205,10 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
     methods: {
         // invalid empty return form
         invalidFeedback: function invalidFeedback(data) {
-            if (data.carriers == '') {
-                $('#carrier .invalid-feedback').css({ 'display': 'block' });
+            if (data.type == '') {
+                $('#type .invalid-feedback').css({ 'display': 'block' });
             }
-            if (data.name == '') {
+            if (data.provider == '') {
                 $('#reference .invalid-feedback').css({ 'display': 'block' });
             }
             if (data.gp_container == null) {
@@ -92235,7 +92235,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
         /* Set the Dropdown lists to use in form */
         setDropdownLists: function setDropdownLists(err, data) {
-            this.carriers = data.carriers;
+            this.types = data.types;
             this.equipments = data.equipments;
             this.directions = data.directions;
         },
@@ -92257,19 +92257,19 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
         /* Prepare the data to create a new Contract */
         prepareData: function prepareData() {
-            var carriers = [];
-            this.carrier.forEach(function (e) {
-                return carriers.push(e.id);
+            var types = [];
+            this.type.forEach(function (e) {
+                return types.push(e.id);
             });
             return {
-                'name': this.reference,
-                'direction': this.direction.id,
+                'name': this.provider,
+                'direction': 'xcosa',
                 'validity': '2020-02-20', //this.dateRange.startDate,
                 'expire': '2020-02-20', //this.dateRange.endDate,
                 'status': 'publish',
                 'remarks': '',
                 'gp_container': this.equipment.id,
-                'carriers': carriers
+                'type': type
             };
         },
 
@@ -92303,11 +92303,11 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             var _this4 = this;
 
             this.$router.push({ query: qs });
-            api.getData(qs, '/api/v2/contracts', function (err, data) {
+            api.getData(qs, '/api/v2/inlands', function (err, data) {
                 _this4.setData(err, data);
             });
         },
-        badgecarriers: function badgecarriers(_ref2) {
+        badgetypes: function badgetypes(_ref2) {
             var _ref3 = _slicedToArray(_ref2, 3),
                 value = _ref3[0],
                 key = _ref3[1],
@@ -93309,7 +93309,7 @@ var render = function() {
                     }
                   },
                   {
-                    key: "cell(carriers)",
+                    key: "cell(type)",
                     fn: function(data) {
                       return [
                         _c("span", {
@@ -93434,11 +93434,11 @@ var render = function() {
                       _c("b-form-input", {
                         attrs: { placeholder: "Reference" },
                         model: {
-                          value: _vm.reference,
+                          value: _vm.provider,
                           callback: function($$v) {
-                            _vm.reference = $$v
+                            _vm.provider = $$v
                           },
-                          expression: "reference"
+                          expression: "provider"
                         }
                       })
                     ],
@@ -93454,10 +93454,10 @@ var render = function() {
                           "b-form-group",
                           {
                             attrs: {
-                              id: "carrier",
-                              label: "Carrier",
-                              "label-for": "carrier",
-                              "invalid-feedback": "Carrier is required.",
+                              id: "type",
+                              label: "type",
+                              "label-for": "type",
+                              "invalid-feedback": "type is required.",
                               "valid-feedback": "Reference is done!"
                             }
                           },
@@ -93465,21 +93465,21 @@ var render = function() {
                             _c("multiselect", {
                               attrs: {
                                 multiple: true,
-                                options: _vm.carriers,
+                                options: _vm.types,
                                 searchable: false,
                                 "close-on-select": false,
                                 "clear-on-select": false,
                                 "track-by": "id",
                                 label: "name",
                                 "show-labels": false,
-                                placeholder: "Select Carrier"
+                                placeholder: "Select type"
                               },
                               model: {
-                                value: _vm.carrier,
+                                value: _vm.type,
                                 callback: function($$v) {
-                                  _vm.carrier = $$v
+                                  _vm.type = $$v
                                 },
-                                expression: "carrier"
+                                expression: "type"
                               }
                             })
                           ],
