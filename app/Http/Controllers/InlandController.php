@@ -18,21 +18,26 @@ class InlandController extends Controller
   public function list(Request $request)
   {        
     $results = Inland::filterByCurrentCompany()->filter($request);
+
     return InlandResource::collection($results);
   }
 
   public function data(Request $request)
   {        
     
-
-    $equipments = GroupContainer::pluck('id','name');
-    $directions = Direction::pluck('id','name');
+    $equipments = GroupContainer::get()->map(function ($equipment) {
+              return $equipment->only(['id', 'name']);
+          });
+    $directions = Direction::get()->map(function ($direction) {
+            return $direction->only(['id', 'name']);
+        });
 
     $data = [
       'equipments' => $equipments,
       'directions' => $directions
 
     ];
+
 
     return response()->json(['data' => $data ]);
   }

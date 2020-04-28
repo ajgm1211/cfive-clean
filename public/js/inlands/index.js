@@ -93386,7 +93386,11 @@ var render = function() {
                   "next-link-class": "page-link",
                   initialPage: _vm.initialPage
                 }
-              })
+              }),
+              _vm._v(" "),
+              _vm._v(
+                "\n                " + _vm._s(_vm.data) + "\n                "
+              )
             ],
             1
           ),
