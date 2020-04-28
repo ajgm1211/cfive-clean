@@ -1,7 +1,7 @@
                 <!-- Freights table all in-->
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.freight_charges')}}</p>
+                        <p class="title">{{__('pdf.freight_charges')}}</p>
                         <br>
                     </div>
 
@@ -153,10 +153,10 @@
                                                                     @php
                                                                         //echo str_replace("Per", "Por", $v->calculation_type->name); 
                                                                     @endphp
-                                                                    {{@$v->calculation_type->display_name}}
+                                                                    {{@$v->calculation_type->name}}
                                                                 </td>
-                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
-                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
+                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
                                                             @else
                                                                 <td>{{__('pdf.per_container')}}</td>
                                                             @endif
