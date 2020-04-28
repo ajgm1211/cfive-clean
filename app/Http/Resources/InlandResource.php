@@ -20,8 +20,8 @@ class InlandResource extends JsonResource
       'type' => $this->type,
       'company_user_id' => $this->companyUser,
       'validity' => $this->validity,
-      'expire' => $this->expire
-      // 'gp_container' => $this->gpContainer
+      'expire' => $this->expire,
+      'gp_container' => $this->gpContainer
     ];
   }
 }

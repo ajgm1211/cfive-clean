@@ -24,20 +24,11 @@ class InlandController extends Controller
   public function data(Request $request)
   {        
     
-    $carriers = Carrier::get()->map(function ($carrier) {
-      return $carrier->only(['id', 'name']);
-    });
 
-    $equipments = GroupContainer::get()->map(function ($carrier) {
-      return $carrier->only(['id', 'name']);
-    });
-    
-    $directions = Direction::get()->map(function ($carrier) {
-      return $carrier->only(['id', 'name']);
-    });
+    $equipments = GroupContainer::pluck('id','name');
+    $directions = Direction::pluck('id','name');
 
     $data = [
-      'carriers' => $carriers,
       'equipments' => $equipments,
       'directions' => $directions
 

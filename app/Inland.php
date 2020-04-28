@@ -2,8 +2,19 @@
 
 namespace App;
 
+
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Filters\InlandFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+
+
 class Inland extends Model implements Auditable
 {
   use \OwenIt\Auditing\Auditable;
@@ -38,16 +49,20 @@ class Inland extends Model implements Auditable
 
   public function scopeFilterByCurrentCompany( $query )
   {
+
     $company_id = Auth::user('web')->company_user_id;
-    return $query->where( 'company_user_id', '=', $company_id );
+  
+    return $query->where('company_user_id', '=',$company_id);
   }
 
-  /*public function getRouteKey()
-  {
-    $hashids = new \Hashids\Hashids('MySecretSalt');
-
-    return $hashids->encode($this->getKey());
-  }*/
+  public function gpContainer()
+	{
+		return $this->belongsTo('App\GroupContainer');
+  }
+  public function scopeFilter(Builder $builder, Request $request)
+	{
+		return (new InlandFilter($request, $builder))->filter();
+	}
 
 
 }
