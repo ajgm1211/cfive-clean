@@ -311,6 +311,7 @@ trait QuoteV2Trait
                             }
                         }
                     }
+                    //Inlands
                     if (!$rate->inland->isEmpty()) {
                         foreach ($rate->inland as $value) {
                             foreach ($containers as $c) {
@@ -423,11 +424,7 @@ trait QuoteV2Trait
                             
                             if ($amounts->type_id == 1 || $amounts->type_id == 2) {
 
-                                if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                                } else {
-                                    $typeCurrency =  $currency_cfg;
-                                }
+                                $typeCurrency =  $currency_cfg;
 
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
 
