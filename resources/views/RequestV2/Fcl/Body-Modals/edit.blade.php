@@ -79,6 +79,7 @@
                     $('#changeStatus').modal('hide');
                     if(data.status == 'Done'){
                         $('#statusHiden'+idContract).removeAttr('hidden');
+                        $('#myatest').DataTable().draw(true);
                     } else {
                         $('#statusHiden'+idContract).attr('hidden','hidden');                        
                     }
