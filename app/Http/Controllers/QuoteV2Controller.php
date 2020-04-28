@@ -290,22 +290,22 @@ class QuoteV2Controller extends Controller
         }
 
         $company_user_id = \Auth::user()->company_user_id;
-        $quote = QuoteV2::when($type,function($query,$type) {
-            return $query->where('type',$type);
-        })->when($status,function($query,$status) {
-            return $query->where('status',$status);
-        })->when($integration,function($query,$integration) {
-            return $query->whereHas('integration', function($q) {
+        $quote = QuoteV2::when($type, function ($query, $type) {
+            return $query->where('type', $type);
+        })->when($status, function ($query, $status) {
+            return $query->where('status', $status);
+        })->when($integration, function ($query, $integration) {
+            return $query->whereHas('integration', function ($q) {
                 $q->where('status', 0);
             });
         })->with(['rates_v2' => function ($query) {
-            $query->with('origin_airport', 'destination_airport', 'currency','carrier','airline');
-            $query->with(['origin_port'=>function($q){
-                $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+            $query->with('origin_airport', 'destination_airport', 'currency', 'carrier', 'airline');
+            $query->with(['origin_port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                 $q->with('country');
             }]);
             $query->with(['destination_port' => function ($q) {
-                $q->select('id','name','code','display_name','coordinates','country_id','varation as variation','api_varation as api_variation');
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
                 $q->with('country');
             }]);
             $query->with(['charge' => function ($q) {
@@ -315,25 +315,25 @@ class QuoteV2Controller extends Controller
                 $q->with('type', 'surcharge', 'calculation_type', 'currency');
             }]);
         }])->with(['user' => function ($query) {
-            $query->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state','company_user_id');
+            $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
             $query->with(['companyUser' => function ($q) {
-                $q->select('id','name','address','phone','currency_id');
+                $q->select('id', 'name', 'address', 'phone', 'currency_id');
                 $q->with('currency');
             }]);
         }])->with(['company' => function ($query) {
             $query->with(['company_user' => function ($q) {
-                $q->select('id','name','address','phone','currency_id');
+                $q->select('id', 'name', 'address', 'phone', 'currency_id');
                 $q->with('currency');
             }]);
             $query->with(['owner' => function ($q) {
-                $q->select('id','name','lastname','email','phone','type','name_company','position','access','verified','state');
+                $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
             }]);
         }])->with(['contact' => function ($query) {
             $query->with(['company' => function ($q) {
-                $q->select('id','business_name','phone','address','email','tax_number');
+                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number');
             }]);
         }])->with(['price' => function ($q) {
-            $q->select('id','name','description');
+            $q->select('id', 'name', 'description');
         }])->with('incoterm')->findOrFail($id);
 
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
@@ -791,10 +791,10 @@ class QuoteV2Controller extends Controller
         if ($request->value) {
             $quote = QuoteV2::find($request->pk);
             $name = $request->name;
-            if($name=='total_weight' || $name=='total_volume' || $name=='chargeable_weight'){
+            if ($name == 'total_weight' || $name == 'total_volume' || $name == 'chargeable_weight') {
                 $value = $this->tofloat($request->value);
                 $quote->$name = $value;
-            }else{
+            } else {
                 $quote->$name = $request->value;
             }
             $quote->update();
@@ -1633,7 +1633,9 @@ class QuoteV2Controller extends Controller
 
         $language_id = $company->companyUser->pdf_language;
 
-
+        if ($language_id == '') {
+            $language_id = 1;
+        }
 
         $remarks_all = RemarkHarbor::where('port_id', $port_all->id)->with('remark')->whereHas('remark', function ($q) use ($rem_carrier_id, $language_id) {
             $q->where('remark_conditions.company_user_id', \Auth::user()->company_user_id)->where('language_id', $language_id)->whereHas('remarksCarriers', function ($b) use ($rem_carrier_id) {
@@ -2371,14 +2373,14 @@ class QuoteV2Controller extends Controller
                 $currency_cfg = "";
             }
 
-            $pdfarray= $this->generatepdf($quote->id,$company_user,$currency_cfg,\Auth::user()->id);
+            $pdfarray = $this->generatepdf($quote->id, $company_user, $currency_cfg, \Auth::user()->id);
             $pdf = $pdfarray['pdf'];
             $view = $pdfarray['view'];
-            $idQuote= $pdfarray['idQuote'];
+            $idQuote = $pdfarray['idQuote'];
             $idQ = $pdfarray['idQ'];
 
-            $pdf->loadHTML($view)->save('pdf/quote-'.$idQuote.'.pdf');
-            $quote->addMedia('pdf/quote-'.$idQuote.'.pdf')->toMediaCollection('document','pdfApiS3');
+            $pdf->loadHTML($view)->save('pdf/quote-' . $idQuote . '.pdf');
+            $quote->addMedia('pdf/quote-' . $idQuote . '.pdf')->toMediaCollection('document', 'pdfApiS3');
         }
         return redirect()->action('QuoteV2Controller@show', setearRouteKey($quote->id));
     }
@@ -3275,7 +3277,7 @@ class QuoteV2Controller extends Controller
 
                     $url = env('CMA_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
                     $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
-                    
+
                     try {
                         $response = $client->request('GET', $url);
                     } catch (\Exception $e) {
