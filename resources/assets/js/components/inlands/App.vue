@@ -10,7 +10,7 @@
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-primary btn-bg">+ Add Inland</button>
+                                <button class="btn btn-primary btn-bg"  v-b-modal.add-inland>+ Add Inland</button>
                             </div>
                         </div>
                     </div>
@@ -108,9 +108,8 @@
                     <!-- Pagination end -->
 
                 </b-card>
-
-                <!-- Modal 
-                <b-modal ref="addFCL" id="add-fcl" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
+         
+                <b-modal ref="addFCL" id="add-inland" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
                          title="Add FCL Contract" hide-footer>
 
                     <b-form ref="form" @submit.stop.prevent="onSubmit" class="modal-input">
@@ -129,26 +128,6 @@
                         </b-form-group>
 
                         <div class="row">
-                            <div class="col-12 col-sm-6">
-                                <b-form-group
-                                              id="validity"
-                                              label="Validity"
-                                              label-for="validity"
-                                              invalid-feedback="Validity is required."
-                                              valid-feedback="Reference is done!"
-                                              >
-                                    <date-range-picker
-                                                       ref="picker"
-                                                       :opens="'center'"
-                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
-                                                       :singleDatePicker="false"
-                                                       :autoApply="true"
-                                                       :timePicker="false"
-                                                       v-model="selectedDates"
-                                                       :linkedCalendars="true">
-                                    </date-range-picker>
-                                </b-form-group>
-                            </div>
                             <div class="col-12 col-sm-6 ">
                                 <b-form-group
                                               id="carrier"
@@ -169,11 +148,29 @@
                                                  placeholder="Select Carrier">
 
                                     </multiselect>
-
-
-
                                 </b-form-group>
                             </div>
+                            <div class="col-12 col-sm-6">
+                                <b-form-group
+                                              id="validity"
+                                              label="Validity"
+                                              label-for="validity"
+                                              invalid-feedback="Validity is required."
+                                              valid-feedback="Reference is done!"
+                                              >
+                                    <date-range-picker
+                                                       ref="picker"
+                                                       :opens="'center'"
+                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
+                                                       :singleDatePicker="false"
+                                                       :autoApply="true"
+                                                       :timePicker="false"
+                                                       v-model="selectedDates"
+                                                       :linkedCalendars="true">
+                                    </date-range-picker>
+                                </b-form-group>
+                            </div>
+                
                             <div class="col-12 col-sm-6">
                                 <b-form-group
                                               id="equipment"
@@ -206,8 +203,7 @@
                             <button class="btn btn-primary btn-bg">Add Contract</button>
                         </div>
                     </b-form>
-                </b-modal>
-                 Modal end -->
+                </b-modal>        
 
             </div>
 
@@ -248,7 +244,7 @@
                 nameState: true,
                 search: null,
                 fields: [
-                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', isHtml: true},
+                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true},
                     { key: 'name', label: 'Reference', sortable: false },
                     { key: 'status', label: 'Status', sortable: false, isHtml: true,
                      formatter: value => {
@@ -265,7 +261,7 @@
                     },
                     { key: 'direction', label: 'Direction', formatter: value => { return value.name } 
                     },
-                    { key: 'actions', label: '', tdClass: 'actions-add-fcl'}
+                    { key: 'actions', label: '', tdClass: 'actions-add-inland'}
                 ],
                 // Models Data
                 reference: '',
@@ -322,7 +318,7 @@
                 this.selected = checked ? this.data.slice() : [] //Selected all the checkbox
             },
             modalClose() {
-                this.$bvModal.hide('add-fcl'); //Close modal 
+                this.$bvModal.hide('add-inland'); //Close modal 
             },
             setDates() {
                 if(this.startDate && this.endDate){
