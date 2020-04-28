@@ -40,10 +40,7 @@
                                          >
                         </b-form-checkbox>
                     </b-form-checkbox-group>
-                    <!--  <p>
-
-{{ selected }}
-</p>  -->
+                    <!--  <p>{{ selected }}</p>  -->
 
                     <b-button id="popover-all" class="action-app all-action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                     <b-popover target="popover-all" class="btns-action" variant="" triggers="focus" placement="bottomleft">
@@ -107,7 +104,6 @@
                               :initialPage="initialPage">
                     </paginate>
                     <!-- Pagination end -->
-
                 </b-card>
 
                 <!-- Modal -->
@@ -353,7 +349,6 @@
             },
             setDates() {
                 if(this.startDate && this.endDate){
-                    alert('asdsad');
                     this.selectedDates = {
                         startDate: moment(this.startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
                         endDate: moment(this.endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
