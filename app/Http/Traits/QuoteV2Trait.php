@@ -350,7 +350,7 @@ trait QuoteV2Trait
                                     ${$total . $c->code} = 0;
                                 }
                                 
-                                $value->${$sum . $total . $c->code} = number_format(${$total . $c->code}, 2, '.', '');
+                                $value->${$sum . $total . $c->code} = round(${$total . $c->code});
                             }
                         }
                     }
@@ -447,7 +447,7 @@ trait QuoteV2Trait
                                         ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
                                     }
 
-                                    $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
+                                    $amounts->${$pre_c . $c->code} = round(${$total . '_' . $c->code});
                                 }
                             }
                         }
@@ -563,7 +563,7 @@ trait QuoteV2Trait
                                     }
 
                                     if (isset($array_amounts['c'.$c->code]) || isset($array_markups['m'.$c->code])) {
-                                        $amounts->${$total . $sum . $c->code} = number_format(${$total . $c->code}, 2, '.', '');
+                                        $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
                                     }
                                 }
                             }
