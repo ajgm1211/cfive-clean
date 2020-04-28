@@ -23,12 +23,15 @@ class InlandController extends Controller
 
   public function data(Request $request)
   {        
+    
     $carriers = Carrier::get()->map(function ($carrier) {
       return $carrier->only(['id', 'name']);
     });
+
     $equipments = GroupContainer::get()->map(function ($carrier) {
       return $carrier->only(['id', 'name']);
     });
+    
     $directions = Direction::get()->map(function ($carrier) {
       return $carrier->only(['id', 'name']);
     });
