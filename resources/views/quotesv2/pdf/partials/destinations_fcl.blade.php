@@ -128,7 +128,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{number_format(@${'sum_sale'.$c->code}, 2, '.', '')}}</td>
+                                                            <td {{ $hide }}>{{round(@${'sum_sale'.$c->code})}}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
@@ -197,7 +197,7 @@
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}>{{number_format(@$item->${'total_'.$c->code}, 2, '.', '')}}</td>
+                                                    <td {{ $hide }}>{{round(@$item->${'total_'.$c->code})}}</td>
                                                 @endif
                                             @endforeach
                                         @endforeach
@@ -211,8 +211,8 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{ $hide }}>{{number_format(@$item->${'total_'.$c->code}, 2, '.', '')}}</td>
-                                                <td {{ $hide }}><b>{{number_format(@${'sum_'.$c->code}, 2, '.', '')}}</b></td>
+                                                <td {{ $hide }}>{{round(@$item->${'total_'.$c->code})}}</td>
+                                                <td {{ $hide }}><b>{{round(@${'sum_'.$c->code})}}</b></td>
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -331,7 +331,7 @@
                                     @foreach ($equipmentHides as $key=>$hide)
                                         @foreach ($containers as $c)
                                             @if($c->code == $key)
-                                                <td {{ $hide }}><b>{{number_format(@${'sum_destination_'.$c->code}+@${'inland_'.$c->code}, 2, '.', '')}}</b></td>
+                                                <td {{ $hide }}><b>{{round(@${'sum_destination_'.$c->code}+@${'inland_'.$c->code})}}</b></td>
                                             @endif
                                         @endforeach
                                     @endforeach
