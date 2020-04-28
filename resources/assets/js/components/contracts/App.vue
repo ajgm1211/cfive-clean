@@ -138,16 +138,17 @@
                                               invalid-feedback="Validity is required."
                                               valid-feedback="Reference is done!"
                                               >
-                                    <date-range-picker
-                                                       ref="picker"
-                                                       :opens="'center'"
-                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
-                                                       :singleDatePicker="false"
-                                                       :autoApply="true"
-                                                       :timePicker="false"
-                                                       v-model="selectedDates"
-                                                       :linkedCalendars="true">
-                                    </date-range-picker>
+                                     <date-range-picker
+                                                   ref="picker"
+                                                   :locale-data="{ firstDay: 1 }"
+                                                   :singleDatePicker="singleDatePicker"
+                                                   v-model="dateRange"
+                                                   @update="updateValues"
+                                                   @toggle="checkOpen"
+                                                   :linkedCalendars="linkedCalendars"
+                                                   :dateFormat="dateFormat"
+                                                   >
+                                </date-range-picker>
                                 </b-form-group>
                             </div>
                             <div class="col-12 col-sm-6 ">
@@ -283,7 +284,21 @@
                 selected: [],
                 allSelected: false,
                 indeterminate: false,
-                selectedDates: {},
+                dateRange: { 
+                    startDate: '', 
+                    endDate:  ''
+                }, 
+                locale:{
+                    direction: 'ltr',
+                    format: 'YYYY-MM-DD',
+                    separator: ' - ',
+                    applyLabel: 'Apply',
+                    cancelLabel: 'Cancel',
+                    customRangeLabel: 'Custom Range',
+                    daysOfWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    firstDay: 1
+                },
 
                 //List Data
                 carriers: [],
@@ -338,9 +353,10 @@
             },
             setDates() {
                 if(this.startDate && this.endDate){
+                    alert('asdsad');
                     this.selectedDates = {
-                        startDate: moment(this.startDate, 'YYYY-MM-DD').format('MMM DD, YYYY'),
-                        endDate: moment(this.endDate, 'YYYY-MM-DD').format('MMM DD, YYYY')
+                        startDate: moment(this.startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
+                        endDate: moment(this.endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
                     }
                 }
             },
@@ -372,8 +388,8 @@
                 return {
                     'name': this.reference,
                     'direction': this.direction.id,
-                    'validity': '2020-02-20', //this.dateRange.startDate,
-                    'expire': '2020-02-20', //this.dateRange.endDate,
+                    'validity': '2020/04/05', //this.dateRange.startDate,
+                    'expire': '2020/04/05', //this.dateRange.endDate,
                     'status': 'publish',
                     'remarks': '',
                     'gp_container': this.equipment.id,
