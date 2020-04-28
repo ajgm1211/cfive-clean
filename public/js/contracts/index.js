@@ -92777,10 +92777,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -92917,7 +92913,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
         },
         setDates: function setDates() {
             if (this.startDate && this.endDate) {
-                alert('asdsad');
                 this.selectedDates = {
                     startDate: moment(this.startDate, 'YYYY-MM-DD').format('YYYY-MM-DD'),
                     endDate: moment(this.endDate, 'YYYY-MM-DD').format('YYYY-MM-DD')
