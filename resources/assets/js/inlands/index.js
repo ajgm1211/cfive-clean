@@ -9,7 +9,8 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueRouter from 'vue-router';
 
 /* Config files */
-import App from '../components/inlands/App';  // Main Component
+//import App from '../components/inlands/App';  // Main Component
+import LocalCharges from '../components/inlands/LocalCharges';  // Local Charges
 //import Contracts from '../components/contracts/Contracts';  // Main Component
 import Api from '../api.js'; // Api calls controller
 
@@ -28,6 +29,6 @@ window.api = new Api();
 
 const app = new Vue({
     el: '#app',
-    render: h => h(App),
+    render: h => h(LocalCharges),
     router: router,
 });
