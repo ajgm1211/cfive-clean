@@ -106,7 +106,7 @@
                               :initialPage="initialPage">
                     </paginate>
                     <!-- Pagination end -->
-
+                {{   data   }}
                 </b-card>
          
                 <b-modal ref="addFCL" id="add-inland" cancel-title="Cancel" ok-title="Add Contract" hide-header-close
