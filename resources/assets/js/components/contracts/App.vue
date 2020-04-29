@@ -436,7 +436,7 @@
 
             },
 
-            badgecarriers([value, key, item]){
+            badgecarriers(value){
                 let variation = "";
 
                 if(value){

@@ -92658,8 +92658,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__paginate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__paginate__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css__);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 //
 //
 //
@@ -93110,12 +93108,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
                 _this4.setData(err, data);
             });
         },
-        badgecarriers: function badgecarriers(_ref2) {
-            var _ref3 = _slicedToArray(_ref2, 3),
-                value = _ref3[0],
-                key = _ref3[1],
-                item = _ref3[2];
-
+        badgecarriers: function badgecarriers(value) {
             var variation = "";
 
             if (value) {

@@ -92688,8 +92688,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__paginate___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__paginate__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue2_daterange_picker_dist_vue2_daterange_picker_css__);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 //
 //
 //
@@ -92937,24 +92935,17 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
             data: null,
             nameState: true,
             search: null,
-            fields: [{ key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true }, { key: 'provider', label: 'Provider', sortable: false }, { key: 'status', label: 'Status', sortable: false, isHtml: true,
+            fields: [{ key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', isHtml: true }, { key: 'provider', label: 'Provider', sortable: false }, { key: 'status', label: 'Status', sortable: false, isHtml: true,
                 formatter: function formatter(value) {
                     return '<span class="status-st ' + value + '"></span>';
-                }
-            }, { key: 'type', label: 'Type',
-                formatter: function formatter() {
-                    for (var _len = arguments.length, params = Array(_len), _key = 0; _key < _len; _key++) {
-                        params[_key] = arguments[_key];
-                    }
-
-                    return _this.badgetypes(params);
                 }
             }, { key: 'gp_container', label: 'Equipment', sortable: false,
                 formatter: function formatter(value) {
                     return value.name;
                 }
-            }, { key: 'validity', label: 'Valid From', sortable: false }, { key: 'expire', label: 'Valid Until', sortable: false }, { key: 'direction', label: 'Direction', formatter: function formatter(value) {
-                    return '<span class="status-st >otro</span>';
+            }, { key: 'validity', label: 'Valid From', sortable: false }, { key: 'expire', label: 'Valid Until', sortable: false }, { key: 'type', label: 'Type',
+                formatter: function formatter(value) {
+                    return _this.badgetypes(value);
                 }
             }, { key: 'actions', label: '', tdClass: 'actions-add-inland' }],
             // Models Data
@@ -93098,20 +93089,17 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
                 _this4.setData(err, data);
             });
         },
-        badgetypes: function badgetypes(_ref2) {
-            var _ref3 = _slicedToArray(_ref2, 3),
-                value = _ref3[0],
-                key = _ref3[1],
-                item = _ref3[2];
-
+        badgetypes: function badgetypes(value) {
             var variation = "";
-            if (value) {
-                value.forEach(function (val) {
-                    variation += "<span class='badge badge-primary'>" + val.name + "</span> ";
-                });
+            if (value == 1) {
+                variation += "<span class='badge badge-primary'>Export</span> ";
+                return variation;
+            } else if (value == 2) {
+                variation += "<span class='badge badge-primary'>Import</span> ";
                 return variation;
             } else {
-                return '-';
+                variation += "<span class='badge badge-primary'>Both</span> ";
+                return variation;
             }
         }
     },
