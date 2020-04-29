@@ -3,26 +3,20 @@
             @forelse($origin_charges_grouped as $origin=>$detail)
             <br>
                 <div>
-                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
+                    <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                            <th class="unit"><b>{{__('pdf.charge')}}</b></th>
                             @if($quote->type=='LCL')
-                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                             @else
-                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}}</b></th>
                             @endif
                             <th ><b>Total</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                            <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,61 +72,47 @@
                 @empty
                     @if($sale_terms_origin->count()>0)
                         @foreach($sale_terms_origin as $origin=>$sale_origin)
-                        @foreach($sale_origin as $value)
-                            <div>
-                               @if($quote->type=='AIR')
-                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
-                                @else
-                                    <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                                    <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
-                                @endif
-                                <br>
-                            </div>
+                            @foreach($sale_origin as $value)
+                                <div>
+                                    <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
+                                    <br>
+                                </div>
 
-                            <table border="0" cellspacing="1" cellpadding="1" >
-                                <thead class="title-quote text-left header-table">
-                                    <tr >
-                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
-                                        @if($quote->type=='LCL')
-                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
-                                        @else
-                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
-                                        @endif
-                                        <th ><b>Total</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $total_origin=0;
-                                    @endphp
-                                    @foreach($value->charge as $item)
-                                        @php
-                                            $total_origin += $item->total_sale_origin;
-                                        @endphp
-                                    @endforeach
-                                        <tr class="text-left color-table">
-                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total origin charges</td>
-                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en origen</td>
-                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
-                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td >{{number_format(@$total_origin, 2, '.', '')}}</td>
-                                            @if($quote->pdf_option->grouped_origin_charges==1)
-                                                <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+                                <table border="0" cellspacing="1" cellpadding="1" >
+                                    <thead class="title-quote text-left header-table">
+                                        <tr >
+                                            <th class="unit"><b>{{__('pdf.charge')}}</b></th>
+                                            @if($quote->type=='LCL')
+                                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                             @else
-                                                <td >{{$currency_cfg->alphacode}}</td>
+                                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}}</b></th>
                                             @endif
+                                            <th ><b>Total</b></th>
+                                            <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                                         </tr>
-                                </tbody>
-                            </table>
-                        @endforeach
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $total_origin=0;
+                                        @endphp
+                                        @foreach($value->charge as $item)
+                                            @php
+                                                $total_origin += $item->total_sale_origin;
+                                            @endphp
+                                        @endforeach
+                                            <tr class="text-left color-table">
+                                                <td>{{__('pdf.total_origin')}}</td>
+                                                <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
+                                                <td >{{number_format(@$total_origin, 2, '.', '')}}</td>
+                                                @if($quote->pdf_option->grouped_origin_charges==1)
+                                                    <td >{{$quote->pdf_option->origin_charges_currency}}</td>
+                                                @else
+                                                    <td >{{$currency_cfg->alphacode}}</td>
+                                                @endif
+                                            </tr>
+                                    </tbody>
+                                </table>
+                            @endforeach
                         @endforeach
                     @endif
                 @endforelse
@@ -143,41 +123,23 @@
                 @foreach($sale_terms_origin as $origin=>$sale_origin)
                 @foreach($sale_origin as $value)
                     <div>
-                        @if($quote->type=='AIR')
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
-                        @else
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
-                        @endif
+                        <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-center header-table">
                             <tr >
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detalhe</b></th>
+                                <th class="unit"><b>{{__('pdf.charge')}}</b></th>
+                                <th class="unit"><b>{{__('pdf.detail')}}</b></th>
                                 @if($quote->type=='LCL')
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @else
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}}</b></th>
                                 @endif
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Units</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Unidades</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Unidades</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Rate</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tarifa</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Taxa</b></th>
+                                <th class="unit"><b>{{__('pdf.units')}}</b></th>
+                                <th class="unit"><b>{{__('pdf.rate')}}</b></th>
                                 <th ><b>Total</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                                <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,35 +170,23 @@
             @foreach($origin_charges_grouped as $origin => $value)
                 @foreach($value as $carrier => $item)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin charges - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Costos en origen - {{$origin}}</p>
-                        <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Encargos de origem - {{$origin}}</p>
+                        <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
                         <br>
                     </div>
                     <table border="0" cellspacing="1" cellpadding="1">
                         <thead class="title-quote text-center header-table">
                             <tr >
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Detail</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Detalle</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Detalhe</b></th>
+                                <th class="unit"><b>{{__('pdf.charge')}}</b></th>
+                                <th class="unit"><b>{{__('pdf.detail')}}</b></th>
                                 @if($quote->type=='LCL')
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                 @else
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}} @endif</b></th>
                                 @endif
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Units</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Unidades</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Unidades</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Rate</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Tarifa</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Taxa</b></th>
+                                <th class="unit"><b>{{__('pdf.units')}}</b></th>
+                                <th class="unit"><b>{{__('pdf.rate')}}</b></th>
                                 <th ><b>Total</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                                <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -299,9 +249,7 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Total local charges</b></td>
-                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Total gastos en origen</b></td>
-                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Total de cobranças locais</b></td>
+                            <td><b>{{__('pdf.total_local')}}</b></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -316,9 +264,7 @@
                         <tr class="{{$show_inland}}" style="background-color: white !important;">
                             <td  style="background-color: white !important;" colspan="2">
                                 <br>
-                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Origin inlands - {{$origin}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Inlands de origen - {{$origin}}</p>
-                                <p class="title" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Inlands de origem - {{$origin}}</p>
+                                <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.origin_inland')}} - {{$origin}}</p>
                             </td>
                         </tr>
                         @if(!$r->automaticInlandLclAir->isEmpty()){

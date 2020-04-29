@@ -1,7 +1,7 @@
             @switch($quote->pdf_option->show_type)
                 @case('total in')
                     <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>{{__('pdf.total_estimated')}}</b></p>
+                        <p class="title"><b>{{__('pdf.total_estimated')}}</b></p>
                         <br>
                     </div>
                     @break
@@ -12,7 +12,6 @@
                         <br>
                     </div>
                     @break
-
             @endswitch
             @if($quote->pdf_option->show_type=='total in')
                 <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
@@ -44,12 +43,12 @@
                             <?php 
 
                                 foreach ($containers as $c){ 
-                                    ${'total_'.$c} = 0;
-                                    ${'sum_total_'.$c} = 0;
-                                    ${'sum_inland_'.$c} = 0;
-                                    ${'sum_total_inland_'.$c} = 0;
-                                    ${'total_c'.$c} = 'total_c'.$c;
-                                    ${'total_m'.$c} = 'total_m'.$c;
+                                    ${'total_'.$c->code} = 0;
+                                    ${'sum_total_'.$c->code} = 0;
+                                    ${'sum_inland_'.$c->code} = 0;
+                                    ${'sum_total_inland_'.$c->code} = 0;
+                                    ${'total_c'.$c->code} = 'total_c'.$c->code;
+                                    ${'total_m'.$c->code} = 'total_m'.$c->code;
                                 }
 
                                 $array = array();
@@ -59,14 +58,14 @@
                                     if($quote->pdf_option->show_type=='charges'){
                                         if($value->type_id!=3){
                                             foreach ($containers as $c){
-                                                ${'total_'.$c}=$value->${'total_c'.$c}+$value->${'total_m'.$c};
-                                                ${'sum_total_'.$c} += ${'total_'.$c};
+                                                ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
+                                                ${'sum_total_'.$c->code} += ${'total_'.$c->code};
                                             }
                                         }
                                     }else{
                                         foreach ($containers as $c){ 
-                                            ${'total_'.$c}=$value->${'total_c'.$c}+$value->${'total_m'.$c};
-                                            ${'sum_total_'.$c} += ${'total_'.$c};
+                                            ${'total_'.$c->code}=$value->${'total_c'.$c->code}+$value->${'total_m'.$c->code};
+                                            ${'sum_total_'.$c->code} += ${'total_'.$c->code};
                                         }
                                     }
                                 }
@@ -75,8 +74,8 @@
                                     foreach($rate->inland as $inland){
                                         if($rate->inland->where('port_id', $inland->port_id)->count()==1){
                                             foreach ($containers as $c){
-                                                ${'sum_inland_'.$c}=$inland->${'total_c'.$c}+$inland->${'total_m'.$c};
-                                                ${'sum_total_inland_'.$c}+=${'sum_inland_'.$c};
+                                                ${'sum_inland_'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
+                                                ${'sum_total_inland_'.$c->code}+=${'sum_inland_'.$c->code};
                                             }
                                         }
                                     }
@@ -90,7 +89,7 @@
                                 @foreach ($equipmentHides as $key=>$hide)
                                     @foreach ($containers as $c)
                                         @if($c->code == $key)
-                                            <td {{ $hide }}>{{number_format((float)@${'sum_total_'.$c}+@${'sum_total_inland_'.$c}, 2, '.', '')}}</td>
+                                            <td {{ $hide }}>{{round(${'sum_total_'.$c->code}+@${'sum_total_inland_'.$c->code})}}</td>
                                         @endif
                                     @endforeach
                                 @endforeach
