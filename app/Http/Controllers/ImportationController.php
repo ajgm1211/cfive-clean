@@ -1144,9 +1144,50 @@ class ImportationController extends Controller
         foreach($scheduleTo as $d){
             $schedulesT[$d['id']]=$d->name;
         }
-        $rates          = Rate::find($id);
-        //dd($rates);
-        return view('importation.Body-Modals.GoodEditRates', compact('rates','harbor','carrier','schedulesT','currency'));
+        $rate           = Rate::find($id);
+        $contract       = Contract::find($rate->contract_id);
+        $equiment_id    = $contract->gp_container_id;
+        $containers     = json_decode($rate->containers,true);
+        $columns_rt_ident = [];
+        $equiments  = GroupContainer::with('containers')->find($equiment_id);
+        $colec      = [];
+        if($equiment_id == 1){
+            $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+            foreach($contenedores_rt as $conten_rt){
+                $conten_rt->options = json_decode($conten_rt->options);
+                $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+            }
+            foreach($equiments->containers as $containersEq){
+                if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                    $colec['C'.$containersEq->code]['value']    = $rate->twuenty;
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                    $colec['C'.$containersEq->code]['value']    = $rate->forty;
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code; 
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                    $colec['C'.$containersEq->code]['value']    = $rate->fortyhc;
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                    $colec['C'.$containersEq->code]['value']    = $rate->fortynor;
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                    $colec['C'.$containersEq->code]['value']    = $rate->fortyfive;
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                }
+            }
+        } else {
+            foreach($equiments->containers as $containersEq){
+                if(array_key_exists('C'.$containersEq->code,$containers)){
+                    $colec['C'.$containersEq->code]['value']    = $containers['C'.$containersEq->code];
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                } else{
+                    $colec['C'.$containersEq->code]['value']    = 0;          
+                    $colec['C'.$containersEq->code]['name']     = $containersEq->code;
+                }
+            }
+        }
+        //dd($colec);
+        return view('importationV2.Fcl.Body-Modals.GoodEditRates', compact('rate','colec','equiment_id','harbor','carrier','schedulesT','currency'));
     }
     public function EditRatesFail($id){
 
@@ -1244,22 +1285,29 @@ class ImportationController extends Controller
             foreach($equiments->containers as $containersEq){
                 if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->twuenty);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->forty);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code; 
                 } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortyhc);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortynor);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($failrate->fortyfive);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 }
             }
         } else {
             foreach($equiments->containers as $containersEq){
                 if(array_key_exists('C'.$containersEq->code,$containers)){
                     $colec['C'.$containersEq->code] = HelperAll::validatorErrorWitdColor($containers['C'.$containersEq->code]);
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 } else{
                     $colec['C'.$containersEq->code] = ['value' => 0,'color'=>'green'];          
+                    $colec['C'.$containersEq->code]['name'] = $containersEq->code;
                 }
             }
         }
@@ -1286,13 +1334,51 @@ class ImportationController extends Controller
 
         $pruebacurre = "";
         $carrAIn = "";
-        dd($failrates);
-        return view('importation.Body-Modals.FailEditRates',compact('failrates','schedulesT','harbor','carrier','currency','equiment_id'));
+        //dd($failrates);
+        //return view('importation.Body-Modals.FailEditRates',compact('failrates','schedulesT','harbor','carrier','currency','equiment_id'));
+        return view('importationV2.Fcl.Body-Modals.failedRate',compact('failrates','schedulesT','harbor','carrier','currency','equiment_id'));
     }
     public function CreateRates(Request $request, $id){
-        //dd($request->all());
-        $origins = $request->origin_port;
-        $destinis = $request->destiny_port;
+        //dd($request->all(),$request->input('C20DV'));
+        $origins            = $request->origin_port;
+        $destinis           = $request->destiny_port;
+        $equiment_id        = $request->equiment_id;
+        $twuenty            = 0;
+        $forty              = 0;
+        $fortyhc            = 0;
+        $fortynor           = 0;
+        $fortyfive          = 0;
+        $containers         = null;
+        $columns_rt_ident   = [];
+        $equiments          = GroupContainer::with('containers')->find($equiment_id);
+        $colec              = [];
+        if($equiment_id == 1){
+            $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+            foreach($contenedores_rt as $conten_rt){
+                $conten_rt->options = json_decode($conten_rt->options);
+                $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+            }
+            foreach($equiments->containers as $containersEq){
+                if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                    $twuenty    = floatval($request->input('C'.$containersEq->code));
+                }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                    $forty      = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                    $fortyhc    = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                    $fortynor   = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                    $fortyfive  = floatval($request->input('C'.$containersEq->code));
+                }
+            }
+        } else {
+            foreach($equiments->containers as $containersEq){
+                $colec['C'.$containersEq->code] = ''.floatval($request->input('C'.$containersEq->code));
+            }
+        }
+        $containers = json_encode($colec);
+        //dd($twuenty,$forty,$fortyhc,$fortynor,$fortyfive,$containers);
+
         foreach($origins as $origin){
             foreach($destinis as $destiny){
                 if($origin != $destiny){
@@ -1300,11 +1386,12 @@ class ImportationController extends Controller
                         ->where('destiny_port',$destiny)
                         ->where('carrier_id',$request->carrier_id)
                         ->where('contract_id',$request->contract_id)
-                        ->where('twuenty',floatval($request->twuenty))
-                        ->where('forty',floatval($request->forty))
-                        ->where('fortyhc',floatval($request->fortyhc))
-                        ->where('fortynor',floatval($request->fortynor))
-                        ->where('fortyfive',floatval($request->fortyfive))
+                        ->where('twuenty',$twuenty)
+                        ->where('forty',$forty)
+                        ->where('fortyhc',$fortyhc)
+                        ->where('fortynor',$fortynor)
+                        ->where('fortyfive',$fortyfive)
+                        ->where('containers',$containers)
                         ->where('currency_id',$request->currency_id)
                         ->where('schedule_type_id',$request->scheduleT)
                         ->where('transit_time',$request->transit_time)
@@ -1316,11 +1403,12 @@ class ImportationController extends Controller
                             "destiny_port"      => $destiny,
                             "carrier_id"        => $request->carrier_id,
                             "contract_id"       => $request->contract_id,
-                            "twuenty"           => floatval($request->twuenty),
-                            "forty"             => floatval($request->forty),
-                            "fortyhc"           => floatval($request->fortyhc),
-                            "fortynor"          => floatval($request->fortynor),
-                            "fortyfive"         => floatval($request->fortyfive),
+                            "twuenty"           => $twuenty,
+                            "forty"             => $forty,
+                            "fortyhc"           => $fortyhc,
+                            "fortynor"          => $fortynor,
+                            "fortyfive"         => $fortyfive,
+                            "containers"        => $containers,
                             "currency_id"       => $request->currency_id,
                             "schedule_type_id"  => $request->scheduleT,
                             "transit_time"      => $request->transit_time,
@@ -1336,10 +1424,47 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'Updated Rate' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$request->contract_id,1]);
+        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,1]);
     }
     public function UpdateRatesD(Request $request, $id){
         //dd($request->all());
+
+        $equiment_id        = $request->equiment_id;
+        $twuenty            = 0;
+        $forty              = 0;
+        $fortyhc            = 0;
+        $fortynor           = 0;
+        $fortyfive          = 0;
+        $containers         = null;
+        $columns_rt_ident   = [];
+        $equiments          = GroupContainer::with('containers')->find($equiment_id);
+        $colec              = [];
+        if($equiment_id == 1){
+            $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+            foreach($contenedores_rt as $conten_rt){
+                $conten_rt->options = json_decode($conten_rt->options);
+                $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+            }
+            foreach($equiments->containers as $containersEq){
+                if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                    $twuenty    = floatval($request->input('C'.$containersEq->code));
+                }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                    $forty      = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                    $fortyhc    = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                    $fortynor   = floatval($request->input('C'.$containersEq->code));
+                } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                    $fortyfive  = floatval($request->input('C'.$containersEq->code));
+                }
+            }
+        } else {
+            foreach($equiments->containers as $containersEq){
+                $colec['C'.$containersEq->code] = ''.floatval($request->input('C'.$containersEq->code));
+            }
+        }
+        $containers = json_encode($colec);
+        //dd($twuenty,$forty,$fortyhc,$fortynor,$fortyfive,$containers);
 
         $rate = Rate::find($id);
         $rate->origin_port      =  $request->origin_id;
@@ -1347,11 +1472,12 @@ class ImportationController extends Controller
         $rate->carrier_id       =  $request->carrier_id;
         $rate->contract_id      =  $request->contract_id;
         $rate->currency_id      =  $request->currency_id;
-        $rate->twuenty          =  floatval($request->twuenty);
-        $rate->forty            =  floatval($request->forty);
-        $rate->fortyhc          =  floatval($request->fortyhc);
-        $rate->fortynor         =  floatval($request->fortynor);
-        $rate->fortyfive        =  floatval($request->fortyfive);
+        $rate->twuenty          =  $twuenty;
+        $rate->forty            =  $forty;
+        $rate->fortyhc          =  $fortyhc;
+        $rate->fortynor         =  $fortynor;
+        $rate->fortyfive        =  $fortyfive;
+        $rate->containers       =  $containers;
         $rate->schedule_type_id =  $request->scheduleT;
         $rate->transit_time     =  (int)$request->transit_time;
         $rate->via              =  $request->via;
@@ -1361,7 +1487,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
         $tab = 0;
-        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$request->contract_id,$tab]);
+        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,$tab]);
     }
     public function DestroyRatesF($id){
         try{

@@ -387,26 +387,7 @@
                 style:    'multi',
                 selector: 'td:first-child'
             },
-            buttons: [
-                {
-                    text: 'Select all',
-                    action : function(e) {
-                        e.preventDefault();
-                        ratesTable.rows({ page: 'all'}).nodes().each(function() {
-                            $(this).removeClass('selected')
-                        })
-                        ratesTable.rows({ search: 'applied'}).nodes().each(function() {
-                            $(this).addClass('selected');        
-                        })
-                    }
-                },
-                {
-                    text: 'Select none',
-                    action: function () {
-                        ratesTable.rows().deselect();
-                    }
-                }
-            ],
+            buttons: [],
             ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,2,"rates"]) !!}',
             columns:columnas_rates,
             "lengthChange": false,
@@ -500,13 +481,13 @@
         } else  if(operation == 'editMultRates'){
 
             var idAr = [];
-            var oTable = $("#myatest").dataTable();
-            var length=table.rows('.selected').data().length;
+            var oTable = $("#failedRates").dataTable();
+            var length=ratesFailedsTable.rows('.selected').data().length;
 
             if(length > 0)
             {
                 for (var i = 0; i < length; i++) { 
-                    idAr.push(table.rows('.selected').data()[i].id);
+                    idAr.push(ratesFailedsTable.rows('.selected').data()[i].id);
                 }
                 //console.log();
                 var url = "{{route('Edicion.Multiples.Rates.Fcl')}}";
@@ -521,13 +502,13 @@
             }
         } else  if(operation == 'editRatesByDetalls'){
             var idAr = [];
-            var oTable = $("#myatest").dataTable();
-            var length=table.rows('.selected').data().length;
+            var oTable = $("#failedRates").dataTable();
+            var length=ratesFailedsTable.rows('.selected').data().length;
 
             if(length >= 2)
             {
                 for (var i = 0; i < length; i++) { 
-                    idAr.push(table.rows('.selected').data()[i].id);
+                    idAr.push(ratesFailedsTable.rows('.selected').data()[i].id);
                 }
                 //console.log();
                 var url = "{{route('load.arr.Rates.por.detalles.Fcl')}}";
@@ -543,6 +524,117 @@
             }
         }
     }
+
+    function showModalsavetosurcharge(id,operation){
+
+        if(operation == 1){
+            var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
+            url = url.replace(':id', id);
+            $('#edit-modal-body').load(url,function(){
+                $('#modaleditSurcharge').modal();
+            });
+        }else if(operation == 2){
+            var url = '{{ route("Edit.Surchargers.Good.For.Contracts", ":id") }}';
+            url = url.replace(':id', id);
+            $('#edit-modal-body').load(url,function(){
+                $('#modaleditSurcharge').modal();
+            });
+        }
+    }
+
+    $(document).on('click','#delete-Fail-Surcharge',function(){
+        var id = $(this).attr('data-id-failSurcharge');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+
+                url='{!! route("Destroy.SurchargersF.For.Contracts",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your Surcharge has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var a = $('#strfailinput').val();
+                            a--;
+                            $('#strfail').text(a);
+                            $('#strfailinput').attr('value',a);
+                        }else if(data == 2){
+                            swal("Error!", "An internal error occurred!", "error");
+                        }
+                    }
+                });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
+
+    $(document).on('click','#delete-Surcharge',function(){
+        var id = $(this).attr('data-id-Surcharge');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+
+                url='{!! route("Destroy.SurchargersG.For.Contracts",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your Surcharge has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var b = $('#strgoodinput').val();
+                            b--;
+                            $('#strgood').text(b);
+                            $('#strgoodinput').attr('value',b);
+                        }else if(data == 2){
+                            swal("Error!", "an internal error occurred!", "error");
+                        }
+                    }
+                });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
 
     $(document).on('click','#delete-FailRate',function(){
         var id = $(this).attr('data-id-failrate');
