@@ -3912,7 +3912,7 @@ class ImportationController extends Controller
         $goodsurcharges  = LocalCharge::with('currency','calculationtype','surcharge','typedestiny','localcharcarriers.carrier','localcharports.portOrig','localcharports.portDest','localcharcountries.countryOrig','localcharcountries.countryDest')->find($id);
         $surchargeSelect       = $objsurcharge->where('company_user_id','=', $goodsurcharges->contract->company_user_id)->pluck('name','id');
         //dd($goodsurcharges);
-        return view('importation.Body-Modals.GoodEditSurcharge', compact('harbor',
+        return view('importationV2.Fcl.Body-Modals.GoodEditSurcharge', compact('harbor',
                                                                          'currency',
                                                                          'countries',
                                                                          'typedestiny',
@@ -4092,7 +4092,7 @@ class ImportationController extends Controller
 
 
         //dd($failsurchargeArre);
-        return view('importation.Body-Modals.FailEditSurcharge', compact('failsurchargeArre',
+        return view('importationV2.Fcl.Body-Modals.FailEditSurcharge', compact('failsurchargeArre',
                                                                          'harbor',
                                                                          'carrierSelect',
                                                                          'currency',
@@ -4186,7 +4186,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'Surcharge Updated' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Surcharge.F.C.D',[$request->contract_id,1]);
+        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,1]);
 
     }
 
@@ -4253,7 +4253,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'Surcharge Updated' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Surcharge.F.C.D',[$request->contract_id,0]);
+        return redirect()->route('Failed.Developer.For.Contracts',[$request->contract_id,0]);
     }
     public function DestroySurchargersF($id){
         try{
