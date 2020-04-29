@@ -244,24 +244,22 @@
                 nameState: true,
                 search: null,
                 fields: [
-                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-inland', isHtml: true},
+                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', isHtml: true},
                     { key: 'provider', label: 'Provider', sortable: false },
                     { key: 'status', label: 'Status', sortable: false, isHtml: true,
                      formatter: value => {
                          return '<span class="status-st '+value+'"></span>';
                      } 
                     },
-                    { key: 'type', label: 'Type', 
-                     formatter: (...params) => { return this.badgetypes(params) }
-                    },
+          
                     { key: 'gp_container', label: 'Equipment', sortable: false, 
                      formatter: value => { return value.name; }
                     },
                     { key: 'validity', label: 'Valid From', sortable: false },
                     { key: 'expire', label: 'Valid Until', sortable: false },
-                               
-                    { key: 'direction', label: 'Direction', formatter: value => { return '<span class="status-st >otro</span>'; } 
-                    },
+                    { key: 'type', label: 'Type', 
+                     formatter: value => { return this.badgetypes(value) }
+                    },                       
                     { key: 'actions', label: '', tdClass: 'actions-add-inland'}
                 ],
                 // Models Data
@@ -390,15 +388,17 @@
                     this.setData(err, data);
                 });
             },
-            badgetypes([value, key, item]){
+            badgetypes(value){
                 let variation = "";
-                if(value){
-                    value.forEach(function(val){
-                        variation += "<span class='badge badge-primary'>"+val.name+"</span> ";
-                    });
+                if(value == 1){
+                    variation += "<span class='badge badge-primary'>Export</span> ";
                     return variation;
-                } else {
-                    return '-';
+                } else  if(value == 2) {
+                      variation += "<span class='badge badge-primary'>Import</span> ";
+                    return variation;
+                }else{
+                         variation += "<span class='badge badge-primary'>Both</span> ";
+                    return variation;
                 }
             },
         },
