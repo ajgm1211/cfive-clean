@@ -21,6 +21,7 @@ class InlandResource extends JsonResource
       'company_user_id' => $this->companyUser,
       'validity' => $this->validity,
       'expire' => $this->expire,
+      'status' => $this->status,
       'gp_container' => $this->gpContainer
     ];
   }
