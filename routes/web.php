@@ -1026,6 +1026,7 @@ Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightCont
 Route::get('api/inlands', 'InlandController@index');
 Route::get('api/v2/inlands', 'InlandController@list');
 Route::get('api/v2/inlands/data', 'InlandController@data');
+Route::post('api/v2/inlands/store', 'InlandController@store');
 
 /** End Contracts V2 routes **/
 
