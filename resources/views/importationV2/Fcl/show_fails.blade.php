@@ -57,25 +57,25 @@
                 <div class="m-portlet__head-tools">
                     <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailRates" role="tab">
+                            <a class="nav-link m-tabs__link tabMap active" data-toggle="tab" href="#FailRates" role="tab">
                                 <i class="la la-cog"></i>
                                 Fail Rates 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodRates" role="tab">
+                            <a class="nav-link m-tabs__link tabMap " data-toggle="tab" href="#GoodRates" role="tab">
                                 <i class="la la-briefcase"></i>
                                 Good Rates
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#FailSurcharge" role="tab">
+                            <a class="nav-link m-tabs__link tabMap" data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
                                 Fail Surcharge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodSurcharge" role="tab">
+                            <a class="nav-link m-tabs__link tabMap" data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
                                 Good Surcharge
                             </a>
@@ -180,8 +180,8 @@
                             <strong >
                                 Failed Surcharges: 
                             </strong>
-                            <strong id="strfail">{{$countfailsurcharge}}</strong>
-                            <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinput" />
+                            <strong id="strfailSg">{{$countfailsurcharge}}</strong>
+                            <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinputSg" />
                         </label>
                         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
@@ -221,10 +221,10 @@
                             <strong id="">
                                 Good Surcharges: 
                             </strong>
-                            <strong id="strgood">
+                            <strong id="strgoodSg">
                                 {{$countgoodsurcharge}}
                             </strong>
-                            <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinput" />
+                            <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinputSg" />
                         </label>
                     </div>
 
@@ -264,22 +264,9 @@
 
 <!--  begin modal editar rate -->
 
-<div class="modal fade bd-example-modal-lg" id="modaleditRate"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modaledit"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">
-                    Edit Rates
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">
-                        &times;
-                    </span>
-                </button>
-            </div>
-            <div id="edit-modal-body" class="modal-body">
-
-            </div>
+        <div class="modal-content loadDataModal">
 
         </div>
 
@@ -292,8 +279,6 @@
 @endsection
 @section('js')
 @parent
-
-
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <!--<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>-->
 <script type="text/javascript" charset="utf8"  src="/js/datatable.conf.js"></script>
@@ -301,8 +286,7 @@
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 <script>
-
-
+    
     $('.m-select2-general').select2({
 
     });
@@ -318,9 +302,20 @@
         } );
     } );    
 
+    var nameTab = null;
+    var allTabs = '';
+    
+    $('.m-tabs__link').click(function(e){
+        nameTab = $(this).attr('href');
+        alert(nameTab+' / '+allTabs);
+    });
 
-</script>
-<script>
+    $(".tabMap").each(function() {
+        allTabs += '|'+$(this).attr('href');
+        if($(this).hasClass('active')){
+            nameTab = $(this).attr('href');
+        }
+    });
 
     $(function() {
 
@@ -463,20 +458,20 @@
             //"scrollX": true,
         });
     });
-
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     function showModalsavetorate(id,operation){
-        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
         if(operation == 1){
             var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditRate').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         }else if(operation == 2){
             var url = '{{ route("Edit.Rates.Good.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditRate').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         } else  if(operation == 'editMultRates'){
 
@@ -493,8 +488,8 @@
                 var url = "{{route('Edicion.Multiples.Rates.Fcl')}}";
                 //url = url.replace(':id', idAr);
                 data2 = {idAr:idAr,contract_id:id}
-                $('#edit-modal-body').load(url,data2,function(){
-                    $('#modaleditRate').modal({show:true});
+                $('#loadDataModal').load(url,data2,function(){
+                    $('#modaledit').modal({show:true});
                 });
 
             } else {
@@ -526,18 +521,17 @@
     }
 
     function showModalsavetosurcharge(id,operation){
-
         if(operation == 1){
             var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditSurcharge').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         }else if(operation == 2){
             var url = '{{ route("Edit.Surchargers.Good.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditSurcharge').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         }
     }
@@ -570,10 +564,10 @@
                                 'success'
                             )
                             $(elemento).closest('tr').remove();
-                            var a = $('#strfailinput').val();
+                            var a = $('#strfailinputSg').val();
                             a--;
-                            $('#strfail').text(a);
-                            $('#strfailinput').attr('value',a);
+                            $('#strfailSg').text(a);
+                            $('#strfailinputSg').attr('value',a);
                         }else if(data == 2){
                             swal("Error!", "An internal error occurred!", "error");
                         }
@@ -617,10 +611,10 @@
                                 'success'
                             )
                             $(elemento).closest('tr').remove();
-                            var b = $('#strgoodinput').val();
+                            var b = $('#strgoodinputSg').val();
                             b--;
-                            $('#strgood').text(b);
-                            $('#strgoodinput').attr('value',b);
+                            $('#strgoodSg').text(b);
+                            $('#strgoodinputSg').attr('value',b);
                         }else if(data == 2){
                             swal("Error!", "an internal error occurred!", "error");
                         }
