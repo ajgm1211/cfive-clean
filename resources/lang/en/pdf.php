@@ -30,6 +30,7 @@ return [
     "per_container" => "Per Container",
     "total_estimated" => "Total estimated costs",
     "total_destination" => "Total destination charges",
+    "total_origin" => "Total origin charges",
     "origin_inland" => "Origin Inlands",
     "destination_inland" => "Destination Inlands",
 ];
