@@ -318,7 +318,7 @@ trait QuoteV2Trait
                             }
                         }
                         if (!$value->inland->isEmpty()) {
-                            foreach ($value->inland as $value) {
+                            foreach ($value->inland as $inland_value) {
 
                                 if ($quote->pdf_option->grouped_origin_charges == 1) {
                                     $typeCurrency =  $quote->pdf_option->origin_charges_currency;
@@ -326,10 +326,10 @@ trait QuoteV2Trait
                                     $typeCurrency =  $currency_cfg;
                                 }
 
-                                $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
+                                $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
 
-                                $array_amounts = json_decode($value->rate, true);
-                                $array_markups = json_decode($value->markup, true);
+                                $array_amounts = json_decode($inland_value->rate, true);
+                                $array_markups = json_decode($inland_value->markup, true);
 
                                 foreach ($containers as $c) {
                                     ${$inland . '_' . $c->code} = 0;
@@ -347,7 +347,7 @@ trait QuoteV2Trait
                                         ${$total . '_' . $c->code} = number_format(${$markup . '_' . $c->code} / $currency_rate, 2, '.', '');
                                     }
 
-                                    $value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
+                                    $inland_value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
                                 }
                             }
                         }
@@ -517,7 +517,7 @@ trait QuoteV2Trait
         $total = 'total_';
         $amount = 'amount_';
         $markup = 'markup_';
-
+        
         foreach ($freight_charges_grouped as $freight) {
             foreach ($freight as $detail) {
                 foreach ($detail as $item) {
@@ -535,7 +535,7 @@ trait QuoteV2Trait
                                 } else {
                                     $typeCurrency = $currency_cfg;
                                 }
-
+                                
                                 $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
 
                                 $array_amounts = json_decode($amounts->amount, true);
