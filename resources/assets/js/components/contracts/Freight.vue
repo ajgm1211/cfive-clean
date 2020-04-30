@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row my-3">
             <div class="col-12 col-sm-4">
                 <b-form inline>
@@ -24,8 +24,6 @@
                 </b-form>
             </div>
         </div>
-
-
 
         <b-table-simple hover small responsive borderless>
             <b-thead>
@@ -164,8 +162,9 @@
                   :initialPage="initialPage">
         </paginate>
         <!-- Pagination end -->
+
     </b-card>
-    </template>
+</template>
 
 
 <script>
@@ -203,8 +202,9 @@
                 container_fields: [],
                 selected: [],
                 rates: {},
-                contract_id: null
-                
+                contract_id: null,
+                allSelected: false,
+                indeterminate: false,
             }
         },
         created() {
