@@ -43,7 +43,7 @@ class HelperAll {
         }
         return $result;
     }
-    
+
     public static function validatorErrorWitdColor($data){
         $result = null;
         $Arr    = null;
@@ -85,6 +85,21 @@ class HelperAll {
             array_push($json_array,['data'=>'action','name'=>'action','orderable'=>false,'searchable'=>false]);
             $equiment['columns'] = json_encode($json_array);
 
+        }
+        return $equiment;   
+    }
+
+    public static function LoadHearderContaniers($equiment_id,$type){
+        if(strnatcasecmp($type,'rates')==0){
+            $equiments      = GroupContainer::with('containers')->find($equiment_id);
+            //dd($equiment->containers->pluck('code'));
+            $datajson   = json_decode($equiments->data,true);
+            $equiment   = [];
+            // Head Datatable <th>
+            $equiment   = ['id' => $equiment_id,'color' => $datajson['color'],'name'=>$equiments->name,'thead' => []];
+            foreach($equiments->containers as $containers){
+                array_push($equiment['thead'],$containers->code);            
+            }
         }
         return $equiment;   
     }
