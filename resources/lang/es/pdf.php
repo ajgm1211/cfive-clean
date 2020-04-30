@@ -34,4 +34,11 @@ return [
     "total_origin" => "Costos totales origen",
     "origin_inland" => "Inlands en origen",
     "destination_inland" => "Inlands en destino",
+    "rate" => "Tarifa",
+    "units" => "Unidades",
+    "cargo_type" => "Tipo de carga",
+    "total_quantity" => "Cantidad total",
+    "total_weight" => "Peso total",
+    "chargeable_weight" => "Peso tasable",
+    "total_volume" => "Volumen total",
 ];

@@ -1,4 +1,4 @@
-<div id="details" class="clearfix details">
+            <div id="details" class="clearfix details">
                 <div class="client" style="line-height: 10px; width:300px;">
                     <p class="title">{{__('pdf.from')}}</p>
                     <span id="destination_input" style="line-height: 0.5">
