@@ -83,16 +83,16 @@
                         <template v-slot:cell(actions)="data">
                             <b-button v-bind:id="'popover'+data.item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                             <b-popover v-bind:target="'popover'+data.item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                                <button class="btn-action">Edit</button>
-                                <button class="btn-action">Duplicate</button>
-                                <button class="btn-action">Delete</button>
+                                <button class="btn-action" v-on:click="onEdit(data.item.id)">Edit</button>
+                                <button class="btn-action" v-on:click="onDuplicate(data.item.id)">Duplicate</button>
+                                <button class="btn-action" v-on:click="onDelete(data.item.id)">Delete</button>
                             </b-popover>
                         </template>
 
                     </b-table>
                     <!-- Table end -->
                     <!-- Pagination -->
-                    <paginate
+                    <paginate 
                               :page-count="pageCount"
                               :click-handler="clickCallback"
                               :prev-text="'Prev'"
@@ -104,7 +104,7 @@
                               :prev-link-class="'page-link'"
                               :next-class="'page-item'"
                               :next-link-class="'page-link'"
-                              :initialPage="initialPage">
+                              :forcePage="forcePage">
                     </paginate>
                     <!-- Pagination end -->
 
@@ -291,30 +291,47 @@
                 equipments: [],
                 //Pagination
                 pageCount: 0,
-                initialPage: 1
+                forcePage: 1
             }
         },
         created() {
 
-            let params = this.$route.query;
-
-            if(params.page) this.initialPage = Number(params.page);
-
-            /* Return the Contracts lists data*/
-            api.getData(params, '/api/v2/contracts', (err, data) => {
-                this.setData(err, data);
-            });
-
-            /* Return the lists data for dropdowns */
-            api.getData({}, '/api/v2/contracts/data', (err, data) => {
-                this.setDropdownLists(err, data.data);
-            });
+            this.initialData();
 
             this.$emit('input', { startDate: null, endDate: null });
             this.setDates();
 
         },
         methods: {
+            /* Response the Contracts lists data*/
+            initialData(){
+                let params = this.$route.query;
+
+                if(params.page) this.forcePage = Number(params.page);
+
+                this.getData(params);
+
+                /* Return the lists data for dropdowns */
+                api.getData({}, '/api/v2/contracts/data', (err, data) => {
+                    this.setDropdownLists(err, data.data);
+                });
+            },
+
+            /* Response the Contracts lists data*/
+            getData(params = {}){
+
+                api.getData(params, '/api/v2/contracts', (err, data) => {
+                    this.setData(err, data);
+                });
+
+            },
+
+            refreshData(){
+                this.$router.push({});
+                this.getData({});
+                this.forcePage = 1;
+            },
+
             // invalid empty return form
             invalidFeedback(data) {
                 if(data.carriers == ''){
@@ -388,7 +405,7 @@
                 this.invalidFeedback(data);
                 api.call('post', '/api/v2/contracts/store', data)
                     .then( ( response ) => {
-                    window.location = 'http://127.0.0.1:8000/api/contracts/'+response.data.data.id+'/edit';
+                    //window.location = `/api/contracts/${response.data.data.id}/edit`;
                 })
                     .catch(( data ) => {
                     this.$refs.observer.setErrors(data.data.errors);
@@ -399,6 +416,8 @@
             /* Pagination Callback */
             clickCallback (pageNum) {
                 this.isBusy = true;
+
+                this.forcePage = pageNum;
 
                 let qs = {
                     page: pageNum
@@ -414,9 +433,7 @@
             routerPush(qs) {
                 this.$router.push({query: qs});
 
-                api.getData(qs, '/api/v2/contracts', (err, data) => {
-                    this.setData(err, data);
-                });
+                this.getData(qs);
 
             },
 
@@ -434,6 +451,37 @@
                 }
 
             },
+
+            /* Single Actions */
+            onEdit(id){
+                window.location = `/api/contracts/${id}/edit`;
+            },
+            onDelete(id){
+
+                this.isBusy = true;
+
+                api.call('delete', `/api/v2/contracts/${id}/destroy`, {})
+                    .then( ( response ) => {
+                    this.refreshData();
+                })
+                    .catch(( data ) => {
+                      console.log(data);
+                    //this.$refs.observer.setErrors(data.data.errors);
+                });
+            },
+            onDuplicate(id){
+
+                this.isBusy = true;
+                
+                api.call('post', '/api/v2/contracts/duplicate', data)
+                    .then( ( response ) => {
+                    this.refreshData();
+                })
+                    .catch(( data ) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
+            /* End single actions */
 
         },
         watch: {

@@ -53,7 +53,17 @@
                                           label-for="validity"
                                           invalid-feedback="Validity is required"
                                           >
-                                <date-range-picker
+                                          <date-range-picker
+                                                       ref="picker"
+                                                       :opens="'center'"
+                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
+                                                       :singleDatePicker="false"
+                                                       :autoApply="true"
+                                                       :timePicker="false"
+                                                       v-model="selectedDates"
+                                                       :linkedCalendars="true">
+                                    </date-range-picker>
+                                <!--<date-range-picker
                                                    ref="picker"
                                                    :opens="opens"
                                                    :locale-data="{ firstDay: 1 }"
@@ -63,15 +73,7 @@
                                                    @toggle="checkOpen"
                                                    :linkedCalendars="linkedCalendars"
                                                    :dateFormat="dateFormat"
-                                                   >
-
-                                    <template v-slot:input="picker"  style="min-width: 350px;">
-                                        <i class="fa fa-calendar"></i>
-                                        {{ picker.startDate | date }} - {{ picker.endDate | date }}
-                                    </template>
-                                </date-range-picker>
-
-
+                                                   >-->
                             </b-form-group>
                         </div>
                         <div class="col-12 col-sm-3 col-lg-2">
@@ -108,19 +110,21 @@
                             :equipment="equipment" 
                             :containers="containers"
                             :carriers="carriers"
+                            :harbors="harbors"
+                            :currencies="currencies"
                             ></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
-                            <surcharges></surcharges>
+                            <!--<surcharges></surcharges>-->
                         </b-tab>
                         <b-tab title="Restrictions">
-                            <restrictions></restrictions>
+                            <!--<restrictions></restrictions>-->
                         </b-tab>
                         <b-tab title="Remarks">
-                            <remarks></remarks>
+                            <!--<remarks></remarks>-->
                         </b-tab>
                         <b-tab title="Files">
-                            <files></files>
+                            <!--<files></files>-->
                         </b-tab>
                     </b-tabs>
                 </b-card>
@@ -163,11 +167,14 @@
                 equipment: null,
                 reference: null,
                 statusclass: '',
+                selectedDates: {},
 
                 // Dropdown Lists
                 directions: [],
                 carriers: [],
                 equipments: [],
+                currencies: [],
+                harbors: [],
                 
                 dateRange: { 
                     startDate: '', 
@@ -222,6 +229,8 @@
                 this.equipments = data.equipments;
                 this.directions = data.directions;
                 this.containers = data.containers;
+                this.harbors = data.harbors;
+                this.currencies = data.currencies;
             },
 
             setData(err, { data: records, links, meta }) {
