@@ -108,21 +108,18 @@
     </div>
 </div>
 
-<input type="hidden" id="nameTab" value="">
-<input type="hidden" id="allTabs" value="">
+
 <!--end::Form-->
 {!! Form::close() !!}
 <script>
 
 
-    $('.m-select2-general').select2({
-
-    });
+    $('.m-select2-general').select2({ });
     
     $(document).ready(function(e){
-        alert(nameTab+' ------ '+allTabs);
-        $('#nameTab').val(nameTab);
-        $('#allTabs').val(allTabs);
+        //alert(nameTab);
+        // frmRates id del formulario Auto Save TAB
+        $("#frmRates").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
     })
 
 </script>

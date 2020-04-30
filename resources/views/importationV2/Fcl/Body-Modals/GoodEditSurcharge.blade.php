@@ -164,5 +164,9 @@ $portRadio = false;
     $('.m-select2-general').select2({
         placeholder: "Select an option"
     });
-
+    $(document).ready(function(e){
+        //alert(nameTab);
+        // frmSurcharges id del formulario Auto Save TAB
+        $("#frmSurcharges").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
+    });
 </script>

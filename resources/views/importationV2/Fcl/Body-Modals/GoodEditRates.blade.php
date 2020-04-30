@@ -119,6 +119,10 @@
     $('.m-select2-general').select2({
 
     });
-
+    $(document).ready(function(e){
+        //alert(nameTab);
+        // frmRates id del formulario Auto Save TAB
+        $("#frmRates").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
+    });
 
 </script>
