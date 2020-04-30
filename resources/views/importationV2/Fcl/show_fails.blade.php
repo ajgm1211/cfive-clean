@@ -453,9 +453,9 @@
         });
     });
     
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
     
     function showModalsavetorate(id,operation){
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
         if(operation == 1){
             var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
@@ -484,7 +484,7 @@
                 var url = "{{route('Edicion.Multiples.Rates.Fcl')}}";
                 //url = url.replace(':id', idAr);
                 data2 = {idAr:idAr,contract_id:id}
-                $('#loadDataModal').load(url,data2,function(){
+                $('.loadDataModal').load(url,data2,function(){
                     $('#modaledit').modal({show:true});
                 });
 
