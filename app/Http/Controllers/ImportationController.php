@@ -100,18 +100,14 @@ class ImportationController extends Controller
                 $fortynorVal        = '';
                 $fortyfiveVal       = '';
                 $scheduleTVal       = null;
+                $containers         = null;
 
                 $curreExitBol       = false;
                 $originB            = false;
                 $destinyB           = false;
-                $twentyExiBol       = false;
-                $fortyExiBol        = false;
-                $fortyhcExiBol      = false;
-                $values             = true;
                 $carriExitBol       = false;
-                $fortynorExiBol     = false;
-                $fortyfiveExiBol    = false;
                 $scheduleTBol       = false;
+                $containersBol      = false;
 
                 $originEX       = explode('_',$failrate->origin_port);
                 $destinyEX      = explode('_',$failrate->destiny_port);
@@ -123,6 +119,13 @@ class ImportationController extends Controller
                 $fortyfiveArr   = explode('_',$failrate->fortyfive);
                 $currencyArr    = explode('_',$failrate->currency_id);
                 $scheduleTArr   = explode('_',$failrate->schedule_type);
+                $containers     = json_decode($failrate->containers,true);
+                foreach($containers as $containerEq){
+                    if(count(explode('_',$containerEq)) > 1){
+                        $containersBol = true;
+                        break;
+                    }
+                }
 
                 $carrierEX     = count($carrierArr);
                 $twuentyEX     = count($twentyArr);
@@ -133,7 +136,7 @@ class ImportationController extends Controller
                 $caracteres = ['*','/','.','?','"',1,2,3,4,5,6,7,8,9,0,'{','}','[',']','+','_','|','°','!','$','%','&','(',')','=','¿','¡',';','>','<','^','`','¨','~',':'];
                 if( $twuentyEX   <= 1 &&
                    $fortyEX     <= 1 &&  $fortyhcEX   <= 1 &&
-                   $currencyEX  <= 1 ){
+                   $currencyEX  <= 1 && $containersBol == false){
 
                     $resultadoPortOri = PrvHarbor::get_harbor($originEX[0]);
                     if($resultadoPortOri['boolean']){
@@ -155,48 +158,36 @@ class ImportationController extends Controller
                     $carriExitBol    = $carrierArr['boolean'];
                     $carrierVal      = $carrierArr['carrier'];
 
+                    //---------------- Containers -----------------------------------------------------------
+                    $colec = [];
+                    foreach($containers as $key => $containerEq){
+                        $colec[$key] = ''.floatval($containerEq);
+                    }
+                    $containers = json_encode($colec);
                     //---------------- 20' ------------------------------------------------------------------
 
-                    if(empty($twentyArr[0]) != true || (int)$twentyArr[0] == 0){
-                        $twentyExiBol = true;
-                        $twentyVal   = floatval($twentyArr[0]);
-                    }
+                    $twentyVal   = floatval($twentyArr[0]);
+
 
                     //----------------- 40' -----------------------------------------------------------------
 
-                    if(empty($fortyArr[0]) != true || (int)$fortyArr[0] == 0){
-                        $fortyExiBol = true;
-                        $fortyVal   = floatval($fortyArr[0]);
-                    }
+                    $fortyVal   = floatval($fortyArr[0]);
+
 
                     //----------------- 40'HC --------------------------------------------------------------
 
-                    if(empty($fortyhcArr[0]) != true || (int)$fortyhcArr[0] == 0){
-                        $fortyhcExiBol = true;
-                        $fortyhcVal   = floatval($fortyhcArr[0]);
-                    }
+                    $fortyhcVal   = floatval($fortyhcArr[0]);
+
 
                     //----------------- 40'NOR -------------------------------------------------------------
 
-                    if(empty($fortynorArr[0]) != true || (int)$fortynorArr[0] == 0){
-                        $fortynorExiBol = true;
-                        $fortynorVal   = floatval($fortynorArr[0]);
-                    }
+
+                    $fortynorVal   = floatval($fortynorArr[0]);
 
                     //----------------- 45' ----------------------------------------------------------------
 
-                    if(empty($fortyfiveArr[0]) != true || (int)$fortyfiveArr[0] == 0){
-                        $fortyfiveExiBol = true;
-                        $fortyfiveVal   = floatval($fortyfiveArr[0]);
-                    }
+                    $fortyfiveVal   = floatval($fortyfiveArr[0]);
 
-                    if($twentyVal == 0
-                       && $fortyVal == 0
-                       && $fortyhcVal == 0
-                       && $fortynorVal == 0
-                       && $fortyfiveVal == 0){
-                        $values = false;
-                    }
                     //----------------- Currency -----------------------------------------------------------
 
                     $currenct = Currency::where('alphacode','=',$currencyArr[0])->orWhere('id','=',$currencyArr[0])->first();
@@ -218,26 +209,18 @@ class ImportationController extends Controller
                     }
 
                     $array = [
-                        'ori' => $originB,
-                        'des' => $destinyB,
-                        '20' => $twentyExiBol,
-                        '40' => $fortyExiBol,
-                        '40h' => $fortyhcExiBol,
-                        '40n' => $fortynorExiBol,
-                        '45' => $fortyfiveExiBol,
-                        'val' => $values,
-                        'sch' => $scheduleTBol,
-                        'car' => $carriExitBol,
-                        'curr' => $curreExitBol
+                        'ori'   => $originB,
+                        'des'   => $destinyB,
+                        'containers' => $containers,
+                        'sch'   => $scheduleTBol,
+                        'car'   => $carriExitBol,
+                        'curr'  => $curreExitBol
                     ];
                     //dd($array);
 
 
                     // Validacion de los datos en buen estado ------------------------------------------------------------------------
                     if($originB == true && $destinyB == true &&
-                       $twentyExiBol   == true && $fortyExiBol    == true &&
-                       $fortyhcExiBol  == true && $fortynorExiBol == true &&
-                       $fortyfiveExiBol == true && $values        == true &&
                        $scheduleTBol == true && $curreExitBol   == true && $carriExitBol == true){
                         $collecciont = '';
                         $exists = null;
@@ -250,6 +233,7 @@ class ImportationController extends Controller
                             ->where('fortyhc',$fortyhcVal)
                             ->where('fortynor',$fortynorVal)
                             ->where('fortyfive',$fortyfiveVal)
+                            ->where('containers',$containers)
                             ->where('currency_id',$currencyVal)
                             ->where('schedule_type_id',$scheduleTVal)
                             ->where('transit_time',(int)$failrate['transit_time'])
@@ -266,6 +250,7 @@ class ImportationController extends Controller
                                 'fortyhc'           => $fortyhcVal,
                                 'fortynor'          => $fortynorVal,
                                 'fortyfive'         => $fortyfiveVal,
+                                'containers'        => $containers,
                                 'currency_id'       => $currencyVal,
                                 'schedule_type_id'  => $scheduleTVal,
                                 'transit_time'      => (int)$failrate['transit_time'],
@@ -292,17 +277,14 @@ class ImportationController extends Controller
             }
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The rates are reprocessing in the background');
-            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'1']);
+            return redirect()->route('Failed.Developer.For.Contracts',[$id,0]);
         }
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'The rates are being reprocessed');
-        $countfailratesNew = FailRate::where('contract_id','=',$id)->count();
-        if($countfailratesNew > 0){
-            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'1']);
-        }else{
-            return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,'0']);
-        }
+
+        return redirect()->route('Failed.Developer.For.Contracts',[$id,0]);
+
     }
 
     public function ReprocesarSurchargers(Request $request, $id){
@@ -534,7 +516,6 @@ class ImportationController extends Controller
             return redirect()->route('Failed.Surcharge.F.C.D',[$id,'0']);
         }
     }
-
 
     // precarga la vista para importar rates mas surchargers desde Request
     public function requestProccess($id,$selector,$request_id){
@@ -867,7 +848,7 @@ class ImportationController extends Controller
         return view('importationV2.Fcl.processedInformation',compact('id','contract'));
     }
 
-    // Rates ----------------------------------------------------------------------------
+    // Multiples Rates ------------------------------------------------------------------
 
     //Edita solo el origen y destino para rates fallidos, solo se coloca una vez
     public function EdicionRatesMultiples(Request $request){
@@ -1136,6 +1117,7 @@ class ImportationController extends Controller
         return redirect()->route('Failed.Rates.Developer.For.Contracts',[$id,1]);
     }
 
+    // Rates ----------------------------------------------------------------------------
     public function EditRatesGood($id){
         $harbor         = Harbor::pluck('display_name','id');
         $carrier        = Carrier::pluck('name','id');
@@ -1510,134 +1492,6 @@ class ImportationController extends Controller
     }
 
     // Surcharge ------------------------------------------------------------------------
-    ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
-    // Revisar  para eliminacion de este method
-    public function UploadFileSubchargeForContract(Request $request){
-        //dd($request->all());
-        $contractId       = $request->contract_id;
-        $carrierVal       = $request->carrier;
-        $statustypecurren = $request->valuesCurrency;
-        $carrier          = carrier::all()->pluck('name','id');
-        $harbor           = harbor::all()->pluck('display_name','id');
-        $destinyArr       = $request->destiny;
-        $originArr        = $request->origin;
-        $destinyBol       = false;
-        $originBol        = false;
-        $carrierBol       = false;
-        $fortynorBol      = false;
-        $fortyfiveBol     = false;
-
-        $file = $request->file('file');
-        $ext = strtolower($file->getClientOriginalExtension());
-        $validator = \Validator::make(
-            array('ext' => $ext),
-            array('ext' => 'in:xls,xlsx,csv')
-        );
-
-        if ($validator->fails()) {
-            $request->session()->flash('message.nivel', 'danger');
-            $request->session()->flash('message.content', 'just archive with extension xlsx xls csv');
-            return redirect()->route('contracts.edit',$request->contract_id);
-        }
-
-
-        $now = new \DateTime();
-        $now = $now->format('dmY_His');  
-        $nombre = $file->getClientOriginalName();
-        $fileName = $now.'_'.$nombre;
-        $fileputtmp = \Storage::disk('FclImport')->put($fileName,\File::get($file));
-
-        $targetsArr =[ 
-            0 => "20'",
-            1 => "40'",
-            2 => "40'HC"
-        ];
-
-        // Datftynor Datftyfive - DatOri - DatDes - DatCar, hacen referencia a si fue marcado el checkbox
-
-        if($request->Datftynor == true){
-            array_push($targetsArr,"40'NOR");
-        } else{
-            $fortynorBol = true;
-        }
-
-        if($request->Datftyfive == true){
-            array_push($targetsArr,"45'");
-        } else {
-            $fortyfiveBol = true;
-        }
-
-        if($request->DatCar == false){
-            array_push($targetsArr,'Carrier');
-        } else {
-            $carrierVal;
-            $carrierBol = true;
-        }
-
-        if($request->DatOri == false){
-            array_push($targetsArr,'Origin');
-        }
-        else{
-            $originBol = true;
-            $originArr;
-        }
-        if($request->DatDes == false){
-            array_push($targetsArr,'Destiny');
-        } else {
-            $destinyArr;
-            $destinyBol = true;
-        }   
-
-
-        if($statustypecurren == 1){
-            array_push($targetsArr,"Currency");
-        }
-
-        array_push($targetsArr,"Calculation Type");
-        array_push($targetsArr,"Surcharge");
-
-        $coordenates = collect([]);
-        //ini_set('max_execution_time', 300);
-
-        $path =Storage::disk('FclImport')->url($fileName);
-        Excel::selectSheetsByIndex(0)
-            ->Load($path,function($reader) use($request,$coordenates) {
-                $reader->noHeading = true;
-                $reader->ignoreEmpty();
-                $reader->takeRows(2);
-                $read = $reader->first();
-                $columna= array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V');
-                for($i=0;$i<count($reader->first());$i++){
-                    $coordenates->push($columna[$i].' '.$read[$i]);
-                }
-
-            });
-
-        $contract      = Contract::find($contractId);
-        $countTarges = count($targetsArr);
-
-        $value = [
-            'existorigin'     => $originBol,
-            'origin'          => $originArr,
-            'existdestiny'    => $destinyBol,
-            'destiny'         => $destinyArr,
-            'existfortynor'   => $fortynorBol,
-            'existfortyfive'  => $fortyfiveBol,
-            'fileName'        => $fileName,
-            'existcarrier'    => $carrierBol,
-            'countTarges'     => $countTarges,
-            'carrier'         => $carrierVal,
-        ];
-
-        return view('importation.surchargeforcontract',compact('contract',
-                                                               'value',
-                                                               'harbor',
-                                                               'carrier',
-                                                               'coordenates',
-                                                               'statustypecurren',
-                                                               'targetsArr'));
-    }   
-    
     public function FailedSurchargeDeveloper($id,$tab){
         //$id se refiere al id del contracto
         $countfailsurcharge = FailSurCharge::where('contract_id','=',$id)->count();
@@ -1666,13 +1520,13 @@ class ImportationController extends Controller
         $surchargeSelect       = $objsurcharge->where('company_user_id','=', $goodsurcharges->contract->company_user_id)->pluck('name','id');
         //dd($goodsurcharges);
         return view('importationV2.Fcl.Body-Modals.GoodEditSurcharge', compact('harbor',
-                                                                         'currency',
-                                                                         'countries',
-                                                                         'typedestiny',
-                                                                         'carrierSelect',
-                                                                         'goodsurcharges',
-                                                                         'surchargeSelect',
-                                                                         'calculationtypeselect'));
+                                                                               'currency',
+                                                                               'countries',
+                                                                               'typedestiny',
+                                                                               'carrierSelect',
+                                                                               'goodsurcharges',
+                                                                               'surchargeSelect',
+                                                                               'calculationtypeselect'));
     }
     public function EditSurchargersFail($id){
         $objharbor          = new Harbor();
@@ -1846,14 +1700,14 @@ class ImportationController extends Controller
 
         //dd($failsurchargeArre);
         return view('importationV2.Fcl.Body-Modals.FailEditSurcharge', compact('failsurchargeArre',
-                                                                         'harbor',
-                                                                         'carrierSelect',
-                                                                         'currency',
-                                                                         'countries',
-                                                                         'surchargeSelect',
-                                                                         'typedestiny',
-                                                                         'differentiator',
-                                                                         'calculationtypeselect'));
+                                                                               'harbor',
+                                                                               'carrierSelect',
+                                                                               'currency',
+                                                                               'countries',
+                                                                               'surchargeSelect',
+                                                                               'typedestiny',
+                                                                               'differentiator',
+                                                                               'calculationtypeselect'));
     }
     public function CreateSurchargers(Request $request, $id){
         //dd($request->all());
