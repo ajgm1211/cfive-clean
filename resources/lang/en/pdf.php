@@ -33,4 +33,11 @@ return [
     "total_origin" => "Total origin charges",
     "origin_inland" => "Origin Inlands",
     "destination_inland" => "Destination Inlands",
+    "rate" => "Rate",
+    "units" => "Units",
+    "cargo_type" => "Cargo type",
+    "total_quantity" => "Total quantity",
+    "total_weight" => "Total weight",
+    "chargeable_weight" => "Chargeable weight",
+    "total_volume" => "Total volume",
 ];
