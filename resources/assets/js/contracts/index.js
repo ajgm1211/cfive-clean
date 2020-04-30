@@ -10,7 +10,7 @@ import VueRouter from 'vue-router';
 
 /* Config files */
 import App from '../components/contracts/App';  // Main Component
-//import Contracts from '../components/contracts/Contracts';  // Main Component
+//import Contracts from '../components/contracts/Contracts';  // Contract Component
 import Api from '../api.js'; // Api calls controller
 
 // Install BootstrapVue
