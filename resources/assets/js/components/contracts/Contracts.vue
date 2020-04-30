@@ -53,7 +53,20 @@
                                           label-for="validity"
                                           invalid-feedback="Validity is required"
                                           >
+
+                                          <!--<date-range-picker
+                                                       ref="picker"
+                                                       :opens="'center'"
+                                                       :locale-data="{ firstDay: 1, format: 'MMM DD, YYYY' }"
+                                                       :singleDatePicker="false"
+                                                       :autoApply="true"
+                                                       :timePicker="false"
+                                                       v-model="selectedDates"
+                                                       :linkedCalendars="true">
+                                    </date-range-picker>-->
+
                                  <date-range-picker
+
                                                    ref="picker"
                                                    :locale-data="{ firstDay: 1 }"
                                                    :singleDatePicker="singleDatePicker"
@@ -64,7 +77,6 @@
                                                    :dateFormat="dateFormat"
                                                    >
                                 </date-range-picker>
-
 
                             </b-form-group>
                         </div>
@@ -98,19 +110,25 @@
                 <b-card no-body class="card-tabs">
                     <b-tabs card>
                         <b-tab title="Ocean Freight" active>
-                            <ocean-freight :equipment="equipment" :containers="containers"></ocean-freight>
+                            <ocean-freight 
+                            :equipment="equipment" 
+                            :containers="containers"
+                            :carriers="carriers"
+                            :harbors="harbors"
+                            :currencies="currencies"
+                            ></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
-                            <surcharges></surcharges>
+                            <!--<surcharges></surcharges>-->
                         </b-tab>
                         <b-tab title="Restrictions">
-                            <restrictions></restrictions>
+                            <!--<restrictions></restrictions>-->
                         </b-tab>
                         <b-tab title="Remarks">
-                            <remarks></remarks>
+                            <!--<remarks></remarks>-->
                         </b-tab>
                         <b-tab title="Files">
-                            <files></files>
+                            <!--<files></files>-->
                         </b-tab>
                     </b-tabs>
                 </b-card>
@@ -153,13 +171,16 @@
                 equipment: null,
                 reference: null,
                 statusclass: '',
+                selectedDates: {},
                 allSelected: false,
                 indeterminate: false,
-
+                
                 // Dropdown Lists
                 directions: [],
                 carriers: [],
                 equipments: [],
+                currencies: [],
+                harbors: [],
                 
                 dateRange: { 
                     startDate: '', 
@@ -214,6 +235,8 @@
                 this.equipments = data.equipments;
                 this.directions = data.directions;
                 this.containers = data.containers;
+                this.harbors = data.harbors;
+                this.currencies = data.currencies;
             },
 
             setData(err, { data: records, links, meta }) {

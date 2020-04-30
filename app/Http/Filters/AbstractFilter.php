@@ -101,7 +101,7 @@ abstract class AbstractFilter
             $sort = explode(':', $this->request->query('sort'));
             $this->query->orderBy($sort[0], $sort[1]); 
         } else {
-            $this->query->orderBy('id', 'asc');
+            $this->query->orderBy('id', 'desc');
         }
 
     }
