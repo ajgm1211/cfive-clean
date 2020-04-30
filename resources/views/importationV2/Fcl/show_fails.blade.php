@@ -55,9 +55,9 @@
         <div class="m-portlet m-portlet--tabs">
             <div class="m-portlet__head">
                 <div class="m-portlet__head-tools">
-                    <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
+                    <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" id="tab_id" role="tablist">
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link tabMap active" data-toggle="tab" href="#FailRates" role="tab">
+                            <a class="nav-link m-tabs__link tabMap defaultActive " data-toggle="tab" href="#FailRates" role="tab">
                                 <i class="la la-cog"></i>
                                 Fail Rates 
                             </a>
@@ -85,7 +85,7 @@
             </div>
 
             <div class="tab-content">
-                <div class="tab-pane active" id="FailRates" role="tabpanel">
+                <div class="tab-pane " id="FailRates" role="tabpanel">
                     <br>
                     <div class="m-portlet__head">
                         <div class="form-group row ">
@@ -279,14 +279,22 @@
 @endsection
 @section('js')
 @parent
+
+<script>
+    // Auto Save Tab
+    var nameTab     = null;
+    var nameTabCtll = '{{@$tab}}';
+</script>
+
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 <!--<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>-->
+<script type="text/javascript" charset="utf8"  src="/js/autoSaveTab.js"></script>
 <script type="text/javascript" charset="utf8"  src="/js/datatable.conf.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 <script>
-    
+
     $('.m-select2-general').select2({
 
     });
@@ -300,22 +308,8 @@
             // Toggle the visibility
             column.visible( ! column.visible() );
         } );
+        //alert(nameTabCtll);
     } );    
-
-    var nameTab = null;
-    var allTabs = '';
-    
-    $('.m-tabs__link').click(function(e){
-        nameTab = $(this).attr('href');
-        alert(nameTab+' / '+allTabs);
-    });
-
-    $(".tabMap").each(function() {
-        allTabs += '|'+$(this).attr('href');
-        if($(this).hasClass('active')){
-            nameTab = $(this).attr('href');
-        }
-    });
 
     $(function() {
 

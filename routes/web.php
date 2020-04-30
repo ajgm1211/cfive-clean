@@ -268,8 +268,8 @@ Route::prefix('Importation')->group(function () {
         ->middleware(['auth','role:administrator|data_entry']);
 
     // Surcharge
-    Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts')
-        ->middleware(['auth','role:administrator|data_entry']);
+//    Route::put('UploadFileSubchargeForContracts','ImportationController@UploadFileSubchargeForContract')->name('Upload.File.Subcharge.For.Contracts')
+//        ->middleware(['auth','role:administrator|data_entry']);
     ////BORRAR UNA VEZ HECHAS LAS PRUEBAS
     //    Route::get('fcl/surcharge/{id}/{bo}','ImportationController@FailedSurchargeDeveloper')->name('Failed.Surcharge.F.C.D')
     //        ->middleware(['auth','role:administrator|data_entry']);

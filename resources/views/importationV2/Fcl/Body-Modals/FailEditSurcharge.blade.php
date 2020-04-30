@@ -164,8 +164,10 @@ $portRadio = false;
         placeholder: "Select an option"
     });
 
-    $(document).ready(function(){
-
+    $(document).ready(function(e){
+        //alert(nameTab);
+        // frmSurcharges id del formulario Auto Save TAB
+        $("#frmSurcharges").append('<input type="hidden" name="nameTab" value="'+nameTab+'">');
     });
 
     function radio_place(val){
