@@ -2,40 +2,21 @@
         @if($quote->pdf_option->grouped_destination_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
             <br>
             @forelse($destination_charges_grouped as $destination=>$detail)
-                <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}>
-                    @switch($quote->pdf_option->language)
-                        @case("English")
-                            <p class="title">Destination charges - {{$destination}}</p>
-                            @break
-
-                        @case("Portuguese")
-                            <p class="title">Encargos de destino - {{$destination}}</p>
-                            @break
-
-                        @case("Spanish")
-                            <p class="title">Costos en destino - {{$destination}}</p>
-                            @break
-
-                        @default
-                            <p class="title">Destination charges - {{$destination}}</p>
-                    @endswitch                    
+                <div {{$quote->pdf_option->show_type=='detailed' ? '':'hidden'}}> 
+                    <p class="title">{{__('pdf.destination_charges')}}    - {{$destination}}</p>                    
                     <br>
                 </div>
                 <table border="0" cellspacing="1" cellpadding="1" >
                     <thead class="title-quote text-center header-table">
                         <tr >
-                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                            <th class="unit"><b>{{__('pdf.charge')}}   </b></th>
                             @if($quote->type=='LCL')
-                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}   </b></th>
                             @else
-                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}}   </b></th>
                             @endif
                             <th ><b>Total</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                            <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                            <th class="unit"><b>{{__('pdf.currency')}}   </b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +56,7 @@
                                 @endforeach
                             @endforeach
                             <tr class="text-center color-table">
-                                <td colspan="">Total Destination Charges</td>
+                                <td colspan="">{{__('pdf.total_destination')}}   </td>
                                 @if($quote->type=='LCL')
                                     <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
                                 @else
@@ -93,40 +74,21 @@
                     @foreach($sale_terms_destination as $destination=>$sale_destination)
                         @foreach($sale_destination as $value)
                             <div>
-                                @switch($quote->pdf_option->language)
-                                    @case("English")
-                                        <p class="title">Destination charges - {{$destination}}</p>
-                                        @break
-
-                                    @case("Portuguese")
-                                        <p class="title">Encargos de destino - {{$destination}}</p>
-                                        @break
-
-                                    @case("Spanish")
-                                        <p class="title">Costos en destino - {{$destination}}</p>
-                                        @break
-
-                                    @default
-                                        <p class="title">Destination charges - {{$destination}}</p>
-                                @endswitch                    
+                                <p class="title">{{__('pdf.destination_charges')}}    - {{$destination}}</p>             
                                 <br>
                             </div>
 
                             <table border="0" cellspacing="1" cellpadding="1" >
                                 <thead class="title-quote text-left header-table">
                                     <tr >
-                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Charge</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Concepto</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Conceito</b></th>
+                                        <th class="unit"><b>{{__('pdf.charge')}}   </b></th>
                                         @if($quote->type=='LCL')
-                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Carrier @elseif($quote->pdf_option->language=='Spanish') Línea marítima @else Linha Maritima @endif</b></th>
+                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                         @else
-                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>@if($quote->pdf_option->language=='English') Airline @elseif($quote->pdf_option->language=='Spanish') Línea aérea @else Linha aérea @endif</b></th>
+                                            <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.airline')}}</b></th>
                                         @endif
                                         <th ><b>Total</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='English' ? '':'hidden'}}><b>Currency</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}><b>Moneda</b></th>
-                                        <th class="unit" {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}><b>Moeda</b></th>
+                                        <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -139,11 +101,9 @@
                                         @endphp
                                     @endforeach
                                         <tr class="text-left color-table">
-                                            <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>Total destination charges</td>
-                                            <td {{$quote->pdf_option->language=='Spanish' ? '':'hidden'}}>Total gastos en destino</td>
-                                            <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>Total de cobranças locais</td>
+                                            <td >{{__('pdf.total_destination')}}</td>
                                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>-</td>
-                                            <td {{ @$equipmentHides['40hc'] }}>{{number_format(@$total_destination, 2, '.', '')}}</td>
+                                            <td {{ @$equipmentHides['40hc'] }}>{{round(@$total_destination)}}</td>
                                             @if($quote->pdf_option->grouped_destination_charges==1)
                                                 <td >{{$quote->pdf_option->origin_charges_currency}}</td>
                                             @else
@@ -234,7 +194,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_destination, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_destination)}}</b></td>
                             @if($quote->pdf_option->grouped_destintion_charges==1)
                                 <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                             @else
@@ -367,7 +327,7 @@
                             <td></td>
                             <td></td>
                             <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}></td>
-                            <td ><b>{{number_format(@$total_destination+@$total_inland, 2, '.', '')}}</b></td>
+                            <td ><b>{{round(@$total_destination+@$total_inland)}}</b></td>
                             @if($quote->pdf_option->grouped_destintion_charges==1)
                                 <td><b>{{$quote->pdf_option->destination_charges_currency}}</b></td>
                             @else
