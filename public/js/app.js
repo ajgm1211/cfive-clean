@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 332);
+/******/ 	return __webpack_require__(__webpack_require__.s = 338);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -21747,7 +21747,7 @@ module.exports = function(module) {
 var utils = __webpack_require__(14);
 var bind = __webpack_require__(65);
 var Axios = __webpack_require__(126);
-var defaults = __webpack_require__(36);
+var defaults = __webpack_require__(37);
 
 /**
  * Create an instance of Axios
@@ -21822,7 +21822,7 @@ module.exports = function isBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(36);
+var defaults = __webpack_require__(37);
 var utils = __webpack_require__(14);
 var InterceptorManager = __webpack_require__(134);
 var dispatchRequest = __webpack_require__(135);
@@ -22327,7 +22327,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(14);
 var transformData = __webpack_require__(136);
 var isCancel = __webpack_require__(68);
-var defaults = __webpack_require__(36);
+var defaults = __webpack_require__(37);
 var isAbsoluteURL = __webpack_require__(137);
 var combineURLs = __webpack_require__(138);
 
@@ -35156,16 +35156,16 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 332:
+/***/ 338:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(333);
-module.exports = __webpack_require__(340);
+__webpack_require__(339);
+module.exports = __webpack_require__(346);
 
 
 /***/ }),
 
-/***/ 333:
+/***/ 339:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -35175,9 +35175,9 @@ module.exports = __webpack_require__(340);
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(334);
+__webpack_require__(340);
 
-window.Vue = __webpack_require__(43);
+window.Vue = __webpack_require__(44);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -35185,7 +35185,7 @@ window.Vue = __webpack_require__(43);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(337));
+Vue.component('example-component', __webpack_require__(343));
 //Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
 //Vue.component('restrictions', require('./components/Restrictions.vue'));
 //Vue.component('remarkes', require('./components/Remarkes.vue'));
@@ -35197,12 +35197,12 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 334:
+/***/ 340:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(335);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(341);
 
 window._ = __webpack_require__(121);
 window.Popper = __webpack_require__(63).default;
@@ -35262,7 +35262,7 @@ if (token) {
 
 
 
-window.Pusher = __webpack_require__(336);
+window.Pusher = __webpack_require__(342);
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */]({
   broadcaster: 'pusher',
   key: "1a64b121010c1eb64623",
@@ -35363,7 +35363,7 @@ function getUrl() {
 
 /***/ }),
 
-/***/ 335:
+/***/ 341:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36618,7 +36618,7 @@ var Echo = function () {
 
 /***/ }),
 
-/***/ 336:
+/***/ 342:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -45508,15 +45508,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ 337:
+/***/ 343:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(36)
 /* script */
-var __vue_script__ = __webpack_require__(338)
+var __vue_script__ = __webpack_require__(344)
 /* template */
-var __vue_template__ = __webpack_require__(339)
+var __vue_template__ = __webpack_require__(345)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45556,7 +45556,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 338:
+/***/ 344:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45586,7 +45586,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 339:
+/***/ 345:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45630,7 +45630,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 340:
+/***/ 346:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -45638,111 +45638,6 @@ if (false) {
 /***/ }),
 
 /***/ 36:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-var utils = __webpack_require__(14);
-var normalizeHeaderName = __webpack_require__(127);
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(66);
-  } else if (typeof process !== 'undefined') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(66);
-  }
-  return adapter;
-}
-
-var defaults = {
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Content-Type');
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-      return JSON.stringify(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
-    }
-    return data;
-  }],
-
-  /**
-   * A timeout in milliseconds to abort a request. If set to 0 (default) a
-   * timeout is not created.
-   */
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  }
-};
-
-defaults.headers = {
-  common: {
-    'Accept': 'application/json, text/plain, */*'
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
-
-/***/ }),
-
-/***/ 37:
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -45849,6 +45744,111 @@ module.exports = function normalizeComponent (
   }
 }
 
+
+/***/ }),
+
+/***/ 37:
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+var utils = __webpack_require__(14);
+var normalizeHeaderName = __webpack_require__(127);
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+function setContentTypeIfUnset(headers, value) {
+  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = __webpack_require__(66);
+  } else if (typeof process !== 'undefined') {
+    // For node use HTTP adapter
+    adapter = __webpack_require__(66);
+  }
+  return adapter;
+}
+
+var defaults = {
+  adapter: getDefaultAdapter(),
+
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type');
+    if (utils.isFormData(data) ||
+      utils.isArrayBuffer(data) ||
+      utils.isBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+      return JSON.stringify(data);
+    }
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    /*eslint no-param-reassign:0*/
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) { /* Ignore */ }
+    }
+    return data;
+  }],
+
+  /**
+   * A timeout in milliseconds to abort a request. If set to 0 (default) a
+   * timeout is not created.
+   */
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  }
+};
+
+defaults.headers = {
+  common: {
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
+
+utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults.headers[method] = {};
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+});
+
+module.exports = defaults;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42)))
 
 /***/ }),
 
@@ -46043,7 +46043,7 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
 if (false) {
