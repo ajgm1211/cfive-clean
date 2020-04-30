@@ -13,6 +13,9 @@ use App\Contact;
 
 class ApiIntegrationController extends Controller
 {
+
+    const ENDPOINT = 'constant value';
+
     /**
      * Display a listing of the resource.
      *
@@ -121,7 +124,7 @@ class ApiIntegrationController extends Controller
 
         $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
 
-        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_m?api_key=".$api->api_key;
+        $endpoint = $api->url."?".$api->key_name."=".$api->api_key;
 
         $client = new Client([
             'headers' => ['Content-Type'=>'application/json','Accept'=>'*/*'],
