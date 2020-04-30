@@ -8,6 +8,8 @@ use App\Carrier;
 use App\GroupContainer;
 use App\Direction;
 use App\Container;
+use App\Harbor;
+use App\Currency;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 
@@ -56,13 +58,23 @@ class ContractController extends Controller
             return $carrier->only(['id', 'name']);
         });
 
+        $harbors = Harbor::get()->map(function ($harbor) {
+            return $harbor->only(['id', 'name']);
+        });
+
+        $currencies = Currency::get()->map(function ($currency) {
+            return $currency->only(['id', 'alphacode']);
+        });
+
         $containers = Container::get();
 
         $data = [
             'carriers' => $carriers,
             'equipments' => $equipments,
             'directions' => $directions,
-            'containers' => $containers
+            'containers' => $containers,
+            'currencies' => $currencies,
+            'harbors' => $harbors
  
         ];
 
@@ -162,6 +174,19 @@ class ContractController extends Controller
         $contract->ContractCarrierSync($data['carriers']);
 
         return new ContractResource($contract);   
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Contract $contract)
+    {
+        $contract->delete();
+
+        return response()->json(null, 204);
     }
 
     /**

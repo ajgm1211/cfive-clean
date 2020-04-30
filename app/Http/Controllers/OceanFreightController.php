@@ -34,14 +34,16 @@ class OceanFreightController extends Controller
     {
         $data = $this->validateData($request, $contract);
 
-        $prepared_data = $this->preparedData($data, $contract);
+        $prepared_data = $this->prepareData($data, $contract);
 
         $rate = Rate::create($prepared_data);
 
-        return new OceanFreightResource($rate);
+        $results = Rate::orderBy('id', 'desc')->paginate(10);
+
+        return OceanFreightResource::collection($results);
     }
 
-    public function preparedData($request, $contract)
+    public function prepareData($data, $contract)
     {
         $prepared_data = [
             'origin_port' => $data['origin'],
@@ -58,11 +60,11 @@ class OceanFreightController extends Controller
         
         if($contract->isDRY()){
 
-            $prepared_data['twuenty'] = $data['rates_20V'];
-            $prepared_data['forty'] = $data['rates_40V'];
-            $prepared_data['fortyhc'] = $data['rates_40HC'];
-            $prepared_data['fortynor'] = $data['rates_20NOR'];
-            $prepared_data['fortyfive'] = $data['rates_45HC'];
+            $prepared_data['twuenty'] = isset($data['rates_20DV']) ? $data['rates_20DV'] : '-';
+            $prepared_data['forty'] = isset($data['rates_40DV']) ? $data['rates_40DV'] : '-';
+            $prepared_data['fortyhc'] = isset($data['rates_40HC']) ? $data['rates_40HC'] : '-';
+            $prepared_data['fortynor'] = isset($data['rates_40NOR']) ? $data['rates_40NOR'] : '-';
+            $prepared_data['fortyfive'] = isset($data['rates_45HC']) ? $data['rates_45HC'] : '-';
 
         } else {
 
@@ -116,7 +118,7 @@ class OceanFreightController extends Controller
     {
         $data = $this->validateData($request, $contract);
 
-        $prepared_data = $this->preparedData($data, $contract);
+        $prepared_data = $this->prepareData($data, $contract);
 
         $rate->update($prepared_data);
 
