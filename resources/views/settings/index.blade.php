@@ -187,7 +187,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_text">Email from</label>
+                                            <label for="footer_text">Email from (Requires verification)</label>
                                             <input type="email" value="{{@$email_settings->email_from}}" id="email_from" name="email_from" class="form-control"/>
                                             <span class="hide" id="email_from_error" style="color:red;">Enter a valid email</span>
                                         </div>
@@ -334,7 +334,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group m-form__group">
-                                            <label for="footer_text">Email from</label>
+                                            <label for="footer_text">Email from (Requires verification)</label>
                                             <input type="email" value="{{@$email_settings->email_from}}" id="email_from" name="email_from" class="form-control"/>
                                             <span class="hide" id="email_from_error" style="color:red;">Enter a valid email</span>
                                         </div>
