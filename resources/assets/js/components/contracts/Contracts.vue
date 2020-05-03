@@ -27,7 +27,7 @@
                                           label-for="direction"
                                           invalid-feedback="Direction is required"
                                           >
-                                <multiselect v-model="direction" :options="directions" :searchable="false" :close-on-select="true"  track-by="id" label="name" :show-labels="false" placeholder="Select Direction"></multiselect>
+                                <multiselect v-model="direction" :options="datalists.directions" :searchable="false" :close-on-select="true"  track-by="id" label="name" :show-labels="false" placeholder="Select Direction"></multiselect>
 
 
                             </b-form-group>
@@ -38,7 +38,7 @@
                                           label-for="carrier"
                                           invalid-feedback="Carrier is required"
                                           >
-                                    <multiselect v-model="carrier" :multiple="true" :options="carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier">
+                                    <multiselect v-model="carrier" :multiple="true" :options="datalists.carriers" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Carrier">
                                       
                                        <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
                                     </multiselect>
@@ -65,7 +65,7 @@
                                                        :linkedCalendars="true">
                                     </date-range-picker>-->
 
-                                 <date-range-picker
+                                 <!--<date-range-picker
 
                                                    ref="picker"
                                                    :locale-data="{ firstDay: 1 }"
@@ -76,7 +76,7 @@
                                                    :linkedCalendars="linkedCalendars"
                                                    :dateFormat="dateFormat"
                                                    >
-                                </date-range-picker>
+                                </date-range-picker>-->
 
                             </b-form-group>
                         </div>
@@ -86,7 +86,7 @@
                                           label-for="equipment"
                                           invalid-feedback="Equipment is required"
                                           >
-                                <multiselect v-model="equipment" :options="equipments" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Equipment"></multiselect>
+                                <multiselect v-model="equipment" :options="datalists.equipments" :searchable="false" :close-on-select="true" track-by="id" label="name" :show-labels="false" placeholder="Select Equipment"></multiselect>
                             </b-form-group>
                         </div>
 
@@ -112,10 +112,8 @@
                         <b-tab title="Ocean Freight" active>
                             <ocean-freight 
                             :equipment="equipment" 
-                            :containers="containers"
-                            :carriers="carriers"
-                            :harbors="harbors"
-                            :currencies="currencies"
+                            :datalists="datalists"
+                            :actions="actions.oceanfreights"
                             ></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
@@ -147,6 +145,7 @@
     import Restrictions from './Restrictions';
     import Remarks from './Remarks';
     import Files from './Files';
+    import actions from '../../actions';
 
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
     import 'vue-multiselect/dist/vue-multiselect.min.css';
@@ -164,6 +163,7 @@
         },
         data() {
             return {
+                actions: actions,
                 isBusy:true, // Loader
                 data: null,
                 carrier: null,
@@ -176,11 +176,14 @@
                 indeterminate: false,
                 
                 // Dropdown Lists
-                directions: [],
-                carriers: [],
-                equipments: [],
-                currencies: [],
-                harbors: [],
+                datalists: {
+                  'carriers': [],
+                  'equipments': [],
+                  'directions': [],
+                  'containers': [],
+                  'harbors': [],
+                  'currencies': []
+                },
                 
                 dateRange: { 
                     startDate: '', 
@@ -231,12 +234,16 @@
 
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data){
-                this.carriers = data.carriers;
-                this.equipments = data.equipments;
-                this.directions = data.directions;
-                this.containers = data.containers;
-                this.harbors = data.harbors;
-                this.currencies = data.currencies;
+                this.datalists = {
+                  'carriers': data.carriers,
+                  'equipments': data.equipments,
+                  'directions': data.directions,
+                  'containers': data.containers,
+                  'harbors': data.harbors,
+                  'currencies': data.currencies
+                }
+
+                console.log(this.datalists);
             },
 
             setData(err, { data: records, links, meta }) {
@@ -257,8 +264,8 @@
                 return {
                   'name': this.reference,
                   'direction': this.direction.id,
-                  'validity': this.dateRange.startDate, //this.dateRange.startDate,
-                  'expire': this.dateRange.endDate, //this.dateRange.endDate,
+                  'validity': '2020-10-10',//this.dateRange.startDate, //this.dateRange.startDate,
+                  'expire': '2020-10-10',//this.dateRange.endDate, //this.dateRange.endDate,
                   'remarks': '',
                   'gp_container': this.equipment.id,
                   'carriers': carriers

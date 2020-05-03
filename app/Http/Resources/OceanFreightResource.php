@@ -12,7 +12,7 @@ class OceanFreightResource extends JsonResource
      */
     private $available_containers;
     
-    public function __construct($resource, $available_containers)
+    public function __construct($resource)
     {
         // Ensure you call the parent constructor
         parent::__construct($resource);
@@ -47,14 +47,14 @@ class OceanFreightResource extends JsonResource
 
     public function addContainers($data) 
     {
-        $data['20DV'] = $this->twuenty;
-        $data['40DV'] = $this->forty;
-        $data['40HC'] = $this->fortyhc;
-        $data['40NOR'] = $this->fortynor;
-        $data['45HC'] = $this->fortyfive; 
+        $data['rates_20DV'] = $this->twuenty;
+        $data['rates_40DV'] = $this->forty;
+        $data['rates_40HC'] = $this->fortyhc;
+        $data['rates_40NOR'] = $this->fortynor;
+        $data['rates_45HC'] = $this->fortyfive; 
 
         foreach ($this->available_containers as $container) {
-           $data[$container] = isset($this->containers['C'.$container]) ? $this->containers['C'.$container] : '-';
+           $data['rates_'.$container] = isset($this->containers['C'.$container]) ? $this->containers['C'.$container] : '-';
         }
 
         return $data;
