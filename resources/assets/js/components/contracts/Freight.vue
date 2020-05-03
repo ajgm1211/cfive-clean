@@ -1,4 +1,5 @@
 <template>
+    <div>
     <b-card>
         <div class="row">
             <div class="col-6">
@@ -7,7 +8,7 @@
             <div class="col-6">
                 <div class="float-right">
                     <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
-                    <button class="btn btn-primary btn-bg">+ Add Freight</button>
+                    <button class="btn btn-primary btn-bg" v-b-modal.addOFreight>+ Add Freight</button>
                 </div>
             </div>
         </div>
@@ -42,8 +43,8 @@
                     </b-td>
                     <b-td>
                         <multiselect 
-                             v-model="destination"
-                             :options="harbors" 
+                             v-model="origin"
+                             :options="datalists.harbors" 
                              :searchable="true"
                              :close-on-select="true"
                              :clear-on-select="false"
@@ -54,8 +55,8 @@
                     </b-td>
                     <b-td>
                         <multiselect 
-                             v-model="origin" 
-                             :options="harbors" 
+                             v-model="destination" 
+                             :options="datalists.harbors" 
                              :searchable="true"
                              :close-on-select="true"
                              :clear-on-select="false"
@@ -66,15 +67,15 @@
                     </b-td>
                     <b-td v-for="(val, k) in container_fields" :key="k" class="th-max">
                         <b-form-input
-                                      :placeholder="val"
-                                      v-model="rates['rates_'+val]" 
+                                      placeholder="-"
+                                      v-model="rates[val]" 
                                       >
                         </b-form-input>
                     </b-td>
                     <b-td>
                         <multiselect 
                              v-model="carrier" 
-                             :options="carriers" 
+                             :options="datalists.carriers" 
                              :searchable="true"
                              :close-on-select="true"
                              :clear-on-select="false"
@@ -86,7 +87,7 @@
                     <b-td>
                         <multiselect 
                              v-model="currency"
-                             :options="currencies" 
+                             :options="datalists.currencies" 
                              :searchable="true"
                              :close-on-select="true"
                              :clear-on-select="false"
@@ -133,7 +134,7 @@
                     <b-td>
                         <b-button v-bind:id="'popover'+value.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+value.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                            <button class="btn-action">Edit</button>
+                            <button class="btn-action" v-on:click="onEdit(value)">Edit</button>
                             <button class="btn-action">Duplicate</button>
                             <button class="btn-action">Delete</button>
                         </b-popover>
@@ -164,35 +165,67 @@
         <!-- Pagination end -->
 
     </b-card>
+
+    <!-- Edit Form -->
+    <b-modal id="editOFreight" size="lg" cancel-title="Cancel" ok-title="Add Contract" hide-header-close title="Update Ocean Freight" hide-footer>
+        <FormView 
+            :data="currentData" 
+            :fields="fields"
+            :datalists="datalists"
+            btnTxt="Update Ocean Freight"
+            @exit="closeModal('editOFreight')"
+            @success="closeModal('editOFreight')"
+            :actions="actions"
+            :update="true"
+            >
+        </FormView>
+    </b-modal>
+    <!-- End Edit Form -->
+
+    <!-- Create Form -->
+    <b-modal id="addOFreight" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
+        <FormView 
+            :data="[]" 
+            :fields="fields"
+            :datalists="datalists"
+            btnTxt="Add Ocean Freight"
+            @exit="closeModal('addOFreight')"
+            @success="closeModal('addOFreight')"
+            :actions="actions"
+            >
+        </FormView>
+    </b-modal>
+    <!-- End Create Form -->
+
+    </div>
 </template>
 
 
 <script>
     import Multiselect from 'vue-multiselect';
     import paginate from '../paginate';
-
+    import FormView from '../views/FormView.vue';
 
     export default {
         props: {
             equipment: Object,
-            containers: Array,
-            carriers: Array,
-            harbors: Array,
-            currencies: Array
+            datalists: Object,
+            actions: Object
         },
         components: { 
             Multiselect,
-            paginate
+            paginate,
+            FormView
         },
         data() {
             return {
+                efields: [],
                 isBusy:true, // Loader
                 booleano: false,
                 data: null,
                 e_startfields: [' ', 'Origin Port', 'Destination Port'],
                 e_endfields: ['Carrier', 'Currency', ' '],
                 e_fields: [],
-                fields: [],
                 pageCount: 0,
                 initialPage: 1,
                 carrier: null,
@@ -205,6 +238,14 @@
                 contract_id: null,
                 allSelected: false,
                 indeterminate: false,
+                currentData: {},
+                fields: {},
+                vfields: {
+                    origin: { label: 'Origin Port', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select Origin Port', options: 'harbors' },
+                    destination: { label: 'Destination Port', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select Destination Port', options: 'harbors' },
+                    carrier: { label: 'Carrier', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select Carrier Port', options: 'carriers' },
+                    currency: { label: 'Origin Port', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Select Currency Port', options: 'currencies' }
+                },
             }
         },
         created() {
@@ -226,7 +267,7 @@
             /* Response the Rates lists data*/
             getData(params = {}){
 
-                api.getData({}, `/api/v2/contracts/${this.contract_id}/ocean_freight`, (err, data) => {
+                this.actions.list(this.contract_id, params, (err, data) => {
                     this.setData(err, data);
                 });
 
@@ -311,8 +352,9 @@
             },
 
             /* Single Actions */
-            onEdit(id){
-                //window.location = `/api/contracts/${id}/edit`;
+            onEdit(data){
+                this.currentData = data;
+                this.$bvModal.show('editOFreight');
             },
             onDelete(id){
               
@@ -338,31 +380,43 @@
                     .catch(( data ) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
-            }
+            },
             /* End single actions */
-        },
-        watch: {
-            equipment: function(val, oldVal) {
-                let data = this;
+            resetValues(){
+
                 this.efields = [];
                 this.booleano = false;
                 this.container_fields = [];
+                this.fields = Object.assign({}, this.vfields);
+            },
 
-                this.e_startfields.forEach(item => data.efields.push(item));
+            /* Set Container Columns and fields by equipment */
+            setContainersColumns(val){
+                let ofcomponent = this;
+                this.resetValues();
 
-                this.containers.forEach(function(item){
+                this.e_startfields.forEach(item => ofcomponent.efields.push(item));
+
+                this.datalists.containers.forEach(function(item){
                     if(item.gp_container_id === val.id)
                     {
-                        data.efields.push(item.name);
-                        data.container_fields.push(item.code);
+                        ofcomponent.efields.push(item.name);
+                        ofcomponent.container_fields.push('rates_'+item.code);
+                        ofcomponent.fields['rates_'+item.code] = { type: 'text', placeholder: item.name };
                     }
                 });
 
-                this.e_endfields.forEach(item => data.efields.push(item));
+                this.e_endfields.forEach(item => ofcomponent.efields.push(item));
 
                 this.booleano = true;
-
-                console.log(this.efields);
+            },
+            closeModal(modal){
+                this.$bvModal.hide(modal);
+            }
+        },
+        watch: {
+            equipment: function(val, oldVal) {
+                this.setContainersColumns(val)
             }
         }
     }
