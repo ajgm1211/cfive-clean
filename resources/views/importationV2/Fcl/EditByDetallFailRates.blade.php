@@ -52,7 +52,7 @@ $validation_expire = 'Please enter validity date';
         </div>
         <div class="container-fluid mt-4">
             {!! Form::open(['route' => 'store.multi.rates.fails', 'method' => 'post','class' => 'form-group m-form__group']) !!}
-
+            <input type="hidden" name="equiment_id" value="{{$equiment_id}}">
             <div class="m-portlet m-portlet--tabs">
                 <div class="m-portlet__head">
                     <div class="m-portlet__head-tools">
