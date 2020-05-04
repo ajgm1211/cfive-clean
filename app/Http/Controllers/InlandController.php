@@ -55,6 +55,7 @@ class InlandController extends Controller
       'gp_container' => 'required',
 
   ]);
+
         $inland = Inland::create([
           'provider' => $data['provider'],
           'company_user_id' => $company_user_id,
@@ -68,4 +69,34 @@ class InlandController extends Controller
     
         return new InlandResource($inland);
     }
+
+
+        /**
+     * Render edit view 
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Request $request, Inland $inland)
+    {
+        return view('inlands.edit');
+    }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function retrieve(Inland $inland)
+    {
+
+
+
+        $direction = Direction::where('id',$inland->type)->first();
+        $inland->type = $direction;        
+        return new InlandResource($inland, true);
+    }
+
+
 }
