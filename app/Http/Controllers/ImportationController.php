@@ -954,16 +954,16 @@ class ImportationController extends Controller
             }
 
             $failed  = ['rate_id'         =>  $failrate->id,
-                       'contract_id'     =>  $failrate->contract_id,
-                       'origin_port'     =>  $originV,   
-                       'destiny_port'    =>  $destinationV,     
-                       'carrierAIn'      =>  $carrierV,
-                       'currencyAIn'     =>  $currencyV,
-                       'classorigin'     =>  $classdorigin,
-                       'classdestiny'    =>  $classddestination,
-                       'classcarrier'    =>  $classcarrier,
-                       'classcurrency'   =>  $classcurrency
-                      ];
+                        'contract_id'     =>  $failrate->contract_id,
+                        'origin_port'     =>  $originV,   
+                        'destiny_port'    =>  $destinationV,     
+                        'carrierAIn'      =>  $carrierV,
+                        'currencyAIn'     =>  $currencyV,
+                        'classorigin'     =>  $classdorigin,
+                        'classdestiny'    =>  $classddestination,
+                        'classcarrier'    =>  $classcarrier,
+                        'classcurrency'   =>  $classcurrency
+                       ];
 
             $equiments      = GroupContainer::with('containers')->find($equiment_id);
             $columns_rt_ident = [];
@@ -1006,7 +1006,7 @@ class ImportationController extends Controller
         }
 
         //dd($fail_rates_total);
-        return view('importationV2.Fcl.EditByDetallFailRates',compact('fail_rates_total','equiment','contract_id','contract','harbor','carrier','currency'));
+        return view('importationV2.Fcl.EditByDetallFailRates',compact('fail_rates_total','equiment','contract_id','equiment_id','contract','harbor','carrier','currency'));
 
     }
 
@@ -1017,16 +1017,50 @@ class ImportationController extends Controller
         $data_origins       = $request->origin_id;
         $data_destinations  = $request->destiny_id;
         $data_carrier       = $request->carrier_id;
-        $data_twuenty       = $request->twuenty;
-        $data_forty         = $request->forty;
-        $data_fortyhc       = $request->fortyhc;
-        $data_fortyhc       = $request->fortyhc;
-        $data_fortynor      = $request->fortynor;
-        $data_fortyfive     = $request->fortyfive;
         $data_currency      = $request->currency_id;
+
+        $equiment_id        = $request->equiment_id;
+        $equiments          = GroupContainer::with('containers')->find($equiment_id);
+        $columns_rt_ident   = [];
 
         foreach($data_rates as $key => $data_rate){
             //dd($request->all(),$data_rate,$key);
+            $twuenty            = 0;
+            $forty              = 0;
+            $fortyhc            = 0;
+            $fortynor           = 0;
+            $fortyfive          = 0;
+            $containers         = null;
+            $colec              = [];
+            if($equiment_id == 1){
+                $contenedores_rt = Container::where('gp_container_id',$equiment_id)->where('options->column',true)->get();
+                foreach($contenedores_rt as $conten_rt){
+                    $conten_rt->options = json_decode($conten_rt->options);
+                    $columns_rt_ident[$conten_rt->code] = $conten_rt->options->column_name;
+                }
+            }
+            if($equiment_id == 1){
+                foreach($equiments->containers as $containersEq){
+                    if(strnatcasecmp($columns_rt_ident[$containersEq->code],'twuenty') == 0){
+                        $twuenty    = floatval($request->input('C'.$containersEq->code)[$key]);
+                    }else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'forty') == 0){
+                        $forty      = floatval($request->input('C'.$containersEq->code)[$key]);
+                    } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyhc') == 0){
+                        $fortyhc    = floatval($request->input('C'.$containersEq->code)[$key]);
+                    } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortynor') == 0){
+                        $fortynor   = floatval($request->input('C'.$containersEq->code)[$key]);
+                    } else if(strnatcasecmp($columns_rt_ident[$containersEq->code],'fortyfive') == 0){
+                        $fortyfive  = floatval($request->input('C'.$containersEq->code)[$key]);
+                    }
+                }
+            } else {
+                foreach($equiments->containers as $containersEq){
+                    $colec['C'.$containersEq->code] = ''.floatval($request->input('C'.$containersEq->code)[$key]);
+                }
+            }
+            $containers = json_encode($colec);
+            //dd($twuenty,$forty,$fortyhc,$fortynor,$fortyfive,$containers);
+            
             foreach($data_origins[$key] as $origin){
                 foreach($data_destinations[$key] as $destiny){
                     // dd($request->all(),$key,$origin,$destiny);
@@ -1035,11 +1069,12 @@ class ImportationController extends Controller
                             ->where('destiny_port',$destiny)
                             ->where('carrier_id',$data_carrier[$key])
                             ->where('contract_id',$contract_id)
-                            ->where('twuenty',floatval($data_twuenty[$key]))
-                            ->where('forty',floatval($data_forty[$key]))
-                            ->where('fortyhc',floatval($data_fortyhc[$key]))
-                            ->where('fortynor',floatval($data_fortynor[$key]))
-                            ->where('fortyfive',floatval($data_fortyfive[$key]))
+                            ->where('twuenty',$twuenty)
+                            ->where('forty',$forty)
+                            ->where('fortyhc',$fortyhc)
+                            ->where('fortynor',$fortynor)
+                            ->where('fortyfive',$fortyfive)
+                            ->where('containers',$containers)
                             ->where('currency_id',$data_currency[$key])
                             ->first();
                         if(count($exists_rate) == 0){
@@ -1048,11 +1083,12 @@ class ImportationController extends Controller
                                 "destiny_port"      => $destiny,
                                 "carrier_id"        => $data_carrier[$key],
                                 "contract_id"       => $contract_id,
-                                "twuenty"           => floatval($data_twuenty[$key]),
-                                "forty"             => floatval($data_forty[$key]),
-                                "fortyhc"           => floatval($data_fortyhc[$key]),
-                                "fortynor"          => floatval($data_fortynor[$key]),
-                                "fortyfive"         => floatval($data_fortyfive[$key]),
+                                "twuenty"           => $twuenty,
+                                "forty"             => $forty,
+                                "fortyhc"           => $fortyhc,
+                                "fortynor"          => $fortynor,
+                                "fortyfive"         => $fortyfive,
+                                "containers"        => $containers,
                                 "currency_id"       => $data_currency[$key],
                                 "schedule_type_id"  => null,
                                 "transit_time"      => 0,
@@ -1070,7 +1106,7 @@ class ImportationController extends Controller
         $request->session()->flash('message.content', 'Updated Rates' );
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        return redirect()->route('Failed.Rates.Developer.For.Contracts',[$contract_id,1]);
+        return redirect()->route('Failed.Developer.For.Contracts',[$contract_id,0]);
 
 
     }
