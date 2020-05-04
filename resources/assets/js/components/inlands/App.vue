@@ -87,22 +87,16 @@
               <span v-html="data.value"></span>
             </template>
 
-            <template v-slot:cell(actions)="data">
-              <b-button v-bind:id="'popover'+data.item.id" class="action-app" href="#" tabindex="0">
-                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-              </b-button>
-              <b-popover
-                v-bind:target="'popover'+data.item.id"
-                class="btns-action"
-                variant
-                triggers="focus"
-                placement="bottomleft"
-              >
-                <button class="btn-action">Edit</button>
-                <button class="btn-action">Duplicate</button>
-                <button class="btn-action">Delete</button>
-              </b-popover>
-            </template>
+             <template v-slot:cell(actions)="data">
+                            <b-button v-bind:id="'popover'+data.item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                            <b-popover v-bind:target="'popover'+data.item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                                <button class="btn-action" v-on:click="onEdit(data.item.id)">Edit</button>
+                                <button class="btn-action" v-on:click="onDuplicate(data.item.id)">Duplicate</button>
+                                <button class="btn-action" v-on:click="onDelete(data.item.id)">Delete</button>
+                            </b-popover>
+                        </template>
+
+
           </b-table>
           <!-- Table end -->
           <!-- Pagination -->
@@ -298,7 +292,7 @@ export default {
         { key: "validity", label: "Valid From", sortable: false },
         { key: "expire", label: "Valid Until", sortable: false },
         {
-          key: "direction",
+          key: "type",
           label: "Direction",
           formatter: value => {
             return this.badgetypes(value);
@@ -334,7 +328,7 @@ export default {
   },
   created() {
     /* Return the Contracts lists data*/
-    api.getData({}, "/api/v2/inlands", (err, data) => {
+    api.getData({}, "/api/v2/inlands/list", (err, data) => {
       this.setData(err, data);
     });
 
@@ -401,7 +395,7 @@ export default {
       
       return {
         provider: this.provider,
-        direction: this.direction.id,
+        direction: this.type,
         validity: "2020-04-01",
         expire: "2020-05-20", //this.dateRange.endDate,
         status:this.status.value,
@@ -415,11 +409,11 @@ export default {
       const data = this.prepareData();
       this.invalidFeedback(data);
       api
-        .call("post", "/api/v2/inlands/store", data)
+        .call("post", "/api/v2/inlands", data)
         .then(response => {
-         //console.log(response);
+        // console.log(response);
           window.location =
-            "http://cargofive/api/inlands/";
+            "http://cargofive/api/v2/inlands/";
         })
         .catch(data => {
           this.$refs.observer.setErrors(data.data.errors);
@@ -444,17 +438,51 @@ export default {
     },
     badgetypes(value) {
       let variation = "";
-      if (value == 1) {
-        variation += "<span class='badge badge-primary'>Export</span> ";
+    
+      if (value == '1') {
+        variation += '<span class="badge badge-primary">Import</span> ';
         return variation;
-      } else if (value == 2) {
-        variation += "<span class='badge badge-primary'>Import</span> ";
+      } else if (value == '2') {
+        variation += '<span class="badge badge-primary">Export</span> ';
         return variation;
       } else {
         variation += "<span class='badge badge-primary'>Both</span> ";
         return variation;
       }
-    }
+    },
+
+
+            /* Single Actions */
+            onEdit(id){
+                window.location = `/api/v2/inlands/${id}/edit`;
+            },
+            onDelete(id){
+
+                this.isBusy = true;
+
+                api.call('delete', `/api/v2/inlands/${id}/destroy`, {})
+                    .then( ( response ) => {
+                    this.refreshData();
+                })
+                    .catch(( data ) => {
+                      console.log(data);
+                    //this.$refs.observer.setErrors(data.data.errors);
+                });
+            },
+            onDuplicate(id){
+
+                this.isBusy = true;
+                
+                api.call('post', '/api/v2/inlands/duplicate', data)
+                    .then( ( response ) => {
+                    this.refreshData();
+                })
+                    .catch(( data ) => {
+                    this.$refs.observer.setErrors(data.data.errors);
+                });
+            }
+            /* End single actions */
+
   },
   watch: {
     selected() {
