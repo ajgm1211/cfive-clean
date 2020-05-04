@@ -1028,11 +1028,19 @@ Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFre
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
 /** End Contracts V2 routes **/
 
-/** Contracts V2 routes **/
+/** Inland V2 routes **/
+Route::group(['prefix' => 'api/v2/inlands', 'middleware' => ['auth']], function () {
+    Route::get('list', 'InlandController@list');
+    Route::get('data', 'InlandController@data');
+    Route::get('retrieve/{inland}', 'InlandController@retrieve');
+});
+Route::resource('api/v2/inlands', 'InlandController')->middleware('auth');
+
+/*
 Route::get('api/inlands', 'InlandController@index');
-Route::get('api/v2/inlands', 'InlandController@list');
-Route::get('api/v2/inlands/data', 'InlandController@data');
+
 Route::post('api/v2/inlands/store', 'InlandController@store');
+Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
 
 /** End Contracts V2 routes **/
 

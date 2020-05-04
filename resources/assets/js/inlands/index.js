@@ -10,7 +10,7 @@ import VueRouter from 'vue-router';
 
 /* Config files */
 import App from '../components/inlands/App';  // Main Component
-import LocalCharges from '../components/inlands/LocalCharges';  // Local Charges
+import Inlands from '../components/inlands/Inlands';  // Local Charges
 //import Contracts from '../components/contracts/Contracts';  // Main Component
 import Api from '../api.js'; // Api calls controller
 
