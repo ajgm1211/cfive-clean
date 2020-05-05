@@ -537,7 +537,7 @@ class RequestFclV2Controller extends Controller
     {
         try{
             $Ncontract = NewContractRequest::find($id);
-            if(empty($Ncontract->namefile)){
+            if(!empty($Ncontract->namefile)){
                 Storage::disk('FclRequest')->delete($Ncontract->namefile);
             } else {
                 $mediaItem = $Ncontract->getFirstMedia('document');
