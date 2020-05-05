@@ -1329,7 +1329,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $ammoun_zero = true;
                                                 }
                                                 $rows_calculations[$key] = [
-                                                    'calculationtype' => $calculationtypeValFail,
+                                                    'calculationtype' => $calculationtypeValFail.'Fila '.$countRow,
                                                     'ammount'         => $ammount,
                                                     'ammount_zero'    => $ammoun_zero,
                                                     'currency'        => $currency_val
