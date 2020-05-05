@@ -546,6 +546,7 @@ class RequestFclV2Controller extends Controller
             $Ncontract->delete();
             return 1;
         } catch(\Exception $e){
+            Log::error($e);
             return 2;
         }
     }
