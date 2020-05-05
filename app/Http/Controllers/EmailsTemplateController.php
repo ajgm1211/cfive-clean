@@ -11,7 +11,7 @@ use App\Contact;
 use App\Company;
 use App\QuoteV2;
 use App\User;
-
+use App\Http\Requests\StoreEmailTemplate;
 class EmailsTemplateController extends Controller
 {
     /**
@@ -84,8 +84,9 @@ class EmailsTemplateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEmailTemplate $request)
     {
+        $request->validated();
         $template = new EmailTemplate();
         $template->name = $request->name;
         $template->subject = $request->subject;
@@ -144,7 +145,7 @@ class EmailsTemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(request $request, $id) //
     {
         $requestForm = $request->all();
         $template = EmailTemplate::find($id);
