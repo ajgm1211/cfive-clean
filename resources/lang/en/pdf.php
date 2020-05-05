@@ -40,4 +40,11 @@ return [
     "total_weight" => "Total weight",
     "chargeable_weight" => "Chargeable weight",
     "total_volume" => "Total volume",
+    "quantity" => "Quantity",
+    "volume" => "Volume",
+    "weight" => "Weight",
+    "large" => "Large",
+    "width" => "Width",
+    "height" => "Height",
+    "cargo_details" => "Cargo details",
 ];

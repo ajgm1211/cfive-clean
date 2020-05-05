@@ -41,4 +41,11 @@ return [
     "total_weight" => "Peso total",
     "chargeable_weight" => "Peso tasable",
     "total_volume" => "Volumen total",
+    "quantity" => "Cantidad",
+    "volume" => "Volumen",
+    "weight" => "Peso",
+    "large" => "Largo",
+    "width" => "Ancho",
+    "height" => "Alto",
+    "cargo_details" => "Detalles de la carga",
 ];
