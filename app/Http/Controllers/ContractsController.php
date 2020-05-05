@@ -1497,7 +1497,7 @@ class ContractsController extends Controller
     public function duplicatedContractStore(Request $request, $id){
         $requestArray   = $request->all();
         $requestArray['requestChange'] = false;
-        $data           = ['id'=> $id,'data' => $requestArray];
+        $data = ['id'=> $id,'data' => $requestArray];
         if(env('APP_VIEW') == 'operaciones') {
             GeneralJob::dispatch('duplicated_fcl',$data)->onQueue('operaciones');
         } else {
@@ -1505,7 +1505,7 @@ class ContractsController extends Controller
         }
 
         $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.content', 'The contract is duplicating, please do not delete it, is doubling');
+        $request->session()->flash('message.content', 'The contract is duplicating, please do not delete it');
         return redirect()->route('contracts.index');
     }
 
@@ -1541,7 +1541,7 @@ class ContractsController extends Controller
         }
 
         $request->session()->flash('message.nivel', 'success');
-        $request->session()->flash('message.content', 'The contract is duplicating, please do not delete it, is doubling');
+        $request->session()->flash('message.content', 'The contract is duplicating, please do not delete it');
         return redirect()->back();
     }
 
