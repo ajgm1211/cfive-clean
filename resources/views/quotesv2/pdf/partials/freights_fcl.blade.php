@@ -1,7 +1,7 @@
                 <!-- Freights table all in-->
                 @if($quote->pdf_option->show_type=='detailed' && $rates->count()>1)
                     <div>
-                        <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.freight_charges')}}</p>
+                        <p class="title">{{__('pdf.freight_charges')}}</p>
                         <br>
                     </div>
 
@@ -57,7 +57,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{$hide}}>{{number_format(@${'freight_'.$c}, 2, '.', '')}}</td>
+                                                        <td {{$hide}}>{{round(@${'freight_'.$c})}}</td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -153,10 +153,10 @@
                                                                     @php
                                                                         //echo str_replace("Per", "Por", $v->calculation_type->name); 
                                                                     @endphp
-                                                                    {{@$v->calculation_type->display_name}}
+                                                                    {{@$v->calculation_type->name}}
                                                                 </td>
-                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
-                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->display_name}}</td>
+                                                                <td {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
+                                                                <td {{$quote->pdf_option->language=='Portuguese' ? '':'hidden'}}>{{@$v->calculation_type->name}}</td>
                                                             @else
                                                                 <td>{{__('pdf.per_container')}}</td>
                                                             @endif
@@ -164,7 +164,7 @@
                                                             @foreach ($equipmentHides as $key=>$hide)
                                                                 @foreach ($containers as $c)
                                                                     @if($c->code == $key)
-                                                                        <td {{ $hide }}>{{number_format($v->${'total_sum_'.$c->code}, 2, '.', '')}}</td>
+                                                                        <td {{ $hide }}>{{round($v->${'total_sum_'.$c->code})}}</td>
                                                                     @endif
                                                                 @endforeach
                                                             @endforeach
@@ -199,7 +199,7 @@
                                                                 @foreach ($equipmentHides as $key=>$hide)
                                                                     @foreach ($containers as $c)
                                                                         @if($c->code == $key)
-                                                                            <td {{ $hide }}>{{number_format($v->${'total_sum_'.$c->code}, 2, '.', '')}}</td>
+                                                                            <td {{ $hide }}>{{round($v->${'total_sum_'.$c->code})}}</td>
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach
@@ -235,7 +235,7 @@
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}><b>{{number_format(@${'sum_freight_'.$c->code}, 2, '.', '')}}</b></td>
+                                                    <td {{ $hide }}><b>{{round(@${'sum_freight_'.$c->code})}}</b></td>
                                                 @endif
                                             @endforeach
                                         @endforeach
@@ -306,7 +306,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{ $hide }}>{{number_format(@${'sum_freight_'.$c->code}, 2, '.', '')}}</td>
+                                                        <td {{ $hide }}>{{round(@${'sum_freight_'.$c->code})}}</td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
