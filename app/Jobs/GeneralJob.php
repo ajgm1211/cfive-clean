@@ -80,9 +80,7 @@ class GeneralJob implements ShouldQueue
             $contract_new->company_user_id  = $requestArray['company_user_id'];
             $contract_new->validity         = $validity;
             $contract_new->expire           = $expire;
-            if($requestArray['requestChange'] == false){
-                $contract_new->remarks          = $requestArray['remarks'];
-            }
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->status           = 'publish';
 
             if(!empty($contract->gp_container_id)){
