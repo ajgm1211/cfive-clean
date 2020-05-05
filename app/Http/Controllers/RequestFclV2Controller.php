@@ -177,7 +177,7 @@ class RequestFclV2Controller extends Controller
                     $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
                     $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;';
-                    
+
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
                     </a>&nbsp;&nbsp;
@@ -422,7 +422,7 @@ class RequestFclV2Controller extends Controller
             }
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
-            
+
             return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color,'request' => $Ncontract]);
         } catch (\Exception $e){
             return response()->json($data=['data'=>2]);;
@@ -538,7 +538,10 @@ class RequestFclV2Controller extends Controller
         try{
             $Ncontract = NewContractRequest::find($id);
             if(!empty($Ncontract->namefile)){
-                Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                try{
+                    Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                } catch(\Exception $e){
+                }
             } else {
                 $mediaItem = $Ncontract->getFirstMedia('document');
                 $mediaItems->delete();
