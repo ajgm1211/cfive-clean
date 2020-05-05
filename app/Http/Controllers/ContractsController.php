@@ -845,7 +845,7 @@ class ContractsController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You successfully update this contract.');
+        $request->session()->flash('message.content', 'The contract was successfully updated');
         return redirect()->back()->with('editContract','true');
 
         //return redirect()->action('ContractsController@index');
