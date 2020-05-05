@@ -87,7 +87,7 @@ $x=0;
                                                     @endforeach
                                                 @endforeach
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="units" data-value="{{$v->units}}" data-pk="{{$v->id}}" data-title="units"></a></td>
-                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="rate" data-value="{{$v->rate}}" data-pk="{{$v->id}}" data-title="rate"></a></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="amount" data-value="{{$v->amount}}" data-pk="{{$v->id}}" data-title="amount"></a></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="total" data-value="{{$v->total}}" data-pk="{{$v->id}}" data-title="total"></a></td>
                                                 <td class="tds"><a href="#" class="editable-saleterms td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$v->currency_id}}" data-pk="{{$v->id}}" data-title="Select currency" data-emptyText="-"></a>
                                                 &nbsp;
@@ -113,8 +113,8 @@ $x=0;
                                                         @endif
                                                     @endforeach
                                                 @endforeach
-                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control rate" name="rate" placeholder="Units"/></td>
-                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control units" name="units" placeholder="Rate"/></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control amount" name="amount" placeholder="Amount"/></td>
+                                                <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control units" name="units" placeholder="Units"/></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control total" name="total" placeholder="Total"/></td>
                                                 <td class="tds">
                                                     <div class="input-group">
