@@ -464,7 +464,7 @@ class ContractsController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your contract was updated');
-        return redirect()->route('RequestImportation.index');
+        return redirect()->route('RequestFcl.index');
     }
 
     public function show($id)

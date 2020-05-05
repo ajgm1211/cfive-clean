@@ -527,12 +527,14 @@ class ImportationController extends Controller
         if($selector == 1){
             $requestfcl     = RequestFcl::find($id);
             @$requestfcl->load('Requestcarriers');
-            if(json_decode($requestfcl->request_data,true) != null){
-                $json_rq = json_decode($requestfcl->request_data,true);
+            if(json_decode($requestfcl->data,true) != null){
+                $json_rq = json_decode($requestfcl->data,true);
                 if(!empty($json_rq['group_containers'])){
                     $equiment['id']     = $json_rq['group_containers']['id'];
                     $equiment['name']   = $json_rq['group_containers']['name'];
-                    $equiment['color']  = $json_rq['group_containers']['color'];
+                    $groupContainer     = GroupContainer::find($equiment['id']);
+                    $json_rq            = json_decode($groupContainer->data,true);
+                    $equiment['color']  = $json_rq['color'];
                 }
             } else {
                 $groupContainer = GroupContainer::find(1);
@@ -574,6 +576,9 @@ class ImportationController extends Controller
                 }
             }
         }
+
+        // dd($equiment);
+
         $harbor         = harbor::pluck('display_name','id');
         $country        = Country::pluck('name','id');
         $region         = Region::pluck('name','id');
@@ -654,7 +659,7 @@ class ImportationController extends Controller
                 $contract->status           = 'incomplete';
                 $contract->company_user_id  = $CompanyUserId;
                 $contract->account_id       = $account->id;
-                $contract->$gp_container_id = $gp_container_id;
+                $contract->gp_container_id  = $gp_container_id;
                 $contract->save();
 
                 foreach($request->carrierM as $carrierVal){
@@ -1060,7 +1065,7 @@ class ImportationController extends Controller
             }
             $containers = json_encode($colec);
             //dd($twuenty,$forty,$fortyhc,$fortynor,$fortyfive,$containers);
-            
+
             foreach($data_origins[$key] as $origin){
                 foreach($data_destinations[$key] as $destiny){
                     // dd($request->all(),$key,$origin,$destiny);
@@ -2967,11 +2972,18 @@ class ImportationController extends Controller
         $company    = CompanyUser::find($account->company_user_id);
         $extObj     = new \SplFileInfo($account->namefile);
         $ext        = $extObj->getExtension();
-        $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
-        try{
-            return Storage::disk('s3_upload')->download('Account/FCL/'.$account->namefile,$name);
-        } catch(\Exception $e){
-            return Storage::disk('FclAccount')->download($account->namefile,$name);
+        if(empty($account->namefile)){
+            $mediaItem  = $account->getFirstMedia('document');
+            $name = explode('_',$mediaItem->file_name);
+            $name = str_replace($name[0].'_','',$mediaItem->file_name);
+            return Storage::disk('FclAccount')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
+        } else {
+            $name       = $account->id.'-'.$company->name.'_'.$now.'-FLC.'.$ext;
+            try{
+                return Storage::disk('s3_upload')->download('Account/FCL/'.$account->namefile,$name);
+            } catch(\Exception $e){
+                return Storage::disk('FclAccount')->download($account->namefile,$name);
+            }
         }
     }
 
