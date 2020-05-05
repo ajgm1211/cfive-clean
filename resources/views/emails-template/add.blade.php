@@ -3,7 +3,7 @@
 @section('content')
 <div class="m-portlet">
     <!--begin::Form-->
-    {!! Form::open(['route' => 'templates.store','novalidate' => 'novalidate']) !!}   <!--justo donde agregue esto'novalidate' => 'novalidate' -->
+    {!! Form::open(['route' => 'templates.store']) !!}   
     
     <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
