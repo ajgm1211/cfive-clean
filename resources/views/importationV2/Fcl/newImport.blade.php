@@ -77,7 +77,7 @@
                                     <label for="numberid" class=" ">Company User</label>
                                     {!!  Form::select('CompanyUserId',$companysUser,$requestfcl['company_user_id'],['id'=>'CompanyUserId',
                                     'required',
-                                    'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
+                                    'class'=>'form-control m-input m-select2-general','onchange' => 'selectvalidate()'])!!}
                                 </div>
                                 <div class="col-lg-1">
                                     <label for="request_id" class=" ">Request id</label>
@@ -116,7 +116,7 @@
                                     <label for="numberid" class=" ">Company User</label>
                                     {!!  Form::select('CompanyUserIdd',$companysUser,$contract['company_user_id'],['id'=>'CompanyUserId',
                                     'required','disabled',
-                                    'class'=>'form-control m-input','onchange' => 'selectvalidate()'])!!}
+                                    'class'=>'form-control m-input m-select2-general','onchange' => 'selectvalidate()'])!!}
                                 </div>
                                 <input type="hidden" name="CompanyUserId" value="{{$contract['company_user_id']}}">
 

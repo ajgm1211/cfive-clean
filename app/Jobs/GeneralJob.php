@@ -62,7 +62,7 @@ class GeneralJob implements ShouldQueue
     public function handle()
     {
         $requestArrayD = $this->data;
-        
+
         if(strnatcasecmp($this->accion,'duplicated_fcl') == 0){
             $id           = $requestArrayD['id'];
             $requestArray = $requestArrayD['data'];
