@@ -55,27 +55,27 @@
         <div class="m-portlet m-portlet--tabs">
             <div class="m-portlet__head">
                 <div class="m-portlet__head-tools">
-                    <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
+                    <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" id="tab_id" role="tablist">
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link active" data-toggle="tab" href="#FailRates" role="tab">
+                            <a class="nav-link m-tabs__link tabMap defaultActive " data-toggle="tab" href="#FailRates" role="tab">
                                 <i class="la la-cog"></i>
                                 Fail Rates 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodRates" role="tab">
+                            <a class="nav-link m-tabs__link tabMap " data-toggle="tab" href="#GoodRates" role="tab">
                                 <i class="la la-briefcase"></i>
                                 Good Rates
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#FailSurcharge" role="tab">
+                            <a class="nav-link m-tabs__link tabMap" data-toggle="tab" href="#FailSurcharge" role="tab">
                                 <i class="la la-cog"></i>
                                 Fail Surcharge 
                             </a>
                         </li>
                         <li class="nav-item m-tabs__item">
-                            <a class="nav-link m-tabs__link addS " data-toggle="tab" href="#GoodSurcharge" role="tab">
+                            <a class="nav-link m-tabs__link tabMap" data-toggle="tab" href="#GoodSurcharge" role="tab">
                                 <i class="la la-briefcase"></i>
                                 Good Surcharge
                             </a>
@@ -85,7 +85,7 @@
             </div>
 
             <div class="tab-content">
-                <div class="tab-pane active" id="FailRates" role="tabpanel">
+                <div class="tab-pane " id="FailRates" role="tabpanel">
                     <br>
                     <div class="m-portlet__head">
                         <div class="form-group row ">
@@ -171,6 +171,89 @@
                         <div class="row align-items-center"></div>
                     </div>
                 </div>
+
+                <div class="tab-pane " id="FailSurcharge" role="tabpanel">
+                    <br>
+                    <div class="m-portlet__head">
+                        <label >
+                            <i class="fa fa-dot-circle-o" style="color:red;"> </i>
+                            <strong >
+                                Failed Surcharges: 
+                            </strong>
+                            <strong id="strfailSg">{{$countfailsurcharge}}</strong>
+                            <input type="hidden" value="{{$countfailsurcharge}}" id="strfailinputSg" />
+                        </label>
+                        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="{{route('Reprocesar.Surchargers',$id)}}" class="btn btn-primary">Reprocess &nbsp;<span class="la la-refresh"></span></a>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                        <br>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+                        <table class="table tableData"  id="failedSurchargeTable" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    <th> Surcharge </th>
+                                    <th> Origin </th>
+                                    <th> Destiny </th>
+                                    <th> Type Destiny </th>
+                                    <th> Type Calculation </th>
+                                    <th> Ammount </th>
+                                    <th> Currency </th>
+                                    <th> Carrier </th>
+                                    <th> Options </th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                        <!--end: tab body -->
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
+                </div>
+                <!-- /////////////////////////////////////////////////////////////////////////////////////////// -->
+                <div class="tab-pane" id="GoodSurcharge" role="tabpanel">
+                    <br>
+                    <div class="m-portlet__head">
+                        <label>
+                            <i class="fa fa-dot-circle-o" style="color:green;"> </i>
+                            <strong id="">
+                                Good Surcharges: 
+                            </strong>
+                            <strong id="strgoodSg">
+                                {{$countgoodsurcharge}}
+                            </strong>
+                            <input type="hidden" value="{{$countgoodsurcharge}}" id="strgoodinputSg" />
+                        </label>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <!--begin: tab body -->
+
+                        <table class="table tableData"  id="GoodSurchargetable" width="100%">
+                            <thead width="100%">
+                                <tr>
+                                    <th> Surcharge </th>
+                                    <th> Origin </th>
+                                    <th> Destiny </th>
+                                    <th> Type Destiny </th>
+                                    <th> Type Calculation </th>
+                                    <th> Ammount </th>
+                                    <th> Currency </th>
+                                    <th> Carrier </th>
+                                    <th> Options </th>
+                                </tr>
+                            </thead>
+
+                        </table>
+
+                        <!--end: tab body -->
+                    </div>
+                    <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
+                        <div class="row align-items-center"></div>
+                    </div>
+                </div>
             </div>
             <div class="tab-pane ShEditMultRates" id="editMultRates" hidden role="tabpanel"></div>
 
@@ -181,22 +264,9 @@
 
 <!--  begin modal editar rate -->
 
-<div class="modal fade bd-example-modal-lg" id="modaleditRate"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modaledit"   role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" >
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">
-                    Edit Rates
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">
-                        &times;
-                    </span>
-                </button>
-            </div>
-            <div id="edit-modal-body" class="modal-body">
-
-            </div>
+        <div class="modal-content loadDataModal">
 
         </div>
 
@@ -210,15 +280,20 @@
 @section('js')
 @parent
 
+<script>
+    // Auto Save Tab
+    var nameTab     = null;
+    var nameTabCtll = '{{@$tab}}';
+</script>
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>
+<!--<script type="text/javascript" charset="utf8"  src="/js/Contracts/RatesAndFailForContract.js"></script>-->
+<script type="text/javascript" charset="utf8"  src="/js/autoSaveTab.js"></script>
 <script type="text/javascript" charset="utf8"  src="/js/datatable.conf.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 <script>
-
 
     $('.m-select2-general').select2({
 
@@ -233,12 +308,8 @@
             // Toggle the visibility
             column.visible( ! column.visible() );
         } );
+        //alert(nameTabCtll);
     } );    
-
-
-</script>
-<script>
-
 
     $(function() {
 
@@ -305,26 +376,7 @@
                 style:    'multi',
                 selector: 'td:first-child'
             },
-            buttons: [
-                {
-                    text: 'Select all',
-                    action : function(e) {
-                        e.preventDefault();
-                        ratesTable.rows({ page: 'all'}).nodes().each(function() {
-                            $(this).removeClass('selected')
-                        })
-                        ratesTable.rows({ search: 'applied'}).nodes().each(function() {
-                            $(this).addClass('selected');        
-                        })
-                    }
-                },
-                {
-                    text: 'Select none',
-                    action: function () {
-                        ratesTable.rows().deselect();
-                    }
-                }
-            ],
+            buttons: [],
             ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,2,"rates"]) !!}',
             columns:columnas_rates,
             "lengthChange": false,
@@ -339,39 +391,101 @@
             "paging": true
             //"scrollX": true
         });
-    });
+        failedSurchar = $('#failedSurchargeTable').DataTable({
+            processing: true,
+            serverSide: true,
+            columnDefs: [],
+            select: {},
+            buttons: [],
+            ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,1,"surcharger"]) !!}',
+            columns: [
 
+                { data: 'surchargelb', name: 'surchargelb' },
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'typedestinylb', name: "typedestinylb" },
+                { data: 'calculationtypelb', name: 'calculationtypelb' },
+                { data: 'ammount', name: "ammount" },
+                { data: 'currencylb', name: 'currencylb' },
+                { data: 'carrierlb', name: 'carrierlb' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
+            //"scrollX": true,
+        });
+
+        goodSurchar = $('#GoodSurchargetable').DataTable({
+            processing: true,
+            serverSide: true,
+            columnDefs: [],
+            select: {},
+            buttons: [],
+            ajax: '{!! route("LoadDataTable.Fcl.Faileds",[$id,2,"surcharger"]) !!}',
+            columns: [
+                { data: 'surchargelb', name: 'surchargelb' },
+                { data: 'origin_portLb', name: 'origin_portLb' },
+                { data: 'destiny_portLb', name: 'destiny_portLb' },
+                { data: 'typedestinylb', name: "typedestinylb" },
+                { data: 'calculationtypelb', name: 'calculationtypelb' },
+                { data: 'ammount', name: "ammount" },
+                { data: 'currencylb', name: 'currencylb' },
+                { data: 'carrierlb', name: 'carrierlb' },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ],
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "stateSave": true,
+            "autoWidth": true,
+            "processing": true,
+            "dom": 'Bfrtip',
+            "paging": true,
+            //"scrollX": true,
+        });
+    });
+    
+    
     function showModalsavetorate(id,operation){
-        $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
+
         if(operation == 1){
             var url = '{{ route("Edit.Rates.Fail.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditRate').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         }else if(operation == 2){
             var url = '{{ route("Edit.Rates.Good.For.Contracts", ":id") }}';
             url = url.replace(':id', id);
-            $('#edit-modal-body').load(url,function(){
-                $('#modaleditRate').modal();
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
             });
         } else  if(operation == 'editMultRates'){
 
             var idAr = [];
-            var oTable = $("#myatest").dataTable();
-            var length=table.rows('.selected').data().length;
+            var oTable = $("#failedRates").dataTable();
+            var length=ratesFailedsTable.rows('.selected').data().length;
 
             if(length > 0)
             {
                 for (var i = 0; i < length; i++) { 
-                    idAr.push(table.rows('.selected').data()[i].id);
+                    idAr.push(ratesFailedsTable.rows('.selected').data()[i].id);
                 }
                 //console.log();
                 var url = "{{route('Edicion.Multiples.Rates.Fcl')}}";
                 //url = url.replace(':id', idAr);
                 data2 = {idAr:idAr,contract_id:id}
-                $('#edit-modal-body').load(url,data2,function(){
-                    $('#modaleditRate').modal({show:true});
+                $('.loadDataModal').load(url,data2,function(){
+                    $('#modaledit').modal({show:true});
                 });
 
             } else {
@@ -379,13 +493,13 @@
             }
         } else  if(operation == 'editRatesByDetalls'){
             var idAr = [];
-            var oTable = $("#myatest").dataTable();
-            var length=table.rows('.selected').data().length;
+            var oTable = $("#failedRates").dataTable();
+            var length=ratesFailedsTable.rows('.selected').data().length;
 
             if(length >= 2)
             {
                 for (var i = 0; i < length; i++) { 
-                    idAr.push(table.rows('.selected').data()[i].id);
+                    idAr.push(ratesFailedsTable.rows('.selected').data()[i].id);
                 }
                 //console.log();
                 var url = "{{route('load.arr.Rates.por.detalles.Fcl')}}";
@@ -401,6 +515,116 @@
             }
         }
     }
+
+    function showModalsavetosurcharge(id,operation){
+        if(operation == 1){
+            var url = '{{ route("Edit.Surchargers.Fail.For.Contracts", ":id") }}';
+            url = url.replace(':id', id);
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
+            });
+        }else if(operation == 2){
+            var url = '{{ route("Edit.Surchargers.Good.For.Contracts", ":id") }}';
+            url = url.replace(':id', id);
+            $('.loadDataModal').load(url,function(){
+                $('#modaledit').modal();
+            });
+        }
+    }
+
+    $(document).on('click','#delete-Fail-Surcharge',function(){
+        var id = $(this).attr('data-id-failSurcharge');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+
+                url='{!! route("Destroy.SurchargersF.For.Contracts",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your Surcharge has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var a = $('#strfailinputSg').val();
+                            a--;
+                            $('#strfailSg').text(a);
+                            $('#strfailinputSg').attr('value',a);
+                        }else if(data == 2){
+                            swal("Error!", "An internal error occurred!", "error");
+                        }
+                    }
+                });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
+
+    $(document).on('click','#delete-Surcharge',function(){
+        var id = $(this).attr('data-id-Surcharge');
+        var elemento = $(this);
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then(function(result){
+            if (result.value) {
+
+                url='{!! route("Destroy.SurchargersG.For.Contracts",":id") !!}';
+                url = url.replace(':id', id);
+                // $(this).closest('tr').remove();
+                $.ajax({
+                    url:url,
+                    method:'get',
+                    success: function(data){
+                        if(data == 1){
+                            swal(
+                                'Deleted!',
+                                'Your Surcharge has been deleted.',
+                                'success'
+                            )
+                            $(elemento).closest('tr').remove();
+                            var b = $('#strgoodinputSg').val();
+                            b--;
+                            $('#strgoodSg').text(b);
+                            $('#strgoodinputSg').attr('value',b);
+                        }else if(data == 2){
+                            swal("Error!", "an internal error occurred!", "error");
+                        }
+                    }
+                });
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your rate is safe :)',
+                    'error'
+                )
+            }
+        });
+    });
 
     $(document).on('click','#delete-FailRate',function(){
         var id = $(this).attr('data-id-failrate');
