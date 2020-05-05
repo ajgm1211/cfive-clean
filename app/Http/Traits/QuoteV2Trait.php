@@ -224,151 +224,15 @@ trait QuoteV2Trait
         return $rates;
     }
 
-    /**
+        /**
      * Process collections origins grouped rates
      * @param  collection $origin_charges
      * @param  collection $quote
      * @return collection
      */
-    public function localChargesDetailed($charges, $type, $quote, $currency_cfg, $containers)
+    public function localChargesGrouped($charges_grouped, $type, $quote, $currency_cfg, $containers)
     {
-        $charges_detailed = collect($charges);
         
-        if ($type == 'origin') {
-            $charges_detailed = $charges_detailed->groupBy([
-
-                function ($item) {
-                    return $item['carrier']['name'];
-                },
-                function ($item) {
-                    return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
-                },
-                function ($item) {
-                    return $item['destination_port']['name'];
-                },
-
-            ], $preserveKeys = true);
-        } else {
-            $charges_detailed = $charges_detailed->groupBy([
-
-                function ($item) {
-                    return $item['carrier']['name'];
-                },
-                function ($item) {
-                    return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
-                },
-                function ($item) {
-                    return $item['origin_port']['name'];
-                },
-
-            ], $preserveKeys = true);
-        }
-
-        $sum = 'sum';
-        $markup = 'markup';
-        $inland = 'inland';
-        $amount = 'amount';
-        $total = 'total';
-        $pre_c = 'total_c';
-        $pre_m = 'total_m';
-
-        foreach ($charges_detailed as $origin => $item) {
-            foreach ($item as $destination => $items) {
-                foreach ($items as $carrier => $itemsDetail) {
-                    foreach ($itemsDetail as $value) {
-                        foreach ($value->charge as $amounts) {
-                            foreach ($containers as $c) {
-                                ${$sum . '_' . $c->code} = 0;
-                                ${$total . '_' . $c->code} = 0;
-                                ${$total . '_markup_' . $c->code} = 0;
-                            }
-
-                            if ($amounts->type_id == 1) {
-
-                                if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                                } else {
-                                    $typeCurrency =  $currency_cfg;
-                                }
-
-                                $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
-
-                                $array_amounts = json_decode($amounts->amount, true);
-                                $array_markups = json_decode($amounts->markups, true);
-
-                                foreach ($containers as $c) {
-                                    ${$pre_c . $c->code} = 'total_c' . $c->code;
-                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
-                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
-                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
-                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
-                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code];
-                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
-                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
-                                        ${$sum . '_' . $c->code} = $array_markups['m' . $c->code];
-                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
-                                    }
-                                }
-
-                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                                $amounts->${$pre_c . $c->code} = number_format(${$total . '_' . $c->code}, 2, '.', '');
-                            }
-                        }
-                        if (!$value->inland->isEmpty()) {
-                            foreach ($value->inland as $inland_value) {
-
-                                if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
-                                } else {
-                                    $typeCurrency =  $currency_cfg;
-                                }
-
-                                $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
-
-                                $array_amounts = json_decode($inland_value->rate, true);
-                                $array_markups = json_decode($inland_value->markup, true);
-
-                                foreach ($containers as $c) {
-                                    ${$inland . '_' . $c->code} = 0;
-                                    ${$total . '_' . $inland . $c->code} = 'total_inland' . $c->code;
-
-                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
-                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
-                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
-                                        ${$total . '_' . $c->code} = number_format((${$amount . '_' . $c->code} + ${$markup . '_' . $c->code}) / $currency_rate, 2, '.', '');
-                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
-                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
-                                        ${$total . '_' . $c->code} = number_format(${$amount . '_' . $c->code} / $currency_rate, 2, '.', '');
-                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
-                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
-                                        ${$total . '_' . $c->code} = number_format(${$markup . '_' . $c->code} / $currency_rate, 2, '.', '');
-                                    }
-
-                                    $inland_value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return $charges_detailed;
-    }
-
-    /**
-     * Process collections origins grouped rates
-     * @param  collection $origin_charges
-     * @param  collection $quote
-     * @return collection
-     */
-    public function localChargesGrouped($charges, $type, $quote, $currency_cfg, $containers)
-    {
-        $charges_grouped = collect($charges);
-
         if ($type == 'origin') {
             $charges_grouped = $charges_grouped->groupBy([
 
@@ -411,15 +275,20 @@ trait QuoteV2Trait
 
                     foreach ($rate->charge as $value) {
 
-                        if ($value->type_id == 1) {
-                            if ($quote->pdf_option->grouped_origin_charges == 1) {
-                                $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                        if ($value->type_id == 1 || $value->type_id == 2) {
+
+                            if ($quote->pdf_option->grouped_origin_charges == 1 || $quote->pdf_option->grouped_destination_charges == 1) {
+                                if($value->type_id==1){
+                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                }else{
+                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                }
                             } else {
                                 $typeCurrency =  $currency_cfg;
                             }
-
+                            
                             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
-
+                            
                             $array_amounts = json_decode($value->amount, true);
                             $array_markups = json_decode($value->markups, true);
 
@@ -442,20 +311,25 @@ trait QuoteV2Trait
                             }
                         }
                     }
+                    //Inlands
                     if (!$rate->inland->isEmpty()) {
                         foreach ($rate->inland as $value) {
                             foreach ($containers as $c) {
                                 ${$inland . $c->code} = 0;
                             }
 
-                            if ($quote->pdf_option->grouped_destination_charges == 1) {
-                                $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                            if ($quote->pdf_option->grouped_origin_charges == 1 || $quote->pdf_option->grouped_destination_charges == 1) {
+                                if($value->type=='Origin'){
+                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                }else{
+                                    $typeCurrency =  $quote->pdf_option->destination_charges_currency;
+                                }
                             } else {
                                 $typeCurrency =  $currency_cfg;
                             }
-
+                            
                             $currency_rate = $this->ratesCurrency($value->currency_id, $typeCurrency);
-
+                            
                             $array_amounts = json_decode($value->rate, true);
                             $array_markups = json_decode($value->markup, true);
 
@@ -476,8 +350,8 @@ trait QuoteV2Trait
                                 } else {
                                     ${$total . $c->code} = 0;
                                 }
-
-                                $value->${$sum . $total . $c->code} = number_format(${$total . $c->code}, 2, '.', '');
+                                
+                                $value->${$sum . $total . $c->code} = round(${$total . $c->code});
                             }
                         }
                     }
@@ -486,6 +360,134 @@ trait QuoteV2Trait
         }
 
         return $charges_grouped;
+    }
+
+
+    /**
+     * Process collections origins grouped rates
+     * @param  collection $origin_charges
+     * @param  collection $quote
+     * @return collection
+     */
+    public function localChargesDetailed($charges_detailed, $type, $quote, $currency_cfg, $containers)
+    {   
+
+        if ($type == 'origin') {
+            $charges_detailed = $charges_detailed->groupBy([
+
+                function ($item) {
+                    return $item['carrier']['name'];
+                },
+                function ($item) {
+                    return $item['origin_port']['name'] . ', ' . $item['origin_port']['code'];
+                },
+                function ($item) {
+                    return $item['destination_port']['name'];
+                },
+
+            ]);
+        } else {
+            
+            $charges_detailed = $charges_detailed->groupBy([
+                
+                function ($item) {
+                    return $item['carrier']['name'];
+                },
+                function ($item) {
+                    return $item['destination_port']['name'] . ', ' . $item['destination_port']['code'];
+                },
+                function ($item) {
+                    return $item['origin_port']['name'];
+                },
+
+            ]);
+        }
+
+        $sum = 'sum';
+        $markup = 'markup';
+        $inland = 'inland';
+        $amount = 'amount';
+        $total = 'total';
+        $pre_c = 'total_c';
+        $pre_m = 'total_m';
+
+        foreach ($charges_detailed as $origin => $item) {
+            foreach ($item as $destination => $items) {
+                foreach ($items as $carrier => $itemsDetail) {
+                    foreach ($itemsDetail as $value) {
+                        foreach ($value->charge as $amounts) {
+                            foreach ($containers as $c) {
+                                ${$sum . '_' . $c->code} = 0;
+                                ${$total . '_' . $c->code} = 0;
+                                ${$total . '_markup_' . $c->code} = 0;
+                            }
+                            
+                            if ($amounts->type_id == 1 || $amounts->type_id == 2) {
+
+                                $typeCurrency =  $currency_cfg;
+
+                                $currency_rate = $this->ratesCurrency($amounts->currency_id, $typeCurrency);
+
+                                $array_amounts = json_decode($amounts->amount, true);
+                                $array_markups = json_decode($amounts->markups, true);
+
+                                foreach ($containers as $c) {
+                                    ${$pre_c . $c->code} = 'total_c' . $c->code;
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code] + $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$sum . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = ${$sum . '_' . $c->code} / $currency_rate;
+                                    }
+
+                                    $amounts->${$pre_c . $c->code} = round(${$total . '_' . $c->code});
+                                }
+                            }
+                        }
+                        if (!$value->inland->isEmpty()) {
+                            foreach ($value->inland as $inland_value) {
+
+                                if ($quote->pdf_option->grouped_origin_charges == 1) {
+                                    $typeCurrency =  $quote->pdf_option->origin_charges_currency;
+                                } else {
+                                    $typeCurrency =  $currency_cfg;
+                                }
+
+                                $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
+
+                                $array_amounts = json_decode($inland_value->rate, true);
+                                $array_markups = json_decode($inland_value->markup, true);
+
+                                foreach ($containers as $c) {
+                                    ${$inland . '_' . $c->code} = 0;
+                                    ${$total . '_' . $inland . $c->code} = 'total_inland' . $c->code;
+
+                                    if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format((${$amount . '_' . $c->code} + ${$markup . '_' . $c->code}) / $currency_rate, 2, '.', '');
+                                    } else if (isset($array_amounts['c' . $c->code]) && !isset($array_markups['m' . $c->code])) {
+                                        ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format(${$amount . '_' . $c->code} / $currency_rate, 2, '.', '');
+                                    } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
+                                        ${$markup . '_' . $c->code} = $array_markups['m' . $c->code];
+                                        ${$total . '_' . $c->code} = number_format(${$markup . '_' . $c->code} / $currency_rate, 2, '.', '');
+                                    }
+
+                                    $inland_value->${$total . '_' . $inland . $c->code} = ${$total . '_' . $c->code};
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $charges_detailed;
     }
 
     /**
@@ -558,7 +560,7 @@ trait QuoteV2Trait
                                     }
 
                                     if (isset($array_amounts['c'.$c->code]) || isset($array_markups['m'.$c->code])) {
-                                        $amounts->${$total . $sum . $c->code} = number_format(${$total . $c->code}, 2, '.', '');
+                                        $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
                                     }
                                 }
                             }

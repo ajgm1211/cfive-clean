@@ -7,6 +7,7 @@ use App\SaleTermV2;
 use App\SaleTermV2Charge;
 use App\Charge;
 use App\AutomaticRate;
+use App\Container;
 use App\User;
 
 class SaleTermV2Controller extends Controller
@@ -136,17 +137,29 @@ class SaleTermV2Controller extends Controller
 
     public function storeSaleCharge(Request $request)
     {
+
+        $containers = Container::all();
+
+        $merge_amounts = array();
+
+        foreach ($containers as $value) {
+            ${'array_amount_' . $value->code} = array();
+  
+            foreach ($request->equipments as $key => $equipment) {
+                if (($key == 'c'.$value->code) && $equipment != null) {
+                    ${'array_amount_' . $value->code} = array('c'.$value->code => $equipment);
+                }
+            }
+            $merge_amounts = array_merge($merge_amounts, ${'array_amount_' . $value->code});
+        }
+
         $sale_charge = new SaleTermV2Charge();
         $sale_charge->sale_term_id = $request->sale_term_id;
         $sale_charge->charge = $request->charge;
         $sale_charge->detail = $request->detail;
-        $sale_charge->c20 = $request->c20;
-        $sale_charge->c40 = $request->c40;
-        $sale_charge->c40hc = $request->c40hc;
-        $sale_charge->c40nor = $request->c40nor;
-        $sale_charge->c45 = $request->c45;
+        $sale_charge->rate = json_encode($merge_amounts);
+        $sale_charge->amount = $request->amount;
         $sale_charge->units = $request->units;
-        $sale_charge->rate = $request->rate;
         $sale_charge->total = $request->total;
         $sale_charge->currency_id = $request->currency_id;
         $sale_charge->save();
