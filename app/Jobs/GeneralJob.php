@@ -62,7 +62,7 @@ class GeneralJob implements ShouldQueue
     public function handle()
     {
         $requestArrayD = $this->data;
-        
+
         if(strnatcasecmp($this->accion,'duplicated_fcl') == 0){
             $id           = $requestArrayD['id'];
             $requestArray = $requestArrayD['data'];
@@ -80,7 +80,9 @@ class GeneralJob implements ShouldQueue
             $contract_new->company_user_id  = $requestArray['company_user_id'];
             $contract_new->validity         = $validity;
             $contract_new->expire           = $expire;
-            $contract_new->remarks          = $requestArray['remarks'];
+            if($requestArray['requestChange'] == false){
+                $contract_new->remarks          = $requestArray['remarks'];
+            }
             $contract_new->status           = 'publish';
 
             if(!empty($contract->gp_container_id)){
