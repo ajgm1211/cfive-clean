@@ -659,7 +659,7 @@ class ImportationController extends Controller
                 $contract->status           = 'incomplete';
                 $contract->company_user_id  = $CompanyUserId;
                 $contract->account_id       = $account->id;
-                $contract->$gp_container_id = $gp_container_id;
+                $contract->gp_container_id  = $gp_container_id;
                 $contract->save();
 
                 foreach($request->carrierM as $carrierVal){
