@@ -109,10 +109,12 @@
                         <br>
 
                     </div>
+<!--
                     <a href="#" class="toggle-vis" data-column="1" >Origin</a>
                     <a href="#" class="toggle-vis" data-column="2">Destiny</a>
                     <a href="#" class="toggle-vis" data-column="3">Carrier</a>
                     <a href="#" class="toggle-vis" data-column="4">20DV</a>
+-->
                     <div class="m-portlet__body">
                         <!--begin: tab body -->
 
