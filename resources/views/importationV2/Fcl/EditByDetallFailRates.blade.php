@@ -105,7 +105,7 @@ $validation_expire = 'Please enter validity date';
                                         $rowTable = $loop->index;
                                         @endphp
                                         <tr id="{{'tr_clone'.$loop->index}}"  >
-                                            <input type="hidden" name="rate_fail_id[]" value="{{$ratef['rate_id']}}">
+                                            <input type="hidden" name="rate_fail_id[{{$loop->index}}]" value="{{$ratef['rate_id']}}">
                                             <td style="padding: 0.75rem 0.2rem;">
                                                 {{ Form::select('origin_id['.$rowTable.'][]', $harbor,$ratef['origin_port'],['class'=>'m-select2-general  col-sm-6 form-control ','style' => 'width:00%;'.$ratef["classorigin"] ,'required' => 'required','multiple' => 'multiple']) }}
                                                 <div class="progress m-progress--sm" style="padding: 0.1rem 0.2rem;">
