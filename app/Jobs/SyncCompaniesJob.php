@@ -58,6 +58,7 @@ class SyncCompaniesJob implements ShouldQueue
             $this->syncCompanies($api_response);
 
             return response()->json(['message' => 'Ok']);
+            
         } catch (GuzzleHttp\Exception\BadResponseException $e) {
             return "Error: " . $e;
         }
@@ -104,6 +105,10 @@ class SyncCompaniesJob implements ShouldQueue
 
             $i++;
         }
+
+        $setting = ApiIntegrationSetting::where('company_user_id', $this->user->company_user_id)->first();
+        $setting->status=0;
+        $setting->save();
 
         //return 'Done';
     }
