@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
 
-    Queue::after(function (JobProcessed $event) {
+    /*Queue::after(function (JobProcessed $event) {
         switch($event->job->resolveName()){
             case "App\Jobs\SyncCompaniesJob":
                 $userLogin  = auth()->user();
@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
                 $setting->save();
             break;
         }
-    });
+    });*/
 
     //$url->forceScheme('https');
 

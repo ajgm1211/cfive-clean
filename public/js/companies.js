@@ -350,10 +350,11 @@ $(document).on('click', '#syncCompanies', function(e) {
                         'Synchronization completed successfully.',
                         'success'
                     )*/
+
+                    setTimeout(function() { location.reload(); }, 2000);
+
                     $("#syncCompaniesLoading").addClass("hide");
                     $("#syncCompanies").removeClass("hide");
-
-                    setTimeout(function() { location.reload(); }, 100);
                 },
                 error: function(request, status, error) {
                     msg('An error has occurred!', 'error');
