@@ -123,10 +123,14 @@ class ApiIntegrationController extends Controller
     public function getCompanies()
     {
         $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+        $setting->status=1;
+        $setting->save();
 
         $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
 
-        SyncCompaniesJob::dispatch($setting,$endpoint);
+        $user = \Auth::user();
+
+        SyncCompaniesJob::dispatch($setting,$endpoint,$user);
     }
 
     public function syncCompanies($response)
