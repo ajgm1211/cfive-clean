@@ -105,6 +105,6 @@ class SyncCompaniesJob implements ShouldQueue
             $i++;
         }
 
-        return 'Done';
+        //return 'Done';
     }
 }
