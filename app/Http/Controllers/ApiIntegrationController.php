@@ -122,33 +122,11 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
-        //SyncCompaniesJob::dispatch();
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+        $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
 
-        $endpoint = $api->url . "ent_m?" . $api->key_name . "=" . $api->api_key;
+        $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
 
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
-        ]);
-
-        try {
-
-            $response = $client->get($endpoint, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'X-Requested-With' => 'XMLHttpRequest',
-                ]
-            ]);
-
-            $api_response = json_decode($response->getBody());
-
-            $this->syncCompanies($api_response);
-
-            return response()->json(['message' => 'Ok']);
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Error: " . $e;
-        }
+        SyncCompaniesJob::dispatch($setting,$endpoint);
     }
 
     public function syncCompanies($response)
