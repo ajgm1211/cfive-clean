@@ -345,13 +345,13 @@ $(document).on('click', '#syncCompanies', function(e) {
                 type: 'GET',
                 url: '/api/get/companies',
                 success: function(data) {
-                    /*swal(
+                    swal(
                         'Done!',
                         'Synchronization completed successfully.',
                         'success'
-                    )*/
+                    )
 
-                    setTimeout(function() { location.reload(); }, 2000);
+                    setTimeout(function() { location.reload(); }, 4000);
 
                     $("#syncCompaniesLoading").addClass("hide");
                     $("#syncCompanies").removeClass("hide");
@@ -420,7 +420,7 @@ function msg(message, type) {
                 "onclick": null,
                 "showDuration": "0",
                 "hideDuration": "0",
-                "timeOut": "20000",
+                "timeOut": "10000",
                 "extendedTimeOut": "0",
                 "showEasing": "swing",
                 "hideEasing": "linear",
