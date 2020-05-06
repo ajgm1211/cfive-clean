@@ -17,16 +17,18 @@ class SyncCompaniesJob implements ShouldQueue
 
     protected $setting;
     protected $endpoint;
+    protected $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($setting, $endpoint)
+    public function __construct($setting, $endpoint, $user)
     {
         $this->setting = $setting;
         $this->endpoint = $endpoint;
+        $this->user = $user;
     }
 
     /**
@@ -75,8 +77,8 @@ class SyncCompaniesJob implements ShouldQueue
                     $company->phone = $item->tlf;
                     $company->address = $item->address;
                     $company->email = $item->eml;
-                    $company->company_user_id = \Auth::user()->company_user_id;
-                    $company->owner = \Auth::user()->id;
+                    $company->company_user_id = $this->user->company_user_id;
+                    $company->owner = $this->user->id;
                     $company->api_id = $item->id;
                     $company->api_status = 'created';
                     $company->save();
