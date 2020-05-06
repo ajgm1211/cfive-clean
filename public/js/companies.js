@@ -340,20 +340,20 @@ $(document).on('click', '#syncCompanies', function(e) {
         if (result.value) {
             $("#syncCompanies").addClass("hide");
             $("#syncCompaniesLoading").removeClass("hide");
-            msg('This process may take a few minutes');
+            msg('Synchronizing. This process may take a few minutes &nbsp;<i class="fa fa-spin fa-spinner"></i>');
             $.ajax({
                 type: 'GET',
                 url: '/api/get/companies',
                 success: function(data) {
-                    swal(
+                    /*swal(
                         'Done!',
                         'Synchronization completed successfully.',
                         'success'
-                    )
+                    )*/
                     $("#syncCompaniesLoading").addClass("hide");
                     $("#syncCompanies").removeClass("hide");
 
-                    setTimeout(function() { location.replace("/companies/api"); }, 2000);
+                    setTimeout(function() { location.replace("/companies"); }, 3000);
                 },
                 error: function(request, status, error) {
                     msg('An error has occurred!', 'error');
@@ -419,7 +419,7 @@ function msg(message, type) {
                 "onclick": null,
                 "showDuration": "0",
                 "hideDuration": "0",
-                "timeOut": "10000",
+                "timeOut": "20000",
                 "extendedTimeOut": "0",
                 "showEasing": "swing",
                 "hideEasing": "linear",

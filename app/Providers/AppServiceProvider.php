@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\ApiIntegrationSetting;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Routing\UrlGenerator;
 use App\Observers\ContractObserver;
 use App\Contract;
+use App\Jobs\SyncCompaniesJob;
 use App\Observers\QuoteObserver;
 use App\Quote;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +27,16 @@ class AppServiceProvider extends ServiceProvider
     Schema::defaultStringLength(191);
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
+
+    Queue::after(function (JobProcessed $event) {
+        switch($event->job->resolveName()){
+            case "App\Jobs\SyncCompaniesJob":
+                $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+                $setting->status=0;
+                $setting->save();
+            break;
+        }
+    });
 
     //$url->forceScheme('https');
 
