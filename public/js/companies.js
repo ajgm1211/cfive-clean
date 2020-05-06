@@ -353,7 +353,7 @@ $(document).on('click', '#syncCompanies', function(e) {
                             'success'
                         )
 
-                        setTimeout(function() { location.reload(); }, 4000);
+                        setTimeout(function() { location.reload(); }, 3000);
 
                         $("#syncCompaniesLoading").addClass("hide");
                         $("#syncCompanies").removeClass("hide");
