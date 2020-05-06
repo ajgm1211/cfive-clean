@@ -27,17 +27,6 @@ class AppServiceProvider extends ServiceProvider
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
 
-    /*Queue::after(function (JobProcessed $event) {
-        switch($event->job->resolveName()){
-            case "App\Jobs\SyncCompaniesJob":
-                $userLogin  = auth()->user();
-                $setting = ApiIntegrationSetting::where('company_user_id', $userLogin->company_user_id)->first();
-                $setting->status=0;
-                $setting->save();
-            break;
-        }
-    });*/
-
     //$url->forceScheme('https');
 
   }
