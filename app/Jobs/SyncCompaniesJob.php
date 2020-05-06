@@ -15,14 +15,18 @@ class SyncCompaniesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $setting;
+    protected $endpoint;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($setting, $endpoint)
     {
-        //
+        $this->setting = $setting;
+        $this->endpoint = $endpoint;
     }
 
     /**
@@ -32,9 +36,6 @@ class SyncCompaniesJob implements ShouldQueue
      */
     public function handle()
     {
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
-
-        $endpoint = $api->url . "ent_m?" . $api->key_name . "=" . $api->api_key;
 
         $client = new Client([
             'verify' => false,
@@ -43,7 +44,7 @@ class SyncCompaniesJob implements ShouldQueue
 
         try {
 
-            $response = $client->get($endpoint, [
+            $response = $client->get($this->endpoint, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'X-Requested-With' => 'XMLHttpRequest',
