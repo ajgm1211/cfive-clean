@@ -14,7 +14,7 @@ class AddFieldInlands extends Migration
     public function up()
     {
             Schema::table('inlands', function (Blueprint $table){
-            $table->enum('status', ['published', 'hard']);
+            $table->enum('status', ['publish', 'expired']);
             $table->integer('gp_container_id')->nullable()->unsigned();
             $table->foreign('gp_container_id')->references('id')->on('group_containers');
         });
