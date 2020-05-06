@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Routing\UrlGenerator;
 use App\Observers\ContractObserver;
 use App\Contract;
-use App\Jobs\SyncCompaniesJob;
 use App\Observers\QuoteObserver;
 use App\Quote;
 use Illuminate\Support\Facades\Queue;
@@ -31,7 +30,8 @@ class AppServiceProvider extends ServiceProvider
     Queue::after(function (JobProcessed $event) {
         switch($event->job->resolveName()){
             case "App\Jobs\SyncCompaniesJob":
-                $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+                $userLogin  = auth()->user();
+                $setting = ApiIntegrationSetting::where('company_user_id', $userLogin->company_user_id)->first();
                 $setting->status=0;
                 $setting->save();
             break;

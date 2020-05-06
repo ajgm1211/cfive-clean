@@ -353,7 +353,7 @@ $(document).on('click', '#syncCompanies', function(e) {
                     $("#syncCompaniesLoading").addClass("hide");
                     $("#syncCompanies").removeClass("hide");
 
-                    setTimeout(function() { location.replace("/companies"); }, 3000);
+                    setTimeout(function() { location.reload(); }, 100);
                 },
                 error: function(request, status, error) {
                     msg('An error has occurred!', 'error');
