@@ -108,6 +108,5 @@ class SyncCompaniesJob implements ShouldQueue
         $setting->status=0;
         $setting->save();
 
-        return response()->json(['message' => 'Ok']);
     }
 }

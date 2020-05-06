@@ -131,6 +131,8 @@ class ApiIntegrationController extends Controller
         $user = \Auth::user();
 
         SyncCompaniesJob::dispatch($setting,$endpoint,$user);
+
+        return response()->json(['message' => 'Ok']);
     }
 
     public function syncCompanies($response)
