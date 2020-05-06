@@ -543,8 +543,11 @@ class RequestFclV2Controller extends Controller
                 } catch(\Exception $e){
                 }
             } else {
-                $mediaItem = $Ncontract->getFirstMedia('document');
-                $mediaItems->delete();
+                try{
+                    $mediaItem = $Ncontract->getFirstMedia('document');
+                    $mediaItems->delete();
+                } catch(\Exception $e){
+                }
             }
             $Ncontract->delete();
             return 1;
