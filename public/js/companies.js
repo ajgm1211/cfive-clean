@@ -345,16 +345,19 @@ $(document).on('click', '#syncCompanies', function(e) {
                 type: 'GET',
                 url: '/api/get/companies',
                 success: function(data) {
-                    swal(
-                        'Done!',
-                        'Synchronization completed successfully.',
-                        'success'
-                    )
+                    console.log(data.message);
+                    if (data.message == 'Ok') {
+                        swal(
+                            'Done!',
+                            'Synchronization completed successfully.',
+                            'success'
+                        )
 
-                    setTimeout(function() { location.reload(); }, 4000);
+                        setTimeout(function() { location.reload(); }, 4000);
 
-                    $("#syncCompaniesLoading").addClass("hide");
-                    $("#syncCompanies").removeClass("hide");
+                        $("#syncCompaniesLoading").addClass("hide");
+                        $("#syncCompanies").removeClass("hide");
+                    }
                 },
                 error: function(request, status, error) {
                     msg('An error has occurred!', 'error');
