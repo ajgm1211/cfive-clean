@@ -122,17 +122,39 @@ class ApiIntegrationController extends Controller
 
     public function getCompanies()
     {
+        $user = \Auth::user();
+
+        $client = new Client([
+            'verify' => false,
+            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
+        ]);
+
         $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
-        $setting->status=1;
+        $setting->status = 1;
         $setting->save();
 
         $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
 
-        $user = \Auth::user();
+        try {
 
-        SyncCompaniesJob::dispatch($setting,$endpoint,$user);
+            $response = $client->get($endpoint, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'X-Requested-With' => 'XMLHttpRequest',
+                ]
+            ]);
 
-        return response()->json(['message' => 'Ok']);
+            $api_response = json_decode($response->getBody());
+
+            SyncCompaniesJob::dispatch($api_response, $user);
+
+            return response()->json(['message' => 'Ok']);
+            
+        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+            $setting->status = 0;
+            $setting->save();
+            return "Error: " . $e;
+        }
     }
 
     public function syncCompanies($response)
@@ -142,7 +164,7 @@ class ApiIntegrationController extends Controller
             if ($item->es_emp) {
 
                 $exist_com = Company::where('business_name', $item->nom_com)->get();
-                
+
                 if ($exist_com->count() == 0) {
                     $company = new Company();
                     $company->business_name = $item->nom_com;

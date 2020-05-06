@@ -15,8 +15,7 @@ class SyncCompaniesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $setting;
-    protected $endpoint;
+    protected $response;
     protected $user;
 
     /**
@@ -24,10 +23,9 @@ class SyncCompaniesJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($setting, $endpoint, $user)
+    public function __construct($response, $user)
     {
-        $this->setting = $setting;
-        $this->endpoint = $endpoint;
+        $this->response = $response;
         $this->user = $user;
     }
 
@@ -38,38 +36,12 @@ class SyncCompaniesJob implements ShouldQueue
      */
     public function handle()
     {
-
-        $client = new Client([
-            'verify' => false,
-            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
-        ]);
-
-        try {
-
-            $response = $client->get($this->endpoint, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'X-Requested-With' => 'XMLHttpRequest',
-                ]
-            ]);
-
-            $api_response = json_decode($response->getBody());
-
-            $this->syncCompanies($api_response);
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Error: " . $e;
-        }
-    }
-
-    public function syncCompanies($response)
-    {
         $i = 0;
-        foreach ($response->ent_m as $item) {
+        foreach ($this->response->ent_m as $item) {
             if ($item->es_emp) {
 
                 $exist_com = Company::where('business_name', $item->nom_com)->get();
-                
+
                 if ($exist_com->count() == 0) {
                     $company = new Company();
                     $company->business_name = $item->nom_com;
@@ -105,8 +77,7 @@ class SyncCompaniesJob implements ShouldQueue
         }
 
         $setting = ApiIntegrationSetting::where('company_user_id', $this->user->company_user_id)->first();
-        $setting->status=0;
+        $setting->status = 0;
         $setting->save();
-
     }
 }

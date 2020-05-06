@@ -99,7 +99,7 @@ Companies List
                                 <a href="javascript:void(0)" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                     <span>
                                         <span>
-                                            Sync with API
+                                            Fetch from API
                                         </span>
                                         &nbsp;
                                         <i class="la la-refresh"></i>
@@ -108,7 +108,7 @@ Companies List
                                 <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill hide disabled">
                                     <span>
                                         <span>
-                                            Synchronizing
+                                            Obtaining data
                                         </span>
                                         &nbsp;
                                         <i class="la la-refresh la-spin"></i>
@@ -118,7 +118,7 @@ Companies List
                                 <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill disabled">
                                     <span>
                                         <span>
-                                            Synchronizing
+                                            Obtaining data
                                         </span>
                                         &nbsp;
                                         <i class="la la-refresh la-spin"></i>
