@@ -93,13 +93,14 @@ class ReprocessRatesJob implements ShouldQueue
             $currencyArr    = explode('_',$failrate->currency_id);
             $scheduleTArr   = explode('_',$failrate->schedule_type);
             $containers     = json_decode($failrate->containers,true);
-            foreach($containers as $containerEq){
-                if(count(explode('_',$containerEq)) > 1){
-                    $containersBol = true;
-                    break;
+            if(!empty($containers)){
+                foreach($containers as $containerEq){
+                    if(count(explode('_',$containerEq)) > 1){
+                        $containersBol = true;
+                        break;
+                    }
                 }
             }
-
             $carrierEX     = count($carrierArr);
             $twuentyEX     = count($twentyArr);
             $fortyEX       = count($fortyArr);
@@ -131,8 +132,10 @@ class ReprocessRatesJob implements ShouldQueue
                 $carrierVal      = $carrierArr['carrier'];
                 //---------------- Containers -----------------------------------------------------------
                 $colec = [];
-                foreach($containers as $key => $containerEq){
-                    $colec[$key] = ''.floatval($containerEq);
+                if(!empty($containers)){
+                    foreach($containers as $key => $containerEq){
+                        $colec[$key] = ''.floatval($containerEq);
+                    }
                 }
                 $containers = json_encode($colec);
                 //---------------- 20' ------------------------------------------------------------------
