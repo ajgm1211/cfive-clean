@@ -1392,23 +1392,23 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                 $nopalicaC = $nopalicaC['id'];
             }
 
-            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_orig','LIKE','%No Aplica%')->delete();
-            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_dest','LIKE','%No Aplica%')->delete();
-
-            $surchargecollection = LocalCharge::where('contract_id',$this->contract_id)
-                ->whereHas('localcharcountries',function($query) use($nopalicaC){
-                    $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
-                })
-                ->orWhereHas('localcharports',function($q) use($nopalicaH){
-                    $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
-                })->forceDelete();
+//            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_orig','LIKE','%No Aplica%')->delete();
+//            $failsurchargeS = FailSurCharge::where('contract_id','=',$this->contract_id)->where('port_dest','LIKE','%No Aplica%')->delete();
+//
+//            $surchargecollection = LocalCharge::where('contract_id',$this->contract_id)
+//                ->whereHas('localcharcountries',function($query) use($nopalicaC){
+//                    $query->where('country_dest',$nopalicaC)->orWhere('country_orig',$nopalicaC);
+//                })
+//                ->orWhereHas('localcharports',function($q) use($nopalicaH){
+//                    $q->where('port_dest','=',$nopalicaH)->orWhere('port_orig',$nopalicaH);
+//                })->forceDelete();
 
             // dd($collection);
 
-            $userNotifique = User::find($this->user_id);
-            $message = 'The file imported was processed :' .$this->contract_id ;
-            $userNotifique->notify(new SlackNotification($message));
-            $userNotifique->notify(new N_general($userNotifique,$message)); 
+//            $userNotifique = User::find($this->user_id);
+//            $message = 'The file imported was processed :' .$this->contract_id ;
+//            $userNotifique->notify(new SlackNotification($message));
+//            $userNotifique->notify(new N_general($userNotifique,$message)); 
         } else {
             //imprimir en el log error
             Log::error('Container calculation type relationship error');

@@ -70,6 +70,7 @@
                         @endforeach
                     @endif               
                 @endif              
+                
 
                 <!-- ALL in origin table -->
                 @if($quote->pdf_option->grouped_origin_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
@@ -78,6 +79,7 @@
                             <p class="title">{{__('pdf.origin_charges')}} - {{$origin}}</p>
                             <br>
                         </div>
+                        
                         <table border="0" cellspacing="1" cellpadding="1" >
                             <thead class="title-quote text-left header-table">
                                 <tr >
@@ -227,6 +229,8 @@
                 <!-- Origins detailed -->
                 @if($quote->pdf_option->grouped_origin_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @foreach($origin_charges_detailed as $carrier => $value)
+                
+                    @if($value->charge_origin>=1 || $value->inland_origin>=1)
                         @foreach($value as $origin => $item)
                             <div>
                                 <p class="title" {{$quote->pdf_option->language=='English' ? '':'hidden'}}>{{__('pdf.origin_charges')}} - {{$origin}}</p>
@@ -373,6 +377,7 @@
                             </table>
                             <br>
                         @endforeach
+                        @endif
                     @endforeach
                     <br>
                 @endif      
