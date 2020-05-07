@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Support\Collection as Collection;
 class InlandRangeResource extends JsonResource
 {
     /**
@@ -14,6 +14,8 @@ class InlandRangeResource extends JsonResource
      */
     public function toArray($request)
     {
+
+
         return [
             'id' => $this->id,
             'lower' => $this->lower,
@@ -22,6 +24,7 @@ class InlandRangeResource extends JsonResource
             'inland' => $this->inland,
             'currency' => $this->currency,
             'gp_container' => $this->gpContainer,
+            'groupContainers'=> $this->x
  
           ];
     }
