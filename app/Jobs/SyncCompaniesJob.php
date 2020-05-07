@@ -40,7 +40,7 @@ class SyncCompaniesJob implements ShouldQueue
         foreach ($this->response->ent_m as $item) {
             if ($item->es_emp) {
 
-                $exist_com = Company::where('business_name', $item->nom_com)->get();
+                $exist_com = Company::where('api_id', $item->id)->get();
 
                 if ($exist_com->count() == 0) {
                     $company = new Company();
@@ -48,6 +48,7 @@ class SyncCompaniesJob implements ShouldQueue
                     $company->phone = $item->tlf;
                     $company->address = $item->address;
                     $company->email = $item->eml;
+                    $company->tax_number = $item->cif;
                     $company->company_user_id = $this->user->company_user_id;
                     $company->owner = $this->user->id;
                     $company->api_id = $item->id;
