@@ -150,7 +150,7 @@ class ApiIntegrationController extends Controller
 
             return response()->json(['message' => 'Ok']);
             
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (\Exception $e) {
             $setting->status = 0;
             $setting->save();
             return "Error: " . $e;
@@ -224,7 +224,7 @@ class ApiIntegrationController extends Controller
             $api_response = json_decode($response->getBody());
 
             return $api_response;
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
+        } catch (\Exception $e) {
             return "Error: " . $e;
         }
     }
