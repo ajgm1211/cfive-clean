@@ -47,8 +47,8 @@ class InlandController extends Controller
         $company_user_id = \Auth::user('web')->company_user_id;
         $data = $request->validate([
       'provider' => 'required',
-      'direction' => 'required',
       'validity' => 'required',
+      'direction' => 'sometimes',
       'expire' => 'required',
       'status' => 'required',
       'type' => 'sometimes',
@@ -56,10 +56,23 @@ class InlandController extends Controller
 
   ]);
 
+
+ /*$x = array([
+    'provider' => $data['provider'],
+    'company_user_id' => $company_user_id,
+    'type' => $data['direction']['id'],
+    'validity' => $data['validity'],
+    'expire' => $data['expire'],
+    'status' => $data['status'],
+    'gp_container_id' => $data['gp_container']]);
+
+
+  return response()->json(['data' => $x ]);*/
+
         $inland = Inland::create([
           'provider' => $data['provider'],
           'company_user_id' => $company_user_id,
-          'type' => $data['direction'],
+          'type' => $data['direction']['id'],
           'validity' => $data['validity'],
           'expire' => $data['expire'],
           'status' => $data['status'],

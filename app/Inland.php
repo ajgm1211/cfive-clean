@@ -32,6 +32,11 @@ class Inland extends Model implements Auditable
     return $this->hasMany('App\InlandPort');
 
   }
+  public function inlandRange(){
+
+    return $this->hasMany('App\InlandRange');
+
+  }
   public function inlanddetails(){
 
     return $this->hasMany('App\InlandDetail');
