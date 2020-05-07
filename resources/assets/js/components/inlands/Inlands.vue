@@ -105,7 +105,7 @@
     import DateRangePicker from 'vue2-daterange-picker';
     import InlandRanges from './InlandRanges';
     import InlandKm from './InlandKm';
-
+    
     import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
     import 'vue-multiselect/dist/vue-multiselect.min.css';
     export default {
@@ -117,6 +117,7 @@
         },
         data() {
             return {
+                
                 isBusy:true, // Loader
                 data: null,
                 carrier: null,

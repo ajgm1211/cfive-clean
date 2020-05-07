@@ -92726,6 +92726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
+
             isBusy: true, // Loader
             data: null,
             carrier: null,
@@ -92981,78 +92982,108 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        equipment: Object,
-        containers: Object
-    },
-    components: {},
-    data: function data() {
-        return {
-            isBusy: true, // Loader
-            data: null,
-            fields: [],
-            start_fields: [{ key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', isHtml: true }, { key: 'lower', label: 'Lower Limit', sortable: false,
-                formatter: function formatter(value) {
-                    return value.name;
-                }
-            }, { key: 'upper', label: 'Upper Limit', sortable: false,
-                formatter: function formatter(value) {
-                    return value.name;
-                }
-            }],
-            end_fields: [{ key: 'currency', label: 'Currency', sortable: false,
-                formatter: function formatter(value) {
-                    return value.alphacode;
-                }
-            }, { key: 'actions', label: '', tdClass: 'actions-add-fcl' }]
+  props: {
+    equipment: Object,
+    containers: Object
+  },
+  components: {},
+  data: function data() {
+    return {
+      start_fields: [{
+        key: "checkbox",
+        label: "",
+        tdClass: "checkbox-add-fcl",
+        isHtml: true
+      }, {
+        key: "lower",
+        label: "lower",
+        sortable: false,
+        isHtml: true
 
-        };
-    },
-    created: function created() {
-        var _this = this;
+      }, {
+        key: "upper",
+        label: "Upper Limit",
+        sortable: false,
+        isHtml: true
 
-        var contract_id = this.$route.params.id;
-        api.getData({}, '/api/v2/contracts/' + contract_id + '/ocean_freight', function (err, data) {
-            _this.setData(err, data);
-        });
-    },
+      }, { key: "details", label: "20 DV", sortable: false, formatter: function formatter(value) {
+          return value.C20DV;
+        } }, { key: "40dv", label: "40 DV", sortable: false }, { key: "40hc", label: "40 HC", sortable: false }, { key: "40nor", label: "40 NOR", sortable: false }, { key: "45hc", label: "45 HC", sortable: false }],
 
-    methods: {
-        setData: function setData(err, _ref) {
-            var records = _ref.data,
-                links = _ref.links,
-                meta = _ref.meta;
+      end_fields: [{
+        key: "currency",
+        label: "Currency",
+        sortable: false,
+        formatter: "aaaaaa"
+      }, { key: "actions", label: "", tdClass: "actions-add-fcl" }],
+      isBusy: true, // Loader
+      data: null,
+      fields: []
+    };
+  },
+  created: function created() {
+    var _this = this;
 
-            this.isBusy = false;
-            if (err) {
-                this.error = err.toString();
-            } else {
-                this.data = records;
-            }
-        },
-        confirmAction: function confirmAction() {
-            console.log('hola');
-        }
+    var inland_id = this.$route.params.id;
+    api.getData({}, "/api/v2/inlands/range/" + inland_id, function (err, data) {
+      _this.setData(err, data);
+    });
+  },
+
+  methods: {
+    setData: function setData(err, _ref) {
+      var records = _ref.data,
+          links = _ref.links,
+          meta = _ref.meta;
+
+      this.isBusy = false;
+      if (err) {
+        this.error = err.toString();
+      } else {
+        this.data = records;
+      }
     },
-    watch: {
-        equipment: function equipment(val, oldVal) {
-            var data = this;
-            this.fields = [];
-            this.start_fields.forEach(function (item) {
-                return data.fields.push(item);
-            });
-            this.containers.forEach(function (item) {
-                if (item.gp_container_id === val.id) {
-                    data.fields.push({ key: item.code, label: item.name, sortable: false });
-                }
-            });
-            this.end_fields.forEach(function (item) {
-                return data.fields.push(item);
-            });
-        }
+    confirmAction: function confirmAction() {
+      console.log("hola");
     }
+  },
+  watch: {
+    equipment: function equipment(val, oldVal) {
+      var data = this;
+      this.fields = [];
+      this.start_fields.forEach(function (item) {
+        return data.fields.push(item);
+      });
+      this.containers.forEach(function (item) {
+        if (item.gp_container_id === val.id) {
+          data.fields.push({
+            key: item.code,
+            label: item.name,
+            sortable: false
+          });
+        }
+      });
+      this.end_fields.forEach(function (item) {
+        return data.fields.push(item);
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -93195,7 +93226,7 @@ var render = function() {
             }
           },
           {
-            key: "cell(status)",
+            key: "cell(upper)",
             fn: function(data) {
               return [
                 _c("span", { domProps: { innerHTML: _vm._s(data.value) } })
@@ -93203,7 +93234,7 @@ var render = function() {
             }
           },
           {
-            key: "cell(carriers)",
+            key: "cell(otro)",
             fn: function(data) {
               return [
                 _c("span", { domProps: { innerHTML: _vm._s(data.value) } })
@@ -95116,9 +95147,9 @@ var render = function() {
                           "b-form-group",
                           {
                             attrs: {
-                              id: "direction",
-                              label: "Direction",
-                              "label-for": "direction",
+                              id: "type",
+                              label: "type",
+                              "label-for": "type",
                               "invalid-feedback": "Direction is required.",
                               "valid-feedback": "Reference is done!"
                             }
@@ -95135,11 +95166,11 @@ var render = function() {
                                 placeholder: "Select Direction"
                               },
                               model: {
-                                value: _vm.direction,
+                                value: _vm.type,
                                 callback: function($$v) {
-                                  _vm.direction = $$v
+                                  _vm.type = $$v
                                 },
-                                expression: "direction"
+                                expression: "type"
                               }
                             })
                           ],
