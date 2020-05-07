@@ -23,7 +23,8 @@ class InlandResource extends JsonResource
       'expire' => $this->expire,
       'status' => $this->status,
       'gp_container' => $this->gpContainer,
-      'inlandRange'=> $this->inlandRange(),
+      
+
     ];
   }
 }

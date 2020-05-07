@@ -1033,7 +1033,10 @@ Route::group(['prefix' => 'api/v2/inlands', 'middleware' => ['auth']], function 
     Route::get('list', 'InlandController@list');
     Route::get('data', 'InlandController@data');
     Route::get('retrieve/{inland}', 'InlandController@retrieve');
+    Route::get('groupc/{inland}', 'InlandController@groupInlandContainer');
+      // INLAND RANGE 
     Route::get('range/{inland}', 'InlandRangeController@list');
+    Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');
 });
 Route::resource('api/v2/inlands', 'InlandController')->middleware('auth');
 

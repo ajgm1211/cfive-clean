@@ -8,6 +8,7 @@ use App\Carrier;
 use App\GroupContainer;
 use App\Direction;
 use App\Http\Resources\InlandResource;
+use App\Container;
 
 class InlandController extends Controller
 {
@@ -103,13 +104,14 @@ class InlandController extends Controller
      */
     public function retrieve(Inland $inland)
     {
-
-
-
         $direction = Direction::where('id',$inland->type)->first();
         $inland->type = $direction;        
         return new InlandResource($inland, true);
     }
 
-
+    public function groupInlandContainer(Inland $inland)
+    {        
+        $container = Container::where('gp_container_id',$inland->gp_container_id)->get();
+        return $container;
+    }
 }
