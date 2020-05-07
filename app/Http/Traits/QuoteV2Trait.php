@@ -807,6 +807,7 @@ trait QuoteV2Trait
         $total = 'total_';
         $amount = 'amount_';
         $markup = 'markup_';
+        $charge_freight = 0;
 
         foreach ($freight_charges_grouped as $freight) {
             foreach ($freight as $detail) {
@@ -848,6 +849,7 @@ trait QuoteV2Trait
                                     }
 
                                     if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                                        $charge_freight++;
                                         $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
                                     }
                                 }
@@ -856,6 +858,7 @@ trait QuoteV2Trait
                     }
                 }
             }
+            $freight->charge_freight = $charge_freight;
         }
 
         return $freight_charges_grouped;
