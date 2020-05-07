@@ -22,7 +22,8 @@ class InlandResource extends JsonResource
       'validity' => $this->validity,
       'expire' => $this->expire,
       'status' => $this->status,
-      'gp_container' => $this->gpContainer
+      'gp_container' => $this->gpContainer,
+      'inlandRange'=> $this->inlandRange(),
     ];
   }
 }

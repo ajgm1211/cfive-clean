@@ -202,14 +202,14 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
-                                              id="direction"
-                                              label="Direction"
-                                              label-for="direction"
+                                              id="type"
+                                              label="type"
+                                              label-for="type"
                                               invalid-feedback="Direction is required."
                                               valid-feedback="Reference is done!"
                                               >
                                     <multiselect
-                                                 v-model="direction"
+                                                 v-model="type"
                                                  :options="directions"
                                                  :searchable="false"
                                                  :close-on-select="true"
