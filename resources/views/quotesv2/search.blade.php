@@ -398,18 +398,19 @@
   {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 
   <div class="col-lg-12">
-
-
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
           <div>
             <div class="row">
-              <div class="col-lg-2">
+              <div class="col-lg-1">
                 <label>Quote Type</label>
                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
-
+              <div class="col-lg-1">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              </div>
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
                 {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
@@ -417,7 +418,6 @@
 
               <div class="col-lg-2">
                 <label>Company</label>
-
                 <div class="m-input-icon m-input-icon--right">
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -444,14 +444,15 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-              <div class="col-lg-2">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
+              <div class="col-lg-2" id="delivery_type_label">
+                <label>Delivery type</label>
+                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
               </div>
+             
 
             </div><br>
             <div class="row">
-              <div class="col-lg-2" >
+              <div class="col-lg-4" >
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
@@ -464,16 +465,19 @@
                 </div>
 
               </div>
-              <div class="col-lg-2">
+              <div class="col-lg-4" id="destination_port">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
                   {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
-
                 </div>
                 <div id="destination_airport_label" style="display:none;">
                   <label>Destination airport</label>
                   <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
                 </div>
+              </div>
+              <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
+                <label>Destination address</label>
+                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
               <div class="col-lg-2">
                 <label>Date</label>
@@ -486,40 +490,42 @@
                       <i class="la la-calendar-check-o"></i>
                     </span>
                   </div>
-                </div><br>
+                </div>
+                
+                <br>
 
 
               </div>
-              <div class="col-lg-2" id="delivery_type_label">
-                <label>Delivery type</label>
-                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+
+              <div class="col-lg-2" id="carriers">
+                <label>Carries</label>
+                {!! Form::text('date', @$form['date'], ['id' => 'm_daterangepicker_1' ,'placeholder' => 'Select date','class' => 'form-control m-input date' ,'required' => 'true','autocomplete'=>'off']) !!}
+                  {!! Form::text('date_hidden', null, ['id' => 'date_hidden','hidden'  => 'true']) !!}
               </div>
-              <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
+  
+             <!-- <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
                 <label>Delivery type</label>
                 {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
                 {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>
-              <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
-                <label>Destination address</label>
-                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
-              </div>
+              </div>-->
+              
 
             </div>
             <div class="row">
-              <div class="col-lg-2 for-check">   
+              <div class="col-lg-4 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
               </div>
 
-              <div class="col-lg-2 for-check">
+              <div class="col-lg-4 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
 
-              <div class="col-lg-2 for-check">
+              <!-- <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
@@ -532,14 +538,9 @@
               <div class="col-lg-2 for-check" id="maerskdiv">
                 {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
                 <label for="mode5" class="label-check">Include MAERSK Spot</label>
-              </div>
+              </div>-->
 
             </div><br>
-            <div class="row">
-
-
-
-            </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -1427,7 +1428,6 @@
         //console.log(clase);
       }
     }
-
   });
 
   /*** GOOGLE MAPS API ***/
@@ -1485,8 +1485,15 @@
 
   }
 
-
-
+    $(document).on('change', function(){
+        if($('#destination_address_label').hasClass('hide')){
+            if($('#destination_port').hasClass('col-lg-2')){
+            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+            }
+        }else{
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+        }
+    });
 </script>
 
 @stop
