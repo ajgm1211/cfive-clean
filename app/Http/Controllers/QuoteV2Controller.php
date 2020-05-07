@@ -2441,7 +2441,7 @@ class QuoteV2Controller extends Controller
 
           $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/cma/{orig}/{dest}/{date}';
           $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
-          $response = $client->request('GET', $url);
+          //$response = $client->request('GET', $url);
 
           //$response = $client->request('GET','http://cfive-api.eu-central-1.elasticbeanstalk.com/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
           //  $response = $client->request('GET','http://cmacgm/rates/HARIndex/'.$orig.'/'.$dest.'/'.trim($dateUntil));
@@ -2459,7 +2459,7 @@ class QuoteV2Controller extends Controller
           $url = 'http://maersk-info.eu-central-1.elasticbeanstalk.com/rates/HARIndex/maersk/{orig}/{dest}/{date}';
           $url = str_replace(['{orig}', '{dest}', '{date}'], [$orig, $dest, trim($dateUntil)], $url);
           try {
-            $response = $client->request('GET', $url);
+            //$response = $client->request('GET', $url);
           } catch (\Exception $e) {
           }  
         }

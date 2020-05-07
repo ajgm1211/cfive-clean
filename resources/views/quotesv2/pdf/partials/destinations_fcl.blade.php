@@ -213,7 +213,7 @@
                                                     @endif
                                                 @endforeach
                                             @endforeach
-                                            <td><b>{{$currency_cfg->alphacode}}</b></td>                    
+                                            <td><b>{{$currency_cfg->alphacode}}</b></td>                  
                                         </tr>
                                     </tbody>
                                 </table>
@@ -224,7 +224,8 @@
                 
                 <!-- Destinations detailed -->
                 @if($quote->pdf_option->grouped_destination_charges==0 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
-                        @foreach($destination_charges_detailed as $carrier => $value)
+                    @foreach($destination_charges_detailed as $carrier => $value)
+                        @if($value->charge_destination>=1 || $value->inland_destination>=1)
                             @foreach($value as $destination => $destiny)
                                 <div>
                                     <p class="title">{{__('pdf.destination_charges')}} - {{$destination}}</p>
@@ -365,9 +366,10 @@
                                             @endif
                                         @endforeach
                                     @endif                                        
-                            </tbody>
-                        </table>
-                        <br>
-                        @endforeach
+                                </tbody>
+                            </table>
+                            <br>
+                            @endforeach
+                        @endif
                     @endforeach
                 @endif
