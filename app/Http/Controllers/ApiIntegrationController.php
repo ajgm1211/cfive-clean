@@ -10,6 +10,7 @@ use GuzzleHttp\Message\Request as ClienteR;
 use GuzzleHttp\Message\Response;
 use App\Company;
 use App\Contact;
+use App\Jobs\SyncCompaniesJob;
 
 class ApiIntegrationController extends Controller
 {
@@ -20,9 +21,9 @@ class ApiIntegrationController extends Controller
      */
     public function index()
     {
-        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
+        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
 
-        return view ('api.index',compact('api'));
+        return view('api.index', compact('api'));
     }
 
     /**
@@ -32,16 +33,16 @@ class ApiIntegrationController extends Controller
      */
     public function enable(Request $request)
     {
-        $api = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        $api = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
 
-        if(!empty($api)){
+        if (!empty($api)) {
             $api->enable = $request->enable;
             $api->update();
-        }else{
+        } else {
             $api_int = new ApiIntegrationSetting();
             $api_int->company_user_id = $request->company_user_id;
             $api_int->enable = $request->enable;
-            $api_int->save();   
+            $api_int->save();
         }
 
         return response()->json(['message' => 'Ok']);
@@ -65,11 +66,13 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        $api_int = ApiIntegrationSetting::where('company_user_id',$request->company_user_id)->first();
+        $api_int = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
         $api_int->api_key = $request->api_key;
+        $api_int->key_name = $request->key_name;
+        $api_int->url = $request->url;
         $api_int->update();
 
-        return response()->json(['message' => 'Ok']);         
+        return response()->json(['message' => 'Ok']);
     }
 
     /**
@@ -117,54 +120,64 @@ class ApiIntegrationController extends Controller
         //
     }
 
-    public function getCompanies(){
-
-        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
-
-        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_m?api_key=".$api->api_key;
+    public function getCompanies()
+    {
+        $user = \Auth::user();
 
         $client = new Client([
-            'headers' => ['Content-Type'=>'application/json','Accept'=>'*/*'],
+            'verify' => false,
+            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
         ]);
+
+        $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+        $setting->status = 1;
+        $setting->save();
+
+        $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
 
         try {
 
             $response = $client->get($endpoint, [
                 'headers' => [
-                    'Content-Type'=>'application/json',
-                    'X-Requested-With'=>'XMLHttpRequest',
+                    'Content-Type' => 'application/json',
+                    'X-Requested-With' => 'XMLHttpRequest',
                 ]
             ]);
 
-            $api_response = json_decode( $response->getBody() );
+            $api_response = json_decode($response->getBody());
 
-            $this->syncCompanies($api_response);
+            SyncCompaniesJob::dispatch($api_response, $user);
 
             return response()->json(['message' => 'Ok']);
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Error: ". $e;
+            
+        } catch (\Exception $e) {
+            $setting->status = 0;
+            $setting->save();
+            return "Error: " . $e;
         }
     }
 
-    public function syncCompanies($response){
-        $i=0;
-        foreach($response->ent_m as $item){
-            $exist_com = Company::where('business_name',$item->nom_com)->get();
+    public function syncCompanies($response)
+    {
+        $i = 0;
+        foreach ($response->ent_m as $item) {
+            if ($item->es_emp) {
 
-            if($exist_com->count()==0){
-                $company = new Company();
-                $company->business_name = $item->nom_com;
-                $company->phone = $item->tlf;
-                $company->address = $item->address;
-                $company->email = $item->eml;
-                $company->company_user_id = \Auth::user()->company_user_id;
-                $company->owner = \Auth::user()->id;
-                $company->api_id = $item->id;
-                $company->api_status = 'created';
-                $company->save();
+                $exist_com = Company::where('business_name', $item->nom_com)->get();
 
-                $contacts = $this->getContacts($item->id);
+                if ($exist_com->count() == 0) {
+                    $company = new Company();
+                    $company->business_name = $item->nom_com;
+                    $company->phone = $item->tlf;
+                    $company->address = $item->address;
+                    $company->email = $item->eml;
+                    $company->company_user_id = \Auth::user()->company_user_id;
+                    $company->owner = \Auth::user()->id;
+                    $company->api_id = $item->id;
+                    $company->api_status = 'created';
+                    $company->save();
+
+                    /*$contacts = $this->getContacts($item->id);
                 
                 foreach($contacts->ent_rel_m as $v){
                     $exist_cont = Contact::where('api_id',$item->ent_rel)->count();
@@ -179,6 +192,7 @@ class ApiIntegrationController extends Controller
                         $contact->api_id = $v->ent_rel;
                         $contact->save();
                     }
+                }*/
                 }
             }
 
@@ -188,30 +202,30 @@ class ApiIntegrationController extends Controller
         return 'Done';
     }
 
-    public function getContacts($company_id){
-        $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
+    public function getContacts($company_id)
+    {
+        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
 
-        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D=".$company_id."&api_key=".$api->api_key;
+        $endpoint = "https://demoapi.vforwarding.com/rest/vERP_2_dat_dat/v2/ent_rel_m?filter%5Bent_rel%5D=" . $company_id . "&api_key=" . $api->api_key;
 
         $client = new Client([
-            'headers' => ['Content-Type'=>'application/json','Accept'=>'*/*'],
+            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
         ]);
 
         try {
 
             $response = $client->get($endpoint, [
                 'headers' => [
-                    'Content-Type'=>'application/json',
-                    'X-Requested-With'=>'XMLHttpRequest',
+                    'Content-Type' => 'application/json',
+                    'X-Requested-With' => 'XMLHttpRequest',
                 ]
             ]);
 
-            $api_response = json_decode( $response->getBody() );
+            $api_response = json_decode($response->getBody());
 
             return $api_response;
-
-        } catch (GuzzleHttp\Exception\BadResponseException $e) {
-            return "Error: ". $e;
+        } catch (\Exception $e) {
+            return "Error: " . $e;
         }
     }
 }

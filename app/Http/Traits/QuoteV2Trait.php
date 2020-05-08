@@ -1839,9 +1839,6 @@ trait QuoteV2Trait {
 
     public function generatepdf($id,$company_user,$currency_cfg,$user_id){
 
-
-
-
         $quote = QuoteV2::findOrFail($id);
         $rates = AutomaticRate::where('quote_id',$quote->id)->with('charge')->get();
 

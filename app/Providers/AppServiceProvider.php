@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\ApiIntegrationSetting;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Routing\UrlGenerator;
@@ -9,6 +10,9 @@ use App\Observers\ContractObserver;
 use App\Contract;
 use App\Observers\QuoteObserver;
 use App\Quote;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 
 class AppServiceProvider extends ServiceProvider
 {

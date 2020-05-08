@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left" role="tablist" style="border-bottom: none;">
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             <li class="nav-item m-tabs__item size-14px" >
-                <a  href="{{url('/v2/quotes/search')}}" class="btn-backto"><span class="fa fa-arrow-left"></span> Back to search</a>
+                <a  href="javascript:history.back()" class="btn-backto"><span class="fa fa-arrow-left"></span> Back to search</a>
             </li>                    
         </ul>                
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
@@ -354,12 +354,4 @@
     </div>
 </div>
 @endif
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn btn-primary-v2 btn-edit pull-right" data-toggle="modal" data-target="#createRateModal">
-            Add rate &nbsp;&nbsp;<i class="fa fa-plus"></i>
-        </button>
-    </div>
-</div>
-<br>
 
