@@ -44,6 +44,21 @@ class HelperAll {
         return $result;
     }
 
+    public static function validatorErrorWitdColor($data){
+        $result = null;
+        $Arr    = null;
+        $Arr    = explode("_",$data);
+        $resul  = [];
+        if(count($Arr) <= 1){
+            $result['value'] = $Arr[0];
+            $result['color'] = 'green';
+        } else{
+            $result['value'] = $Arr[0].' (error)';
+            $result['color'] = 'red';
+        }
+        return $result;
+    }
+
     public static function LoadHearderDataTable($equiment_id,$type){
         if(strnatcasecmp($type,'rates')==0){
             $equiments      = GroupContainer::with('containers')->find($equiment_id);
@@ -72,5 +87,36 @@ class HelperAll {
 
         }
         return $equiment;   
+    }
+
+    public static function LoadHearderContaniers($equiment_id,$type){
+        if(strnatcasecmp($type,'rates')==0){
+            $equiments      = GroupContainer::with('containers')->find($equiment_id);
+            //dd($equiment->containers->pluck('code'));
+            $datajson   = json_decode($equiments->data,true);
+            $equiment   = [];
+            // Head Datatable <th>
+            $equiment   = ['id' => $equiment_id,'color' => $datajson['color'],'name'=>$equiments->name,'thead' => []];
+            foreach($equiments->containers as $containers){
+                array_push($equiment['thead'],$containers->code);            
+            }
+        }
+        return $equiment;   
+    }
+
+    public static function statusColorRq($status){
+        $color = null;
+        if(strnatcasecmp($status,'Pending')==0){
+            $color = '#f81538';
+        } else if(strnatcasecmp($status,'Processing')==0){
+            $color = '#5527f0';
+        } else if(strnatcasecmp($status,'Review')==0){
+            $color = '#e07000';
+        } else if(strnatcasecmp($status,'Imp Finished')==0){
+            $color = '#431b02';
+        } else {
+            $color = '#04950f';
+        }
+        return $color;
     }
 }

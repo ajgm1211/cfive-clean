@@ -464,7 +464,7 @@ class ContractsController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.content', 'Your contract was updated');
-        return redirect()->route('RequestImportation.index');
+        return redirect()->route('RequestFcl.index');
     }
 
     public function show($id)
@@ -1488,10 +1488,15 @@ class ContractsController extends Controller
         $carrier        = Carrier::pluck('name','id');
         $directions     = Direction::pluck('name','id');
         $contract       = Contract::find($id);
+        if(!empty($contract->gp_container_id)){
+            $equiment_id = $contract->gp_container_id;
+        } else {
+            $equiment_id = 1;
+        }
         $contract->load('carriers');
         $companyUsers   = CompanyUser::pluck('name','id');
         //dd($companyUser);
-        return view('contracts.Body-Modals.DuplicatedscontractsOtherCompany',compact('contract','carrier','directions','companyUsers','request_dp_id'));
+        return view('contracts.Body-Modals.DuplicatedscontractsOtherCompany',compact('contract','carrier','directions','companyUsers','request_dp_id','equiment_id'));
     }
 
     public function duplicatedContractStore(Request $request, $id){
@@ -1534,6 +1539,7 @@ class ContractsController extends Controller
         }
         $requestFc->update();
         $data           = ['id'=> $id,'data' => $requestArray];
+        //dd($data);
         if(env('APP_VIEW') == 'operaciones') {
             GeneralJob::dispatch('duplicated_fcl',$data)->onQueue('operaciones');
         } else {

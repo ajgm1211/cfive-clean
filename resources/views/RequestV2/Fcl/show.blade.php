@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="col-xl-12 order-1 order-xl-2 m--align-right row">
                                         <div class="col-md-3">
-                                            <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="{{$date}}">
+                                            <input placeholder="Contract Validity" class="form-control m-input requestDate" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="{{$date}}">
                                         </div>
                                         <div class="col-md-2">
 
@@ -131,6 +131,16 @@
                         <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                             <div class="row align-items-center">
                                 <div class="col-xl-12 order-2 order-xl-1 conten_load">
+                                    <div class="col-xl-12 order-1 order-xl-2 m--align-right row">
+                                        <div class="col-md-3">
+                                            <input placeholder="Account Date" class="form-control m-input accountDate" readonly="" id="m_daterangepicker_1" required="required" name="betweenAccount" type="text" value="{{$date}}">
+                                        </div>
+                                        <div class="col-md-2">
+
+                                            <!--<button type="text" id="btnFiterSubmitSearch"  class="btn btn-primary form-control">Search</button>-->
+                                            <a href="#" id="btnFiterSubmitSearchAcc"  class="btn btn-primary form-control">Search</a>
+                                        </div>
+                                    </div>
                                     <table class="table tableData"  id="myatest" width="100%">
                                         <thead width="100%">
                                             <tr>
@@ -189,7 +199,7 @@
                             <h4 class="">Between:</h4>
                         </div>
                         <div class="col-md-5">
-                            <input placeholder="Contract Validity" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="Please enter validation date">
+                            <input placeholder="Contract Validity" class="form-control m-input exportRqDate" readonly="" id="m_daterangepicker_1" required="required" name="between" type="text" value="Please enter validation date">
                         </div>
                         <div class="col-md-5">
                             <a href="#" onclick="exportjs()" class="btn btn-info">
@@ -308,11 +318,23 @@
     $('#btnFiterSubmitSearch').click(function(){
         $('#requesttable').DataTable().draw(true);
     });
-
-    $(function() {
+    
+    $('#btnFiterSubmitSearchAcc').click(function(){
+        $('#myatest').DataTable().draw(true);
+    });
+    
+    var requesttableV = '';
+    $(function() {    
         $('#myatest').DataTable({
             processing: true,
-            ajax:'{!! route("index.Account.import.fcl") !!}',
+            ajax: {
+                url:'{!! route("index.Account.import.fcl") !!}',
+                data: function (d) {
+                    var date = ($('.accountDate').val()).split(" / ");
+                    d.dateS = $.trim(date[0]);
+                    d.dateE = $.trim(date[1]);
+                }
+            },
             columns: [
                 { data: 'id', name: 'id' },
                 { data: 'request_id', name: 'request_id' },
@@ -334,16 +356,14 @@
             "paging": true
             //"scrollX": true,
         });
-    });
 
-    $(function() {
-        $('#requesttable').DataTable({
+        requesttableV = $('#requesttable').DataTable({
             processing: true,
-            //serverSide: true,
+            serverSide: true,
             ajax: {
                 url:'{!! route("RequestFcl.create") !!}',
                 data: function (d) {
-                    var date = ($('#m_daterangepicker_1').val()).split(" / ");
+                    var date = ($('.requestDate').val()).split(" / ");
                     d.dateS = $.trim(date[0]);
                     d.dateE = $.trim(date[1]);
                 }
@@ -470,6 +490,7 @@
                                 a--;
                                 $('#strfail').text(a);
                                 $('#strfailinput').attr('value',a);
+                                $('#requesttable').DataTable().ajax.reload();
                             }else if(data.success == 2){
                                 swal("Error!", "An internal error occurred!", "error");
                             }
@@ -492,7 +513,7 @@
 
     function exportjs(){
         var url = '{!! route("export.request.fcl.v2") !!}';
-        var between = $('#m_daterangepicker_1').val();
+        var between = $('.exportRqDate').val();
         //alert(date);
         $.ajaxSetup({
             headers: {
