@@ -77,7 +77,7 @@ class SurchargesController extends Controller
 
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
-        $request->session()->flash('message.content', 'You upgrade has been success ');
+        $request->session()->flash('message.content', 'Record updated successfully');
         return redirect()->action('SurchargesController@index');
     }
 
@@ -100,7 +100,7 @@ class SurchargesController extends Controller
             $user = self::destroy($id);
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
-            $request->session()->flash('message.content', 'You successfully delete ');
+            $request->session()->flash('message.content', 'Record deleted successfully');
             return redirect()->action('SurchargesController@index');
 
         } catch (\Illuminate\Database\QueryException $e) {
