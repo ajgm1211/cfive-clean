@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     Contract::observe(ContractObserver::class);
     Quote::observe(QuoteObserver::class);
 
-    //$url->forceScheme('https');
+    $url->forceScheme('https');
 
   }
 
