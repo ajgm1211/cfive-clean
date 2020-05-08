@@ -239,11 +239,6 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
-                                        @if($quote->pdf_option->show_schedules==1)
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        @endif
                                         <td><b>{{$currency_cfg->alphacode}}</b></td>
                                     </tr>
                                 </tbody>
@@ -335,6 +330,7 @@
                                     @endforeach
                                 @endforeach
                             </tbody>
-                        </table>                
+                        </table>
+                        <br>             
                     @endif
                 @endif
