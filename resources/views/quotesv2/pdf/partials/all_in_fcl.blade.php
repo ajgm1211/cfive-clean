@@ -14,9 +14,9 @@
     @break
 @endswitch
 @if($quote->pdf_option->show_type=='total in')
-<table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
+    <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
 @else
-<table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
+    <table border="0" cellspacing="1" cellpadding="1" {{$quote->pdf_option->grouped_total_currency==1 ? '':'hidden'}}>
 @endif
     <thead class="title-quote text-left header-table">
         <tr >
@@ -39,13 +39,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php 
-
-                foreach ($containers as $c){ 
-                    ${'sum_total_origin'.$c->code} = 0;
-                    ${'sum_total_destination'.$c->code} = 0;
-                    ${'sum_'.$c->code} = 'sum_'.$c->code;
-                }
+        <?php
+            foreach ($containers as $c){ 
+                ${'sum_total_origin'.$c->code} = 0;
+                ${'sum_total_destination'.$c->code} = 0;
+                ${'sum_'.$c->code} = 'sum_'.$c->code;
+            }
         ?>
         @foreach($rates as $rate)
             <?php 
