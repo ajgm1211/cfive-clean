@@ -1,91 +1,93 @@
                 <!-- ALL in destination table -->
                 @if($quote->pdf_option->grouped_destination_charges==1 && ($quote->pdf_option->show_type=='detailed' || $quote->pdf_option->show_type=='charges'))
                     @forelse($destination_charges_grouped as $origin=>$detail)
-                        <div>
-                            <p class="title">{{__('pdf.destination_charges')}} - {{$origin}}</p>
-                            <br>
-                        </div>
-                        <table border="0" cellspacing="1" cellpadding="1" >
-                            <thead class="title-quote text-left header-table">
-                                <tr >
-                                    <th class="unit" colspan="2"><b>{{__('pdf.charge')}}</b></th>
-                                    <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
-                                    @foreach ($equipmentHides as $key=>$hide)
-                                        @foreach ($containers as $c)
-                                            @if($c->code == $key)
-                                                <th class="unit" {{$hide}}><b>{{$key}}</b></th>
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                    <th class="unit"><b>{{__('pdf.currency')}}</b></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    foreach ($containers as $c) {
-                                        ${'sum_sale'.$c->code} = 0;
-                                        ${'total_'.$c->code} = 'total_'.$c->code;
-                                    }
-                                @endphp
-                                @if($sale_terms_destination->count()>0)
-                                    @foreach($sale_terms_destination as $v)
-                                        @foreach($v as $value)
-                                            @foreach($value->charge as $item)
-                                                @foreach ($containers as $c)
-                                                    @php
-                                                        ${'sum_sale'.$c->code} += $item->${'total_'.$c->code};
-                                                    @endphp
-                                                @endforeach
-                                            @endforeach
-                                        @endforeach
-                                    @endforeach
-                                @endif
-                                @foreach($detail as $item)
-                                    <?php
-                                        foreach ($containers as $c) {
-                                            ${'destination_'.$c->code} = 0;
-                                            ${'destination_inland_'.$c->code} = 0;
-                                            ${'sum_total_'.$c->code} = 'sum_total_'.$c->code;
-                                            ${'total_inland'.$c->code} = 0;
-                                        }
-                                    ?>  
-                                    @foreach($item as $rate)
-                                        @foreach($rate->charge as $value)
-                                            <?php
-                                                foreach ($containers as $c) {
-                                                    ${'destination_'.$c->code}+=$value->${'sum_total_'.$c->code};
-                                                }                      
-                                            ?>
-                                        @endforeach
-                                        @foreach($rate->inland as $value)
-                                            @if($value->type=='Destination')
-                                                <?php
-                                                    foreach ($containers as $c) {
-                                                        ${'destination_inland_'.$c->code}+=$value->${'sum_total_'.$c->code};
-                                                    }                              
-                                                ?>
-                                            @endif
-                                        @endforeach
-                                    @endforeach
-                                    <tr class="text-left color-table">
-                                        <td colspan="2">{{__('pdf.total_local')}}</td>
-                                        <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
+                        @if($detail->charge_destination>=1 || $detail->inland_destination>=1)
+                            <div>
+                                <p class="title">{{__('pdf.destination_charges')}} - {{$origin}}</p>
+                                <br>
+                            </div>
+                            <table border="0" cellspacing="1" cellpadding="1" >
+                                <thead class="title-quote text-left header-table">
+                                    <tr >
+                                        <th class="unit" colspan="2"><b>{{__('pdf.charge')}}</b></th>
+                                        <th class="unit" {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}><b>{{__('pdf.carrier')}}</b></th>
                                         @foreach ($equipmentHides as $key=>$hide)
                                             @foreach ($containers as $c)
                                                 @if($c->code == $key)
-                                                    <td {{ $hide }}>{{ @${'destination_'.$c->code}+@${'destination_inland_'.$c->code}+@${'sum_sale'.$c->code} }}</td>
+                                                    <th class="unit" {{$hide}}><b>{{$key}}</b></th>
                                                 @endif
                                             @endforeach
                                         @endforeach
-                                        @if($quote->pdf_option->grouped_destination_charges==1)
-                                            <td >{{$quote->pdf_option->destination_charges_currency}}</td>
-                                        @else
-                                            <td >{{$currency_cfg->alphacode}}</td>
-                                        @endif
+                                        <th class="unit"><b>{{__('pdf.currency')}}</b></th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        foreach ($containers as $c) {
+                                            ${'sum_sale'.$c->code} = 0;
+                                            ${'total_'.$c->code} = 'total_'.$c->code;
+                                        }
+                                    @endphp
+                                    @if($sale_terms_destination->count()>0)
+                                        @foreach($sale_terms_destination as $v)
+                                            @foreach($v as $value)
+                                                @foreach($value->charge as $item)
+                                                    @foreach ($containers as $c)
+                                                        @php
+                                                            ${'sum_sale'.$c->code} += $item->${'total_'.$c->code};
+                                                        @endphp
+                                                    @endforeach
+                                                @endforeach
+                                            @endforeach
+                                        @endforeach
+                                    @endif
+                                    @foreach($detail as $item)
+                                        <?php
+                                            foreach ($containers as $c) {
+                                                ${'destination_'.$c->code} = 0;
+                                                ${'destination_inland_'.$c->code} = 0;
+                                                ${'sum_total_'.$c->code} = 'sum_total_'.$c->code;
+                                                ${'total_inland'.$c->code} = 0;
+                                            }
+                                        ?>  
+                                        @foreach($item as $rate)
+                                            @foreach($rate->charge as $value)
+                                                <?php
+                                                    foreach ($containers as $c) {
+                                                        ${'destination_'.$c->code}+=$value->${'sum_total_'.$c->code};
+                                                    }                      
+                                                ?>
+                                            @endforeach
+                                            @foreach($rate->inland as $value)
+                                                @if($value->type=='Destination')
+                                                    <?php
+                                                        foreach ($containers as $c) {
+                                                            ${'destination_inland_'.$c->code}+=$value->${'sum_total_'.$c->code};
+                                                        }                              
+                                                    ?>
+                                                @endif
+                                            @endforeach
+                                        @endforeach
+                                        <tr class="text-left color-table">
+                                            <td colspan="2">{{__('pdf.total_local')}}</td>
+                                            <td {{$quote->pdf_option->show_carrier==1 ? '':'hidden'}}>{{@$rate->carrier->name}}</td>
+                                            @foreach ($equipmentHides as $key=>$hide)
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+                                                        <td {{ $hide }}>{{ @${'destination_'.$c->code}+@${'destination_inland_'.$c->code}+@${'sum_sale'.$c->code} }}</td>
+                                                    @endif
+                                                @endforeach
+                                            @endforeach
+                                            @if($quote->pdf_option->grouped_destination_charges==1)
+                                                <td >{{$quote->pdf_option->destination_charges_currency}}</td>
+                                            @else
+                                                <td >{{$currency_cfg->alphacode}}</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     @empty
                         @if($sale_terms_destination->count()>0)
                             @foreach($sale_terms_destination as $destination=>$v)
