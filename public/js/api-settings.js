@@ -9,7 +9,7 @@ $(document).on('change', '#enable_api', function() {
     }
     $.ajax({
         type: 'GET',
-        url: '/api/enable/',
+        url: '/api/enable',
         data: {
             'enable': value,
             'company_user_id': $('#company_user_id').val(),
