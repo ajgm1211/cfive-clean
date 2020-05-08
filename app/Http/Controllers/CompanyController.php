@@ -35,6 +35,7 @@ class CompanyController extends Controller
         $api = ApiIntegrationSetting::where('company_user_id',\Auth::user()->company_user_id)->first();
         $user_id = \Auth::user()->id;
         $users = User::where('company_user_id',\Auth::user()->company_user_id)->where('id','!=',\Auth::user()->id)->where('type','!=','company')->pluck('name','id');
+
         if(\Auth::user()->hasRole('subuser')){
             $companies = Company::where('company_user_id','=',$company_user_id)->whereHas('groupUserCompanies', function ($query) use($user_id) {
                 $query->where('user_id',$user_id);

@@ -64,5 +64,6 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('airlines', 'ApiController@airlines');
         //surcharges
         Route::get('surcharges', 'ApiController@surcharges');
+        Route::post('surcharge', 'SurchargesController@store');
     });
 });

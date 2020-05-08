@@ -1,7 +1,20 @@
-    <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
+        @switch($quote->pdf_option->language)
+            @case('English')
+                {{ App::setLocale('en') }}
+                @break
+            @case('Spanish')
+                {{ App::setLocale('es') }}
+                @break
+            @case('Portuguese')
+                {{ App::setLocale('pt') }}
+                @break
+            @default
+                {{ App::setLocale('en') }}
+        @endswitch
+        <header class="clearfix" style="margin-top:-25px; margin-bottom:-10px">
             <div id="logo">
                 @if($user->companyUser->logo!='')
-                <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
+                    <img src="{{Storage::disk('s3_upload')->url($user->companyUser->logo)}}" class="img img-fluid" style="width: 150px; height: auto; margin-bottom:0">
                 @endif
             </div>
             <div id="company">
