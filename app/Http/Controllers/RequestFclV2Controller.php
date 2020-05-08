@@ -131,18 +131,9 @@ class RequestFclV2Controller extends Controller
                 }
             })
             ->addColumn('status', function ($Ncontracts) {
-                $color='';
-                if(strnatcasecmp($Ncontracts->status,'Pending')==0){
-                    //$color = 'color:#031B4E';
-                    $color = 'color:#f81538';
-                } else if(strnatcasecmp($Ncontracts->status,'Processing')==0){
-                    $color = 'color:#5527f0';
-                } else if(strnatcasecmp($Ncontracts->status,'Review')==0){
-                    $color = 'color:#e07000';
-                } else {
-                    $color = 'color:#04950f';
-                }
 
+                $color = HelperAll::statusColorRq($Ncontracts->status);
+                $color = 'color:'.$color;
                 return '<a href="#" onclick="showModal('.$Ncontracts->id.')"style="'.$color.'" id="statusHrf'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'">'.$Ncontracts->status.'</a>
                 &nbsp;
                 <samp class="la la-pencil-square-o" id="statusSamp'.$Ncontracts->id.'" class="statusHrf'.$Ncontracts->id.'" for="" style="'.$color.'"></samp>';
@@ -183,14 +174,16 @@ class RequestFclV2Controller extends Controller
                     } else {
                         $hiddenPrCt = '';
                     }
-                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" id="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+                    $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
+
+                    $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;';
 
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
-                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#04950f"></samp>
-                    </a>
+                    <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
+                    </a>&nbsp;&nbsp;
                     ';
 
-                    $buttons = $butPrCt . $buttonDp . $buttoEdit . $buttons;
+                    $buttons = $butPrCt . $butFailsR .$buttonDp . $buttoEdit . $buttons;
                 } else{
 
                     if(strnatcasecmp($Ncontracts->status,'Pending')==0){
@@ -231,7 +224,6 @@ class RequestFclV2Controller extends Controller
         $now    			= $time->format('dmY_His');
         $now2   			= $time->format('Y-m-d H:i:s');
         $file 				= $request->input('document');
-
         if(!empty($file)){
             $gpContainer = GroupContainer::find($groupContainer);			
             $ArrayData['group_containers'] = [
@@ -283,8 +275,8 @@ class RequestFclV2Controller extends Controller
                 ]);
             }
 
-            $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','contracts3');
-            $ext_at_sl  = strtolower($file->getClientOriginalExtension());
+            $Ncontract->addMedia(storage_path('tmp/request/' . $file))->toMediaCollection('document','FclRequest-New');
+            $ext_at_sl  = strtolower(pathinfo($file,PATHINFO_EXTENSION));
 
             if(strnatcasecmp($ext_at_sl,'xls')  == 0 ||
                strnatcasecmp($ext_at_sl,'xlsx') == 0 ||
@@ -338,15 +330,20 @@ class RequestFclV2Controller extends Controller
         $status = $requests->status;
         $status_arr = [];
         if($status == 'Pending'){
-            $status_arr['Pending'] = 'Pending';
-            $status_arr['Processing'] = 'Processing';
+            $status_arr['Pending']      = 'Pending';
+            $status_arr['Processing']   = 'Processing';
         } elseif($status == 'Processing'){
-            $status_arr['Processing'] = 'Processing';
-            $status_arr['Review'] = 'Review';
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Review']       = 'Review';
+        } elseif($status == 'Imp Finished'){
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Imp Finished'] = 'Imp Finished';   
+            $status_arr['Review']       = 'Review';
         } elseif($status == 'Review' || $status == 'Done'){
-            $status_arr['Processing'] = 'Processing';
-            $status_arr['Review'] = 'Review';
-            $status_arr['Done'] = 'Done';
+            $status_arr['Processing']   = 'Processing';
+            $status_arr['Imp Finished'] = 'Imp Finished';
+            $status_arr['Review']       = 'Review';
+            $status_arr['Done']         = 'Done';
         }
 
         return view('RequestV2.Fcl.Body-Modals.edit',compact('requests','status_arr'));
@@ -393,7 +390,9 @@ class RequestFclV2Controller extends Controller
                     }
                 }
             } elseif($Ncontract->status == 'Done'){
-
+                $contractObj = Contract::find($Ncontract->contract_id);
+                $contractObj->status = 'publish';
+                $contractObj->update();
                 if($Ncontract->time_manager == null){
                     $fechaEnd = Carbon::parse($now2);
                     $fechaStar = Carbon::parse($Ncontract->created);
@@ -422,16 +421,8 @@ class RequestFclV2Controller extends Controller
                 }
             }
             $Ncontract->save();
+            $color = HelperAll::statusColorRq($Ncontract->status);
 
-            if(strnatcasecmp($Ncontract->status,'Pending')==0){
-                $color = '#f81538';
-            } else if(strnatcasecmp($Ncontract->status,'Processing')==0){
-                $color = '#5527f0';
-            } else if(strnatcasecmp($Ncontract->status,'Review')==0){
-                $color = '#e07000';
-            } else if(strnatcasecmp($Ncontract->status,'Done')==0){
-                $color = '#04950f';
-            }
             return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color,'request' => $Ncontract]);
         } catch (\Exception $e){
             return response()->json($data=['data'=>2]);;
@@ -445,13 +436,14 @@ class RequestFclV2Controller extends Controller
         if(strnatcasecmp($selector,'media')==0){
             $Ncontract	= NewContractRequest::find($id);
             $Ncontract->load('companyuser');
+            $data       = json_decode($Ncontract->data,true);
             $time       = new \DateTime();
             $now        = $time->format('d-m-y');
             $mediaItem  = $Ncontract->getFirstMedia('document');
             $extObj     = new \SplFileInfo($mediaItem->file_name);
             $ext        = $extObj->getExtension();
-            $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$now.'-FLC.'.$ext;
-            return Storage::disk('contracts3')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
+            $name       = $Ncontract->id.'-'.$Ncontract->companyuser->name.'_'.$data['group_containers']['name'].'_'.$now.'-FLC.'.$ext;
+            return Storage::disk('FclRequest-New')->download($mediaItem->id.'/'.$mediaItem->file_name,$name);
 
         } elseif(strnatcasecmp($selector,'storage')==0){
 
@@ -491,7 +483,7 @@ class RequestFclV2Controller extends Controller
         $Ncontract  = NewContractRequest::find($id);
         $Ncontract->load('direction','Requestcarriers','companyuser');
         $data = json_decode($Ncontract->data);
-        $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_TMP_FCL';
+        $name = $Ncontract->id.'_'.$Ncontract->companyuser->name.'_'.$data->group_containers->name.'_IMP_FCL';
 
         $columns = ['ORIGIN','DESTINY','CHARGE','CALCULATION TYPE'];
         $cellDir = ['A','B','C','D','E','F','G','H','I','J','K','L','M','Ñ','O','P','Q','R','S','T','U','V','W','Y','Z'];
@@ -545,15 +537,22 @@ class RequestFclV2Controller extends Controller
     {
         try{
             $Ncontract = NewContractRequest::find($id);
-            if(empty($Ncontract->namefile)){
-                Storage::disk('FclRequest')->delete($Ncontract->namefile);
+            if(!empty($Ncontract->namefile)){
+                try{
+                    Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                } catch(\Exception $e){
+                }
             } else {
-                $mediaItem = $Ncontract->getFirstMedia('document');
-                $mediaItems->delete();
+                try{
+                    $mediaItem = $Ncontract->getFirstMedia('document');
+                    $mediaItems->delete();
+                } catch(\Exception $e){
+                }
             }
             $Ncontract->delete();
             return 1;
         } catch(\Exception $e){
+            Log::error($e);
             return 2;
         }
     }
@@ -562,6 +561,7 @@ class RequestFclV2Controller extends Controller
         $groupContainers = $request->groupContainers;
         $containers 	 = Container::where('gp_container_id',$groupContainers)->where('name','!=','45 HC')->where('name','!=','40 NOR')->pluck('id');
         return response()->json(['success' => true,'data' => ['values' => $containers->all() ]]);
+        //return view('RequestV2.Fcl.select',compact('containers'));
     }
 
     public function storeMedia(Request $request){

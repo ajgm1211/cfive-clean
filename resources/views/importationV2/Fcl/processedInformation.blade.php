@@ -57,7 +57,7 @@
                                 </div>
                                 <br>
                                 <div class="col-md-12">
-                                    <a href="{{route('Failed.Developer.For.Contracts',[$id,1])}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+                                    <a href="{{route('Failed.Developer.For.Contracts',[$id,0])}}" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                         Failed <i class="fa flaticon-tool-1"></i>
                                     </a>
                                 </div>

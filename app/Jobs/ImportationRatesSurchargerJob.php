@@ -30,6 +30,7 @@ use App\FailSurCharge;
 use App\CalculationType;
 use App\LocalCharCarrier;
 use App\LocalCharCountry;
+use App\NewContractRequest;
 use Illuminate\Http\Request;
 use App\ContractUserRestriction;
 use App\Notifications\N_general;
@@ -76,6 +77,9 @@ class ImportationRatesSurchargerJob implements ShouldQueue
         $json_account_dc        = json_decode($account->data,true);
         $valuesSelecteds        = $json_account_dc['valuesSelecteds'];
         $final_columns          = $json_account_dc['final_columns'];
+        $ncontractRq            = NewContractRequest::find($account->request_id);
+        $ncontractRq->status    = 'Processing';
+        $ncontractRq->update();
         //dd($valuesSelecteds,$final_columns);
 
         $contract_id            = $valuesSelecteds['contract_id'];
@@ -1325,7 +1329,7 @@ class ImportationRatesSurchargerJob implements ShouldQueue
                                                     $ammoun_zero = true;
                                                 }
                                                 $rows_calculations[$key] = [
-                                                    'calculationtype' => $calculationtypeValFail,
+                                                    'calculationtype' => $calculationtypeValFail.'Fila '.$countRow,
                                                     'ammount'         => $ammount,
                                                     'ammount_zero'    => $ammoun_zero,
                                                     'currency'        => $currency_val
@@ -1415,6 +1419,8 @@ class ImportationRatesSurchargerJob implements ShouldQueue
             $file_csv = str_replace(['.xlsx','.xls'],'.csv',$mediaItem->file_name);
             Storage::disk('FclImport')->Delete($file_csv);
         }
+        $ncontractRq->status    = 'Imp Finished';
+        $ncontractRq->update();
 
     }
 }

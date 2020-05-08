@@ -61,14 +61,7 @@ return [
             'url' => 'storage',
             'visibility' => 'public',
         ],
-
-        //  PARA BORRAR - AUN NO
-        //    'FclAccount' => [
-        //      'driver' => 'local',
-        //      'root' => storage_path('app/public/Account/Fcl'),
-        //      'url' => 'storage/app/public/Account/Fcl',
-        //      'visibility' => 'public',
-        //    ],
+// FCL -------------------------------------------------
         'FclAccount' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -93,7 +86,16 @@ return [
             'url' => '/storage/Request/Fcl',
             'visibility' => 'public',
         ],
+        'FclRequest-New' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'root' => '/Request/FCL/',
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_UPLOAD'),
+        ],
 
+// FCL -------------------------------------------------
         'LclAccount' => [
             'driver' => 'local',
             'root' => storage_path('app/public/Account/Lcl'),
