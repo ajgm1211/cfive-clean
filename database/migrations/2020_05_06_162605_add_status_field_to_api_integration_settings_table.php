@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddFieldCompanyApi extends Migration
+class AddStatusFieldToApiIntegrationSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddFieldCompanyApi extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->json('options')->nullable()->after('payment_conditions');
+        Schema::table('api_integration_settings', function (Blueprint $table) {
+            $table->integer('status')->default(0)->after('url');
         });
     }
 
@@ -25,6 +25,8 @@ class AddFieldCompanyApi extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('api_integration_settings', function (Blueprint $table) {
+            //
+        });
     }
 }
