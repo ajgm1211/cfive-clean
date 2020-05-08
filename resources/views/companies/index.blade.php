@@ -95,24 +95,36 @@ Companies List
                             </a>
                         </div>
                         @if(@$api->enable==1 && @$api->api_key!='')
-                            <a href="javascript:void(0)" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
-                                <span>
+                            @if(@$api->status==0)
+                                <a href="javascript:void(0)" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                     <span>
-                                        Sync with API
+                                        <span>
+                                            Fetch from API
+                                        </span>
+                                        &nbsp;
+                                        <i class="la la-refresh"></i>
                                     </span>
-                                    &nbsp;
-                                    <i class="la la-refresh"></i>
-                                </span>
-                            </a>
-                            <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill hide disabled">
-                                <span>
+                                </a>
+                                <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill hide disabled">
                                     <span>
-                                        Synchronizing
+                                        <span>
+                                            Obtaining data
+                                        </span>
+                                        &nbsp;
+                                        <i class="la la-refresh la-spin"></i>
                                     </span>
-                                    &nbsp;
-                                    <i class="la la-refresh la-spin"></i>
-                                </span>
-                            </a>
+                                </a>
+                            @else
+                                <a href="#" id="syncCompaniesLoading" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill disabled">
+                                    <span>
+                                        <span>
+                                            Obtaining data
+                                        </span>
+                                        &nbsp;
+                                        <i class="la la-refresh la-spin"></i>
+                                    </span>
+                                </a>
+                            @endif
                         @endif
                     </div>
                 </div>

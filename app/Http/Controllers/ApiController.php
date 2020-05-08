@@ -557,7 +557,11 @@ class ApiController extends Controller
 
     public function surcharges(Request $request){
 
-        $surcharges = Surcharge::where('company_user_id',\Auth::user()->company_user_id)->get();
+        $name = $request->name;
+
+        $surcharges = Surcharge::when($name,function($query,$name) {
+            return $query->where('name','LIKE','%'.$name.'%');
+        })->take($request->size)->get();
 
         return $surcharges;
     }

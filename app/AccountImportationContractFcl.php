@@ -24,7 +24,7 @@ class AccountImportationContractFcl extends Model implements Auditable
 
 
     public function FilesTmps(){
-        return $thid->hasMany('App\FileTmp');  
+        return $this->hasMany('App\FileTmp');  
     }
 
     public function contract(){
