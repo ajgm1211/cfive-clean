@@ -18,6 +18,7 @@
                     <DataTable 
                         :fields="fields"
                         :actions="actions.contracts"
+                        @onEdit="onEdit"
                         ></DataTable>
                 </b-card>
             </div>
@@ -149,6 +150,11 @@
 
             success(id){
                 window.location = `/api/contracts/${id}/edit`;
+            },
+
+            /* Single Actions */
+            onEdit(data){
+                window.location = `/api/contracts/${data.id}/edit`;
             },
 
             badgecarriers(value){

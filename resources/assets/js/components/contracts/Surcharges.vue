@@ -41,8 +41,8 @@
                 /* Table headers */
                 fields: [
                     { key: 'type', label: 'Type', formatter: (value)=> { return value.name } }, 
-                    { key: 'origin', label: 'Origin Port' }, 
-                    { key: 'destination', label: 'Destination Port' }, 
+                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badgeports(value) } }, 
+                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badgeports(value) } }, 
                     { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
                     { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
@@ -74,6 +74,20 @@
                 if(value){
                     value.forEach(function(val){
                         carriers += "<span class='badge badge-primary'>"+val.name+"</span> ";
+                    });
+
+                    return carriers;
+                } else {
+                    return '-';
+                }
+
+            },
+            badgeports(value){
+                let carriers = "";
+
+                if(value){
+                    value.forEach(function(val){
+                        carriers += "<span class='badge badge-warning'>"+val.name+"</span> ";
                     });
 
                     return carriers;
