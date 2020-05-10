@@ -5,6 +5,14 @@
 
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 <style>
+    body {
+        background: #f6f6f6;
+    }
+    .m-portlet {
+        box-shadow: none;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+    }
     .btn-search__quotes {
         top: 50px;
         font-size: 18px; 
@@ -467,7 +475,10 @@
         -webkit-border-radius: 3px;
         cursor: pointer;
         margin-bottom: 0px;
-       
+        display: flex;
+        justify-content: flex-start;
+        overflow: hidden;
+        white-space: nowrap;
     }
     .c5-select-dropdown-list li {
         list-style: none;
@@ -631,7 +642,7 @@
               </div>
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',array('Types' => $airlines, 'Equipment List' => $contain),null,['class'=>'c5-select-multiple','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel', 'label-name' => 'Types,Equipment']) }}
+                {{ Form::select('equipment[]',array('Types' => $airlines, 'Equipment List' => $contain),null,['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
               </div> 
               <div class="col-lg-2">
                 <label>Company</label>
@@ -716,7 +727,7 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carries</label>
-                {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
+                {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
                 <!--<select name="carriers[]" id="carrier_select" class="c5-select-multiple" c5-data="{{ $contain }}" multiple></select>-->
               </div>
              
@@ -1721,116 +1732,189 @@
    (function($){
        $.fn.selectC5 = function(){
             var clickOnID = ''+$(this).attr('id')+'';
+            var optionSelect = '#'+$(this).attr('id')+' option';
             var selectType = ''+$(this).attr('select-type')+'';
             var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
                                 '<ul class="c5-select-dropdown-list">'+
-                                    '<li>Select an option</li>'+
+                                    '<li class="hida">Select an option</li>'+
                                 '</ul>'+
-                            '</span>'+
-                            '<span class="c5-select-multiple-container '+clickOnID+'">'+
-                            '<span class="c5-select-header">Carriers</span>'+
-                            '<span class="c5-select-container-close">'+
-                            '<i class="fa fa-times" aria-hidden="true"></i>'+
-                            '</span>'+
-                            '<span class="c5-select-multiple-switch">'+
-                                'Select All '+
-                                '<label class="switch">'+
-                                    '<input type="checkbox" class="c5-switch">'+
-                                    '<span class="slider round"></span>'+
-                                '</label>'+
-                            '</span>'+
-                            '<ul class="c5-select-list"></ul>'+
-                            '</span>';
-
-            var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
-                                    '<ul class="c5-select-dropdown-list">'+
-                                        '<li>Select an option</li>'+
-                                    '</ul>'+
                                 '</span>'+
                                 '<span class="c5-select-multiple-container '+clickOnID+'">'+
-                                '<span class="c5-select-container-close">'+
-                                '<i class="fa fa-times" aria-hidden="true"></i>'+
-                                '</span>'+
-                                '<span class="c5-select-header">Types</span>'+
-                                '<ul class="c5-select-list list-group1"></ul>'+
-                                '<span class="c5-select-header">Equipment List</span>'+
-                                '<ul class="c5-select-list list-group2"></ul>'+
+                                    '<span class="c5-select-header">Carriers</span>'+
+                                    '<span class="c5-select-container-close">'+
+                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
+                                    '</span>'+
+                                    '<span class="c5-select-multiple-switch">'+
+                                        'Select All '+
+                                        '<label class="switch">'+
+                                            '<input type="checkbox" class="c5-switch">'+
+                                            '<span class="slider round"></span>'+
+                                        '</label>'+
+                                    '</span>'+
+                                    '<ul class="c5-select-list select-normal"></ul>'+
                                 '</span>';
 
-            var optionSelect = '#'+$(this).attr('id')+' option'; 
+            var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
+                                    '<ul class="c5-select-dropdown-list select-list">'+
+                                        '<li class="hida">Select an option</li>'+
+                                    '</ul>'+
+                                    '</span>'+
+                                    '<span class="c5-select-multiple-container '+clickOnID+'">'+
+                                    '<span class="c5-select-container-close">'+
+                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
+                                    '</span>'+
+                                    '<span class="c5-select-header">Types</span>'+
+                                    '<ul class="c5-select-list list-group1"></ul>'+
+                                    '<span class="c5-select-header">Equipment List</span>'+
+                                    '<ul class="c5-select-list list-group2"></ul>'+
+                                    '</span>';            
           
 
-           if(selectType == 'multiple'){
+            // Filtramos por tipo de select
+
+            // Select Multiple con swicth
+            if(selectType == 'multiple'){
                 $(this).after(multiSelect);
                 $(optionSelect).each(function(){
-                    var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+'<input type="checkbox" name="carrier" class="c5-check" value="'+$(this).val()+'"><span class="checkmark"></span></label></li>';
-                    $('.c5-select-list').append(list);    
+                    var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
+                                '<input type="checkbox" name="carrier" title="'+$(this).text()+
+                                '" class="c5-check" value="'+$(this).val()+
+                                '"><span class="checkmark"></span></label></li>';
+                    $('.c5-select-list.select-normal').append(list);    
                 });
-           }else if(selectType == 'groupLabel'){
+
+                $('.'+clickOnID+' .c5-check').on("click", function() {
+                    var checkSelected = [];
+                    var textCheckSelected = [];
+                    var valCheckSelected = $(this).val();
+                    //var title = $(this).attr('title');
+                    
+                    $('.'+clickOnID+' .c5-check').each(function() {
+                        if (this.checked) {
+                            checkSelected.push($(this).val());
+                        }
+                    });
+                    
+                    $('#'+clickOnID+'.select-normal').val(checkSelected);
+                    //var valor1 = $('#'+clickOnID+'.select-normal').val();
+                    //console.log(valor1);                            
+                    
+                });
+
+                $('.'+clickOnID+' .c5-switch').on('change', function(){   
+                    var allSelected = [];    
+
+                    $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
+                    $('.'+clickOnID+' .c5-check').each(function() {
+                        if (this.checked) {
+                            allSelected.push($(this).val());
+                        }
+                    }); 
+                    
+                    $('.'+clickOnID+'').val(allSelected);
+                    //var valor = $('.'+clickOnID+'').val();
+                    //console.log(valor);
+                    
+                    if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
+                        $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
+                    }else{
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
+                    }                    
+
+                });
+
+                $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
+                    var allCarriers = [];
+                    var allOptions = $('.'+clickOnID+' .c5-check').length;
+
+                    $('.'+clickOnID+' .select-normal .c5-check').each(function() {
+                        if (this.checked) {
+                            allCarriers.push($(this).val());
+                        }
+                    });
+
+                    var allCarriersLength = allCarriers.length;
+
+                    if( allCarriers.length > 0 ){
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''+allCarriers.length+' has been Selected');
+                    } else if ( allCarriers.length == 0 ){
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
+                        $('.'+clickOnID+' .c5-select-dropdown-list').html('Select an option');
+                    }
+                    $('.'+clickOnID+' .c5-switch').prop('checked', false);
+                    
+                    
+                });
+
+            }
+
+            // Select Multiple con Lables
+            if(selectType == 'groupLabel'){
                 $(this).after(multiSelectGroup);
-                var nameOption1= $('#'+clickOnID+' optgroup:nth-child(1) option');
-                var nameOption2= $('#'+clickOnID+' optgroup:nth-child(2) option');
+                var nameOption1 = $('#'+clickOnID+' optgroup:nth-child(1) option');
+                var nameOption2 = $('#'+clickOnID+' optgroup:nth-child(2) option');
+
                 $(nameOption1).each(function(){
-                    var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+'<input type="radio" name="carrier" class="c5-check" value="'+$(this).val()+'"><span class="checkmark"></span></label></li>';
+                    var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
+                                '<input type="radio" name="container_type" class="c5-check" value="'+$(this).val()+
+                                '"><span class="checkmark"></span></label></li>';
                     $('.list-group1').append(list1);
                 });          
                 $(nameOption2).each(function(){
-                    var list2 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+'<input type="checkbox" name="carrier" class="c5-check" value="'+$(this).val()+'"><span class="checkmark"></span></label></li>';
+                    var list2 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
+                                '<input type="checkbox" name="equipment" class="c5-check" title="'+$(this).text()+'" value="'+$(this).val()+
+                                '"><span class="checkmark"></span></label></li>';
                     $('.list-group2').append(list2);    
-                });          
-           }
+                });
+
+                $('.'+clickOnID+' .list-group2 .c5-check').on("click", function() {
+                    var valueEquipment = [];                    
+                    var title = $(this).attr('title');
+                    
+                    $('.'+clickOnID+' .list-group2 .c5-check').each(function() {
+                        if (this.checked) {
+                            valueEquipment.push($(this).val());
+                        }
+                    });
+
+                    var countEquip = valueEquipment.length;
+
+                    $('#'+clickOnID+'.select-group').val(valueEquipment);
+                    //var valor2 = $('#'+clickOnID+'.select-group').val();
+                    //console.log(valor2);
+                    
+
+                    if ($(this).is(':checked')) {
+                        var html = '<li title="' + title + '">' + title + ', </li>';
+                        $('.'+clickOnID+' .select-list').append(html);
+                        $(".select-list .hida").hide();
+                    } else {
+                        var listLength = $('.'+clickOnID+' .list-group2 .c5-check:checked').length;
+                        $('li[title="' + title + '"]').remove();
+                        if( countEquip == 0 ){
+                            $(".select-list .hida").show();   
+                        }
+                    }
+
+                });
+
+                $('.'+clickOnID+' .list-group1 .c5-check').on("click", function() {
+                    alert('estoy en el 1');
+                });
+
+                
+            }
            
            //C5 Select Options
-           
-           $('.'+clickOnID+' .c5-check').on("click", function() {
-                var checkSelected = [];
-                var textCheckSelected = [];
-                var valCheckSelected = $(this).val();
-                
-                $(".c5-check").each(function() {
-                    if (this.checked) {
-                        checkSelected.push($(this).val());
-                    }
-                });
-                
-                $('#'+clickOnID+'').val(checkSelected);
-                var valor = $('#'+clickOnID+'').val();
-                console.log(valor);
-                $('#'+clickOnID+' option').each(function() {
-                    if($(this).val() == valCheckSelected) {
-                        textCheckSelected.push($(this).text());
-                        //console.log(textCheckSelected);
-                    }
-                });
-                $('.'+clickOnID+' .c5-select-dropdown-list').html(textCheckSelected);
-                
+                        
+            $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
             });
 
-            $('.'+clickOnID+' .c5-switch').on('change', function(){   
-                var allSelected = [];     
-                
-                if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {
-                    $('.'+clickOnID+' .c5-select-dropdown-list').html('Select an option');
-                }else{
-                    $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
-                }
-                $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
-                $('.'+clickOnID+' .c5-check').each(function() {
-                    if (this.checked) {
-                        allSelected.push($(this).val());
-                    }
-                });
-                $('.'+clickOnID+'').val(allSelected);
-                var valor = $('.'+clickOnID+'').val();
-                console.log(valor);
-            });
-
-            $('.'+clickOnID+' .c5-check').on('change', function(){
-                $('.'+clickOnID+' .c5-switch').prop('checked', false);
-            });
-            
-            $('.'+clickOnID+'').on('click', function(){
-             $('.c5-select-multiple-container.'+clickOnID+'').toggle();
+            $('.'+clickOnID+' .c5-select-container-close').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
             });
        }
    })(jQuery);
