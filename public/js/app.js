@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 338);
+/******/ 	return __webpack_require__(__webpack_require__.s = 347);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -35156,7 +35156,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 31:
+/***/ 30:
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -35266,16 +35266,16 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ 338:
+/***/ 347:
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(339);
-module.exports = __webpack_require__(346);
+__webpack_require__(348);
+module.exports = __webpack_require__(355);
 
 
 /***/ }),
 
-/***/ 339:
+/***/ 348:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -35285,7 +35285,7 @@ module.exports = __webpack_require__(346);
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(340);
+__webpack_require__(349);
 
 window.Vue = __webpack_require__(44);
 
@@ -35295,7 +35295,7 @@ window.Vue = __webpack_require__(44);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', __webpack_require__(343));
+Vue.component('example-component', __webpack_require__(352));
 //Vue.component('ocean-freight', require('./components/contracts/Freight.vue'));
 //Vue.component('restrictions', require('./components/Restrictions.vue'));
 //Vue.component('remarkes', require('./components/Remarkes.vue'));
@@ -35307,12 +35307,12 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 340:
+/***/ 349:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(341);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_laravel_echo__ = __webpack_require__(350);
 
 window._ = __webpack_require__(122);
 window.Popper = __webpack_require__(63).default;
@@ -35335,7 +35335,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(70);
+window.axios = __webpack_require__(72);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -35372,7 +35372,7 @@ if (token) {
 
 
 
-window.Pusher = __webpack_require__(342);
+window.Pusher = __webpack_require__(351);
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo__["a" /* default */]({
   broadcaster: 'pusher',
   key: "1a64b121010c1eb64623",
@@ -35473,7 +35473,7 @@ function getUrl() {
 
 /***/ }),
 
-/***/ 341:
+/***/ 350:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -36728,7 +36728,7 @@ var Echo = function () {
 
 /***/ }),
 
-/***/ 342:
+/***/ 351:
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -45618,15 +45618,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 
-/***/ 343:
+/***/ 352:
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(31)
+var normalizeComponent = __webpack_require__(30)
 /* script */
-var __vue_script__ = __webpack_require__(344)
+var __vue_script__ = __webpack_require__(353)
 /* template */
-var __vue_template__ = __webpack_require__(345)
+var __vue_template__ = __webpack_require__(354)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45666,7 +45666,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ 344:
+/***/ 353:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -45696,7 +45696,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
-/***/ 345:
+/***/ 354:
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -45740,7 +45740,7 @@ if (false) {
 
 /***/ }),
 
-/***/ 346:
+/***/ 355:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -59530,7 +59530,7 @@ module.exports = Cancel;
 
 /***/ }),
 
-/***/ 70:
+/***/ 72:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(125);

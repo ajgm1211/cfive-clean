@@ -11,7 +11,6 @@
                             :id="'id_'+key"
                             :label="item.label"
                             :label-for="'id_'+key"
-                            class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                                   >
@@ -30,7 +29,6 @@
                     <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                           >
@@ -55,7 +53,6 @@
                     <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                           >
@@ -80,7 +77,6 @@
                     <b-form-group
                             :id="'id_'+key"
                             :label="item.label"
-                            class="d-block"
                             :invalid-feedback="key+' is required'"
                             valid-feedback="key+' is done!'"
                             >
