@@ -185,7 +185,7 @@
     <!-- Create Form -->
     <b-modal id="addOFreight" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
         <FormView 
-            :data="[]" 
+            :data="{}" 
             :fields="fields"
             :datalists="datalists"
             btnTxt="Add Ocean Freight"
@@ -267,9 +267,9 @@
             /* Response the Rates lists data*/
             getData(params = {}){
 
-                this.actions.list(this.contract_id, params, (err, data) => {
+                this.actions.list(params, (err, data) => {
                     this.setData(err, data);
-                });
+                }, this.$route);
 
             },
 

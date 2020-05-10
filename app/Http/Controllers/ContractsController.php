@@ -151,7 +151,7 @@ class ContractsController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-        })->pluck('first_name','id');
+        })->pluck('first_name','id');Country
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
                                      {

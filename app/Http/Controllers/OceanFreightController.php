@@ -38,9 +38,7 @@ class OceanFreightController extends Controller
 
         $rate = Rate::create($prepared_data);
 
-        $results = Rate::orderBy('id', 'desc')->paginate(10);
-
-        return OceanFreightResource::collection($results);
+        return new OceanFreightResource($rate);
     }
 
     public function prepareData($data, $contract)
@@ -76,8 +74,8 @@ class OceanFreightController extends Controller
 
             foreach ($data as $key => $value) {
 
-            if(strpos($key, "rates_") === 0 and !empty($value))
-                $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
+                if(strpos($key, "rates_") === 0 and !empty($value))
+                    $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
             }
         }
 
