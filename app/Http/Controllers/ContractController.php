@@ -179,7 +179,6 @@ class ContractController extends Controller
             'direction' => 'required',
             'validity' => 'required',
             'expire' => 'required',
-            'remarks' => 'present',
             'gp_container' => 'required',
             'carriers' => 'required'
         ]);
@@ -189,7 +188,7 @@ class ContractController extends Controller
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
-            'remarks' => $data['remarks'],
+            'remarks' => '',
             'gp_container_id' => $data['gp_container'],
         ]);
 

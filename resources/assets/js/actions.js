@@ -12,6 +12,15 @@ export default {
     	},
     	create(data, route) {
 	        return api.call('post', `/api/v2/contracts/store`, data);
+	    },
+	    update(id, data, route){
+	    	return api.call('post', `/api/v2/contracts/${id}/update`, data);
+	    },
+	    retrieve(id){
+			return api.call('get', `/api/v2/contracts/${id}`, {});
+	    },
+	    delete(id){
+	    	return api.call('delete', `/api/v2/contracts/${id}/destroy`, {});	
 	    }
 	},
 	oceanfreights: {

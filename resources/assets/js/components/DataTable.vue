@@ -7,6 +7,7 @@
                     <b-input
                              id="inline-form-input-name"
                              class="mb-2 mr-sm-2 mb-sm-0"
+                             v-model="search"
                              placeholder="Search"
                              ></b-input>
                 </b-form>
@@ -19,9 +20,25 @@
             <b-thead>
                 <b-tr>
                     <b-th>
+                        <b-form-checkbox
+                             v-model="allSelected"
+                             :indeterminate="false"
+                             @change="toggleAll"
+                             >
+                        </b-form-checkbox>
                     </b-th>
+
                     <b-th v-for="(value, key) in fields" :key="key">
                         {{value.label}}
+                    </b-th>
+
+                    <b-th>
+                        <b-button v-bind:id="'popover_all'" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                        <b-popover v-bind:target="'popover_all'" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                            <button class="btn-action" v-on:click="onEditAll()">Edit</button>
+                            <button class="btn-action">Duplicate</button>
+                            <button class="btn-action">Delete</button>
+                        </b-popover>
                     </b-th>
                 </b-tr>
             </b-thead>
@@ -43,7 +60,7 @@
             <b-tbody v-if="!isBusy">
 
                 <!-- Form add new item -->
-                <b-tr v-if="inputFields.length">
+                <b-tr v-if="!isEmpty(inputFields)">
 
                     <b-td v-for="(item, key) in inputFields" :key="key" :style="'max-width:'+item.width">
                        
@@ -149,8 +166,8 @@
                         <b-button v-bind:id="'popover'+item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                             <button class="btn-action" v-on:click="onEdit(item)">Edit</button>
-                            <button class="btn-action">Duplicate</button>
-                            <button class="btn-action">Delete</button>
+                            <button class="btn-action" >Duplicate</button>
+                            <button class="btn-action" v-on:click="onDelete(item.id)">Delete</button>
                         </b-popover>
                     </b-td>
                     <!-- End Actions column -->
@@ -215,13 +232,13 @@
                 currentData: [],
                 refresh: true,
                 datalists: {},
+                search: null,
 
                 /* Pagination */
                 initialPage: 1,
                 pageCount: 0,
 
                 /* Checkboxes */
-                selectMode: 'multi',
                 selected: [],
                 allSelected: false,
                 indeterminate: false,
@@ -325,6 +342,11 @@
                 this.fdata = {};
             },
 
+            /* Set all the checkbox */
+            toggleAll(checked) {
+                this.selected = checked ? this.data.slice() : [] //Selected all the checkbox
+            },
+
             /* Submit form new data */
             onSubmit() {
                 
@@ -347,6 +369,7 @@
             onEdit(data){
                 this.currentData = data;
                 this.$bvModal.show('editModal');
+                this.$emit('onEdit', data);
             },
             onDelete(id){
               
@@ -397,6 +420,13 @@
                     if(this.inputFields[key]['type'] == 'pre_select')
                         this.datalists[this.inputFields[key]['target']] = this.datalists[this.inputFields[key]['initial'].vselected];
                 }
+            },
+            isEmpty(obj){
+                for(var key in obj) {
+                    if(obj.hasOwnProperty(key))
+                        return false;
+                }
+                return true;
             }
         },
         watch: {
@@ -406,6 +436,16 @@
                 },
                 deep: true
             },
+            selected() {
+                this.$emit('input', this.selected);
+            },
+            search: {
+                handler: function (val, oldVal) {
+                    let qs = { q: val };
+
+                    this.routerPush(qs);
+                }
+            }
         }
     }
 </script>
