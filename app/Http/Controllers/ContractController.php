@@ -10,6 +10,10 @@ use App\Direction;
 use App\Container;
 use App\Harbor;
 use App\Currency;
+use App\Surcharge;
+use App\CalculationType;
+use App\TypeDestiny;
+use App\Country;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 
@@ -66,6 +70,22 @@ class ContractController extends Controller
             return $currency->only(['id', 'alphacode']);
         });
 
+        $countries = Country::get()->map(function ($country) {
+            return $country->only(['id', 'name']);
+        });
+
+        $surcharges = Surcharge::where('company_user_id', '=' , Auth::user()->company_user_id)->get()->map(function ($surcharge) {
+            return $surcharge->only(['id', 'name']);
+        });
+
+        $calculations = CalculationType::get()->map(function ($calculation) {
+            return $calculation->only(['id', 'name']);
+        });
+
+        $destination_types = TypeDestiny::get()->map(function ($destination_type) {
+            return $destination_type->only(['id', 'description']);
+        });
+
         $containers = Container::get();
 
         $data = [
@@ -74,7 +94,11 @@ class ContractController extends Controller
             'directions' => $directions,
             'containers' => $containers,
             'currencies' => $currencies,
-            'harbors' => $harbors
+            'harbors' => $harbors,
+            'surcharges' => $surcharges,
+            'countries' => $countries,
+            'calculation_types' => $calculations,
+            'destination_types' => $destination_types
  
         ];
 
@@ -108,8 +132,6 @@ class ContractController extends Controller
             'direction' => 'required',
             'validity' => 'required',
             'expire' => 'required',
-            'status' => 'required',
-            'remarks' => 'sometimes',
             'gp_container' => 'required',
             'carriers' => 'required'
         ]);
@@ -122,9 +144,9 @@ class ContractController extends Controller
             'direction_id' => $data['direction'],
             'validity' => $data['validity'],
             'expire' => $data['expire'],
-            'status' => $data['status'],
+            'status' => 'publish',
             'gp_container_id' => $data['gp_container'],
-            'remarks' => $data['remarks']
+            'remarks' => ''
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);

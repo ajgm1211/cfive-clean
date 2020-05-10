@@ -3,7 +3,7 @@
 
     <b-form ref="form" class="modal-input">
         <div class="row">
-            <div v-for="(item, key) in fields" :key="key" class="col-12 col-sm-6">
+            <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
 
                 <!-- Text Field -->
                 <div v-if="item.type == 'text'">
@@ -13,7 +13,7 @@
                             :label-for="'id_'+key"
                             class="d-block"
                             :invalid-feedback="key+' is required'"
-                            valid-feedback="Reference is done!"
+                            valid-feedback="key+' is done!'"
                                   >
                         <b-form-input
                                 v-model="vdata[key]"
@@ -32,7 +32,7 @@
                             :label="item.label"
                             class="d-block"
                             :invalid-feedback="key+' is required'"
-                            valid-feedback="Reference is done!"
+                            valid-feedback="key+' is done!'"
                           >
                         <multiselect 
                              v-model="vdata[key]" 
@@ -45,11 +45,58 @@
                              :label="item.trackby" 
                              :show-labels="false" 
                              :placeholder="item.placeholder">
-                            <!-- <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template> -->
                         </multiselect>
                     </b-form-group>
                 </div>
                 <!-- End Select Field -->
+
+                <!-- MultiSelect Field -->
+                <div v-if="item.type == 'multiselect'">
+                    <b-form-group
+                            :id="'id_'+key"
+                            :label="item.label"
+                            class="d-block"
+                            :invalid-feedback="key+' is required'"
+                            valid-feedback="key+' is done!'"
+                          >
+                        <multiselect 
+                             v-model="vdata[key]"
+                             :multiple="true" 
+                             :options="datalists[item.options]" 
+                             :searchable="item.searchable"
+                             :close-on-select="true"
+                             :clear-on-select="true"
+                             track-by="id" 
+                             :label="item.trackby" 
+                             :show-labels="false" 
+                             :placeholder="item.placeholder">
+                        </multiselect>
+                    </b-form-group>
+                </div>
+                <!-- End MultiSelect Field -->
+
+                <!-- DateRange Field -->
+                <div v-if="item.type == 'daterange'">
+                    <b-form-group
+                            :id="'id_'+key"
+                            :label="item.label"
+                            class="d-block"
+                            :invalid-feedback="key+' is required'"
+                            valid-feedback="key+' is done!'"
+                            >
+                              <date-range-picker
+                                  :opens="'center'"
+                                  :locale-data="{ firstDay: 1, format: 'yyyy/mm/dd' }"
+                                  :singleDatePicker="false"
+                                  :autoApply="true"
+                                  :timePicker="false"
+                                  v-model="vdata[key]"
+                                  :linkedCalendars="true">
+
+                              </date-range-picker>
+                    </b-form-group>
+                </div>
+                <!-- End DateRange Field -->
 
             </div>
 
@@ -67,10 +114,16 @@
 <script>
 
     import Multiselect from 'vue-multiselect';
+    import DateRangePicker from 'vue2-daterange-picker';
+
+    import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
+    import 'vue-multiselect/dist/vue-multiselect.min.css';
+
 
     export default {
         components: {
-            Multiselect
+            Multiselect,
+            DateRangePicker
         },
     	props: {
             data: Object,
@@ -100,10 +153,20 @@
             closeModal(){
                 this.$emit('exit', true);
             },
+
+            getClass(item){
+
+                if('colClass' in item)
+                    return item.colClass;
+
+                return 'col-sm-6';
+
+            },
+
             isEmpty(value){
                 //console.log(typeof value);
                 if(typeof value == 'string')
-                    return value == '';
+                    return value == '' || value == null;
 
                 if(typeof value == 'object')
                     return value == null || Object.keys(value).length === 0;
@@ -138,12 +201,29 @@
                 let fields_keys = Object.keys(this.fields);
 
                 fields_keys.forEach(function(key){
-                    const item = component.vdata[key];
+                    const item = component.fields[key];
 
-                    if(typeof item == 'object')
-                        data[key] = item.id;
-                    else 
-                        data[key] = item
+                    switch (item.type) {
+                        case 'text':
+                            if(component.vdata[key])
+                                data[key] = component.vdata[key];
+                            break;
+                        case 'select':
+                            if(component.vdata[key])
+                                data[key] = component.vdata[key].id;
+                            break;
+                        case 'multiselect':
+                            if(component.vdata[key].length)
+                                data[key] = component.vdata[key].map(e => e.id );
+                            break;
+                        case 'daterange':
+                            if(component.vdata[key]['startDate'] && component.vdata[key]['endDate']){ 
+                                data[item.sdName] = moment(component.vdata[key].startDate).format('YYYY/MM/DD');
+                                data[item.edName] = moment(component.vdata[key].endDate).format('YYYY/MM/DD');
+                            }
+                            break;
+
+                    }
                 });
 
                 return data;
@@ -154,12 +234,14 @@
             onSubmit(){
                 if(this.validateForm()){
                     let data = this.prepareData();
+                    console.log('data', data);
 
                     if(this.update){
 
                         this.actions.update(this.vdata.id, data, this.$route)
                             .then( ( response ) => {
-                                this.$emit('success', true);
+                                this.$emit('success', response.data.data.id);
+                                this.vdata = {};
                         })
                             .catch(( data ) => {
                                 console.log(data);
@@ -169,7 +251,8 @@
 
                         this.actions.create(data, this.$route)
                             .then( ( response ) => {
-                                this.$emit('success', true);
+                                this.$emit('success', response.data.data.id);
+                                this.vdata = {};
                         })
                             .catch(( data ) => {
                                 console.log(data);

@@ -1014,9 +1014,16 @@ Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
 Route::delete('api/v2/contracts/{contract}/destroy', 'ContractController@destroy');
 /** End API Contracts endpoint **/
 
-
+/** API Contracts Ocean Freights EndPoints **/
 Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@list');
 Route::post('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
 Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
+/** End Contracts V2 routes **/
+
+/** API Contracts LocalCharge EndPoints **/
+Route::get('api/v2/contracts/{contract}/localcharges', 'LocalChargeController@list');
+Route::post('api/v2/contracts/{contract}/localcharge/store', 'LocalChargeController@store');
+Route::post('api/v2/contracts/{contract}/localcharge/{rate}/update', 'LocalChargeController@update');
+Route::get('api/v2/contracts/{contract}/localcharge/{rate}', 'LocalChargeController@retrieve');
 /** End Contracts V2 routes **/
