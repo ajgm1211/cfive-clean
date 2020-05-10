@@ -117,7 +117,11 @@
                             ></ocean-freight>
                         </b-tab>
                         <b-tab title="Surcharges">
-                            <!--<surcharges></surcharges>-->
+                            <surcharges
+                                  :datalists="datalists"
+                                  :actions="actions.surcharges"
+                                  >
+                            </surcharges>
                         </b-tab>
                         <b-tab title="Restrictions">
                             <!--<restrictions></restrictions>-->
@@ -182,7 +186,11 @@
                   'directions': [],
                   'containers': [],
                   'harbors': [],
-                  'currencies': []
+                  'currencies': [],
+                  'surcharges': [],
+                  'route_types': [],
+                  'destination_types': [],
+                  'calculation_types': []
                 },
                 
                 dateRange: { 
@@ -240,10 +248,16 @@
                   'directions': data.directions,
                   'containers': data.containers,
                   'harbors': data.harbors,
-                  'currencies': data.currencies
+                  'currencies': data.currencies,
+                  'surcharges': data.surcharges,
+                  'countries': data.countries,
+                  'route_types': [
+                        { id: 'port', name: 'Port', vselected: 'harbors' }, 
+                        { id: 'country', name: 'Country', vselected: 'countries' }
+                      ],
+                  'destination_types': data.destination_types,
+                  'calculation_types': data.calculation_types
                 }
-
-                console.log(this.datalists);
             },
 
             setData(err, { data: records, links, meta }) {
