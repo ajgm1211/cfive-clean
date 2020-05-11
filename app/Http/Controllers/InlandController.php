@@ -7,8 +7,10 @@ use App\Inland;
 use App\Carrier;
 use App\GroupContainer;
 use App\Direction;
+use App\Harbor;
 use App\Http\Resources\InlandResource;
 use App\Container;
+use App\InlandPort;
 
 class InlandController extends Controller
 {
@@ -32,7 +34,12 @@ class InlandController extends Controller
             return $direction->only(['id', 'name']);
         });
 
+        $ports = Harbor::get()->map(function ($harbor) {
+            return $harbor->only(['id', 'name']);
+        });
+
         $data = [
+      'ports' => $ports,
       'equipments' => $equipments,
       'directions' => $directions
 
@@ -45,6 +52,12 @@ class InlandController extends Controller
 
     public function store(Request $request)
     {
+
+
+
+
+
+
         $company_user_id = \Auth::user('web')->company_user_id;
         $data = $request->validate([
       'provider' => 'required',
@@ -57,19 +70,6 @@ class InlandController extends Controller
 
   ]);
 
-
- /*$x = array([
-    'provider' => $data['provider'],
-    'company_user_id' => $company_user_id,
-    'type' => $data['direction']['id'],
-    'validity' => $data['validity'],
-    'expire' => $data['expire'],
-    'status' => $data['status'],
-    'gp_container_id' => $data['gp_container']]);
-
-
-  return response()->json(['data' => $x ]);*/
-
         $inland = Inland::create([
           'provider' => $data['provider'],
           'company_user_id' => $company_user_id,
@@ -80,6 +80,15 @@ class InlandController extends Controller
           'gp_container_id' => $data['gp_container']
           
       ]);
+
+      $ports = $request->input('ports');
+      foreach($ports as $p => $value)
+      {
+        $inlandport = new InlandPort();
+        $inlandport->port = $value['id'];
+        $inlandport->inland()->associate($inland);
+        $inlandport->save();
+      }
     
         return new InlandResource($inland);
     }

@@ -94550,6 +94550,55 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -94589,7 +94638,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 label: "",
                 tdClass: "checkbox-add-fcl",
                 isHtml: true
-            }, { key: "provider", label: "Provider", sortable: false }, {
+            }, { key: "provider", label: "Provider", sortable: false }, { key: "port", label: "Ports", sortable: false }, {
                 key: "status",
                 label: "Status",
                 sortable: false,
@@ -94612,15 +94661,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     return '<span class="badge badge-primary">' + _this.badgetypes(value) + '</span>';
                     /*return this.badgetypes(value);*/
                 }
-            }, { key: "actions", label: "", tdClass: "actions-add-inland" }],
+            }, { key: "restrictions", label: "Company Restrictions", sortable: false }, { key: "actions", label: "", tdClass: "actions-add-inland" }],
             // Models Data
             options: [{ name: "Publish", value: "publish" }, { name: "Expired", value: "expired" }],
             reference: "",
             types: [],
             status: [],
             equipment: "",
+            port: "",
             direction: ""
-        }, _defineProperty(_ref, "status", ""), _defineProperty(_ref, "type", ""), _defineProperty(_ref, "selectMode", "multi"), _defineProperty(_ref, "selected", []), _defineProperty(_ref, "allSelected", false), _defineProperty(_ref, "indeterminate", false), _defineProperty(_ref, "selectedDates", {}), _defineProperty(_ref, "directions", []), _defineProperty(_ref, "equipments", []), _defineProperty(_ref, "pageCount", 0), _defineProperty(_ref, "initialPage", 1), _ref;
+        }, _defineProperty(_ref, "status", ""), _defineProperty(_ref, "type", ""), _defineProperty(_ref, "selectMode", "multi"), _defineProperty(_ref, "selected", []), _defineProperty(_ref, "allSelected", false), _defineProperty(_ref, "indeterminate", false), _defineProperty(_ref, "selectedDates", {}), _defineProperty(_ref, "directions", []), _defineProperty(_ref, "equipments", []), _defineProperty(_ref, "ports", []), _defineProperty(_ref, "pageCount", 0), _defineProperty(_ref, "initialPage", 1), _ref;
     },
     created: function created() {
         var _this2 = this;
@@ -94672,7 +94722,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         /* Set the Dropdown lists to use in form */
         setDropdownLists: function setDropdownLists(err, data) {
-            //this.types = data.types;
+            this.ports = data.ports;
             this.equipments = data.equipments;
             this.directions = data.directions;
         },
@@ -94703,7 +94753,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 validity: "2020-04-01",
                 expire: "2020-05-20", //this.dateRange.endDate,
                 status: this.status.value,
-                gp_container: this.equipment.id
+                gp_container: this.equipment.id,
+                ports: this.port
                 // type: type
             };
         },
@@ -94716,8 +94767,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             var data = this.prepareData();
             this.invalidFeedback(data);
             api.call("post", "/api/v2/inlands", data).then(function (response) {
-                // console.log(response);
-                window.location = "http://cargofive/api/v2/inlands/";
+                console.log(response);
+                /*window.location =
+                    "http://cargofive/api/v2/inlands/";*/
             }).catch(function (data) {
                 _this3.$refs.observer.setErrors(data.data.errors);
             });
@@ -95006,6 +95058,20 @@ var render = function() {
                     }
                   },
                   {
+                    key: "cell(port)",
+                    fn: function(data) {
+                      return _vm._l(data.value, function(val, k) {
+                        return _c("span", { key: k }, [
+                          _vm._v(
+                            "                        \n                                    " +
+                              _vm._s(val.ports.name) +
+                              ",\n                            "
+                          )
+                        ])
+                      })
+                    }
+                  },
+                  {
                     key: "cell(actions)",
                     fn: function(data) {
                       return [
@@ -95168,6 +95234,48 @@ var render = function() {
                           "b-form-group",
                           {
                             attrs: {
+                              id: "port",
+                              label: "port",
+                              "label-for": "port",
+                              "invalid-feedback": "ports is required.",
+                              "valid-feedback": "ports is done!"
+                            }
+                          },
+                          [
+                            _c("multiselect", {
+                              attrs: {
+                                options: _vm.ports,
+                                searchable: false,
+                                "close-on-select": true,
+                                "track-by": "id",
+                                multiple: true,
+                                label: "name",
+                                "show-labels": false,
+                                placeholder: "Select Type"
+                              },
+                              model: {
+                                value: _vm.port,
+                                callback: function($$v) {
+                                  _vm.port = $$v
+                                },
+                                expression: "port"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-12 col-sm-6" },
+                      [
+                        _c(
+                          "b-form-group",
+                          {
+                            attrs: {
                               id: "status",
                               label: "status",
                               "label-for": "status",
@@ -95318,6 +95426,47 @@ var render = function() {
                                   _vm.type = $$v
                                 },
                                 expression: "type"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-12 col-sm-6" },
+                      [
+                        _c(
+                          "b-form-group",
+                          {
+                            attrs: {
+                              id: "restrictions",
+                              label: "Company Restrictions",
+                              "label-for": "restrictions",
+                              "invalid-feedback": "Direction is required.",
+                              "valid-feedback": "Reference is done!"
+                            }
+                          },
+                          [
+                            _c("multiselect", {
+                              attrs: {
+                                options: _vm.restrictions,
+                                searchable: false,
+                                "close-on-select": true,
+                                "track-by": "id",
+                                label: "name",
+                                "show-labels": false,
+                                placeholder: "Select Direction"
+                              },
+                              model: {
+                                value: _vm.restrictions,
+                                callback: function($$v) {
+                                  _vm.restrictions = $$v
+                                },
+                                expression: "restrictions"
                               }
                             })
                           ],
