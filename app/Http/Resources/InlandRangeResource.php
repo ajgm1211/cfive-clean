@@ -24,8 +24,7 @@ class InlandRangeResource extends JsonResource
             'inland' => $this->inland,
             'currency' => $this->currency,
             'gp_container' => $this->gpContainer,
-            'groupContainers'=> $this->x
- 
+             
           ];
     }
 }
