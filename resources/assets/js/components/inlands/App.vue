@@ -87,6 +87,13 @@
                             <span v-html="data.value"></span>
                         </template>
 
+
+                        <template v-slot:cell(port)="data">
+                            <span  v-for="(val, k) in data.value" :key="k" >                        
+                                    {{ val.ports.name }},
+                            </span>
+                        </template>
+
                         <template v-slot:cell(actions)="data">
                             <b-button v-bind:id="'popover'+data.item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                             <b-popover v-bind:target="'popover'+data.item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
@@ -138,6 +145,28 @@
                         </b-form-group>
 
                         <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <b-form-group
+                                              id="port"
+                                              label="port"
+                                              label-for="port"
+                                              invalid-feedback="ports is required."
+                                              valid-feedback="ports is done!"
+                                              >
+                                    <multiselect
+                                                 v-model="port"
+                                                 :options="ports"
+                                                 :searchable="false"
+                                                 :close-on-select="true"
+                                                 track-by="id"
+                                                 :multiple="true"
+                                                 label="name"
+                                                 :show-labels="false"
+                                                 placeholder="Select Type"
+                                                 ></multiselect>
+
+                                </b-form-group>
+                            </div>
                             <div class="col-12 col-sm-6">
                                 <b-form-group
                                               id="status"
@@ -220,6 +249,26 @@
                                                  ></multiselect>
                                 </b-form-group>
                             </div>
+                                          <div class="col-12 col-sm-6">
+                                <b-form-group
+                                              id="restrictions"
+                                              label="Company Restrictions"
+                                              label-for="restrictions"
+                                              invalid-feedback="Direction is required."
+                                              valid-feedback="Reference is done!"
+                                              >
+                                    <multiselect
+                                                 v-model="restrictions"
+                                                 :options="restrictions"
+                                                 :searchable="false"
+                                                 :close-on-select="true"
+                                                 track-by="id"
+                                                 label="name"
+                                                 :show-labels="false"
+                                                 placeholder="Select Direction"
+                                                 ></multiselect>
+                                </b-form-group>
+                            </div>
                         </div>
 
                         <div class="btns-form-modal">
@@ -271,6 +320,7 @@
                         isHtml: true
                     },
                     { key: "provider", label: "Provider", sortable: false },
+                    { key: "port", label: "Ports", sortable: false   },
                     {
                         key: "status",
                         label: "Status",
@@ -300,6 +350,7 @@
                             /*return this.badgetypes(value);*/
                         }
                     },
+                    { key: "restrictions", label: "Company Restrictions", sortable: false },
                     { key: "actions", label: "", tdClass: "actions-add-inland" }
                 ],
                 // Models Data
@@ -311,6 +362,7 @@
                 types: [],
                 status: [],
                 equipment: "",
+                port:"",
                 direction: "",
                 status: "",
                 type:"" ,
@@ -323,6 +375,7 @@
 
                 directions: [],
                 equipments: [],
+                ports: [],
                 //Pagination
                 pageCount: 0,
                 initialPage: 1
@@ -376,7 +429,7 @@
             },
             /* Set the Dropdown lists to use in form */
             setDropdownLists(err, data) {
-                //this.types = data.types;
+                this.ports= data.ports;
                 this.equipments = data.equipments;
                 this.directions = data.directions;
             },
@@ -402,6 +455,7 @@
                     expire: "2020-05-20", //this.dateRange.endDate,
                     status:this.status.value,
                     gp_container: this.equipment.id,
+                    ports : this.port,
                     // type: type
                 };
             },
@@ -413,9 +467,9 @@
                 api
                     .call("post", "/api/v2/inlands", data)
                     .then(response => {
-                    // console.log(response);
-                    window.location =
-                        "http://cargofive/api/v2/inlands/";
+                     console.log(response);
+                    /*window.location =
+                        "http://cargofive/api/v2/inlands/";*/
                 })
                     .catch(data => {
                     this.$refs.observer.setErrors(data.data.errors);
