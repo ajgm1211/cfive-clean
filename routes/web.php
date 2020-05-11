@@ -199,7 +199,7 @@ Route::prefix('Requests')->group(function () {
 
     Route::resource('RequestImportation','NewContractRequestsController')->middleware(['auth','role:administrator|data_entry']);
 
-    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importaion.fcl')
+    Route::get('Requestimporfcl','NewContractRequestsController@LoadViewRequestImporContractFcl')->name('Request.importation.fcl')
         ->middleware(['auth','role:administrator|company|subuser|data_entry']);
     Route::get('StatusRquestFCL/{id}','NewContractRequestsController@showStatus')->name('show.status.Request')
         ->middleware(['auth','role:administrator|data_entry']);
