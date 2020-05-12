@@ -1,114 +1,152 @@
 <template>
-    <b-card>
-        <div class="row">
-            <div class="col-6">
-                <b-card-title>Surcharges</b-card-title>
-            </div>
-            <div class="col-6">
-                <div class="float-right">
-                    <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
-                    <button class="btn btn-primary btn-bg">+ Add Surcharge</button>
+    <div>
+        <b-card>
+            <div class="row">
+                <div class="col-6">
+                    <b-card-title>Surcharges</b-card-title>
+                </div>
+                <div class="col-6">
+                    <div class="float-right">
+                        <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
+                        <button class="btn btn-primary btn-bg" v-b-modal.addSurcharge>+ Add Surcharge</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="row my-3">
-             <div class="col-12 col-sm-4">
-                <b-form inline>
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    <b-input
-                             id="inline-form-input-name"
-                             class="mb-2 mr-sm-2 mb-sm-0"
-                             placeholder="Search"
-                             ></b-input>
-                </b-form>
-            </div>
-        </div>
-        
-        <b-table borderless hover :fields="fields" :items="data" :current-page="currentPage"></b-table>
-        <b-button id="popover-button-variant" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
-        <!-- Action BTN -->
-        <b-popover target="popover-button-variant" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-            <button class="btn-action">Edit</button>
-            <button class="btn-action">Duplicate</button>
-            <button class="btn-action">Delete</button>
-        </b-popover>
-        <!-- Action BTN END -->
-        <!-- checkbox -->
-        <input type="checkbox" class="input-check" id="check">
-        <label  for="check"></label>
-        <!-- checkbox end -->
-        <!-- paginator -->
-        <b-pagination v-model="currentPage" :total-rows="rows" align="right"></b-pagination>
-    </b-card>
-    </template>
+
+            <DataTable 
+                :fields="fields"
+                :inputFields="input_fields"
+                :vdatalists="datalists"
+                :actions="actions"
+                @onEdit="onEdit"
+                ></DataTable>
+
+
+        </b-card>
+
+        <!-- Edit Form -->
+        <b-modal id="editSurcharge" size="lg" cancel-title="Cancel" ok-title="Add Contract" hide-header-close title="Update Ocean Freight" hide-footer>
+            <FormView 
+                :data="currentData" 
+                :fields="input_fields"
+                :vdatalists="datalists"
+                btnTxt="Update Surcharge"
+                @exit="closeModal('editSurcharge')"
+                @success="closeModal('editSurcharge')"
+                :actions="actions"
+                :update="true"
+                >
+            </FormView>
+        </b-modal>
+        <!-- End Edit Form -->
+
+        <!-- Create Form -->
+        <b-modal id="addSurcharge" size="lg" hide-header-close title="Add Ocean Freight" hide-footer>
+            <FormView 
+                :data="{ typeofroute: { id: 'port', name: 'Port', vselected: 'harbors' } }" 
+                :fields="input_fields"
+                :vdatalists="datalists"
+                btnTxt="Add Surcharge"
+                @exit="closeModal('addSurcharge')"
+                @success="closeModal('addSurcharge')"
+                :actions="actions"
+                >
+            </FormView>
+        </b-modal>
+        <!-- End Create Form -->
+    </div>
+</template>
 
 
 <script>
+    import DataTable from '../DataTable';
+    import FormView from '../views/FormView';
+
     export default {
         components: { 
-            
+            DataTable,
+            FormView
+        },
+        props: {
+            datalists: Object,
+            actions: Object
         },
         data() {
             return {
                 isBusy:true, // Loader
                 data: null,
+                currentData: {},
 
+                /* Table headers */
                 fields: [
-                    { key: 'checkbox', label: '', tdClass: 'checkbox-add-fcl', formatter: value => {
-                        var checkbox = '<input type="checkbox" class="input-check" id="check"/><label  for="check"></label>';
-                        $('.checkbox-add-fcl').append(checkbox);
-                    }  
-                    },
-                    { key: 'charges', label: 'Charges', sortable: false },
-                    { key: 'from', label: 'Origin Port', sortable: false },
-                    { key: 'until', label: 'Destination Port', sortable: false },
-                    { key: 'chargeType', label: 'Charge Type', sortable: false },
-                    { key: 'calculation', label: 'Calculation Type', sortable: false },
-                    { key: 'amount', label: 'Amount', sortable: false },
-                    { key: 'currency', label: 'Currency', sortable: false },
-                    { key: 'carriers', label: 'Carriers', 
-                     formatter: value => {
-                         let $carriers = [];
-
-                         value.forEach(function(val){
-                             $carriers.push(val.name);
-                         });
-                         return $carriers.join(', ');
-                     } 
-                    },
-                    { key: 'actions', label: '', tdClass: 'actions-add-fcl', formatter: value => {
-                        var actions = '<label for="actions-box"><div class="actions-box"><i class="fa fa-ellipsis-h icon-add-fcl" aria-hidden="true"></i><input type="checkbox" id="actions-box"><div class="popup-actions"><button type="button" class="btn-action">Edit</button><button type="button" class="btn-action">Duplicate</button><button type="button" class="btn-action">Delete</button></div></div></label>';
-                        $('.actions-add-fcl').append(actions);
-                    }  
-                    }
-                    
-                
-
+                    { key: 'surcharge', label: 'Type', formatter: (value)=> { return value.name } }, 
+                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badgeports(value) } }, 
+                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badgeports(value) } }, 
+                    { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
+                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
+                    { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
+                    { key: 'amount', label: 'Amount' }, 
+                    { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } },
                 ],
-                
+
+                /* Table input inline fields */
+                input_fields: {
+                    typeofroute: { label: 'Type of route', searchable: true, type: 'pre_select', rules: 'required', trackby: 'name', placeholder: '', options: 'route_types', initial: { id: 'port', name: 'Port', vselected: 'harbors' }, target: 'dynamical_ports' },
+                    surcharge: { label: 'Surcharge', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'surcharges' },
+                    origin: { label: 'Origin Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'dynamical_ports' },
+                    destination: { label: 'Destination Ports', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'dynamical_ports' },
+                    destination_type: { label: 'Destination Type', searchable: true, type: 'select', rules: 'required', trackby: 'description', placeholder: 'Select option', options: 'destination_types' },
+                    carriers: { label: 'Carriers', searchable: true, type: 'multiselect', rules: 'required', trackby: 'name', placeholder: 'Select options', options: 'carriers' },
+                    calculation_type: { label: 'Calculation type', searchable: true, type: 'select', rules: 'required', trackby: 'name', placeholder: 'Select option', options: 'calculation_types' },
+                    amount: { label: 'Amount', type: 'text', rules: 'required', placeholder: 'Amount' },
+                    currency: { label: 'Currency', searchable: true, type: 'select', rules: 'required', trackby: 'alphacode', placeholder: 'Select option', options: 'currencies' },
+                },
+
             }
         },
         created() {
-
-            api.getData({}, '/api/v2/contracts', (err, data) => {
-                this.setData(err, data);
-            });
-
         },
         methods: {
-            setData(err, { data: records, links, meta }) {
-                this.isBusy = false;
-
-                if (err) {
-                    this.error = err.toString();
-                } else {
-                    this.data = records;
-                }
+            /* Single Actions */
+            onEdit(data){
+                this.currentData = data;
+                this.$bvModal.show('editSurcharge');
             },
-            confirmAction() {
-                console.log('hola');
-            }
+
+            /* Dispatched event */
+            closeModal(modal){
+                this.$bvModal.hide(modal);
+            },
+
+            badgecarriers(value){
+                let carriers = "";
+
+                if(value){
+                    value.forEach(function(val){
+                        carriers += "<span class='badge badge-primary'>"+val.name+"</span> ";
+                    });
+
+                    return carriers;
+                } else {
+                    return '-';
+                }
+
+            },
+            badgeports(value){
+                let carriers = "";
+
+                if(value){
+                    value.forEach(function(val){
+                        carriers += "<span class='badge badge-warning'>"+val.name+"</span> ";
+                    });
+
+                    return carriers;
+                } else {
+                    return '-';
+                }
+
+            },
+            
         }
     }
 </script>
