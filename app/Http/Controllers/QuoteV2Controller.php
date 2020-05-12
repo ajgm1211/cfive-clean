@@ -2706,19 +2706,27 @@ class QuoteV2Controller extends Controller
         $prices = Price::all()->pluck('name', 'id');
         $company_user = User::where('id', \Auth::id())->first();
         $carrierMan = Carrier::all()->pluck('name', 'id');
+        $company_setting = CompanyUser::where('id', \Auth::user()->company_user_id)->first();
+        $typeCurrency = 'USD';
+        $idCurrency = 149;
+        $currency_name = '';
+        
+        if($company_setting->currency_id != null){
+            $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
+            $typeCurrency =  $company_setting->currency->alphacode;
+            $idCurrency = $company_setting->currency_id;
+        }
 
-        if ($company_user->companyUser) {
+        /*if ($company_user->companyUser) {
             $currency_name = Currency::where('id', $company_user->companyUser->currency_id)->first();
         } else {
             $currency_name = '';
-        }
-        $currencies = Currency::all()->pluck('alphacode', 'id');
+        }*/
 
+        $currencies = Currency::all()->pluck('alphacode', 'id');
 
         //Settings de la compañia 
         $company = User::where('id', \Auth::id())->with('companyUser.currency')->first();
-        $typeCurrency =  $company->companyUser->currency->alphacode;
-        $idCurrency = $company->companyUser->currency_id;
 
         // Request Formulario
         foreach ($request->input('originport') as $origP) {
