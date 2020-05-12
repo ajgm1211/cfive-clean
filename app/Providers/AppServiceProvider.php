@@ -16,25 +16,26 @@ use Illuminate\Queue\Events\JobProcessing;
 
 class AppServiceProvider extends ServiceProvider
 {
-  /**
+    /**
      * Bootstrap any application services.
      *
      * @return void
      */
 
-  public function boot(UrlGenerator $url){
-    Schema::defaultStringLength(191);
-    Contract::observe(ContractObserver::class);
-    Quote::observe(QuoteObserver::class);
+    public function boot(UrlGenerator $url)
+    {
+        Schema::defaultStringLength(191);
+        Contract::observe(ContractObserver::class);
+        Quote::observe(QuoteObserver::class);
 
-    $url->forceScheme('https');
+        //$url->forceScheme('https');
+    }
 
-  }
-
-  public function register(){
-    // Dusk, if env is appropiate
-    /*if ($this->app->environment('local', 'testing')) {
+    public function register()
+    {
+        // Dusk, if env is appropiate
+        /*if ($this->app->environment('local', 'testing')) {
         $this->app->register(DuskServiceProvider::class);
       }*/
-  }
+    }
 }
