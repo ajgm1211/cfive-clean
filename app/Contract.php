@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\ContractCarrier;
 use Illuminate\Support\Facades\DB;
 
-class Contract extends Model implements HasMedia
+class Contract extends Model implements HasMedia, Auditable
 {
 	use HasMediaTrait;
 	protected $guard = 'web';

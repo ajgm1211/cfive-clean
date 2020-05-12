@@ -91,6 +91,11 @@
 
     background-color: #41B0D5;    
   }
+
+  .bg-safmarine {
+
+    background-color: #f99702;    
+}
   .btn-detail__quotes:hover {
     border-color: #0072fc;
     background-color: #0072fc;    
@@ -534,6 +539,11 @@
                 <label for="mode5" class="label-check">Include MAERSK Spot</label>
               </div>
 
+              <div class="col-lg-2 for-check" id="safmarinediv">
+								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
+								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
+							</div>
+
             </div><br>
             <div class="row">
 
@@ -783,10 +793,11 @@
 
             <div class="row">
               <div class="col-lg-12">   
-                <center>
-                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
-                  <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
-                </center>
+              <center>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search" id="quote_search">Search</button>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide" id="quote_searching">Searching &nbsp;<i class="fa fa-spinner fa-spin"></i></button>
+									<button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
+								</center>
             </div>
           </div>
         </div>
@@ -873,6 +884,7 @@
             </div>
             @foreach($arreglo as $arr)
             <!-- Empieza tarjeta de cotifzacion -->
+
             <div class="card-p__quotes input-select{{$loop->iteration}}"  style="margin-bottom: 50px;">
               <div class="row initial-card" id='principal{{$loop->iteration}}' >
                 <div class="col-lg-2 d-flex align-items-center img-bottom-border">            
@@ -1011,7 +1023,6 @@
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div>
-
                   @foreach($arr->localorigin as $localorigin)
 
                   <div class="row data-rates">
@@ -1411,6 +1422,9 @@
 
 
   $(document).ready(function() {
+
+
+    
 
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;

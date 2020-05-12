@@ -151,7 +151,7 @@ class ContractsController extends Controller
         $companies = Company::where('company_user_id', '=', \Auth::user()->company_user_id)->pluck('business_name','id');
         $contacts = Contact::whereHas('company', function ($query) {
             $query->where('company_user_id', '=', \Auth::user()->company_user_id);
-        })->pluck('first_name','id');Country
+        })->pluck('first_name','id');
         if(Auth::user()->type == 'company' ){
             $users =  User::whereHas('companyUser', function($q)
                                      {
@@ -1150,9 +1150,13 @@ class ContractsController extends Controller
             }
 
             $contract = Contract::find($id);
-            $contract->delete();
+            if(!empty($contract)){
+              $contract->delete();
+              return response()->json(['message' => 'Ok']);
+            }else{
+              return response()->json(['message' => 'HasDeleted']);
+            }
 
-            return response()->json(['message' => 'Ok']);
         }
         catch (\Exception $e) {
             return response()->json(['message' => $e]);
@@ -1516,7 +1520,7 @@ class ContractsController extends Controller
 
     public function duplicatedContractFromRequestStore(Request $request, $id){
         $requestArray   = $request->all();
-        //dd($requestArray);
+        
         $requestArray['requestChange'] 	= true;
         $time   = new \DateTime();
         $now2   = $time->format('Y-m-d H:i:s');
@@ -1539,7 +1543,6 @@ class ContractsController extends Controller
         }
         $requestFc->update();
         $data           = ['id'=> $id,'data' => $requestArray];
-        //dd($data);
         if(env('APP_VIEW') == 'operaciones') {
             GeneralJob::dispatch('duplicated_fcl',$data)->onQueue('operaciones');
         } else {
