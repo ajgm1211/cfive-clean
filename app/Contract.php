@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 class Contract extends Model implements HasMedia, Auditable
 {
 	use HasMediaTrait;
+	use \OwenIt\Auditing\Auditable;
 	protected $guard = 'web';
 	protected $table    = "contracts";     
 
