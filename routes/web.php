@@ -1007,18 +1007,54 @@ Route::prefix('Container')->group(function () {
     Route::resource('Container','ContainerController')->middleware(['role:administrator|data_entry']);
 });
 
-/** Contracts V2 routes **/
+/** Contracts V2 view routes **/
 Route::get('api/contracts', 'ContractController@index');
+Route::get('api/contracts/create', 'ContractController@create');
+Route::get('api/contracts/{contract}/edit', 'ContractController@edit');
+/** End Contracts routes view **/
+
+/** API Contracts endpoint (Pending to check) **/
 Route::get('api/v2/contracts', 'ContractController@list');
 Route::get('api/v2/contracts/data', 'ContractController@data');
-Route::get('api/contracts/create', 'ContractController@create');
 Route::post('api/v2/contracts/store', 'ContractController@store');
 Route::get('api/v2/contracts/{contract}', 'ContractController@retrieve');
-Route::get('api/contracts/{contract}/edit', 'ContractController@edit');
 Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
+Route::delete('api/v2/contracts/{contract}/destroy', 'ContractController@destroy');
+/** End API Contracts endpoint **/
 
+/** API Contracts Ocean Freights EndPoints **/
 Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@list');
-Route::get('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
+Route::post('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
 Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
 /** End Contracts V2 routes **/
+
+
+/** API Contracts LocalCharge EndPoints **/
+Route::get('api/v2/contracts/{contract}/localcharges', 'LocalChargeController@list');
+Route::post('api/v2/contracts/{contract}/localcharge/store', 'LocalChargeController@store');
+Route::post('api/v2/contracts/{contract}/localcharge/{localcharge}/update', 'LocalChargeController@update');
+Route::get('api/v2/contracts/{contract}/localcharge/{surcharge}', 'LocalChargeController@retrieve');
+/** End Contracts V2 routes **/
+
+
+/** Inland V2 routes **/
+Route::group(['prefix' => 'api/v2/inlands', 'middleware' => ['auth']], function () {
+    Route::get('list', 'InlandController@list');
+    Route::get('data', 'InlandController@data');
+    Route::get('retrieve/{inland}', 'InlandController@retrieve');
+    Route::get('groupc/{inland}', 'InlandController@groupInlandContainer');
+      // INLAND RANGE 
+    Route::get('range/{inland}', 'InlandRangeController@list');
+    Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');
+});
+Route::resource('api/v2/inlands', 'InlandController')->middleware('auth');
+
+/*
+Route::get('api/inlands', 'InlandController@index');
+
+Route::post('api/v2/inlands/store', 'InlandController@store');
+Route::get('api/inlands/{contract}/edit', 'ContractController@edit');*/
+
+/** End Contracts V2 routes **/
+

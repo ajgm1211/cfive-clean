@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Rate;
 use App\Container;
+use App\Contract;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OceanFreightResource;
 
@@ -33,14 +34,14 @@ class OceanFreightController extends Controller
     {
         $data = $this->validateData($request, $contract);
 
-        $prepared_data = $this->preparedData($data, $contract);
+        $prepared_data = $this->prepareData($data, $contract);
 
         $rate = Rate::create($prepared_data);
 
         return new OceanFreightResource($rate);
     }
 
-    public function preparedData($request, $contract)
+    public function prepareData($data, $contract)
     {
         $prepared_data = [
             'origin_port' => $data['origin'],
@@ -57,24 +58,24 @@ class OceanFreightController extends Controller
         
         if($contract->isDRY()){
 
-            $prepared_data['twuenty'] = $data['rates_20V'],
-            $prepared_data['forty'] = $data['rates_40V'],
-            $prepared_data['fortyhc'] = $data['rates_40HC'],
-            $prepared_data['fortynor'] = $data['rates_20NOR'],
-            $prepared_data['fortyfive'] = $data['rates_45HC'],
+            $prepared_data['twuenty'] = isset($data['rates_20DV']) ? $data['rates_20DV'] : '-';
+            $prepared_data['forty'] = isset($data['rates_40DV']) ? $data['rates_40DV'] : '-';
+            $prepared_data['fortyhc'] = isset($data['rates_40HC']) ? $data['rates_40HC'] : '-';
+            $prepared_data['fortynor'] = isset($data['rates_40NOR']) ? $data['rates_40NOR'] : '-';
+            $prepared_data['fortyfive'] = isset($data['rates_45HC']) ? $data['rates_45HC'] : '-';
 
         } else {
 
-            $prepared_data['twuenty'] = '-',
-            $prepared_data['forty'] = '-',
-            $prepared_data['fortyhc'] = '-',
-            $prepared_data['fortynor'] = '-',
-            $prepared_data['fortyfive'] = '-'
+            $prepared_data['twuenty'] = '-';
+            $prepared_data['forty'] = '-';
+            $prepared_data['fortyhc'] = '-';
+            $prepared_data['fortynor'] = '-';
+            $prepared_data['fortyfive'] = '-';
 
             foreach ($data as $key => $value) {
 
-            if(strpos($key, "rates_") === 0 and !empty($value))
-                $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
+                if(strpos($key, "rates_") === 0 and !empty($value))
+                    $containers['C'.substr($key, 6)] = number_format(floatval($value), 2, '.', '');
             }
         }
 
@@ -87,7 +88,7 @@ class OceanFreightController extends Controller
     {
         $vdata = [
             'origin' => 'required',
-            'destination' => 'required'
+            'destination' => 'required',
             'carrier' => 'required',
             'currency' => 'required',
             'schedule_type' => 'sometimes|nullable',
@@ -115,7 +116,7 @@ class OceanFreightController extends Controller
     {
         $data = $this->validateData($request, $contract);
 
-        $prepared_data = $this->preparedData($data, $contract);
+        $prepared_data = $this->prepareData($data, $contract);
 
         $rate->update($prepared_data);
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Surcharge extends Model
 {
   protected $table    = "surcharges";
-  protected $fillable = ['id', 'name', 'description','sale_term_id','company_user_id'];
+  protected $fillable = [ 'id', 'name', 'description', 'sale_term_id', 'company_user_id' ];
 
   public function companyUser()
   {
