@@ -122,7 +122,7 @@ New \ Status Import  &nbsp;
                                         Charge Type
                                     </th>
                                     <th>
-                                        Calculationtype type
+                                        Calculation type
                                     </th>
                                     <th>
                                         Currency

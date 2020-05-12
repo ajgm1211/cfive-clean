@@ -27,7 +27,7 @@ class AccountImportationContractFcl extends Model implements HasMedia,Auditable
 
 
     public function FilesTmps(){
-        return $thid->hasMany('App\FileTmp');  
+        return $this->hasMany('App\FileTmp');  
     }
 
     public function contract(){

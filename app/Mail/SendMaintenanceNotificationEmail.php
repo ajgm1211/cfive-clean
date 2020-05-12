@@ -16,10 +16,12 @@ class SendMaintenanceNotificationEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($day, $month, $date, $hour, $duration)
+    public function __construct($day, $month, $day_spanish, $month_spanish, $date, $hour, $duration)
     {
         $this->day = $day;
+        $this->day_spanish = $day_spanish;
         $this->month = $month;
+        $this->month_spanish = $month_spanish;
         $this->date = $date;
         $this->hour = $hour;
         $this->duration = $duration;
@@ -32,9 +34,9 @@ class SendMaintenanceNotificationEmail extends Mailable
      */
     public function build()
     {
-        return $this->from('info@cargofive.com')
+        return $this->from('info@cargofive.com', 'Cargofive')
             ->view('emails.notifications.maintenance')
-            ->subject('Cargofive scheduled maintenance')
-            ->with(['day' => $this->day,'month'=> $this->month,'date'=> $this->date,'hour'=>$this->hour,'duration'=>$this->duration]);
+            ->subject('Cargofive scheduled maintenance notice | Aviso de mantenimiento')
+            ->with(['day' => $this->day,'day_spanish' => $this->day_spanish,'month'=> $this->month,'month_spanish'=> $this->month_spanish,'date'=> $this->date,'hour'=>$this->hour,'duration'=>$this->duration]);
     }
 }
