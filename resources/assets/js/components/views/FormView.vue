@@ -24,6 +24,32 @@
                 </div>
                 <!-- End Text Field -->
 
+                <!-- Based Dinamical Select Input -->
+                <div v-if="item.type == 'pre_select' && refresh">
+                    <b-form-group
+                            :id="'id_'+key"
+                            :label="item.label"
+                            :invalid-feedback="key+' is required'"
+                            valid-feedback="key+' is done!'"
+                          >
+                        <multiselect 
+                             v-model="vdata[key]"
+                             :id="key"
+                             :multiple="false" 
+                             :options="datalists[item.options]" 
+                             :searchable="item.searchable"
+                             :close-on-select="true"
+                             :clear-on-select="false"
+                             track-by="id" 
+                             :label="item.trackby" 
+                             :show-labels="false"
+                             :placeholder="item.placeholder"
+                             @select="dispatch">
+                        </multiselect>
+                    </b-form-group>
+                </div>
+                <!-- Based Dinamycal Select -->
+
                 <!-- Select Field -->
                 <div v-if="item.type == 'select'">
                     <b-form-group
@@ -97,7 +123,7 @@
             </div>
 
             <div class="btns-form-modal">
-                <button class="btn" @click="closeModal" type="button">Cancel</button>
+                <button class="btn" @click="close" type="button">Cancel</button>
                 <button class="btn btn-primary btn-bg" type="button" @click="onSubmit" >{{ btnTxt }}</button>
             </div>
         </div>
@@ -124,7 +150,11 @@
     	props: {
             data: Object,
             fields: Object,
-            datalists: Object,
+            vdatalists: {
+                type: Object,
+                required: false,
+                default: () => { return {} }
+            },
             btnTxt: {
                 type: String,
                 required: false,
@@ -139,17 +169,22 @@
         },
         data() {
             return {
-                vdata: {}
+                vdata: {},
+                datalists: {},
+                refresh: true
             }
         },
         created() {
             this.vdata = this.data;
+            this.updateDinamicalFieldOptions();
         },
         methods: {
-            closeModal(){
+            /* Dispatch an event when click in cancel close */
+            close(){
                 this.$emit('exit', true);
             },
 
+            /* Set the class of the field */
             getClass(item){
 
                 if('colClass' in item)
@@ -159,6 +194,36 @@
 
             },
 
+            /* Reset the Dynamical Fields */
+            resetDynamicalFields(target){
+
+                for (const key in this.fields) {
+                    if(this.fields[key]['options'] == target)
+                        this.vdata[key] = null;
+                }
+
+            },
+
+            /* Execute when pre select field is updated */
+            dispatch(val, item){
+                this.refresh = false;
+                this.datalists[this.fields[item].target] = this.datalists[val.vselected];
+                this.resetDynamicalFields(this.fields[item].target);
+                this.refresh = true;
+            },
+
+            /* Update Dynamical Fields */
+            updateDinamicalFieldOptions(){
+
+                this.datalists = JSON.parse(JSON.stringify(this.vdatalists));
+
+                for (const key in this.fields) {
+                    if(this.fields[key]['type'] == 'pre_select')
+                        this.datalists[this.fields[key]['target']] = this.datalists[this.fields[key]['initial'].vselected];
+                }
+            },
+
+            /* Check if value is empty by type */
             isEmpty(value){
                 //console.log(typeof value);
                 if(typeof value == 'string')
@@ -170,6 +235,7 @@
                 return false;
             },
 
+            /* Validate Form */
             validateForm(){
                 let validate = true;
                 let component = this;
@@ -191,6 +257,8 @@
 
                 return validate;
             },
+
+            /* Prepare the data to submit */
             prepareData(){
                 let data = {};
                 let component = this;
@@ -204,6 +272,7 @@
                             if(component.vdata[key])
                                 data[key] = component.vdata[key];
                             break;
+                        case 'pre_select':
                         case 'select':
                             if(component.vdata[key])
                                 data[key] = component.vdata[key].id;
@@ -257,6 +326,14 @@
 
                 }
 
+            },
+        },        
+        watch: {
+            vdatalists: {
+                handler(val, oldval){
+                    this.updateDinamicalFieldOptions();
+                },
+                deep: true
             },
         }
 

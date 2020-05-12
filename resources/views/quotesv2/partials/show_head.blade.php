@@ -68,7 +68,7 @@
                     <div class="row quote-info-mb">
                         <div class="col-md-4">
                             <input type="text" value="{{$quote->id}}" class="form-control id" hidden >
-                            <input type="text" id="currency_id" value="{{$currency_cfg->alphacode}}" class="form-control id" hidden >
+                            <input type="text" id="currency_id" value="{{$company_user->currency->alphacode}}" class="form-control id" hidden >
                             <label class="title-quote"><b>Quotation ID:&nbsp;&nbsp;</b></label>
                             <input type="text" value="{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}" class="form-control quote_id" hidden >
                             <span class="quote_id_span">{{$quote->custom_quote_id!='' ? $quote->custom_quote_id:$quote->quote_id}}</span>
@@ -167,16 +167,22 @@
                             <label class="title-quote"><b>Equipment:&nbsp;&nbsp;</b></label>
                             <span class="equipment_span">
                                 @if($quote->type=='FCL')
-                                @if($quote->equipment!='')
-                                <?php
-                                $equipment=json_decode($quote->equipment);
-                                ?>
-                                @foreach($equipment as $item)
-                                {{$item}}@unless($loop->last),@endunless
-                                @endforeach
-                                @endif
+                                    @if($quote->equipment!='')
+                                        <?php
+                                            $equipment=json_decode($quote->equipment);
+                                        ?>
+                                        @foreach ($equipmentHides as $key=>$hide)
+                                            @if($hide != 'hidden')
+                                                @foreach ($containers as $c)
+                                                    @if($c->code == $key)
+                                                        {{$key}}
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 @else
-                                N/A
+                                    N/A
                                 @endif
                             </span>
                             {{ Form::select('equipment[]',['20' => '20','40' => '40','40HC'=>'40HC','40NOR'=>'40NOR','45'=>'45'],@$equipment,['class'=>'form-control equipment','multiple' => 'multiple','required' => 'true','hidden','disabled']) }}

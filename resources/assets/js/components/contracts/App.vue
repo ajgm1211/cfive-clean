@@ -29,7 +29,7 @@
             <FormView 
                 :data="fdata" 
                 :fields="form_fields"
-                :datalists="datalists"
+                :vdatalists="datalists"
                 btnTxt="Add Contract"
                 @exit="closeModal('addContract')"
                 @success="success"
@@ -158,6 +158,7 @@
             },
 
             badgecarriers(value){
+
                 let carriers = "";
 
                 if(value){
