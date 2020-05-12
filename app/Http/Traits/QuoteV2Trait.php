@@ -15,8 +15,25 @@ use App\Jobs\SendQuotes;
 use App\SendQuote;
 use App\Container;
 use App\SaleTermV2;
+use App\SaleTermV2Charge;
+use App\CalculationType;
+use App\CalculationTypeLcl;
+use App\Company;
+use App\CompanyUser;
+use App\Contact;
+use App\Country;
+use App\EmailTemplate;
 use App\Harbor;
+use App\Incoterm;
+use App\Price;
+use App\Inland;
+use App\Quote;
+use App\Carrier;
 use App\User;
+use App\PdfOption;
+use App\IntegrationQuoteStatus;
+
+use App\Surcharge;
 use Illuminate\Support\Collection as Collection;
 
 trait QuoteV2Trait

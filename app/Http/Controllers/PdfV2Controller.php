@@ -62,6 +62,7 @@ use App\ViewQuoteV2;
 use App\SaleTermV2Charge;
 use App\Http\Traits\QuoteV2Trait;
 
+
 class PdfV2Controller extends Controller
 {
 
@@ -78,8 +79,8 @@ class PdfV2Controller extends Controller
         $id = obtenerRouteKey($id);
         $equipmentHides = '';
 
-        if (\Auth::user()->company_user_id) {
-            $company_user = CompanyUser::find(\Auth::user()->company_user_id);
+        if (Auth::user()->company_user_id) {
+            $company_user = CompanyUser::find(Auth::user()->company_user_id);
             $currency_cfg = Currency::find($company_user->currency_id);
         } else {
             $company_user = "";
@@ -1149,7 +1150,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = \Auth::user()->email;
+                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
         }
@@ -1374,7 +1375,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = \Auth::user()->email;
+                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;
@@ -1841,7 +1842,7 @@ class PdfV2Controller extends Controller
                 if ($email_settings->email_from != '') {
                     $email_from = $email_settings->email_from;
                 } else {
-                    $email_from = \Auth::user()->email;
+                  $email_from = Auth::user()->name . ' ' . Auth::user()->lastname;
                 }
             }
             $type = $company_user->type_pdf;

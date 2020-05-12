@@ -79,6 +79,7 @@ class GeneralJob implements ShouldQueue
             $contract_new->direction_id     = $requestArray['direction_id'];
             $contract_new->company_user_id  = $requestArray['company_user_id'];
             $contract_new->validity         = $validity;
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->expire           = $expire;
             $contract_new->remarks          = $contract->remarks;
             $contract_new->status           = 'publish';

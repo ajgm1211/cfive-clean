@@ -491,12 +491,10 @@ class NewContractRequestsController extends Controller
 
 				if($Ncontract->sentemail == false){
 					$users = User::all()->where('company_user_id','=',$Ncontract->company_user_id);
-					$message = 'The request was processed N°: ' . $Ncontract->id;
+					$message = 'Your request N° '.$Ncontract->id.' was processed';
 					foreach ($users as $user) {
-
 						$user->notify(new N_general(\Auth::user(),$message));
 					}
-
 
 					$usercreador = User::find($Ncontract->user_id);
 					$message = "The importation ".$Ncontract->id." was completed";

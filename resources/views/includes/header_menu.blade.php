@@ -321,15 +321,14 @@
                         </span>
                       </a>
                     </li>
-
-                    <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('api.settings')}}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-network"></i>
-<span class="m-menu__link-text">
-API Integrations
-</span>
-</a>
-</li>-->
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('api.settings')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon flaticon-network"></i>
+                        <span class="m-menu__link-text">
+                        External API Integrations
+                        </span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
