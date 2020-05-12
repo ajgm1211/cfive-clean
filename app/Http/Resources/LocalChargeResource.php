@@ -18,16 +18,19 @@ class LocalChargeResource extends JsonResource
             $ports = $this->localcharports;
             $origin = $ports->pluck('portOrig');
             $destination = $ports->pluck('portDest');
+            $route = [ 'id' => 'port', 'name' => 'Port', 'vselected' => 'harbors' ];
         }
         else {
             $countries = $this->localcharcountries;
             $origin = $countries->pluck('countryOrig');
             $destination = $countries->pluck('countryDest');
+            $route = [ 'id' => 'country', 'name' => 'Country', 'vselected' => 'countries' ];
         }
 
         return [
             'id' => $this->id,
-            'type' => $this->surcharge,
+            'typeofroute' => $route,
+            'surcharge' => $this->surcharge,
             'origin' => $origin, 
             'destination' => $destination,
             'destination_type' => $this->typedestiny,
