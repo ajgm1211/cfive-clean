@@ -1,19 +1,22 @@
 <template>
     <div>
+        <!-- Search Input -->
         <div class="row my-3">
             <div class="col-12 col-sm-4">
                 <b-form inline>
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <b-input
-                             id="inline-form-input-name"
-                             class="mb-2 mr-sm-2 mb-sm-0"
-                             v-model="search"
-                             placeholder="Search"
-                             ></b-input>
+                         id="inline-form-input-name"
+                         class="mb-2 mr-sm-2 mb-sm-0"
+                         v-model="search"
+                         placeholder="Search"
+                         ></b-input>
                 </b-form>
             </div>
         </div>
+        <!-- End Search Input -->
 
+        <!-- DataTable -->
         <b-table-simple hover small responsive borderless>
             
             <!-- Header table -->
@@ -88,7 +91,7 @@
                                  :label="item.trackby" 
                                  :show-labels="false"
                                  :placeholder="item.placeholder"
-                                 @select="doSomething">
+                                 @select="dispatch">
                             </multiselect>
                         </div>
                         <!-- Based Dinamycal Select -->
@@ -180,6 +183,7 @@
             <!-- Body table -->
 
         </b-table-simple>
+        <!-- End DataTable -->
         
         <!-- Pagination -->
         <paginate
@@ -399,6 +403,7 @@
             closeModal(modal){
                 this.$bvModal.hide(modal);
             },
+
             resetDinamicalFields(target){
 
                     for (const key in this.inputFields) {
@@ -406,12 +411,14 @@
                             this.fdata[key] = null;
                     }
             },
-            doSomething(val, item){
+
+            dispatch(val, item){
                 this.refresh = false;
                 this.datalists[this.inputFields[item].target] = this.datalists[val.vselected];
                 this.resetDinamicalFields(this.inputFields[item].target);
                 this.refresh = true;
             },
+            
             updateDinamicalFieldOptions(){
 
                 this.datalists = JSON.parse(JSON.stringify(this.vdatalists));

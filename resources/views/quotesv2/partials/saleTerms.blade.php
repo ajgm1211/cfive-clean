@@ -46,11 +46,14 @@ $x=0;
                                             <tr style="height: 40px;">
                                                 <td class="td-table" style="padding-left: 30px">Charge</td>
                                                 <td class="td-table">Detail</td>
-                                                <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
-                                                <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
-                                                <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
+                                                <!-- Seteando cabeceras -->
+                                                @foreach ($equipmentHides as $key=>$hide)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            <td class="td-table" {{$hide}}>{{$key}}</td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td class="td-table {{$quote->type=='FCL' ? 'hide':''}}">Units</td>
                                                 <td class="td-table {{$quote->type=='FCL' ? 'hide':''}}">Rate</td>
                                                 <td class="td-table {{$quote->type=='FCL' ? 'hide':''}}">Total</td>
@@ -58,8 +61,13 @@ $x=0;
                                             </tr>
                                         </thead>
                                         <tbody style="background-color: white;">
-
+                                            @php
+                                                $pre = 'c';
+                                            @endphp
                                             @foreach($item->charge as $v)
+                                            @php
+                                                $amounts = json_decode($v->rate, true);
+                                            @endphp
                                             <tr class="tr-freight" style="height:40px;">
                                                 <td class="tds" style="padding-left: 30px">
                                                     <a href="#" class="editable-saleterms td-a" data-type="text" data-name="charge" data-value="{{$v->charge}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="Charge" data-emptyText="-"></a>
@@ -67,11 +75,17 @@ $x=0;
                                                 <td class="tds">
                                                     <a href="#" class="editable-saleterms td-a" data-type="text" data-name="detail" data-value="{{$v->detail}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="Detail" data-emptyText="-"></a>
                                                 </td>
-                                                <td class="tds" {{ @$equipmentHides['20'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c20" data-value="{{$v->c20}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="20"></a></td>
-                                                <td class="tds" {{ @$equipmentHides['40'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c40" data-value="{{$v->c40}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="40"></a></td>
-                                                <td class="tds" {{ @$equipmentHides['40hc'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c40hc" data-value="{{$v->c40hc}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="40hc"></a></td>
-                                                <td class="tds" {{ @$equipmentHides['40nor'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c40nor" data-value="{{$v->c40nor}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="20"></a></td>
-                                                <td class="tds" {{ @$equipmentHides['45'] }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="c45" data-value="{{$v->c45}}" data-pk="{{$v->id}}" data-cargo-type="freight" data-title="20"></a></td>
+                                                @foreach ($equipmentHides as $key=>$hide)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            @php
+                                                                ${$pre.$c->code} = 'c'.$c->code;
+                                                                
+                                                            @endphp
+                                                            <td class="tds" {{ $hide }}><a href="#" class="editable-saleterms td-a" data-type="text" data-name="rate->c{{$key}}" data-value="{{@$amounts['c'.$key]}}" data-pk="{{$v->id}}" data-title="{{$key}}"></a></td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="units" data-value="{{$v->units}}" data-pk="{{$v->id}}" data-title="units"></a></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="rate" data-value="{{$v->rate}}" data-pk="{{$v->id}}" data-title="rate"></a></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><a href="#" class="editable-saleterms td-a" data-type="text" data-name="total" data-value="{{$v->total}}" data-pk="{{$v->id}}" data-title="total"></a></td>
@@ -92,11 +106,13 @@ $x=0;
                                                 <td class="tds">
                                                     <input type="text" class="form-control detail" name="detail" placeholder="Detail"/>
                                                 </td>
-                                                <td class="tds" {{ @$equipmentHides['20'] }}><input type="number" class="form-control c20" name="c20" placeholder="20'"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40'] }}><input type="number" class="form-control c40" name="c40" placeholder="40'"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40hc'] }}><input type="number" class="form-control c40hc" name="c40hc" placeholder="40' HC"/></td>
-                                                <td class="tds" {{ @$equipmentHides['40nor'] }}><input type="number" class="form-control c40nor" name="c40nor" placeholder="40' NOR"/></td>
-                                                <td class="tds" {{ @$equipmentHides['45'] }}><input type="number" class="form-control c45" name="c45" placeholder="45'"/></td>
+                                                @foreach ($equipmentHides as $key=>$hide)
+                                                    @foreach ($containers as $c)
+                                                        @if($c->code == $key)
+                                                            <td class="tds" {{ $hide }}><input type="number" class="form-control c{{$key}}" name="c{{$key}}" placeholder="{{$key}}"/></td>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control rate" name="rate" placeholder="Units"/></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control units" name="units" placeholder="Rate"/></td>
                                                 <td class="tds {{$quote->type=='FCL' ? 'hide':''}}"><input type="number" class="form-control total" name="total" placeholder="Total"/></td>
@@ -104,7 +120,7 @@ $x=0;
                                                     <div class="input-group">
                                                         <div class="input-group-btn">
                                                             <div class="btn-group">
-                                                                {{ Form::select('currency_id',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
+                                                                {{ Form::select('currency_id',$currencies,$company_user->currency->id,['class'=>'form-control currency_id select-2-width']) }}
                                                             </div>
                                                             <a class="btn btn-xs btn-primary-plus store_sale_charge">
                                                                 <span class="fa fa-save" role="presentation" aria-hidden="true"></span>

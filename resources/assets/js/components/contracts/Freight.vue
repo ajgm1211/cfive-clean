@@ -171,7 +171,7 @@
         <FormView 
             :data="currentData" 
             :fields="fields"
-            :datalists="datalists"
+            :vdatalists="datalists"
             btnTxt="Update Ocean Freight"
             @exit="closeModal('editOFreight')"
             @success="closeModal('editOFreight')"
@@ -187,7 +187,7 @@
         <FormView 
             :data="{}" 
             :fields="fields"
-            :datalists="datalists"
+            :vdatalists="datalists"
             btnTxt="Add Ocean Freight"
             @exit="closeModal('addOFreight')"
             @success="closeModal('addOFreight')"
@@ -402,7 +402,7 @@
                     {
                         ofcomponent.efields.push(item.name);
                         ofcomponent.container_fields.push('rates_'+item.code);
-                        ofcomponent.fields['rates_'+item.code] = { type: 'text', placeholder: item.name };
+                        ofcomponent.fields['rates_'+item.code] = { type: 'text', label: item.name, placeholder: item.name };
                     }
                 });
 

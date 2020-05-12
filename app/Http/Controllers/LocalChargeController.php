@@ -90,6 +90,13 @@ class LocalChargeController extends Controller
 
         $localcharge->update($prepared_data);
 
+        $localcharge->LocalChargeCarrierSync($data['carriers']);
+
+        if($data['typeofroute'] == 'country')
+            $localcharge->LocalChargeCountriesSync($data['origin'], $data['destination']);
+        else
+            $localcharge->LocalChargePortsSync($data['origin'], $data['destination']);
+
         return new LocalChargeResource($localcharge);
     }
 

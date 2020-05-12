@@ -64,6 +64,10 @@ export default {
 
 	        return api.call('post', `/api/v2/contracts/${contract_id}/localcharge/store`, data);
 	    },
+	    update(id, data, route) {
+	    	let contract_id = route.params.id;
+	        return api.call('post', `/api/v2/contracts/${contract_id}/localcharge/${id}/update`, data);
+	    },
 	   	delete(id) {
 	        return api.call('delete', `/api/v2/contracts/surcharges/${id}/delete/`);
 	    }
