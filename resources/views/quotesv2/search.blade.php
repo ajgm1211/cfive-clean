@@ -779,7 +779,7 @@
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     @if(isset($arreglo))
                     @if($arreglo->isEmpty())
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates were found for this trade route.</span> You can create a quote manually.</p>
                     @endif
                     @endif
                   </div>
