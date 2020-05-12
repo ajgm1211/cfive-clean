@@ -1,3 +1,8 @@
+.table-responsive {
+    overflow: initial !important;
+    overflow-x: initial !important;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
@@ -5,6 +10,18 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     font-family: "Sailec" !important;
 }
 
+.multiselect__content-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb {
+    background: #aaa; 
+    border-radius: 10px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #006bf9; 
+}
 
 
 /*** genetal styles ***/
@@ -290,9 +307,6 @@ i.mx-icon-calendar {
     padding-left: 15px !important;
     padding-right: 15px !important;
 }
-.modal-input input {
-    border: 2px solid #eee !important;
-}
 .modal-header h5 {
     font-weight: bold !important;
     color: #031b4e !important;
@@ -308,11 +322,10 @@ i.mx-icon-calendar {
     border: 2px solid #eee !important;
     padding:  4px 40px 5px 10px !important;
     border-radius: 0.25rem !important;
+    height: auto !important;
 }
 .multiselect__tags-wrap {
     width: 100% !important;
-    display: flex;
-    flex-flow: wrap;
 }
 .multiselect__option {
     font-size: 13px;
@@ -342,6 +355,12 @@ i.mx-icon-calendar {
 .multiselect__content-wrapper {
     box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;
     margin-top: 3px !important;
+    z-index: 100 !important; 
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+.multiselect__content {
+    display: block !important;
 }
 
 /*** --- Tabs --- ***/
@@ -370,17 +389,14 @@ i.mx-icon-calendar {
 }
 .multiselect__placeholder {
     white-space: nowrap;
+    margin-bottom: 0px !important;
+    padding-top: 0px !important;
+    padding-left: 3px;
 }
 .select-all {
     position: relative;
     top: 25px;
     left: 11px;
-}
-#carrier .multiselect__tags {
-    height: auto;
-}
-.multiselect__placeholder {
-    margin-bottom: 0px !important;
 }
 
 
@@ -428,6 +444,29 @@ i.mx-icon-calendar {
 .vue-daterange-picker {
     width: 100%;
     white-space: nowrap;
+}
+input.multiselect__input {
+    font-size: 13px;
+    padding-left: 3px;
+}
+input.multiselect__input:focus {
+    border: 0px;
+    outline: none;
+}
+#id_name input {
+    font-size: 13px;
+    color: #35495e !important;
+    border: 2px solid #eee !important;
+}
+#id_name input::placeholder {
+    color: #adadad !important;
+}
+.form-group legend {
+    font-size: 12px !important;
+    color: #626e8b !important;
+}
+.multiselect__single {
+    margin-bottom: 0px !important;
 }
 
 @media only screen and (max-width: 425px) {
