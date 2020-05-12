@@ -1,3 +1,8 @@
+.table-responsive {
+    overflow: initial !important;
+    overflow-x: initial !important;
+}
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
@@ -5,6 +10,18 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     font-family: "Sailec" !important;
 }
 
+.multiselect__content-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb {
+    background: #aaa; 
+    border-radius: 10px;
+}
+
+.multiselect__content-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #006bf9; 
+}
 
 
 /*** genetal styles ***/
@@ -42,21 +59,21 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     padding: 5px 10px;
     text-transform: uppercase;
 }
-.published {
+.publish {
     background-color: #5fe2a0;
 }
-.incompleted {
+.incomplete {
     background-color: #969cc0;
 }
 .expired {
     background-color: #ff6464;
 }
-.incompleted::before {
+.incomplete::before {
     content: 'incompleted';
     font-weight: bold;
 }
-.published::before {
-    content: 'published';
+.publish::before {
+    content: 'publish';
     font-weight: bold;
 }
 .expired::before {
@@ -115,7 +132,19 @@ table tr th:focus {
     border: 2px solid #eee;
     padding-left: 33px;
 }
-.input-check[type=checkbox] + label {
+.custom-control-label::before,
+.custom-control-label::after,
+.custom-control-input {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 2px;
+    border-color: #EEE;
+}
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before,
+.custom-checkbox .custom-control-input ~ .custom-control-label::before{
+    box-shadow: none;
+}
+/*.input-check[type=checkbox] + label {
     //display: block;
     margin: 0.2em;
     cursor: pointer;
@@ -154,7 +183,7 @@ table tr th:focus {
     transform: scale(1);
     background-color: transparent;
     border-color: #006bf9;
-}
+}*/
 td.checkbox-add-fcl, td.actions-add-fcl {
     width: 45px;
 }
@@ -164,6 +193,9 @@ td.checkbox-add-fcl, td.actions-add-fcl {
 }
 .btn.btn-secondary:focus i {
     color: #006bf9;
+}
+.action-app {
+    padding: 0.1rem 0.40rem;
 }
 .action-app i {
     color: #eee;
@@ -186,8 +218,22 @@ td.checkbox-add-fcl, td.actions-add-fcl {
     position: relative;
     cursor: pointer;
     border: 2px solid #eee;
-    z-index: 100;
 }
+
+.actions-box span {
+    position: relative;
+    z-index: 1;
+}
+
+.all-action-app {
+    position: absolute;
+    right: 30px;
+}
+
+.popup-actions[data-action="false"] {
+    background: red;
+}
+
 .actions-box:hover .icon-add-fcl {
     color: #006bf9;
 }
@@ -200,7 +246,10 @@ td.checkbox-add-fcl, td.actions-add-fcl {
     border: 2px solid #eee;
     border-radius: 5px;
     position: absolute;
-     z-index: 100;
+    z-index: 10;
+}
+.active {
+    display: block;
 }
 .btn-action {
     width: 100%;
@@ -258,16 +307,13 @@ i.mx-icon-calendar {
     padding-left: 15px !important;
     padding-right: 15px !important;
 }
-.modal-input input {
-    border: 2px solid #eee !important;
-}
 .modal-header h5 {
     font-weight: bold !important;
     color: #031b4e !important;
 }
-.multiselect__option--highlight {
-    background-color: #eeeeee !important;
-    color: #525f7e !important;
+.multiselect__option--highlight, .multiselect__option--selected {
+    background-color: #dddddd  !important;
+    color: #333333 !important;
 }
 .multiselect__tags {
     font-size: 13px !important;
@@ -276,6 +322,10 @@ i.mx-icon-calendar {
     border: 2px solid #eee !important;
     padding:  4px 40px 5px 10px !important;
     border-radius: 0.25rem !important;
+    height: auto !important;
+}
+.multiselect__tags-wrap {
+    width: 100% !important;
 }
 .multiselect__option {
     font-size: 13px;
@@ -305,6 +355,12 @@ i.mx-icon-calendar {
 .multiselect__content-wrapper {
     box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.1) !important;
     margin-top: 3px !important;
+    z-index: 100 !important; 
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+.multiselect__content {
+    display: block !important;
 }
 
 /*** --- Tabs --- ***/
@@ -333,8 +389,21 @@ i.mx-icon-calendar {
 }
 .multiselect__placeholder {
     white-space: nowrap;
+    margin-bottom: 0px !important;
+    padding-top: 0px !important;
+    padding-left: 3px;
+}
+.select-all {
+    position: relative;
+    top: 25px;
+    left: 11px;
 }
 
+
+/*** Validations ***/
+.form-control.is-invalid:focus, .form-control.is-valid:focus {
+    box-shadow: none !important;
+}
 
 /*** --- REMARK --- ***/
 .remarks {
@@ -376,6 +445,29 @@ i.mx-icon-calendar {
     width: 100%;
     white-space: nowrap;
 }
+input.multiselect__input {
+    font-size: 13px;
+    padding-left: 3px;
+}
+input.multiselect__input:focus {
+    border: 0px;
+    outline: none;
+}
+#id_name input {
+    font-size: 13px;
+    color: #35495e !important;
+    border: 2px solid #eee !important;
+}
+#id_name input::placeholder {
+    color: #adadad !important;
+}
+.form-group legend {
+    font-size: 12px !important;
+    color: #626e8b !important;
+}
+.multiselect__single {
+    margin-bottom: 0px !important;
+}
 
 @media only screen and (max-width: 425px) {
     .nav-tabs .nav-item {
@@ -391,4 +483,8 @@ i.mx-icon-calendar {
         bottom: 16px;
     }
 
+}
+
+.th-max {
+    max-width: 60px;
 }
