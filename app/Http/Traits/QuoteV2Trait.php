@@ -304,15 +304,6 @@ trait QuoteV2Trait
             $item->currency_eur = $currency->rates_eur;
 
             //Charges
-            $currency = Currency::find($item->currency_id);
-            $item->currency_usd = $currency->rates;
-            $item->currency_eur = $currency->rates_eur;
-
-            $typeCurrency =  $currency_cfg;
-
-            $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
-
-            //Charges
             foreach ($item->charge as $value) {
 
                 if ($quote->pdf_option->grouped_total_currency == 1) {
@@ -379,7 +370,7 @@ trait QuoteV2Trait
                         ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
                         ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
                     }
-
+                    
                     $item->${$total . '_c' . $c->code} = number_format(@${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
                     $item->${$total . '_m' . $c->code} = number_format(@${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
                 }
@@ -389,7 +380,7 @@ trait QuoteV2Trait
                 $item->currency_eur = $currency_charge->rates_eur;
             }
         }
-
+        
         return $rates;
     }
 
@@ -528,6 +519,10 @@ trait QuoteV2Trait
         $amount = 'amount_';
         $markup = 'markup_';
         $inland = 'inland_';
+        $charge_origin = 0;
+        $charge_destination = 0;
+        $inland_origin = 0;
+        $inland_destination = 0;
 
         foreach ($charges_grouped as $origin => $detail) {
             foreach ($detail as $item) {
@@ -572,6 +567,12 @@ trait QuoteV2Trait
                                     } else if (!isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
                                         ${$markup . $c->code} = $array_markups['c' . $c->code];
                                         ${$total . $c->code} += number_format(${$markup . $c->code} / $currency_rate, 2, '.', '');
+                                    }
+                                    if ($value->type_id == 1) {
+                                        $charge_origin++;
+                                    }
+                                    if ($value->type_id == 2) {
+                                        $charge_destination++;
                                     }
                                     $value->${$sum . $total . $c->code} = number_format(${$total . $c->code}, 2, '.', '');
                                 }
@@ -618,12 +619,24 @@ trait QuoteV2Trait
                                     ${$total . $c->code} = 0;
                                 }
 
+                                if ($value->type == 'Origin') {
+                                    $inland_origin++;
+                                }
+                                if ($value->type == 'Destination') {
+                                    $inland_destination++;
+                                }
+
                                 $value->${$sum . $total . $c->code} = round(${$total . $c->code});
                             }
                         }
                     }
                 }
             }
+
+            $detail->charge_origin = $charge_origin;
+            $detail->charge_destination = $charge_destination;
+            $detail->inland_origin = $inland_origin;
+            $detail->inland_destination = $inland_destination;
         }
 
         return $charges_grouped;
@@ -807,6 +820,7 @@ trait QuoteV2Trait
         $total = 'total_';
         $amount = 'amount_';
         $markup = 'markup_';
+        $charge_freight = 0;
 
         foreach ($freight_charges_grouped as $freight) {
             foreach ($freight as $detail) {
@@ -848,6 +862,7 @@ trait QuoteV2Trait
                                     }
 
                                     if (isset($array_amounts['c' . $c->code]) || isset($array_markups['m' . $c->code])) {
+                                        $charge_freight++;
                                         $amounts->${$total . $sum . $c->code} = round(${$total . $c->code});
                                     }
                                 }
@@ -856,6 +871,7 @@ trait QuoteV2Trait
                     }
                 }
             }
+            $freight->charge_freight = $charge_freight;
         }
 
         return $freight_charges_grouped;
