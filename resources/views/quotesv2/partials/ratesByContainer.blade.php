@@ -72,11 +72,44 @@
                                                 @endphp 
                                                 @foreach($rate->charge as $item)
                                                     @if($item->type_id==3)
-                                                        @php
+                                                        <?php
                                                             $rate_id=$item->automatic_rate_id;
                                                             $freight_amounts = json_decode($item->amount,true);
                                                             $freight_markups = json_decode($item->markups,true);
-                                                        @endphp
+
+                                                            foreach ($freight_amounts as $k => $amount_value) {
+                                                                if ($k == 'c20') {
+                                                                    $freight_amounts['c20DV'] = $amount_value;
+                                                                    unset($freight_amounts['c20']);
+                                                                } elseif ($k == 'c40') {
+                                                                    $freight_amounts['c40DV'] = $amount_value;
+                                                                    unset($freight_amounts['c40']);
+                                                                } elseif ($k == 'c40hc') {
+                                                                    $freight_amounts['c40HC'] = $amount_value;
+                                                                    unset($freight_amounts['c40hc']);
+                                                                } elseif ($k == 'c40nor') {
+                                                                    $freight_amounts['c40NOR'] = $amount_value;
+                                                                    unset($freight_amounts['c40nor']);
+                                                                }
+                                                            }
+
+                                                            foreach ($freight_markups as $k => $markup_value) {
+                                                                if ($k == 'm20') {
+                                                                    $freight_markups['m20DV'] = $markup_value;
+                                                                    unset($freight_markups['m20']);
+                                                                } elseif ($k == 'm40') {
+                                                                    $freight_markups['m40DV'] = $markup_value;
+                                                                    unset($freight_markups['m40']);
+                                                                } elseif ($k == 'm40hc') {
+                                                                    $freight_markups['m40HC'] = $markup_value;
+                                                                    unset($freight_markups['m40hc']);
+                                                                } elseif ($k == 'm40nor') {
+                                                                    $freight_markups['m40NOR'] = $markup_value;
+                                                                    unset($freight_markups['m40nor']);
+                                                                }
+                                                            }
+
+                                                        ?>
                                                         <tr class="tr-freight" style="height:40px;">
                                                             <td class="tds" style="padding-left: 30px">
                                                                 <input name="charge_id" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
@@ -249,6 +282,38 @@
                                                             $rate_id=$item->automatic_rate_id;
                                                             $origin_amounts = json_decode($item->amount,true);
                                                             $origin_markups = json_decode($item->markups,true);
+
+                                                            foreach ($origin_amounts as $k => $amount_value) {
+                                                                if ($k == 'c20') {
+                                                                    $origin_amounts['c20DV'] = $amount_value;
+                                                                    unset($origin_amounts['c20']);
+                                                                } elseif ($k == 'c40') {
+                                                                    $origin_amounts['c40DV'] = $amount_value;
+                                                                    unset($origin_amounts['c40']);
+                                                                } elseif ($k == 'c40hc') {
+                                                                    $origin_amounts['c40HC'] = $amount_value;
+                                                                    unset($origin_amounts['c40hc']);
+                                                                } elseif ($k == 'c40nor') {
+                                                                    $origin_amounts['c40NOR'] = $amount_value;
+                                                                    unset($origin_amounts['c40nor']);
+                                                                }
+                                                            }
+
+                                                            foreach ($origin_markups as $k => $markup_value) {
+                                                                if ($k == 'm20') {
+                                                                    $origin_markups['m20DV'] = $markup_value;
+                                                                    unset($origin_markups['m20']);
+                                                                } elseif ($k == 'm40') {
+                                                                    $origin_markups['m40DV'] = $markup_value;
+                                                                    unset($origin_markups['m40']);
+                                                                } elseif ($k == 'm40hc') {
+                                                                    $origin_markups['m40HC'] = $markup_value;
+                                                                    unset($origin_markups['m40hc']);
+                                                                } elseif ($k == 'm40nor') {
+                                                                    $origin_markups['m40NOR'] = $markup_value;
+                                                                    unset($origin_markups['m40nor']);
+                                                                }
+                                                            }
                                                         ?>
                                                         <tr style="height:40px;">
                                                             <td class="tds" style="padding-left: 30px">
@@ -417,6 +482,38 @@
                                                             $rate_id=$item->automatic_rate_id;
                                                             $destination_amounts = json_decode($item->amount,true);
                                                             $destination_markups = json_decode($item->markups,true);
+
+                                                            foreach ($destination_amounts as $k => $amount_value) {
+                                                                if ($k == 'c20') {
+                                                                    $destination_amounts['c20DV'] = $amount_value;
+                                                                    unset($destination_amounts['c20']);
+                                                                } elseif ($k == 'c40') {
+                                                                    $destination_amounts['c40DV'] = $amount_value;
+                                                                    unset($destination_amounts['c40']);
+                                                                } elseif ($k == 'c40hc') {
+                                                                    $destination_amounts['c40HC'] = $amount_value;
+                                                                    unset($destination_amounts['c40hc']);
+                                                                } elseif ($k == 'c40nor') {
+                                                                    $destination_amounts['c40NOR'] = $amount_value;
+                                                                    unset($destination_amounts['c40nor']);
+                                                                }
+                                                            }
+
+                                                            foreach ($destination_markups as $k => $markup_value) {
+                                                                if ($k == 'm20') {
+                                                                    $destination_markups['m20DV'] = $markup_value;
+                                                                    unset($destination_markups['m20']);
+                                                                } elseif ($k == 'm40') {
+                                                                    $destination_markups['m40DV'] = $markup_value;
+                                                                    unset($destination_markups['m40']);
+                                                                } elseif ($k == 'm40hc') {
+                                                                    $destination_markups['m40HC'] = $markup_value;
+                                                                    unset($destination_markups['m40hc']);
+                                                                } elseif ($k == 'm40nor') {
+                                                                    $destination_markups['m40NOR'] = $markup_value;
+                                                                    unset($destination_markups['m40nor']);
+                                                                }
+                                                            }
                                                         @endphp
 
                                                         <tr style="height:40px;">
@@ -799,147 +896,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="details_inland_{{$x}}">
-                                                    <table class="table table-sm table-bordered color-blue text-center">
-                                                        <thead class="title-quote text-center header-table">
-                                                            <tr style="height: 40px;">
-                                                                <td class="td-table" style="padding-left: 30px">Charge</td>
-                                                                <td class="td-table">Distance</td>
-                                                                <td class="td-table" {{ @$equipmentHides['20'] }}>20'</td>
-                                                                <td class="td-table" {{ @$equipmentHides['40'] }}>40'</td>
-                                                                <td class="td-table" {{ @$equipmentHides['40hc'] }}>40HC'</td>
-                                                                <td class="td-table" {{ @$equipmentHides['40nor'] }}>40NOR'</td>
-                                                                <td class="td-table" {{ @$equipmentHides['45'] }}>45'</td>
-                                                                <td class="td-table" >Currency</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody style="background-color: white;">
-                                                            <tr style="height:40px;">
-                                                                <td class="tds" style="padding-left: 30px">
-                                                                    <input name="inland_id" value="{{$inland->id}}" class="form-control inland_id" type="hidden" />
-                                                                    <a href="#" class="editable-inland provider td-a" data-type="text" data-value="{{$inland->provider}}" data-name="provider" data-pk="{{@$inland->id}}" data-title="Provider"></a>
-                                                                </td>
-                                                                <td class="tds">
-                                                                    <a href="#" class="editable-inland distance td-a" data-type="text" data-name="distance" data-value="{{@$inland->distance}}" data-pk="{{@$inland->id}}" data-title="Distance"></a> &nbsp;km
-                                                                </td>
-                                                                <td {{ @$equipmentHides['20'] }} class="tds">
-                                                                    <a href="#" class="editable-inland-20 amount_20 td-a" data-type="text" data-name="rate->c20" data-value="{{@$inland_rates['c20']}}" data-pk="{{@$inland->id}}" data-title="Amount"></a>
-                                                                    +
-                                                                    <a href="#" class="editable-inland-m20 markup_20 td-a" data-type="text" data-name="markup->c20" data-value="{{@$inland_markups['c20']}}" data-pk="{{@$inland->id}}" data-title="Markup"></a>
-                                                                    <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_20 td-a">{{@$inland_rates['c20']+@$inland_markups['c20']}}</span>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40'] }} class="tds">
-                                                                    <a href="#" class="editable-inland-40 amount_40 td-a" data-type="text" data-name="rate->c40" data-value="{{@$inland_rates['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    +
-                                                                    <a href="#" class="editable-inland-m40 markup_40 td-a"data-type="text" data-name="markup->c40" data-value="{{@$inland_markups['c40']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_40 td-a">{{@$inland_rates['c40']+@$inland_markups['c40']}}</span>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                                    <a href="#" class="editable-inland-40hc amount_40hc td-a" data-type="text" data-name="rate->c40hc" data-value="{{@$inland_rates['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    +
-                                                                    <a href="#" class="editable-inland-m40hc markup_40hc td-a" data-type="text" data-name="markup->c40hc" data-value="{{@$inland_markups['c40hc']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_40hc td-a">{{@$inland_rates['c40hc']+@$inland_markups['c40hc']}}</span>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                                    <a href="#" class="editable-inland-40nor amount_40nor td-a" data-type="text" data-name="rate->c40nor" data-value="{{@$inland_rates['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    +
-                                                                    <a href="#" class="editable-inland-m40nor markup_40nor td-a" data-type="text" data-name="markup->c40nor" data-value="{{@$inland_markups['c40nor']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_40nor td-a">{{@$inland_rates['c40nor']+@$inland_markups['c40nor']}}</span>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['45'] }} class="tds">
-                                                                    <a href="#" class="editable-inland-45 amount_45 td-a" data-type="text" data-name="rate->45" data-value="{{@$inland_rates['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    +
-                                                                    <a href="#" class="editable-inland-m45 markup_45 td-a" data-type="text" data-name="markup->c45" data-value="{{@$inland_markups['c45']}}" data-pk="{{@$inland->id}}" data-title="Total"></a>
-                                                                    <i class="la la-caret-right arrow-down"></i>
-                                                                    <span class="total_45 td-a">{{@$inland_rates['c45']+@$inland_markups['c45']}}</span>
-                                                                </td>
-                                                                <td class="tds">
-                                                                    <a href="#" class="editable-inland td-a" data-source="{{$currencies}}" data-type="select" data-name="currency_id" data-value="{{$inland->currency_id}}" data-pk="{{@$inland->id}}" data-title="Select currency"></a>
-                                                                    &nbsp;
-                                                                </td>
-                                                            </tr>
-                                                            <tr style="height:40px;" class="hide" id="inland_charges_{{$x}}">
-                                                                <td class="tds" style="padding-left: 30px">
-                                                                    <input class="provider form-control" type="text" value="" name="provider" title="Provider" placeholder="Charge">
-                                                                </td>
-                                                                <td class="tds">
-                                                                    <input class="distance form-control" type="text" name="distance" value="" title="Distance" placeholder="Distance">
-                                                                </td>
-                                                                <td {{ @$equipmentHides['20'] }} class="tds">
-                                                                    <div class="input-group">
-                                                                        <input class="amount_20 form-control" type="text" name="amount_20" value="" title="Distance" placeholder="Rate">
-                                                                        <input class="markup_20 form-control" type="text" name="markup_20" value="" title="Distance" placeholder="Markup">
-                                                                    </div>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40'] }} class="tds">
-                                                                    <div class="input-group">
-                                                                        <input class="amount_40 form-control" type="text" name="amount_40" value="" title="Distance" placeholder="Rate">
-                                                                        <input class="markup_40 form-control" type="text" name="markup_40" value="" title="Distance" placeholder="Markup">
-                                                                    </div>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40hc'] }} class="tds">
-                                                                    <div class="input-group">
-                                                                        <input class="amount_40hc form-control" type="text" name="amount_40hc" value="" title="Distance" placeholder="Rate">
-                                                                        <input class="markup_40hc form-control" type="text" name="markup_40hc" value="" title="Distance" placeholder="Markup">
-                                                                    </div>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['40nor'] }} class="tds">
-                                                                    <div class="input-group">
-                                                                        <input class="amount_40nor form-control" type="text" name="amount_40nor" value="" title="Distance" placeholder="Rate">
-                                                                        <input class="markup_40nor form-control" type="text" name="markup_40nor" value="" title="Distance" placeholder="Markup">
-                                                                    </div>
-                                                                </td>
-                                                                <td {{ @$equipmentHides['45'] }} class="tds">
-                                                                    <div class="input-group">
-                                                                        <input class="amount_45 form-control" type="text" name="amount_45" value="" title="Distance" placeholder="Rate">
-                                                                        <input class="markup_45 form-control" type="text" name="markup_45" value="" title="Distance" placeholder="Markup">
-                                                                    </div>
-                                                                </td>
-                                                                <td class="tds">
-                                                                    <div class="btn-group">
-                                                                        {{ Form::select('destination_ammount_currency[]',$currencies,$currency_cfg->id,['class'=>'form-control currency_id select-2-width']) }}
-                                                                    </div>
-                                                                    <br>
-                                                                    <a class="btn btn-xs btn-primary-plus store_charge">
-                                                                        <span class="fa fa-save" role="presentation" aria-hidden="true"></span>
-                                                                    </a>
-                                                                    <a class="btn btn-xs btn-primary-plus removeOriginCharge">
-                                                                        <span class="fa fa-trash" role="presentation" aria-hidden="true"></span>
-                                                                    </a>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </span>
-                                        <br>
-                                        @php
-                                        $x++;
-                                        @endphp
-                                        @endforeach
-                                        <div class='row'>
-                                            <div class="col-md-12 ">
-                                                <div class="m-portlet__body">
-                                                    <button class="btn btn-primary-v2 btn-edit pull-right open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
-                                                        Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @else
-                                        <div class='row'>
-                                            <div class="col-md-12 ">
-                                                <div class="m-portlet__body">
-                                                    <button class="btn btn-primary-v2 btn-edit open-inland-modal" data-rate-id="{{$rate->id}}" data-toggle="modal" data-target="#createInlandModal">
-                                                        Add inland &nbsp;&nbsp;<i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

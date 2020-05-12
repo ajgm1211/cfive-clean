@@ -379,7 +379,7 @@ class QuoteV2Controller extends Controller
             $collection = Collection::make($quote);
             return $collection;
         }
-
+        
         return view('quotesv2/show', compact('quote', 'containers', 'companies', 'company_user', 'incoterms', 'users', 'prices', 'contacts', 'currencies', 'equipmentHides', 'freight_charges', 'origin_charges', 'destination_charges', 'calculation_types', 'calculation_types_lcl_air', 'rates', 'surcharges', 'email_templates', 'inlands', 'emaildimanicdata', 'package_loads', 'countries', 'harbors', 'prices', 'airlines', 'carrierMan', 'currency_name', 'hideO', 'hideD', 'sale_terms', 'rate_origin_ports', 'rate_destination_ports', 'rate_origin_airports', 'rate_destination_airports', 'destinationAddressHides', 'originAddressHides'));
     }
 
@@ -868,9 +868,19 @@ class QuoteV2Controller extends Controller
             $hidden = 'hidden' . $cont->code;
             $$hidden = 'hidden';
             foreach ($equipmentForm as $val) {
-
+                if($val=='20'){
+                    $val = 1;
+                }elseif($val=='40'){
+                    $val = 2;
+                }elseif($val=='40HC'){
+                    $val = 3;
+                }elseif($val=='45HC'){
+                    $val = 4;
+                }elseif($val=='40NOR'){
+                    $val = 5;
+                }
                 if ($val == $cont->id) {
-
+                    
                     $$hidden = '';
                 }
             }
@@ -2370,6 +2380,7 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
+        $chargesAPI_SF = $request->input('chargeAPI_SF');
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2512,7 +2523,7 @@ class QuoteV2Controller extends Controller
           foreach ($origin_port as $orig) {
               foreach ($destiny_port as $dest) {
 
-                  $url = env('CMA_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                  $url = env('CMA_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                   $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['cmacgm', $orig, $dest, trim($dateUntil)], $url);
 
                   try {
@@ -2537,7 +2548,7 @@ class QuoteV2Controller extends Controller
           foreach ($origin_port as $orig) {
               foreach ($destiny_port as $dest) {
 
-                  $url = env('MAERSK_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                  $url = env('MAERSK_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                   $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['maersk', $orig, $dest, trim($dateUntil)], $url);
 
                   try {
@@ -2558,7 +2569,7 @@ class QuoteV2Controller extends Controller
           foreach ($origin_port as $orig) {
               foreach ($destiny_port as $dest) {
 
-                  $url = env('SAFMARINE_API_URL', 'http://carrier-info.eu-central-1.elasticbeanstalk.com/rates/api/{code}/{orig}/{dest}/{date}');
+                  $url = env('SAFMARINE_API_URL', 'http://carrier.cargofive.com/rates/api/{code}/{orig}/{dest}/{date}');
                   $url = str_replace(['{code}', '{orig}', '{dest}', '{date}'], ['safmarine', $orig, $dest, trim($dateUntil)], $url);
 
                   try {
@@ -3059,6 +3070,7 @@ class QuoteV2Controller extends Controller
         $chargeFreight = ($chargesFreight != null) ? true : false;
         $chargeAPI = ($chargesAPI != null) ? true : false;
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
+        $chargeAPI_SF =  ($chargesAPI_SF != null) ? true : false;
 
         // Ordenar por prioridad
         if (in_array('1', $equipment)) {
@@ -3514,6 +3526,7 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
+        $chargesAPI_SF = $request->input('chargeAPI_SF');
 
         $form = $request->all();
 
