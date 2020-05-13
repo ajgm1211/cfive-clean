@@ -1880,11 +1880,11 @@ class QuoteV2Controller extends Controller
                             foreach ($inlandDestiny->inlandDetails as $key => $inlandDet) {
 
                                 if (@$inlandDet->sub_in != 0) {
-                                    $arregloMontoInDest = array($key => $inlandDet->sub_in);
+                                    $arregloMontoInDest = array('c'.$key => $inlandDet->sub_in);
                                     $montoInDest = array_merge($arregloMontoInDest, $montoInDest);
                                 }
                                 if (@$inlandDet->markup != 0) {
-                                    $arregloMarkupsInDest = array($key => $inlandDet->markup);
+                                    $arregloMarkupsInDest = array('m'.$key => $inlandDet->markup);
                                     $markupInDest = array_merge($arregloMarkupsInDest, $markupInDest);
                                 }
 
@@ -1924,11 +1924,11 @@ class QuoteV2Controller extends Controller
                             foreach ($inlandOrigin->inlandDetails as $key => $inlandDetails) {
 
                                 if (@$inlandDetails->sub_in != 0) {
-                                    $arregloMontoInOrig = array($key => $inlandDetails->sub_in);
+                                    $arregloMontoInOrig = array('c'.$key => $inlandDetails->sub_in);
                                     $montoInOrig = array_merge($arregloMontoInOrig, $montoInOrig);
                                 }
                                 if (@$inlandDetails->markup != 0) {
-                                    $arregloMarkupsInOrig = array($key => $inlandDetails->markup);
+                                    $arregloMarkupsInOrig = array('m'.$key => $inlandDetails->markup);
                                     $markupInOrig = array_merge($arregloMarkupsInOrig, $markupInOrig);
                                 }
 
@@ -2370,6 +2370,7 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
+        $chargesAPI_SF = $request->input('chargesAPI_SF');
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2456,7 +2457,7 @@ class QuoteV2Controller extends Controller
 
             $hideD = '';
             $dataDest = array();
-            $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino');
+            $dataDest = $this->inlands($inlandParams, $markup, $equipment, $containers, 'destino', $mode );
 
             if (!empty($dataDest)) {
                 $inlandDestiny = Collection::make($dataDest);
@@ -2469,7 +2470,7 @@ class QuoteV2Controller extends Controller
         if ($delivery_type == "3" || $delivery_type == "4") {
             $hideO = '';
             $dataOrig = array();
-            $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen');
+            $dataOrig = $this->inlands($inlandParams, $markup, $equipment, $containers, 'origen', $mode );
 
             if (!empty($dataOrig)) {
                 $inlandOrigin = Collection::make($dataOrig);
@@ -3043,6 +3044,7 @@ class QuoteV2Controller extends Controller
 
             // INLANDS
             $data->setAttribute('inlandDestiny', $inlandDestiny);
+         //   dd($inlandDestiny);
             $data->setAttribute('inlandOrigin', $inlandOrigin);
             $data->setAttribute('typeCurrency', $typeCurrency);
 

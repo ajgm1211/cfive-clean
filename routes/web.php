@@ -1039,7 +1039,7 @@ Route::get('api/v2/contracts/{contract}/localcharge/{surcharge}', 'LocalChargeCo
 
 
 /** Inland V2 routes **/
-Route::group(['prefix' => 'api/v2/inlands', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function () {
     Route::get('list', 'InlandController@list');
     Route::get('data', 'InlandController@data');
     Route::get('retrieve/{inland}', 'InlandController@retrieve');
@@ -1048,7 +1048,7 @@ Route::group(['prefix' => 'api/v2/inlands', 'middleware' => ['auth']], function 
     Route::get('range/{inland}', 'InlandRangeController@list');
     Route::get('deleteRange/{range}', 'InlandRangeController@deleteRange');
 });
-Route::resource('api/v2/inlands', 'InlandController')->middleware('auth');
+Route::resource('api/v2/inland', 'InlandController')->middleware('auth');
 
 /*
 Route::get('api/inlands', 'InlandController@index');
