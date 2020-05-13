@@ -1018,7 +1018,9 @@ Route::get('api/v2/contracts/data', 'ContractController@data');
 Route::post('api/v2/contracts/store', 'ContractController@store');
 Route::get('api/v2/contracts/{contract}', 'ContractController@retrieve');
 Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
+Route::post('api/v2/contracts/{contract}/duplicate', 'ContractController@duplicate');
 Route::delete('api/v2/contracts/{contract}/destroy', 'ContractController@destroy');
+Route::post('api/v2/contracts/destroyAll', 'ContractController@destroyAll');
 /** End API Contracts endpoint **/
 
 /** API Contracts Ocean Freights EndPoints **/
@@ -1026,6 +1028,9 @@ Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@
 Route::post('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
 Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
 Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
+Route::post('api/v2/contracts/ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
+Route::delete('api/v2/contracts/ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
+Route::post('api/v2/contracts/ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
 /** End Contracts V2 routes **/
 
 
@@ -1033,7 +1038,10 @@ Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightCont
 Route::get('api/v2/contracts/{contract}/localcharges', 'LocalChargeController@list');
 Route::post('api/v2/contracts/{contract}/localcharge/store', 'LocalChargeController@store');
 Route::post('api/v2/contracts/{contract}/localcharge/{localcharge}/update', 'LocalChargeController@update');
-Route::get('api/v2/contracts/{contract}/localcharge/{surcharge}', 'LocalChargeController@retrieve');
+Route::get('api/v2/contracts/{contract}/localcharge/{localcharge}', 'LocalChargeController@retrieve');
+Route::post('api/v2/contracts/localcharge/{localcharge}/duplicate', 'LocalChargeController@duplicate');
+Route::delete('api/v2/contracts/localcharge/{localcharge}/destroy', 'LocalChargeController@destroy');
+Route::post('api/v2/contracts/localcharge/destroyAll', 'LocalChargeController@destroyAll');
 /** End Contracts V2 routes **/
 
 
