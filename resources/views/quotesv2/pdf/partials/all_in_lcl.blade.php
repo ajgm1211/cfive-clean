@@ -1,4 +1,4 @@
-         @if($quote->pdf_option->show_type=='total in')
+@if($quote->pdf_option->show_type=='total in')
             <div {{$quote->pdf_option->show_type=='total in' ? '':'hidden'}}>
                 <p class="title">{{__('pdf.total_estimated')}}</p>
                 <br>

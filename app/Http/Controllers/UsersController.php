@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Subuser;
-use App\Quote;
 use App\Company;
 use Illuminate\Http\Response;
 use Laracasts\Flash\Flash;
@@ -17,13 +16,12 @@ use App\VerifyUser;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
+use App\QuoteV2;
+use App\TermAndConditionV2;
 use EventCrisp;
 
 class UsersController extends Controller
 {
-
-
-
 
   public function index()
   {
@@ -31,50 +29,50 @@ class UsersController extends Controller
   }
 
   /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
   public function create()
   {
     //
   }
 
   /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   * Store a newly created resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\Response
+   */
   public function store(Request $request)
   {
 
     try {
-      if($request->type == "subuser" || $request->type == "data_entry"){
+      if ($request->type == "subuser" || $request->type == "data_entry") {
 
         $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
       }
 
-      if(\Auth::user()->type=='company' && $request->type == 'company'){
-        $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);   
+      if (\Auth::user()->type == 'company' && $request->type == 'company') {
+        $request->request->add(['company_user_id' => \Auth::user()->company_user_id]);
       }
 
       $user = new User($request->all());
       $user->password = bcrypt($request->password);
       $user->save();
-      if($request->type == "subuser"){
+      if ($request->type == "subuser") {
         $user->assignRole('subuser');
       }
-      if($request->type == "company"){
+      if ($request->type == "company") {
         $user->assignRole('company');
       }
-      if($request->type == "admin"){
+      if ($request->type == "admin") {
         $user->assignRole('administrator');
       }
-      if($request->type == "data_entry"){
+      if ($request->type == "data_entry") {
         $user->assignRole('data_entry');
       }
-      $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
+      $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
       $user->notify(new SlackNotification($message));
 
       VerifyUser::create([
@@ -91,11 +89,10 @@ class UsersController extends Controller
       $request->session()->flash('message.content', 'You successfully added this user.');
 
       return redirect('users/home');
-
     } catch (\Exception $e) {
-      if($e->errorInfo[0]=='23000'){
+      if ($e->errorInfo[0] == '23000') {
         $error = 'The email address entered is already registered';
-      }else{
+      } else {
         $error = 'An error has occurred. Try again';
       }
       $request->session()->flash('message.nivel', 'danger');
@@ -107,14 +104,13 @@ class UsersController extends Controller
   }
 
   /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   * Display the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
   public function show($id)
   {
-
   }
 
   public function add()
@@ -122,11 +118,11 @@ class UsersController extends Controller
     return view('users.add');
   }
 
-  public function resetPass(Request $request,$user)
+  public function resetPass(Request $request, $user)
   {
     $user = User::find($user);
     //Password::sendResetLink(['email' => $user->email]);
-    $response = \Password::sendResetLink(['email' => $user->email ] , function (Message $message) {
+    $response = \Password::sendResetLink(['email' => $user->email], function (Message $message) {
       $message->subject($this->getEmailSubject());
     });
     $request->session()->flash('message.nivel', 'success');
@@ -135,11 +131,11 @@ class UsersController extends Controller
     return redirect('users/home');
   }
   /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   * Show the form for editing the specified resource.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
   public function edit($id)
   {
     $user = User::find($id);
@@ -148,38 +144,38 @@ class UsersController extends Controller
   }
 
   /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
   public function update(Request $request, $id)
   {
     $requestForm = $request->all();
     $user = User::find($id);
     $roles = $user->getRoleNames();
 
-    if(!$roles->isEmpty()){
-      $user->removeRole($roles[0]);   
+    if (!$roles->isEmpty()) {
+      $user->removeRole($roles[0]);
     }
 
-    if($request->type == "admin"){
+    if ($request->type == "admin") {
       $user->assignRole('administrator');
     }
-    if($request->type == "subuser"){
+    if ($request->type == "subuser") {
       $user->assignRole('subuser');
     }
-    if($request->type == "company"){
+    if ($request->type == "company") {
       $user->assignRole('company');
     }
-    if($request->type == "data_entry"){
+    if ($request->type == "data_entry") {
       $user->assignRole('data_entry');
     }
 
     $user->update($requestForm);
 
-    if($request->ajax()) {
+    if ($request->ajax()) {
       return response()->json('User updated successfully!');
     }
 
@@ -191,11 +187,11 @@ class UsersController extends Controller
   }
 
   /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   * Remove the specified resource from storage.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
 
   public function destroy($id)
   {
@@ -205,80 +201,81 @@ class UsersController extends Controller
     //Crisp Delete 
     $CrispClient = new EventCrisp();
     $exist =  $CrispClient->checkIfExist($user->email);
-    if($exist == 'true'){//Eliminamos el perfil
+    if ($exist == 'true') { //Eliminamos el perfil
       $people = $CrispClient->deleteProfile($user->email);
     }
     return $user;
   }
 
 
-  public function destroyUser(Request $request,$id)
+  public function destroyUser(Request $request, $id)
   {
-    if($request->user_id){
-      Quote::where('owner',$id)->update(['owner'=>$request->user_id]);
-      Company::where('owner',$id)->update(['owner'=>$request->user_id]);
+    if ($request->user_id) {
+      QuoteV2::where('user_id', $id)->update(['user_id' => $request->user_id]);
+      Company::where('owner', $id)->update(['owner' => $request->user_id]);
+      TermAndConditionV2::where('user_id', $id)->update(['user_id' => $request->user_id]);
     }
 
     $user = self::destroy($id);
 
     $request->session()->flash('message.nivel', 'success');
     $request->session()->flash('message.title', 'Well done!');
-    $request->session()->flash('message.content', 'You successfully delete : '.$user->name.' '.$user->lastname);
+    $request->session()->flash('message.content', 'You successfully deleted : ' . $user->name . ' ' . $user->lastname);
 
     return redirect()->route('users.home');
-
   }
 
   public function destroymsg($id)
   {
-    if(Auth::user()->type == 'admin'  ){
-      $users = User::pluck('name','id');
-    }else{
-      $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id','<>', $id)->pluck('name','id');
+    if (Auth::user()->type == 'admin') {
+      $users = User::pluck('name', 'id');
+    } else {
+      $users = User::where('company_user_id', Auth::user()->company_user_id)->where('id', '<>', $id)->pluck('name', 'id');
     }
 
-    return view('users/message' ,['userid' => $id,'users' => $users]);
-
+    return view('users/message', ['userid' => $id, 'users' => $users]);
   }
   public function resetmsg($id)
   {
-    return view('users/messagereset' ,['userid' => $id]);
+    return view('users/messagereset', ['userid' => $id]);
   }
 
-  public function datahtml(){
+  public function datahtml()
+  {
     // temporal
-    if(Auth::user()->type == 'admin'  ){
+    if (Auth::user()->type == 'admin') {
       $data = User::all();
     }
 
-    if(Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser' ){
-      $data =  User::where('company_user_id', "=",Auth::user()->company_user_id)->with('companyUser')->get();
+    if (Auth::user()->type == 'company' || Auth::user()->type == 'data_entry' || Auth::user()->type == 'subuser') {
+      $data =  User::where('company_user_id', "=", Auth::user()->company_user_id)->with('companyUser')->get();
     }
 
     return view('users/indexhtml', ['arreglo' => $data]);
   }
 
-  public function datajson() {
+  public function datajson()
+  {
 
     $user = new User();
 
     $response = User::all('name', 'lastname', 'email', 'rol')->toJson();
     return view('users/indexjson')->with('url', $response);
-
   }
 
-  public function activate(Request $request,$id) {
-    $user=User::find($id);
+  public function activate(Request $request, $id)
+  {
+    $user = User::find($id);
     //dd(json_encode($user->state));
-    if($user->state==1){
-      $user->state=0;
+    if ($user->state == 1) {
+      $user->state = 0;
       $user->update();
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
       $request->session()->flash('message.content', 'User has been disabled successfully!');
       return redirect()->route('users.home');
-    }else{
-      $user->state=1;
+    } else {
+      $user->state = 1;
       $user->update();
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
@@ -287,7 +284,8 @@ class UsersController extends Controller
     }
   }
 
-  public function logout(Request $request) {
+  public function logout(Request $request)
+  {
     Auth::logout();
     return redirect('/login');
   }
@@ -303,22 +301,22 @@ class UsersController extends Controller
   public function updateNotifications()
   {
     $notifications =  auth()->user()->unreadNotifications()->limit(4)->get();
-    foreach($notifications as $notification ){
+    foreach ($notifications as $notification) {
       $notification->markAsRead();
-
     }
   }
 
-  public function verify(Request $request, $id){
+  public function verify(Request $request, $id)
+  {
     $user = User::find($id);
-    if($user->verified==0){
+    if ($user->verified == 0) {
       $user->verified = 1;
       $user->update();
       $request->session()->flash('message.nivel', 'success');
       $request->session()->flash('message.title', 'Well done!');
       $request->session()->flash('message.content', 'User has been verified successfully!');
       return redirect()->route('users.home');
-    }else{
+    } else {
       $user->verified = 0;
       $user->update();
       $request->session()->flash('message.nivel', 'warning');
@@ -327,5 +325,4 @@ class UsersController extends Controller
       return redirect()->route('users.home');
     }
   }
-
 }
