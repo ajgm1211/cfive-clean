@@ -179,11 +179,17 @@ trait SearchTrait {
           $options = json_decode($cont->options);
 
           if(@$options->field_rate == 'containers'){
-            $jsonContainer = json_decode($data->{$options->field_rate});
-            if(isset($jsonContainer->{'C'.$cont->code}))
-              $rateMount = $jsonContainer->{'C'.$cont->code};
-            else
+            if(!empty($data->{$options->field_rate})){
+              $jsonContainer = json_decode($data->{$options->field_rate});
+              if(isset($jsonContainer->{'C'.$cont->code}))
+                $rateMount = $jsonContainer->{'C'.$cont->code};
+              else
+                $rateMount = 0;
+            }else{
               $rateMount = 0;
+            }
+            
+        
           }else{            
             $rateMount = $data->{$options->field_rate};
           }
