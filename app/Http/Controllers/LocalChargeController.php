@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\LocalCharge;
 use App\Http\Resources\LocalChargeResource;
 use App\Contract;
+use Illuminate\Support\Facades\DB;
 
 class LocalChargeController extends Controller
 {
@@ -109,5 +110,45 @@ class LocalChargeController extends Controller
     public function retrieve(Contract $contract, LocalCharge $localcharge)
     {
         return new LocalChargeResource($localcharge);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(LocalCharge $localcharge)
+    {
+        $localcharge->delete();
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(LocalCharge $localcharge)
+    {
+        
+        $new_localcharge = $localcharge->duplicate(); 
+
+        return new LocalChargeResource($new_localcharge, true);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('localcharges')->whereIn('id', $request->input('ids'))->delete(); 
+
+        return response()->json(null, 204);
     }
 }
