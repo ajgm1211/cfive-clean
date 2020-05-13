@@ -166,4 +166,29 @@ class Contract extends Model implements HasMedia
 		return $this->gpContainer->isFlatRack();
 	}
 
+	public function duplicate(){
+		
+		$new_contract = $this->replicate();
+		$new_contract->name .= ' copy';
+		$new_contract->save();
+
+		$this->load('carriers.carrier', 'localcharges', 'rates');
+		$relations = $this->getRelations();
+
+		foreach ($relations as $relation) {
+		    foreach ($relation as $relationRecord) {
+
+		    	if($relationRecord instanceof \App\LocalCharge)
+		    		$relationRecord->duplicate($new_contract->id);
+		   		else{
+		   			$newRelationship = $relationRecord->replicate();
+		        	$newRelationship->contract_id = $new_contract->id;
+		        	$newRelationship->save();
+		   		}
+
+		    }
+		}
+
+		return $new_contract;
+	}
 }

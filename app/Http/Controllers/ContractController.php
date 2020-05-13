@@ -16,6 +16,7 @@ use App\TypeDestiny;
 use App\Country;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
+use Illuminate\Support\Facades\DB;
 
 class ContractController extends Controller
 {
@@ -219,6 +220,32 @@ class ContractController extends Controller
     public function retrieve(Contract $contract)
     {
         return new ContractResource($contract, true);
+    }
+
+    /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(Contract $contract)
+    {
+        $new_contract = $contract->duplicate(); 
+
+        return new ContractResource($new_contract, true);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('contracts')->whereIn('id', $request->input('ids'))->delete(); 
+
+        return response()->json(null, 204);
     }
    
 }
