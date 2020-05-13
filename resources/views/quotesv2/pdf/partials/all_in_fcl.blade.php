@@ -43,6 +43,8 @@
             foreach ($containers as $c){ 
                 ${'sum_total_origin'.$c->code} = 0;
                 ${'sum_total_destination'.$c->code} = 0;
+                ${'sum_total_inland_origin'.$c->code} = 0;
+                ${'sum_total_inland_destination'.$c->code} = 0;
                 ${'sum_'.$c->code} = 'sum_'.$c->code;
             }
         ?>
@@ -53,7 +55,8 @@
                     ${'total_'.$c->code} = 0;
                     ${'sum_total_'.$c->code} = 0;
                     ${'sum_inland_'.$c->code} = 0;
-                    ${'sum_total_inland_'.$c->code} = 0;
+                    ${'sum_inland_origin'.$c->code} = 0;
+                    ${'sum_inland_destination'.$c->code} = 0;
                     ${'total_c'.$c->code} = 'total_c'.$c->code;
                     ${'total_m'.$c->code} = 'total_m'.$c->code;
                 }
@@ -127,9 +130,17 @@
                 if(!$rate->inland->isEmpty()){
                     foreach($rate->inland as $inland){
                         if($rate->inland->where('port_id', $inland->port_id)->count()==1){
-                            foreach ($containers as $c){
-                                ${'sum_inland_'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
-                                ${'sum_total_inland_'.$c->code}+=${'sum_inland_'.$c->code};
+                            if($inland->type == 'Origin' && !$sale_terms_origin->count()>0){
+                                foreach ($containers as $c){
+                                    ${'sum_inland_origin'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
+                                    ${'sum_total_inland_origin'.$c->code}+=${'sum_inland_origin'.$c->code};
+                                }
+                            }
+                            if($inland->type == 'Destination'){
+                                foreach ($containers as $c){
+                                    ${'sum_inland_destination'.$c->code}=$inland->${'total_c'.$c->code}+$inland->${'total_m'.$c->code};
+                                    ${'sum_total_inland_destination'.$c->code}+=${'sum_inland_destination'.$c->code};
+                                }
                             }
                         }
                     }
@@ -144,13 +155,13 @@
                     @foreach ($containers as $c)
                         @if($c->code == $key)
                             @if($sale_terms_origin->count()>0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_'.$c->code})}}</td>
+                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()>0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_'.$c->code})}}</td>
+                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_origin'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()>0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_'.$c->code})}}</td>
+                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_destination'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @elseif($sale_terms_origin->count()==0 && $sale_terms_destination->count()==0)
-                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_inland_'.$c->code})}}</td>
+                                <td {{ $hide }}>{{round(@${'sum_total_'.$c->code}+@${'sum_total_inland_origin'.$c->code}+@${'sum_total_inland_destination'.$c->code})}}</td>
                             @endif
                         @endif
                     @endforeach

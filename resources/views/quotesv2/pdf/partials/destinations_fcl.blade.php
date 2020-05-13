@@ -308,7 +308,7 @@
                                                                             @endif
                                                                         @endforeach
                                                                     @endforeach
-                                                                    <td>{{$currency_cfg->alphacode}}</td>
+                                                                    <td>{{$v->currency->alphacode}}</td>
                                                                 </tr>
                                                             @else
                                                                 <?php
