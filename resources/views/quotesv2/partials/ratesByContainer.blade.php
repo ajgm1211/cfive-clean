@@ -72,11 +72,54 @@
                                                 @endphp 
                                                 @foreach($rate->charge as $item)
                                                     @if($item->type_id==3)
-                                                        @php
+                                                        <?php
                                                             $rate_id=$item->automatic_rate_id;
                                                             $freight_amounts = json_decode($item->amount,true);
                                                             $freight_markups = json_decode($item->markups,true);
-                                                        @endphp
+
+                                                            if(!Empty($freight_amounts)){
+                                                                foreach ($freight_amounts as $k => $amount_value) {
+                                                                    if ($k == 'c20') {
+                                                                        $freight_amounts['c20DV'] = $amount_value;
+                                                                        unset($freight_amounts['c20']);
+                                                                    } elseif ($k == 'c40') {
+                                                                        $freight_amounts['c40DV'] = $amount_value;
+                                                                        unset($freight_amounts['c40']);
+                                                                    } elseif ($k == 'c40hc') {
+                                                                        $freight_amounts['c40HC'] = $amount_value;
+                                                                        unset($freight_amounts['c40hc']);
+                                                                    } elseif ($k == 'c40nor') {
+                                                                        $freight_amounts['c40NOR'] = $amount_value;
+                                                                        unset($freight_amounts['c40nor']);
+                                                                    } elseif ($k == 'c45hc') {
+                                                                        $freight_amounts['c45hc'] = $amount_value;
+                                                                        unset($freight_amounts['c45hc']);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if(!Empty($freight_markups)){
+                                                                foreach ($freight_markups as $k => $markup_value) {
+                                                                    if ($k == 'm20') {
+                                                                        $freight_markups['m20DV'] = $markup_value;
+                                                                        unset($freight_markups['m20']);
+                                                                    } elseif ($k == 'm40') {
+                                                                        $freight_markups['m40DV'] = $markup_value;
+                                                                        unset($freight_markups['m40']);
+                                                                    } elseif ($k == 'm40hc') {
+                                                                        $freight_markups['m40HC'] = $markup_value;
+                                                                        unset($freight_markups['m40hc']);
+                                                                    } elseif ($k == 'm40nor') {
+                                                                        $freight_markups['m40NOR'] = $markup_value;
+                                                                        unset($freight_markups['m40nor']);
+                                                                    } elseif ($k == 'm45hc') {
+                                                                        $freight_markups['m45HC'] = $markup_value;
+                                                                        unset($freight_markups['m45hc']);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        ?>
                                                         <tr class="tr-freight" style="height:40px;">
                                                             <td class="tds" style="padding-left: 30px">
                                                                 <input name="charge_id" value="{{$item->id}}" class="form-control charge_id" type="hidden" />
@@ -249,6 +292,48 @@
                                                             $rate_id=$item->automatic_rate_id;
                                                             $origin_amounts = json_decode($item->amount,true);
                                                             $origin_markups = json_decode($item->markups,true);
+
+                                                            if(!Empty($origin_amounts)){
+                                                                foreach ($origin_amounts as $k => $amount_value) {
+                                                                    if ($k == 'c20') {
+                                                                        $origin_amounts['c20DV'] = $amount_value;
+                                                                        unset($origin_amounts['c20']);
+                                                                    } elseif ($k == 'c40') {
+                                                                        $origin_amounts['c40DV'] = $amount_value;
+                                                                        unset($origin_amounts['c40']);
+                                                                    } elseif ($k == 'c40hc') {
+                                                                        $origin_amounts['c40HC'] = $amount_value;
+                                                                        unset($origin_amounts['c40hc']);
+                                                                    } elseif ($k == 'c40nor') {
+                                                                        $origin_amounts['c40NOR'] = $amount_value;
+                                                                        unset($origin_amounts['c40nor']);
+                                                                    } elseif ($k == 'c45hc') {
+                                                                        $origin_amounts['c45HC'] = $amount_value;
+                                                                        unset($origin_amounts['c45hc']);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if(!Empty($origin_markups)){
+                                                                foreach ($origin_markups as $k => $markup_value) {
+                                                                    if ($k == 'm20') {
+                                                                        $origin_markups['m20DV'] = $markup_value;
+                                                                        unset($origin_markups['m20']);
+                                                                    } elseif ($k == 'm40') {
+                                                                        $origin_markups['m40DV'] = $markup_value;
+                                                                        unset($origin_markups['m40']);
+                                                                    } elseif ($k == 'm40hc') {
+                                                                        $origin_markups['m40HC'] = $markup_value;
+                                                                        unset($origin_markups['m40hc']);
+                                                                    } elseif ($k == 'm40nor') {
+                                                                        $origin_markups['m40NOR'] = $markup_value;
+                                                                        unset($origin_markups['m40nor']);
+                                                                    } elseif ($k == 'm45hc') {
+                                                                        $origin_markups['m45HC'] = $markup_value;
+                                                                        unset($origin_markups['m45hc']);
+                                                                    }
+                                                                }
+                                                            }
                                                         ?>
                                                         <tr style="height:40px;">
                                                             <td class="tds" style="padding-left: 30px">
@@ -417,6 +502,47 @@
                                                             $rate_id=$item->automatic_rate_id;
                                                             $destination_amounts = json_decode($item->amount,true);
                                                             $destination_markups = json_decode($item->markups,true);
+
+                                                            if(!Empty($destination_amounts)){
+                                                                foreach ($destination_amounts as $k => $amount_value) {
+                                                                    if ($k == 'c20') {
+                                                                        $destination_amounts['c20DV'] = $amount_value;
+                                                                        unset($destination_amounts['c20']);
+                                                                    } elseif ($k == 'c40') {
+                                                                        $destination_amounts['c40DV'] = $amount_value;
+                                                                        unset($destination_amounts['c40']);
+                                                                    } elseif ($k == 'c40hc') {
+                                                                        $destination_amounts['c40HC'] = $amount_value;
+                                                                        unset($destination_amounts['c40hc']);
+                                                                    } elseif ($k == 'c40nor') {
+                                                                        $destination_amounts['c40NOR'] = $amount_value;
+                                                                        unset($destination_amounts['c40nor']);
+                                                                    } elseif ($k == 'c45hc') {
+                                                                        $destination_amounts['c45HC'] = $amount_value;
+                                                                        unset($destination_amounts['c45hc']);
+                                                                    }
+                                                                }
+                                                            }
+                                                            if(!Empty($destination_markups)){
+                                                                foreach ($destination_markups as $k => $markup_value) {
+                                                                    if ($k == 'm20') {
+                                                                        $destination_markups['m20DV'] = $markup_value;
+                                                                        unset($destination_markups['m20']);
+                                                                    } elseif ($k == 'm40') {
+                                                                        $destination_markups['m40DV'] = $markup_value;
+                                                                        unset($destination_markups['m40']);
+                                                                    } elseif ($k == 'm40hc') {
+                                                                        $destination_markups['m40HC'] = $markup_value;
+                                                                        unset($destination_markups['m40hc']);
+                                                                    } elseif ($k == 'm40nor') {
+                                                                        $destination_markups['m40NOR'] = $markup_value;
+                                                                        unset($destination_markups['m40nor']);
+                                                                    } elseif ($k == 'm45hc') {
+                                                                        $destination_markups['m45HC'] = $markup_value;
+                                                                        unset($destination_markups['m45hc']);
+                                                                    }
+                                                                }
+                                                            }
                                                         @endphp
 
                                                         <tr style="height:40px;">
