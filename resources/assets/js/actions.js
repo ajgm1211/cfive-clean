@@ -19,8 +19,14 @@ export default {
 	    retrieve(id){
 			return api.call('get', `/api/v2/contracts/${id}`, {});
 	    },
+	    duplicate(id, data){
+			return api.call('post', `/api/v2/contracts/${id}/duplicate`, data);
+	    },
 	    delete(id){
 	    	return api.call('delete', `/api/v2/contracts/${id}/destroy`, {});	
+	    },
+	    deleteAll(ids){
+	    	return api.call('post', `/api/v2/contracts/destroyAll`, { ids:ids });	
 	    }
 	},
 	oceanfreights: {
@@ -44,7 +50,13 @@ export default {
 	        return api.call('post', `/api/v2/contracts/${contract_id}/ocean_freight/${id}/update`, data);
 	    },
 	   	delete(id) {
-	        return api.call('delete', `/api/v2/contracts/ocean_freight/${id}/delete/`);
+	        return api.call('delete', `/api/v2/contracts/ocean_freight/${id}/destroy/`, {});
+	    },
+	   	duplicate(id, data){
+			return api.call('post', `/api/v2/contracts/ocean_freight/${id}/duplicate`, data);
+	    },
+	    deleteAll(ids){
+	    	return api.call('post', `/api/v2/contracts/ocean_freight/destroyAll`, { ids:ids });	
 	    }
 	},
 	surcharges: {
@@ -69,7 +81,13 @@ export default {
 	        return api.call('post', `/api/v2/contracts/${contract_id}/localcharge/${id}/update`, data);
 	    },
 	   	delete(id) {
-	        return api.call('delete', `/api/v2/contracts/surcharges/${id}/delete/`);
+	        return api.call('delete', `/api/v2/contracts/localcharge/${id}/destroy`, {});
+	    },
+	   	duplicate(id, data){
+			return api.call('post', `/api/v2/contracts/localcharge/${id}/duplicate`, data);
+	    },
+	    deleteAll(ids){
+	    	return api.call('post', `/api/v2/contracts/localcharge/destroyAll`, { ids:ids });	
 	    }
 	}
 
