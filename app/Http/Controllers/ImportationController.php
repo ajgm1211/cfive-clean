@@ -269,7 +269,7 @@ class ImportationController extends Controller
             $contractData = Contract::find($id);
             $usersNotifiques = User::where('type','=','admin')->get();
             foreach($usersNotifiques as $userNotifique){
-                $message = 'The Rates was Reprocessed. Contract: ' . $contractData->number ;
+                $message = 'The Rates was Reprocessed. Contract: ' . $contractData->name;
                 $userNotifique->notify(new N_general($userNotifique,$message));
             }
 
@@ -507,7 +507,7 @@ class ImportationController extends Controller
             }
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'The Surchargers are reprocessing in the background');
-            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
+            return redirect()->route('Failed.Developer.For.Contracts',[$id,'FailSurcharge']);
         }
 
         $request->session()->flash('message.nivel', 'success');
@@ -515,9 +515,10 @@ class ImportationController extends Controller
         $countfailSurChargersNew = FailSurCharge::where('contract_id','=',$id)->count();
 
         if($countfailSurChargersNew > 0){
-            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'1']);
+            //1
+            return redirect()->route('Failed.Developer.For.Contracts',[$id,'FailSurcharge']);
         }else{
-            return redirect()->route('Failed.Surcharge.F.C.D',[$id,'0']);
+            return redirect()->route('Failed.Developer.For.Contracts',[$id,'GoodSurcharge']);
         }
     }
 
@@ -1894,7 +1895,11 @@ class ImportationController extends Controller
             $objcarrier = new Carrier();
             $failrates      = collect([]);
             $contract       = Contract::find($id);
-            $equiment_id    = $contract->gp_container_id;
+            if(empty($contract->gp_container_id)){
+                $equiment_id    = 1;                
+            } else {
+                $equiment_id    = $contract->gp_container_id;                                
+            }
             $equiments      = GroupContainer::with('containers')->find($equiment_id);
             $columns_rt_ident = [];
             if($equiment_id == 1){
