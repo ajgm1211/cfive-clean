@@ -93538,9 +93538,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 
@@ -93739,20 +93736,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this4.refreshData();
             }).catch(function (data) {});
         },
-        onDuplicate: function onDuplicate(id) {
+        onDeleteAll: function onDeleteAll() {
             var _this5 = this;
 
             this.isBusy = true;
 
-            api.call('post', '/api/v2/contracts/duplicate', data).then(function (response) {
-                _this5.$router.push({});
-                _this5.getData();
+            var ids = this.selected.map(function (item) {
+                return item.id;
+            });
+
+            this.actions.deleteAll(ids).then(function (response) {
+                _this5.refreshData();
+            }).catch(function (data) {});
+        },
+        onDuplicate: function onDuplicate(id) {
+            var _this6 = this;
+
+            this.isBusy = true;
+
+            this.actions.duplicate(id, {}).then(function (response) {
+                _this6.refreshData();
             }).catch(function (data) {
-                _this5.$refs.observer.setErrors(data.data.errors);
+                _this6.$refs.observer.setErrors(data.data.errors);
             });
         },
 
         /* End single actions */
+
         closeModal: function closeModal(modal) {
             this.$bvModal.hide(modal);
         },
@@ -93867,7 +93877,6 @@ var render = function() {
                     [
                       _c("b-form-checkbox", {
                         attrs: { indeterminate: false },
-                        on: { change: _vm.toggleAll },
                         model: {
                           value: _vm.allSelected,
                           callback: function($$v) {
@@ -93925,20 +93934,12 @@ var render = function() {
                               staticClass: "btn-action",
                               on: {
                                 click: function($event) {
-                                  return _vm.onEditAll()
+                                  return _vm.onDeleteAll()
                                 }
                               }
                             },
-                            [_vm._v("Edit")]
-                          ),
-                          _vm._v(" "),
-                          _c("button", { staticClass: "btn-action" }, [
-                            _vm._v("Duplicate")
-                          ]),
-                          _vm._v(" "),
-                          _c("button", { staticClass: "btn-action" }, [
-                            _vm._v("Delete")
-                          ])
+                            [_vm._v("Delete")]
+                          )
                         ]
                       )
                     ],
@@ -94238,9 +94239,18 @@ var render = function() {
                                   [_vm._v("Edit")]
                                 ),
                                 _vm._v(" "),
-                                _c("button", { staticClass: "btn-action" }, [
-                                  _vm._v("Duplicate")
-                                ]),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn-action",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.onDuplicate(item.id)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Duplicate")]
+                                ),
                                 _vm._v(" "),
                                 _c(
                                   "button",
@@ -94308,75 +94318,93 @@ if (false) {
 "use strict";
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-	contracts: {
-		list: function list(params, callback, route) {
+		contracts: {
+				list: function list(params, callback, route) {
 
-			api.call('get', '/api/v2/contracts', { params: params }).then(function (response) {
-				callback(null, response.data);
-			}).catch(function (error) {
-				callback(error, error.response.data);
-			});
+						api.call('get', '/api/v2/contracts', { params: params }).then(function (response) {
+								callback(null, response.data);
+						}).catch(function (error) {
+								callback(error, error.response.data);
+						});
+				},
+				create: function create(data, route) {
+						return api.call('post', '/api/v2/contracts/store', data);
+				},
+				update: function update(id, data, route) {
+						return api.call('post', '/api/v2/contracts/' + id + '/update', data);
+				},
+				retrieve: function retrieve(id) {
+						return api.call('get', '/api/v2/contracts/' + id, {});
+				},
+				duplicate: function duplicate(id, data) {
+						return api.call('post', '/api/v2/contracts/' + id + '/duplicate', data);
+				},
+				delete: function _delete(id) {
+						return api.call('delete', '/api/v2/contracts/' + id + '/destroy', {});
+				},
+				deleteAll: function deleteAll(ids) {
+						return api.call('post', '/api/v2/contracts/destroyAll', { ids: ids });
+				}
 		},
-		create: function create(data, route) {
-			return api.call('post', '/api/v2/contracts/store', data);
+		oceanfreights: {
+				list: function list(params, callback, route) {
+
+						var contract_id = route.params.id;
+
+						api.call('get', '/api/v2/contracts/' + contract_id + '/ocean_freight', { params: params }).then(function (response) {
+								callback(null, response.data);
+						}).catch(function (error) {
+								callback(error, error.response.data);
+						});
+				},
+				create: function create(data, route) {
+						var contract_id = route.params.id;
+						return api.call('post', '/api/v2/contracts/' + contract_id + '/ocean_freight/store', data);
+				},
+				update: function update(id, data, route) {
+						var contract_id = route.params.id;
+						return api.call('post', '/api/v2/contracts/' + contract_id + '/ocean_freight/' + id + '/update', data);
+				},
+				delete: function _delete(id) {
+						return api.call('delete', '/api/v2/contracts/ocean_freight/' + id + '/destroy/', {});
+				},
+				duplicate: function duplicate(id, data) {
+						return api.call('post', '/api/v2/contracts/ocean_freight/' + id + '/duplicate', data);
+				},
+				deleteAll: function deleteAll(ids) {
+						return api.call('post', '/api/v2/contracts/ocean_freight/destroyAll', { ids: ids });
+				}
 		},
-		update: function update(id, data, route) {
-			return api.call('post', '/api/v2/contracts/' + id + '/update', data);
-		},
-		retrieve: function retrieve(id) {
-			return api.call('get', '/api/v2/contracts/' + id, {});
-		},
-		delete: function _delete(id) {
-			return api.call('delete', '/api/v2/contracts/' + id + '/destroy', {});
+		surcharges: {
+				list: function list(params, callback, route) {
+
+						var contract_id = route.params.id;
+
+						api.call('get', '/api/v2/contracts/' + contract_id + '/localcharges', { params: params }).then(function (response) {
+								callback(null, response.data);
+						}).catch(function (error) {
+								callback(error, error.response.data);
+						});
+				},
+				create: function create(data, route) {
+						var contract_id = route.params.id;
+
+						return api.call('post', '/api/v2/contracts/' + contract_id + '/localcharge/store', data);
+				},
+				update: function update(id, data, route) {
+						var contract_id = route.params.id;
+						return api.call('post', '/api/v2/contracts/' + contract_id + '/localcharge/' + id + '/update', data);
+				},
+				delete: function _delete(id) {
+						return api.call('delete', '/api/v2/contracts/localcharge/' + id + '/destroy', {});
+				},
+				duplicate: function duplicate(id, data) {
+						return api.call('post', '/api/v2/contracts/localcharge/' + id + '/duplicate', data);
+				},
+				deleteAll: function deleteAll(ids) {
+						return api.call('post', '/api/v2/contracts/localcharge/destroyAll', { ids: ids });
+				}
 		}
-	},
-	oceanfreights: {
-		list: function list(params, callback, route) {
-
-			var contract_id = route.params.id;
-
-			api.call('get', '/api/v2/contracts/' + contract_id + '/ocean_freight', { params: params }).then(function (response) {
-				callback(null, response.data);
-			}).catch(function (error) {
-				callback(error, error.response.data);
-			});
-		},
-		create: function create(data, route) {
-			var contract_id = route.params.id;
-			return api.call('post', '/api/v2/contracts/' + contract_id + '/ocean_freight/store', data);
-		},
-		update: function update(id, data, route) {
-			var contract_id = route.params.id;
-			return api.call('post', '/api/v2/contracts/' + contract_id + '/ocean_freight/' + id + '/update', data);
-		},
-		delete: function _delete(id) {
-			return api.call('delete', '/api/v2/contracts/ocean_freight/' + id + '/delete/');
-		}
-	},
-	surcharges: {
-		list: function list(params, callback, route) {
-
-			var contract_id = route.params.id;
-
-			api.call('get', '/api/v2/contracts/' + contract_id + '/localcharges', { params: params }).then(function (response) {
-				callback(null, response.data);
-			}).catch(function (error) {
-				callback(error, error.response.data);
-			});
-		},
-		create: function create(data, route) {
-			var contract_id = route.params.id;
-
-			return api.call('post', '/api/v2/contracts/' + contract_id + '/localcharge/store', data);
-		},
-		update: function update(id, data, route) {
-			var contract_id = route.params.id;
-			return api.call('post', '/api/v2/contracts/' + contract_id + '/localcharge/' + id + '/update', data);
-		},
-		delete: function _delete(id) {
-			return api.call('delete', '/api/v2/contracts/surcharges/' + id + '/delete/');
-		}
-	}
 
 });
 
