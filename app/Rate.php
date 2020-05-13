@@ -48,6 +48,14 @@ class Rate extends Model
         return (new OceanFreightFilter($request, $builder))->filter();
     }
 
+    public function duplicate(){
+        
+        $new_rate = $this->replicate();
+        $new_rate->save();
+
+        return $new_rate;
+    }
+
     /**
     * Scope a query to only include rates by contract.
     *

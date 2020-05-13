@@ -8,6 +8,7 @@ use App\Container;
 use App\Contract;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\OceanFreightResource;
+use Illuminate\Support\Facades\DB;
 
 class OceanFreightController extends Controller
 {
@@ -132,5 +133,45 @@ class OceanFreightController extends Controller
     public function retrieve(Contract $contract, Rate $rate)
     {
         return new OceanFreightResource($rate);
+    }
+
+    /**
+     * Duplicate the specified resource.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate(Rate $rate)
+    {
+        
+        $new_rate = $rate->duplicate(); 
+
+        return new OceanFreightResource($new_rate, true);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Rate $rate)
+    {
+        $rate->delete();
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyAll(Request $request)
+    {
+        DB::table('rates')->whereIn('id', $request->input('ids'))->delete(); 
+
+        return response()->json(null, 204);
     }
 }
