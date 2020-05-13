@@ -29,9 +29,9 @@
                         <tbody>
                             @php
                                 foreach ($containers as $c){
-                                    ${'freight_'.$c} = 'freight_'.$c;
-                                    ${'inland_freight_'.$c} = 'inland_freight_'.$c;
-                                    ${'total_sum_'.$c} = 'total_sum_'.$c;
+                                    ${'freight_'.$c->code} = 'freight_'.$c->code;
+                                    ${'inland_freight_'.$c->code} = 'inland_freight_'.$c->code;
+                                    ${'total_sum_'.$c->code} = 'total_sum_'.$c->code;
                                 }
                             @endphp
                             @foreach($freight_charges_grouped as $origin=>$freight)
@@ -39,13 +39,13 @@
                                     @foreach($detail as $item)
                                         <?php
                                             foreach ($containers as $c){
-                                                ${'freight_'.$c} = 0;  
-                                                ${'inland_freight_'.$c} = 0; 
+                                                ${'freight_'.$c->code} = 0;  
+                                                ${'inland_freight_'.$c->code} = 0;
                                             }
                                             foreach($item as $rate){
                                                 foreach($rate->charge as $value){
                                                     foreach ($containers as $c){
-                                                        ${'freight_'.$c}+=$value->${'total_sum_'.$c};
+                                                        ${'freight_'.$c->code}+=$value->${'total_sum_'.$c->code};
                                                     }
                                                 }
                                             }
@@ -57,7 +57,7 @@
                                             @foreach ($equipmentHides as $key=>$hide)
                                                 @foreach ($containers as $c)
                                                     @if($c->code == $key)
-                                                        <td {{$hide}}>{{round(@${'freight_'.$c})}}</td>
+                                                        <td {{$hide}}>{{round(@${'freight_'.$c->code})}}</td>
                                                     @endif
                                                 @endforeach
                                             @endforeach
@@ -239,6 +239,11 @@
                                                 @endif
                                             @endforeach
                                         @endforeach
+                                        @if($quote->pdf_option->show_schedules==1 && $quote->pdf_option->grouped_total_currency==0)
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        @endif
                                         <td><b>{{$currency_cfg->alphacode}}</b></td>
                                     </tr>
                                 </tbody>
