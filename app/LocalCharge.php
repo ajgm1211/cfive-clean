@@ -156,4 +156,28 @@ class LocalCharge extends Model
 			}
 		}
 	}
+
+	public function duplicate($contract_id = null){
+		
+		$new_localcharge = $this->replicate();
+		
+		if($contract_id)
+			$new_localcharge->contract_id = $contract_id;
+
+		$new_localcharge->save();
+
+		$this->load('localcharcarriers.carrier', 'localcharcountries.countryOrig', 'localcharcountries.countryDest', 'localcharports.portOrig', 'localcharports.portDest');
+		
+		$relations = $this->getRelations();
+
+		foreach ($relations as $relation) {
+		    foreach ($relation as $relationRecord) {
+	   			$newRelationship = $relationRecord->replicate();
+	        	$newRelationship->localcharge_id = $new_localcharge->id;
+	        	$newRelationship->save();
+		    }
+		}
+
+		return $new_localcharge;
+	}
 }

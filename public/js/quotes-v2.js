@@ -2717,6 +2717,10 @@ $(".quote_search").on("click", function() {
     }
     $(".quote_search").attr("type", "submit");
 
+    var form = $(this).parents('form');
+    $(form).submit(function() {
+        notification('Searching  &nbsp;&nbsp;<i class="fa fa-spinner fa-spin"></i>', 'info');
+    });
 });
 
 $(".quote_man").on("click", function() {
@@ -3954,10 +3958,14 @@ function notification(message, type) {
         "closeButton": true,
         "debug": false,
         "newestOnTop": false,
-        "progressBar": true,
+        "progressBar": false,
         "positionClass": "toast-bottom-center",
         "preventDuplicates": true,
         "onclick": null,
+        "showDuration": "0",
+        "hideDuration": "0",
+        "timeOut": "0",
+        "extendedTimeOut": "0",
         "showEasing": "swing",
         "hideEasing": "linear",
         "showMethod": "fadeIn",
