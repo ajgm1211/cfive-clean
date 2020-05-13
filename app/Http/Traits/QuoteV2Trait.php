@@ -296,7 +296,7 @@ trait QuoteV2Trait
 
         $pdf = \App::make('dompdf.wrapper');
 
-        $pdfarray = array('pdf'=>$pdf,'view'=>$view,'idQuote'=>$quote->quote_id,'idQ'=>$quote->id);
+        $pdfarray = array('pdf' => $pdf, 'view' => $view, 'idQuote' => $quote->quote_id, 'idQ' => $quote->id);
 
         return $pdfarray;
     }
@@ -333,6 +333,8 @@ trait QuoteV2Trait
 
                 $array_amounts = json_decode($value->amount, true);
                 $array_markups = json_decode($value->markups, true);
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
                 $pre_c = 'total_c';
                 $pre_m = 'total_m';
 
@@ -376,6 +378,9 @@ trait QuoteV2Trait
                 $array_amounts = json_decode($item->rate, true);
                 $array_markups = json_decode($item->markup, true);
 
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
+
                 foreach ($containers as $c) {
                     ${$sum . '_' . $total . '_' . $inland . $c->code} = 0;
                     if (isset($array_amounts['c' . $c->code])) {
@@ -387,7 +392,7 @@ trait QuoteV2Trait
                         ${$markup . '_' . $inland . $c->code} = $array_markups['m' . $c->code];
                         ${$total . '_' . $inland . '_' . $markup . $c->code} = number_format(${$markup . '_' . $inland . $c->code} / $currency_rate, 2, '.', '');
                     }
-                    
+
                     $item->${$total . '_c' . $c->code} = number_format(@${$sum . '_' . $total . '_' . $inland . $c->code}, 2, '.', '');
                     $item->${$total . '_m' . $c->code} = number_format(@${$total . '_' . $inland . '_' . $markup . $c->code}, 2, '.', '');
                 }
@@ -397,7 +402,7 @@ trait QuoteV2Trait
                 $item->currency_eur = $currency_charge->rates_eur;
             }
         }
-        
+
         return $rates;
     }
 
@@ -433,6 +438,9 @@ trait QuoteV2Trait
 
                 $array_amounts = json_decode($value->amount, true);
                 $array_markups = json_decode($value->markups, true);
+
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                 foreach ($containers as $c) {
                     ${$pre_c . $c->code} = 'total_c' . $c->code;
@@ -472,6 +480,9 @@ trait QuoteV2Trait
 
                 $array_amounts = json_decode($item->rate, true);
                 $array_markups = json_decode($item->markup, true);
+
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                 foreach ($containers as $c) {
                     ${$total . '_c' . $c->code} = 0;
@@ -570,6 +581,9 @@ trait QuoteV2Trait
                                 $array_amounts = json_decode($value->amount, true);
                                 $array_markups = json_decode($value->markups, true);
 
+                                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                $array_markups = $this->processOldContainers($array_markups, 'markups');
+
                                 foreach ($containers as $c) {
                                     ${$total . $c->code} = 0;
                                     ${$sum . $total . $c->code} = 'sum_total_' . $c->code;
@@ -617,6 +631,9 @@ trait QuoteV2Trait
 
                             $array_amounts = json_decode($value->rate, true);
                             $array_markups = json_decode($value->markup, true);
+
+                            $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                            $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                             foreach ($containers as $c) {
                                 ${$total . $c->code} = 0;
@@ -733,6 +750,9 @@ trait QuoteV2Trait
                                     $array_amounts = json_decode($amounts->amount, true);
                                     $array_markups = json_decode($amounts->markups, true);
 
+                                    $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                    $array_markups = $this->processOldContainers($array_markups, 'markups');
+
                                     foreach ($containers as $c) {
                                         ${$pre_c . $c->code} = 'total_c' . $c->code;
                                         if (isset($array_amounts['c' . $c->code]) && isset($array_markups['m' . $c->code])) {
@@ -763,13 +783,16 @@ trait QuoteV2Trait
                                     ${$total . '_' . $c->code} = 0;
                                     ${$total . '_markup_' . $c->code} = 0;
                                 }
-                                
+
                                 $typeCurrency =  $currency_cfg;
 
                                 $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
 
                                 $array_amounts = json_decode($inland_value->rate, true);
                                 $array_markups = json_decode($inland_value->markup, true);
+
+                                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                                 foreach ($containers as $c) {
                                     ${$inland . '_' . $c->code} = 0;
@@ -861,6 +884,9 @@ trait QuoteV2Trait
 
                                 $array_amounts = json_decode($amounts->amount, true);
                                 $array_markups = json_decode($amounts->markups, true);
+
+                                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                                $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                                 foreach ($containers as $c) {
                                     ${$sum . $c->code} = 0;
@@ -1348,9 +1374,13 @@ trait QuoteV2Trait
                 $amount = 'amount';
                 $pre = 'c';
 
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
+
                 foreach ($containers as $c) {
                     ${$pre . $c->code} = 'c' . $c->code;
                     ${$pre . $c->code . '_markup'} = 'c' . $c->code . '_markup';
+
                     if (isset($array_amounts['c' . $c->code])) {
                         ${$amount . '_' . $c->code} = $array_amounts['c' . $c->code];
                         ${$amount . '_' . $total . '_' . $c->code} = ${$amount . '_' . $c->code} / $currency_rate;
@@ -1405,6 +1435,9 @@ trait QuoteV2Trait
                 $currency_rate = $this->ratesCurrency($inland->currency_id, $typeCurrency);
                 $array_amounts = json_decode($inland->rate, true);
                 $array_markups = json_decode($inland->markup, true);
+
+                $array_amounts = $this->processOldContainers($array_amounts, 'amounts');
+                $array_markups = $this->processOldContainers($array_markups, 'markups');
 
                 foreach ($containers as $c) {
                     ${$pre . $c->code} = 'c' . $c->code;
@@ -1464,5 +1497,80 @@ trait QuoteV2Trait
         }
 
         return $sale_terms;
+    }
+
+    public function updateIntegrationQuoteStatus($quote_id)
+    {
+        $status = IntegrationQuoteStatus::where('quote_id', $quote_id)->first();
+        if ($status) {
+            $status->status = 0;
+            $status->update();
+        }
+    }
+
+    public function tofloat($num)
+    {
+        $dotPos = strrpos($num, '.');
+        $commaPos = strrpos($num, ',');
+        $sep = (($dotPos > $commaPos) && $dotPos) ? $dotPos : ((($commaPos > $dotPos) && $commaPos) ? $commaPos : false);
+
+        if (!$sep) {
+            return floatval(preg_replace("/[^0-9]/", "", $num));
+        }
+
+        return floatval(
+            preg_replace("/[^0-9]/", "", substr($num, 0, $sep)) . '.' .
+                preg_replace("/[^0-9]/", "", substr($num, $sep + 1, strlen($num)))
+        );
+    }
+
+    public function processOldContainers($array, $type)
+    {
+        if(!Empty($array)){
+            switch ($type) {
+                case 'amounts':
+                    foreach ($array as $k => $amount_value) {
+                        if ($k == 'c20') {
+                            $array['c20DV'] = $amount_value;
+                            unset($array['c20']);
+                        } elseif ($k == 'c40') {
+                            $array['c40DV'] = $amount_value;
+                            unset($array['c40']);
+                        } elseif ($k == 'c40hc') {
+                            $array['c40HC'] = $amount_value;
+                            unset($array['c40hc']);
+                        } elseif ($k == 'c40nor') {
+                            $array['c40NOR'] = $amount_value;
+                            unset($array['c40nor']);
+                        } elseif ($k == 'c45hc') {
+                            $array['c45HC'] = $amount_value;
+                            unset($array['c45hc']);
+                        }
+                    }
+                    return $array;
+                    break;
+                case 'markups':
+                    foreach ($array as $k => $markup_value) {
+                        if ($k == 'm20') {
+                            $array['m20DV'] = $markup_value;
+                            unset($array['m20']);
+                        } elseif ($k == 'm40') {
+                            $array['m40DV'] = $markup_value;
+                            unset($array['m40']);
+                        } elseif ($k == 'm40hc') {
+                            $array['m40HC'] = $markup_value;
+                            unset($array['m40hc']);
+                        } elseif ($k == 'm40nor') {
+                            $array['m40NOR'] = $markup_value;
+                            unset($array['m40nor']);
+                        } elseif ($k == 'm45hc') {
+                            $array['m45HC'] = $markup_value;
+                            unset($array['m45hc']);
+                        }
+                    }
+                    return $array;
+                    break;
+            }
+        }
     }
 }
