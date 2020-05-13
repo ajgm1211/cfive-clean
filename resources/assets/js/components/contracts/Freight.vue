@@ -29,8 +29,23 @@
         <b-table-simple hover small responsive borderless>
             <b-thead>
                 <b-tr v-if="booleano">
+                    <b-th>
+                        <b-form-checkbox
+                             v-model="allSelected"
+                             :indeterminate="false"
+                             >
+                        </b-form-checkbox>
+                    </b-th>
+
                     <b-th v-for="(value, key) in efields" :key="key">
                         {{value}}
+                    </b-th>
+
+                    <b-th>
+                        <b-button v-bind:id="'popover_all'" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
+                        <b-popover v-bind:target="'popover_all'" class="btns-action" variant="" triggers="focus" placement="bottomleft">
+                            <button class="btn-action" v-on:click="onDeleteAll()">Delete</button>
+                        </b-popover>
                     </b-th>
                 </b-tr>
             </b-thead>
@@ -135,8 +150,8 @@
                         <b-button v-bind:id="'popover'+value.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+value.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                             <button class="btn-action" v-on:click="onEdit(value)">Edit</button>
-                            <button class="btn-action">Duplicate</button>
-                            <button class="btn-action">Delete</button>
+                            <button class="btn-action" v-on:click="onDuplicate(value.id)">Duplicate</button>
+                            <button class="btn-action" v-on:click="onDelete(value.id)">Delete</button>
                         </b-popover>
                     </b-td>
 
@@ -205,6 +220,7 @@
     import Multiselect from 'vue-multiselect';
     import paginate from '../paginate';
     import FormView from '../views/FormView.vue';
+    import actions from '../../actions';
 
     export default {
         props: {
@@ -360,7 +376,31 @@
               
                 this.isBusy = true;
 
-                api.call('delete', `/api/v2/contracts/${id}/destroy`, {})
+                this.actions.delete(id)
+                    .then( ( response ) => {
+                        this.refreshData();
+                    })
+                        .catch(( data ) => {
+                    });
+            },
+            onDeleteAll(id){
+              
+                this.isBusy = true;
+
+                let ids = this.selected.map(item => item.id);
+
+                this.actions.deleteAll(ids)
+                    .then( ( response ) => {
+                        this.refreshData();
+                    })
+                        .catch(( data ) => {
+                    });
+            },
+            onDuplicate(id){
+
+                this.isBusy = true;
+                
+                this.actions.duplicate(id, {})
                     .then( ( response ) => {
                     this.refreshData();
                 })
@@ -368,20 +408,8 @@
                     this.$refs.observer.setErrors(data.data.errors);
                 });
             },
-            onDuplicate(id){
-
-                this.isBusy = true;
-                
-                api.call('post', '/api/v2/contracts/duplicate', data)
-                    .then( ( response ) => {
-                    this.$router.push({});
-                    this.getData();
-                })
-                    .catch(( data ) => {
-                    this.$refs.observer.setErrors(data.data.errors);
-                });
-            },
             /* End single actions */
+
             resetValues(){
 
                 this.efields = [];

@@ -26,7 +26,6 @@
                         <b-form-checkbox
                              v-model="allSelected"
                              :indeterminate="false"
-                             @change="toggleAll"
                              >
                         </b-form-checkbox>
                     </b-th>
@@ -38,9 +37,7 @@
                     <b-th>
                         <b-button v-bind:id="'popover_all'" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover_all'" class="btns-action" variant="" triggers="focus" placement="bottomleft">
-                            <button class="btn-action" v-on:click="onEditAll()">Edit</button>
-                            <button class="btn-action">Duplicate</button>
-                            <button class="btn-action">Delete</button>
+                            <button class="btn-action" v-on:click="onDeleteAll()">Delete</button>
                         </b-popover>
                     </b-th>
                 </b-tr>
@@ -169,7 +166,7 @@
                         <b-button v-bind:id="'popover'+item.id" class="action-app" href="#" tabindex="0"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></b-button>
                         <b-popover v-bind:target="'popover'+item.id" class="btns-action" variant="" triggers="focus" placement="bottomleft">
                             <button class="btn-action" v-on:click="onEdit(item)">Edit</button>
-                            <button class="btn-action" >Duplicate</button>
+                            <button class="btn-action" v-on:click="onDuplicate(item.id)">Duplicate</button>
                             <button class="btn-action" v-on:click="onDelete(item.id)">Delete</button>
                         </b-popover>
                     </b-td>
@@ -386,20 +383,33 @@
                         .catch(( data ) => {
                     });
             },
+            onDeleteAll(){
+              
+                this.isBusy = true;
+
+                let ids = this.selected.map(item => item.id);
+
+                this.actions.deleteAll(ids)
+                    .then( ( response ) => {
+                        this.refreshData();
+                    })
+                        .catch(( data ) => {
+                    });
+            },
             onDuplicate(id){
 
                 this.isBusy = true;
                 
-                api.call('post', '/api/v2/contracts/duplicate', data)
+                this.actions.duplicate(id, {})
                     .then( ( response ) => {
-                    this.$router.push({});
-                    this.getData();
+                    this.refreshData();
                 })
                     .catch(( data ) => {
                     this.$refs.observer.setErrors(data.data.errors);
                 });
             },
             /* End single actions */
+
             closeModal(modal){
                 this.$bvModal.hide(modal);
             },
