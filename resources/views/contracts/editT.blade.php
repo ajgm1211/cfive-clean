@@ -122,7 +122,7 @@ $validation_expire = $contracts->validity ." / ". $contracts->expire ;
 Upload Rates
 <i class="fa flaticon-tool-1"></i>
 </button>-->
-              <a href="{{route('Failed.Rates.Developer.For.Contracts',[$id,1])}}" class="btn btn-danger">
+              <a href="{{route('Failed.Developer.For.Contracts',[$id,1])}}" class="btn btn-danger">
                 Failed Rates
                 <i class="la la-arrows-alt"></i>
               </a>
