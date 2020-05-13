@@ -10,10 +10,10 @@ trait SearchTrait {
 
 
 
-  public function inlands($inlandParams,$markup,$equipment,$contain,$type){
+  public function inlands($inlandParams,$markup,$equipment,$contain,$type,$mode){
 
 
-    $modality_inland = '1';// FALTA AGREGAR EXPORT
+    $modality_inland = $mode;// FALTA AGREGAR EXPORT
     $company_inland = $inlandParams['company_id_quote'];
 
     $company_user_id = $inlandParams['company_user_id'];
@@ -101,7 +101,7 @@ trait SearchTrait {
                       $markupI20=$this->inlandMarkup($markup['inland']['inlandPercentage'],$markup['inland']['inlandAmmount'],$markup['inland']['inlandMarkup'],$sub_20,$typeCurrency,$markup['inland']['inlandMarkup']);
 
                       // FIN CALCULO MARKUPS 
-                      $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code) ; 
+                      $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => $cont->code) ; 
                       $arrayInland20 = array_merge($markupI20,$arrayInland20);
                       $inlandDetails[] = $arrayInland20;
                     }
@@ -135,7 +135,7 @@ trait SearchTrait {
 
                       // FIN CALCULO MARKUPS 
                       $sub_20 = number_format($sub_20, 2, '.', '');
-                      $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
+                      $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => $cont->code ) ;
                       $arrayInland20 = array_merge($markupI20,$arrayInland20);
                       $inlandDetails[] = $arrayInland20;
                     }  
@@ -345,7 +345,7 @@ trait SearchTrait {
       // Inlands
       $fclInland = $freight->inland_markup->where('price_type_id','=',1);
 
-      if($request->modality == "1"){
+      if($request->mode == "1"){
         $markupInlandCurre =  $this->skipPluck($fclInland->pluck('currency_export'));
         // valor de la conversion segun la moneda
         $inlandMarkup = $this->ratesCurrency($markupInlandCurre,$typeCurrency);
