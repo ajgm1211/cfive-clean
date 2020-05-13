@@ -98,11 +98,6 @@
 										</button>
 									</a>
 
-<<<<<<< HEAD
-								
-=======
-									<!--                                    <a href="{{route('Request.importation.fcl')}}">-->
->>>>>>> d3b282d1623124358ad97b6552c998f4e6b537b9
 									<a href="{{route('request.fcl.new.request')}}">
 
 										<button type="button" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill" >
