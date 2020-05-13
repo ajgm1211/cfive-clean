@@ -2375,11 +2375,8 @@ class QuoteV2Controller extends Controller
         $chargesFreight = $request->input('chargeFreight');
         $chargesAPI = $request->input('chargeAPI');
         $chargesAPI_M = $request->input('chargeAPI_M');
-<<<<<<< HEAD
         $chargesAPI_SF = $request->input('chargesAPI_SF');
-=======
-        $chargesAPI_SF = $request->input('chargeAPI_SF');
->>>>>>> d3b282d1623124358ad97b6552c998f4e6b537b9
+
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
