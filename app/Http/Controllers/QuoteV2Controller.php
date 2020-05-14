@@ -433,7 +433,6 @@ class QuoteV2Controller extends Controller
             }
 
             foreach ($array as $key => $arr) {
-                \Log::debug($key);
                 if ($key == 'c20' && $name[1] =='c20DV') {
                     $name[1] = 'c20';
                 }elseif($key == 'c40' && $name[1] =='c40DV'){
@@ -507,6 +506,29 @@ class QuoteV2Controller extends Controller
             } else {
                 $array = json_decode($charge->markup, true);
             }
+
+            foreach ($array as $key => $arr) {
+                if ($key == 'c20' && $name[1] =='c20DV') {
+                    $name[1] = 'c20';
+                }elseif($key == 'c40' && $name[1] =='c40DV'){
+                    $name[1] = 'c40';
+                }elseif($key == 'c40hc' && $name[1] =='c40HC'){
+                    $name[1] = 'c40hc';
+                }elseif($key == 'c40nor' && $name[1] =='c40NOR'){
+                    $name[1] = 'c40nor';
+                }elseif ($key == 'm20' && $name[1] =='m20DV') {
+                    $name[1] = 'm20';
+                }elseif($key == 'm40' && $name[1] =='m40DV'){
+                    $name[1] = 'm40';
+                }elseif($key == 'm40hc' && $name[1] =='m40HC'){
+                    $name[1] = 'm40hc';
+                }elseif($key == 'm40nor' && $name[1] =='m40NOR'){
+                    $name[1] = 'm40nor';
+                }elseif($key == 'm45hc' && $name[1] =='m45HC'){
+                    $name[1] = 'm45hc';
+                }
+            }
+
             $field = (string) $name[0];
             $array[$name[1]] = $request->value;
             $array = json_encode($array);
