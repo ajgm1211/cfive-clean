@@ -314,6 +314,8 @@ class QuoteV2Controller extends Controller
             $query->with(['charge_lcl_air' => function ($q) {
                 $q->with('type', 'surcharge', 'calculation_type', 'currency');
             }]);
+            $query->with('inland');
+            $query->with('automaticInlandLclAir');
         }])->with(['user' => function ($query) {
             $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
             $query->with(['companyUser' => function ($q) {
@@ -334,6 +336,8 @@ class QuoteV2Controller extends Controller
             }]);
         }])->with(['price' => function ($q) {
             $q->select('id', 'name', 'description');
+        }])->with(['saleterm' => function ($q) {
+            $q->with('charge');
         }])->with('incoterm')->findOrFail($id);
 
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
