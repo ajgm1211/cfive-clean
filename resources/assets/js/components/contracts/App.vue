@@ -10,7 +10,7 @@
                         <div class="col-6">
                             <div class="float-right">
                                 <button class="btn btn-link" v-b-modal.addContract>+ Add Contract</button>
-                                <button class="btn btn-primary btn-bg" v-click="link">+ Import Contracts</button>
+                                <a href="/RequestFcl/NewRqFcl" class="btn btn-primary btn-bg" >+ Import Contracts</a>
                             </div>
                         </div>
                     </div>
