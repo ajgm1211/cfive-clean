@@ -305,12 +305,12 @@ class RequestFclV2Controller extends Controller
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('new.contracts.index');
         } else {
 
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('new.contracts.index');
         }
     }
 
