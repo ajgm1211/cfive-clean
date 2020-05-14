@@ -179,7 +179,7 @@ trait QuoteV2Trait
         $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
         $user = User::where('id', \Auth::id())->with('companyUser')->first();
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
-
+        
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $company_user->currency->alphacode, $containers);
@@ -785,9 +785,9 @@ trait QuoteV2Trait
                                 }
 
                                 $typeCurrency =  $currency_cfg;
-
+                                
                                 $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
-
+                                
                                 $array_amounts = json_decode($inland_value->rate, true);
                                 $array_markups = json_decode($inland_value->markup, true);
 
@@ -981,7 +981,17 @@ trait QuoteV2Trait
             $hidden = 'hidden' . $cont->code;
             $$hidden = 'hidden';
             foreach ($equipmentForm as $val) {
-
+                if ($val == '20') {
+                    $val = 1;
+                } elseif ($val == '40') {
+                    $val = 2;
+                } elseif ($val == '40HC') {
+                    $val = 3;
+                } elseif ($val == '45HC') {
+                    $val = 4;
+                } elseif ($val == '40NOR') {
+                    $val = 5;
+                }
                 if ($val == $cont->id) {
 
                     $$hidden = '';
