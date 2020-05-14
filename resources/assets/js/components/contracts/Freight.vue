@@ -450,6 +450,7 @@
         },
         watch: {
             equipment: function(val, oldVal) {
+                console.log('equipment', val);
                 this.setContainersColumns(val)
             }
         }
