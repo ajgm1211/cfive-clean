@@ -20,7 +20,7 @@
 					<b-tabs card>
 
 						<b-tab title="Ocean Freight" active>
-							<ocean-freight v-if="false"
+							<ocean-freight v-if="freight"
 							:equipment="equipment" 
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
