@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-6">
                     <div class="float-right">
-                        <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
+                        <!--<button class="btn btn-link" v-b-modal.addSurcharge>+ Add Surcharge</button>-->
                         <button class="btn btn-primary btn-bg" v-b-modal.addSurcharge>+ Add Surcharge</button>
                     </div>
                 </div>

@@ -179,7 +179,6 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				console.log(data);
 				this.equipment = data.gp_container;
 			},
 
