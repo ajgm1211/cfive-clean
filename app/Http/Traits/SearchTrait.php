@@ -177,23 +177,17 @@ trait SearchTrait {
       foreach($equipment as $containers){
         if($containers == $cont->id) {
           $options = json_decode($cont->options);
-
-          if(@$options->field_rate == 'containers'){
-            if(!empty($data->{$options->field_rate} || $data->{$options->field_rate} != "" )){
+          if(@$options->field_rate == 'containers'){           
               $jsonContainer = json_decode($data->{$options->field_rate});
-              if(isset($jsonContainer->{'C'.$cont->code}))
+              if(isset($jsonContainer->{'C'.$cont->code})){              
                 $rateMount = $jsonContainer->{'C'.$cont->code};
+              }
+                
               else
-                $rateMount = 0;
-            }else{
-              $rateMount = 0;
-            }
-            
-        
+                $rateMount = 0;                      
           }else{            
             $rateMount = $data->{$options->field_rate};
           }
-
           $arreglo = $this->detailRate($markup,$rateMount,$data,$rateC,$typeCurrency,$cont->code);
           $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
           $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
@@ -436,4 +430,24 @@ trait SearchTrait {
 
 
 
+  public function validateEquipment($equipmentForm,$container){
+    $equipment = new Collection();
+    foreach ($container as $cont) {
+       foreach ($equipmentForm as $val) {
+        if ($val == $cont->id) {
+          $equipment->push($cont->gp_container_id);
+        }  
+      }    
+    } 
+
+  
+$equipment = $equipment->unique();
+
+$equipment->values()->all();
+
+$array = array("gpId"=>$equipment[0],"count"=>$equipment->count() );
+
+    return $array;
+
+  }
 }
