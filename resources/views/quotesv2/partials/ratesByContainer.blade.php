@@ -798,6 +798,48 @@
                                                     <?php
                                                         $inland_rates = json_decode($inland->rate,true);
                                                         $inland_markups = json_decode($inland->markup,true);
+
+                                                        if(!Empty($inland_rates)){
+                                                                foreach ($inland_rates as $k => $amount_value) {
+                                                                    if ($k == 'c20') {
+                                                                        $inland_rates['c20DV'] = $amount_value;
+                                                                        unset($inland_rates['c20']);
+                                                                    } elseif ($k == 'c40') {
+                                                                        $inland_rates['c40DV'] = $amount_value;
+                                                                        unset($inland_rates['c40']);
+                                                                    } elseif ($k == 'c40hc') {
+                                                                        $inland_rates['c40HC'] = $amount_value;
+                                                                        unset($inland_rates['c40hc']);
+                                                                    } elseif ($k == 'c40nor') {
+                                                                        $inland_rates['c40NOR'] = $amount_value;
+                                                                        unset($inland_rates['c40nor']);
+                                                                    } elseif ($k == 'c45hc') {
+                                                                        $inland_rates['c45hc'] = $amount_value;
+                                                                        unset($inland_rates['c45hc']);
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            if(!Empty($inland_markups)){
+                                                                foreach ($inland_markups as $k => $markup_value) {
+                                                                    if ($k == 'm20') {
+                                                                        $inland_markups['m20DV'] = $markup_value;
+                                                                        unset($inland_markups['m20']);
+                                                                    } elseif ($k == 'm40') {
+                                                                        $inland_markups['m40DV'] = $markup_value;
+                                                                        unset($inland_markups['m40']);
+                                                                    } elseif ($k == 'm40hc') {
+                                                                        $inland_markups['m40HC'] = $markup_value;
+                                                                        unset($inland_markups['m40hc']);
+                                                                    } elseif ($k == 'm40nor') {
+                                                                        $inland_markups['m40NOR'] = $markup_value;
+                                                                        unset($inland_markups['m40nor']);
+                                                                    } elseif ($k == 'm45hc') {
+                                                                        $inland_markups['m45HC'] = $markup_value;
+                                                                        unset($inland_markups['m45hc']);
+                                                                    }
+                                                                }
+                                                            }
                                                     ?>
                                                     <span >
                                                         <div class="tab-content">

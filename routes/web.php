@@ -1008,9 +1008,9 @@ Route::prefix('Container')->group(function () {
 });
 
 /** Contracts V2 view routes **/
-Route::get('api/contracts', 'ContractController@index');
-Route::get('api/contracts/create', 'ContractController@create');
-Route::get('api/contracts/{contract}/edit', 'ContractController@edit');
+Route::get('api/contracts', 'ContractController@index')->name('new.contracts.index');
+Route::get('api/contracts/create', 'ContractController@create')->name('new.contracts.create');
+Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit');
 /** End Contracts routes view **/
 
 /** API Contracts endpoint (Pending to check) **/
