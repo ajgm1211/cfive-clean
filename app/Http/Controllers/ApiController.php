@@ -386,7 +386,7 @@ class ApiController extends Controller
         $integration = $request->integration;
         $company_user_id = \Auth::user()->company_user_id;
         if (\Auth::user()->hasRole('subuser')) {
-            if($request->paginate){
+            if ($request->paginate) {
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
                 })->when($status, function ($query, $status) {
@@ -416,6 +416,8 @@ class ApiController extends Controller
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
                     }]);
+                    $query->with('inland');
+                    $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
                     $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
@@ -436,8 +438,10 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
+                }])->with(['saleterm' => function ($q) {
+                    $q->with('charge');
                 }])->with('incoterm')->paginate($request->paginate);
-            }else{
+            } else {
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
                 })->when($status, function ($query, $status) {
@@ -467,6 +471,8 @@ class ApiController extends Controller
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
                     }]);
+                    $query->with('inland');
+                    $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
                     $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
@@ -487,10 +493,12 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
+                }])->with(['saleterm' => function ($q) {
+                    $q->with('charge');
                 }])->with('incoterm')->take($request->size)->get();
             }
         } else {
-            if($request->paginate){
+            if ($request->paginate) {
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
                 })->when($status, function ($query, $status) {
@@ -520,6 +528,8 @@ class ApiController extends Controller
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
                     }]);
+                    $query->with('inland');
+                    $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
                     $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
@@ -540,8 +550,10 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
+                }])->with(['saleterm' => function ($q) {
+                    $q->with('charge');
                 }])->with('incoterm')->paginate($request->paginate);
-            }else{
+            } else {
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
                 })->when($status, function ($query, $status) {
@@ -571,6 +583,8 @@ class ApiController extends Controller
                     $query->with(['carrier' => function ($q) {
                         $q->select('id', 'name', 'uncode', 'varation as variation');
                     }]);
+                    $query->with('inland');
+                    $query->with('automaticInlandLclAir');
                 }])->with(['user' => function ($query) {
                     $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
                     $query->with(['companyUser' => function ($q) {
@@ -591,6 +605,8 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
+                }])->with(['saleterm' => function ($q) {
+                    $q->with('charge');
                 }])->with('incoterm')->take($request->size)->get();
             }
         }
@@ -604,7 +620,7 @@ class ApiController extends Controller
 
         $collection = Collection::make($quotes);
 
-        if(!$request->paginate){
+        if (!$request->paginate) {
             $collection->transform(function ($quote, $key) {
                 unset($quote['origin_port_id']);
                 unset($quote['destination_port_id']);
