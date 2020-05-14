@@ -59,19 +59,19 @@ class OceanFreightController extends Controller
         
         if($contract->isDRY()){
 
-            $prepared_data['twuenty'] = isset($data['rates_20DV']) ? $data['rates_20DV'] : '-';
-            $prepared_data['forty'] = isset($data['rates_40DV']) ? $data['rates_40DV'] : '-';
-            $prepared_data['fortyhc'] = isset($data['rates_40HC']) ? $data['rates_40HC'] : '-';
-            $prepared_data['fortynor'] = isset($data['rates_40NOR']) ? $data['rates_40NOR'] : '-';
-            $prepared_data['fortyfive'] = isset($data['rates_45HC']) ? $data['rates_45HC'] : '-';
+            $prepared_data['twuenty'] = isset($data['rates_20DV']) ? $data['rates_20DV'] : 0;
+            $prepared_data['forty'] = isset($data['rates_40DV']) ? $data['rates_40DV'] : 0;
+            $prepared_data['fortyhc'] = isset($data['rates_40HC']) ? $data['rates_40HC'] : 0;
+            $prepared_data['fortynor'] = isset($data['rates_40NOR']) ? $data['rates_40NOR'] : 0;
+            $prepared_data['fortyfive'] = isset($data['rates_45HC']) ? $data['rates_45HC'] : 0;
 
         } else {
 
-            $prepared_data['twuenty'] = '-';
-            $prepared_data['forty'] = '-';
-            $prepared_data['fortyhc'] = '-';
-            $prepared_data['fortynor'] = '-';
-            $prepared_data['fortyfive'] = '-';
+            $prepared_data['twuenty'] = 0;
+            $prepared_data['forty'] = 0;
+            $prepared_data['fortyhc'] = 0;
+            $prepared_data['fortynor'] = 0;
+            $prepared_data['fortyfive'] = 0;
 
             foreach ($data as $key => $value) {
 
