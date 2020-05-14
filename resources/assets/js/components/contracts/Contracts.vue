@@ -20,7 +20,7 @@
 					<b-tabs card>
 
 						<b-tab title="Ocean Freight" active>
-							<ocean-freight
+							<ocean-freight v-if="freight"
 							:equipment="equipment" 
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
@@ -88,7 +88,8 @@
 			return {
 				actions: actions,
 				/* Inline Form */
-				equipment: null,
+				equipment: {},
+				freight: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
@@ -163,6 +164,7 @@
 			/* Return the lists data for dropdowns */
 			api.getData({}, '/api/v2/contracts/data', (err, data) => {
 				this.setDropdownLists(err, data.data);
+				this.freight = true;
 			});
 
 			actions.contracts.retrieve(id)
@@ -179,7 +181,7 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				console.log(data);
+				console.log('onSuccess', data);
 				this.equipment = data.gp_container;
 			},
 
