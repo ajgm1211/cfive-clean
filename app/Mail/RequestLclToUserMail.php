@@ -32,7 +32,7 @@ class RequestLclToUserMail extends Mailable
 
       return $this->markdown('emails.RequestLcl.ToUserMailabel')->with(['user'=>$this->user,
                                                                         'contract' => $this->contract])
-         ->from('info@cargofive.com')
+         ->from('info@cargofive.com', 'Cargofive')
          ->subject('The contract '.$this->contract['namecontract'].' importation was completed');
    }
 }

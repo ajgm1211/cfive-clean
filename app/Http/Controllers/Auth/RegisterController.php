@@ -13,9 +13,10 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Notifications\SlackNotification;
+
 class RegisterController extends Controller
 {
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Register Controller
     |--------------------------------------------------------------------------
@@ -26,34 +27,34 @@ class RegisterController extends Controller
     |
     */
 
-  use RegistersUsers;
+    use RegistersUsers;
 
-  /**
+    /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-  protected $redirectTo = '/home';
+    protected $redirectTo = '/home';
 
-  /**
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
-  public function __construct()
-  {
-    $this->middleware('guest');
-  }
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
 
-  /**
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-  protected function validator(array $data)
-  {
- /*   $validation = Validator::make( $data, [
+    protected function validator(array $data)
+    {
+        /*   $validation = Validator::make( $data, [
       'name' => 'required|string|max:255',
       'email' => 'required|string|email|max:255|unique:users',
       'password' => 'required|string|min:2|confirmed',
@@ -70,82 +71,80 @@ class RegisterController extends Controller
     }
     */
 
-    return Validator::make($data, [
-      'name' => 'required|string|max:255',
-      'email' => 'required|string|email|max:255|unique:users',
-      'password' => 'required|string|min:2|confirmed',
-      'g-recaptcha-response' => 'required|recaptcha',
-    ]);
-  }
+        return Validator::make($data, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:2|confirmed',
+            'g-recaptcha-response' => 'required|recaptcha',
+        ]);
+    }
 
-  /**
+    /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
      * @return \App\User
      */
-  protected function create(array $data)
-  {
+    protected function create(array $data)
+    {
 
-    $user = User::create([
-      'name' => $data['name'],
-      'lastname' => $data['lastname'],
-      'email' => $data['email'],
-      'phone' => $data['phone'],
-      'password' => Hash::make($data['password'])
+        $user = User::create([
+            'name' => $data['name'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => Hash::make($data['password'])
+        ]);
 
 
-    ]);
-    //aaaaa@ccccc.com
+        $user->assignRole('company');
 
-    $user->assignRole('company');
+        $message = $user->name . " " . $user->lastname . " has been registered in Cargofive.";
+        $user->notify(new SlackNotification($message));
 
-    $message = $user->name." ".$user->lastname." has been registered in Cargofive." ;
-    $user->notify(new SlackNotification($message));
+        VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => str_random(40)
+        ]);
 
-    VerifyUser::create([
-      'user_id' => $user->id,
-      'token' => str_random(40)
-    ]);
+        \Mail::to($user->email)->send(new VerifyMail($user));
+        return $user;
+    }
 
-    \Mail::to($user->email)->send(new VerifyMail($user));
-    return $user;
-  }
-
-  /**
+    /**
      * Verify email user after register
      *
      * @param  string  $token
      * @return view
      */
-  public function verifyUser($token)
-  {
-    $verifyUser = VerifyUser::where('token', $token)->first();
-    if(isset($verifyUser) ){
-      $user = $verifyUser->user;
-      if(!$user->verified) {
-        $verifyUser->user->verified = 1;
-        $verifyUser->user->save();
-        VerifyUser::where('token', $token)->delete();
-        $status = "Your e-mail is verified. You can now login.";
-      }else{
-        $status = "Your e-mail is already verified. You can now login.";
-      }
-    }else{
-      //  return redirect('/login')->with('warning', "Sorry your email cannot be identified.");
+    public function verifyUser($token)
+    {
+        $verifyUser = VerifyUser::where('token', $token)->first();
+        if (isset($verifyUser)) {
+            $user = $verifyUser->user;
+            if (!$user->verified) {
+                $verifyUser->user->verified = 1;
+                $verifyUser->user->save();
+                VerifyUser::where('token', $token)->delete();
+                $status = "Your email was verified successfully!";
+            } else {
+                $status = "Your email is already verified";
+            }
+        } else {
+            return redirect('/login')->with('warning', "Sorry! Your email cannot be identified.");
+        }
+
+        return redirect('/login')->with('status', $status);
     }
 
-    //   return redirect('/login')->with('status', $status);
-  }
-
-  // @overwrite
-  protected function registered(Request $request, $user)
-  {
+    // @overwrite
+    protected function registered(Request $request, $user)
+    {
 
 
-    $this->guard()->logout();
+        $this->guard()->logout();
 
 
-    return redirect('/login')->with('status', 'We sent you an activation code. Check your email and click on the link to verify.');
-  }
+        return redirect('/login')->with('status', 'We sent you an activation code. Check your email and click on the link to verify.');
+    }
 }
