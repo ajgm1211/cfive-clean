@@ -152,10 +152,10 @@ Sea Freight LCL
             <ul class="m-menu__subnav">
               @role('administrator|data_entry')
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                <a  href="{{ route('RequestImportation.index') }}" class="m-menu__link ">
+                <a  href="{{ route('RequestFcl.index') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-folder-3"></i>
                   <span class="m-menu__link-text">
-                    Request Imp. FCL
+                    Request Imp. FCL V2
                   </span>
                 </a>
               </li>
@@ -302,6 +302,24 @@ API Integrations
               </li>
               @endrole
               @role('administrator|data_entry')
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('ContainerCalculation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-clipboard"></i>
+                  <span class="m-menu__link-text">
+                    Containers Calculation T.
+                  </span>
+                </a>
+              </li>
+
+
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{route('inlandD.index')}}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-truck"></i>
+                  <span class="m-menu__link-text">
+                    Inlands Distance
+                  </span>
+                </a>
+              </li>
 
               <!-- Sub- Menus --------------------------------------------------------------- -->
 

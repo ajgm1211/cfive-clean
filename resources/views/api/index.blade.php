@@ -67,10 +67,23 @@
                             <div class="col-xl-3">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="api_key" name="api_key" value="{{@$api->api_key}}" placeholder="Api key" aria-label="Api key" aria-describedby="basic-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" id="store_api_key" type="button">Save <i class="fa fa-save"></i></button>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="key_name" name="key_name" value="{{@$api->key_name}}" placeholder="Key name" aria-label="Key name" aria-describedby="basic-addon2">
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="url" name="url" value="{{@$api->url}}" placeholder="URL" aria-label="URL" aria-describedby="basic-addon2">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row align-items-center">
+                            <div class="col-xl-3">
+                                <button class="btn btn-primary" id="store_api_key" type="button">Save <i class="fa fa-save"></i></button>
                             </div>
                         </div>
                     </div>
