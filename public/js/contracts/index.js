@@ -95380,15 +95380,14 @@ var render = function() {
                         {
                           directives: [
                             {
-                              name: "click",
-                              rawName: "v-click",
-                              value: _vm.link,
-                              expression: "link"
+                              name: "b-modal",
+                              rawName: "v-b-modal.addContract",
+                              modifiers: { addContract: true }
                             }
                           ],
                           staticClass: "btn btn-link"
                         },
-                        [_vm._v("+ Import Contract")]
+                        [_vm._v("+ Add Contract")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -95396,14 +95395,15 @@ var render = function() {
                         {
                           directives: [
                             {
-                              name: "b-modal",
-                              rawName: "v-b-modal.addContract",
-                              modifiers: { addContract: true }
+                              name: "click",
+                              rawName: "v-click",
+                              value: _vm.link,
+                              expression: "link"
                             }
                           ],
                           staticClass: "btn btn-primary btn-bg"
                         },
-                        [_vm._v("+ Add Contracts")]
+                        [_vm._v("+ Import Contracts")]
                       )
                     ])
                   ])
