@@ -63,11 +63,6 @@
 /******/ 	return __webpack_require__(__webpack_require__.s = 365);
 /******/ })
 /************************************************************************/
-<<<<<<< HEAD
-/******/ ({
-
-/***/ 365:
-=======
 /******/ ([
 /* 0 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -95055,25 +95050,12 @@ if (false) {
 /* 363 */,
 /* 364 */,
 /* 365 */
->>>>>>> desarrollo-v2
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(366);
 
 
 /***/ }),
-<<<<<<< HEAD
-
-/***/ 366:
-/***/ (function(module, __webpack_exports__) {
-
-"use strict";
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/var/www/html/cargofive/cargofive/resources/assets/js/contracts/index.js'");
-
-/***/ })
-
-/******/ });
-=======
 /* 366 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -95485,4 +95467,3 @@ if (false) {
 
 /***/ })
 /******/ ]);
->>>>>>> desarrollo-v2

@@ -63,27 +63,6 @@
 /******/ 	return __webpack_require__(__webpack_require__.s = 395);
 /******/ })
 /************************************************************************/
-<<<<<<< HEAD
-/******/ ({
-
-/***/ 395:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(396);
-
-
-/***/ }),
-
-/***/ 396:
-/***/ (function(module, __webpack_exports__) {
-
-"use strict";
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/var/www/html/cargofive/cargofive/resources/assets/js/inlands/edit.js'");
-
-/***/ })
-
-/******/ });
-=======
 /******/ ([
 /* 0 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -94927,4 +94906,3 @@ var app = new __WEBPACK_IMPORTED_MODULE_2_vue___default.a({
 
 /***/ })
 /******/ ]);
->>>>>>> desarrollo-v2
