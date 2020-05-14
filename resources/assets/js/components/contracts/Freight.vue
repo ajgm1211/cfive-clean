@@ -7,7 +7,7 @@
             </div>
             <div class="col-6">
                 <div class="float-right">
-                    <button class="btn btn-link" v-b-modal.add-fcl>+ Export Contract</button>
+                    <button class="btn btn-link" v-b-modal.addOFreight>+ Add Freight</button>
                     <button class="btn btn-primary btn-bg" v-b-modal.addOFreight>+ Add Freight</button>
                 </div>
             </div>
@@ -239,8 +239,8 @@
                 isBusy:true, // Loader
                 booleano: false,
                 data: null,
-                e_startfields: [' ', 'Origin Port', 'Destination Port'],
-                e_endfields: ['Carrier', 'Currency', ' '],
+                e_startfields: ['Origin Port', 'Destination Port'],
+                e_endfields: ['Carrier', 'Currency'],
                 e_fields: [],
                 pageCount: 0,
                 initialPage: 1,
@@ -268,6 +268,7 @@
             this.contract_id = this.$route.params.id;
 
             this.initialData();
+            this.setContainersColumns(this.equipment);
 
         },
         methods: {
