@@ -180,8 +180,8 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				this.freight = true;
 				this.equipment = data.gp_container;
+				this.freight = true;
 			},
 
 			/* Set the Dropdown lists to use in form */
