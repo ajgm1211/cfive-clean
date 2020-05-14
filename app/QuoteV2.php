@@ -84,7 +84,7 @@ class QuoteV2 extends Model  implements HasMedia
     {
         return $this->hasOne('App\SaleTermV2','quote_id','id');
     }
-
+    
     public function rates_v2()
     {
         return $this->hasMany('App\AutomaticRate','quote_id','id');
