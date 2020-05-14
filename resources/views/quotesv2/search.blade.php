@@ -777,8 +777,13 @@
               <div class="col-lg-12 no-padding">
                 <div class="row  justify-content-between">
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
-                    @if(isset($arreglo))
-                    @if($arreglo->isEmpty())
+                    @if(isset($validateEquipment))
+                    @if($validateEquipment['count'] > 1 )
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>The equipments is not the same group</span> You can create a quote manually.</p>
+                    @endif
+                    @endif
+                    @if(isset($arreglo) && isset($validateEquipment) )
+                    @if($arreglo->isEmpty() && $validateEquipment['count'] < 2 )
                     <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates were found for this trade route.</span> You can create a quote manually.</p>
                     @endif
                     @endif
