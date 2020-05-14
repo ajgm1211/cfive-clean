@@ -436,7 +436,7 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
-                }])->with('incoterm')->paginate($request->paginate);
+                }])->with('incoterm','saleterm')->paginate($request->paginate);
             }else{
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
@@ -487,7 +487,7 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
-                }])->with('incoterm')->take($request->size)->get();
+                }])->with('incoterm','saleterm')->take($request->size)->get();
             }
         } else {
             if($request->paginate){
@@ -540,7 +540,7 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
-                }])->with('incoterm')->paginate($request->paginate);
+                }])->with('incoterm','saleterm')->paginate($request->paginate);
             }else{
                 $quotes = QuoteV2::when($type, function ($query, $type) {
                     return $query->where('type', $type);
@@ -591,7 +591,7 @@ class ApiController extends Controller
                     }]);
                 }])->with(['price' => function ($q) {
                     $q->select('id', 'name', 'description');
-                }])->with('incoterm')->take($request->size)->get();
+                }])->with('incoterm','saleterm')->take($request->size)->get();
             }
         }
 
