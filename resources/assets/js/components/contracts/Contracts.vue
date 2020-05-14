@@ -20,7 +20,7 @@
 					<b-tabs card>
 
 						<b-tab title="Ocean Freight" active>
-							<ocean-freight
+							<ocean-freight v-if="false"
 							:equipment="equipment" 
 							:datalists="datalists"
 							:actions="actions.oceanfreights"
@@ -89,6 +89,7 @@
 				actions: actions,
 				/* Inline Form */
 				equipment: null,
+				freight: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
@@ -179,6 +180,7 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
+				this.freight = true;
 				this.equipment = data.gp_container;
 			},
 
