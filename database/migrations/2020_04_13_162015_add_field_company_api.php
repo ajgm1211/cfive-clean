@@ -6,26 +6,25 @@ use Illuminate\Database\Migrations\Migration;
 
 class AddFieldCompanyApi extends Migration
 {
-  /**
+    /**
      * Run the migrations.
      *
      * @return void
      */
-  public function up()
-  {
-    Schema::table('companies', function (Blueprint $table){
-      $table->json('options')->nullable()->after('payment_conditions');
+    public function up()
+    {
+        Schema::table('companies', function (Blueprint $table) {
+            $table->json('options')->nullable()->after('payment_conditions');
+        });
+    }
 
-    });
-  }
-
-  /**
+    /**
      * Reverse the migrations.
      *
      * @return void
      */
-  public function down()
-  {
-    //
-  }
+    public function down()
+    {
+        //
+    }
 }
