@@ -9,7 +9,7 @@
                         </div>
                         <div class="col-6">
                             <div class="float-right">
-                                <button class="btn btn-link">+ Export Contract</button>
+                                <button class="btn btn-link" v-click="link">+ Import Contract</button>
                                 <button class="btn btn-primary btn-bg" v-b-modal.addContract>+ Add Contracts</button>
                             </div>
                         </div>
@@ -142,6 +142,10 @@
                   'directions': data.directions,
                   'containers': data.containers,
                 }
+            },
+
+            link(){
+                 window.location = '/RequestFcl/NewRqFcl';
             },
 
             closeModal(modal){

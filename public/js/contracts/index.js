@@ -95313,6 +95313,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'containers': data.containers
             };
         },
+        link: function link() {
+            window.location = '/RequestFcl/NewRqFcl';
+        },
         closeModal: function closeModal(modal) {
             this.$bvModal.hide(modal);
         },
@@ -95372,9 +95375,21 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "col-6" }, [
                     _c("div", { staticClass: "float-right" }, [
-                      _c("button", { staticClass: "btn btn-link" }, [
-                        _vm._v("+ Export Contract")
-                      ]),
+                      _c(
+                        "button",
+                        {
+                          directives: [
+                            {
+                              name: "click",
+                              rawName: "v-click",
+                              value: _vm.link,
+                              expression: "link"
+                            }
+                          ],
+                          staticClass: "btn btn-link"
+                        },
+                        [_vm._v("+ Import Contract")]
+                      ),
                       _vm._v(" "),
                       _c(
                         "button",
