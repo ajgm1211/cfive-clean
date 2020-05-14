@@ -8,7 +8,7 @@
             <div class="col-6">
                 <div class="float-right">
                     <button class="btn btn-link" v-b-modal.addOFreight>+ Add Freight</button>
-                    <button class="btn btn-primary btn-bg" v-b-modal.addOFreight>+ Add Freight</button>
+                    <button class="btn btn-primary btn-bg" v-click="link">+ Import Contract</button>
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@
                     <b-td>
                        <b-form-checkbox-group >
                             <b-form-checkbox 
-                                             v-bind:value="data.value"
+                                             v-bind:value="data[key]"
                                              v-bind:id="'check'+value.id"
                                              v-model="selected"
                                              >
@@ -272,6 +272,11 @@
 
         },
         methods: {
+            
+            link(){
+                 window.location = '/RequestFcl/NewRqFcl';
+            },
+
             /* Response the Rates lists data*/
             initialData(){
                 let params = this.$route.query;
