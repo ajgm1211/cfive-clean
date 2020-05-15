@@ -29,6 +29,7 @@
                                             foreach ($containers as $c){
                                                 ${'sum_total_'.$c->code}=0;
                                                 ${'sum_'.$c->code}='sum_'.$c->code;
+                                                ${'sale_term_'.$c->code} = 'sale_term_'.$c->code;
                                             }
                                         @endphp
                                         @foreach($value->charge as $item)
@@ -44,7 +45,7 @@
                                                 @foreach ($equipmentHides as $key=>$hide)
                                                     @foreach ($containers as $c)
                                                         @if($c->code == $key)
-                                                            <td {{ $hide }}>{{round(@$item->${'sum_'.$c->code})}}</td>
+                                                            <td {{ $hide }}>{{round(@$item->${'sale_term_'.$c->code})}}</td>
                                                         @endif
                                                     @endforeach
                                                 @endforeach
