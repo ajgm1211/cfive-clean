@@ -6,7 +6,7 @@
         <div class="row">
 
             <!-- Reference -->
-            <div v-for="(item, key) in fields" :key="key" class="col-12 col-sm-3 col-lg-2">
+            <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
 
                 <!-- Text Field -->
                 <div v-if="item.type == 'text'">
@@ -28,6 +28,27 @@
                     </b-form-group>
                 </div>
                 <!-- End Text Field -->
+
+                <!-- Textarea Field -->
+                <div v-if="item.type == 'textarea'">
+                    <b-form-group
+                            :id="'id_'+key"
+                            :label="item.label"
+                            class="d-block"
+                            :label-for="'id_'+key"
+                            :invalid-feedback="key+' is required'"
+                            valid-feedback="key+' is done!'"
+                                  >
+                        <b-textarea  
+                                id="inline-form-input-name"
+                                v-model="vdata[key]"
+                                class="mb-2 mr-sm-2 mb-sm-0 remarks"
+                                v-on:blur="onSubmit()" 
+                         ></b-textarea>
+                        <span class="update-remark"><i class="fa fa-repeat" aria-hidden="true"></i></span>
+                    </b-form-group>
+                </div>
+                <!-- End Textarea Field -->
 
                 <!-- Select Field -->
                 <div v-if="item.type == 'select'">
@@ -181,7 +202,7 @@
                 if('colClass' in item)
                     return item.colClass;
 
-                return 'col-sm-6';
+                return "col-12 col-sm-3 col-lg-2";
 
             },
 
@@ -227,6 +248,7 @@
 
                     switch (item.type) {
                         case 'text':
+                        case 'textarea':
                             if(component.vdata[key])
                                 data[key] = component.vdata[key];
                             break;
@@ -272,7 +294,6 @@
                         this.actions.create(data, this.$route)
                             .then( ( response ) => {
                                 this.$emit('success', response.data.data);
-                                this.vdata = {};
                         })
                             .catch(( data ) => {
                                 console.log(data);
