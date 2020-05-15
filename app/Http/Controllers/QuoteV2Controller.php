@@ -52,6 +52,7 @@ use App\ScheduleType;
 use App\SearchPort;
 use App\SearchRate;
 use App\Surcharge;
+use App\GroupContainer;
 //LCL
 use App\TermAndConditionV2;
 use App\TermsPort;
@@ -2338,6 +2339,8 @@ class QuoteV2Controller extends Controller
         $company_user_id = \Auth::user()->company_user_id;
         $incoterm = Incoterm::pluck('name', 'id');
         $incoterm->prepend('Select at option', '');
+        $group_contain = GroupContainer::pluck('name', 'id');
+        $group_contain->prepend('Select at option', '');
         $contain = Container::pluck('code', 'id');
         $contain->prepend('Select at option', '');
 
@@ -2374,7 +2377,7 @@ class QuoteV2Controller extends Controller
         $form['equipment'] = array('20', '40', '40HC');
         $form['company_id_quote'] = '';
 
-        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF'));
+        return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF','group_contain'));
     }
 
     /**
