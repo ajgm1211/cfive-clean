@@ -6,14 +6,15 @@ use App\Price;
 use App\Currency;
 use App\Inland;
 use GoogleMaps;
+use App\CalculationType;
 trait SearchTrait {
 
 
 
-  public function inlands($inlandParams,$markup,$equipment,$contain,$type){
+  public function inlands($inlandParams,$markup,$equipment,$contain,$type,$mode){
 
 
-    $modality_inland = '1';// FALTA AGREGAR EXPORT
+    $modality_inland = $mode;// FALTA AGREGAR EXPORT
     $company_inland = $inlandParams['company_id_quote'];
 
     $company_user_id = $inlandParams['company_user_id'];
@@ -101,7 +102,7 @@ trait SearchTrait {
                       $markupI20=$this->inlandMarkup($markup['inland']['inlandPercentage'],$markup['inland']['inlandAmmount'],$markup['inland']['inlandMarkup'],$sub_20,$typeCurrency,$markup['inland']['inlandMarkup']);
 
                       // FIN CALCULO MARKUPS 
-                      $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code) ; 
+                      $arrayInland20 = array("cant_cont" =>  '1' , "sub_in" => $sub_20 ,'amount' => $amount_inland ,'currency' => $details->currency->alphacode , 'price_unit' => $price_per_unit , 'typeContent' => $cont->code) ; 
                       $arrayInland20 = array_merge($markupI20,$arrayInland20);
                       $inlandDetails[] = $arrayInland20;
                     }
@@ -135,7 +136,7 @@ trait SearchTrait {
 
                       // FIN CALCULO MARKUPS 
                       $sub_20 = number_format($sub_20, 2, '.', '');
-                      $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => 'i'.$cont->code ) ;
+                      $arrayInland20 = array("cant_cont" =>'1' , "sub_in" => $sub_20, "des_in" => $texto20 ,'amount' => $amount_inland ,'currency' =>$inlandsValue->inlandadditionalkms->currency->alphacode, 'price_unit' => $price_per_unit , 'typeContent' => $cont->code ) ;
                       $arrayInland20 = array_merge($markupI20,$arrayInland20);
                       $inlandDetails[] = $arrayInland20;
                     }  
@@ -177,17 +178,17 @@ trait SearchTrait {
       foreach($equipment as $containers){
         if($containers == $cont->id) {
           $options = json_decode($cont->options);
-
-          if(@$options->field_rate == 'containers'){
-            $jsonContainer = json_decode($data->{$options->field_rate});
-            if(isset($jsonContainer->{'C'.$cont->code}))
-              $rateMount = $jsonContainer->{'C'.$cont->code};
-            else
-              $rateMount = 0;
+          if(@$options->field_rate == 'containers'){           
+              $jsonContainer = json_decode($data->{$options->field_rate});
+              if(isset($jsonContainer->{'C'.$cont->code})){              
+                $rateMount = $jsonContainer->{'C'.$cont->code};
+              }
+                
+              else
+                $rateMount = 0;                      
           }else{            
             $rateMount = $data->{$options->field_rate};
           }
-
           $arreglo = $this->detailRate($markup,$rateMount,$data,$rateC,$typeCurrency,$cont->code);
           $arregloRate = array_merge($arreglo['arregloRate'],$arregloRate);
           $arregloSaveR =  array_merge($arreglo['arregloRateSaveR'],$arregloSaveR);
@@ -255,6 +256,39 @@ trait SearchTrait {
 
     return $arreglo;
   }
+
+
+  public function asociarPerCont($calculation_id){ 
+
+    $calculation = CalculationType::get();
+    $valor = array();
+    $gp_id = $calculation->where('id',$calculation_id)->first();
+    if($gp_id->gp_pcontainer != 0 ){
+   
+      $grupo = $calculation->where('gp_pcontainer',$gp_id->gp_pcontainer);
+      foreach($grupo  as $val ){
+
+        $options = json_decode($val->options);
+        if(@$options->iscont == 'true'){   
+  
+          $valor = array('id'=> $val->id, 'name' => $val->name);
+          
+        }
+      }
+
+      if(empty($valor)){
+        $valor = array('id'=> $gp_id->id, 'name' => $gp_id->name);
+      }
+    
+
+    }else{
+      $valor = array('id'=> $gp_id->id, 'name' => $gp_id->name);
+    
+    }
+  
+ return $valor;
+
+   }
 
 
   // Metodos Calculo de markups 
@@ -345,7 +379,7 @@ trait SearchTrait {
       // Inlands
       $fclInland = $freight->inland_markup->where('price_type_id','=',1);
 
-      if($request->modality == "1"){
+      if($request->mode == "1"){
         $markupInlandCurre =  $this->skipPluck($fclInland->pluck('currency_export'));
         // valor de la conversion segun la moneda
         $inlandMarkup = $this->ratesCurrency($markupInlandCurre,$typeCurrency);
@@ -430,4 +464,24 @@ trait SearchTrait {
 
 
 
+  public function validateEquipment($equipmentForm,$container){
+    $equipment = new Collection();
+    foreach ($container as $cont) {
+       foreach ($equipmentForm as $val) {
+        if ($val == $cont->id) {
+          $equipment->push($cont->gp_container_id);
+        }  
+      }    
+    } 
+
+  
+$equipment = $equipment->unique();
+
+$equipment->values()->all();
+
+$array = array("gpId"=>$equipment[0],"count"=>$equipment->count() );
+
+    return $array;
+
+  }
 }

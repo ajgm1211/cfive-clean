@@ -68,9 +68,9 @@
             <label class=""><br></label>    
             <div class="" id="only_div">
                 <label class="m-checkbox m-checkbox--state-primary">
-                    {!! Form::checkbox('gp_pcontainer',true,$calculation->gp_pcontainer,['class'=>'form-control','title'=>'only importer','id'=>'only_imp'])!!}
+                    {!! Form::checkbox('gp_pcontainer',true,$calculation->gp_pcontainer,['class'=>'form-control','title'=>'Only importer.','id'=>'only_imp'])!!}
                     Only Imp.
-                    <span></span>
+                    <span title="Only importer. The calculation type belongs to a column in the container table"></span>
                 </label>
             </div>
         </div>

@@ -20,8 +20,6 @@ class RemarkCondition extends Model
     return $this->belongsTo('App\User');
   }
 
-
-
   public function remarksCarriers(){
     
      return $this->HasManyThrough('App\Carrier','App\RemarkCarrier','remark_condition_id','id','id','carrier_id');

@@ -89,14 +89,7 @@
                   </span>
                 </a>
               </li>
-              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                <a  href="{{ route('ContainerCalculation.index') }}" class="m-menu__link ">
-                  <i class="m-menu__link-icon la la-clipboard"></i>
-                  <span class="m-menu__link-text">
-                    Containers Calculation T.
-                  </span>
-                </a>
-              </li>
+        
 
             </ul>
           </div>
@@ -120,7 +113,7 @@
             <span class="m-menu__arrow m-menu__arrow--adjust"></span>
             <ul class="m-menu__subnav">
               <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-                <a  href="{{route('contracts.index')}}" class="m-menu__link ">
+                <a  href="{{route('new.contracts.index')}}" class="m-menu__link ">
                   <i class="m-menu__link-icon flaticon-file"></i>
                   <span class="m-menu__link-text">
                     Sea Freight FCL
@@ -321,15 +314,14 @@
                         </span>
                       </a>
                     </li>
-
-                    <!--<li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
-<a  href="{{route('api.settings')}}" class="m-menu__link ">
-<i class="m-menu__link-icon flaticon-network"></i>
-<span class="m-menu__link-text">
-API Integrations
-</span>
-</a>
-</li>-->
+                    <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                      <a  href="{{route('api.settings')}}" class="m-menu__link ">
+                        <i class="m-menu__link-icon flaticon-network"></i>
+                        <span class="m-menu__link-text">
+                        External API Integrations
+                        </span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>
@@ -362,6 +354,19 @@ API Integrations
                 </a>
               </li>
               @endrole
+              @role('administrator')
+       
+              <li class="m-menu__item "  data-redirect="true" aria-haspopup="true">
+                <a  href="{{ route('ContainerCalculation.index') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-clipboard"></i>
+                  <span class="m-menu__link-text">
+                    Containers Calculation T.
+                  </span>
+                </a>
+              </li>
+              @endrole
+
+
               @role('administrator|data_entry')
 
               <!-- Sub- Menus --------------------------------------------------------------- -->

@@ -79,8 +79,16 @@ class GeneralJob implements ShouldQueue
             $contract_new->direction_id     = $requestArray['direction_id'];
             $contract_new->company_user_id  = $requestArray['company_user_id'];
             $contract_new->validity         = $validity;
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->expire           = $expire;
+            $contract_new->remarks          = $contract->remarks;
             $contract_new->status           = 'publish';
+
+            if(!empty($contract->gp_container_id)){
+                $contract_new->gp_container_id = $contract->gp_container_id;
+            } else {
+                $contract_new->gp_container_id = 1;
+            }
 
             if($requestArray['requestChange'] == true){   
                 $now                        = new \DateTime();
@@ -95,7 +103,7 @@ class GeneralJob implements ShouldQueue
                 $account->request_dp_id     = $requestArray['request_dp_id'];
                 $account->save();
                 $contract_new->account_id   = $account->id;
-            }
+            } 
 
             $contract_new->save();
             $contract_new_id                = $contract_new->id;
@@ -125,6 +133,7 @@ class GeneralJob implements ShouldQueue
                 $rate_new->fortyhc          = $rate_original->fortyhc;
                 $rate_new->fortynor         = $rate_original->fortynor;
                 $rate_new->fortyfive        = $rate_original->fortyfive;
+                $rate_new->containers       = $rate_original->containers;
                 $rate_new->currency_id      = $rate_original->currency_id;
                 $rate_new->schedule_type_id = $rate_original->schedule_type_id;
                 $rate_new->transit_time     = $rate_original->transit_time;

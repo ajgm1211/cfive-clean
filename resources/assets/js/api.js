@@ -11,12 +11,9 @@ class Api {
 		return new Promise(( resolve, reject ) => {
 			axios[requestType]( url, data )
 				.then( response => {
-					console.log(response);
 					resolve(response);
 				})
 				.catch( ( { response } ) => { 
-					console.log(response);
-
 					reject(response);
 					if (response.status === 403) {
 						//Event.$swal("Oops!!", response.data.error, "error"); 
