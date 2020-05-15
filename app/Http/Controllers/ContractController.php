@@ -213,7 +213,7 @@ class ContractController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource of Contract Restriction.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\Contract $contract
@@ -228,6 +228,25 @@ class ContractController extends Controller
         
         $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
         $contract->ContractUsersRestrictionsSync($data['users'] ?? []);
+
+        return new ContractResource($contract);   
+    }
+
+
+    /**
+     * Update the specified resource of Contract Remarks.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function updateRemarks(Request $request, Contract $contract)
+    {
+        $data = $request->validate([
+            'remarks' => 'sometimes'
+        ]);
+        
+        $contract->update(['remarks' => $data['remarks']]);
 
         return new ContractResource($contract);   
     }
