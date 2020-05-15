@@ -36,11 +36,18 @@
 						</b-tab>
 
 						<b-tab title="Restrictions">
-							<!--<restrictions></restrictions>-->
+							<restrictions v-if="loaded"
+								:datalists="datalists"
+								:actions="actions.restrictions"
+								:data="currentData['restrictions']"
+							></restrictions>
 						</b-tab>
 
 						<b-tab title="Remarks">
-							<!--<remarks></remarks>-->
+							<remarks v-if="loaded"
+								:actions="actions.remarks"
+								:data="currentData"
+							></remarks>
 						</b-tab>
 
 						<b-tab title="Files">
@@ -59,23 +66,16 @@
 
 </template>
 <script>
-	import Multiselect from 'vue-multiselect';
-	import DateRangePicker from 'vue2-daterange-picker';
 	import OceanFreight from './Freight';
 	import Surcharges from './Surcharges';
 	import Restrictions from './Restrictions';
 	import Remarks from './Remarks';
 	import Files from './Files';
 	import actions from '../../actions';
-	import FormInlineView from '../views/FormInlineView.vue';
-
-	import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
-	import 'vue-multiselect/dist/vue-multiselect.min.css';
+	import FormInlineView from '../views/FormInlineView';
 
 	export default {
 		components: { 
-			DateRangePicker,
-			Multiselect,
 			OceanFreight,
 			Surcharges,
 			Restrictions,
@@ -87,14 +87,14 @@
 		data() {
 			return {
 				actions: actions,
-				/* Inline Form */
 				equipment: {},
 				freight: false,
+				loaded: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
 				
-				// Dropdown Lists
+				/* Dropdown Lists */
 				datalists: {
 				  'carriers': [],
 				  'equipments': [],
@@ -105,7 +105,9 @@
 				  'surcharges': [],
 				  'route_types': [],
 				  'destination_types': [],
-				  'calculation_types': []
+				  'calculation_types': [],
+				  'companies': [],
+				  'users': []
 				},
 
 				/* Form Inline Fields */
@@ -181,13 +183,20 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				console.log('onSuccess', data);
+				this.loaded = true;
 				this.equipment = data.gp_container;
 			},
 
 			/* Set the Dropdown lists to use in form */
 			setDropdownLists(err, data){
-				this.datalists = {
+				this.datalists = data;
+				
+				this.datalists['route_types'] = [
+						{ id: 'port', name: 'Port', vselected: 'harbors' }, 
+						{ id: 'country', name: 'Country', vselected: 'countries' }
+					];
+
+				/*
 				  'carriers': data.carriers,
 				  'equipments': data.equipments,
 				  'directions': data.directions,
@@ -196,13 +205,12 @@
 				  'currencies': data.currencies,
 				  'surcharges': data.surcharges,
 				  'countries': data.countries,
-				  'route_types': [
-						{ id: 'port', name: 'Port', vselected: 'harbors' }, 
-						{ id: 'country', name: 'Country', vselected: 'countries' }
-					  ],
+				  
 				  'destination_types': data.destination_types,
-				  'calculation_types': data.calculation_types
-				}
+				  'calculation_types': data.calculation_types,
+				  'companies': data.companies,
+				  'users': data.users
+				}*/
 			},
 		},
 		watch: {

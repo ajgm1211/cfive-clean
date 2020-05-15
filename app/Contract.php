@@ -11,6 +11,8 @@ use App\Http\Filters\ContractFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\ContractCarrier;
+use App\ContractUserRestriction;
+use App\ContractCompanyRestriction;
 use Illuminate\Support\Facades\DB;
 
 class Contract extends Model implements HasMedia, Auditable
@@ -146,6 +148,42 @@ class Contract extends Model implements HasMedia, Auditable
 		foreach($carriers as $carrier_id){
 			ContractCarrier::create([
 				'carrier_id'    => $carrier_id,
+				'contract_id'   => $this->id
+			]);
+		}
+	}
+
+	/**
+	* Sync Contract User Restrictions
+	*
+	* @param  Array $users
+	* @return void
+	*/
+	public function ContractUsersRestrictionsSync($users)
+	{
+		DB::table('contract_user_restrictions')->where('contract_id', '=', $this->id)->delete(); 
+
+		foreach($users as $user_id){
+			ContractUserRestriction::create([
+				'user_id'    => $user_id,
+				'contract_id'   => $this->id
+			]);
+		}
+	}
+
+	/**
+	* Sync Contract Company Restrictions
+	*
+	* @param  Array $companies
+	* @return void
+	*/
+	public function ContractCompaniesRestrictionsSync($companies)
+	{
+		DB::table('contract_company_restrictions')->where('contract_id', '=', $this->id)->delete(); 
+
+		foreach($companies as $company_id){
+			ContractCompanyRestriction::create([
+				'company_id'    => $company_id,
 				'contract_id'   => $this->id
 			]);
 		}
