@@ -6,7 +6,7 @@
         <div class="row">
 
             <!-- Reference -->
-            <div v-for="(item, key) in fields" :key="key" class="col-12 col-sm-3 col-lg-2">
+            <div v-for="(item, key) in fields" :key="key" :class="getClass(item)">
 
                 <!-- Text Field -->
                 <div v-if="item.type == 'text'">
@@ -181,7 +181,7 @@
                 if('colClass' in item)
                     return item.colClass;
 
-                return 'col-sm-6';
+                return "col-12 col-sm-3 col-lg-2";
 
             },
 
@@ -272,7 +272,6 @@
                         this.actions.create(data, this.$route)
                             .then( ( response ) => {
                                 this.$emit('success', response.data.data);
-                                this.vdata = {};
                         })
                             .catch(( data ) => {
                                 console.log(data);

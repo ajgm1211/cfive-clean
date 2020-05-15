@@ -36,7 +36,11 @@
 						</b-tab>
 
 						<b-tab title="Restrictions">
-							<!--<restrictions></restrictions>-->
+							<restrictions v-if="restrictions"
+								:datalists="datalists"
+								:actions="actions.restrictions"
+								:data="currentData['restrictions']"
+							></restrictions>
 						</b-tab>
 
 						<b-tab title="Remarks">
@@ -90,6 +94,7 @@
 				/* Inline Form */
 				equipment: {},
 				freight: false,
+				restrictions: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
@@ -105,7 +110,9 @@
 				  'surcharges': [],
 				  'route_types': [],
 				  'destination_types': [],
-				  'calculation_types': []
+				  'calculation_types': [],
+				  'companies': [],
+				  'users': []
 				},
 
 				/* Form Inline Fields */
@@ -181,13 +188,20 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				console.log('onSuccess', data);
+				this.restrictions = true;
 				this.equipment = data.gp_container;
 			},
 
 			/* Set the Dropdown lists to use in form */
 			setDropdownLists(err, data){
-				this.datalists = {
+				this.datalists = data;
+				
+				this.datalists['route_types'] = [
+						{ id: 'port', name: 'Port', vselected: 'harbors' }, 
+						{ id: 'country', name: 'Country', vselected: 'countries' }
+					];
+
+				/*
 				  'carriers': data.carriers,
 				  'equipments': data.equipments,
 				  'directions': data.directions,
@@ -196,13 +210,12 @@
 				  'currencies': data.currencies,
 				  'surcharges': data.surcharges,
 				  'countries': data.countries,
-				  'route_types': [
-						{ id: 'port', name: 'Port', vselected: 'harbors' }, 
-						{ id: 'country', name: 'Country', vselected: 'countries' }
-					  ],
+				  
 				  'destination_types': data.destination_types,
-				  'calculation_types': data.calculation_types
-				}
+				  'calculation_types': data.calculation_types,
+				  'companies': data.companies,
+				  'users': data.users
+				}*/
 			},
 		},
 		watch: {

@@ -1013,6 +1013,9 @@ Route::get('api/contracts/create', 'ContractController@create')->name('new.contr
 Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('new.contracts.edit');
 /** End Contracts routes view **/
 
+/*****************************************************************************************
+**                                      API ENDPOINTS                                   **
+*****************************************************************************************/
 /** API Contracts endpoint (Pending to check) **/
 Route::get('api/v2/contracts', 'ContractController@list');
 Route::get('api/v2/contracts/data', 'ContractController@data');
@@ -1022,7 +1025,7 @@ Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
 Route::post('api/v2/contracts/{contract}/duplicate', 'ContractController@duplicate');
 Route::delete('api/v2/contracts/{contract}/destroy', 'ContractController@destroy');
 Route::post('api/v2/contracts/destroyAll', 'ContractController@destroyAll');
-/** End API Contracts endpoint **/
+/** End Contracts endpoint (Pending to check) **/
 
 /** API Contracts Ocean Freights EndPoints **/
 Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@list');
@@ -1032,7 +1035,7 @@ Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightCont
 Route::post('api/v2/contracts/ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
 Route::delete('api/v2/contracts/ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
 Route::post('api/v2/contracts/ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
-/** End Contracts V2 routes **/
+/** End API Contracts Ocean Freights EndPoints **/
 
 
 /** API Contracts LocalCharge EndPoints **/
@@ -1045,6 +1048,13 @@ Route::delete('api/v2/contracts/localcharge/{localcharge}/destroy', 'LocalCharge
 Route::post('api/v2/contracts/localcharge/destroyAll', 'LocalChargeController@destroyAll');
 /** End Contracts V2 routes **/
 
+/** API Contracts Restrictions EndPoints **/
+Route::post('api/v2/contracts/{contract}/restrictions', 'ContractController@updateRestrictions');
+/** End Contract
+
+/*****************************************************************************************
+**                                   END API ENDPOINTS                                   **
+*****************************************************************************************/
 
 /** Inland V2 routes **/
 Route::group(['prefix' => 'api/v2/inland', 'middleware' => ['auth']], function () {
