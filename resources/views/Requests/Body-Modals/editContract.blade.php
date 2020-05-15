@@ -1,7 +1,7 @@
 {{ Form::model($contract, array('route' => array('update.contract.edit', $contract->id), 'method' => 'put', 'id' => 'frmcontract')) }}
 <div class="modal-header" >
     <h5 class="modal-title" id="exampleModalLongTitle">
-        Status Of The Request
+        Request Status
     </h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">
@@ -56,9 +56,9 @@
     </div>
 </div>
 <div class="modal-footer">
-    <input type="submit" class="btn btn-primary"  value="Load">
+    <input type="submit" class="btn btn-primary"  value="Update">
         
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+    <button type="button" class="btn btn-danger" data-dismiss="modal">
         Close
     </button>
 </div>

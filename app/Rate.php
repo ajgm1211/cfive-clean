@@ -48,18 +48,26 @@ class Rate extends Model
         return (new OceanFreightFilter($request, $builder))->filter();
     }
 
+    public function duplicate(){
+        
+        $new_rate = $this->replicate();
+        $new_rate->save();
+
+        return $new_rate;
+    }
+
     /**
     * Scope a query to only include rates by contract.
     *
     * @param  \Illuminate\Database\Eloquent\Builder $query
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeFilterByContract( $contract_id )
+    public function scopeFilterByContract( $query, $contract_id )
     {
         return $query->where( 'contract_id', '=', $contract_id );
     }
 
-    protected $casts = [
+protected $casts = [
         'containers' => 'array'
     ];
 }

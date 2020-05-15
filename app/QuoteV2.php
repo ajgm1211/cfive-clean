@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
+use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
-class QuoteV2 extends Model
+class QuoteV2 extends Model  implements HasMedia
 {
     use SoftDeletes;
+    use HasMediaTrait;
 
     /**
      * The attributes that should be mutated to dates.
@@ -77,6 +80,11 @@ class QuoteV2 extends Model
         return $this->hasOne('App\AutomaticRate','quote_id','id');
     }
 
+    public function saleterm()
+    {
+        return $this->hasOne('App\SaleTermV2','quote_id','id');
+    }
+
     public function rates_v2()
     {
         return $this->hasMany('App\AutomaticRate','quote_id','id');
@@ -95,6 +103,11 @@ class QuoteV2 extends Model
     public function packing_load()
     {
         return $this->hasOne('App\PackageLoadV2','quote_id','id');
+    }
+
+    public function integration()
+    {
+        return $this->hasOne('App\IntegrationQuoteStatus','quote_id','id');
     }
 
     public function scopeExclude($query,$value = array()) 

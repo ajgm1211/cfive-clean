@@ -5,8 +5,8 @@ namespace App\Helpers;
 class EventCrisp{
 
   static $web_id = '011f006f-3864-44b5-9443-d700e87df5f7';
-  static $token_indentifier = '7012d8d8-532f-4d0e-83a5-407abd5f07d3';
-  static $token_key = 'bf601822e3743e4a611dc964254a71ac1347586ee691d60ce98f247e0047ae55';
+  static $token_indentifier = 'e25cbac8-cfa6-4c5c-8bf1-bd7b202f3bb5';
+  static $token_key = '728d485a6b67ce9c6538627290e7b1c2c0cb9f8e7d52b9a935a3f6c0b9a068d5';
   static $CrispClient;
 
   public function __construct(){

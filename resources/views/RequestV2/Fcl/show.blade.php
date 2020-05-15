@@ -322,7 +322,8 @@
     $('#btnFiterSubmitSearchAcc').click(function(){
         $('#myatest').DataTable().draw(true);
     });
-
+    
+    var requesttableV = '';
     $(function() {    
         $('#myatest').DataTable({
             processing: true,
@@ -356,7 +357,7 @@
             //"scrollX": true,
         });
 
-        $('#requesttable').DataTable({
+        requesttableV = $('#requesttable').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -489,6 +490,7 @@
                                 a--;
                                 $('#strfail').text(a);
                                 $('#strfailinput').attr('value',a);
+                                $('#requesttable').DataTable().ajax.reload();
                             }else if(data.success == 2){
                                 swal("Error!", "An internal error occurred!", "error");
                             }

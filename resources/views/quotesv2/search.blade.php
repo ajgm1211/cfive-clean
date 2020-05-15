@@ -13,389 +13,394 @@
         border-radius: 5px;
         -webkit-border-radius: 5px;
     }
-    .btn-search__quotes {
-        top: 50px;
-        font-size: 18px; 
-        position: relative; 
-        padding: 13px 30px; 
-        border-radius: 50px !important;
-    }
-    .q-one, .q-two, .q-three {
-        display: flex;
-        flex-flow: wrap;
-        justify-content: space-between;
-    }
-    .q-two {
-        justify-content: flex-start;
-    }
-    .q-one div:nth-child(1), 
-    .q-one div:nth-child(2), 
-    .q-one div:nth-child(3), 
-    .q-one div:nth-child(4) {
-        overflow: hidden;
-    }
-    .q-one div:nth-child(1), 
-    .q-one div:nth-child(2), 
-    .q-one div:nth-child(3) {
-        width: 18% !important;
-    }
-    .q-one div:nth-child(4) {
-        width: 38% !important;
-    }
-    .q-one div:nth-child(5), .q-two div:nth-child(3) {
-        width: 100%;
-    }
-    .q-one div:nth-child(1) label {
-        white-space: nowrap;
-    }
-    .q-two div:nth-child(1) {
-        width: 66%;
-        margin-right: 10px;
-    }
-    .q-three div:nth-child(3) {
-        width: 100%;
-    }
-    .q-three div:nth-child(1) {
-        width: 50%;
-    }
-    .dfw {
-        width: 100%;
-    }
-    .no-shadow{
-        box-shadow: none;
-    }
-    .filter-table__quotes, .card-p__quotes, .card__quote-manual {
-        padding: 25px;
-        box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
-    }
-    .card__quote-manual {
-        margin: 0 15px;
-        border: 2px;
-    }
-    .no-padding {
-        padding: 0px !important;
-    }
-    .card-p__quotes {
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
-        margin: 0px;
-        border-radius: 5px;
-        border: 2px solid transparent;
-        transition: all 300ms linear;
-    }
-    .card-p__quotes:hover {
-        border-color: #0072fc;
-    }
-    .btn-detail__quotes {
-        width: 140px;
-        height: 30px;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: 1px solid #ececec;
-        transition: all 300ms ease;
-    }
-    .bg-maersk {
+  .btn-search__quotes {
+    top: 50px;
+    font-size: 18px; 
+    position: relative; 
+    padding: 13px 30px; 
+    border-radius: 50px !important;
+  }
+  .q-one, .q-two, .q-three {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-between;
+  }
+  .q-two {
+    justify-content: flex-start;
+  }
+  .q-one div:nth-child(1), 
+  .q-one div:nth-child(2), 
+  .q-one div:nth-child(3), 
+  .q-one div:nth-child(4) {
+    overflow: hidden;
+  }
+  .q-one div:nth-child(1), 
+  .q-one div:nth-child(2), 
+  .q-one div:nth-child(3) {
+    width: 18% !important;
+  }
+  .q-one div:nth-child(4) {
+    width: 38% !important;
+  }
+  .q-one div:nth-child(5), .q-two div:nth-child(3) {
+    width: 100%;
+  }
+  .q-one div:nth-child(1) label {
+    white-space: nowrap;
+  }
+  .q-two div:nth-child(1) {
+    width: 66%;
+    margin-right: 10px;
+  }
+  .q-three div:nth-child(3) {
+    width: 100%;
+  }
+  .q-three div:nth-child(1) {
+    width: 50%;
+  }
+  .dfw {
+    width: 100%;
+  }
+  .no-shadow{
+    box-shadow: none;
+  }
+  .filter-table__quotes, .card-p__quotes, .card__quote-manual {
+    padding: 25px;
+    box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+  }
+  .card__quote-manual {
+    margin: 0 15px;
+    border: 2px;
+  }
+  .no-padding {
+    padding: 0px !important;
+  }
+  .card-p__quotes {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin: 0px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    transition: all 300ms linear;
+  }
+  .card-p__quotes:hover {
+    border-color: #0072fc;
+  }
+  .btn-detail__quotes {
+    width: 140px;
+    height: 30px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #ececec;
+    transition: all 300ms ease;
+  }
+  .bg-maersk {
 
-        background-color: #41B0D5;    
-    }
-    .btn-detail__quotes:hover {
-        border-color: #0072fc;
-        background-color: #0072fc;    
-    }
-    .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
-        color: #fff;
-    }
-    .btn-detail__quotes span {
-        font-size: 12px;
-        color: #0072fc;
-    }
-    .btn-detail__quotes a {
-        height: 0px !important;
-    }
-    .btn-detail__quotes a i {
-        color: #a4a2bb;
-    }
-    .btn-input__select, .btn-input__select-add {
-        position: relative;
-        left: 25px;
-        width: 120px;
-        display: flex;
-        align-items:center;
-        justify-content:center;
-        color: #cecece;
-        cursor: pointer;
-        font-size: 12px;
-        padding: 3px 0px;
-        border-radius: 5px;
-        border: 2px solid #cecece;
-        transition: all 300ms ease;
-    }
-    .btn-input__select:hover, .btn-input__select-add:hover {
-        border-color: #0072fc; 
-    }
+    background-color: #41B0D5;    
+  }
 
-    .input-select[type="checkbox"] {
-        display: none; 
-    }
-    .input-select[type="checkbox"]:checked + .btn-input__select {
-        color: #fff;
-        display: flex;
-        width: 120px;
-        border-color: #0072fc;
-        justify-content: center;
-        background-color: #0072fc;
-    }
-    .style__select-add {
-        color: #fff;
-        border-color: #0072fc;
-        background-color: #0072fc;
-    }
-    .add-click {
-        color: #cecece !important;
-    }
-    .input-select[type="checkbox"]:checked + .btn-input__select span {
-        display :none;
-    }
-    .btn-input__select-add {
-        width: 60px !important;
-        left: 60px;
-        visibility: hidden;
-    }
-    .btn-input__select-gen {
-        width: 60px !important;
-        left: 60px;
-        visibility: hidden;
-    }
+  .bg-safmarine {
 
-    .hidden-general{
-        display:none !important;
-    }
-    .visible__select-add {
-        visibility: visible;
-    }
-    .col-txt {
-        font-weight: 600;
-        color: #0072fc;
-        font-size: 18px;
-    }
-    .btn-d {
-        width: 130px;
-    }
-    .padding {
-        padding: 0 25px;
-    }
-    .padding-v2 {
-        padding: 25px;
-    }
-    .no-margin {
-        margin: 0 !important;
-    }
-    .freight__quotes {
-        border-top: none !important;
-        border: 3px solid #0072fc; 
-        border-radius: 0px 0px 3px 3px;
-    }
-    .add-class__card-p {
-        box-shadow: none;
-        border: 3px solid #0072fc; 
-        border-bottom: 1px solid #ececec !important;
-        border-radius: 3px 3px 0px 0px !important;
-    }
-    .bg-light {
-        padding: 5px 25px;
-        border-radius: 3px;
-        background-color: #f4f3f8 !important;
-    }
-    .portalphacode {
-        color: #1d3b6e !important;
-    }
-    .colorphacode {
-        color: #7c83b3;
-    }
-    .bg-rates {
-        padding: 2px 5px;
-        border-radius: 3px;
-        text-align: center;
-        background-color: #ececec;
-    }
-    .wth {
-        width: 22%;
-    }
-    .table-r__quotes {
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-    }
-    .table-r__quotes div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .b-top {
-        border-top: 1px solid #ececec;
-    }
-    .padding-min {
-        padding: 10px !important;
-    }
-    .b-left {
-        border-left: 1px solid #ececec;
-    }
-    .padding-min-col {
-        padding: 45px 10px !important;
-    }
-    .pos-btn {
-        position: relative;
-        right: 40px;
-    }
-    .padding-right-table {
-        padding-right: 50px !important;
-    }
-    .btn-date {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-    }
-    .data-rates {
-        padding: 5px 25px;
-    }
-    .arrow-down {
-        top: 4px;
-        position: relative;
-    }
-    .monto-down {
-        top: 2px;
-        position: relative;
-    }
-    .min-width-filter span {
-        min-width: 50px !important;
-    }
-    .min-width-filter .select2-search--dropdown {
-        padding: 0px !important;
-    }
-    .margin-card {
-        margin-top: 50px !important;
-        margin-bottom: 50px !important;
-    }
-    .no-check {
-        display: none !important;
-    }
-    .border-bottom {
-        border-bottom: 1px solid #ececec;
-    }
-    .border-card {
-        border-color: #0072fc !important;
-    }
-    .btn-manual__quotes {
-        background-color: transparent;
-        color: #0072fc !important;
-        border-width: 2px;
-        font-weight: 600;
-        padding: 0.35rem 1rem;
-    }
-    .btn-manual__quotes span {
-        top: 2px;
-        position: relative;
-    }
-    .warning-p {
-        color: #575962;
-        font-size: 14px;
-        font-weight: 600;
+    background-color: #f99702;    
+}
+  .btn-detail__quotes:hover {
+    border-color: #0072fc;
+    background-color: #0072fc;    
+  }
+  .btn-detail__quotes:hover span,.btn-detail__quotes:hover a i {
+    color: #fff;
+  }
+  .btn-detail__quotes span {
+    font-size: 12px;
+    color: #0072fc;
+  }
+  .btn-detail__quotes a {
+    height: 0px !important;
+  }
+  .btn-detail__quotes a i {
+    color: #a4a2bb;
+  }
+  .btn-input__select, .btn-input__select-add {
+    position: relative;
+    left: 25px;
+    width: 120px;
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    color: #cecece;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 0px;
+    border-radius: 5px;
+    border: 2px solid #cecece;
+    transition: all 300ms ease;
+  }
+  .btn-input__select:hover, .btn-input__select-add:hover {
+    border-color: #0072fc; 
+  }
 
-    }
-    .warning-p span {
-        color: #e74c3c;
-    }
-    .warning-p i {
-        font-size: 33px;
-        top: 7px;
-        margin-right: 5px;
-        position: relative;
-        transform: rotate(180deg);
-    }
-    .btn-remarks {
-        width: 95px;
-    }
-    .btn-nowrap {
-        white-space: nowrap;
-    }
-    .select-class::before {
-        content:'Select ->';
-        font-size: 13px;
-    }
-    .selected-class:before {
-        content: 'Selected';
-        font-size: 13px;
-    }
-    .full-width {
-        width: 100% !important;
-    }
-    .create-manual {
-        background-color: transparent !important;
-        color: #36a3f7 !important;
-        border-width: 2px;
-        border-color: #36a3f7 !important;
-    }
-    .create-manual:hover {
-        background-color: #36a3f7 !important;
-        border-color: #36a3f7 !important;
-    }
-    .workgreen {
-        color: #6ee99e !important;
-        font-weight: bold !important;
-    }
-    .downexcel {
-        border-color: #6ee99e !important;
-    }
-    .downexcel a {
-        text-decoration: none;
-    }
-    .downexcel:hover {
-        background-color: transparent !important;
-    } 
-    .downexcel i {
-        margin-top: 8px !important;
-        font-size: 24px;
-        color: #6ee99e !important;
-    }
-    .btn-plus__form {
-        position: relative;
-        top: 8px;
-    }
-    .include-checkbox[type="checkbox"] {
-        display: none;
-    }
-    .for-check {
-        display: flex;
-        padding-left: 40px;
-        padding-right: 0px;
-    }
-    .label-check {
-        position: relative;
-    }
-    .label-check::before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        left: -25px;
-        width: 15px;
-        height: 15px;
-        background: transparent;
-        border: 2px solid #0000ff;
-        border-radius: 3px;
-        display: flex;
-        /*align-items: center*/
-        justify-content: center;
-    }
-    .include-checkbox[type="checkbox"]:checked + .label-check::before {
-        content: '✔';
-        color: #0000ff;
-        line-height: 15px;
-    }
+  .input-select[type="checkbox"] {
+    display: none; 
+  }
+  .input-select[type="checkbox"]:checked + .btn-input__select {
+    color: #fff;
+    display: flex;
+    width: 120px;
+    border-color: #0072fc;
+    justify-content: center;
+    background-color: #0072fc;
+  }
+  .style__select-add {
+    color: #fff;
+    border-color: #0072fc;
+    background-color: #0072fc;
+  }
+  .add-click {
+    color: #cecece !important;
+  }
+  .input-select[type="checkbox"]:checked + .btn-input__select span {
+    display :none;
+  }
+  .btn-input__select-add {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
+  .btn-input__select-gen {
+    width: 60px !important;
+    left: 60px;
+    visibility: hidden;
+  }
 
-    /* c5 select */
-    .c5-select-multiple {
+  .hidden-general{
+    display:none !important;
+  }
+  .visible__select-add {
+    visibility: visible;
+  }
+  .col-txt {
+    font-weight: 600;
+    color: #0072fc;
+    font-size: 18px;
+  }
+  .btn-d {
+    width: 130px;
+  }
+  .padding {
+    padding: 0 25px;
+  }
+  .padding-v2 {
+    padding: 25px;
+  }
+  .no-margin {
+    margin: 0 !important;
+  }
+  .freight__quotes {
+    border-top: none !important;
+    border: 3px solid #0072fc; 
+    border-radius: 0px 0px 3px 3px;
+  }
+  .add-class__card-p {
+    box-shadow: none;
+    border: 3px solid #0072fc; 
+    border-bottom: 1px solid #ececec !important;
+    border-radius: 3px 3px 0px 0px !important;
+  }
+  .bg-light {
+    padding: 5px 25px;
+    border-radius: 3px;
+    background-color: #f4f3f8 !important;
+  }
+  .portalphacode {
+    color: #1d3b6e !important;
+  }
+  .colorphacode {
+    color: #7c83b3;
+  }
+  .bg-rates {
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-align: center;
+    background-color: #ececec;
+  }
+  .wth {
+    width: 22%;
+  }
+  .table-r__quotes {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .table-r__quotes div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .b-top {
+    border-top: 1px solid #ececec;
+  }
+  .padding-min {
+    padding: 10px !important;
+  }
+  .b-left {
+    border-left: 1px solid #ececec;
+  }
+  .padding-min-col {
+    padding: 45px 10px !important;
+  }
+  .pos-btn {
+    position: relative;
+    right: 40px;
+  }
+  .padding-right-table {
+    padding-right: 50px !important;
+  }
+  .btn-date {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+  }
+  .data-rates {
+    padding: 5px 25px;
+  }
+  .arrow-down {
+    top: 4px;
+    position: relative;
+  }
+  .monto-down {
+    top: 2px;
+    position: relative;
+  }
+  .min-width-filter span {
+    min-width: 50px !important;
+  }
+  .min-width-filter .select2-search--dropdown {
+    padding: 0px !important;
+  }
+  .margin-card {
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+  }
+  .no-check {
+    display: none !important;
+  }
+  .border-bottom {
+    border-bottom: 1px solid #ececec;
+  }
+  .border-card {
+    border-color: #0072fc !important;
+  }
+  .btn-manual__quotes {
+    background-color: transparent;
+    color: #0072fc !important;
+    border-width: 2px;
+    font-weight: 600;
+    padding: 0.35rem 1rem;
+  }
+  .btn-manual__quotes span {
+    top: 2px;
+    position: relative;
+  }
+  .warning-p {
+    color: #575962;
+    font-size: 14px;
+    font-weight: 600;
+
+  }
+  .warning-p span {
+    color: #e74c3c;
+  }
+  .warning-p i {
+    font-size: 33px;
+    top: 7px;
+    margin-right: 5px;
+    position: relative;
+    transform: rotate(180deg);
+  }
+  .btn-remarks {
+    width: 95px;
+  }
+  .btn-nowrap {
+    white-space: nowrap;
+  }
+  .select-class::before {
+    content:'Select ->';
+    font-size: 13px;
+  }
+  .selected-class:before {
+    content: 'Selected';
+    font-size: 13px;
+  }
+  .full-width {
+    width: 100% !important;
+  }
+  .create-manual {
+    background-color: transparent !important;
+    color: #36a3f7 !important;
+    border-width: 2px;
+    border-color: #36a3f7 !important;
+  }
+  .create-manual:hover {
+    background-color: #36a3f7 !important;
+    border-color: #36a3f7 !important;
+  }
+  .workgreen {
+    color: #6ee99e !important;
+    font-weight: bold !important;
+  }
+  .downexcel {
+    border-color: #6ee99e !important;
+  }
+  .downexcel a {
+    text-decoration: none;
+  }
+  .downexcel:hover {
+    background-color: transparent !important;
+  } 
+  .downexcel i {
+    margin-top: 8px !important;
+    font-size: 24px;
+    color: #6ee99e !important;
+  }
+  .btn-plus__form {
+    position: relative;
+    top: 8px;
+  }
+  .include-checkbox[type="checkbox"] {
+    display: none;
+  }
+  .for-check {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 0px;
+  }
+  .label-check {
+    position: relative;
+  }
+  .label-check::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -25px;
+    width: 15px;
+    height: 15px;
+    background: transparent;
+    border: 2px solid #0000ff;
+    border-radius: 3px;
+    display: flex;
+    /*align-items: center*/
+    justify-content: center;
+  }
+  .include-checkbox[type="checkbox"]:checked + .label-check::before {
+    content: '✔';
+    color: #0000ff;
+    line-height: 15px;
+  }
+
+   /* c5 select */
+   .c5-select-multiple {
         display: none;
     }
     .c5-select-multiple-dropdown {
@@ -642,8 +647,8 @@
               </div>
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',array('Types' => $airlines, 'Equipment List' => $contain),null,['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
-              </div> 
+                {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
+              </div>
               <div class="col-lg-2">
                 <label>Company</label>
                 <div class="m-input-icon m-input-icon--right">
@@ -676,7 +681,7 @@
                 <label>Delivery type</label>
                 {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
               </div>
-             
+
 
             </div><br>
             <div class="row">
@@ -730,16 +735,16 @@
                 {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
                 <!--<select name="carriers[]" id="carrier_select" class="c5-select-multiple" c5-data="{{ $contain }}" multiple></select>-->
               </div>
-             
-             <!-- <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
-                <label>Delivery type</label>
+
+           <!--   <div class="col-lg-2" id="delivery_type_label">
+                <label>Delivery type</label>          
                 {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
                 {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
               </div>-->
-              
+      
 
             </div>
             <div class="row">
@@ -753,11 +758,14 @@
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
 
-              <!-- <div class="col-lg-2 for-check">
+              <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
 
+
+               <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
+<!--
               <div class="col-lg-2 for-check" id="cmadiv">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
@@ -766,9 +774,14 @@
               <div class="col-lg-2 for-check" id="maerskdiv">
                 {{ Form::checkbox('chargeAPI_M',null,@$chargeAPI_M,['id'=>'mode5', 'class' => 'include-checkbox']) }}
                 <label for="mode5" class="label-check">Include MAERSK Spot</label>
-              </div>-->
+              </div>
 
-            </div><br>
+              <div class="col-lg-2 for-check" id="safmarinediv">
+								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
+								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
+							</div>-->
+
+            </div><br>    
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -996,9 +1009,14 @@
               <div class="col-lg-12 no-padding">
                 <div class="row  justify-content-between">
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
-                    @if(isset($arreglo))
-                    @if($arreglo->isEmpty())
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates founded for this tradelane.</span> You can create a quote manually.</p>
+                    @if(isset($validateEquipment))
+                    @if($validateEquipment['count'] > 1 )
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>The teams do not belong to the same group.</span> You can create a quote manually.</p>
+                    @endif
+                    @endif
+                    @if(isset($arreglo) && isset($validateEquipment) )
+                    @if($arreglo->isEmpty() && $validateEquipment['count'] < 2 )
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>No freight rates were found for this trade route.</span> You can create a quote manually.</p>
                     @endif
                     @endif
                   </div>
@@ -1012,10 +1030,11 @@
 
             <div class="row">
               <div class="col-lg-12">   
-                <center>
-                  <button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search">Search</button>
-                  <button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
-                </center>
+              <center>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_search" id="quote_search">Search</button>
+									<button type="button" class="btn m-btn--pill  btn-search__quotes  btn-info quote_searching hide" id="quote_searching">Searching &nbsp;<i class="fa fa-spinner fa-spin"></i></button>
+									<button type="button" class="btn m-btn--pill  btn-info btn-search__quotes quote_man create-manual">Create Manual</span></button>
+								</center>
             </div>
           </div>
         </div>
@@ -1425,18 +1444,18 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['i20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['i20DV']['markup']  }}</b>
-                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['i20DV']['montoInlandT'], 2, '.', '') }}  </span>
+                        <div class="wth" {{ $equipmentHies['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
+                          <i class="la la-caret-right></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40DV'] }}>{{ $equipmentHides['40DV'] }}
-                          {{ @$inlandDestiny['inlandDetails']['i40DV']['sub_in']  }}
-                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40DV']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ number_format(@$inlandDestiny['inlandDetails']['i40DV']['montoInlandT'] , 2, '.', '')   }} </span> 
+                          {{ @$inlandDestiny['inlandDetails']['40DV']['sub_in']  }}
+                          + &nbsp;<b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['40DV']['markup']  }} </b><i class="la la-caret-right"></i> <span class="bg-rates" id = 'valor-d40{{$loop->iteration}}-{{$arr->id}}' > {{ number_format(@$inlandDestiny['inlandDetails']['40DV']['montoInlandT'] , 2, '.', '')   }} </span> 
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40HC'] }}>{{ $equipmentHides['40HC'] }}
-                          {{ @$inlandDestiny['inlandDetails']['i40HC']['sub_in']  }}
-                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['i40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{  number_format(@$inlandDestiny['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }}  </span>
+                          {{ @$inlandDestiny['inlandDetails']['40HC']['sub_in']  }}
+                          + &nbsp; <b class="monto-down"> {{ @$inlandDestiny['inlandDetails']['40HC']['markup']  }}    </b><i class="la la-caret-right"></i>   <span class="bg-rates" id = 'valor-d40h{{$loop->iteration}}-{{$arr->id}}'> {{  number_format(@$inlandDestiny['inlandDetails']['40HC']['montoInlandT'], 2, '.', '')  }}  </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40NOR'] }}>N/A</div>
@@ -1472,18 +1491,18 @@
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
                         <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i20DV']['sub_in']  }} 
-                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['i20DV']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{  number_format(@$inlandOrigin['inlandDetails']['i20DV']['montoInlandT'], 2, '.', '') }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['20DV']['sub_in']  }} 
+                          <i class="la la-caret-right"></i>     <b class="monto-down"> {{ @$inlandOrigin['inlandDetails']['20DV']['markup']  }}      </b>  <span class="bg-rates" id ='valor-o20{{$loop->iteration}}-{{$arr->id}}'>  {{  number_format(@$inlandOrigin['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40DV'] }}>{{ $equipmentHides['40DV'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i40DV']['sub_in']  }} 
-                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['i40DV']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40DV']['montoInlandT'], 2, '.', '')  }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['40DV']['sub_in']  }} 
+                          <i class="la la-caret-right"></i> <b class="monto-down">{{ @$inlandOrigin['inlandDetails']['40DV']['markup']  }} </b> <span class="bg-rates" id = 'valor-o40{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['40DV']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40HC'] }}>{{ $equipmentHides['40HC'] }}
-                          {{ @$inlandOrigin['inlandDetails']['i40HC']['sub_in']  }}
-                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['i40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['i40HC']['montoInlandT'], 2, '.', '')  }} </span>
+                          {{ @$inlandOrigin['inlandDetails']['40HC']['sub_in']  }}
+                          <i class="la la-caret-right"></i>   <b class="monto-down">      {{ @$inlandOrigin['inlandDetails']['40HC']['markup']  }}   </b> <span class="bg-rates" id ='valor-o40h{{$loop->iteration}}-{{$arr->id}}'> {{ number_format(@$inlandOrigin['inlandDetails']['40HC']['montoInlandT'], 2, '.', '')  }} </span>
                         </div>
 
                         <div class="wth"  {{ $equipmentHides['40NOR'] }}>N/A</div>
@@ -1639,7 +1658,7 @@
 
 
 
-  $(document).ready(function() {
+  $(document).ready(function() {   
 
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
@@ -1717,7 +1736,7 @@
 
   }
 
-    $(document).on('change', function(){
+  $(document).on('change', function(){
         if($('#destination_address_label').hasClass('hide')){
             if($('#destination_port').hasClass('col-lg-2')){
             $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
@@ -1918,8 +1937,8 @@
             });
        }
    })(jQuery);
-     
-    
+
+
 </script>
 
 @stop
