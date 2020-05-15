@@ -69,7 +69,7 @@
                 <label class="m-checkbox m-checkbox--state-primary">
                     {!! Form::checkbox('gp_pcontainer',true,false,['class'=>'form-control','title'=>'only importer','id'=>'only_imp'])!!}
                     Only Imp.
-                    <span></span>
+                    <span title="Only importer. The calculation type belongs to a column in the container table"></span>
                 </label>
             </div>
         </div>

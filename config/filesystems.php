@@ -220,7 +220,14 @@ return [
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_UPLOAD'),
         ],  
-
+        'pdfApiS3' => [
+          'driver' => 's3',
+          'key' => env('AWS_ACCESS_KEY_ID'),
+          'root' => '/pdf_api/',
+          'secret' => env('AWS_SECRET_ACCESS_KEY'),
+          'region' => env('AWS_DEFAULT_REGION'),
+          'bucket' => env('AWS_UPLOAD'),
+        ],  
         'media' => [
             'driver' => 'local',
             'root' => storage_path('app/public/manual'),

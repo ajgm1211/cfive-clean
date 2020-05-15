@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInlandDistanceV2sTable extends Migration
+class CreateAfterAutomaticRateInsertTrigger extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateInlandDistanceV2sTable extends Migration
      */
     public function up()
     {
-        Schema::create('inland_distance_v2s', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
-        });
+        DB::unprepared('
+            CREATE TRIGGER `after_automatic_rate_insert` AFTER INSERT ON `automatic_rates`
+            FOR EACH ROW BEGIN
+                UPDATE integration_quote_statuses set status=0 where quote_id=new.quote_id;
+            END
+        ');
     }
 
     /**
@@ -26,6 +28,6 @@ class CreateInlandDistanceV2sTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inland_distance_v2s');
+        //
     }
 }

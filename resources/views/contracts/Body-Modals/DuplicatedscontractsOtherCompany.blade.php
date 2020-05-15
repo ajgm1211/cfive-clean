@@ -2,10 +2,15 @@
 <div class="m-portlet">
     <!--begin::Form-->
     {{ Form::model($contract, array('route' => array('contract.duplicated.from.request.store', $contract->id), 'method' => 'post', 'id' => 'frmDpAC')) }}
-
-
     <div class="m-portlet__body">
-        <h4 style="color:#031B4E">Duplicate to another company</h4>
+        <div class="form-group m-form__group row"> 
+            <div class="col-lg-5">
+                <h4 style="color:#031B4E">Duplicate to another company</h4>
+                <div class="progress m-progress--sm">
+                    <div class="progress-bar " role="progressbar" id="progress_id" style=" background-color:red;width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
         <div class="form-group m-form__group row"> 
             <div class="col-lg-6">
                 {!! Form::label('reference', 'Reference') !!}
@@ -53,7 +58,7 @@
                 </div>
             </div>
         </div>
-		<input type="hidden" value="{{$request_dp_id}}" name="request_dp_id">
+        <input type="hidden" value="{{$request_dp_id}}" name="request_dp_id">
         <div class="m-portlet__foot m-portlet__foot--fit">
             <div class="m-form__actions m-form__actions">
                 <br>
@@ -65,13 +70,15 @@
         </div>
         {!! Form::close() !!}
     </div>  
-</div>
+</div>  
+
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript"></script>
 
 <!--end::Form-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script>
 
+    var equiment_id = {{$equiment_id}};
 
     function changeForm(){
         var id = $('#js-data-example-ajax').val();
@@ -93,7 +100,7 @@
                     date = date.split(' / ');
                     $(".datePikc").data('daterangepicker').setStartDate(date[0]);
                     $(".datePikc").data('daterangepicker').setEndDate(date[1]);
-
+                    $('#progress_id').css('background-color','green');
                 }else {
                     toastr.error('Error');
                 }
@@ -109,12 +116,22 @@
             dataType: 'json',
             // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
             processResults: function (data) {
-                //  console.log(data);
+                //console.log(data);
                 return {
                     results:  $.map(data, function (item) {
-                        return {
-                            text: item.id+' - '+item.namecontract,
-                            id: item.id
+                        var json = $.parseJSON(item.data);
+                        if(json["group_containers"] === undefined && equiment_id == 1){
+                            return {
+                                text: item.id+' - '+item.namecontract,
+                                id: item.id
+                            }
+                        } else if(json["group_containers"] !== undefined) {
+                            if(json["group_containers"]["id"] == equiment_id){
+                                return {
+                                    text: item.id+' - '+item.namecontract,
+                                    id: item.id
+                                }
+                            }
                         }
                     })
                 };

@@ -1,9 +1,9 @@
 @charset "UTF-8";
 
-/*@font-face {
+@font-face {
   font-family: Sailec;
-  src: url(../../../public/fonts/sailec.otf);
-}*/
+  src: url(/fonts/sailec.otf?a05444e891dc3b8ef7bc54a1694370cd);
+}
 
 /*!
  * Bootstrap v4.4.1 (https://getbootstrap.com/)

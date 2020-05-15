@@ -59,5 +59,13 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('contact/{id}', 'ContactController@show');
         Route::put('contact/{id}', 'ContactController@update');
         Route::delete('contact/{id}', 'ContactController@destroy');
+        //Carriers
+        Route::get('carriers', 'ApiController@carriers');
+        Route::get('airlines', 'ApiController@airlines');
+        //surcharges
+        Route::get('surcharges', 'ApiController@surcharges');
+        Route::post('surcharge', 'SurchargesController@store');
+        Route::put('surcharge', 'SurchargesController@update');
+        Route::delete('surcharge', 'SurchargesController@destroy');
     });
 });

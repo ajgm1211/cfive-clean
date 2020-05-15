@@ -177,7 +177,7 @@ class RequestFclV2Controller extends Controller
                     $butPrCt = '<a href="/Importation/RequestProccessFCL/'.$Ncontracts->contract.'/2/'.$Ncontracts->id.'" '.$hiddenPrCt.' title="Proccess FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-cogs" style="font-size:20px; color:#04950f"></samp></a>                    &nbsp;&nbsp;';
 
                     $butFailsR = '<a href="'.route('Failed.Developer.For.Contracts',[$Ncontracts->contract,0]).'" '.$hiddenPrCt.' title="Failed - FCL Contract" class="PrCHidden'.$Ncontracts->id.'"><samp class="la la-credit-card" style="font-size:20px;"></samp></a>                    &nbsp;&nbsp;';
-                    
+
                     $buttoEdit = '<a href="#" title="Edit FCL Contract">
                     <samp class="la la-edit" onclick="editcontract('.$Ncontracts->contract.')" style="font-size:20px; color:#a56c04"></samp>
                     </a>&nbsp;&nbsp;
@@ -305,12 +305,12 @@ class RequestFclV2Controller extends Controller
 
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.content', 'Your request was created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('new.contracts.index');
         } else {
 
             $request->session()->flash('message.nivel', 'error');
             $request->session()->flash('message.content', 'Your request was not created');
-            return redirect()->route('contracts.index');
+            return redirect()->route('new.contracts.index');
         }
     }
 
@@ -422,7 +422,7 @@ class RequestFclV2Controller extends Controller
             }
             $Ncontract->save();
             $color = HelperAll::statusColorRq($Ncontract->status);
-            
+
             return response()->json($data=['data'=>1,'status' => $Ncontract->status,'color'=> $color,'request' => $Ncontract]);
         } catch (\Exception $e){
             return response()->json($data=['data'=>2]);;
@@ -537,15 +537,22 @@ class RequestFclV2Controller extends Controller
     {
         try{
             $Ncontract = NewContractRequest::find($id);
-            if(empty($Ncontract->namefile)){
-                Storage::disk('FclRequest')->delete($Ncontract->namefile);
+            if(!empty($Ncontract->namefile)){
+                try{
+                    Storage::disk('FclRequest')->delete($Ncontract->namefile);
+                } catch(\Exception $e){
+                }
             } else {
-                $mediaItem = $Ncontract->getFirstMedia('document');
-                $mediaItems->delete();
+                try{
+                    $mediaItem = $Ncontract->getFirstMedia('document');
+                    $mediaItems->delete();
+                } catch(\Exception $e){
+                }
             }
             $Ncontract->delete();
             return 1;
         } catch(\Exception $e){
+            Log::error($e);
             return 2;
         }
     }
@@ -554,6 +561,7 @@ class RequestFclV2Controller extends Controller
         $groupContainers = $request->groupContainers;
         $containers 	 = Container::where('gp_container_id',$groupContainers)->where('name','!=','45 HC')->where('name','!=','40 NOR')->pluck('id');
         return response()->json(['success' => true,'data' => ['values' => $containers->all() ]]);
+        //return view('RequestV2.Fcl.select',compact('containers'));
     }
 
     public function storeMedia(Request $request){

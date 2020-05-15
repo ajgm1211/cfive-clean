@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--left" role="tablist" style="border-bottom: none;">
             <input type="hidden" id="quote-id" value="{{$quote->id}}"/>
             <li class="nav-item m-tabs__item size-14px" >
-                <a  href="{{url('/v2/quotes/search')}}" class="btn-backto"><span class="fa fa-arrow-left"></span> Back to search</a>
+                <a  href="javascript:history.back()" class="btn-backto"><span class="fa fa-arrow-left"></span> Back</a>
             </li>                    
         </ul>                
         <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--right" role="tablist" style="border-bottom: none;">
@@ -15,17 +15,17 @@
             </li>
             <li class="nav-item m-tabs__item" >
                 @if($quote->type=='FCL')
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @elseif($quote->type=='LCL')
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.lcl.air',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @else
-                <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.air',setearRouteKey($quote->id))}}" target="_blank">
-                    PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
-                </a>
+                    <a class="btn btn-primary-v2" href="{{route('quotes-v2.pdf.air',setearRouteKey($quote->id))}}" target="_blank">
+                        PDF &nbsp;&nbsp;<i class="fa fa-download"></i>
+                    </a>
                 @endif
             </li>
             <li class="nav-item m-tabs__item" >
@@ -322,11 +322,11 @@
                 <br>
                 <div class="row ">
                     @if($quote->chargeable_weight!='' && $quote->chargeable_weight>0)
-                    <div class="col-md-6 ">
-                        <b>Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
-                    </div>
+                        <div class="col-md-6 ">
+                            <b>Chargeable weight:</b> {{$quote->chargeable_weight}} m<sup>3</sup>
+                        </div>
                     @else
-                    <div class="col-md-6 "></div>
+                        <div class="col-md-6 "></div>
                     @endif
                     <div class="col-md-6 ">
                         <span class="pull-right">
@@ -335,25 +335,25 @@
                     </div>
                 </div>
                 @else
-                @if($quote->total_quantity!='' && $quote->total_quantity>0)
-                <div class="row">
-                    <div class="col-md-2">
-                        <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                    @if($quote->total_quantity!='' && $quote->total_quantity>0)
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div id="cargo_details_cargo_type_p"><b>Cargo type:</b> {{$quote->cargo_type == 1 ? 'Pallets' : 'Packages'}}</div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_quantity" data-value="{{$quote->total_quantity}}" data-pk="{{@$quote->id}}" data-title="Total Quantity"></a></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div id="cargo_details_total_weight_p"><b>Total weight: </b> <a href="#" class="editable-quote-weight" data-type="text" data-name="total_weight" data-value="{{$quote->total_weight}}" data-pk="{{@$quote->id}}" data-title="Total Weight" id="total-weight"></a> kg</div>
+                        </div>
+                        <div class="col-md-2">
+                            <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-volume" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume" id="total-volume"></a> m<sup>3</sup></p>
+                        </div>
+                        <div class="col-md-2">
+                            <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> m<sup>3</sup></p>
+                        </div>
                     </div>
-                    <div class="col-md-2">
-                        <div id="cargo_details_total_quantity_p"><b>Total quantity:</b> <a href="#" class="editable-quote-info" data-type="text" data-name="total_quantity" data-value="{{$quote->total_quantity}}" data-pk="{{@$quote->id}}" data-title="Total Quantity"></a></div>
-                    </div>
-                    <div class="col-md-2">
-                        <div id="cargo_details_total_weight_p"><b>Total weight: </b> <a href="#" class="editable-quote-weight" data-type="text" data-name="total_weight" data-value="{{$quote->total_weight}}" data-pk="{{@$quote->id}}" data-title="Total Weight" id="total-weight"></a> kg</div>
-                    </div>
-                    <div class="col-md-2">
-                        <p id="cargo_details_total_volume_p"><b>Total volume: </b> <a href="#" class="editable-quote-volume" data-type="text" data-name="total_volume" data-value="{{$quote->total_volume}}" data-pk="{{@$quote->id}}" data-title="Total Volume" id="total-volume"></a> m<sup>3</sup></p>
-                    </div>
-                    <div class="col-md-2">
-                        <p id="cargo_details_total_volume_p"><b>Chargeable weight: </b><span id="chargeable-weight"> {{$quote->chargeable_weight}} </span> m<sup>3</sup></p>
-                    </div>
-                </div>
-                @endif
+                    @endif
                 @endif
             </div>
         </div>
@@ -368,4 +368,3 @@
     </div>
 </div>
 <br>
-
