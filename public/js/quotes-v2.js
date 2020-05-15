@@ -926,14 +926,13 @@ $(document).on('click', '.store_sale_charge', function() {
             "equipments": equipments,
             "units": units,
             "amount": amount,
-            "rate": rate,
             "total": total,
             "currency_id": currency_id,
         },
         success: function(data) {
             if (data.message == 'Ok') {
                 swal(
-                    'Updated!',
+                    'Success!',
                     'The record has been created.',
                     'success'
                 )
