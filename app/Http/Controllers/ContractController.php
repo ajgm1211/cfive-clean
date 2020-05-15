@@ -14,6 +14,8 @@ use App\Surcharge;
 use App\CalculationType;
 use App\TypeDestiny;
 use App\Country;
+use App\Company;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ContractResource;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +55,8 @@ class ContractController extends Controller
      */
     public function data(Request $request)
     {        
+        $company_user_id = \Auth::user()->company_user_id;
+
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name']);
         });
@@ -75,11 +79,11 @@ class ContractController extends Controller
             return $country->only(['id', 'name']);
         });
 
-        $surcharges = Surcharge::where('company_user_id', '=' , Auth::user()->company_user_id)->get()->map(function ($surcharge) {
+        $surcharges = Surcharge::where('company_user_id', '=' , $company_user_id)->get()->map(function ($surcharge) {
             return $surcharge->only(['id', 'name']);
         });
 
-        $calculations = CalculationType::get()->map(function ($calculation) {
+        $calculation_types = CalculationType::get()->map(function ($calculation) {
             return $calculation->only(['id', 'name']);
         });
 
@@ -87,21 +91,31 @@ class ContractController extends Controller
             return $destination_type->only(['id', 'description']);
         });
 
+        $companies = Company::where('company_user_id', '=', $company_user_id)->get()->map(function ($company) {
+            return $company->only(['id', 'business_name']);
+        });
+
+        $users = User::whereHas('companyUser', function($q) use ($company_user_id) { 
+            $q->where('company_user_id', '=', $company_user_id);
+        })->get()->map(function ($company) {
+            return $company->only(['id', 'name']);
+        });
+
         $containers = Container::get();
 
-        $data = [
-            'carriers' => $carriers,
-            'equipments' => $equipments,
-            'directions' => $directions,
-            'containers' => $containers,
-            'currencies' => $currencies,
-            'harbors' => $harbors,
-            'surcharges' => $surcharges,
-            'countries' => $countries,
-            'calculation_types' => $calculations,
-            'destination_types' => $destination_types
- 
-        ];
+        $data = compact(
+            'carriers',
+            'equipments',
+            'directions',
+            'containers',
+            'currencies',
+            'harbors',
+            'surcharges',
+            'countries',
+            'calculation_types',
+            'destination_types',
+            'companies',
+            'users');
 
         return response()->json(['data' => $data ]);
     }
@@ -194,6 +208,26 @@ class ContractController extends Controller
         ]);
 
         $contract->ContractCarrierSync($data['carriers']);
+
+        return new ContractResource($contract);   
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function updateRestrictions(Request $request, Contract $contract)
+    {
+        $data = $request->validate([
+            'companies' => 'sometimes',
+            'users' => 'sometimes'
+        ]);
+        
+        $contract->ContractCompaniesRestrictionsSync($data['companies'] ?? []);
+        $contract->ContractUsersRestrictionsSync($data['users'] ?? []);
 
         return new ContractResource($contract);   
     }
