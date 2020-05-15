@@ -14,12 +14,10 @@
 
 
 <script>
-    import Multiselect from 'vue-multiselect';
     import FormInlineView from '../views/FormInlineView';
 
     export default {
         components: { 
-            Multiselect,
             FormInlineView
         },
         props: {
@@ -32,9 +30,6 @@
         },
         data() {
             return {
-                isBusy:true, // Loader
-                users: '',
-                company: '',
                 currentData: {},
 
                 /* Form Fields */

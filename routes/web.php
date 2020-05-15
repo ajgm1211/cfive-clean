@@ -1052,6 +1052,10 @@ Route::post('api/v2/contracts/localcharge/destroyAll', 'LocalChargeController@de
 Route::post('api/v2/contracts/{contract}/restrictions', 'ContractController@updateRestrictions');
 /** End Contract
 
+/** API Contracts Remarks EndPoints **/
+Route::post('api/v2/contracts/{contract}/remarks', 'ContractController@updateRemarks');
+/** End Contract
+
 /*****************************************************************************************
 **                                   END API ENDPOINTS                                   **
 *****************************************************************************************/

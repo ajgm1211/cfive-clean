@@ -36,7 +36,7 @@
 						</b-tab>
 
 						<b-tab title="Restrictions">
-							<restrictions v-if="restrictions"
+							<restrictions v-if="loaded"
 								:datalists="datalists"
 								:actions="actions.restrictions"
 								:data="currentData['restrictions']"
@@ -44,7 +44,10 @@
 						</b-tab>
 
 						<b-tab title="Remarks">
-							<!--<remarks></remarks>-->
+							<remarks v-if="loaded"
+								:actions="actions.remarks"
+								:data="currentData"
+							></remarks>
 						</b-tab>
 
 						<b-tab title="Files">
@@ -63,23 +66,16 @@
 
 </template>
 <script>
-	import Multiselect from 'vue-multiselect';
-	import DateRangePicker from 'vue2-daterange-picker';
 	import OceanFreight from './Freight';
 	import Surcharges from './Surcharges';
 	import Restrictions from './Restrictions';
 	import Remarks from './Remarks';
 	import Files from './Files';
 	import actions from '../../actions';
-	import FormInlineView from '../views/FormInlineView.vue';
-
-	import 'vue2-daterange-picker/dist/vue2-daterange-picker.css';
-	import 'vue-multiselect/dist/vue-multiselect.min.css';
+	import FormInlineView from '../views/FormInlineView';
 
 	export default {
 		components: { 
-			DateRangePicker,
-			Multiselect,
 			OceanFreight,
 			Surcharges,
 			Restrictions,
@@ -91,15 +87,14 @@
 		data() {
 			return {
 				actions: actions,
-				/* Inline Form */
 				equipment: {},
 				freight: false,
-				restrictions: false,
+				loaded: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
 				},
 				
-				// Dropdown Lists
+				/* Dropdown Lists */
 				datalists: {
 				  'carriers': [],
 				  'equipments': [],
@@ -188,7 +183,7 @@
 		methods: {
 			/* Execute when inline form updated */
 			onSuccess(data){
-				this.restrictions = true;
+				this.loaded = true;
 				this.equipment = data.gp_container;
 			},
 
