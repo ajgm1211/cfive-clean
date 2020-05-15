@@ -684,11 +684,11 @@ class ApiController extends Controller
         if ($request->paginate) {
             $surcharges = Surcharge::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%');
-            })->paginate($request->paginate);
+            })->where('company_user_id',\Auth::user()->company_user_id)->paginate($request->paginate);
         } else {
             $surcharges = Surcharge::when($name, function ($query, $name) {
                 return $query->where('name', 'LIKE', '%' . $name . '%');
-            })->take($request->size)->get();
+            })->where('company_user_id',\Auth::user()->company_user_id)->take($request->size)->get();
         }
 
         return $surcharges;
