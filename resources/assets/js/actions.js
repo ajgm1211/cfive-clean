@@ -89,6 +89,18 @@ export default {
 	    deleteAll(ids){
 	    	return api.call('post', `/api/v2/contracts/localcharge/destroyAll`, { ids:ids });	
 	    }
+	},
+	restrictions: {
+	   	create(data, route) {
+	    	let contract_id = route.params.id;
+	        return api.call('post', `/api/v2/contracts/${contract_id}/restrictions`, data);
+	    },
+	},
+	remarks: {
+	   	create(data, route) {
+	    	let contract_id = route.params.id;
+	        return api.call('post', `/api/v2/contracts/${contract_id}/remarks`, data);
+	    },
 	}
 
 };
