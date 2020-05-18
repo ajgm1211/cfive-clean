@@ -733,7 +733,6 @@
               <div class="col-lg-2" id="carriers">
                 <label>Carries</label>
                 {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
-                <!--<select name="carriers[]" id="carrier_select" class="c5-select-multiple" c5-data="{{ $contain }}" multiple></select>-->
               </div>
 
            <!--   <div class="col-lg-2" id="delivery_type_label">
@@ -765,8 +764,8 @@
 
 
                <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
-<!--
-              <div class="col-lg-2 for-check" id="cmadiv">
+
+              <!--<div class="col-lg-2 for-check" id="cmadiv">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
@@ -1746,7 +1745,6 @@
         }
     });
 
-
     //C5 Select
    (function($){
        $.fn.selectC5 = function(){
@@ -1759,6 +1757,18 @@
                                 '</ul>'+
                                 '</span>'+
                                 '<span class="c5-select-multiple-container '+clickOnID+'">'+
+                                    '<span class="c5-select-header">Types</span>'+
+                                    '<ul class="c5-select-list">'+
+                                        '<li class="c5-case"><label class="c5-label">Include CMA CGM Price Finder'+
+                                        '<input id="mode4" type="checkbox" name="chargeAPI" class="c5-check" value="on">'+
+                                        '<span class="checkmark"></span></label></li>'+
+                                        '<li class="c5-case"><label class="c5-label">Include MAERSK Spot'+
+                                        '<input id="mode5" type="checkbox" name="chargeAPI_M" class="c5-check" value="on">'+
+                                        '<span class="checkmark"></span></label></li>'+
+                                        '<li class="c5-case"><label class="c5-label">Include SAFMARINE Price Finder'+
+                                        '<input id="mode6" type="checkbox" name="chargeAPI_SF" class="c5-check" value="on">'+
+                                        '<span class="checkmark"></span></label></li>'+
+                                    '</ul>'+
                                     '<span class="c5-select-header">Carriers</span>'+
                                     '<span class="c5-select-container-close">'+
                                         '<i class="fa fa-times" aria-hidden="true"></i>'+
@@ -1806,7 +1816,7 @@
                     var checkSelected = [];
                     var textCheckSelected = [];
                     var valCheckSelected = $(this).val();
-                    //var title = $(this).attr('title');
+                    console.log($(this).val());
                     
                     $('.'+clickOnID+' .c5-check').each(function() {
                         if (this.checked) {
@@ -1815,8 +1825,8 @@
                     });
                     
                     $('#'+clickOnID+'.select-normal').val(checkSelected);
-                    //var valor1 = $('#'+clickOnID+'.select-normal').val();
-                    //console.log(valor1);                            
+                    var valor1 = $('#'+clickOnID+'.select-normal').val();
+                    console.log(valor1);                            
                     
                 });
 
@@ -1831,8 +1841,8 @@
                     }); 
                     
                     $('.'+clickOnID+'').val(allSelected);
-                    //var valor = $('.'+clickOnID+'').val();
-                    //console.log(valor);
+                    var valor = $('.'+clickOnID+'').val();
+                    console.log(valor);
                     
                     if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
                         $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
@@ -1920,7 +1930,7 @@
                 });
 
                 $('.'+clickOnID+' .list-group1 .c5-check').on("click", function() {
-                    alert('estoy en el 1');
+                    //alert('estoy en el 1');
                 });
 
                 
