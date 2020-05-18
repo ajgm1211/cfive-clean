@@ -263,9 +263,9 @@ trait SearchTrait {
     $calculation = CalculationType::get();
     $valor = array();
     $gp_id = $calculation->where('id',$calculation_id)->first();
-    if($gp_id->gp_pcontainer != 0 ){
+    if($gp_id->group_container_id != 0 ){
    
-      $grupo = $calculation->where('gp_pcontainer',$gp_id->gp_pcontainer);
+      $grupo = $calculation->where('group_container_id',$gp_id->group_container_id);
       foreach($grupo  as $val ){
 
         $options = json_decode($val->options);
@@ -286,7 +286,7 @@ trait SearchTrait {
     
     }
   
- return $valor;
+    return $valor;
 
    }
 
