@@ -2673,6 +2673,9 @@ class QuoteV2Controller extends Controller
         }
 
 
+
+        $arreglo = $this->filtrarRate($arreglo,$equipment,$validateEquipment['gpId'],$containers);
+
         $arreglo = $arreglo->get();
 
         if ($chargesAPI != null) {
