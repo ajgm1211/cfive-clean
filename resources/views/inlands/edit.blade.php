@@ -5,6 +5,6 @@
 @endsection
 
 @section('js')
-@parent
     <script src="{{ asset('js/inlands/edit.js') }}" type="text/javascript"></script>
+@parent
 @endsection

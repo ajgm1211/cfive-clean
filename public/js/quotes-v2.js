@@ -458,6 +458,7 @@ $(document).ready(function() {
             var amount = 0;
             var sum = 0;
             var sum_total = 0;
+            var sum_total_rate = 0;
             var total = 0;
             var total_currency = 0;
             var markup = parseFloat($(this).closest('tr').find('.markup_' + code).html());
@@ -497,18 +498,18 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.editable-amount-rate').each(function() {
+            $(this).closest('div.rates').find('.amount_' + code).each(function() {
                 console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
                 } else {
                     amount = 0;
                 }
-                sum += amount;
+                sum_total_rate += amount;
             });
 
             //Mostrando sub total de gastos
-            $(this).closest('div.rates').find('.sum_total_amount_' + code).html(sum);
+            $(this).closest('div.rates').find('.sum_total_amount_' + code).html(sum_total_rate);
 
             if (!response) {
                 return "Unknown error!";
@@ -530,6 +531,7 @@ $(document).ready(function() {
             var amount = 0;
             var sum = 0;
             var sum_total = 0;
+            var sum_total_markup = 0;
             var total = 0;
             var total_currency = 0;
             var amount = parseFloat($(this).closest('tr').find('.amount_' + code).html());
@@ -570,17 +572,18 @@ $(document).ready(function() {
             $(this).closest('div.rates').find('.sum_total_' + code).html(sum_total);
 
             //Calculando sub total de gastos
-            $(this).closest('div.rates').find('.editable-amount-markup').each(function() {
+            $(this).closest('div.rates').find('.markup_' + code).each(function() {
+                console.log($(this).html());
                 if (parseFloat($(this).html())) {
                     amount = parseFloat($(this).html());
                 } else {
                     amount = 0;
                 }
-                sum += amount;
+                sum_total_markup += amount;
             });
 
             //Mostrando sub total de gastos
-            $(this).closest('div.rates').find('.sum_total_markup_' + code).html(sum);
+            $(this).closest('div.rates').find('.sum_total_markup_' + code).html(sum_total_markup);
 
             if (!response) {
                 return "Unknown error!";
@@ -923,14 +926,13 @@ $(document).on('click', '.store_sale_charge', function() {
             "equipments": equipments,
             "units": units,
             "amount": amount,
-            "rate": rate,
             "total": total,
             "currency_id": currency_id,
         },
         success: function(data) {
             if (data.message == 'Ok') {
                 swal(
-                    'Updated!',
+                    'Success!',
                     'The record has been created.',
                     'success'
                 )
