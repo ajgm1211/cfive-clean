@@ -373,6 +373,7 @@
   }
   .for-check {
     display: flex;
+    align-items: flex-end;
     padding-left: 40px;
     padding-right: 0px;
   }
@@ -685,7 +686,7 @@
 
             </div><br>
             <div class="row">
-              <div class="col-lg-4" >
+              <div class="col-lg-4" id="origin_port">
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
@@ -708,13 +709,13 @@
                   <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
                 </div>
               </div>
-              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
-                <label>Origin address</label>
-                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>-->
               <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                 <label>Destination address</label>
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+              </div>
+              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
+                <label>Origin address</label>
+                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
               </div>
               <div class="col-lg-2">
                 <label>Date</label>
@@ -735,28 +736,19 @@
               </div>
 
               <div class="col-lg-2" id="carriers">
-                <label>Carriers</label>
-                {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
+                <label>Carries</label>
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
               </div>
 
-           <!--   <div class="col-lg-2" id="delivery_type_label">
+            <div class="col-lg-2" id="delivery_type_label">
                 <label>Delivery type</label>          
                 {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
-              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
-                <label>Origin address</label>
-                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>-->
-      
-
-            </div>
-            <div class="row">
-              <div class="col-lg-4 for-check">   
+              <div class="col-lg-2 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
               </div>
-
-              <div class="col-lg-4 for-check">
+              <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
@@ -766,6 +758,13 @@
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
 
+      
+
+            </div>
+            <div class="row">
+              
+
+              
 
                <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
 
@@ -1014,7 +1013,7 @@
                   <div class="col-lg-9 d-flex message  align-items-end align-self-end">
                     @if(isset($validateEquipment))
                     @if($validateEquipment['count'] > 1 )
-                    <p class="warning-p"><span><i class="la la-info-circle"></i>The equipments do not belong to the same group.</span> You can create a quote manually.</p>
+                    <p class="warning-p"><span><i class="la la-info-circle"></i>The teams do not belong to the same group.</span> You can create a quote manually.</p>
                     @endif
                     @endif
                     @if(isset($arreglo) && isset($validateEquipment) )
@@ -1739,16 +1738,26 @@
 
   }
 
-  $(document).on('change', function(){
-        if($('#destination_address_label').hasClass('hide')){
+  $('#delivery_type').on('change', function(){
+    var value = $(this).val();
+     if(value == 1){
+        $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+        $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+     }else if((value == 2) || (value == 3)){
+        $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+        $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+    }else if(value == 4){
+        $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+        $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
+    }
+        /*if($('#destination_address_label').hasClass('hide')){
             if($('#destination_port').hasClass('col-lg-2')){
-            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+                $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
             }
         }else{
             $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
-        }
+        }*/
     });
-
     //C5 Select
    (function($){
        $.fn.selectC5 = function(){
@@ -1764,14 +1773,14 @@
                                     '<span class="c5-select-header">Types</span>'+
                                     '<ul class="c5-select-list">'+
                                         '<li class="c5-case"><label class="c5-label">Include CMA CGM Price Finder'+
-                                        '<input id="mode4" type="checkbox" name="chargeAPI" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
+                                            '<input id="mode4" type="checkbox" class="c5-check" name="carrier" value="CMA">'+
+                                            '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">Include MAERSK Spot'+
-                                        '<input id="mode5" type="checkbox" name="chargeAPI_M" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
+                                            '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK">'+
+                                            '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">Include SAFMARINE Price Finder'+
-                                        '<input id="mode6" type="checkbox" name="chargeAPI_SF" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
+                                            '<input id="mode6" type="checkbox" class="c5-check" value="SAFMARINE">'+
+                                            '<span class="checkmark"></span></label></li>'+
                                     '</ul>'+
                                     '<span class="c5-select-header">Carriers</span>'+
                                     '<span class="c5-select-container-close">'+
@@ -1801,9 +1810,6 @@
                                     '<span class="c5-select-header">Equipment List</span>'+
                                     '<ul class="c5-select-list list-group2"></ul>'+
                                     '</span>';            
-          
-
-            // Filtramos por tipo de select
 
             // Select Multiple con swicth
             if(selectType == 'multiple'){
@@ -1818,19 +1824,17 @@
 
                 $('.'+clickOnID+' .c5-check').on("click", function() {
                     var checkSelected = [];
-                    var textCheckSelected = [];
+                    //var textCheckSelected = [];
                     var valCheckSelected = $(this).val();
-                    console.log($(this).val());
                     
                     $('.'+clickOnID+' .c5-check').each(function() {
                         if (this.checked) {
                             checkSelected.push($(this).val());
                         }
                     });
-                    
                     $('#'+clickOnID+'.select-normal').val(checkSelected);
                     var valor1 = $('#'+clickOnID+'.select-normal').val();
-                    console.log(valor1);                            
+                    console.log(valor1);
                     
                 });
 
@@ -1937,7 +1941,9 @@
                     //alert('estoy en el 1');
                 });
 
-                
+                $('.select-normal .c5-case:nth-child(1)').remove();
+                $('.select-normal .c5-case:nth-child(2)').remove();
+                $('.select-normal .c5-case:nth-child(1)').remove();
             }
            
            //C5 Select Options
@@ -1951,8 +1957,6 @@
             });
        }
    })(jQuery);
-
-
 </script>
 
 @stop
