@@ -258,36 +258,25 @@ trait SearchTrait {
   }
 
 
-  public function asociarPerCont($calculation_id){ 
-
+  public function asociarPerCont($calculation_id){
     $calculation = CalculationType::get();
     $valor = array();
     $gp_id = $calculation->where('id',$calculation_id)->first();
-    if($gp_id->gp_pcontainer != 0 ){
-   
-      $grupo = $calculation->where('gp_pcontainer',$gp_id->gp_pcontainer);
+    if($gp_id->group_container_id != 0 ){
+      $grupo = $calculation->where('group_container_id',$gp_id->group_container_id);
       foreach($grupo  as $val ){
-
         $options = json_decode($val->options);
-        if(@$options->iscont == 'true'){   
-  
+        if(@$options->iscont == 'true'){
           $valor = array('id'=> $val->id, 'name' => $val->name);
-          
         }
       }
-
       if(empty($valor)){
         $valor = array('id'=> $gp_id->id, 'name' => $gp_id->name);
       }
-    
-
     }else{
       $valor = array('id'=> $gp_id->id, 'name' => $gp_id->name);
-    
     }
-  
- return $valor;
-
+    return $valor;
    }
 
 
