@@ -5,14 +5,6 @@
 
 <link href="/assets/plugins/datatables.min.css" rel="stylesheet" type="text/css" />
 <style>
-    body {
-        background: #f6f6f6;
-    }
-    .m-portlet {
-        box-shadow: none;
-        border-radius: 5px;
-        -webkit-border-radius: 5px;
-    }
   .btn-search__quotes {
     top: 50px;
     font-size: 18px; 
@@ -399,227 +391,6 @@
     line-height: 15px;
   }
 
-   /* c5 select */
-   .c5-select-multiple {
-        display: none;
-    }
-    .c5-select-multiple-dropdown {
-        width: 100%;
-        height: 37px;      
-    }
-    .c5-select-multiple-container {
-        width: 100%;
-        height: auto;
-        padding: 15px;
-        display: none;
-        border: 1px solid #eee;
-        -webkit-border: 1px solid #eee;
-        background: #fff;
-        border-radius: 5px;
-        -webkit-border-radius: 5px;
-        position: absolute;
-        margin-top: 5px;
-        z-index: 100;
-        box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.1);
-        -webkit-box-shadow: 0px 1px 15px 1px rgba(0,0,0, 0.1);
-    }
-    .c5-select-container-close {
-        position: absolute;
-        top: 12px;
-        right: 10px;
-        cursor: pointer;
-        padding: 5px 8px;
-        border-radius: 100px;
-        -webkit-border-radius: 100px;
-    }
-    .c5-select-container-close:hover {
-        background: #f9f9f9;
-    }
-    .c5-select-header, .c5-select-multiple-switch {
-        font-size: 14px;
-        color: #333;
-        padding: 0px 0px 15px 0px;
-        display: block;
-    }
-    .c5-select-list {
-        height: 165px;
-        padding-left: 0px;
-        margin-bottom: 0px;
-        overflow-y: scroll;
-    }
-        /* width */
-    .c5-select-list::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    /* Track */
-    .c5-select-list::-webkit-scrollbar-track {
-        border-radius: 18px;
-    }
-
-    /* Handle */
-    .c5-select-list::-webkit-scrollbar-thumb {
-        background: #ccc; 
-        border-radius: 18px;
-    }
-
-    /* Handle on hover */
-    .c5-select-list::-webkit-scrollbar-thumb:hover {
-        background: #064acb; 
-    }
-    .c5-select-list li {
-        margin-bottom: 10px;
-        cursor: pointer;
-        list-style: none;
-    }
-    .c5-select-dropdown-list {        
-        padding: 8px 10px 8px 10px;
-        border: 1px solid #eee;
-        -webkit-border: 1px solid #eee;
-        border-radius: 3px;
-        -webkit-border-radius: 3px;
-        cursor: pointer;
-        margin-bottom: 0px;
-        display: flex;
-        justify-content: flex-start;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-    .c5-select-dropdown-list li {
-        list-style: none;
-    }
-    .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-    float: right;
-    }
-
-    .switch input { 
-    opacity: 0;
-    width: 0;
-    height: 0;
-    }
-
-    .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-    }
-
-    .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 5px;
-    bottom: 3px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-    }
-
-    .switch input:checked + .slider {
-    background-color: #2196F3;
-    }
-
-    .switch input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-    }
-
-    .switch input:checked + .slider:before {
-    -webkit-transform: translateX(18px);
-    -ms-transform: translateX(18px);
-    transform: translateX(18px);
-    }
-
-    /* Rounded sliders */
-    .slider.round {
-    border-radius: 34px;
-    }
-
-    .slider.round:before {
-    border-radius: 50%;
-    }
-    .c5-label {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    }
-
-    /* Hide the browser's default checkbox */
-    .c5-label input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-    }
-
-    /* Create a custom checkbox */
-    .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    }
-
-    /* On mouse-over, add a grey background color */
-    .c5-label:hover input ~ .checkmark {
-    background-color: #eee;
-    }
-
-    /* When the checkbox is checked, add a blue background */
-    .c5-label input:checked ~ .checkmark {
-    background-color: #2196F3;
-    border: 1px solid #2196F3;
-    }
-
-    /* Create the checkmark/indicator (hidden when not checked) */
-    .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-    }
-
-    /* Show the checkmark when checked */
-    .c5-label input:checked ~ .checkmark:after {
-    display: block;
-    }
-
-    /* Style the checkmark/indicator */
-    .c5-label .checkmark:after {
-    left: 7px;
-    top: 4px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    }
-    .c5-case:hover {
-        background: #fbfbfb;
-    }
   /* estilos */
 </style>
 @endsection
@@ -632,25 +403,26 @@
   {!! Form::open(['id'=>'FormQuote' , 'class' => 'form-group m-form__group dfw']) !!}
 
   <div class="col-lg-12">
+
+
     <div class="m-portlet">
       <div class="m-portlet__body">
         <div class="tab-content">
           <div>
             <div class="row">
-              <div class="col-lg-1">
+              <div class="col-lg-2">
                 <label>Quote Type</label>
                 {{ Form::select('type',['1' => 'FCL','2' => 'LCL','3'=>'AIR'],null,['id'=>'quoteType','class'=>'m-select2-general form-control']) }}
               </div>
-              <div class="col-lg-1">
-                <label>Direction</label>
-                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
-              </div>
+
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
+                {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'m-select2-general form-control','id'=>'equipment','multiple' => 'multiple','required' => 'true']) }}
               </div>
+
               <div class="col-lg-2">
                 <label>Company</label>
+
                 <div class="m-input-icon m-input-icon--right">
                   {{ Form::select('company_id_quote', $companies,@$form['company_id_quote'],['class'=>'m-select2-general form-control','id' => 'm_select2_2_modal']) }} 
                   <span class="m-input-icon__icon m-input-icon__icon--right">
@@ -677,15 +449,14 @@
                 {{ Form::select('price_id',[],null,['id' => 'price_id' ,'class'=>'form-control m-select2-general']) }}
                 {{  Form::hidden('price_id_num', @$form['price_id'] , ['id' => 'price_id_num'  ])  }}
               </div>
-              <div class="col-lg-2" id="delivery_type_label">
-                <label>Delivery type</label>
-                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
+              <div class="col-lg-2">
+                <label>Direction</label>
+                {{ Form::select('mode',['1' => 'Export','2' => 'Import'],@$form['mode'],['id'=>'mode','placeholder'=>'Select','class'=>'m-select2-general form-control','required' => 'true']) }}
               </div>
-
 
             </div><br>
             <div class="row">
-              <div class="col-lg-4" >
+              <div class="col-lg-2" >
                 <div id="origin_harbor_label">
                   <label>Origin port</label>
                   {{ Form::select('originport[]',$harbors,@$form['originport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'origin_harbor','required' => 'true']) }}
@@ -698,23 +469,16 @@
                 </div>
 
               </div>
-              <div class="col-lg-4" id="destination_port">
+              <div class="col-lg-2">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
                   {{ Form::select('destinyport[]',$harbors,@$form['destinyport'],['class'=>'m-select2-general form-control','multiple' => 'multiple','id'=>'destination_harbor','required' => 'true']) }}
+
                 </div>
                 <div id="destination_airport_label" style="display:none;">
                   <label>Destination airport</label>
                   <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
                 </div>
-              </div>
-              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
-                <label>Origin address</label>
-                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>-->
-              <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
-                <label>Destination address</label>
-                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
               <div class="col-lg-2">
                 <label>Date</label>
@@ -727,36 +491,35 @@
                       <i class="la la-calendar-check-o"></i>
                     </span>
                   </div>
-                </div>
-                
-                <br>
+                </div><br>
 
 
               </div>
-
-              <div class="col-lg-2" id="carriers">
-                <label>Carriers</label>
-                {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
+              <div class="col-lg-2" id="delivery_type_label">
+                <label>Delivery type</label>
+                {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
               </div>
-
-           <!--   <div class="col-lg-2" id="delivery_type_label">
-                <label>Delivery type</label>          
+              <div class="col-lg-2" id="delivery_type_air_label" style="display: none;">
+                <label>Delivery type</label>
                 {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
               </div>
               <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
                 <label>Origin address</label>
                 {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>-->
-      
+              </div>
+              <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
+                <label>Destination address</label>
+                {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
+              </div>
 
             </div>
             <div class="row">
-              <div class="col-lg-4 for-check">   
+              <div class="col-lg-2 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
               </div>
 
-              <div class="col-lg-4 for-check">
+              <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
@@ -766,10 +529,7 @@
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
 
-
-               <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
-
-              <!--<div class="col-lg-2 for-check" id="cmadiv">
+              <div class="col-lg-2 for-check" id="cmadiv">
                 {{ Form::checkbox('chargeAPI',null,@$chargeAPI,['id'=>'mode4', 'class' => 'include-checkbox']) }}
                 <label for="mode4" class="label-check">Include CMA CGM Price Finder</label>
               </div>
@@ -782,9 +542,14 @@
               <div class="col-lg-2 for-check" id="safmarinediv">
 								{{ Form::checkbox('chargeAPI_SF',null,@$chargeAPI_SF,['id'=>'mode6', 'class' => 'include-checkbox']) }}
 								<label for="mode6" class="label-check">Include SAFMARINE Price Finder</label>
-							</div>-->
+							</div>
 
-            </div><br>    
+            </div><br>
+            <div class="row">
+
+
+
+            </div>
             <div class="form-group m-form__group row" id="lcl_air_load" style="display: none; margin-top:25px;">
               <div class="col-lg-2">
                 <label>
@@ -1124,6 +889,7 @@
             </div>
             @foreach($arreglo as $arr)
             <!-- Empieza tarjeta de cotifzacion -->
+
             <div class="card-p__quotes input-select{{$loop->iteration}}"  style="margin-bottom: 50px;">
               <div class="row initial-card" id='principal{{$loop->iteration}}' >
                 <div class="col-lg-2 d-flex align-items-center img-bottom-border">            
@@ -1262,7 +1028,6 @@
                     </div>
                     <div class="col-lg-1" ><span class="portalphacode">Currency</span></div>
                   </div>
-
                   @foreach($arr->localorigin as $localorigin)
 
                   <div class="row data-rates">
@@ -1447,8 +1212,8 @@
                     <div class="col-lg-2 colorphacode">{{ $inlandDestiny['km']  }} KM</div>
                     <div class="col-lg-6 colorphacode">
                       <div class="d-flex justify-content-between">
-                        <div class="wth" {{ $equipmentHies['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
-                          <i class="la la-caret-right></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
+                        <div class="wth" {{ $equipmentHides['20DV'] }}>{{ $equipmentHides['20DV'] }} {{ @$inlandDestiny['inlandDetails']['20DV']['sub_in']  }} &nbsp;+<b class="monto-down">{{ @$inlandDestiny['inlandDetails']['20DV']['markup']  }}</b>
+                          <i class="la la-caret-right"></i> <span class="bg-rates" id ='valor-d20{{$loop->iteration}}-{{$arr->id}}'>  {{ number_format(@$inlandDestiny['inlandDetails']['20DV']['montoInlandT'], 2, '.', '') }}  </span>
                         </div>
 
                         <div class="wth" {{ $equipmentHides['40DV'] }}>{{ $equipmentHides['40DV'] }}
@@ -1661,7 +1426,10 @@
 
 
 
-  $(document).ready(function() {   
+  $(document).ready(function() {
+
+
+    
 
     var divRow = document.getElementsByClassName('data-rates');
     var numDivRow = divRow.length;
@@ -1678,9 +1446,6 @@
         //console.log(clase);
       }
     }
-
-    $('#carrier_select').selectC5();
-    $('#equipment').selectC5();
 
   });
 
@@ -1739,218 +1504,6 @@
 
   }
 
-  $(document).on('change', function(){
-        if($('#destination_address_label').hasClass('hide')){
-            if($('#destination_port').hasClass('col-lg-2')){
-            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
-            }
-        }else{
-            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
-        }
-    });
-
-    //C5 Select
-   (function($){
-       $.fn.selectC5 = function(){
-            var clickOnID = ''+$(this).attr('id')+'';
-            var optionSelect = '#'+$(this).attr('id')+' option';
-            var selectType = ''+$(this).attr('select-type')+'';
-            var multiSelect = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
-                                '<ul class="c5-select-dropdown-list">'+
-                                    '<li class="hida">Select an option</li>'+
-                                '</ul>'+
-                                '</span>'+
-                                '<span class="c5-select-multiple-container '+clickOnID+'">'+
-                                    '<span class="c5-select-header">Types</span>'+
-                                    '<ul class="c5-select-list">'+
-                                        '<li class="c5-case"><label class="c5-label">Include CMA CGM Price Finder'+
-                                        '<input id="mode4" type="checkbox" name="chargeAPI" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
-                                        '<li class="c5-case"><label class="c5-label">Include MAERSK Spot'+
-                                        '<input id="mode5" type="checkbox" name="chargeAPI_M" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
-                                        '<li class="c5-case"><label class="c5-label">Include SAFMARINE Price Finder'+
-                                        '<input id="mode6" type="checkbox" name="chargeAPI_SF" class="c5-check" value="on">'+
-                                        '<span class="checkmark"></span></label></li>'+
-                                    '</ul>'+
-                                    '<span class="c5-select-header">Carriers</span>'+
-                                    '<span class="c5-select-container-close">'+
-                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
-                                    '</span>'+
-                                    '<span class="c5-select-multiple-switch">'+
-                                        'Select All '+
-                                        '<label class="switch">'+
-                                            '<input type="checkbox" class="c5-switch">'+
-                                            '<span class="slider round"></span>'+
-                                        '</label>'+
-                                    '</span>'+
-                                    '<ul class="c5-select-list select-normal"></ul>'+
-                                '</span>';
-
-            var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
-                                    '<ul class="c5-select-dropdown-list select-list">'+
-                                        '<li class="hida">Select an option</li>'+
-                                    '</ul>'+
-                                    '</span>'+
-                                    '<span class="c5-select-multiple-container '+clickOnID+'">'+
-                                    '<span class="c5-select-container-close">'+
-                                        '<i class="fa fa-times" aria-hidden="true"></i>'+
-                                    '</span>'+
-                                    '<span class="c5-select-header">Types</span>'+
-                                    '<ul class="c5-select-list list-group1"></ul>'+
-                                    '<span class="c5-select-header">Equipment List</span>'+
-                                    '<ul class="c5-select-list list-group2"></ul>'+
-                                    '</span>';            
-          
-
-            // Filtramos por tipo de select
-
-            // Select Multiple con swicth
-            if(selectType == 'multiple'){
-                $(this).after(multiSelect);
-                $(optionSelect).each(function(){
-                    var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="checkbox" name="carrier" title="'+$(this).text()+
-                                '" class="c5-check" value="'+$(this).val()+
-                                '"><span class="checkmark"></span></label></li>';
-                    $('.c5-select-list.select-normal').append(list);    
-                });
-
-                $('.'+clickOnID+' .c5-check').on("click", function() {
-                    var checkSelected = [];
-                    var textCheckSelected = [];
-                    var valCheckSelected = $(this).val();
-                    console.log($(this).val());
-                    
-                    $('.'+clickOnID+' .c5-check').each(function() {
-                        if (this.checked) {
-                            checkSelected.push($(this).val());
-                        }
-                    });
-                    
-                    $('#'+clickOnID+'.select-normal').val(checkSelected);
-                    var valor1 = $('#'+clickOnID+'.select-normal').val();
-                    console.log(valor1);                            
-                    
-                });
-
-                $('.'+clickOnID+' .c5-switch').on('change', function(){   
-                    var allSelected = [];    
-
-                    $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
-                    $('.'+clickOnID+' .c5-check').each(function() {
-                        if (this.checked) {
-                            allSelected.push($(this).val());
-                        }
-                    }); 
-                    
-                    $('.'+clickOnID+'').val(allSelected);
-                    var valor = $('.'+clickOnID+'').val();
-                    console.log(valor);
-                    
-                    if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
-                        $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
-                    }else{
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html('All Selected');
-                    }                    
-
-                });
-
-                $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
-                    var allCarriers = [];
-                    var allOptions = $('.'+clickOnID+' .c5-check').length;
-
-                    $('.'+clickOnID+' .select-normal .c5-check').each(function() {
-                        if (this.checked) {
-                            allCarriers.push($(this).val());
-                        }
-                    });
-
-                    var allCarriersLength = allCarriers.length;
-
-                    if( allCarriers.length > 0 ){
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html(''+allCarriers.length+' has been Selected');
-                    } else if ( allCarriers.length == 0 ){
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html('');
-                        $('.'+clickOnID+' .c5-select-dropdown-list').html('Select an option');
-                    }
-                    $('.'+clickOnID+' .c5-switch').prop('checked', false);
-                    
-                    
-                });
-
-            }
-
-            // Select Multiple con Lables
-            if(selectType == 'groupLabel'){
-                $(this).after(multiSelectGroup);
-                var nameOption1 = $('#'+clickOnID+' optgroup:nth-child(1) option');
-                var nameOption2 = $('#'+clickOnID+' optgroup:nth-child(2) option');
-
-                $(nameOption1).each(function(){
-                    var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="radio" name="container_type" class="c5-check" value="'+$(this).val()+
-                                '"><span class="checkmark"></span></label></li>';
-                    $('.list-group1').append(list1);
-                });          
-                $(nameOption2).each(function(){
-                    var list2 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="checkbox" name="equipment" class="c5-check" title="'+$(this).text()+'" value="'+$(this).val()+
-                                '"><span class="checkmark"></span></label></li>';
-                    $('.list-group2').append(list2);    
-                });
-
-                $('.'+clickOnID+' .list-group2 .c5-check').on("click", function() {
-                    var valueEquipment = [];                    
-                    var title = $(this).attr('title');
-                    
-                    $('.'+clickOnID+' .list-group2 .c5-check').each(function() {
-                        if (this.checked) {
-                            valueEquipment.push($(this).val());
-                        }
-                    });
-
-                    var countEquip = valueEquipment.length;
-
-                    $('#'+clickOnID+'.select-group').val(valueEquipment);
-                    //var valor2 = $('#'+clickOnID+'.select-group').val();
-                    //console.log(valor2);
-                    
-
-                    if ($(this).is(':checked')) {
-                        var html = '<li title="' + title + '">' + title + ', </li>';
-                        $('.'+clickOnID+' .select-list').append(html);
-                        $(".select-list .hida").hide();
-                    } else {
-                        var listLength = $('.'+clickOnID+' .list-group2 .c5-check:checked').length;
-                        $('li[title="' + title + '"]').remove();
-                        if( countEquip == 0 ){
-                            $(".select-list .hida").show();   
-                        }
-                    }
-
-                });
-
-                $('.'+clickOnID+' .list-group1 .c5-check').on("click", function() {
-                    //alert('estoy en el 1');
-                });
-
-                
-            }
-           
-           //C5 Select Options
-                        
-            $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
-                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
-            });
-
-            $('.'+clickOnID+' .c5-select-container-close').on('click', function(){
-                $('.c5-select-multiple-container.'+clickOnID+'').toggle();
-            });
-       }
-   })(jQuery);
 
 
 </script>

@@ -484,4 +484,85 @@ $array = array("gpId"=>$equipment[0],"count"=>$equipment->count() );
     return $array;
 
   }
+
+
+  public function filtrarRate($arreglo,$equipmentForm,$gpId,$container){ 
+
+
+
+
+          
+         
+
+               $arreglo->where(function($query) use($container,$equipmentForm) {
+                foreach ($container as $cont) {
+                  foreach ($equipmentForm as $val) {
+          
+                    $options = json_decode($cont->options);
+          
+                    if($val == $cont->id) {
+             
+                        if($options->field_rate != 'containers'){    
+                            $query->orwhere(@$options->field_rate, '!=' , "0");
+                        }
+                      }
+                    }
+                  }
+                 
+              });
+              
+    return $arreglo;
+
+  }
+
+
+
+
+
+  public function copy($arreglo,$equipmentForm,$gpId,$container){ 
+
+
+
+    foreach ($container as $cont) {
+      foreach ($equipmentForm as $val) {
+
+        $options = json_decode($cont->options);
+
+        if($val == $cont->id) {
+ 
+            if($options->field_rate == 'containers'){    
+
+              @$arreglo->orwhere('containers'->{'C'.$cont->code} , '!=' , "0");
+                                      
+            }else{  
+
+
+
+             // $arreglo->orwhere(@$options->field_rate, '!=' , "0");              
+            
+       
+
+             $arreglo->where(function($query) use($options) {
+                $query->where(@$options->field_rate, '!=' , "0");
+               
+            });
+            
+
+            }
+      }
+      
+       
+     }
+
+  }
+
+
+
+
+
+  return $arreglo;
+
+}
+
+
 }
