@@ -621,6 +621,9 @@
     .c5-case:hover {
         background: #fbfbfb;
     }
+    .hidden-air {
+        display: none;
+    }
   /* estilos */
 </style>
 @endsection
@@ -682,6 +685,10 @@
                 <label>Delivery type</label>
                 {{ Form::select('delivery_type',['1' => 'PORT(Origin) To PORT(Destination)','2' => 'PORT(Origin) To DOOR(Destination)','3'=>'DOOR(Origin) To PORT(Destination)','4'=>'DOOR(Origin) To DOOR(Destination)'],@$form['delivery_type'],['class'=>'m-select2-general form-control','id'=>'delivery_type']) }}
               </div>
+              <div class="col-lg-4 hidden-air" id="delivery_type_air_label">
+                <label>Delivery type</label>          
+                {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
+              </div>
 
 
             </div><br>
@@ -740,10 +747,7 @@
                 {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
               </div>
 
-            <div class="col-lg-2" id="delivery_type_label">
-                <label>Delivery type</label>          
-                {{ Form::select('delivery_type_air',['5' => 'AIRPORT(Origin) To AIRPORT(Destination)','6' => 'AIRPORT(Origin) To DOOR(Destination)','7'=>'DOOR(Origin) To AIRPORT(Destination)','8'=>'DOOR(Origin) To DOOR(Destination)'],null,['class'=>'m-select2-general form-control','id'=>'delivery_type_air']) }}
-              </div>
+            
               <div class="col-lg-2 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
@@ -757,15 +761,8 @@
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
               </div>
-
-      
-
             </div>
             <div class="row">
-              
-
-              
-
                <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
 
               <!--<div class="col-lg-2 for-check" id="cmadiv">
@@ -1213,7 +1210,6 @@
                             @if($arr->idContract !="0")
                             <a  id='excel_l{{$loop->iteration}}' href="{{route('quotes-v2.excel',[$arr->excelRequest,$arr->excelRequestFCL,$arr->idContract])}}" class="l detailed-cost"  title="Cancel" >
                               <span class="workgreen"><i class="icon-excel"></i></span>
-
                               <i class="la la-file-excel-o"></i>
                             </a>
                             @else
@@ -1738,26 +1734,42 @@
 
   }
 
-  $('#delivery_type').on('change', function(){
-    var value = $(this).val();
-     if(value == 1){
-        $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
-        $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
-     }else if((value == 2) || (value == 3)){
-        $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
-        $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
-    }else if(value == 4){
-        $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
-        $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
-    }
-        /*if($('#destination_address_label').hasClass('hide')){
-            if($('#destination_port').hasClass('col-lg-2')){
-                $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
-            }
-        }else{
+    $('#delivery_type').on('change', function(){
+        var value = $(this).val();
+        if(value == 1){
+            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if((value == 2) || (value == 3)){
             $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
-        }*/
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if(value == 4){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
+        }
     });
+
+    $('#delivery_type_air').on('change', function(){
+        var value = $(this).val();
+        console.log(value);
+        if(value == 5){
+            $('#destination_port').removeClass('col-lg-2').addClass('col-lg-4');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if((value == 6) || (value == 7)){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-2').addClass('col-lg-4');
+        }else if(value == 8){
+            $('#destination_port').removeClass('col-lg-4').addClass('col-lg-2');
+            $('#origin_port').removeClass('col-lg-4').addClass('col-lg-2');
+        }
+    });
+
+    $('#quoteType').on('change', function(){
+        var value = $(this).val();
+        if(value == 3){
+            $('#delivery_type_air_label').css({'display':'block'});
+        }
+    });
+
     //C5 Select
    (function($){
        $.fn.selectC5 = function(){
