@@ -260,6 +260,9 @@ class QuoteV2Controller extends Controller
         $destinationAddressHides = 'hide';
         $currency_name = null;
         $containers = Container::get();
+        $type = $request->type;
+        $status = $request->status;
+        $integration = $request->integration;
 
         //Retrieving all data
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
@@ -268,9 +271,56 @@ class QuoteV2Controller extends Controller
         }
 
         $company_user_id = \Auth::user()->company_user_id;
-        $quote = QuoteV2::with(['rates_v2' => function ($query) {
-            $query->with('origin_port', 'destination_port', 'origin_airport', 'destination_airport', 'automaticInlandLclAir', 'currency', 'charge', 'charge_lcl_air');
-        }])->findOrFail($id);
+        $quote = QuoteV2::when($type, function ($query, $type) {
+            return $query->where('type', $type);
+        })->when($status, function ($query, $status) {
+            return $query->where('status', $status);
+        })->when($integration, function ($query, $integration) {
+            return $query->whereHas('integration', function ($q) {
+                $q->where('status', 0);
+            });
+        })->with(['rates_v2' => function ($query) {
+            $query->with('origin_airport', 'destination_airport', 'currency', 'carrier', 'airline');
+            $query->with(['origin_port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
+                $q->with('country');
+            }]);
+            $query->with(['destination_port' => function ($q) {
+                $q->select('id', 'name', 'code', 'display_name', 'coordinates', 'country_id', 'varation as variation', 'api_varation as api_variation');
+                $q->with('country');
+            }]);
+            $query->with(['charge' => function ($q) {
+                $q->with('type', 'surcharge', 'calculation_type', 'currency');
+            }]);
+            $query->with(['charge_lcl_air' => function ($q) {
+                $q->with('type', 'surcharge', 'calculation_type', 'currency');
+            }]);
+            $query->with('inland');
+            $query->with('automaticInlandLclAir');
+        }])->with(['user' => function ($query) {
+            $query->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state', 'company_user_id');
+            $query->with(['companyUser' => function ($q) {
+                $q->select('id', 'name', 'address', 'phone', 'currency_id');
+                $q->with('currency');
+            }]);
+        }])->with(['company' => function ($query) {
+            $query->with(['company_user' => function ($q) {
+                $q->select('id', 'name', 'address', 'phone', 'currency_id');
+                $q->with('currency');
+            }]);
+            $query->with(['owner' => function ($q) {
+                $q->select('id', 'name', 'lastname', 'email', 'phone', 'type', 'name_company', 'position', 'access', 'verified', 'state');
+            }]);
+        }])->with(['contact' => function ($query) {
+            $query->with(['company' => function ($q) {
+                $q->select('id', 'business_name', 'phone', 'address', 'email', 'tax_number');
+            }]);
+        }])->with(['price' => function ($q) {
+            $q->select('id', 'name', 'description');
+        }])->with(['saleterm' => function ($q) {
+            $q->with('charge');
+        }])->with('incoterm')->findOrFail($id);
+
         $package_loads = PackageLoadV2::where('quote_id', $quote->id)->get();
         $inlands = AutomaticInland::where('quote_id', $quote->id)->get();
         $harbors = Harbor::get()->pluck('display_name', 'id');

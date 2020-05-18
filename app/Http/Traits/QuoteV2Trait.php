@@ -52,11 +52,13 @@ trait QuoteV2Trait
         $sale_terms_destination_grouped = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
 
         $sum = 'sum_';
+        $sale_term = 'sale_term_';
         $total = 'total_';
 
         foreach ($containers as $container) {
-            ${$sum . $container} = $sum . $container->code;
+            ${$sum . $container->code} = $sum . $container->code;
             ${$total . $container->code} = $total . $container->code;
+            ${$sale_term . $container->code} = 'sale_term_' . $container->code;
         }
 
         foreach ($sale_terms_origin_grouped as $origin_sale) {
@@ -70,7 +72,8 @@ trait QuoteV2Trait
                     }
                     $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
                     foreach ($containers as $container) {
-                        $origin_charge->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                        $origin_charge->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
+                        $origin_charge->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                     }
                 }
             }
@@ -88,6 +91,7 @@ trait QuoteV2Trait
                     $currency_rate = $this->ratesCurrency($destination_charge->currency_id, $typeCurrency);
                     foreach ($containers as $container) {
                         $destination_charge->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                        $destination_charge->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                     }
                 }
             }
@@ -113,7 +117,8 @@ trait QuoteV2Trait
                         }
                         $currency_rate = $this->ratesCurrency($origin_charge->currency_id, $typeCurrency);
                         foreach ($containers as $container) {
-                            $origin_charge->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                            $origin_charge->${$sum . $container->code} += @$sale_rates['c' . $container->code] / $currency_rate;
+                            $origin_charge->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                         }
                     }
                 }
@@ -141,12 +146,13 @@ trait QuoteV2Trait
                         $currency_rate = $this->ratesCurrency($item->currency_id, $typeCurrency);
                         foreach ($containers as $container) {
                             $item->${$sum . $container} += @$sale_rates['c' . $container->code] / $currency_rate;
+                            $item->${$sale_term . $container->code} = @$sale_rates['c' . $container->code];
                         }
                     }
                 }
             }
         }
-
+        
         /* Fin Saleterms */
 
         /* Arrays de puertos incluidos en los Saleterms */
@@ -179,7 +185,7 @@ trait QuoteV2Trait
         $destination_harbor = Harbor::where('id', $quote->destination_harbor_id)->first();
         $user = User::where('id', \Auth::id())->with('companyUser')->first();
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
-        
+
         /** Rates **/
 
         $rates = $this->processGlobalRates($rates, $quote, $company_user->currency->alphacode, $containers);
@@ -785,9 +791,9 @@ trait QuoteV2Trait
                                 }
 
                                 $typeCurrency =  $currency_cfg;
-                                
+
                                 $currency_rate = $this->ratesCurrency($inland_value->currency_id, $typeCurrency);
-                                
+
                                 $array_amounts = json_decode($inland_value->rate, true);
                                 $array_markups = json_decode($inland_value->markup, true);
 
@@ -1536,7 +1542,7 @@ trait QuoteV2Trait
 
     public function processOldContainers($array, $type)
     {
-        if(!Empty($array)){
+        if (!empty($array)) {
             switch ($type) {
                 case 'amounts':
                     foreach ($array as $k => $amount_value) {
