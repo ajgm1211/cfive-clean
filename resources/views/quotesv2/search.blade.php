@@ -708,6 +708,10 @@
                   <select id="destination_airport" name="destination_airport_id" class="form-control"></select>
                 </div>
               </div>
+              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
+                <label>Origin address</label>
+                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+              </div>-->
               <div class="col-lg-2 {{$hideD}}" id="destination_address_label">
                 <label>Destination address</label>
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
@@ -731,7 +735,7 @@
               </div>
 
               <div class="col-lg-2" id="carriers">
-                <label>Carries</label>
+                <label>Carriers</label>
                 {{ Form::select('carriers[]',$carrierMan,null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
               </div>
 
