@@ -9,7 +9,7 @@ class ContractFilter extends AbstractFilter
     protected $paginate = 10;
     protected $filter_by = [ 'name', 'company_user_id' ];
     protected $default_filter_by = [ 'company_user_id' ];
-    protected $with = ['carriers.carrier', 'direction', 'companyUser'];
+    protected $with = ['carriers.carrier', 'contract_company_restriction.company', 'contract_user_restriction.user', 'direction', 'companyUser'];
 
 }
 
