@@ -750,7 +750,7 @@
 
               <div class="col-lg-2" id="carriers">
                 <label>Carries</label>
-                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple','required' => 'true', 'select-type' => 'multiple']) }}
+                {{ Form::select('carriers[]',array('CMA' => @$chargeAPI, 'MAERSK' => @$chargeAPI_M, 'SAFMARINE' => $chargeAPI_SF, 'Carriers' => $carrierMan),null,['class'=>'c5-select-multiple select-normal','id'=>'carrier_select','multiple' => 'multiple', 'select-type' => 'multiple']) }}
               </div>
 
             
@@ -1834,7 +1834,7 @@
                 $(this).after(multiSelect);
                 $(optionSelect).each(function(){
                     var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="checkbox" name="carrier" title="'+$(this).text()+
+                                '<input type="checkbox" title="'+$(this).text()+
                                 '" class="c5-check" value="'+$(this).val()+
                                 '"><span class="checkmark"></span></label></li>';
                     $('.c5-select-list.select-normal').append(list);    
@@ -1842,7 +1842,6 @@
 
                 $('.'+clickOnID+' .c5-check').on("click", function() {
                     var checkSelected = [];
-                    //var textCheckSelected = [];
                     var valCheckSelected = $(this).val();
                     
                     $('.'+clickOnID+' .c5-check').each(function() {
@@ -1865,9 +1864,9 @@
                             allSelected.push($(this).val());
                         }
                     }); 
-                    
-                    $('.'+clickOnID+'').val(allSelected);
-                    var valor = $('.'+clickOnID+'').val();
+
+                    $('.'+clickOnID+' .select-normal').val(allSelected);
+                    var valor = $('.'+clickOnID+' .select-normal').val();
                     console.log(valor);
                     
                     if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
@@ -1882,8 +1881,6 @@
                 $('.'+clickOnID+' .select-normal .c5-check').on('change', function(){
                     var allCarriers = [];
                     var allOptions = $('.'+clickOnID+' .c5-check').length;
-
-                    
 
                     $('.'+clickOnID+' .select-normal .c5-check').each(function() {
                         if (this.checked) {
@@ -1921,12 +1918,15 @@
                     $('.list-group1').append(list1);
                     
                 });
-               
+
             }
 
-           
            //C5 Select Options
-                        
+           $('div').on('click', function(){
+                if($('.c5-select-multiple-container .'+clickOnID+'').attr('style') == 'display: block'){
+                    $('.c5-select-multiple-container .'+clickOnID+'').toggle();
+                }
+            });
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
             });
@@ -1954,7 +1954,7 @@
                 var code = `${data[equip].code}`;
                 var idEquip = `${data[equip].id}`;
                 var list2 = '<li class="c5-case"><label class="c5-label">'+code+
-                                '<input type="checkbox" name="equipment" class="c5-check" title="'+code+'" value="'+idEquip+
+                                '<input type="checkbox" class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
                 $('.list-group2').append(list2);
                 
@@ -1967,13 +1967,12 @@
                     $('.equipment .list-group2 .c5-check').each(function() {
                         if (this.checked) {
                             valueEquipment.push($(this).val());
-                            
                         }
                     });
 
                     $('#equipment.select-group').val(valueEquipment);
-                    var valor2 = $('#equipment.select-group').val();
-                    console.log(valor2);
+                    /*var valor2 = $('#equipment.select-group').val();
+                    console.log(valor2);*/
                     
                     var countEquip = valueEquipment.length;
                     if ($(this).is(':checked')) {
