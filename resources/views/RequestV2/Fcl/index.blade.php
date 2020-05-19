@@ -58,7 +58,7 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="m_portlet_tab_1_1">
                     <h5 class="m-portlet__head-text">
-                        <strong  style="color:#0062ff;">Import New Contract - Sea Freight FCL</strong>
+                        <strong  style="color:#0062ff;">Import Contract - Sea Freight FCL</strong>
                     </h5>
                     <br>
                     <div class="row">
@@ -85,11 +85,11 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
-                                    <label for="validation_expire" class=" ">Validation</label>
+                                    <label for="validation_expire" class=" ">Validity</label>
                                     <input placeholder="Contract Validity" inpName="Validation" class="form-control m-input" readonly="" id="m_daterangepicker_1" required="required" name="validation_expire" type="text" value="Please enter validation date">
                                 </div>
                                 <div class="col-lg-2">
-                                    <label for="nameid" class="">References</label>
+                                    <label for="nameid" class="">Reference</label>
                                     {!!  Form::text('name',null,['id'=>'nameid',
                                     'placeholder'=>'References  ',
                                     'required','inpName' => 'References',
