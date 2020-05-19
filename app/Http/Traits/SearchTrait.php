@@ -178,6 +178,7 @@ trait SearchTrait
                 if ($containers == $cont->id) {
                     $options = json_decode($cont->options);
                     if (@$options->field_rate == 'containers') {
+                        $test = json_encode($data->{$options->field_rate});
                         $jsonContainer = json_decode($data->{$options->field_rate});
                         if (isset($jsonContainer->{'C' . $cont->code})) {
                             $rateMount = $jsonContainer->{'C' . $cont->code};
@@ -192,13 +193,15 @@ trait SearchTrait
                     $arregloRate = array_merge($arreglo['arregloRate'], $arregloRate);
                     $arregloSaveR = array_merge($arreglo['arregloRateSaveR'], $arregloSaveR);
                     $arregloSaveM = array_merge($arreglo['arregloRateSaveM'], $arregloSaveM);
-                    if($rateMount != 0 )
-                      array_push($equipmentFilter, $containers);
+                    if ($rateMount != 0) {
+                        array_push($equipmentFilter, $containers);
+                    }
+
                 }
             }
         }
 
-        $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR, 'arregloSaveM' => $arregloSaveM,'arregloEquipment' => $equipmentFilter);
+        $arregloG = array('arregloRate' => $arregloRate, 'arregloSaveR' => $arregloSaveR, 'arregloSaveM' => $arregloSaveM, 'arregloEquipment' => $equipmentFilter);
         return $arregloG;
 
     }
@@ -482,57 +485,27 @@ trait SearchTrait
 
     public function filtrarRate($arreglo, $equipmentForm, $gpId, $container)
     {
-
+        
         $arreglo->where(function ($query) use ($container, $equipmentForm) {
             foreach ($container as $cont) {
                 foreach ($equipmentForm as $val) {
 
                     $options = json_decode($cont->options);
+                       
 
                     if ($val == $cont->id) {
+         //               dd($options);
 
                         if ($options->field_rate != 'containers') {
                             $query->orwhere(@$options->field_rate, '!=', "0");
+                        } else {                                                                     
+                            $query->contain($cont->code);                            
                         }
                     }
                 }
             }
 
         });
-
-        return $arreglo;
-
-    }
-
-    public function copy($arreglo, $equipmentForm, $gpId, $container)
-    {
-
-        foreach ($container as $cont) {
-            foreach ($equipmentForm as $val) {
-
-                $options = json_decode($cont->options);
-
-                if ($val == $cont->id) {
-
-                    if ($options->field_rate == 'containers') {
-
-                        @$arreglo->orwhere('containers'->{'C' . $cont->code}, '!=', "0");
-
-                    } else {
-
-                        // $arreglo->orwhere(@$options->field_rate, '!=' , "0");
-
-                        $arreglo->where(function ($query) use ($options) {
-                            $query->where(@$options->field_rate, '!=', "0");
-
-                        });
-
-                    }
-                }
-
-            }
-
-        }
 
         return $arreglo;
 
