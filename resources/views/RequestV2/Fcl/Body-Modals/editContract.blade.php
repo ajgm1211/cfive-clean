@@ -36,7 +36,7 @@
         <div class="col-lg-4">
 
             {!! Form::label('status', 'Status') !!}<br>
-            {{ Form::select('status',['publish' => 'Publish','draft' => 'Draft','incomplete' => 'Imcomplete','expired' => 'Expired'],$contract->status,['class'=>'form-control m-select2-general','id' => 'm_select2_2_modal']) }}
+            {{ Form::select('status',['publish' => 'Published','draft' => 'Draft','incomplete' => 'Imcomplete','expired' => 'Expired'],$contract->status,['class'=>'form-control m-select2-general','id' => 'status_id']) }}
 
         </div>
         <div class="col-lg-4">
@@ -51,7 +51,7 @@
                 Carrier:
             </label>
 
-            {{ Form::select('carriers_id[]',$carriers,$contract->carriers->pluck('carrier_id'),['class'=>'form-control m-select2-general','id' => 'm_select2_2_modal','multiple']) }}
+            {{ Form::select('carriers_id[]',$carriers,$contract->carriers->pluck('carrier_id'),['class'=>'form-control m-select2-general','id' => 'carriers_id','multiple']) }}
         </div>
     </div>
 </div>
