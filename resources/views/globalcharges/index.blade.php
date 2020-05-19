@@ -20,6 +20,16 @@
 				</div>
 			</div>
 		</div>
+		@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<br>
 		<div class="m-portlet m-portlet--tabs">
 			<div class="m-portlet__head">
 				<div class="m-portlet__head-tools">
