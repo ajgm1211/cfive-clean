@@ -1589,4 +1589,15 @@ trait QuoteV2Trait
             }
         }
     }
+
+    public function find_key_value($array, $key, $val)
+    {
+        foreach ($array as $item) {
+            if (is_array($item) && $this->find_key_value($item, $key, $val)) return true;
+
+            if (isset($item[$key]) && $item[$key] == $val) return true;
+        }
+
+        return false;
+    }
 }
