@@ -26,15 +26,11 @@ class ExcelController extends Controller
      */
     public function costPageQuote($id)
     {
-        //$id = obtenerRouteKey($id);
-
-        /*$quote = QuoteV2::with(['rates_v2' => function ($query) {
-            $query->with('charge');
-        }])->findOrFail($id);*/
-
-        $quote = QuoteV2::whereHas('rates_v2', function ($query) use($id) {
+        $quote = QuoteV2::whereHas('rates_v2', function ($query) use ($id) {
             $query->where('id', $id);
-        })->first();
+        })->with(['rates_v2' => function ($q) use ($id) {
+            $q->where('id', $id);
+        }])->first();
 
         $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
 
@@ -47,6 +43,18 @@ class ExcelController extends Controller
         $sale_terms_origin = $this->processSaleTerms($sale_terms_origin, $quote, $company_user, 'origin');
 
         $sale_terms_destination = $this->processSaleTerms($sale_terms_destination, $quote, $company_user, 'destination');
+
+        $origin_sales = $sale_terms_origin->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
+
+        $destination_sales = $sale_terms_destination->map(function ($origin) {
+            return collect($origin->toArray())
+                ->only(['port_id'])
+                ->all();
+        });
 
         $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
@@ -204,8 +212,8 @@ class ExcelController extends Controller
             //Table
             $sheet->setCellValue('B40', 'DESGLOSE DE CARGOS');
 
-            $sheet->setCellValue('B41', 'Tipo');
-            $sheet->setCellValue('C41', 'Concepto');
+            $sheet->setCellValue('B41', 'Cargo');
+            $sheet->setCellValue('C41', 'Detalle');
             if ($quote->type == 'FCL') {
                 $col = 'D';
                 $spreadsheet->getSheet($key)->getStyle($col . '41')->applyFromArray($styleArray);
@@ -230,6 +238,7 @@ class ExcelController extends Controller
             }
 
             $i = 42;
+            
             if ($quote->type == 'LCL' || $quote->type == 'AIR') {
                 foreach ($item->charge_lcl_air as $charge) {
                     $type = $this->getAmountType($charge->type_id);
@@ -252,7 +261,7 @@ class ExcelController extends Controller
             } else {
 
                 $this->calculateFcl($item, $containers);
-
+                
                 foreach ($item->charge as $charge) {
 
                     $col_amount = 'D';
@@ -284,13 +293,12 @@ class ExcelController extends Controller
                     }
 
                     $type = $this->getAmountType($charge->type_id);
-
-                    $sheet->setCellValue('B' . $i, $type);
                     if ($charge->surcharge_id == '') {
-                        $sheet->setCellValue('C' . $i, 'Ocean freight');
+                        $sheet->setCellValue('B' . $i, 'Ocean freight');
                     } else {
-                        $sheet->setCellValue('C' . $i, @$charge->surcharge->name);
+                        $sheet->setCellValue('B' . $i, @$charge->surcharge->name);
                     }
+                    $sheet->setCellValue('C' . $i, @$charge->calculation_type->name);
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
@@ -315,8 +323,8 @@ class ExcelController extends Controller
                     $inland_rates = $this->processOldContainers($inland_rates, 'amounts');
                     $inland_markups = $this->processOldContainers($inland_markups, 'markups');
 
-                    $sheet->setCellValue('B' . $i, $inland->type);
-                    $sheet->setCellValue('C' . $i, $inland->provider);
+                    $sheet->setCellValue('B' . $i, $inland->provider);
+                    $sheet->setCellValue('C' . $i, $inland->distance.' Km');
                     foreach ($equipmentHides as $k => $hide) {
                         foreach ($containers as $c) {
                             if ($c->code == $k && $hide == "") {
@@ -330,49 +338,57 @@ class ExcelController extends Controller
                     $i++;
                 }
 
-                foreach ($sale_terms_origin as $sale_term_origin) {
-                    foreach ($sale_term_origin->charge as $sale_origin) {
-                        $col_sale = 'D';
-                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                $check_port_origin = $this->find_key_value($origin_sales->toArray(), 'port_id', $item->origin_port_id);
 
-                        $sale_rates = json_decode($sale_origin->rate, true);
+                if ($check_port_origin) {
+                    foreach ($sale_terms_origin as $sale_term_origin) {
+                        foreach ($sale_term_origin->charge as $sale_origin) {
+                            $col_sale = 'D';
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
 
-                        $sheet->setCellValue('B' . $i, $sale_origin->charge);
-                        $sheet->setCellValue('C' . $i, $sale_origin->detail);
-                        foreach ($equipmentHides as $k => $hide) {
-                            foreach ($containers as $c) {
-                                if ($c->code == $k && $hide == "") {
-                                    $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
-                                    $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                            $sale_rates = json_decode($sale_origin->rate, true);
+
+                            $sheet->setCellValue('B' . $i, $sale_origin->charge);
+                            $sheet->setCellValue('C' . $i, $sale_origin->detail);
+                            foreach ($equipmentHides as $k => $hide) {
+                                foreach ($containers as $c) {
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                                    }
                                 }
                             }
-                        }
-                        $sheet->setCellValue($col_sale . $i, @$sale_origin->currency->alphacode);
+                            $sheet->setCellValue($col_sale . $i, @$sale_origin->currency->alphacode);
 
-                        $i++;
+                            $i++;
+                        }
                     }
                 }
 
-                foreach ($sale_terms_destination as $sale_term_destination) {
-                    foreach ($sale_term_destination->charge as $sale_destination) {
-                        $col_sale = 'D';
-                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                $check_port_destination = $this->find_key_value($destination_sales->toArray(), 'port_id', $item->destination_port_id);
+                
+                if($check_port_destination){
+                    foreach ($sale_terms_destination as $sale_term_destination) {
+                        foreach ($sale_term_destination->charge as $sale_destination) {
+                            $col_sale = 'D';
+                            $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
 
-                        $sale_rates = json_decode($sale_destination->rate, true);
+                            $sale_rates = json_decode($sale_destination->rate, true);
 
-                        $sheet->setCellValue('B' . $i, $sale_destination->charge);
-                        $sheet->setCellValue('C' . $i, $sale_destination->detail);
-                        foreach ($equipmentHides as $k => $hide) {
-                            foreach ($containers as $c) {
-                                if ($c->code == $k && $hide == "") {
-                                    $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
-                                    $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                            $sheet->setCellValue('B' . $i, $sale_destination->charge);
+                            $sheet->setCellValue('C' . $i, $sale_destination->detail);
+                            foreach ($equipmentHides as $k => $hide) {
+                                foreach ($containers as $c) {
+                                    if ($c->code == $k && $hide == "") {
+                                        $sheet->setCellValue($col_sale++ . $i, @$sale_rates['c' . $c->code]);
+                                        $spreadsheet->getSheet($key)->getStyle($col_sale . $i)->applyFromArray($styleArray);
+                                    }
                                 }
                             }
-                        }
-                        $sheet->setCellValue($col_sale . $i, @$sale_destination->currency->alphacode);
+                            $sheet->setCellValue($col_sale . $i, @$sale_destination->currency->alphacode);
 
-                        $i++;
+                            $i++;
+                        }
                     }
                 }
             }
