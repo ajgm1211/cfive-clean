@@ -26,19 +26,29 @@ class ExcelController extends Controller
      */
     public function costPageQuote($id)
     {
-        $id = obtenerRouteKey($id);
+        //$id = obtenerRouteKey($id);
 
-        $quote = QuoteV2::with(['rates_v2' => function ($query) {
+        /*$quote = QuoteV2::with(['rates_v2' => function ($query) {
             $query->with('charge');
-        }])->findOrFail($id);
+        }])->findOrFail($id);*/
+
+        $quote = QuoteV2::whereHas('rates_v2', function ($query) use($id) {
+            $query->where('id', $id);
+        })->first();
+
         $sale_terms_origin = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Origin')->with('charge')->get();
+
         $sale_terms_destination = SaleTermV2::where('quote_id', $quote->id)->where('type', 'Destination')->with('charge')->get();
+
         $containers = Container::all();
 
         $company_user = CompanyUser::find(\Auth::user()->company_user_id);
 
         $sale_terms_origin = $this->processSaleTerms($sale_terms_origin, $quote, $company_user, 'origin');
+
         $sale_terms_destination = $this->processSaleTerms($sale_terms_destination, $quote, $company_user, 'destination');
+
+        $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
         $spreadsheet = new Spreadsheet();
 
@@ -105,14 +115,15 @@ class ExcelController extends Controller
             $sheet->setCellValue('H15', $quote->type);
 
             //Set equipments
-            $equipments = array();
             $json_equipment = json_decode($quote->equipment);
             $str = null;
-            foreach ($json_equipment as $value) {
-                if ($value !== end($json_equipment)) {
-                    $str .= $value . ', ';
-                } else {
-                    $str .= $value;
+            foreach ($equipmentHides as $k => $hide) {
+                if ($hide != 'hidden') {
+                    foreach ($containers as $c) {
+                        if ($c->code == $k) {
+                            $str .= $k . ' ';
+                        }
+                    }
                 }
             }
 
@@ -144,10 +155,10 @@ class ExcelController extends Controller
 
             $sheet->setCellValue('A27', '8)');
             $sheet->setCellValue('B27', 'Dirección de recolección:');
-            $sheet->setCellValue('C27', $item->origin_address);
+            $sheet->setCellValue('C27', $quote->origin_address);
 
             $sheet->setCellValue('B28', 'Dirección de entrega:');
-            $sheet->setCellValue('C28', $item->destination_address);
+            $sheet->setCellValue('C28', $quote->destination_address);
 
             $sheet->setCellValue('B29', 'Proveedor terrestre:');
             $sheet->setCellValue('C29', '');
@@ -192,8 +203,6 @@ class ExcelController extends Controller
 
             //Table
             $sheet->setCellValue('B40', 'DESGLOSE DE CARGOS');
-
-            $equipmentHides = $this->hideContainerV2($quote->equipment, 'BD', $containers);
 
             $sheet->setCellValue('B41', 'Tipo');
             $sheet->setCellValue('C41', 'Concepto');
