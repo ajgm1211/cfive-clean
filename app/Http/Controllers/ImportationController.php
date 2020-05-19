@@ -1225,7 +1225,7 @@ class ImportationController extends Controller
         $originA = null;
         if(count($originA) <= 1){
             $originA    = $originOb['name'];
-            $originAIn = $originOb->id;
+            $originAIn = $originOb['id'];
         } else{
             $originA = $originA[0].' (error)';
             $classdorigin='red';
@@ -1235,7 +1235,7 @@ class ImportationController extends Controller
             ->first();
         $destinationAIn = null;
         if(count($destinationA) <= 1){
-            $destinationAIn = $destinationOb->id;
+            $destinationAIn = $destinationOb['id'];
             $destinationA   = $destinationOb['name'];
         } else{
             $destinationA      = $destinationA[0].' (error)';
