@@ -1907,7 +1907,7 @@
 
                 $(nameOption1).each(function(){
                     var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="radio" name="container_type" class="c5-check" value="'+$(this).val()+
+                                '<input type="radio" name="container_type" onclick="getContainerByGroup(1)" class="c5-check" value="'+$(this).val()+
                                 '"><span class="checkmark"></span></label></li>';
                     $('.list-group1').append(list1);
                 });          
@@ -1969,6 +1969,30 @@
             });
        }
    })(jQuery);
+
+
+   function getContainerByGroup(id_group){
+        $.ajax({
+          type: 'GET',
+          url: '/Container/getContainer/',
+          data: {
+              'id_group' : id_group
+          },
+          success: function(data) {
+
+            console.log(data);
+
+          },
+          error: function (request, status, error) {
+              console.log(request.responseText);
+          }
+
+      });
+
+}
+
+
+
 </script>
 
 @stop
