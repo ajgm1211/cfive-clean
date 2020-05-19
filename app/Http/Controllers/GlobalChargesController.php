@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection as Collection;
 use App\Jobs\GlobalchargerDuplicateFclLclJob as GCDplFclLcl;
+use App\Http\Requests\StoreGlobalCharges;						//inclui
 
 class GlobalChargesController extends Controller
 {
@@ -40,7 +41,9 @@ class GlobalChargesController extends Controller
 		//
 	}
 
-	public function store(Request $request){
+	public function store(StoreGlobalCharges $request){ // cambio de request 
+		
+		$request->validated();
 		$detailscharges = $request->input('type');
 		$calculation_type = $request->input('calculationtype');
 
@@ -147,7 +150,7 @@ class GlobalChargesController extends Controller
 		return redirect()->action('GlobalChargesController@index');
 	}
 
-	public function updateGlobalChar(Request $request, $id)
+	public function updateGlobalChar(request $request, $id)
 	{
 
 
