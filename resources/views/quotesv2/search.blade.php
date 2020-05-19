@@ -624,6 +624,12 @@
     .hidden-air {
         display: none;
     }
+    .list-group2 {
+        height: auto !important;
+    }
+    .h-hidden {
+        display: none;
+    }
   /* estilos */
 </style>
 @endsection
@@ -1819,7 +1825,7 @@
                                     '</span>'+
                                     '<span class="c5-select-header">Types</span>'+
                                     '<ul class="c5-select-list list-group1"></ul>'+
-                                    '<span class="c5-select-header">Equipment List</span>'+
+                                    '<span class="c5-select-header h-hidden">Equipment List</span>'+
                                     '<ul class="c5-select-list list-group2"></ul>'+
                                     '</span>';            
 
@@ -1877,6 +1883,8 @@
                     var allCarriers = [];
                     var allOptions = $('.'+clickOnID+' .c5-check').length;
 
+                    
+
                     $('.'+clickOnID+' .select-normal .c5-check').each(function() {
                         if (this.checked) {
                             allCarriers.push($(this).val());
@@ -1896,67 +1904,26 @@
                     
                     
                 });
-
+                $('.select-normal .c5-case:nth-child(1)').remove();
+                $('.select-normal .c5-case:nth-child(2)').remove();
+                $('.select-normal .c5-case:nth-child(1)').remove();
             }
 
             // Select Multiple con Lables
             if(selectType == 'groupLabel'){
                 $(this).after(multiSelectGroup);
                 var nameOption1 = $('#'+clickOnID+' optgroup:nth-child(1) option');
-                var nameOption2 = $('#'+clickOnID+' optgroup:nth-child(2) option');
 
                 $(nameOption1).each(function(){
                     var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="radio" name="container_type" onclick="getContainerByGroup(1)" class="c5-check" value="'+$(this).val()+
+                                '<input type="radio" name="container_type" onclick="getContainerByGroup('+$(this).val()+')" class="c5-check"'+
                                 '"><span class="checkmark"></span></label></li>';
                     $('.list-group1').append(list1);
-                });          
-                $(nameOption2).each(function(){
-                    var list2 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="checkbox" name="equipment" class="c5-check" title="'+$(this).text()+'" value="'+$(this).val()+
-                                '"><span class="checkmark"></span></label></li>';
-                    $('.list-group2').append(list2);    
-                });
-
-                $('.'+clickOnID+' .list-group2 .c5-check').on("click", function() {
-                    var valueEquipment = [];                    
-                    var title = $(this).attr('title');
                     
-                    $('.'+clickOnID+' .list-group2 .c5-check').each(function() {
-                        if (this.checked) {
-                            valueEquipment.push($(this).val());
-                        }
-                    });
-
-                    var countEquip = valueEquipment.length;
-
-                    $('#'+clickOnID+'.select-group').val(valueEquipment);
-                    //var valor2 = $('#'+clickOnID+'.select-group').val();
-                    //console.log(valor2);
-                    
-
-                    if ($(this).is(':checked')) {
-                        var html = '<li title="' + title + '">' + title + ', </li>';
-                        $('.'+clickOnID+' .select-list').append(html);
-                        $(".select-list .hida").hide();
-                    } else {
-                        var listLength = $('.'+clickOnID+' .list-group2 .c5-check:checked').length;
-                        $('li[title="' + title + '"]').remove();
-                        if( countEquip == 0 ){
-                            $(".select-list .hida").show();   
-                        }
-                    }
-
                 });
-
-                $('.'+clickOnID+' .list-group1 .c5-check').on("click", function() {
-                    //alert('estoy en el 1');
-                });
-
-                $('.select-normal .c5-case:nth-child(1)').remove();
-                $('.select-normal .c5-case:nth-child(2)').remove();
-                $('.select-normal .c5-case:nth-child(1)').remove();
+               
             }
+
            
            //C5 Select Options
                         
@@ -1970,26 +1937,67 @@
        }
    })(jQuery);
 
-
    function getContainerByGroup(id_group){
         $.ajax({
-          type: 'GET',
-          url: '/Container/getContainer/',
-          data: {
-              'id_group' : id_group
-          },
-          success: function(data) {
+        type: 'GET',
+        url: '/Container/getContainer/',
+        data: {
+            'id_group' : id_group            
+        },
+        success: function(data) {
+            var nameOption1 = $('#equipment optgroup:nth-child(1) option');
+            //console.log(data);
+            $(nameOption1).val('');
+            $('.h-hidden').css({'display':'block'});
+            $('.list-group2 li').remove();
+            for (const equip in data) {
+                var code = `${data[equip].code}`;
+                var idEquip = `${data[equip].id}`;
+                var list2 = '<li class="c5-case"><label class="c5-label">'+code+
+                                '<input type="checkbox" name="equipment" class="c5-check" title="'+code+'" value="'+idEquip+
+                                '"><span class="checkmark"></span></label></li>';
+                $('.list-group2').append(list2);
+                
+            }
 
-            console.log(data);
+            $('.equipment .list-group2 .c5-check').on("click", function() {
+                    var valueEquipment = [];                    
+                    var title = $(this).attr('title');
 
-          },
-          error: function (request, status, error) {
-              console.log(request.responseText);
-          }
+                    $('.equipment .list-group2 .c5-check').each(function() {
+                        if (this.checked) {
+                            valueEquipment.push($(this).val());
+                            
+                        }
+                    });
 
-      });
+                    $('#equipment.select-group').val(valueEquipment);
+                    var valor2 = $('#equipment.select-group').val();
+                    console.log(valor2);
+                    
+                    var countEquip = valueEquipment.length;
+                    if ($(this).is(':checked')) {
+                        var html = '<li title="' + title + '">' + title + ', </li>';
+                        $('.equipment .select-list').append(html);
+                        $(".select-list .hida").hide();
+                    } else {
+                        var listLength = $('.equipment .list-group2 .c5-check:checked').length;
+                        $('li[title="' + title + '"]').remove();
+                        if( countEquip == 0 ){
+                            $(".select-list .hida").show();   
+                        }
+                    }
+
+                }); 
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+
+    });
 
 }
+
 
 
 
