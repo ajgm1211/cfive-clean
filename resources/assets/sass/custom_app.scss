@@ -73,7 +73,7 @@ a,input,h1,h2,h3,h4,h5,h6,span,li,p,label,textarea,td,th,tr,.h6 {
     font-weight: bold;
 }
 .publish::before {
-    content: 'publish';
+    content: 'published';
     font-weight: bold;
 }
 .expired::before {
