@@ -37,7 +37,7 @@ class HelperRates {
         foreach($rates as $rate){
             $containers = null;
             $containers = json_decode($rate->containers,true);
-            $containers = json_decode($containers,true);
+            //$containers = json_decode($containers,true);
             // dd($containers,$rate->containers);
             $colec = ['id'              =>  $rate->id,
                       'contract_id'     =>  $id,            //
