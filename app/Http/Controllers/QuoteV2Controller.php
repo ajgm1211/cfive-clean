@@ -2450,9 +2450,7 @@ class QuoteV2Controller extends Controller
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight = $request->input('chargeFreight');
-        $chargesAPI = $request->input('chargeAPI');
-        $chargesAPI_M = $request->input('chargeAPI_M');
-        $chargesAPI_SF = $request->input('chargesAPI_SF');
+   
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2511,6 +2509,14 @@ class QuoteV2Controller extends Controller
         }
 
         $equipment = $request->input('equipment');
+        $carriers =$this->divideCarriers($request->input('carriers'));
+
+
+        $chargesAPI = isset($carriers['api']['CMA']) ? true : null;
+        $chargesAPI_M = isset($carriers['api']['MAERSK']) ? true : null;
+        $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
+        
+
         $equipmentFilter = array();
         $delivery_type = $request->input('delivery_type');
         $price_id = $request->input('price_id');
@@ -2604,7 +2610,10 @@ class QuoteV2Controller extends Controller
 
             // ************************* CONSULTA RATE API ******************************
 
+       
             if ($chargesAPI != null) {
+
+              
 
                 $client = new Client();
 
