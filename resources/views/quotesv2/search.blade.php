@@ -406,7 +406,8 @@
     }
     .c5-select-multiple-dropdown {
         width: 100%;
-        height: 37px;      
+        height: 37px;
+        
     }
     .c5-select-multiple-container {
         width: 100%;
@@ -485,6 +486,10 @@
         justify-content: flex-start;
         overflow: hidden;
         white-space: nowrap;
+        background-color: #f6f6f6;   
+    }
+    .m-input.date{
+        background-color: #f6f6f6;   
     }
     .c5-select-dropdown-list li {
         list-style: none;
@@ -629,6 +634,12 @@
     }
     .h-hidden {
         display: none;
+    }
+    .border-select {
+        border-color: #716aca;
+    }
+    .select2-selection {
+        background-color: #f6f6f6 !important;
     }
   /* estilos */
 </style>
@@ -1791,7 +1802,7 @@
                                     '<span class="c5-select-header">Types</span>'+
                                     '<ul class="c5-select-list">'+
                                         '<li class="c5-case"><label class="c5-label">Include CMA CGM Price Finder'+
-                                            '<input id="mode4" type="checkbox" class="c5-check" name="carrier" value="CMA">'+
+                                            '<input id="mode4" type="checkbox" class="c5-check" value="CMA">'+
                                             '<span class="checkmark"></span></label></li>'+
                                         '<li class="c5-case"><label class="c5-label">Include MAERSK Spot'+
                                             '<input id="mode5" type="checkbox" class="c5-check" value="MAERSK">'+
@@ -1849,13 +1860,14 @@
                             checkSelected.push($(this).val());
                         }
                     });
+
                     $('#'+clickOnID+'.select-normal').val(checkSelected);
-                    var valor1 = $('#'+clickOnID+'.select-normal').val();
-                    console.log(valor1);
+                    /*var valor1 = $('#'+clickOnID+'.select-normal').val();
+                    console.log(valor1);*/
                     
                 });
 
-                $('.'+clickOnID+' .c5-switch').on('change', function(){   
+                $('.'+clickOnID+' .c5-select-multiple-switch .c5-switch').on('change', function(){   
                     var allSelected = [];    
 
                     $('.'+clickOnID+' .c5-check').prop('checked', $(this).is(':checked'));
@@ -1864,11 +1876,11 @@
                             allSelected.push($(this).val());
                         }
                     }); 
-
-                    $('.'+clickOnID+' .select-normal').val(allSelected);
-                    var valor = $('.'+clickOnID+' .select-normal').val();
-                    console.log(valor);
                     
+                    $('#'+clickOnID+'.select-normal').val(allSelected);
+                    /*var valor = $('#'+clickOnID+'.select-normal').val();
+                    console.log(valor);*/
+
                     if($('.'+clickOnID+' .c5-select-dropdown-list').html() == 'All Selected') {                        
                         $('.'+clickOnID+' .c5-select-dropdown-list').html(''); 
                         $('.'+clickOnID+' .c5-select-dropdown-list').append('<li class="hida">Select an option</li>');
@@ -1887,6 +1899,10 @@
                             allCarriers.push($(this).val());
                         }
                     });
+
+                    $('.'+clickOnID+' .select-normal').val(allCarriers);
+                    /*var valor = $('.'+clickOnID+' .select-normal').val();
+                    console.log(valor);*/
 
                     var allCarriersLength = allCarriers.length;
 
@@ -1920,19 +1936,21 @@
                 });
 
             }
-
-           //C5 Select Options
-           $('div').on('click', function(){
-                if($('.c5-select-multiple-container .'+clickOnID+'').attr('style') == 'display: block'){
-                    $('.c5-select-multiple-container .'+clickOnID+'').toggle();
-                }
-            });
+           
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
+            
+            });
+
+            $('.select2').on('click', function(){
+                $('.c5-select-multiple-container.'+clickOnID+'').css({'display':'none'});
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#eee'});
             });
 
             $('.'+clickOnID+' .c5-select-container-close').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
+                $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
        }
    })(jQuery);
