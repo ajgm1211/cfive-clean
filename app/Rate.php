@@ -12,7 +12,7 @@ class Rate extends Model
 {
     use SoftDeletes;
     protected $dates    = ['deleted_at'];
-    
+
     protected $table    = "rates";
     protected $fillable = ['id', 'origin_port','destiny_port','carrier_id','contract_id','twuenty','forty','fortyhc','fortynor','fortyfive', 'containers','currency_id','schedule_type_id','transit_time','via'];
     public function contract()
@@ -31,7 +31,7 @@ class Rate extends Model
     public function currency(){
         return $this->belongsTo('App\Currency');
     }
-    
+
     public function scheduletype(){
         return $this->belongsTo('App\ScheduleType','schedule_type_id');
     }
@@ -49,7 +49,7 @@ class Rate extends Model
     }
 
     public function duplicate(){
-        
+
         $new_rate = $this->replicate();
         $new_rate->save();
 
@@ -67,7 +67,7 @@ class Rate extends Model
         return $query->where( 'contract_id', '=', $contract_id );
     }
 
-protected $casts = [
-        'containers' => 'array'
-    ];
+    //protected $casts = [
+    //        'containers' => 'array'
+    //    ];
 }

@@ -342,9 +342,6 @@ Route::prefix('Importation')->group(function () {
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
 
-    // Test
-    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
-
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
