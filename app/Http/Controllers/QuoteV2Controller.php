@@ -2423,8 +2423,9 @@ class QuoteV2Controller extends Controller
         $chargeAPI = 'true';
         $chargeAPI_M = 'false';
         $chargeAPI_SF = 'false';
-        $form['equipment'] = array('20', '40', '40HC');
+        $form['equipment'] = array('1', '2', '3');
         $form['company_id_quote'] = '';
+        $form['mode'] = '1';
 
         return view('quotesv2/search', compact('companies', 'carrierMan', 'hideO', 'hideD', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'form', 'chargeAPI_M', 'contain', 'chargeAPI_SF', 'group_contain'));
     }
@@ -2442,6 +2443,8 @@ class QuoteV2Controller extends Controller
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
+        $group_contain = GroupContainer::pluck('name', 'id');
+        $group_contain->prepend('Select at option', '');
 
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
@@ -3179,7 +3182,7 @@ class QuoteV2Controller extends Controller
         $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
         $chargeAPI_SF = ($chargesAPI_SF != null) ? true : false;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment'));
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers', 'validateEquipment','group_contain','chargeAPI_SF'));
     }
 
     public function perTeu($monto, $calculation_type, $code)
