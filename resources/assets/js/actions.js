@@ -1,3 +1,4 @@
+/* Endpoints API */
 
 export default {
 	contracts: {
@@ -27,6 +28,12 @@ export default {
 	    },
 	    deleteAll(ids){
 	    	return api.call('post', `/api/v2/contracts/destroyAll`, { ids:ids });	
+	    },
+	    getfiles(id){
+	    	return api.call('get', `/api/v2/contracts/${id}/files`, {});
+	    },
+	   	removefile(id, data){
+	    	return api.call('post', `/api/v2/contracts/${id}/removefile`, data);
 	    }
 	},
 	oceanfreights: {

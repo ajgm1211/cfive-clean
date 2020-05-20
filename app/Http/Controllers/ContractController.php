@@ -291,9 +291,8 @@ class ContractController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove all the resource from storage.
      *
-     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
      * @return \Illuminate\Http\Response
      */
     public function destroyAll(Request $request)
@@ -303,6 +302,46 @@ class ContractController extends Controller
         return response()->json(null, 204);
     }
 
+    /**
+     * Remove the specified media resource.
+     *
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function removefile(Request $request, Contract $contract)
+    {
+        $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
+        $media->delete(); 
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * Get all files from the contract model resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getFiles(Request $request, Contract $contract)
+    {
+        $contract_media = $contract->getMedia('document')->map(function ($media, $key){
+            return [
+                'id' => $media->id,
+                'name' => substr($media->name, 14),
+                'size' => $media->size,
+                'type' => $media->mime_type,
+                'url' => $media->getFullUrl()
+            ];
+        }); 
+
+        return response()->json(['data' => $contract_media ]);
+    }
+
+    /**
+     * Store media to an specified model contract.
+     *
+     * @param  use \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
     public function storeMedia(Request $request, Contract $contract)
     {
         $path = storage_path('tmp/uploads');
