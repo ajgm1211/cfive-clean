@@ -52,7 +52,7 @@
 
 						<b-tab title="Files">
 							<files
-								:data="currentData"
+								:actions="actions.contracts"
 							></files>
 						</b-tab>
 
