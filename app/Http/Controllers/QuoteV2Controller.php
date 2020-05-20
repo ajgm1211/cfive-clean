@@ -3015,6 +3015,11 @@ class QuoteV2Controller extends Controller
                                 //Freight
                                 if ($chargesFreight != null) {
                                     if ($global->typedestiny_id == '3') {
+                                        
+                                        $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        $globalParams['typeCurrency'] = $data->currency->alphacode;
+                                        $globalParams['idCurrency'] = $data->currency->id;
+                                        //Fin Variables
                                         $band = false;
                                         foreach ($containers as $cont) {
                                             $name_arreglo = 'array' . $cont->code;
@@ -3023,7 +3028,7 @@ class QuoteV2Controller extends Controller
 
                                                 $montoOrig = $global->ammount;
                                                 $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
-                                                $monto = $global->ammount / $rateMount;
+                                                $monto = $global->ammount / $rateMount_Freight;
                                                 $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
                                                 $monto = number_format($monto, 2, '.', '');
                                                 $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
@@ -3133,7 +3138,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('localdestiny', $collectionDestiny);
                 $data->setAttribute('localorigin', $collectionOrigin);
                 // Valores totales por contenedor
-
+                $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
                 foreach ($containers as $cont) {
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
@@ -3142,6 +3147,7 @@ class QuoteV2Controller extends Controller
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                     $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
+                    $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];
