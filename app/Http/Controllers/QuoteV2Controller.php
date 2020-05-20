@@ -2439,20 +2439,22 @@ class QuoteV2Controller extends Controller
     public function processSearch(Request $request)
     {
 
-    dd($request);
+    
 
         $company_user_id = \Auth::user()->company_user_id;
         $user_id = \Auth::id();
         $container_calculation = ContainerCalculation::get();
         $containers = Container::get();
+        $group_contain = GroupContainer::pluck('name', 'id');
+        $group_contain->prepend('Select at option', '');
 
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight = $request->input('chargeFreight');
-        $chargesAPI = $request->input('chargeAPI');
-        $chargesAPI_M = $request->input('chargeAPI_M');
-        $chargesAPI_SF = $request->input('chargesAPI_SF');
+        $chargesAPI = false; //$request->input('chargeAPI');
+        $chargesAPI_M = false; //$request->input('chargeAPI_M');
+        $chargesAPI_SF =false; // $request->input('chargesAPI_SF');
 
 
         $form = $request->all();
@@ -3171,9 +3173,9 @@ class QuoteV2Controller extends Controller
     $chargeFreight = ($chargesFreight != null) ? true : false;
     $chargeAPI = ($chargesAPI != null) ? true : false;
     $chargeAPI_M = ($chargesAPI_M != null) ? true : false;
-    $chargeAPI_SF =  ($chargesAPI_SF != null) ? true : false;
+    $chargeAPI_SF = false;//  ($chargesAPI_SF != null) ? true : false;
 
-        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers','validateEquipment'));
+        return view('quotesv2/search', compact('arreglo', 'form', 'companies', 'quotes', 'countries', 'harbors', 'prices', 'company_user', 'currencies', 'currency_name', 'incoterm', 'equipmentHides', 'carrierMan', 'hideD', 'hideO', 'airlines', 'chargeOrigin', 'chargeDestination', 'chargeFreight', 'chargeAPI', 'chargeAPI_M', 'contain', 'containers','validateEquipment','group_contain','chargeAPI_SF'));
     }
 
     public function perTeu($monto, $calculation_type, $code)
