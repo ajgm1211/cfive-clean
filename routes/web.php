@@ -42,8 +42,9 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
 
 Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
+    Route::post('store', 'ApiIntegrationController@store')->name('api.store');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
-    Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
+    //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
 
