@@ -48,6 +48,7 @@ class Rate extends Model
         return (new OceanFreightFilter($request, $builder))->filter();
     }
 
+    /* Duplicate Rate Model instance */
     public function duplicate(){
         
         $new_rate = $this->replicate();
