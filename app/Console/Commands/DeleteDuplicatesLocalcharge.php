@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\LocalCharCarrier;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -38,18 +39,30 @@ class DeleteDuplicatesLocalcharge extends Command
      */
     public function handle()
     {
-        try{
-			$duplicates = DB::table('localcharcarriers')
+        try {
+
+            $duplicates = DB::table('localcharcarriers')
                 ->select('carrier_id', 'localcharge_id')
                 ->groupBy('carrier_id', 'localcharge_id')
                 ->havingRaw('COUNT(carrier_id) > ?', [1])
                 ->havingRaw('COUNT(localcharge_id) > ?', [1])
                 ->get();
-                dd(count($duplicates));
-		} catch(\Exception $e){
+
+            foreach ($duplicates as $item) {
+
+                $localcharcarrier = LocalCharCarrier::where([
+                    ['carrier_id', $item->carrier_id],
+                    ['localcharge_id', $item->localcharge_id],
+                ])->delete();
+
+                $localcharcarrier = new LocalCharCarrier();
+                $localcharcarrier->carrier_id = $item->carrier_id;
+                $localcharcarrier->localcharge_id = $item->localcharge_id;
+                $localcharcarrier->save();
+            }
+        } catch (\Exception $e) {
             return $this->info($e->getMessage());
         }
-        $this->info('Command Process Expired Contracts executed successfully!');
+        $this->info('Command to delete duplicated localcharcarriers was executed successfully!');
     }
 }
-
