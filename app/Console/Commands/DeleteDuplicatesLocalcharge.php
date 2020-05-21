@@ -12,7 +12,7 @@ class DeleteDuplicatesLocalcharge extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:DeleteDuplicatesLocalcharge';
 
     /**
      * The console command description.
