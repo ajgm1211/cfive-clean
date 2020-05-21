@@ -9,7 +9,7 @@ var DatatableHtmlTableDemo = function() {
 
         var datatable = $('.m-datatable').mDatatable({
             data: {
-                saveState: {cookie: false},
+                saveState: { cookie: false },
                 pageSize: 5,
 
             },
@@ -35,12 +35,11 @@ var DatatableHtmlTableDemo = function() {
                 items: {
                     // pagination
                     pagination: {
-                        pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+                        pageSizeSelect: [5, 10, 20, 30, 50, 100 /*, -1*/ ] // display dropdown to select pagination size. -1 is used for "ALl" option
                     }
                 }
             },
-            columns: [
-                {
+            columns: [{
                     field: "Name",
                     title: "Name",
                     width: 150,
@@ -74,9 +73,9 @@ var DatatableHtmlTableDemo = function() {
         });
 
 
-        var datatable2 =  $('.m-datatable2').mDatatable({
+        var datatable2 = $('.m-datatable2').mDatatable({
             data: {
-                saveState: {cookie: false},
+                saveState: { cookie: false },
                 pageSize: 5,
 
             },
@@ -101,13 +100,12 @@ var DatatableHtmlTableDemo = function() {
                 items: {
                     // pagination
                     pagination: {
-                        pageSizeSelect: [5, 10, 20, 30, 50, 100/*, -1*/] // display dropdown to select pagination size. -1 is used for "ALl" option
+                        pageSizeSelect: [5, 10, 20, 30, 50, 100 /*, -1*/ ] // display dropdown to select pagination size. -1 is used for "ALl" option
                     }
                 }
             },
 
-            columns: [
-            ],
+            columns: [],
         });
 
         $('#m_form_type').on('change', function() {

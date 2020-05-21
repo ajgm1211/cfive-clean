@@ -8,21 +8,21 @@
 
 <div class="m-content">
     @if(Session::has('message.nivel'))
-    <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show"
-        role="alert">
-        <div class="m-alert__icon">
-            <i class="la la-warning"></i>
+        <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show"
+            role="alert">
+            <div class="m-alert__icon">
+                <i class="la la-warning"></i>
+            </div>
+            <div class="m-alert__text">
+                <strong>
+                    {{ session('message.title') }}
+                </strong>
+                {{ session('message.content') }}
+            </div>
+            <div class="m-alert__close">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
-        <div class="m-alert__text">
-            <strong>
-                {{ session('message.title') }}
-            </strong>
-            {{ session('message.content') }}
-        </div>
-        <div class="m-alert__close">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </div>
     @endif
     
     <div class="m-portlet m-portlet--mobile">
@@ -106,35 +106,52 @@
                 <br>
                 <div class="row">
                     <div class="col-12">
-                        <table class="m-datatable" id="html_table" width="100%">
+                        <table class="m-datatable" width="100%">
                             <thead>
                                 <tr>
                                     <th title="Field #1">
-                                        Name
+                                        <b>Name</b>
                                     </th>
                                     <th title="Field #2">
-                                        URL
+                                       <b>URL</b>
                                     </th>
                                     <th title="Field #3">
-                                        API Key
+                                        <b>API Key</b>
                                     </th>
                                     <th title="Field #4">
-                                        Options
+                                        <b>Associated to</b>
+                                    </th>
+                                    <th title="Field #5">
+                                        <b>Module</b>
+                                    </th>
+                                    <th title="Field #6">
+                                        <b>Options</b>
                                     </th>
 
                                 </tr>
                             </thead>
                             <tbody>
+                                @if(!empty($api->api_integration))
+                                    @foreach($api->api_integration as $item)
+                                        <tr>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->url}}</td>
+                                            <td>{{$item->api_key}}</td>
+                                            <td>{{$item->partner->name}}</td>
+                                            <td>{{$item->module}}</td>
+                                            <td><a href="#"><i class="fa fa-edit"></i></a> &nbsp; <a href="#"><i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+    </div> 
 </div>
-@include('api.add')
+@include('api.add', ['api' => @$api])
 @endsection
 
 @section('js')
