@@ -11,33 +11,24 @@
 
 <div class="m-content">
     <div class="m-portlet m-portlet--mobile">
-        <!--<div class="m-portlet__head">
-<div class="m-portlet__head-caption">
-<div class="m-portlet__head-title">
-<h3 class="m-portlet__head-text">
-Companies List
-</h3>
-</div>
-</div>
-</div>-->
         @if(Session::has('message.nivel'))
-        <div class="col-md-12">
-            <br>
-            <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
-                <div class="m-alert__icon">
-                    <i class="la la-warning"></i>
-                </div>
-                <div class="m-alert__text">
-                    <strong>
-                        {{ session('message.title') }}
-                    </strong>
-                    {{ session('message.content') }}
-                </div>
-                <div class="m-alert__close">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+            <div class="col-md-12">
+                <br>
+                <div class="m-alert m-alert--icon m-alert--outline alert alert-{{ session('message.nivel') }} alert-dismissible fade show" role="alert">
+                    <div class="m-alert__icon">
+                        <i class="la la-warning"></i>
+                    </div>
+                    <div class="m-alert__text">
+                        <strong>
+                            {{ session('message.title') }}
+                        </strong>
+                        {{ session('message.content') }}
+                    </div>
+                    <div class="m-alert__close">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 </div>
             </div>
-        </div>
         @endif
         <div class="m-portlet__body">
             <!--begin: Search Form -->
@@ -94,7 +85,7 @@ Companies List
                                 </span>
                             </a>
                         </div>
-                        @if(@$api->enable==1 && @$api->api_key!='')
+                        @if(!empty($api) && $api->enable==1)
                             @if(@$api->status==0)
                                 <a href="javascript:void(0)" id="syncCompanies" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
                                     <span>

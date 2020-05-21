@@ -15,6 +15,7 @@ $(document).on('change', '#enable_api', function() {
             'company_user_id': $('#company_user_id').val(),
         },
         success: function(data) {
+            $('#api_integration_setting_id').val(data.data.id);
             /*swal(
                 'Updated!',
                 'Api enabled successfully',
