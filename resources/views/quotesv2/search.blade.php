@@ -449,6 +449,9 @@
         margin-bottom: 0px;
         overflow-y: scroll;
     }
+    .list-types-carriers {
+        height: auto !important;
+    }
         /* width */
     .c5-select-list::-webkit-scrollbar {
         width: 8px;
@@ -638,8 +641,11 @@
     .border-select {
         border-color: #716aca;
     }
-    .select2-selection {
+    .select2-selection, .pac-target-input {
         background-color: #f6f6f6 !important;
+    }
+    .hida {
+        display: none;
     }
   /* estilos */
 </style>
@@ -668,7 +674,8 @@
               </div>
               <div class="col-lg-2" id="equipment_id">
                 <label>Equipment</label>
-                {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
+                {{ Form::select('equipment[]',$contain,@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }}
+                <!-- {{ Form::select('equipment[]',array('Types' => $group_contain, 'Equipment List' => $contain),@$form['equipment'],['class'=>'c5-select-multiple select-group','id'=>'equipment','multiple' => 'multiple','required' => 'true', 'select-type' => 'groupLabel']) }} -->
               </div>
               <div class="col-lg-2">
                 <label>Company</label>
@@ -723,6 +730,10 @@
                 </div>
 
               </div>
+              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
+                <label>Origin address</label>
+                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
+              </div>
               <div class="col-lg-4" id="destination_port">
                 <div  id="destination_harbor_label">
                   <label>Destination port</label>
@@ -737,10 +748,7 @@
                 <label>Destination address</label>
                 {!! Form::text('destination_address',@$form['destination_address'] , ['placeholder' => 'Please enter a destination address','class' => 'form-control m-input','id'=>'destination_address']) !!}
               </div>
-              <div class="col-lg-2 {{$hideO}}" id="origin_address_label">
-                <label>Origin address</label>
-                {!! Form::text('origin_address',@$form['origin_address'], ['placeholder' => 'Please enter a origin address','class' => 'form-control m-input','id'=>'origin_address']) !!}
-              </div>
+             
               <div class="col-lg-2">
                 <label>Date</label>
                 <div class="input-group date">
@@ -765,19 +773,18 @@
               </div>
 
             
-              <div class="col-lg-2 for-check">   
+              <div class="col-lg-4 for-check">   
                 {{ Form::checkbox('chargeOrigin',null,@$chargeOrigin,['id'=>'mode1', 'class' => 'include-checkbox']) }}
                 <label for="mode1" class="label-check">Include origin charges</label>
               </div>
-              <div class="col-lg-2 for-check">
+              <div class="col-lg-4 for-check">
                 {{ Form::checkbox('chargeDestination',null,@$chargeDestination,['id'=>'mode2', 'class' => 'include-checkbox']) }}
                 <label for="mode2" class="label-check">Include destination charges</label>
               </div>
-
-              <div class="col-lg-2 for-check">
+              <!-- <div class="col-lg-2 for-check">
                 {{ Form::checkbox('chargeFreight',null,@$chargeFreight,['id'=>'mode3', 'class' => 'include-checkbox']) }}
                 <label for="mode3" class="label-check">Include freight charges</label>
-              </div>
+              </div> -->
             </div>
             <div class="row">
                <!--VEEEEEEEEEEER AQUIIIIIIIIIIIIIIIIIIII -->
@@ -1803,7 +1810,7 @@
                                 '</span>'+
                                 '<span class="c5-select-multiple-container '+clickOnID+'">'+
                                     '<span class="c5-select-header">Types</span>'+
-                                    '<ul class="c5-select-list">'+
+                                    '<ul class="c5-select-list list-types-carriers">'+
                                         '<li class="c5-case"><label class="c5-label">CMA CGM Spot'+
                                             '<input id="mode4" type="checkbox" class="c5-check" value="CMA">'+
                                             '<span class="checkmark"></span></label></li>'+
@@ -1830,6 +1837,9 @@
 
             var multiSelectGroup = '<span class="c5-select-multiple-dropdown '+clickOnID+'">'+
                                     '<ul class="c5-select-dropdown-list select-list">'+
+                                        '<li title="20DV">20DV, </li>'+
+                                        '<li title="40DV">40DV, </li>'+
+                                        '<li title="40HC">40HC, </li>'+
                                         '<li class="hida">Select an option</li>'+
                                     '</ul>'+
                                     '</span>'+
@@ -1842,10 +1852,11 @@
                                     '<span class="c5-select-header h-hidden">Equipment List</span>'+
                                     '<ul class="c5-select-list list-group2"></ul>'+
                                     '</span>';            
-
+           
             // Select Multiple con swicth
             if(selectType == 'multiple'){
                 $(this).after(multiSelect);
+                
                 $(optionSelect).each(function(){
                     var list = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
                                 '<input type="checkbox" title="'+$(this).text()+
@@ -1924,26 +1935,28 @@
                 $('.select-normal .c5-case:nth-child(2)').remove();
                 $('.select-normal .c5-case:nth-child(1)').remove();
             }
-
             // Select Multiple con Lables
             if(selectType == 'groupLabel'){
                 $(this).after(multiSelectGroup);
-                var nameOption1 = $('#'+clickOnID+' optgroup:nth-child(1) option');
+                var showEquip = $('.select-list li.hida');
+                var data = '{{$group_contain}}';
+                var newData = JSON.parse(data.replace(/&quot;/g,'"'));                
+                var defaultValues = $('#'+clickOnID+'').val();
+                for (var i in newData) {
+                    var code = `${newData[i]}`;
+                    //console.log(i, code);
+                    var list2 = '<li class="c5-case"><label class="c5-label">'+code+
+                                    '<input type="radio" name="container_type" onclick="getContainerByGroup('+i+')" class="c5-check" title="'+code+'" value="'+i+
+                                    '"><span class="checkmark"></span></label></li>';
+                    $('.list-group1').append(list2);
+                }
 
-                $(nameOption1).each(function(){
-                    var list1 = '<li class="c5-case"><label class="c5-label">'+$(this).text()+
-                                '<input type="radio" name="container_type" onclick="getContainerByGroup('+$(this).val()+')" class="c5-check"'+
-                                '"><span class="checkmark"></span></label></li>';
-                    $('.list-group1').append(list1);
-                    
-                });
-
+                $('.list-group1 .c5-case:nth-child(1) input').attr('checked', true);
             }
-           
+
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
-            
             });
 
             $('.select2').on('click', function(){
@@ -1966,9 +1979,7 @@
             'id_group' : id_group            
         },
         success: function(data) {
-            var nameOption1 = $('#equipment optgroup:nth-child(1) option');
             //console.log(data);
-            $(nameOption1).val('');
             $('.h-hidden').css({'display':'block'});
             $('.list-group2 li').remove();
             for (const equip in data) {
@@ -1978,13 +1989,24 @@
                                 '<input type="checkbox" class="c5-check" title="'+code+'" value="'+idEquip+
                                 '"><span class="checkmark"></span></label></li>';
                 $('.list-group2').append(list2);
-                
+            }
+
+            if(id_group == 1){
+                var defaultValues = ['1','2','3'];
+                for(var i in defaultValues){
+                    var value = `${defaultValues[i]}`;
+                    $('.list-group2 .c5-case:nth-child('+value+') input').attr('checked', true);
+                }
+                $('#equipment.select-group').val(defaultValues);
+                $(".select-list .hida").hide();
+                $('.equipment .select-list').append('<li title="20DV">20DV, </li><li title="40DV">40DV, </li><li title="40HC">40HC, </li>');
+            } else if((id_group == 2) || (id_group == 3) || (id_group == 4)){
+                $('.equipment .select-list').html('');
             }
 
             $('.equipment .list-group2 .c5-check').on("click", function() {
                     var valueEquipment = [];                    
                     var title = $(this).attr('title');
-
                     $('.equipment .list-group2 .c5-check').each(function() {
                         if (this.checked) {
                             valueEquipment.push($(this).val());
@@ -1994,10 +2016,11 @@
                     $('#equipment.select-group').val(valueEquipment);
                     /*var valor2 = $('#equipment.select-group').val();
                     console.log(valor2);*/
-                    
+
                     var countEquip = valueEquipment.length;
+                    
                     if ($(this).is(':checked')) {
-                        var html = '<li title="' + title + '">' + title + ', </li>';
+                        var html = '<li title="' + title + '">' + title + ', </li>';                    
                         $('.equipment .select-list').append(html);
                         $(".select-list .hida").hide();
                     } else {
