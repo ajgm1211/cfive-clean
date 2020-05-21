@@ -22,24 +22,24 @@
             <div class="modal-body">
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Name</b></label>
-                    {{ Form::text('name', null,['placeholder' => 'Please enter a name','class'=>'form-control']) }}
+                    {{ Form::text('name', null,['placeholder' => 'Please enter a name','class'=>'form-control','required']) }}
                     {{ Form::hidden('api_integration_setting_id', @$api->id,['placeholder' => 'Please enter a name','class'=>'form-control','id'=>'api_integration_setting_id']) }}
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>URL</b></label>
-                    {{ Form::text('url', null,['placeholder' => 'Please enter an URL','class'=>'form-control']) }}
+                    {{ Form::text('url', null,['placeholder' => 'Please enter an URL','class'=>'form-control','required']) }}
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>API Key</b></label>
-                    {{ Form::text('api_key', null,['placeholder' => 'Please enter an API Key','class'=>'form-control']) }}
+                    {{ Form::text('api_key', null,['placeholder' => 'Please enter an API Key','class'=>'form-control','required']) }}
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Associated to</b></label>
-                    {!! Form::select('partner_id', $partners, null, ['placeholder'=>'Select an option','class' => 'form-control']) !!}
+                    {!! Form::select('partner_id', $partners, null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
                 </div>
                 <div class="form-group m-form__group">
                     <label style="letter-spacing: 0.7px"><b>Module</b></label>
-                    {!! Form::select('module', ['Contacts','Companies'], null, ['placeholder'=>'Select an option','class' => 'form-control']) !!}
+                    {!! Form::select('module', ['Contacts','Companies'], null, ['placeholder'=>'Select an option','class' => 'form-control','required']) !!}
                 </div>
                 <br>
                 <hr>
