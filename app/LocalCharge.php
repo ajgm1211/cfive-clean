@@ -157,6 +157,7 @@ class LocalCharge extends Model
 		}
 	}
 
+	/* Duplicate LocalCharge Model instance with relations */
 	public function duplicate($contract_id = null){
 		
 		$new_localcharge = $this->replicate();
