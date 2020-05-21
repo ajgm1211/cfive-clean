@@ -1998,7 +1998,7 @@
                     $('.list-group2 .c5-case:nth-child('+value+') input').attr('checked', true);
                 }
                 $('#equipment.select-group').val(defaultValues);
-                $(".select-list .hida").hide();
+                $('.equipment .select-list').html('');
                 $('.equipment .select-list').append('<li title="20DV">20DV, </li><li title="40DV">40DV, </li><li title="40HC">40HC, </li>');
             } else if((id_group == 2) || (id_group == 3) || (id_group == 4)){
                 $('.equipment .select-list').html('');
