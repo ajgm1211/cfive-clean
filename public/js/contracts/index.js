@@ -93654,6 +93654,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -93675,7 +93677,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return {};
             }
         },
-        actions: Object
+        actions: Object,
+        firstEmpty: {
+            type: Boolean,
+            required: false,
+            default: true
+        }
     },
     components: {
         Multiselect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default.a,
@@ -94108,6 +94115,8 @@ var render = function() {
                     ? _c(
                         "b-tr",
                         [
+                          _vm.firstEmpty ? _c("b-td") : _vm._e(),
+                          _vm._v(" "),
                           _vm._l(_vm.inputFields, function(item, key) {
                             return _c(
                               "b-td",
