@@ -32,7 +32,11 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         $company_user_id = \Auth::user()->company_user_id;
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)
+            ->whereHas('api_integration', function ($query) {
+                $query->where('module', 'Companies');
+            })->first();
+
         $user_id = \Auth::user()->id;
         $users = User::where('company_user_id', \Auth::user()->company_user_id)->where('id', '!=', \Auth::user()->id)->where('type', '!=', 'company')->pluck('name', 'id');
 
@@ -72,7 +76,7 @@ class CompanyController extends Controller
         $prices = Price::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
         return view('companies.add', compact('prices', 'users'));
     }
-    
+
     /**
      * addOwner
      *
@@ -84,7 +88,7 @@ class CompanyController extends Controller
 
         return view('companies.addOwner', compact('users'));
     }
-    
+
     /**
      * addWithModal
      *
@@ -107,7 +111,7 @@ class CompanyController extends Controller
 
         return view('companies.addwithmodal', compact('prices', 'users'));
     }
-    
+
     /**
      * show
      *
@@ -146,7 +150,7 @@ class CompanyController extends Controller
 
         return view('companies.show', compact('company', 'companies', 'contacts', 'quotes', 'users', 'prices'));
     }
-    
+
     /**
      * store
      *
@@ -226,7 +230,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Register completed successfully!');
         return redirect()->route('companies.index');
     }
-    
+
     /**
      * storeOwner
      *
@@ -254,7 +258,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Owner added successfully!');
         return redirect()->back();
     }
-    
+
     /**
      * deleteOwner
      *
@@ -272,7 +276,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Owner deleted successfully!');
         return redirect()->back();
     }
-    
+
     /**
      * edit
      *
@@ -288,7 +292,7 @@ class CompanyController extends Controller
         $prices = Price::where('company_user_id', \Auth::user()->company_user_id)->pluck('name', 'id');
         return view('companies.edit', compact('company', 'prices', 'users'));
     }
-    
+
     /**
      * update
      *
@@ -369,7 +373,7 @@ class CompanyController extends Controller
             return redirect()->back();
         }
     }
-    
+
     /**
      * delete
      *
@@ -386,7 +390,7 @@ class CompanyController extends Controller
 
         return response()->json(['message' => 'Ok']);
     }
-    
+
     /**
      * destroy
      *
@@ -415,7 +419,7 @@ class CompanyController extends Controller
             return response()->json(['message' => $e]);
         }
     }
-    
+
     /**
      * getCompanyPrice
      *
@@ -430,7 +434,7 @@ class CompanyController extends Controller
 
         return $prices;
     }
-    
+
     /**
      * getCompanyContact
      *
@@ -443,7 +447,7 @@ class CompanyController extends Controller
 
         return $contacts;
     }
-    
+
     /**
      * updatePaymentConditions
      *
@@ -462,7 +466,7 @@ class CompanyController extends Controller
         $request->session()->flash('message.content', 'Register updated successfully!');
         return redirect()->back();
     }
-    
+
     /**
      * getCompanies
      *
@@ -482,7 +486,7 @@ class CompanyController extends Controller
 
         return $companies;
     }
-    
+
     /**
      * updateName
      *
@@ -498,7 +502,7 @@ class CompanyController extends Controller
 
         return response()->json(['business_name' => $request->business_name]);
     }
-    
+
     /**
      * updatePhone
      *
@@ -514,7 +518,7 @@ class CompanyController extends Controller
 
         return response()->json(['phone' => $request->phone]);
     }
-    
+
     /**
      * updateAddress
      *
@@ -530,7 +534,7 @@ class CompanyController extends Controller
 
         return response()->json(['address' => $request->address]);
     }
-    
+
     /**
      * updateEmail
      *
@@ -546,7 +550,7 @@ class CompanyController extends Controller
 
         return response()->json(['address' => $request->email]);
     }
-    
+
     /**
      * updateTaxNumber
      *
@@ -562,7 +566,7 @@ class CompanyController extends Controller
 
         return response()->json(['tax_number' => $request->tax_number]);
     }
-    
+
     /**
      * updatePdfLanguage
      *
@@ -578,7 +582,7 @@ class CompanyController extends Controller
 
         return response()->json(['pdf_language' => $request->pdf_language]);
     }
-    
+
     /**
      * updatePriceLevels
      *
@@ -606,7 +610,7 @@ class CompanyController extends Controller
 
         return $prices;
     }
-    
+
     /**
      * apiCompanies
      *
