@@ -80,7 +80,7 @@ class OceanFreightController extends Controller
             }
         }
 
-        $prepared_data['containers'] = $containers;
+        $prepared_data['containers'] = json_encode($containers);
 
         return $prepared_data;
     }
