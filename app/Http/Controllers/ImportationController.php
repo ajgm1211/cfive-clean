@@ -1789,10 +1789,14 @@ class ImportationController extends Controller
         }
 
         foreach($carrierVarArr as $carrierVar){
-            LocalCharCarrier::create([
-                'carrier_id'        => $carrierVar,
-                'localcharge_id'    => $SurchargeId->id  
-            ]);
+            $localcharcarriersV = null;
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id',$carrierVar)->where('localcharge_id',$SurchargeId->id)->get();
+            if(count($localcharcarriersV) == 0){
+                LocalCharCarrier::create([
+                    'carrier_id'        => $carrierVar,
+                    'localcharge_id'    => $SurchargeId->id  
+                ]);
+            }
         }
         $failSurcharge->forceDelete();
         $request->session()->flash('message.content', 'Surcharge Updated' );
@@ -3048,8 +3052,8 @@ class ImportationController extends Controller
 
         TestJob::dispatch()->onQueue('operaciones');
         dd($containerRates);
-        
-        
+
+
     }
 
 }
