@@ -71,7 +71,7 @@
                 /* Table headers */
                 fields: [
                     { key: 'name', label: 'Reference' }, 
-                    { key: 'status', label: 'Status', formatter: value => { return '<span class="status-st '+value+'"></span>' } },
+                    { key: 'status', label: 'Status', formatter: value => { return `<span class="status-st ${value}"></span>` } },
                     { key: 'validity', label: 'Valid From' }, 
                     { key: 'expire', label: 'Valid Until' }, 
                     { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
