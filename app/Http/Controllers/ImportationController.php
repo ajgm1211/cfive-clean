@@ -1833,10 +1833,14 @@ class ImportationController extends Controller
 
         LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
         foreach($carrierVarArr as $carrierVar){
-            LocalCharCarrier::create([
-                'carrier_id'        => $carrierVar,
-                'localcharge_id'    => $SurchargeId->id  
-            ]); //
+            $localcharcarriersV = null;
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id',$carrierVar)->where('localcharge_id',$SurchargeId->id)->get();
+            if(count($localcharcarriersV) == 0){
+                LocalCharCarrier::create([
+                    'carrier_id'        => $carrierVar,
+                    'localcharge_id'    => $SurchargeId->id  
+                ]); //
+            }
         }
 
         if($typerate == 'port'){
