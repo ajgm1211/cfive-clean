@@ -2448,7 +2448,7 @@ class QuoteV2Controller extends Controller
         //Variables para cargar el  Formulario
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
-        $chargesFreight = $request->input('chargeFreight');
+        $chargesFreight ='true';
 
 
         $form = $request->all();
