@@ -2828,7 +2828,7 @@ class QuoteV2Controller extends Controller
                             //Origin
                             if ($chargesOrigin != null) {
                                 if ($local->typedestiny_id == '1') {
-
+                                    $band = false;
                                     foreach ($containers as $cont) {
                                         $name_arreglo = 'array' . $cont->code;
                                         if (in_array($local->calculationtype_id, $$name_arreglo) && in_array($cont->id, $equipmentFilter)) {
@@ -2843,22 +2843,24 @@ class QuoteV2Controller extends Controller
                                             $arregloOrigin = array_merge($arregloOrigin, $markupGe);
                                             $collectionOrigin->push($arregloOrigin);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_O'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
-
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloOrigin = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloOrigin = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionOrigin->push($arregloOrigin);
                                     }
-                                    $collectionOrigin->push($arregloOrigin);
                                 }
                             }
                             //Destiny
                             if ($chargesDestination != null) {
                                 if ($local->typedestiny_id == '2') {
-
+                                    $band = false;
                                     foreach ($containers as $cont) {
 
                                         $name_arreglo = 'array' . $cont->code;
@@ -2874,21 +2876,25 @@ class QuoteV2Controller extends Controller
                                             $arregloDestiny = array_merge($arregloDestiny, $markupGe);
                                             $collectionDestiny->push($arregloDestiny);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloDestiny = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloDestiny = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionDestiny->push($arregloDestiny);
                                     }
-                                    $collectionDestiny->push($arregloDestiny);
                                 }
                             }
                             //Freight
                             if ($chargesFreight != null) {
                                 if ($local->typedestiny_id == '3') {
-
+                                    $band = false;
                                     //Se ajusta el calculo para freight tomando en cuenta el rate currency
                                     $rateMount_Freight = $this->ratesCurrency($local->currency->id, $data->currency->alphacode);
                                     $localParams['typeCurrency'] = $data->currency->alphacode;
@@ -2910,16 +2916,21 @@ class QuoteV2Controller extends Controller
                                             $arregloFreight = array_merge($arregloFreight, $markupGe);
                                             $collectionFreight->push($arregloFreight);
                                             $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] += $markupGe['montoMarkup'];
+                                            $band = true;
                                         }
                                     }
 
-                                    if (in_array($local->calculationtype_id, $arrayContainers)) {
-                                        $valores = $this->asociarPerCont($local->calculationtype_id);
-                                        $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
-                                    } else {
-                                        $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                    if($band){
+                                        if (in_array($local->calculationtype_id, $arrayContainers)) {
+                                            $valores = $this->asociarPerCont($local->calculationtype_id);
+                                            $arregloFreight = $this->ChargesArray99($localParams, $valores['id'], $valores['name']);
+                                        } else {
+                                            $arregloFreight = $this->ChargesArray99($localParams, $local->calculationtype->id, $local->calculationtype->name);
+                                        }
+                                        $collectionFreight->push($arregloFreight);
+
                                     }
-                                    $collectionFreight->push($arregloFreight);
+                                 
                                 }
                             }
                         }
