@@ -29,6 +29,7 @@ use App\Failcompany;
 use App\LocalCharge;
 use App\TypeDestiny;
 use App\CompanyUser;
+use App\Jobs\TestJob;
 use App\ScheduleType;
 use App\Failedcontact;
 use App\LocalCharPort;
@@ -1225,7 +1226,7 @@ class ImportationController extends Controller
         $originA = null;
         if(count($originA) <= 1){
             $originA    = $originOb['name'];
-            $originAIn = $originOb->id;
+            $originAIn = $originOb['id'];
         } else{
             $originA = $originA[0].' (error)';
             $classdorigin='red';
@@ -1235,7 +1236,7 @@ class ImportationController extends Controller
             ->first();
         $destinationAIn = null;
         if(count($destinationA) <= 1){
-            $destinationAIn = $destinationOb->id;
+            $destinationAIn = $destinationOb['id'];
             $destinationA   = $destinationOb['name'];
         } else{
             $destinationA      = $destinationA[0].' (error)';
@@ -1788,10 +1789,14 @@ class ImportationController extends Controller
         }
 
         foreach($carrierVarArr as $carrierVar){
-            LocalCharCarrier::create([
-                'carrier_id'        => $carrierVar,
-                'localcharge_id'    => $SurchargeId->id  
-            ]);
+            $localcharcarriersV = null;
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id',$carrierVar)->where('localcharge_id',$SurchargeId->id)->get();
+            if(count($localcharcarriersV) == 0){
+                LocalCharCarrier::create([
+                    'carrier_id'        => $carrierVar,
+                    'localcharge_id'    => $SurchargeId->id  
+                ]);
+            }
         }
         $failSurcharge->forceDelete();
         $request->session()->flash('message.content', 'Surcharge Updated' );
@@ -1828,10 +1833,14 @@ class ImportationController extends Controller
 
         LocalCharCarrier::where('localcharge_id','=',$SurchargeId->id)->forceDelete();
         foreach($carrierVarArr as $carrierVar){
-            LocalCharCarrier::create([
-                'carrier_id'        => $carrierVar,
-                'localcharge_id'    => $SurchargeId->id  
-            ]); //
+            $localcharcarriersV = null;
+            $localcharcarriersV = LocalCharCarrier::where('carrier_id',$carrierVar)->where('localcharge_id',$SurchargeId->id)->get();
+            if(count($localcharcarriersV) == 0){
+                LocalCharCarrier::create([
+                    'carrier_id'        => $carrierVar,
+                    'localcharge_id'    => $SurchargeId->id  
+                ]); //
+            }
         }
 
         if($typerate == 'port'){
@@ -3027,44 +3036,27 @@ class ImportationController extends Controller
 
     // Solo Para Testear ----------------------------------------------------------------
     public function testExcelImportation(){
+        $ratesCh = Rate::where('containers','!=','null')->where('containers','!=',"[]")->get()->chunk(200);
+        $containerRates = [];
+        foreach($ratesCh as $rates){
+            foreach($rates as $rate){
+                if(is_string($rate->containers)){
+                    $containers = json_decode($rate->containers,true);
+                    if(is_string($containers)){
+                        $containerRates[$rate->id] = $containers;
+                        $rate->containers = $containers;
+                    } else {
+                        $rate->containers = json_encode($containers);
+                        $containerRates[$rate->id] = json_encode($containers);;
+                    }
+                    //$rate->update();
+                }
+            }
+        }
 
-        //account 29
-        //contracto 45
-        //request 13
-        $account = AccountFcl::find(29);
+        TestJob::dispatch()->onQueue('operaciones');
+        dd($containerRates);
 
-        //                $mediaItem  = $account->getFirstMedia('document');
-        //                $excel      = Storage::disk('FclAccount')->get($mediaItem->id.'/'.$mediaItem->file_name);
-        //                Storage::disk('FclImport')->put($mediaItem->file_name,$excel);
-        //                $excelF     = Storage::disk('FclImport')->url($mediaItem->file_name);
-
-        //$extObj     = new \SplFileInfo($mediaItem->file_name);
-        //$ext        = $extObj->getExtension();
-        //        $ext        = 'xlsx';
-        //        if(strnatcasecmp($ext,'xlsx')==0){
-        //            $inputFileType = 'Xlsx';
-        //        } else if(strnatcasecmp($ext,'xls')==0){
-        //            $inputFileType = 'Xls';
-        //        } else {
-        //            $inputFileType = 'Csv';
-        //        }
-        //
-        //        $myacl =  new MyReadFilter(1,5);
-        //        $reader = IOFactory::createReader($inputFileType);
-        //$reader->setReadDataOnly(true);
-        //$reader->setReadFilter($myacl);
-        //$spreadsheet = $reader->load($excelF);
-        //        $sheetData = $spreadsheet->getActiveSheet()->toArray();
-        //        //$sheetData = $spreadsheet->getActiveSheet()->toArray(null,true,true,true);
-        //        dd($sheetData);
-        //        dd($sheetData[1]['Receipt']);
-
-        $resp = NewContractRequest::find(9);
-        //$name = json_decode($resp->data,true);
-        //dd($name['group_containers']['name']);
-        $groupContainers = GroupContainer::all();
-        $data = $groupContainers->firstWhere('id', 1);
-        dd(json_decode(null,true),$data);
 
     }
 
