@@ -1953,7 +1953,7 @@
 
                 $('.list-group1 .c5-case:nth-child(1) input').attr('checked', true);
             }
-
+//conment
             $('.c5-select-multiple-dropdown.'+clickOnID+'').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
