@@ -1974,6 +1974,7 @@
    function getContainerByGroup(id_group){
         $.ajax({
         type: 'GET',
+        dataType: 'json',
         url: '/Container/getContainer/',
         data: {
             'id_group' : id_group            
