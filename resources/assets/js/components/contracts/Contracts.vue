@@ -51,7 +51,9 @@
 						</b-tab>
 
 						<b-tab title="Files">
-							<!--<files></files>-->
+							<files
+								:data="currentData"
+							></files>
 						</b-tab>
 
 					</b-tabs>

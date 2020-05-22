@@ -28,11 +28,11 @@
                     </a>
                 @endif
             </li>
-            <li class="nav-item m-tabs__item" >
+            <!--<li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.cost.page',setearRouteKey($quote->id))}}">
                     Excel &nbsp;&nbsp;<i class="fa fa-file-excel-o"></i>
                 </a>
-            </li>
+            </li>-->
             <li class="nav-item m-tabs__item" >
                 <a class="btn btn-primary-v2" href="{{route('quotes-v2.duplicate',setearRouteKey($quote->id))}}">
                     Duplicate &nbsp;&nbsp;<i class="fa fa-plus"></i>
@@ -90,8 +90,8 @@
                         <div class="col-md-4">
                             <br>
                             <label class="title-quote"><b>Status:&nbsp;&nbsp;</b></label>
-                            {{ Form::select('status',['Draft'=>'Draft','Win'=>'Win','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
-                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status}} <i class="fa fa-check"></i></span>
+                            {{ Form::select('status',['Draft'=>'Draft','Winner'=>'Winner','Sent'=>'Sent'],$quote->status,['class'=>'form-control status select2','hidden','']) }}
+                            <span class="status_span Status_{{$quote->status}}" style="border-radius: 10px;">{{$quote->status!='' ? $quote->status:'Winner' }} <i class="fa fa-check"></i></span>
                         </div>
                         @if($quote->type!='AIR')
                         <div class="col-md-4">
