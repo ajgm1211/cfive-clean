@@ -3119,18 +3119,26 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('remarksG', $remarksGeneral);
 
                 // EXCEL REQUEST
-                $excelRequestFCL = ContractFclFile::where('contract_id', $data->contract->id)->first();
-                if (!empty($excelRequestFCL)) {
-                    $excelRequestIdFCL = $excelRequestFCL->id;
-                } else {
-                    $excelRequestIdFCL = '0';
-                }
+                $excelRequestFCL = 0;
+                $excelRequest = 0;   
+                $excelRequestIdFCL = 0;
+                $excelRequestId = 0;
+                
+                if ($data->contract->status != 'api') {
 
-                $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
-                if (!empty($excelRequest)) {
-                    $excelRequestId = $excelRequest->id;
-                } else {
-                    $excelRequestId = "0";
+                    $excelRequestFCL = ContractFclFile::where('contract_id', $data->contract->id)->first();
+                    if (!empty($excelRequestFCL)) {
+                        $excelRequestIdFCL = $excelRequestFCL->id;
+                    } else {
+                        $excelRequestIdFCL = '0';
+                    }
+
+                    $excelRequest = NewContractRequest::where('contract_id', $data->contract->id)->first();
+                    if (!empty($excelRequest)) {
+                        $excelRequestId = $excelRequest->id;
+                    } else {
+                        $excelRequestId = "0";
+                    }
                 }
 
                 $idContract = 0;
