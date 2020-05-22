@@ -35,7 +35,7 @@ class Rate extends Model
     public function currency(){
         return $this->belongsTo('App\Currency');
     }
-    
+
     public function scheduletype(){
         return $this->belongsTo('App\ScheduleType','schedule_type_id');
     }
@@ -53,7 +53,7 @@ class Rate extends Model
     }
 
     public function duplicate(){
-        
+
         $new_rate = $this->replicate();
         $new_rate->save();
 
