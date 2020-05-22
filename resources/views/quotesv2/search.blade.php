@@ -1958,7 +1958,6 @@
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
-            //Comentatio
 
             $('.select2').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').css({'display':'none'});
@@ -1976,7 +1975,7 @@
         $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'https://equipments.cargofive.com/Container/getContainer/',
+        url: '/Container/getContainer/',
         data: {
             'id_group' : id_group            
         },
