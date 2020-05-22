@@ -1958,6 +1958,7 @@
                 $('.c5-select-multiple-container.'+clickOnID+'').toggle();
                 $('.'+clickOnID+' .c5-select-dropdown-list').css({'border-color':'#716aca'});
             });
+            //Comentatio
 
             $('.select2').on('click', function(){
                 $('.c5-select-multiple-container.'+clickOnID+'').css({'display':'none'});
