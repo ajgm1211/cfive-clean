@@ -343,9 +343,6 @@ Route::prefix('Importation')->group(function () {
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
 
-    // Test
-    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
-
 });
 //New Request Importation Lcl
 Route::prefix('RequestsLcl')->group(function () {
@@ -997,6 +994,7 @@ Route::group(['prefix' => 'RequestFcl','middleware' => 'auth'],function(){
 Route::prefix('ContainerCalculation')->group(function () {
     Route::resource('ContainerCalculation','ContainerCalculationController')->middleware(['role:administrator|data_entry']);
     route::get('AddCCalculationT','ContainerCalculationController@loadBodymodalAdd')->name('add.conatiner.calculation')->middleware(['role:administrator|data_entry']);
+   
 });
 
 Route::prefix('CalculationType')->group(function () {
@@ -1006,6 +1004,7 @@ Route::prefix('CalculationType')->group(function () {
 
 Route::prefix('Container')->group(function () {
     Route::resource('Container','ContainerController')->middleware(['role:administrator|data_entry']);
+    route::get('getContainer','ContainerController@getContainerByGroup')->name('container.get');
 });
 
 /** Contracts V2 view routes **/
@@ -1028,6 +1027,9 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('{contract}/duplicate', 'ContractController@duplicate');
     Route::delete('{contract}/destroy', 'ContractController@destroy');
     Route::post('destroyAll', 'ContractController@destroyAll');
+    Route::get('{contract}/files', 'ContractController@getFiles');
+    Route::post('{contract}/removefile', 'ContractController@removefile');
+    
     /** End Contracts endpoint (Pending to check) **/
 
     /** API Contracts Ocean Freights EndPoints **/

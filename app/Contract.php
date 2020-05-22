@@ -205,6 +205,7 @@ class Contract extends Model implements HasMedia, Auditable
 		return $this->gpContainer->isFlatRack();
 	}
 
+	/* Duplicate Contract Model instance with relations */
 	public function duplicate(){
 		
 		$new_contract = $this->replicate();
@@ -219,7 +220,7 @@ class Contract extends Model implements HasMedia, Auditable
 
 		    	if($relationRecord instanceof \App\LocalCharge)
 		    		$relationRecord->duplicate($new_contract->id);
-		   		else{
+		   		else {
 		   			$newRelationship = $relationRecord->replicate();
 		        	$newRelationship->contract_id = $new_contract->id;
 		        	$newRelationship->save();
