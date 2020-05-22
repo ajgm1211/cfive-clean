@@ -80,10 +80,10 @@
                 /* Table headers */
                 fields: [
                     { key: 'surcharge', label: 'Type', formatter: (value)=> { return value.name } }, 
-                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badgeports(value) } }, 
-                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badgeports(value) } }, 
+                    { key: 'origin', label: 'Origin Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
+                    { key: 'destination', label: 'Destination Port', formatter: (value)=> { return this.badges(value, 'warning') } }, 
                     { key: 'destination_type', label: 'Change Type', formatter: (value)=> { return value.description } }, 
-                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badgecarriers(value) } }, 
+                    { key: 'carriers', label: 'Carrier', formatter: (value)=> { return this.badges(value) } }, 
                     { key: 'calculation_type', label: 'Calculation Type', formatter: (value)=> { return value.name } }, 
                     { key: 'amount', label: 'Amount' }, 
                     { key: 'currency', label: 'Currency', formatter: (value)=> { return value.alphacode } },
@@ -118,12 +118,12 @@
                 this.$bvModal.hide(modal);
             },
 
-            badgecarriers(value){
+            badges(value, color='primary'){
                 let carriers = "";
 
                 if(value){
                     value.forEach(function(val){
-                        carriers += "<span class='badge badge-primary'>"+val.name+"</span> ";
+                        carriers += `<span class='badge badge-${color}'>${val.name}</span>`;
                     });
 
                     return carriers;
@@ -131,21 +131,7 @@
                     return '-';
                 }
 
-            },
-            badgeports(value){
-                let carriers = "";
-
-                if(value){
-                    value.forEach(function(val){
-                        carriers += "<span class='badge badge-warning'>"+val.name+"</span> ";
-                    });
-
-                    return carriers;
-                } else {
-                    return '-';
-                }
-
-            },
+            }
             
         }
     }

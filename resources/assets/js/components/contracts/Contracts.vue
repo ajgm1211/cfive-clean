@@ -4,7 +4,7 @@
 			<div class="col-12">
 
 				<!-- Form Contract Inline -->
-				<FormInlineView
+				<FormInlineView v-if="freight"
 		            :data="currentData" 
 		            :fields="form_fields"
 		            :datalists="datalists"
@@ -29,6 +29,7 @@
 
 						<b-tab title="Surcharges">
 							<surcharges
+									v-if="freight"
 								  :datalists="datalists"
 								  :actions="actions.surcharges"
 								  >
@@ -52,7 +53,7 @@
 
 						<b-tab title="Files">
 							<files
-								:data="currentData"
+								:actions="actions.contracts"
 							></files>
 						</b-tab>
 
@@ -94,22 +95,6 @@
 				loaded: false,
 				currentData: {
 					daterange: { startDate: null, endDate: null }
-				},
-				
-				/* Dropdown Lists */
-				datalists: {
-				  'carriers': [],
-				  'equipments': [],
-				  'directions': [],
-				  'containers': [],
-				  'harbors': [],
-				  'currencies': [],
-				  'surcharges': [],
-				  'route_types': [],
-				  'destination_types': [],
-				  'calculation_types': [],
-				  'companies': [],
-				  'users': []
 				},
 
 				/* Form Inline Fields */
@@ -197,22 +182,6 @@
 						{ id: 'port', name: 'Port', vselected: 'harbors' }, 
 						{ id: 'country', name: 'Country', vselected: 'countries' }
 					];
-
-				/*
-				  'carriers': data.carriers,
-				  'equipments': data.equipments,
-				  'directions': data.directions,
-				  'containers': data.containers,
-				  'harbors': data.harbors,
-				  'currencies': data.currencies,
-				  'surcharges': data.surcharges,
-				  'countries': data.countries,
-				  
-				  'destination_types': data.destination_types,
-				  'calculation_types': data.calculation_types,
-				  'companies': data.companies,
-				  'users': data.users
-				}*/
 			},
 		},
 		watch: {

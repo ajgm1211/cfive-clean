@@ -124,4 +124,15 @@ class ContainerController extends Controller
     {
         //
     }
+
+    public function getContainerByGroup(Request $request)
+	{
+		$id_group = $request->id_group;
+		$containers = Container::where('gp_container_id',$id_group)->get()->map(function ($containers) {
+            return $containers->only(['id', 'code']);
+        });
+
+        return $containers;
+
+	}
 }
