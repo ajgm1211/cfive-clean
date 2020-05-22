@@ -23,8 +23,8 @@ class ApiIntegrationController extends Controller
     public function index()
     {
         $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->with('api_integration')->first();
-        $partners = Partner::pluck('name','id');
-        return view('api.index', compact('api','partners'));
+        $partners = Partner::pluck('name', 'id');
+        return view('api.index', compact('api', 'partners'));
     }
 
     /**
@@ -75,11 +75,11 @@ class ApiIntegrationController extends Controller
         $api_int->api_integration_setting_id = $request->api_integration_setting_id;
         $api_int->save();
 
-        $request->session()->flash('message.content', 'Record saved successfully' );
+        $request->session()->flash('message.content', 'Record saved successfully');
         $request->session()->flash('message.nivel', 'success');
         $request->session()->flash('message.title', 'Well done!');
 
-        return redirect()->back(); 
+        return redirect()->back();
     }
 
     /**
@@ -133,34 +133,37 @@ class ApiIntegrationController extends Controller
 
         $client = new Client([
             'verify' => false,
-            'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
+            'headers' => ['content-type' => 'application/json', 'Accept' => 'applicatipon/json', 'charset' => 'utf-8']
         ]);
 
         $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
             $query->where('company_user_id', \Auth::user()->company_user_id);
         })->with('partner')->first();
-        
+
         $setting->status = 1;
         $setting->save();
 
         $endpoint = $setting->url . "=" . $setting->api_key;
-        //$endpoint = 'https://pr-altius.visualtrans.net/rest/api1-entidades.pro?k=ENTICARGOFIVE75682100';
 
         try {
 
-            $response = $client->get($endpoint, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'X-Requested-With' => 'XMLHttpRequest',
-                ]
-            ]);
+            $response = $client->get($endpoint);
+
+            $type = $response->getHeader('content-type');
+
+            $type = explode(';', $type[0]);
             
-            $api_response = json_decode($response->getBody());
-            
-            SyncCompaniesJob::dispatch($api_response, $user, $setting->partner);
+            $api_response = $response->getBody()->getContents();
+
+            if ($type[1] == 'charset=iso-8859-1') {
+                $api_response = iconv("iso-8859-1", "UTF-8", $api_response);
+            }
+
+            $result = json_decode($api_response, true);
+
+            SyncCompaniesJob::dispatch($result, $user, $setting->partner);
 
             return response()->json(['message' => 'Ok']);
-            
         } catch (\Exception $e) {
             $setting->status = 0;
             $setting->save();
