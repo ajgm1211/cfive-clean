@@ -1975,7 +1975,7 @@
         $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Container/getContainer/',
+        url: 'https://equipments.cargofive.com/Container/getContainer/',
         data: {
             'id_group' : id_group            
         },
