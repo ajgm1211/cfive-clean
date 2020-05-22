@@ -255,7 +255,7 @@ class NewContractRequestLclController extends Controller
 			$contract->validity         = $validity[0];
 			$contract->expire           = $validity[1];
 			$contract->status           = 'incomplete';
-			$contract->comments         = 'Loaded from Request';
+			//$contract->comments         = '';
 			$contract->company_user_id  = $CompanyUserId;
 			$contract->direction_id     = $direction_id;
 			$contract->save();

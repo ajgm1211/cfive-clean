@@ -42,8 +42,9 @@ Route::middleware(['auth'])->prefix('oauth')->group(function () {
 
 Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('settings', 'ApiIntegrationController@index')->name('api.settings');
+    Route::post('store', 'ApiIntegrationController@store')->name('api.store');
     Route::get('enable', 'ApiIntegrationController@enable')->name('api.enable');
-    Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
+    //Route::get('store/key', 'ApiIntegrationController@store')->name('api.store');
     Route::get('get/companies', 'ApiIntegrationController@getCompanies')->name('api.companies');
 });
 
@@ -338,9 +339,6 @@ Route::prefix('Importation')->group(function () {
     // Srucharge for contract
     Route::post('/storeMediaIFCL','ImportationController@storeMedia')->name('importation.storeMedia.fcl')
         ->middleware(['auth','role:administrator|data_entry']);
-
-    // Test
-    Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
 
     // Test
     Route::get('/testExcelImportation','ImportationController@testExcelImportation')->name('testExcelImportation')->middleware(['auth','role:administrator|data_entry']);
@@ -1018,45 +1016,56 @@ Route::get('api/contracts/{contract}/edit', 'ContractController@edit')->name('ne
 /*****************************************************************************************
 **                                      API ENDPOINTS                                   **
 *****************************************************************************************/
-/** API Contracts endpoint (Pending to check) **/
-Route::get('api/v2/contracts', 'ContractController@list');
-Route::get('api/v2/contracts/data', 'ContractController@data');
-Route::post('api/v2/contracts/store', 'ContractController@store');
-Route::get('api/v2/contracts/{contract}', 'ContractController@retrieve');
-Route::post('api/v2/contracts/{contract}/update', 'ContractController@update');
-Route::post('api/v2/contracts/{contract}/duplicate', 'ContractController@duplicate');
-Route::delete('api/v2/contracts/{contract}/destroy', 'ContractController@destroy');
-Route::post('api/v2/contracts/destroyAll', 'ContractController@destroyAll');
-/** End Contracts endpoint (Pending to check) **/
 
-/** API Contracts Ocean Freights EndPoints **/
-Route::get('api/v2/contracts/{contract}/ocean_freight', 'OceanFreightController@list');
-Route::post('api/v2/contracts/{contract}/ocean_freight/store', 'OceanFreightController@store');
-Route::post('api/v2/contracts/{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
-Route::get('api/v2/contracts/{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
-Route::post('api/v2/contracts/ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
-Route::delete('api/v2/contracts/ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
-Route::post('api/v2/contracts/ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
-/** End API Contracts Ocean Freights EndPoints **/
+Route::group(['prefix' => 'api/v2/contracts'], function () {
+    /** API Contracts endpoint (Pending to check) **/
+    Route::get('', 'ContractController@list');
+    Route::get('data', 'ContractController@data');
+    Route::post('store', 'ContractController@store');
+    Route::get('{contract}', 'ContractController@retrieve');
+    Route::post('{contract}/update', 'ContractController@update');
+    Route::post('{contract}/duplicate', 'ContractController@duplicate');
+    Route::delete('{contract}/destroy', 'ContractController@destroy');
+    Route::post('destroyAll', 'ContractController@destroyAll');
+    Route::get('{contract}/files', 'ContractController@getFiles');
+    Route::post('{contract}/removefile', 'ContractController@removefile');
+    
+    /** End Contracts endpoint (Pending to check) **/
+
+    /** API Contracts Ocean Freights EndPoints **/
+    Route::get('{contract}/ocean_freight', 'OceanFreightController@list');
+    Route::post('{contract}/ocean_freight/store', 'OceanFreightController@store');
+    Route::post('{contract}/ocean_freight/{rate}/update', 'OceanFreightController@update');
+    Route::get('{contract}/ocean_freight/{rate}', 'OceanFreightController@retrieve');
+    Route::post('ocean_freight/{rate}/duplicate', 'OceanFreightController@duplicate');
+    Route::delete('ocean_freight/{rate}/destroy', 'OceanFreightController@destroy');
+    Route::post('ocean_freight/destroyAll', 'OceanFreightController@destroyAll');
+    /** End API Contracts Ocean Freights EndPoints **/
 
 
-/** API Contracts LocalCharge EndPoints **/
-Route::get('api/v2/contracts/{contract}/localcharges', 'LocalChargeController@list');
-Route::post('api/v2/contracts/{contract}/localcharge/store', 'LocalChargeController@store');
-Route::post('api/v2/contracts/{contract}/localcharge/{localcharge}/update', 'LocalChargeController@update');
-Route::get('api/v2/contracts/{contract}/localcharge/{localcharge}', 'LocalChargeController@retrieve');
-Route::post('api/v2/contracts/localcharge/{localcharge}/duplicate', 'LocalChargeController@duplicate');
-Route::delete('api/v2/contracts/localcharge/{localcharge}/destroy', 'LocalChargeController@destroy');
-Route::post('api/v2/contracts/localcharge/destroyAll', 'LocalChargeController@destroyAll');
-/** End Contracts V2 routes **/
+    /** API Contracts LocalCharge EndPoints **/
+    Route::get('{contract}/localcharges', 'LocalChargeController@list');
+    Route::post('{contract}/localcharge/store', 'LocalChargeController@store');
+    Route::post('{contract}/localcharge/{localcharge}/update', 'LocalChargeController@update');
+    Route::get('{contract}/localcharge/{localcharge}', 'LocalChargeController@retrieve');
+    Route::post('localcharge/{localcharge}/duplicate', 'LocalChargeController@duplicate');
+    Route::delete('localcharge/{localcharge}/destroy', 'LocalChargeController@destroy');
+    Route::post('localcharge/destroyAll', 'LocalChargeController@destroyAll');
+    /** End Contracts V2 routes **/
 
-/** API Contracts Restrictions EndPoints **/
-Route::post('api/v2/contracts/{contract}/restrictions', 'ContractController@updateRestrictions');
-/** End Contract
+    /** API Contracts Restrictions EndPoints **/
+    Route::post('{contract}/restrictions', 'ContractController@updateRestrictions');
+    /** End Contract
 
-/** API Contracts Remarks EndPoints **/
-Route::post('api/v2/contracts/{contract}/remarks', 'ContractController@updateRemarks');
-/** End Contract
+    /** API Contracts Remarks EndPoints **/
+    Route::post('{contract}/remarks', 'ContractController@updateRemarks');
+    /** End Contract **/
+
+    /** API Contracts Remarks EndPoints **/
+    Route::post('{contract}/storeMedia', 'ContractController@storeMedia');
+    /** End Contract **/
+
+});
 
 /*****************************************************************************************
 **                                   END API ENDPOINTS                                   **

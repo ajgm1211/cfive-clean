@@ -62,6 +62,8 @@
                 <!-- Form add new item -->
                 <b-tr v-if="!isEmpty(inputFields)">
 
+                    <b-td v-if="firstEmpty"></b-td>
+
                     <b-td v-for="(item, key) in inputFields" :key="key" :style="'max-width:'+item.width">
                        
                        <!-- Text Input -->
@@ -219,7 +221,12 @@
                 required: false,
                 default: () => { return {} }
             },
-            actions: Object
+            actions: Object,
+            firstEmpty: {
+                type: Boolean,
+                required: false,
+                default: true
+            }
         },
         components: { 
             Multiselect,
@@ -361,7 +368,6 @@
                         this.refreshData();
                 })
                     .catch(( data ) => {
-                        console.log(data);
                 });
 
             },

@@ -11,6 +11,7 @@ use GuzzleHttp\Message\Response;
 use App\Company;
 use App\Contact;
 use App\Jobs\SyncCompaniesJob;
+use App\Partner;
 
 class ApiIntegrationController extends Controller
 {
@@ -21,9 +22,9 @@ class ApiIntegrationController extends Controller
      */
     public function index()
     {
-        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
-
-        return view('api.index', compact('api'));
+        $api = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->with('api_integration')->first();
+        $partners = Partner::pluck('name','id');
+        return view('api.index', compact('api','partners'));
     }
 
     /**
@@ -39,13 +40,13 @@ class ApiIntegrationController extends Controller
             $api->enable = $request->enable;
             $api->update();
         } else {
-            $api_int = new ApiIntegrationSetting();
-            $api_int->company_user_id = $request->company_user_id;
-            $api_int->enable = $request->enable;
-            $api_int->save();
+            $api = new ApiIntegrationSetting();
+            $api->company_user_id = $request->company_user_id;
+            $api->enable = $request->enable;
+            $api->save();
         }
 
-        return response()->json(['message' => 'Ok']);
+        return response()->json(['data' => $api]);
     }
 
     /**
@@ -66,13 +67,19 @@ class ApiIntegrationController extends Controller
      */
     public function store(Request $request)
     {
-        $api_int = ApiIntegrationSetting::where('company_user_id', $request->company_user_id)->first();
+        $api_int = new ApiIntegration();
+        $api_int->name = $request->name;
         $api_int->api_key = $request->api_key;
-        $api_int->key_name = $request->key_name;
         $api_int->url = $request->url;
-        $api_int->update();
+        $api_int->module = $request->module;
+        $api_int->api_integration_setting_id = $request->api_integration_setting_id;
+        $api_int->save();
 
-        return response()->json(['message' => 'Ok']);
+        $request->session()->flash('message.content', 'Record saved successfully' );
+        $request->session()->flash('message.nivel', 'success');
+        $request->session()->flash('message.title', 'Well done!');
+
+        return redirect()->back(); 
     }
 
     /**
@@ -129,11 +136,15 @@ class ApiIntegrationController extends Controller
             'headers' => ['Content-Type' => 'application/json', 'Accept' => '*/*'],
         ]);
 
-        $setting = ApiIntegrationSetting::where('company_user_id', \Auth::user()->company_user_id)->first();
+        $setting = ApiIntegration::where('module', 'Companies')->whereHas('api_integration_setting', function ($query) {
+            $query->where('company_user_id', \Auth::user()->company_user_id);
+        })->with('partner')->first();
+        
         $setting->status = 1;
         $setting->save();
 
-        $endpoint = $setting->url . "ent_m?" . $setting->key_name . "=" . $setting->api_key;
+        $endpoint = $setting->url . "=" . $setting->api_key;
+        //$endpoint = 'https://pr-altius.visualtrans.net/rest/api1-entidades.pro?k=ENTICARGOFIVE75682100';
 
         try {
 
@@ -143,10 +154,10 @@ class ApiIntegrationController extends Controller
                     'X-Requested-With' => 'XMLHttpRequest',
                 ]
             ]);
-
+            
             $api_response = json_decode($response->getBody());
-
-            SyncCompaniesJob::dispatch($api_response, $user);
+            
+            SyncCompaniesJob::dispatch($api_response, $user, $setting->partner);
 
             return response()->json(['message' => 'Ok']);
             
