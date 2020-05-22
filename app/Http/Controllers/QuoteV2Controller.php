@@ -2449,7 +2449,7 @@ class QuoteV2Controller extends Controller
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight = $request->input('chargeFreight');
-   
+
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2514,7 +2514,10 @@ class QuoteV2Controller extends Controller
         $chargesAPI = isset($carriers['api']['CMA']) ? true : null;
         $chargesAPI_M = isset($carriers['api']['MAERSK']) ? true : null;
         $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
-        
+
+        $arregloCarrier = $carriers['carriers'];
+
+
 
         $equipmentFilter = array();
         $delivery_type = $request->input('delivery_type');
@@ -2586,7 +2589,7 @@ class QuoteV2Controller extends Controller
         if ($validateEquipment['count'] < 2) {
 
             if ($company_id != null || $company_id != 0) {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
                     $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                         $a->where('user_id', '=', $user_id);
                     })->orDoesntHave('contract_user_restriction');
@@ -2598,7 +2601,7 @@ class QuoteV2Controller extends Controller
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
@@ -2609,10 +2612,10 @@ class QuoteV2Controller extends Controller
 
             // ************************* CONSULTA RATE API ******************************
 
-       
+
             if ($chargesAPI != null) {
 
-              
+
 
                 $client = new Client();
 
@@ -3023,6 +3026,11 @@ class QuoteV2Controller extends Controller
                                 //Freight
                                 if ($chargesFreight != null) {
                                     if ($global->typedestiny_id == '3') {
+                                        
+                                        $rateMount_Freight = $this->ratesCurrency($global->currency->id, $data->currency->alphacode);
+                                        $globalParams['typeCurrency'] = $data->currency->alphacode;
+                                        $globalParams['idCurrency'] = $data->currency->id;
+                                        //Fin Variables
                                         $band = false;
                                         foreach ($containers as $cont) {
                                             $name_arreglo = 'array' . $cont->code;
@@ -3031,7 +3039,7 @@ class QuoteV2Controller extends Controller
 
                                                 $montoOrig = $global->ammount;
                                                 $montoOrig = $this->perTeu($montoOrig, $global->calculationtype_id, $cont->code);
-                                                $monto = $global->ammount / $rateMount;
+                                                $monto = $global->ammount / $rateMount_Freight;
                                                 $monto = $this->perTeu($monto, $global->calculationtype_id, $cont->code);
                                                 $monto = number_format($monto, 2, '.', '');
                                                 $markupGe = $this->localMarkupsFCL($markup['charges']['localPercentage'], $markup['charges']['localAmmount'], $markup['charges']['localMarkup'], $monto, $montoOrig, $typeCurrency, $markup['charges']['markupLocalCurre'], $global->currency->id);
@@ -3141,7 +3149,7 @@ class QuoteV2Controller extends Controller
                 $data->setAttribute('localdestiny', $collectionDestiny);
                 $data->setAttribute('localorigin', $collectionOrigin);
                 // Valores totales por contenedor
-
+                $rateTot = $this->ratesCurrency($data->currency->id, $typeCurrency);
                 foreach ($containers as $cont) {
 
                     $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] = $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $arregloRateSum['c' . $cont->code];
@@ -3150,6 +3158,7 @@ class QuoteV2Controller extends Controller
                     $data->setAttribute('tot' . $cont->code . 'O', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_O'], 2, '.', ''));
                     $data->setAttribute('tot' . $cont->code . 'D', number_format($totalesCont[$cont->code]['tot_' . $cont->code . '_D'], 2, '.', ''));
 
+                    $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  = $totalesCont[$cont->code]['tot_' . $cont->code . '_F']  / $rateTot;
                     // TOTALES
                     $name_tot = 'totalT' . $cont->code;
                     $$name_tot = $totalesCont[$cont->code]['tot_' . $cont->code . '_D'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_F'] + $totalesCont[$cont->code]['tot_' . $cont->code . '_O'];

@@ -53,8 +53,10 @@ class OceanFreightResource extends JsonResource
         $data['rates_40NOR'] = $this->fortynor;
         $data['rates_45HC'] = $this->fortyfive; 
 
-        foreach ($this->available_containers as $container) {
-           $data['rates_'.$container] = isset($this->containers['C'.$container]) ? $this->containers['C'.$container] : '-';
+        $containers = json_decode($this->containers, true);
+
+        foreach ($this->available_containers as $available_container) {
+           $data['rates_'.$available_container] = isset($containers['C'.$available_container]) ? $containers['C'.$available_container] : '-';
         }
 
         return $data;

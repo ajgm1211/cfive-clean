@@ -60,9 +60,11 @@ class ContractController extends Controller
         $carriers = Carrier::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name']);
         });
+
         $equipments = GroupContainer::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name']);
         });
+        
         $directions = Direction::get()->map(function ($carrier) {
             return $carrier->only(['id', 'name']);
         });
@@ -285,13 +287,12 @@ class ContractController extends Controller
     {
         $new_contract = $contract->duplicate(); 
 
-        return new ContractResource($new_contract, true);
+        return new ContractResource($new_contract);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove all the resource from storage.
      *
-     * @param  use Spatie\Permission\Models\FCLSurcharge  $fclsurcharge
      * @return \Illuminate\Http\Response
      */
     public function destroyAll(Request $request)
@@ -299,6 +300,69 @@ class ContractController extends Controller
         DB::table('contracts')->whereIn('id', $request->input('ids'))->delete(); 
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Remove the specified media resource.
+     *
+     * @param  \App\Contract $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function removefile(Request $request, Contract $contract)
+    {
+        $media = $contract->getMedia('document')->where('id', $request->input('id'))->first();
+        $media->delete(); 
+
+        return response()->json(null, 204);
+    }
+
+    /**
+     * Get all files from the contract model resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getFiles(Request $request, Contract $contract)
+    {
+        $contract_media = $contract->getMedia('document')->map(function ($media, $key){
+            return [
+                'id' => $media->id,
+                'name' => substr($media->name, 14),
+                'size' => $media->size,
+                'type' => $media->mime_type,
+                'url' => $media->getFullUrl()
+            ];
+        }); 
+
+        return response()->json(['data' => $contract_media ]);
+    }
+
+    /**
+     * Store media to an specified model contract.
+     *
+     * @param  use \App\Contract  $contract
+     * @return \Illuminate\Http\Response
+     */
+    public function storeMedia(Request $request, Contract $contract)
+    {
+        $path = storage_path('tmp/uploads');
+
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file('file');
+
+        $name = uniqid() . '_' . trim($file->getClientOriginalName());
+
+        $file->move($path, $name);
+
+        $contract->addMedia(storage_path('tmp/uploads/' . $name))->toMediaCollection('document','contracts3');
+
+        return response()->json([
+            'contract' => new ContractResource($contract),
+            'name'          => $name,
+            'original_name' => $file->getClientOriginalName(),
+        ]);
     }
    
 }

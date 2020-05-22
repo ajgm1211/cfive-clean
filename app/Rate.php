@@ -35,7 +35,7 @@ class Rate extends Model
     public function currency(){
         return $this->belongsTo('App\Currency');
     }
-    
+
     public function scheduletype(){
         return $this->belongsTo('App\ScheduleType','schedule_type_id');
     }
@@ -52,8 +52,9 @@ class Rate extends Model
         return (new OceanFreightFilter($request, $builder))->filter();
     }
 
+    /* Duplicate Rate Model instance */
     public function duplicate(){
-        
+
         $new_rate = $this->replicate();
         $new_rate->save();
 
@@ -71,6 +72,7 @@ class Rate extends Model
         return $query->where( 'contract_id', '=', $contract_id );
     }
 
+
     public function scopeContain($query, $code)
     {
         $valor =  "containers->C".$code;
@@ -78,4 +80,5 @@ class Rate extends Model
     }
 
 
+    
 }

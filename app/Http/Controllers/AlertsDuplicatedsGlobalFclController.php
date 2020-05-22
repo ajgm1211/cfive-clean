@@ -150,12 +150,12 @@ class AlertsDuplicatedsGlobalFclController extends Controller
         $dataGen = json_decode($response->getBody()->getContents(),true);
 
         if($dataGen['Success'] == 1){
-            $request->session()->flash('message.content', 'Job - Duplicateds Active. Please wait a few minutes and refresh the page' );
+            $request->session()->flash('message.content', 'Job - Duplicates active. Please wait a few minutes and refresh the page' );
             $request->session()->flash('message.nivel', 'success');
             $request->session()->flash('message.title', 'Well done!');
             return redirect()->route('globalsduplicated.index'); 
         } else {
-            $request->session()->flash('message.content', 'Job - Duplicateds Not Active' );
+            $request->session()->flash('message.content', 'Job - Duplicates not active' );
             $request->session()->flash('message.nivel', 'danger');
             $request->session()->flash('message.title', 'Well done!');
             return redirect()->route('globalsduplicated.index'); 
