@@ -511,4 +511,22 @@ trait SearchTrait
 
     }
 
+    public function divideCarriers($array){ 
+
+        $carrier['carriers'] = array();
+        $carrier['api'] = array();
+        foreach($array as $element) {
+            if(is_numeric($element)) {
+                $carriers= array($element) ; 
+               $carrier['carriers'] = array_merge($carrier['carriers'],$carriers);
+            } else {
+                $api[$element] = $element; 
+                $carrier['api'] = array_merge($carrier['carriers'],$api);
+            }
+        }
+
+        return $carrier;
+
+    }
+
 }

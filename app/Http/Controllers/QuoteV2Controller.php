@@ -2449,9 +2449,7 @@ class QuoteV2Controller extends Controller
         $chargesOrigin = $request->input('chargeOrigin');
         $chargesDestination = $request->input('chargeDestination');
         $chargesFreight = $request->input('chargeFreight');
-        $chargesAPI = $request->input('chargeAPI');
-        $chargesAPI_M = $request->input('chargeAPI_M');
-        $chargesAPI_SF = $request->input('chargesAPI_SF');
+
 
         $form = $request->all();
         $incoterm = Incoterm::pluck('name', 'id');
@@ -2510,6 +2508,17 @@ class QuoteV2Controller extends Controller
         }
 
         $equipment = $request->input('equipment');
+        $carriers =$this->divideCarriers($request->input('carriers'));
+
+
+        $chargesAPI = isset($carriers['api']['CMA']) ? true : null;
+        $chargesAPI_M = isset($carriers['api']['MAERSK']) ? true : null;
+        $chargesAPI_SF = isset($carriers['api']['SAFMARINE']) ? true : null;
+
+        $arregloCarrier = $carriers['carriers'];
+
+
+
         $equipmentFilter = array();
         $delivery_type = $request->input('delivery_type');
         $price_id = $request->input('price_id');
@@ -2580,7 +2589,7 @@ class QuoteV2Controller extends Controller
         if ($validateEquipment['count'] < 2) {
 
             if ($company_id != null || $company_id != 0) {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) use ($dateSince, $dateUntil, $user_id, $company_user_id, $company_id) {
                     $q->whereHas('contract_user_restriction', function ($a) use ($user_id) {
                         $a->where('user_id', '=', $user_id);
                     })->orDoesntHave('contract_user_restriction');
@@ -2592,7 +2601,7 @@ class QuoteV2Controller extends Controller
                     $q->where('validity', '<=', $dateSince)->where('expire', '>=', $dateUntil)->where('company_user_id', '=', $company_user_id)->where('gp_container_id', '=', $validateEquipment['gpId']);
                 });
             } else {
-                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
+                $arreglo = Rate::whereIn('origin_port', $origin_port)->whereIn('destiny_port', $destiny_port)->whereIn('carrier_id',$arregloCarrier)->with('port_origin', 'port_destiny', 'contract', 'carrier')->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_user_restriction');
                 })->whereHas('contract', function ($q) {
                     $q->doesnthave('contract_company_restriction');
@@ -2603,7 +2612,10 @@ class QuoteV2Controller extends Controller
 
             // ************************* CONSULTA RATE API ******************************
 
+
             if ($chargesAPI != null) {
+
+
 
                 $client = new Client();
 
