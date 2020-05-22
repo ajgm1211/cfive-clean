@@ -411,9 +411,9 @@
     }
 
     .create-manual {
-        background-color: transparent !important;
+        background-color: #fff !important;
         color: #36a3f7 !important;
-        border-width: 2px;
+        border-width: 1.5px;
         border-color: #36a3f7 !important;
     }
 
