@@ -1027,6 +1027,9 @@ Route::group(['prefix' => 'api/v2/contracts'], function () {
     Route::post('{contract}/duplicate', 'ContractController@duplicate');
     Route::delete('{contract}/destroy', 'ContractController@destroy');
     Route::post('destroyAll', 'ContractController@destroyAll');
+    Route::get('{contract}/files', 'ContractController@getFiles');
+    Route::post('{contract}/removefile', 'ContractController@removefile');
+    
     /** End Contracts endpoint (Pending to check) **/
 
     /** API Contracts Ocean Freights EndPoints **/
