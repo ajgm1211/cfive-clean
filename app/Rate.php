@@ -72,7 +72,7 @@ class Rate extends Model
         return $query->where( 'contract_id', '=', $contract_id );
     }
 
-<<<<<<< HEAD
+
     public function scopeContain($query, $code)
     {
         $valor =  "containers->C".$code;
@@ -80,9 +80,5 @@ class Rate extends Model
     }
 
 
-=======
-    /*protected $casts = [
-        'containers' => 'array'
-    ];*/
->>>>>>> remotes/origin/dcabanales-v2
+    
 }
