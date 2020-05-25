@@ -124,7 +124,7 @@ $portRadio = false;
             </div>
 
             <div class="col-lg-4">
-                {!! Form::label('ammountL', 'Ammount') !!}
+                {!! Form::label('ammountL', 'Amount') !!}
                 <div class="m-input-icon m-input-icon--right">
                     {!! Form::number('ammount', $globalcharges->ammount, ['id' => 'ammount','placeholder' => 'Please
                     enter the 40HC','required','class' => 'form-control m-input','step'=>'0.01', 'required' =>'true'])
@@ -167,18 +167,18 @@ $portRadio = false;
             </div>
         </div>
     </div>
-    <br>
-    <hr>
-    <div class="m-portlet__foot m-portlet__foot--fit">
-        <div class="m-form__actions m-form__actions">
-            {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
-            <button class="btn btn-success" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">Cancel</span>
-            </button>
-        </div>
-    </div>
     {!! Form::close() !!}
 </div>
+
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        {!! Form::submit('Update', ['class'=> 'btn btn-primary']) !!}
+        <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">Cancel</span>
+        </button>
+    </div>
+</div>
+<br>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript">
 </script>
 <script src="/js/globalchargeslcl.js"></script>
