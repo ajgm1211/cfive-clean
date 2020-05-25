@@ -1211,7 +1211,13 @@
                         </div>
                         @else
                         <div class="col-lg-6 d-flex align-items-center">
-                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }}
+                          <span class="portalphacode" style="margin-right:15px;" >Validity:   </span>  {{   \Carbon\Carbon::parse($arr->contract->validity)->format('d M Y') }} - {{   \Carbon\Carbon::parse($arr->contract->expire)->format('d M Y') }} 
+
+                         @if($arr->contratoFuturo)
+                           <img src="{{ url('images/error.svg')}}" width='20' height='20' >  
+                          @endif
+                            
+
 
                         </div>
                         @endif
