@@ -140,19 +140,18 @@
             </div>
         </div>
     </div>
-    <br>
-    <hr>
-    <div class="m-portlet__foot m-portlet__foot--fit">
-        <div class="m-form__actions m-form__actions">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
-            <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">Cancel</span>
-            </button>
-        </div>
-    </div>
     {!! Form::close() !!}
 </div>
+<div class="m-portlet__foot m-portlet__foot--fit">
+    <div class="m-form__actions m-form__actions">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {!! Form::submit('Save', ['class'=> 'btn btn-primary']) !!}
+        <button class="btn btn-danger" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">Cancel</span>
+        </button>
+    </div>
+</div>
+<br>
 <script src="/assets/demo/default/custom/components/forms/widgets/bootstrap-daterangepicker.js" type="text/javascript">
 </script>
 <script src="/js/globalchargeslcl.js"></script>
